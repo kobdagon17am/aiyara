@@ -1468,7 +1468,7 @@ class FrontstoreController extends Controller
                         (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
                         (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                         ))
-                        FROM db_orders WHERE (`id`=".$sRow->id.") ;
+                        FROM db_orders WHERE (`id`=".$sRow->id.") AND delivery_location <> 0 ;
                       ");
 
 

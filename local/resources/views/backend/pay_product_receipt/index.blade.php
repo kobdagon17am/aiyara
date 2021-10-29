@@ -186,10 +186,11 @@
                   <div class="col-12">
                     <div class="form-group row ">
                       <div class="col-md-12 d-flex  ">
-                        <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label>
+                       <!--  <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label> -->
+                        <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>  <span class="b_label_search"></span> </label>
 
                         <div class="col-md-4">
-                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus value=""  >  
+                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus autocomplete="on" >  
                         </div>
 
                        <!--  <div class="col-md-2">
