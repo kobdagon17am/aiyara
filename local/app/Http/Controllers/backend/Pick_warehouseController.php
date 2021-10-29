@@ -861,7 +861,7 @@ GROUP BY db_order_products_list.product_id_fk
                 LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
                 left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
                 left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-                WHERE db_order_products_list.product_id_fk in ($value->product_id_fk)  AND type_product='product'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
+                WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='product'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
                 if(@$p1){
                   foreach (@$p1 as $inv) {
                       array_push($arr_inv,@$inv->code_order);
@@ -876,7 +876,7 @@ GROUP BY db_order_products_list.product_id_fk
                 LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
                 left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
                 left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-                WHERE db_order_products_list.product_id_fk in ($value->product_id_fk)  AND type_product='promotion'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
+                WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='promotion'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
                 if(@$p2){
                   foreach (@$p2 as $inv) {
                       array_push($arr_inv,@$inv->code_order);

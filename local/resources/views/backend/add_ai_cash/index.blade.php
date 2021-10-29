@@ -352,7 +352,7 @@ $(function() {
               }
               var str_D = '';
               if(sD=='1'){
-                str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+                str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX  " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
               }
 
 
@@ -363,8 +363,8 @@ $(function() {
                 // $('td:last-child', nRow).html('-ยกเลิก-');
                 $('td:last-child', nRow).html('-');
 
-              }else if(aData['approve_status']==2){
-                  $('td:last-child', nRow).html( str_U ).addClass('input');
+              // }else if(aData['approve_status']==2){
+                  // $('td:last-child', nRow).html( str_U ).addClass('input');
               }else{
 
 
@@ -388,6 +388,12 @@ $(function() {
 
              $(document).on('click', '.cDeleteX', function(event) {
 
+
+            if (!confirm("Are you sure ? ")){
+                return false;
+            }else{
+
+
                   var id = $(this).data('id');
                   var customer_id_fk = $(this).attr('customer_id_fk');
                   // alert(id);
@@ -408,6 +414,8 @@ $(function() {
                           },
 
                     });
+
+                }
 
            });
 
@@ -560,7 +568,27 @@ $(function() {
                                       {data: 'updated_at', title :'<center>วันที่เติม Ai-Cash</center>', className: 'text-center'},
                                       {data: 'id', title :'Tools', className: 'text-center w60'},
                                   ],
-                                  rowCallback: function(nRow, aData, dataIndex){
+                                   rowCallback: function(nRow, aData, dataIndex){
+
+                                   // console.log(aData['approve_status']);
+
+
+                                    var sPermission = "<?=\Auth::user()->permission?>";
+                                    var sU = sessionStorage.getItem("sU");
+                                    var sD = sessionStorage.getItem("sD");
+                                    if(sPermission==1){
+                                      sU = 1;
+                                      sD = 1;
+                                    }
+                                    var str_U = '';
+                                    if(sU=='1'){
+                                      str_U = '<a href="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                    }
+                                    var str_D = '';
+                                    if(sD=='1'){
+                                      str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX  " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+                                    }
+
 
                                     if(aData['approve_status']==5){
                                       for (var i = 0; i < 6; i++) {
@@ -569,34 +597,22 @@ $(function() {
                                       // $('td:last-child', nRow).html('-ยกเลิก-');
                                       $('td:last-child', nRow).html('-');
 
+                                    // }else if(aData['approve_status']==2){
+                                        // $('td:last-child', nRow).html( str_U ).addClass('input');
                                     }else{
 
-                                            var sPermission = "<?=\Auth::user()->permission?>";
-                                            var sU = sessionStorage.getItem("sU");
-                                            var sD = sessionStorage.getItem("sD");
-                                            if(sPermission==1){
-                                              sU = 1;
-                                              sD = 1;
-                                            }
-                                            var str_U = '';
-                                            if(sU=='1'){
-                                              str_U = '<a href="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                                            }
-                                            var str_D = '';
-                                            if(sD=='1'){
-                                              str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
-                                            }
-                                            if(sU!='1' && sD!='1'){
-                                               $('td:last-child', nRow).html('-');
-                                            }else{
-                                              $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                                            }
+
+                                        if(sU!='1' && sD!='1'){
+                                           $('td:last-child', nRow).html('-');
+                                        }else{
+                                          $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                        }
 
 
                                     }
 
-                                  }
-                            });
+                              }
+                          });
 
                         });
 

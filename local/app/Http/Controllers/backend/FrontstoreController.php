@@ -253,7 +253,7 @@ class FrontstoreController extends Controller
 
       $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
 
-      $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
+      $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
       $User_branch_id = \Auth::user()->branch_id_fk;
@@ -481,7 +481,8 @@ class FrontstoreController extends Controller
       }
       $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ");
 
-      $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
+      $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
+      $sDistribution_channel3 = DB::select(" select * from dataset_distribution_channel where id=3 AND status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
       $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
@@ -605,6 +606,7 @@ class FrontstoreController extends Controller
            'sPurchase_type'=>$sPurchase_type,
            'sProductUnit'=>$sProductUnit,
            'sDistribution_channel'=>$sDistribution_channel,
+           'sDistribution_channel3'=>$sDistribution_channel3,
            'Products'=>$Products,
            'sProvince'=>$sProvince,
            'sAmphures'=>$sAmphures,

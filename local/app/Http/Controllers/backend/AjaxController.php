@@ -2593,21 +2593,54 @@ if($frontstore[0]->check_press_save==2){
         // return $request;
         // dd();
         if($request->ajax()){
+
+               $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
+
               // เช็คเรื่องการตัดยอด Ai-Cash
                $ch_aicash_01 = DB::select(" select * from customers where id=".$request->customer_id_fk." ");
                // return($ch_aicash_01[0]->ai_cash);
                $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=".$request->id." ");
                // return($ch_aicash_02[0]->aicash_amt);
 
+                // return($ch_aicash_02[0]->aicash_amt ." : ". $ch_aicash_01[0]->ai_cash);
+
+
                // เช็คสถานะก่อนว่า รออนุมัติ หรือไม่ ถ้า ใช่ ให้ลบได้ ถ้าเป็น สถานะอื่นๆ จะไม่ให้ลบ
                // ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id
-               if($ch_aicash_02[0]->approve_status==1){
-                return true;
-               }else{
+               // if($ch_aicash_02[0]->approve_status==1){
+               //    return true;
+               // }else{
+               //   if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
+               //       return 'no';
+               //     }
+               // }
+
+          if(@$ch_aicash_01[0]->ai_cash>0){
+
                  if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
                      return 'no';
-                   }
-               }
+                 }else{
+                    // if($ch_aicash_02[0]->approve_status==1){
+                    //     DB::select(" delete from db_add_ai_cash where id=".$request->id." ");
+                    //     return true;
+                    // }else{
+                        DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
+                        DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=".$request->id." ");
+                        return true;
+                    // }
+                 }
+
+           }else{
+                    // if($ch_aicash_02[0]->approve_status==1){
+                    //     DB::select(" delete from db_add_ai_cash where id=".$request->id." ");
+                    //     return true;
+                    // }else{
+                        DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
+                        DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=".$request->id." ");
+                        return true;
+                    // }
+           }
+
 
 
 
@@ -2929,6 +2962,17 @@ if($frontstore[0]->check_press_save==2){
 
          }
 
+        if($pay_type_id_fk==1){
+
+                    if(empty($request->transfer_price)){
+                        exit;
+                    }
+                    $transfer_price = str_replace(',','',$request->transfer_price);
+                    $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+                    $transfer_money_datetime = $request->transfer_money_datetime;
+                    DB::select(" UPDATE db_add_ai_cash SET transfer_price=$transfer_price,cash_price=0,cash_pay=0,transfer_money_datetime='$transfer_money_datetime',total_amt=($sum_price) WHERE id=$id ");
+
+         }
 
 
         // if(!empty($request->this_element)){
