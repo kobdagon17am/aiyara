@@ -230,7 +230,7 @@ class CartPaymentController extends Controller
             $insert_db_orders->pv_total = $pv_total;
             $insert_db_orders->purchase_type_id_fk = $type;
             $insert_db_orders->business_location_id_fk = $business_location_id;
-            $insert_db_orders->distribution_channel_id_fk = '2';
+            $insert_db_orders->distribution_channel_id_fk = '3';
             $insert_db_orders->order_status_id_fk = '2';
 
             foreach ($data as $value) {

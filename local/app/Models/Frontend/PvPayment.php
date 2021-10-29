@@ -282,7 +282,8 @@ class PvPayment extends Model
                         'type_order' => $opc_type_order]); //ลงข้อมูลบิลชำระเงิน
 
                 }
-                $order_update->invoice_code = $code_order;
+                $order_update->invoice_code_id_fk = $code_order;
+                $order_update->invoice_code = $order_data->code_order;
                 //check รายการสินค้าแถม
 
                 if ($type_id == 1) { //ทำคุณสมบติ

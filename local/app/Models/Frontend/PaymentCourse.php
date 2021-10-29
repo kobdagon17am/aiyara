@@ -42,7 +42,7 @@ class PaymentCourse extends Model
     $insert_db_orders->purchase_type_id_fk =  $rs->type;
     $insert_db_orders->pay_type_id_fk  =  $rs->pay_type;
     $insert_db_orders->business_location_id_fk =  $business_location_id;
-    $insert_db_orders->distribution_channel_id_fk = '2';
+    $insert_db_orders->distribution_channel_id_fk = '3';
     $insert_db_orders->order_status_id_fk =  '2';
 
 		foreach ($data as $value) {

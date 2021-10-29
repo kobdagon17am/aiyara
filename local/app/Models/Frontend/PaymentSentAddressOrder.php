@@ -24,7 +24,7 @@ class PaymentSentAddressOrder extends Model
             $insert_db_orders->delivery_location_frontend = $rs->receive;
             $insert_db_orders->delivery_province_id = $rs->province_id_fk;
             $insert_db_orders->code_order = $code_order;
-            $insert_db_orders->distribution_channel_id_fk = 2;
+            $insert_db_orders->distribution_channel_id_fk = 3;
             $insert_db_orders->purchase_type_id_fk = $rs->type;
             $insert_db_orders->branch_id_fk = 12;
 
