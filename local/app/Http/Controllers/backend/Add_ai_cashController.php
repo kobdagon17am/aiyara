@@ -168,6 +168,7 @@ class Add_ai_cashController extends Controller
     {
 // dd($request->all());
 // dd($request->id);
+// dd($id);
       if(isset($request->approved)){
           // dd($request->all());
             // $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
@@ -198,7 +199,7 @@ class Add_ai_cashController extends Controller
 
             // if($add_aicash['status'] == 'success'){
               // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
-               return $this->form($request->id);
+               // return $this->form($request->id);
 
             // }else{
                // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
@@ -206,6 +207,21 @@ class Add_ai_cashController extends Controller
             // return redirect()->to(url("backend/add_ai_cash/".$request->id."/edit"));
 
             // return redirect()->to(url("backend/add_ai_cash"));
+
+            $sRow = \App\Models\Backend\Add_ai_cash::find($id);
+            $sRow->approve_status = 2  ;
+            $sRow->approver = \Auth::user()->id  ;
+            $sRow->approve_date = now()  ;
+
+            $sRow->save();
+
+            if($sRow->code_order==""){
+              $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+              DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='".$id."') ");
+            }
+
+
+            return redirect()->to(url("backend/po_approve"));
 
       }else{
            return $this->form($id);
@@ -215,6 +231,9 @@ class Add_ai_cashController extends Controller
 
    public function form($id=NULL)
     {
+
+      // dd($id);
+
       \DB::beginTransaction();
       try {
           if( $id ){
@@ -293,7 +312,8 @@ class Add_ai_cashController extends Controller
 
               }
            }
-          // dd(str_replace(',','',request('fee_amt')));
+          // dd(str_replace(',','',request('aicash_amt')));
+          // dd('sssss');
 
           $sRow->business_location_id_fk    = @\Auth::user()->business_location_id_fk;
           $sRow->branch_id_fk    = @\Auth::user()->branch_id_fk;
@@ -310,6 +330,7 @@ class Add_ai_cashController extends Controller
           if(!empty(request('account_bank_id'))){
             $sRow->transfer_money_datetime = request('transfer_money_datetime');
           }
+
 
           $request = app('request');
               if ($request->hasFile('image01')) {

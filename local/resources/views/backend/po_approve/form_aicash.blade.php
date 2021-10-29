@@ -126,7 +126,7 @@
                           <div class="form-group row">
                             <label for="pay_type_id_fk" class="col-md-4 col-form-label"> รูปแบบการชำระเงิน :</label>
                             <div class="col-md-8">
-                               <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " required="" >
+                               <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " disabled=""  >
                                 <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
@@ -203,7 +203,7 @@
                           <div class="col-md-8 ">
                              @if(@$sAccount_bank)
                               @foreach(@$sAccount_bank AS $r)
-                                  <input type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
+                                  <input disabled="" type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
                             @endif  
                           </div>
@@ -211,9 +211,9 @@
 
                      <?php $div_account_bank_id = @$sRow->account_bank_id==0||@$sRow->account_bank_id==''?"display: none;":''; ?>
                         <div class="form-group row div_account_bank_id " style="<?=$div_account_bank_id?>">
-                          <label for="" class="col-md-4 col-form-label">  </label>
+                          <label for="" class="col-md-4 col-form-label"> วัน เวลา ที่โอน  </label>
                            <div class="col-md-8 d-flex ">
-                           <button type="button" class="btn btn-info btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
+                           <!-- <button type="button" class="btn btn-info btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button> -->
                             <?php if(!empty(@$sRow->transfer_money_datetime)){
                               $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
                               $ds = explode("-", $ds1);
@@ -222,7 +222,7 @@
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
                             }else{$ds='';} ?>           
-                              <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
+                              <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" disabled="" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
 
                           </div>
@@ -236,7 +236,7 @@
                                   <span width="100" class="span_file_slip" >
                                     @IF(!empty(@$sRow->file_slip))
                                       <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" > 
-                                      <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                               <!--        <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> -->
                                     @ELSE
                                       <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" > 
                                     @ENDIF
@@ -246,16 +246,15 @@
 
 
 
-                      <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
+                      <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==1||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
                         <div class="form-group row show_div_transfer_price " style="<?=$show_div_transfer_price?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินโอน : </label>
                           <div class="col-md-8 ">
                               
-                            @IF(@$sRow->pay_type_id_fk==8)
-                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
-                            @ELSE
-                            <input class="form-control CalPrice input-airight f-ainumber-18-b input-aifill " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
-                            @ENDIF
+                    
+                              <input class="form-control CalAicashAmt NumberOnly input-airight f-ainumber-18 input-aifill" type="text" value="{{number_format(@$sRow->transfer_price,2)}}" name="transfer_price"  {{@$rr2}} >
+
+
                                      
                           </div>
                         </div>
@@ -269,7 +268,7 @@
                       </div>
 
 
-                      <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
+                      <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
                         <div class="form-group row show_div_cash_pay " style="<?=$show_div_cash_pay?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินสดที่ต้องชำระ : </label>
                           <div class="col-md-8 ">
