@@ -194,7 +194,9 @@
                 <img src="{{ asset('frontend/salepage/Aiyara/24.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
+              <a href="{{ url('registermember/' .$rs['data']->user_name)}}">
                 <img src="{{ asset('frontend/salepage/Aiyara/25.jpg') }}" class="img-fluid" alt="">
+              </a>
             </div>
             <div class="row justify-content-center mt-2">
                 <img src="{{ asset('frontend/salepage/Aiyara/26.jpg') }}" class="img-fluid" alt="">

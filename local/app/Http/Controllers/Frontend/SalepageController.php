@@ -176,6 +176,26 @@ public function aiyara($user_name=''){
 		return $resule;
 	}
 
+
+  public static function save_type_register(Request $req){
+		$user_name =  Auth::guard('c_user')->user()->user_name;
+		try {
+
+				$update_type = DB::table('customers')//update บิล
+				->where('user_name',$user_name)
+				->update(['registers_setting'=>$req->type]);
+
+			$resule = ['status'=>'success','message'=>'Save Type Register Success'];
+
+		}catch(Exception $e) {
+
+			$resule = ['status'=>'fail','message'=>$e];
+
+		}
+
+		return $resule;
+	}
+
 		public static function save_js(Request $req){
 
 			$js_page_1= (trim($req->js_page_1) == '') ? null : $req->js_page_1;

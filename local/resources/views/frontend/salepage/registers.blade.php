@@ -91,13 +91,13 @@
 
                                         <div class="card-block ">
 
-                                            <form action="{{ route('register_new_member') }}"
-                                                id="register_new_member" method="POST" enctype="multipart/form-data">
+                                            <form action="{{ route('register_member_salepage') }}"
+                                                id="register_member_salepage" method="POST" enctype="multipart/form-data">
                                                 @csrf
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
-                                                        <label><b>Uplind ID</b></label>
+                                                        <label><b>รหัสผู้แนะนำ</b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
                                                             style="font-size: 15px;padding: 9px 9px;">
                                                             <font style="color: #000;">

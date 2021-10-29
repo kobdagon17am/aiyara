@@ -11,7 +11,7 @@
     <meta name="keywords" content="Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
     <meta name="author" content="codedthemes" /> --}}
     <!-- Favicon icon -->
-    <link rel="icon" href="{{asset('frontend/assets/icon/logo_icon.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('frontend/assets/icon/logo_icon.png') }}" type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
     <!-- Required Fremwork -->
@@ -37,20 +37,20 @@
     <link rel="stylesheet" type="text/css"
         href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
 
-        <style>
-          .icons-alert:before {
-              top: 11px;
-          }
+    <style>
+        .icons-alert:before {
+            top: 11px;
+        }
 
-          .pcoded-main-container {
+        .pcoded-main-container {
             margin-top: 0px !important;
-          }
+        }
 
-          .pcoded .pcoded-header[header-theme="theme5"] {
-             background: linear-gradient(to right, #18c160, #18c160);
-            }
+        .pcoded .pcoded-header[header-theme="theme5"] {
+            background: linear-gradient(to right, #18c160, #18c160);
+        }
 
-      </style>
+    </style>
 
 </head>
 <!-- Menu horizontal icon fixed -->
@@ -63,15 +63,9 @@
             <nav class="navbar header-navbar pcoded-header">
                 <div class="navbar-wrapper">
                     <div class="navbar-logo">
-
-
                         <img class="img-fluid" src="{{ asset('frontend/assets/images/logo.png') }}" width="140"
                             alt="Theme-Logo" />
-
-
                     </div>
-
-
                 </div>
             </nav>
 
@@ -83,7 +77,73 @@
                             <!-- Main-body start -->
                             <div class="main-body">
                                 <div class="page-wrapper">
-                                  ....
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-4">
+
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="usre-image">
+                                                        <img src="{{ asset('local/public/images/ex.png') }}"
+                                                            class="img-radius" width="100">
+                                                    </div>
+                                                    <h6 class="f-w-600 m-t-10 m-b-10">
+                                                        {{ $data['data']['business_name'] }}</h6>
+                                                    <h6 class="f-w-600 m-t-10 m-b-10">
+                                                        {{ $data['data']['prefix_name'] }}
+                                                        {{ $data['data']['first_name'] }}
+                                                        {{ $data['data']['last_name'] }}</h6>
+                                                    {{-- <p class="text-muted">Regiter Date | {{ data('Y-m-d',strtotime($data['data']['business_name'] )) }}</p> --}}
+
+                                                    <ul class="list-unstyled activity-leval m-b-10">
+                                                        <li class="active"></li>
+                                                        <li class="active"></li>
+                                                        <li class="active"></li>
+                                                        <li class="active"></li>
+                                                        <li class="active"></li>
+                                                    </ul>
+
+                                                    <div class="input-group input-group-primary">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-user"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control"
+                                                            style="font-size: 18px;color: #000;font-weight: bold;"
+                                                            value="{{ $data['data']['user_name'] }}" disabled="">
+                                                    </div>
+
+                                                    <div class="input-group input-group-primary">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-key"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control"
+                                                            style="font-size: 18px;color: #000;font-weight: bold;"
+                                                            value="{{ $data['pass'] }}" disabled="">
+                                                    </div>
+
+                                                    <p class="m-t-15 text-muted"><b
+                                                            class="text-success">ลงทะเบียนสำเร็จ</b>
+                                                        <br>กรุณาบันทึกข้อมูลการลงทะเบียนเพื่อเพื่อใช้ในการเข้าสู่ระบบ
+                                                    </p>
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-md-12 text-center">
+
+                                                                <a  href="{{ route('login') }}" class="btn btn-primary"><i
+                                                                        class="fa fa-sitemap"></i> Login </a>
+
+
+                                                        </div>
+                                                    </div>
+                                                    {{-- <div class="row justify-content-center user-social-link">
+                                        <div class="col-auto"><a href="#!"><i class="fa fa-facebook text-facebook"></i></a></div>
+                                        <div class="col-auto"><a href="#!"><i class="fa fa-twitter text-twitter"></i></a></div>
+                                        <div class="col-auto"><a href="#!"><i class="fa fa-dribbble text-dribbble"></i></a></div>
+                                    </div> --}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
 
                                 </div>
 

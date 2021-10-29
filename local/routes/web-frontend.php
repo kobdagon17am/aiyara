@@ -253,6 +253,9 @@ Route::get('{user_name?}/5','Frontend\SalepageController@ailada')->name('5');
 Route::get('{user_name?}/6','Frontend\SalepageController@trimmax')->name('6');
 
 Route::get('registermember/{user_name?}','Frontend\RegisterSalepageController@index')->name('registermember');
+Route::get('registermember/{user_name?}','Frontend\RegisterSalepageController@index')->name('registermember');
+
+Route::post('register_member_salepage','Frontend\RegisterSalepageController@register_member_salepage')->name('register_member_salepage');
 
 // Route::get('aiyara/{user_name?}','Frontend\SalepageController@aiyara')->name('aiyara');
 // Route::get('aimmura/{user_name?}','Frontend\SalepageController@aimmura')->name('aimmura');
@@ -262,6 +265,8 @@ Route::get('registermember/{user_name?}','Frontend\RegisterSalepageController@in
 // Route::get('trimmax/{user_name?}','Frontend\SalepageController@trimmax')->name('trimmax');
 
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
+
+Route::post('salepage/save_type_register','Frontend\SalepageController@save_type_register')->name('salepage/save_type_register');
 Route::post('salepage/save_contact','Frontend\SalepageController@save_contact')->name('salepage/save_contact');
 Route::post('salepage/save_js','Frontend\SalepageController@save_js')->name('salepage/save_js');
 Route::post('salepage/save_url', 'Frontend\SalepageController@saveUrl')->name('salepage/save_url');

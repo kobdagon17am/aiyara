@@ -76,14 +76,26 @@
             </nav>
 
             <div class="pcoded-main-container">
-
                 <div class="pcoded-wrapper ">
                     <div class="pcoded-content">
                         <div class="pcoded-inner-content">
                             <!-- Main-body start -->
                             <div class="main-body">
                                 <div class="page-wrapper">
-                                  ....
+                                  <div class="row justify-content-center">
+                                    <div class="col-md-6 col-lg-6">
+                                      <div class="card">
+                                          <div class="card-block text-center">
+                                              <i class="fa fa-times-circle-o text-c-pink d-block f-80"></i>
+                                              <h4 class="m-t-20">EROR REGISTER</h4>
+                                              <p class="m-b-20">{{ @$data['message'] }}</p>
+                                              {{-- <button class="btn btn-danger btn-sm btn-round">Upgrade to VIP</button> --}}
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  </div>
+
 
                                 </div>
 

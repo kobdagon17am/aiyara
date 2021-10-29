@@ -8,6 +8,55 @@ use Auth;
 class LineModel extends Model
 {
 
+  public static function last_line($username,$line_type){
+
+		$data =array();
+
+
+      $i =1;
+      $j = 2;
+
+      $last_id = DB::table('customers')
+      ->select('upline_id','user_name')
+      ->where('line_type','=',$line_type)
+      ->where('upline_id','=',$username)
+      ->first();
+
+      if(empty($last_id)){
+        return $username;
+      }
+
+      for ($i; $i<$j; $i++) {
+
+        $last_id = DB::table('customers')
+        ->select('upline_id','user_name')
+		    ->where('line_type','=',$line_type)
+        ->where('upline_id','=',$username)
+        ->first();
+
+        if($last_id){
+          $i = 1;
+          $j = 3;
+          $username	= $last_id->user_name;
+        }else{
+          $i = 1;
+          $j = 0;
+          $last_id = DB::table('customers')
+          ->select('upline_id','user_name')
+		      ->where('line_type','=',$line_type)
+          ->where('user_name','=',$username)
+          ->first();
+
+          $last_id = $last_id->upline_id;
+
+        }
+
+      }
+
+    return $username;
+
+  }
+
 	public static function line_all($username,$line_type=''){
 		$data =array();
 
@@ -250,7 +299,7 @@ public static function check_line($username){
 public static function check_type_introduce($introduce_id,$under_line_id){//คนแนะนำ//สร้างภายใต้ id
 
 	$data_user = DB::table('customers')
-	->select('upline_id','user_name','upline_id')
+	->select('upline_id','user_name','upline_id','line_type')
 	->where('user_name','=',$under_line_id)
 	->first();
 
@@ -268,7 +317,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 		for ($i=1; $i <= $j ; $i++){
 			if($i == 1){
 				$data = DB::table('customers')
-				->select('upline_id','user_name','upline_id')
+        ->select('upline_id','user_name','upline_id','line_type')
 				->where('user_name','=',$username)
 			//->where('upline_id','=',$use_id)
 				->first();
@@ -289,7 +338,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 				}else{
 
 					$data = DB::table('customers')
-					->select('upline_id','user_name','upline_id')
+					->select('upline_id','user_name','upline_id','line_type')
 					->where('id','=',$data->upline_id)
 					->first();
 
@@ -311,9 +360,11 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 		if($resule['status'] == 'fail'){
 
 			$data_account = DB::table('customers')
-			->select('upline_id','user_name','upline_id')
+			->select('upline_id','user_name','upline_id','line_type')
 			->where('user_name','=',$introduce_id)
 			->first();
+
+
 
 			$username = $data_account->upline_id;
 			$j = 2;
@@ -323,7 +374,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 					$j =0;
 				}else{
 					$data_account = DB::table('customers')
-					->select('upline_id','user_name','upline_id')
+					->select('upline_id','user_name','upline_id','line_type')
 					->where('user_name','=',$username)
 					->first();
 					$upline_id_arr[] = $data_account->user_name;

@@ -12,6 +12,7 @@ class Register extends Model
         $type_introduce = LineModel::check_type_introduce($introduce_id,$req->upline_id);
 
         if( $type_introduce['status'] == 'success'){
+
             $introduce_type = $type_introduce['data']->line_type;
         }else{
             $introduce_type = '';

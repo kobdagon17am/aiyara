@@ -1,10 +1,11 @@
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
-<style>
-  code {
-    color: #009688 !important;
-}
-</style>
+    <style>
+        code {
+            color: #009688 !important;
+        }
+
+    </style>
 @endsection
 
 @section('conten')
@@ -14,10 +15,7 @@
 
         <div class="col-md-5 col-xl-5">
             <div class="card">
-                {{-- <div class="card-header">
-        <h5>Setting Salepage</h5>
 
-      </div> --}}
 
                 <div class="card-header">
                     <h5 class="card-header-text">Setting Salepage All </h5>
@@ -73,127 +71,201 @@
             </div>
 
             <div class="row">
-              <div class="col-md-12">
-                  <div class="card">
-                      <div class="card-header">
-                          <h5 class="card-header-text mb-0">Setting Salepage Name URL</h5>
-                      </div>
-                      <div class="card-block">
-                        <div class="form-group">
-                          <?php
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-header-text mb-0">Setting Salepage Name URL</h5>
+                        </div>
+                        <div class="card-block">
+                            <div class="form-group">
+                                <?php
 
-                          if (empty($data->name_s1)) {
-                              $url_s1 = Auth::guard('c_user')->user()->user_name;
-                          } else {
-                              $url_s1 = $data->name_s1;
-                          }
+                                if (empty($data->name_s1)) {
+                                    $url_s1 = Auth::guard('c_user')->user()->user_name;
+                                } else {
+                                    $url_s1 = $data->name_s1;
+                                }
 
-                          ?>
-                            <label>Example Url :</label> <code>{{ url($url_s1.'/1') }}</code>
-                            <div class="input-group input-group-button mb-0">
+                                ?>
+                                <label>Example Url :</label> <code>{{ url($url_s1 . '/1') }}</code>
+                                <div class="input-group input-group-button mb-0">
 
-                                <input type="text" class="form-control" name="name_s1" id="name_s1" placeholder="Edit Name Url"
-                                    value="{{ $url_s1 }}">
-                                <span class="input-group-addon btn btn-primary btn-save-url">
-                                    <span class="">Edit Url</span>
+                                    <input type="text" class="form-control" name="name_s1" id="name_s1"
+                                        placeholder="Edit Name Url" value="{{ $url_s1 }}">
+                                    <span class="input-group-addon btn btn-primary btn-save-url">
+                                        <span class="">Edit Url</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <?php
+                                if (empty($data->name_s1)) {
+                                    $url_s1 = Auth::guard('c_user')->user()->user_name;
+                                } else {
+                                    $url_s1 = $data->name_s1;
+                                }
+
+                                if (empty($data->name_s2)) {
+                                    $url_s2 = Auth::guard('c_user')->user()->user_name;
+                                } else {
+                                    $url_s2 = $data->name_s2;
+                                }
+
+                                if (empty($data->name_s3)) {
+                                    $url_s3 = Auth::guard('c_user')->user()->user_name;
+                                } else {
+                                    $url_s3 = $data->name_s3;
+                                }
+
+                                if (empty($data->name_s4)) {
+                                    $url_s4 = Auth::guard('c_user')->user()->user_name;
+                                } else {
+                                    $url_s4 = $data->name_s4;
+                                }
+
+                                if (empty($data->name_s5)) {
+                                    $url_s5 = Auth::guard('c_user')->user()->user_name;
+                                } else {
+                                    $url_s5 = $data->name_s5;
+                                }
+
+                                if (empty($data->name_s6)) {
+                                    $url_s6 = Auth::guard('c_user')->user()->user_name;
+                                } else {
+                                    $url_s6 = $data->name_s6;
+                                }
+
+                                ?>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <p> <label>1. Aiyara</label>
+                                            {{-- <button type="button" class="btn btn-default waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="tooltip on top">Top
+                              </button> --}}
+                                            {{-- <code>{{ route('aiyara', $url_s1) }}</code> --}}
+                                            <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                                data-toggle="tooltip" data-placement="top"
+                                                data-original-title="Copy Url : {{ url($url_s1 . '/1') }}" href="#!"
+                                                data-url="{{ url($url_s1 . '/1') }}"><b stye="color:#000">Copy Url</b></a>
+                                            <br>
+                                            <label>2. Aimmura</label>
+                                            {{-- <code>{{ route('aimmura', $url_s2) }}</code> --}}
+                                            <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                                data-toggle="tooltip" data-placement="top"
+                                                data-original-title="Copy Url : {{ url($url_s2 . '/2') }}" href="#!"
+                                                data-url="{{ url($url_s2 . '/2') }}"><b stye="color:#000">Copy Url</b></a>
+                                            <br>
+
+                                            <label>3. Cashewy Drink</label>
+                                            {{-- <code>{{ route('cashewy', $url_s3) }}</code> --}}
+                                            <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                                data-toggle="tooltip" data-placement="top"
+                                                data-original-title="Copy Url : {{ url($url_s3 . '/3') }}" href="#!"
+                                                data-url="{{ url($url_s3 . '/3') }}"><b stye="color:#000">Copy
+                                                    Url</b></a><br>
+
+
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <p>
+                                            <label>4. Aifacad</label>
+                                            {{-- <code>{{ route('aifacad', $url_s4) }}</code> --}}
+                                            <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                                data-toggle="tooltip" data-placement="top"
+                                                data-original-title="Copy Url : {{ url($url_s4 . '/4') }}" href="#!"
+                                                data-url="{{ url($url_s4 . '/4') }}"><b stye="color:#000">Copy
+                                                    Url</b></a>
+                                            <br>
+
+                                            <label>5. Alada</label>
+                                            {{-- <code>{{ url('ailada.'/,' $url_s5) }}</code> --}}
+                                            <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                                data-toggle="tooltip" data-placement="top"
+                                                data-original-title="Copy Url : {{ url($url_s5 . '/5') }}" href="#!"
+                                                data-url="{{ url($url_s5 . '/5') }}"><b stye="color:#000">Copy
+                                                    Url</b></a>
+                                            <br>
+                                            <label>6. TrimMax</label>
+                                            {{-- <code>{{ url('trimma.'/'', $url_s6) }}</code> --}}
+                                            <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
+                                                data-toggle="tooltip" data-placement="top"
+                                                data-original-title="Copy Url : {{ url($url_s6 . '/6') }}" href="#!"
+                                                data-url="{{ url($url_s6 . '/6') }}"><b stye="color:#000">Copy
+                                                    Url</b></a>
+                                            <br>
+                                        </p>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-header-text">กำหนดสายข้อมูลการลงทะเบียนสมาชิกใหม่ที่มาจากหน้าเว็บ </h5>
+                    @if ($canAccess)
+                        <button id="edit-Contact" type="button" onclick="save_type_register()"
+                            class="btn btn-primary waves-effect waves-light f-right">
+                            <i class="icofont icofont-edit"></i> Save
+                        </button>
+                    @endif
+                </div>
+
+                <div class="card-block">
+                    <?php $url_registers = Auth::guard('c_user')->user()->user_name; ?>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
+                            {{-- <h4 class="sub-title">Radio Fill Button</h4> --}}
+                            <div class="form-radio">
+                                <form>
+                                    <div class="radio radio-inline">
+                                        <label>
+                                            <input type="radio" name="type_regis" value="A" @if (Auth::guard('c_user')->user()->registers_setting == 'A') checked="checked" @endif>
+                                            <i class="helper"></i> A
+                                        </label>
+                                    </div>
+                                    <div class="radio radio-inline">
+                                        <label>
+                                            <input type="radio" name="type_regis" value="B" @if (Auth::guard('c_user')->user()->registers_setting == 'B') checked="checked" @endif>
+                                            <i class="helper"></i> B
+                                        </label>
+                                    </div>
+                                    <div class="radio radio-inline">
+                                        <label>
+                                            <input type="radio" name="type_regis" value="C" @if (Auth::guard('c_user')->user()->registers_setting == 'C') checked="checked" @endif>
+                                            <i class="helper"></i> C
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-sm-12">
+                            <div class="input-group input-group-button">
+                                <input type="text" class="form-control"
+                                    value="{{ url('registermember/' . $url_registers) }}">
+                                <span class="input-group-addon btn btn-primary" id="basic-addon10" >
+                                    <span class="copy-to-clipboard" data-url="{{ url('registermember/' . $url_registers) }}">Copy Url</span>
                                 </span>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                          <?php
-                          if (empty($data->name_s1)) {
-                              $url_s1 = Auth::guard('c_user')->user()->user_name;
-                          } else {
-                              $url_s1 = $data->name_s1;
-                          }
-
-                          if (empty($data->name_s2)) {
-                              $url_s2 = Auth::guard('c_user')->user()->user_name;
-                          } else {
-                              $url_s2 = $data->name_s2;
-                          }
-
-                          if (empty($data->name_s3)) {
-                              $url_s3 = Auth::guard('c_user')->user()->user_name;
-                          } else {
-                              $url_s3 = $data->name_s3;
-                          }
-
-                          if (empty($data->name_s4)) {
-                              $url_s4 = Auth::guard('c_user')->user()->user_name;
-                          } else {
-                              $url_s4 = $data->name_s4;
-                          }
-
-                          if (empty($data->name_s5)) {
-                              $url_s5 = Auth::guard('c_user')->user()->user_name;
-                          } else {
-                              $url_s5 = $data->name_s5;
-                          }
-
-                          if (empty($data->name_s6)) {
-                              $url_s6 = Auth::guard('c_user')->user()->user_name;
-                          } else {
-                              $url_s6 = $data->name_s6;
-                          }
-
-                          ?>
-                          <hr>
-                          <div class="row">
-                            <div class="col-md-6">
-
-                              <p> <label>1. Aiyara</label>
-                              {{-- <button type="button" class="btn btn-default waves-effect" data-toggle="tooltip" data-placement="top" title="" data-original-title="tooltip on top">Top
-                              </button> --}}
-                                {{-- <code>{{ route('aiyara', $url_s1) }}</code> --}}
-                                <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s1.'/1') }}"  href="#!" data-url="{{ url($url_s1.'/1') }}"><b stye="color:#000">Copy Url</b></a>
-                                <br>
-                                <label>2. Aimmura</label>
-                                {{-- <code>{{ route('aimmura', $url_s2) }}</code> --}}
-                                <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                                data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s2.'/2') }}" href="#!" data-url="{{ url($url_s2.'/2') }}"><b stye="color:#000">Copy Url</b></a>
-                                <br>
-
-                                <label>3. Cashewy Drink</label>
-                                {{-- <code>{{ route('cashewy', $url_s3) }}</code> --}}
-                                 <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-
-                                 data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s3.'/3') }}" href="#!" data-url="{{ url($url_s3.'/3') }}"><b stye="color:#000">Copy Url</b></a><br>
-
-
-                            </div>
-
-                            <div class="col-md-6">
-                              <p>
-                              <label>4. Aifacad</label>
-                              {{-- <code>{{ route('aifacad', $url_s4) }}</code> --}}
-                              <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s4.'/4') }}" href="#!" data-url="{{ url($url_s4.'/4') }}"  ><b stye="color:#000">Copy Url</b></a>
-                              <br>
-
-                              <label>5. Alada</label>
-                              {{-- <code>{{ url('ailada.'/,' $url_s5) }}</code>  --}}
-                              <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s5.'/5') }}" href="#!" data-url="{{ url($url_s5.'/5') }}"><b stye="color:#000">Copy Url</b></a>
-                              <br>
-                              <label>6. TrimMax</label>
-                              {{-- <code>{{ url('trimma.'/'', $url_s6) }}</code>  --}}
-                              <a href="#!" class="pcoded-badge label label-warning copy-to-clipboard"
-                              data-toggle="tooltip" data-placement="top" data-original-title="Copy Url : {{ url($url_s6.'/6') }}" href="#!" data-url="{{ url($url_s6.'/6') }}"><b stye="color:#000">Copy Url</b></a>
-                              <br>
-                              </p>
-
-                            </div>
-                          </div>
-
-
-                        </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
+                </div>
+            </div>
 
 
         </div>
@@ -357,6 +429,67 @@
 
         }
 
+        function save_type_register() {
+
+            Swal.fire({
+                title: 'Do you want to save the changes?',
+                // showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: `Save`,
+                // denyButtonText: `Don't save`,
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+
+                    var radios = document.getElementsByName('type_regis');
+
+                    for (var i = 0, length = radios.length; i < length; i++) {
+                        if (radios[i].checked) {
+                            // do whatever you want with the checked radio
+                           var type = radios[i].value;
+                        }
+                    }
+                    $.ajax({
+                            url: '{{ route('salepage/save_type_register') }}',
+                            type: 'POST',
+
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                type: type,
+                            },
+                        })
+                        .done(function(data) {
+
+                            if (data['status'] == 'success') {
+                                Swal.fire('Saved!', '', 'success');
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Saved Fail',
+                                    // text: 'Something went wrong!',
+                                    // footer: '<a href>Why do I have this issue?</a>'
+                                })
+
+                            }
+
+                        })
+                        .fail(function() {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Saved Fail',
+                                // text: 'Something went wrong!',
+                                // footer: '<a href>Why do I have this issue?</a>'
+                            })
+                            console.log("error");
+                        })
+
+                }
+            })
+
+        }
+
+
 
         function save_js() {
 
@@ -429,7 +562,7 @@
                 document.execCommand('copy');
                 document.body.removeChild(el);
 
-                Swal.fire('Copy Url',el.value, 'success');
+                Swal.fire('Copy Url', el.value, 'success');
             })
         })
 
@@ -478,7 +611,7 @@
                                     location.reload();
                                 }
                                 if (response.fail) {
-                                   alert('fails')
+                                    alert('fails')
                                 }
                             },
                             error: function(response) {
