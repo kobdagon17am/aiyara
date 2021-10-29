@@ -1172,10 +1172,14 @@ class FrontstoreController extends Controller
 // dd(request('branch_id_fk'));
 // dd($request->delivery_location);
 
-              $db_orders = DB::select(" select invoice_code from db_orders where id=".$sRow->id." ");
+              $db_orders = DB::select(" select code_order from db_orders where id=".$sRow->id." ");
 
              if(@$request->delivery_location  == 0 || @$request->delivery_location  == 4 ){
                    $sentto_branch_id = request('sentto_branch_id')?request('sentto_branch_id'):0;
+              // dd($sentto_branch_id);
+              // dd(request('sentto_branch_id'));
+              // dd($request->frontstore_id);
+                   
                    $sRow->sentto_branch_id    = request('sentto_branch_id');
                    DB::select("UPDATE db_orders SET sentto_branch_id=".$sentto_branch_id.", address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
               }

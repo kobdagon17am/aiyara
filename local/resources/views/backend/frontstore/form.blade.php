@@ -186,12 +186,16 @@
 18  Gift Voucher + TrueMoney
 
 */
+if(@$sRow->check_press_save==2){
 
     if(@$sRow->pay_type_id_fk==6||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11){
       $pay_type_transfer_aicash = " disabled ";
     }else{
       $pay_type_transfer_aicash = "";
     }
+  }else{
+    $pay_type_transfer_aicash = "";
+  }
 
  ?>
 
@@ -753,6 +757,11 @@
 
 // $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
 // dd($data);
+
+                    // dd(@$sRow->check_press_save);
+                    // dd(@$disChannel3);
+                    // dd(@$sRow->shipping_special);
+                    // dd(@$pay_type_transfer_aicash);
 
                     ?>
 
@@ -2778,9 +2787,6 @@
             // localStorage.setItem('branch_id_fk', id);
         });
 
-        // if(localStorage.getItem('branch_id_fk')){
-        //     $('#branch_id_fk').val(localStorage.getItem('branch_id_fk')).select2();
-        // }
 
 
         // if(localStorage.getItem('aicash_remain')){
@@ -4894,6 +4900,12 @@ $(document).ready(function() {
 
 
 
+              $(document).on('change', '#sentto_branch_id', function(event) {
+                  var id = $("#sentto_branch_id").val();
+                  localStorage.setItem('sentto_branch_id',id);
+              });
+
+
                 $(document).on('change', '#pay_type_id_fk', function(event) {
 
                         // event.preventDefault();
@@ -6206,6 +6218,10 @@ $(document).ready(function() {
 
           if(localStorage.getItem('pay_type_id_fk')){
               $('#pay_type_id_fk').val(localStorage.getItem('pay_type_id_fk')).select2();
+          }
+
+          if(localStorage.getItem('sentto_branch_id')){
+              $('#sentto_branch_id').val(localStorage.getItem('sentto_branch_id')).select2();
           }
 
           $(document).on('submit', '#frm-main', function(event) {
