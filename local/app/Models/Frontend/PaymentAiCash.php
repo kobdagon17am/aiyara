@@ -14,7 +14,7 @@ class PaymentAiCash extends Model
       DB::BeginTransaction();
       $price = str_replace(',', '', $rs->price);
       $business_location_id = Auth::guard('c_user')->user()->business_location_id;
-      ห
+
       if(empty($business_location_id)){
         $business_location_id = 1;
       }
@@ -22,6 +22,21 @@ class PaymentAiCash extends Model
       $code_order = RunNumberPayment::run_number_aicash($business_location_id);
 
       try {
+
+        $file_slip = $rs->file_slip;
+        if (isset($file_slip)) {
+            $url = 'local/public/files_slip/' . date('Ym');
+
+            $f_name = date('YmdHis') . '_' . $customer_id . '.' . $file_slip->getClientOriginalExtension();
+            if ($file_slip->move($url, $f_name)) {
+                DB::table('payment_slip')
+                    ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name, 'order_id' => $id,'code_order' =>$code_order, 'type' => 'ai-cash']);
+            }
+
+            $url = $url.'/'.$f_name;
+
+        }
+
 
           $id = DB::table('db_add_ai_cash')->insertGetId(
             [
@@ -39,21 +54,11 @@ class PaymentAiCash extends Model
                 'approve_status' => 0,
                 'order_status_id_fk' => 2,
                 'upto_customer_status' => 0,
-
+                'file_slip' =>$url,
                 'note' => 'Add Ai-Cash',
             ]
         );
 
-          $file_slip = $rs->file_slip;
-          if (isset($file_slip)) {
-              $url = 'local/public/files_slip/' . date('Ym');
-
-              $f_name = date('YmdHis') . '_' . $customer_id . '.' . $file_slip->getClientOriginalExtension();
-              if ($file_slip->move($url, $f_name)) {
-                  DB::table('payment_slip')
-                      ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name, 'order_id' => $id,'code_order' =>$code_order, 'type' => 'ai-cash']);
-              }
-          }
 
           $resule = ['status' => 'success', 'message' => 'Add Ai-Cash Success'];
           DB::commit();
