@@ -2732,13 +2732,14 @@
           var v = $(e.target).closest('.input-group').find('input.quantity').val();
           var limited_amt_person = $(this).attr('limited_amt_person');
           // alert(v+":"+limited_amt_person);
+          if(limited_amt_person>0){
+              if(v>=limited_amt_person){
+                alert("Promotion นี้ กำหนดจำนวนจำกัดต่อคน ไว้เท่ากับ "+limited_amt_person);
+                $(e.target).closest('.input-group').find('input.quantity').val(limited_amt_person);
+              }
 
-          if(v>=limited_amt_person){
-            alert("Promotion นี้ กำหนดจำนวนจำกัดต่อคน ไว้เท่ากับ "+limited_amt_person);
-            $(e.target).closest('.input-group').find('input.quantity').val(limited_amt_person);
+               $(e.target).closest('.input-group').find('input.quantity').attr('max',limited_amt_person);
           }
-
-          $(e.target).closest('.input-group').find('input.quantity').attr('max',limited_amt_person);
 
           const isNegative = $(e.target).closest('.btn-minus-product-pro').is('.btn-minus-product-pro');
           const input = $(e.target).closest('.input-group').find('input');
