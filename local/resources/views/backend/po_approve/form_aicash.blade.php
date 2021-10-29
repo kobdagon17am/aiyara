@@ -289,7 +289,7 @@
 
                   @if( !empty(@$sRow->id) )
                   @if( $sPermission==1 || @$menu_permit->can_approve==1 )
-                  @if( @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 )
+                  @if( @$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 )
 
                               <div class="myBorder" style="">
                           
