@@ -1318,14 +1318,14 @@ class FrontstoreController extends Controller
 
                // dd($ch_aicash_02[0]->aicash_price);
                // ถ้าค่าที่ส่งมาตัด รวมกับ ค่าเดิม แล้วเกินค่าเดิม ให้ลบกันได้เลย แต่ถ้า รวมแล้วน่อยกว่า ให้เอาค่าก่อนหน้า มาบวกก่อน ค่อยลบออก
-              if(@$ch_aicash_01[0]->ai_cash>0){
-                 if( ($ch_aicash_02[0]->aicash_price + $ch_aicash_01[0]->ai_cash) >= $ch_aicash_01[0]->ai_cash ){
-                    DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$ch_aicash_02[0]->aicash_price.") where id=".$ch_aicash_02[0]->member_id_aicash." ");
-                 }else{
-                      $x = $ch_aicash_01[0]->ai_cash - $ch_aicash_02[0]->aicash_price ;
-                      DB::select(" UPDATE customers SET ai_cash=($x) where id=".$ch_aicash_02[0]->member_id_aicash." ");
-                 }
-               }
+              // if(@$ch_aicash_01[0]->ai_cash>0){
+              //    if( ($ch_aicash_02[0]->aicash_price + $ch_aicash_01[0]->ai_cash) >= $ch_aicash_01[0]->ai_cash ){
+              //       DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$ch_aicash_02[0]->aicash_price.") where id=".$ch_aicash_02[0]->member_id_aicash." ");
+              //    }else{
+              //         $x = $ch_aicash_01[0]->ai_cash - $ch_aicash_02[0]->aicash_price ;
+              //         DB::select(" UPDATE customers SET ai_cash=($x) where id=".$ch_aicash_02[0]->member_id_aicash." ");
+              //    }
+              //  }
 
 
                $r_addr = DB::select("select address_sent_id_fk from db_orders WHERE (id='".$request->frontstore_id."')");
