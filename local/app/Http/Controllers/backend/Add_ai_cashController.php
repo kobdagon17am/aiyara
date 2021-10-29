@@ -77,7 +77,7 @@ class Add_ai_cashController extends Controller
             $sRow = \App\Models\Backend\Add_ai_cash::find($id);
        // dd($sRow);
 
-       $sPay_type = DB::select(" select * from dataset_pay_type where id in(5,7,8,10); ");
+       $sPay_type = DB::select(" select * from dataset_pay_type where id in(1,5,7,8,10); ");
 
        if($sRow){
          $action_user = \App\Models\Backend\Permission\Admin::where('id', $sRow->action_user)->get();
