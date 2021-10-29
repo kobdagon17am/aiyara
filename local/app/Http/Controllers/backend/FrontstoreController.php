@@ -251,7 +251,7 @@ class FrontstoreController extends Controller
 
       $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
 
-      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
+      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and status=1 ");
 
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
@@ -479,7 +479,7 @@ class FrontstoreController extends Controller
       }else{
         $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
       }
-      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ");
+      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
 
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
       $sDistribution_channel3 = DB::select(" select * from dataset_distribution_channel where id=3 AND status=1  ");
@@ -569,7 +569,7 @@ class FrontstoreController extends Controller
       $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
       // dd(@$check_giveaway);
 
-      $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ORDER BY id=5 DESC ");
+      $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ORDER BY id=5 DESC ");
 
 
       $DATE_CREATED = date("Y-m-d",strtotime($sRow->created_at));
@@ -721,7 +721,7 @@ class FrontstoreController extends Controller
       }else{
         $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
       }
-      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 ");
+      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and status=1 ");
 
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
