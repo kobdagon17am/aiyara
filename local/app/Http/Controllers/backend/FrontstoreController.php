@@ -1462,10 +1462,11 @@ class FrontstoreController extends Controller
               // dd($sRow->delivery_location);
               if(@$sRow->delivery_location==0){
                 DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=".$sRow->id.") ");
+                DB::select(" DELETE FROM `db_delivery` WHERE (`orders_id_fk`=".$sRow->id.") ");
               }
 
 
-              if($sRow->check_press_save==2 && $sRow->approve_status>0 ){
+              if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->id!='' && @$sRow->delivery_location>0 ){
 
                        DB::select("
                         INSERT IGNORE INTO db_delivery
