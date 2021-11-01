@@ -222,9 +222,6 @@ $(document).ready(function() {
                                               {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
                                               {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
                                               {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
-                                              {data: 'warehouses',title :'<center>คลังสินค้า</center>', className: 'text-center',render: function(d) {
-                                                    return d;
-                                              }},
                                               {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {
                                                     return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
                                               }},

@@ -5020,6 +5020,12 @@ if($frontstore[0]->check_press_save==2){
                   "details" =>  @$value->note?$value->note:NULL,
                   "amt_in" =>  @$value->in_out==1?$value->amt:0,
                   "amt_out" =>  @$value->in_out==2?$value->amt:0,
+
+                  "warehouse_id_fk" =>  @$value->warehouse_id_fk>0?$value->warehouse_id_fk:0,
+                  "zone_id_fk" =>  @$value->zone_id_fk>0?$value->zone_id_fk:0,
+                  "shelf_id_fk" =>  @$value->shelf_id_fk>0?$value->shelf_id_fk:0,
+                  "shelf_floor" =>  @$value->shelf_floor>0?$value->shelf_floor:0,
+
                   "created_at" =>@$value->dd?$value->dd:NULL
               );
 
@@ -5324,10 +5330,12 @@ if($frontstore[0]->check_press_save==2){
                   "amt" =>  @$value->amt?$value->amt:0,
                   "in_out" =>  @$value->in_out?$value->in_out:0,
                   "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+
                   "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
                   "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
                   "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
 
@@ -5381,10 +5389,12 @@ if($frontstore[0]->check_press_save==2){
                   "amt" =>  @$value->amt?$value->amt:0,
                   "in_out" =>  @$value->in_out?$value->in_out:0,
                   "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+
                   "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
                   "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
                   "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
                   "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
 

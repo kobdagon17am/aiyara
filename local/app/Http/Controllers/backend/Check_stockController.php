@@ -73,6 +73,7 @@ class Check_stockController extends Controller
          WHERE date(lot_expired_date) >= CURDATE() AND product_id_fk=$id
          GROUP BY product_id_fk
          ");
+         // dd($Products);
          // dd($sBalance);
         $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
          return View('backend.check_stock.stock_card')->with(
