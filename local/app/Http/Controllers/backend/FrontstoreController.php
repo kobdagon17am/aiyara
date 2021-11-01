@@ -1188,7 +1188,7 @@ class FrontstoreController extends Controller
 
              if(@$request->delivery_location==1){
 
-                          DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$request->invoice_code."' ");
+                          DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$db_orders[0]->code_order."' ");
 
                           $addr = DB::select("SELECT
                                       customers_address_card.id,
@@ -1220,7 +1220,7 @@ class FrontstoreController extends Controller
                                  ");
 
 
-                            $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,customer_id, recipient_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".$db_orders[0]->invoice_code."','".@$request->customers_id_fk."', '".@$addr[0]->first_name." ".@$addr[0]->last_name."','".@$addr[0]->card_house_no."','".@$addr[0]->card_zipcode."', '".@$addr[0]->card_amphures_id_fk."', '".@$addr[0]->card_district_id_fk."', '".@$addr[0]->card_province_id_fk."', 'customers_address_card', '".@$addr[0]->id."','".@$request->invoice_code."') ");
+                            $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,customer_id, recipient_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$db_orders[0]->code_order."','".@$request->customers_id_fk."', '".@$addr[0]->first_name." ".@$addr[0]->last_name."','".@$addr[0]->card_house_no."','".@$addr[0]->card_zipcode."', '".@$addr[0]->card_amphures_id_fk."', '".@$addr[0]->card_district_id_fk."', '".@$addr[0]->card_province_id_fk."', 'customers_address_card', '".@$addr[0]->id."','".@$db_orders[0]->code_order."') ");
 
 
                             DB::select("UPDATE db_orders SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
@@ -1232,7 +1232,7 @@ class FrontstoreController extends Controller
 
               if(@$request->delivery_location==2){
 
-                    DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$request->invoice_code."' ");
+                    DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='".@$db_orders[0]->code_order."' ");
 
                     $addr = DB::select("SELECT
                           customers_detail.id,
@@ -1268,7 +1268,7 @@ class FrontstoreController extends Controller
                         recipient_name,
                          house_no,house_name, zipcode,
                          amphures_id_fk, district_id_fk,province_id_fk,
-                          from_table, from_table_id, receipt_no) VALUES ( '".$db_orders[0]->invoice_code."',
+                          from_table, from_table_id, receipt_no) VALUES ( '".@$db_orders[0]->code_order."',
                           '".@$request->customers_id_fk."',
                           '".@$recipient_name."',
                           '".@$addr[0]->house_no."','".@$addr[0]->house_name."','".@$addr[0]->zipcode."',
@@ -1293,7 +1293,7 @@ class FrontstoreController extends Controller
                               Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                               where customers_addr_frontstore.frontstore_id_fk = ".@$request->frontstore_id." ");
 
-                        $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,customer_id, recipient_name, house_no, zipcode,amphures_id_fk,district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".$db_orders[0]->invoice_code."','".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$request->invoice_code."') ");
+                        $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,customer_id, recipient_name, house_no, zipcode,amphures_id_fk,district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('".@$db_orders[0]->code_order."','".@$request->customers_id_fk."', '".@$addr[0]->recipient_name."','".@$addr[0]->addr_no."','".@$addr[0]->zip_code."', '".@$addr[0]->ampname."', '".@$addr[0]->tamname."', '".@$addr[0]->provname."', 'customers_addr_frontstore', '".@$addr[0]->id."','".@$db_orders[0]->code_order."') ");
 
                        DB::select("UPDATE db_orders SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
 
