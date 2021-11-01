@@ -253,40 +253,63 @@ class HistoryController extends Controller
 
             ->addColumn('action', function ($row) {
 
+              if($row->distribution_channel_id_fk == 3){
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
-                    // $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')"><i class="fa fa-upload"></i> Upload </button>
-                    $action = '<a class="btn btn-sm btn-success" href="'.route('cart_payment_transfer',['code_order'=>$row->code_order]).'" ><i class="fa fa-refresh"></i> ชำระเงิน </a>
+                  // $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')"><i class="fa fa-upload"></i> Upload </button>
+                  $action = '<a class="btn btn-sm btn-success" href="'.route('cart_payment_transfer',['code_order'=>$row->code_order]).'" ><i class="fa fa-refresh"></i> ชำระเงิน </a>
 
-                    <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-trash"></i></a>';
-                } elseif ($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
+                  <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-trash"></i></a>';
+              } elseif ($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
 
-                    if ($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date))) {
-                        $action = '';
-                    } else {
-                        if ($row->pay_type_id_fk == 1 || $row->pay_type_id_fk == 10 || $row->pay_type_id_fk == 12) {
-                            $action = '';
-                        } elseif($row->pay_type_id_fk == 6 || $row->pay_type_id_fk == 9 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 14 ){
+                  if ($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date))) {
+                      $action = '';
+                  } else {
+                      if ($row->pay_type_id_fk == 1 || $row->pay_type_id_fk == 10 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 12) {
+                          $action = '';
+                      } else {
                           $action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
-                        }else {
-                            $action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
-                        }
+                      }
 
-                    }
+                  }
 
-                }elseif($row->order_status_id_fk == 9){
-                  $action = '<div class="dropdown-warning dropdown open">
-                  <button class="btn btn-warning dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
+              }elseif($row->order_status_id_fk == 9){
+                $action = '<div class="dropdown-warning btn-sm dropdown open">
+                <button class="btn btn-sm btn-warning dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
+                <div class="dropdown-menu" aria-labelledby="dropdown-5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#promptpay" onclick="re_new_payment_promptpay('.$row->id.',\''.$row->code_order.'\')">PromptPay</a>
+                <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#truemoney" onclick="re_new_payment_truemoney('.$row->id.',\''.$row->code_order.'\')">TrueMoney</a>
+                <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')">Upload File Slip</a>
+                </div>
+            </div>';
+              }
+               else {
+                  $action = '';
+              }
+              return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $action;
+
+              }else{
+
+                if(($row->pay_type_id_fk == 6 || $row->pay_type_id_fk == 9 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 14) and $row->order_status_id_fk == 2 ){
+
+                  $action = '<div class="dropdown-primary btn-sm dropdown open">
+                  <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
                   <div class="dropdown-menu" aria-labelledby="dropdown-5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#promptpay" onclick="re_new_payment_promptpay('.$row->id.',\''.$row->code_order.'\')">PromptPay</a>
-                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#truemoney" onclick="re_new_payment_truemoney('.$row->id.',\''.$row->code_order.'\')">TrueMoney</a>
-                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')">Upload File Slip</a>
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#promptpay" onclick="re_new_payment_promptpay('.$row->id.',\''.$row->code_order.'\')">Confirm</a>
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#cancel" onclick="cancel_order(' . $row->id . ',\'' . $row->code_order . '\')">Cancel</a>
+
                   </div>
               </div>';
+
+                }else{
+                  $action = '';
+
                 }
-                 else {
-                    $action = '';
-                }
-                return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $action;
+
+
+                return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> '.$action;
+
+              }
+
             })
 
             ->addColumn('banlance', function ($row) {
@@ -388,13 +411,20 @@ class HistoryController extends Controller
         if ($rs->cancel_order_id) {
             $customer_id = Auth::guard('c_user')->user()->id;
             $order = DB::table('db_orders')
-                ->select('cancel_expiry_date')
+                ->select('cancel_expiry_date','distribution_channel_id_fk')
                 ->where('id', '=', $rs->cancel_order_id)
                 ->first();
 
-            if ($order->cancel_expiry_date == '' || $order->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($order->cancel_expiry_date))) {
+
+
+            if($order->distribution_channel_id_fk == 3){//มาจากออนไลนเท่านั้น
+
+              if ($order->cancel_expiry_date == '' || $order->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($order->cancel_expiry_date))) {
                 return redirect('product-history')->withError('Cancel Oder Fail : Cancel Time Out !');
+              }
             }
+
+
 
             $resule = CancelOrderController::cancel_order($rs->cancel_order_id, $customer_id, 1, 'customer');
             if ($resule['status'] == 'success') {

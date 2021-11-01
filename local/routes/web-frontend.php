@@ -207,7 +207,7 @@ Route::get('modal_qr_ce','Frontend\CourseEventController@modal_qr_ce')->name('mo
 Route::post('dt_course','Frontend\CourseEventController@dt_course')->name('dt_course');
 
 Route::get('direct-sponsor','Frontend\DirectSponsorController@index')->name('direct-sponsor');
-Route::get('c','Frontend\DirectSponsorController@dt_sponsor')->name('dt_sponsor');
+Route::get('dt_sponsor','Frontend\DirectSponsorController@dt_sponsor')->name('dt_sponsor');
 
 Route::get('commission-per-day','Frontend\CommissionController@commission_per_day')->name('commission-per-day');
 Route::post('dt_commission_perday','Frontend\CommissionController@dt_commission_perday')->name('dt_commission_perday');
