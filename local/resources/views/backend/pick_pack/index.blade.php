@@ -484,6 +484,9 @@ $(function() {
           });
 
 
+              setTimeout(function(){
+                 $(".myloading").hide();
+              }, 3000);
 
             $('#data-table').on( 'click', 'tr', function () {
 
