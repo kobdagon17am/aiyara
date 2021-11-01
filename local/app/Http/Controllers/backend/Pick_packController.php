@@ -301,24 +301,51 @@ class Pick_packController extends Controller
              return '-';
         }
       })
+      
+      ->addColumn('receipt', function($row) {
+        if(!empty($row->packing_code)){
+            $d = DB::select(" select * from db_delivery WHERE packing_code=".$row->packing_code." ");
+            // return "P1".sprintf("%05d",@$row->packing_code);
+                $array1 = array();
+                $rs = DB::table('db_delivery')->where('packing_code',@$row->packing_code)->get();
+                foreach ($rs as $key => $value) {
+                    if(!empty(@$value->receipt)){
+                        array_push($array1, @$value->receipt);
+                    }
+                }
+                $arr = implode('<br>', $array1);
+
+                return "<b>(".@$row->packing_code_desc.")</b><br>".$arr;
+
+        }else{
+            return @$row->receipt;
+        }
+
+      })
+      ->escapeColumns('receipt')
+
       ->addColumn('packing_code', function($row) {
 
-        $array = '';
+        // $d = DB::select(" select * from db_delivery WHERE packing_code=".$row->packing_code." ");
 
-        if(@$row->packing_code!=''){
-             $array = "P1".sprintf("%05d",@$row->packing_code);
-        }
+        // return @$row->packing_code;
 
-        $array1 = array();
-        $rs = DB::table('db_delivery')->where('packing_code',$row->packing_code)->get();
-        foreach ($rs as $key => $value) {
-            if(!empty(@$value->receipt)){
-                array_push($array1, @$value->receipt);
-            }
-        }
+        // $array = '';
+
+        // if(@$row->packing_code!=''){
+        //      $array = "P1".sprintf("%05d",@$row->packing_code);
+        // }
+
+        // $array1 = array();
+        // $rs = DB::table('db_delivery')->where('packing_code',$row->packing_code)->get();
+        // foreach ($rs as $key => $value) {
+        //     if(!empty(@$value->receipt)){
+        //         array_push($array1, @$value->receipt);
+        //     }
+        // }
           
-          $array2 = implode(',', $array1);
-          return "(".$array."),".$array2;
+        //   $array2 = implode(',', $array1);
+        //   return "(".$array."),".$array2;
 
       })
       ->addColumn('packing_id', function($row) {

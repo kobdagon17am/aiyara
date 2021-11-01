@@ -365,13 +365,14 @@ $(function() {
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
-                  {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
+                  {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
+                  // {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                  //         if(d){
+                  //           return d.replace(/ *, */g, '<br>');
+                  //         }else{
+                  //           return '-';
+                  //         }
+                  //     }},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
@@ -404,12 +405,12 @@ $(function() {
 
                         '<span data-toggle="tooltip" data-placement="right" title="Packing (รวมบิลจากขั้นตอนที่ 1)" class=" badge badge-danger font-size-14">P</span>');
 
-                      if(aData['packing_code']){
-                            $x= aData['packing_code'].replace(/ *, */g, '<br>');
-                        }else{
-                          $x='';
-                        }
-                      $('td:eq(4)', nRow).html($x).addClass('input');
+                      // if(aData['packing_code']){
+                      //       $x= aData['packing_code'].replace(/ *, */g, '<br>');
+                      //   }else{
+                      //     $x='';
+                      //   }
+                      // $('td:eq(4)', nRow).html($x).addClass('input');
 
                  }else{
                       $("td:eq(2)", nRow).html('');
@@ -581,13 +582,15 @@ $(function() {
                       //     }
                       // }},
 
-                      {data: 'receipt02',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '';
-                          }
-                      }},
+
+                      {data: 'receipt02', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
+                      // {data: 'receipt02',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                      //     if(d){
+                      //       return d.replace(/ *, */g, '<br>');
+                      //     }else{
+                      //       return '';
+                      //     }
+                      // }},
                
                       // {data: 'receipt02', title :'<center>รหัสใบเสร็จ </center>', className: 'text-center'},
 
@@ -714,13 +717,14 @@ $(function() {
                       // {data: 'packing_code',   title :'<center>รหัสส่ง</center>', className: 'text-center ',render: function(d) {
                       //     return ;
                       // }},
-                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
+                      {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
+                  // {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                  //         if(d){
+                  //           return d.replace(/ *, */g, '<br>');
+                  //         }else{
+                  //           return '-';
+                  //         }
+                  //     }},
                       {data: 'customer_name',   title :'<center>ชื่อลูกค้า</center>', className: 'text-center ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');

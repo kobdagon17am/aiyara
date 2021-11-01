@@ -73,7 +73,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 "> สินค้ารอจัดส่ง  </h4>
+            <h4 class="mb-0 font-size-18  "> สินค้ารอจัดส่ง  </h4>
              <!-- <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล) </span> -->
             <!-- test_clear_data -->
         </div>
@@ -636,6 +636,11 @@ $(function() {
                 $('[data-toggle="tooltip"]').tooltip();
               });
           });
+
+
+              setTimeout(function(){
+                 $(".myloading").hide();
+              }, 3000);
 
 
             $('#data-table').on( 'click', 'tr', function () {
@@ -1627,6 +1632,7 @@ $(function() {
       ?>
           <script>
           location.replace( "{{ url('backend/delivery') }}");
+          $(".myloading").hide();
           </script>
           <?php
       }

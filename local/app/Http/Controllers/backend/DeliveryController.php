@@ -25,8 +25,9 @@ class DeliveryController extends Controller
         ");
         */
 
-   // นำเข้า manaul  
-/*
+
+   // Start => นำเข้า manaul  
+/* 
   DB::select("
           INSERT IGNORE INTO db_delivery
           ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
@@ -68,9 +69,6 @@ class DeliveryController extends Controller
 
         ");
 
-
-
-
          $sDelivery = DB::select("
                     SELECT id,delivery_location
                     FROM db_orders 
@@ -80,60 +78,12 @@ class DeliveryController extends Controller
 
 
          foreach ($sDelivery as $key => $vd) {
-          
-             if(@$request->delivery_location==3){
-
-                          $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                            dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
-                            from customers_addr_frontstore
-                            Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
-                            Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
-                            Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
-                            WHERE
-                            frontstore_id_fk in (".@$sRow->id.") ;");
-
-                           if(@$addr){
-                              foreach ($addr as $key => $v) {
-
-                                  @$address = @$v->addr_no;
-                                  @$address .= ", ต.". @$v->tamname. " ";
-                                  @$address .= ", อ.". @$v->ampname;
-                                  @$address .= ", จ.". @$v->provname;
-
-                                  if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
-                                  }else{
-                                      @$address = null;
-                                  }
-
-                                  if(!empty(@$v->tel)){
-                                      $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
-                                  }else{
-                                      $tel = '';
-                                  }
-
-                                  DB::select(" UPDATE db_delivery  
-                                  SET 
-                                  recipient_name = '".@$v->recipient_name."',
-                                  addr_send = '".@$address."',
-                                  postcode = '".@$v->zip_code."',
-                                  mobile = '".@$tel."',
-                                  province_id_fk = '".@$v->province_id_fk."',
-                                  province_name = '".@$v->provname."',
-                                  set_addr_send_this = '1'
-                                  where orders_id_fk = '".$sRow->id."'
-
-                                 ");
-                              }
-
-                            }
-                      }
-
- 
+              $this->fncUpdateDeliveryAddress($vd->id);
          }
 
-   // นำเข้า manaul  
+         // สิ้นสุดการนำเข้าแบบ manual 
+  */
 
-*/
 
 
       // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
@@ -175,6 +125,244 @@ class DeliveryController extends Controller
 
 
     }
+
+
+
+   public function fncUpdateDeliveryAddress($id)
+    {
+              
+              $sRow = \App\Models\Backend\Frontstore::find($id);
+              // dd($sRow->delivery_location);
+              if(@$sRow->delivery_location==0){
+                DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=".$sRow->id.") ");
+              }
+
+
+              if($sRow->check_press_save==2 && $sRow->approve_status>0 ){
+
+                       DB::select("
+                        INSERT IGNORE INTO db_delivery
+                        ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
+                        SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
+                        (SUM(
+                        (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+                        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+                        (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+                        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
+                        (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+                        ))
+                        FROM db_orders WHERE (`id`=".$sRow->id.") AND delivery_location <> 0 ;
+                      ");
+
+
+// Clear ก่อน ค่อย อัพเดต ใส่ตามเงื่อนไขทีหลัง
+                      DB::select(" UPDATE db_delivery
+                          SET
+                          recipient_name = '',
+                          addr_send = '',
+                          postcode = '',
+                          mobile = '',
+                          province_id_fk = '',
+                          province_name = '',
+                          shipping_price = '".$sRow->shipping_price."',
+                          delivery_date = now() ,
+                          set_addr_send_this = '0'
+                          where orders_id_fk = '".$sRow->id."'
+
+                         ");
+
+                      //delivery_location = ที่อยู่ผู้รับ>0=รับสินค้าด้วยตัวเอง|1=ที่อยู่ตามบัตร ปชช.>customers_address_card|2=ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ>customers_detail|3=ที่อยู่กำหนดเอง>customers_addr_frontstore|4=จัดส่งพร้อมบิลอื่น|5=ส่งแบบพิเศษ/พรีเมี่ยม
+
+                      if(@$sRow->delivery_location==1){
+
+                          $addr = DB::select(" SELECT
+                                      customers_address_card.id,
+                                      customers_address_card.customer_id,
+                                      customers_address_card.card_house_no,
+                                      customers_address_card.card_house_name,
+                                      customers_address_card.card_moo,
+                                      customers_address_card.card_zipcode,
+                                      customers_address_card.card_soi,
+                                      customers_address_card.created_at,
+                                      customers_address_card.updated_at,
+                                      customers_address_card.card_province_id_fk,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname,
+                                      customers.prefix_name,
+                                      customers.first_name,
+                                      customers.last_name
+                                      FROM
+                                      customers_address_card
+                                      Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+                                      Left Join customers ON customers_address_card.customer_id = customers.id
+                                      where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+
+                            ");
+
+                            if(@$addr){
+
+
+                                        foreach ($addr as $key => $v) {
+
+                                          @$address = @$v->card_house_no." ". @$v->card_house_name." ". @$v->card_moo."";
+                                          @$address .= @$v->card_soi." ". @$v->card_road;
+                                          @$address .= ", ต.". @$v->tamname. " ";
+                                          @$address .= ", อ.". @$v->ampname;
+                                          @$address .= ", จ.". @$v->provname;
+
+                                          @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
+
+                                          if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                          }else{
+                                              @$address = null;
+                                          }
+
+                                            DB::select(" UPDATE db_delivery
+                                            SET
+                                            recipient_name = '".@$recipient_name."',
+                                            addr_send = '".@$address."',
+                                            postcode = '".@$v->card_zipcode."',
+                                            province_id_fk = '".@$v->card_province_id_fk."',
+                                            province_name = '".@$v->province_name."',
+                                            set_addr_send_this = '1'
+                                            where orders_id_fk = '".$sRow->id."'
+
+                                           ");
+                                        }
+
+                            }
+
+                      }
+
+
+
+                      if(@$sRow->delivery_location==2){
+
+                          $addr = DB::select("
+                            SELECT
+                                      customers_detail.customer_id,
+                                      customers_detail.house_no,
+                                      customers_detail.house_name,
+                                      customers_detail.moo,
+                                      customers_detail.zipcode,
+                                      customers_detail.soi,
+                                      customers_detail.road,
+                                      customers_detail.province_id_fk,
+                                      customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
+                                      customers.prefix_name,
+                                      customers.first_name,
+                                      customers.last_name,
+                                      dataset_provinces.name_th AS provname,
+                                      dataset_amphures.name_th AS ampname,
+                                      dataset_districts.name_th AS tamname
+                                      FROM
+                                      customers_detail
+                                      Left Join customers ON customers_detail.customer_id = customers.id
+                                      Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                      Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                      Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                      WHERE customers_detail.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+
+                               ");
+
+                           if(@$addr){
+                              foreach ($addr as $key => $v) {
+
+                                  @$address = @$v->house_no." ". @$v->house_name." ". @$v->moo." ". @$v->soi." ". @$v->road." ";
+                                  @$address .= ", ต.". @$v->tamname. " ";
+                                  @$address .= ", อ.". @$v->ampname;
+                                  @$address .= ", จ.". @$v->provname;
+
+                                  if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                  }else{
+                                      @$address = null;
+                                  }
+
+                                  if(!empty(@$v->tel_mobile)){
+                                      $tel = 'Tel. '. @$v->tel_mobile . (@$v->tel_home?', '.@$v->tel_home:'') ;
+                                  }else{
+                                      $tel = '';
+                                  }
+
+                                  @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
+
+                                  DB::select(" UPDATE db_delivery
+                                  SET
+                                  recipient_name = '".@$recipient_name."',
+                                  addr_send = '".@$address."',
+                                  postcode = '".@$v->zipcode."',
+                                  mobile = '".@$tel."',
+                                  province_id_fk = '".@$v->province_id_fk."',
+                                  province_name = '".@$v->provname."',
+                                  set_addr_send_this = '1'
+                                  where orders_id_fk = '".$sRow->id."'
+
+                                 ");
+                              }
+
+                            }
+                      }
+
+
+
+                      if(@$sRow->delivery_location==3){
+
+                          $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                            dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
+                            from customers_addr_frontstore
+                            Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                            Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                            Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                            WHERE
+                            frontstore_id_fk in (".@$sRow->id.") ;");
+
+                           if(@$addr){
+                              foreach ($addr as $key => $v) {
+
+                                  @$address = @$v->addr_no;
+                                  @$address .= ", ต.". @$v->tamname. " ";
+                                  @$address .= ", อ.". @$v->ampname;
+                                  @$address .= ", จ.". @$v->provname;
+
+                                  if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                  }else{
+                                      @$address = null;
+                                  }
+
+                                  if(!empty(@$v->tel)){
+                                      $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
+                                  }else{
+                                      $tel = '';
+                                  }
+
+                                  DB::select(" UPDATE db_delivery
+                                  SET
+                                  recipient_name = '".@$v->recipient_name."',
+                                  addr_send = '".@$address."',
+                                  postcode = '".@$v->zip_code."',
+                                  mobile = '".@$tel."',
+                                  province_id_fk = '".@$v->province_id_fk."',
+                                  province_name = '".@$v->provname."',
+                                  set_addr_send_this = '1'
+                                  where orders_id_fk = '".$sRow->id."'
+
+                                 ");
+                              }
+
+                            }
+                      }
+
+
+              }
+
+    }
+
+
 
 
  public function create()
@@ -323,8 +511,16 @@ class DeliveryController extends Controller
             db_delivery
             Inner Join db_delivery_packing ON db_delivery.id = db_delivery_packing.delivery_id_fk
             SET
-            db_delivery.packing_code=
-            db_delivery_packing.packing_code_id_fk ");
+            db_delivery.packing_code=db_delivery_packing.packing_code_id_fk ");
+
+         // รหัสนี้สร้างใหม่เพื่อเอาไว้อ้างอิงให้มันชัดเจนยิ่งขึ้น
+         $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+         foreach ($rsDelivery as $key => $value) {
+
+              $pc = "P1".sprintf("%05d",$value->packing_code) ;
+              DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' WHERE id=$value->id  ");
+            
+         }
 
         return redirect()->to(url("backend/delivery"));
 
