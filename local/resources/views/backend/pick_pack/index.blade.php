@@ -320,6 +320,8 @@ var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 $(function() {
 
+  $(".myloading").show();
+
      $.fn.dataTable.ext.errMode = 'throw';
 
     oTable = $('#data-table').DataTable({
@@ -469,6 +471,9 @@ $(function() {
                     // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
                 }
+
+                $(".myloading").hide();
+
               }
           });
            oTable.on( 'draw', function () {

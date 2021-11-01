@@ -266,9 +266,9 @@ class Pick_packController extends Controller
 
      public function Datatable(){
       $sTable = DB::select(" 
-        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 
+        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL
         UNION
-        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 GROUP BY packing_code
+        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0  AND orders_id_fk is not NULL GROUP BY packing_code
         ORDER BY updated_at DESC
      ");
       $sQuery = \DataTables::of($sTable);

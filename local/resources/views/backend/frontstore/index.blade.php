@@ -1167,7 +1167,15 @@ $(document).ready(function() {
                   var action_user = $('#action_user').val();
                   var status_sent_money = $('#status_sent_money').val();
                   var approve_status = $('#approve_status').val();
-                  // console.log(approve_status);
+
+                  console.log(startDate+" : "+endDate);
+                  console.log(purchase_type_id_fk);
+                  console.log(customer_username);
+                  console.log(customer_name);
+                  console.log(invoice_code);
+                  console.log(action_user);
+                  console.log(status_sent_money);
+                  console.log(approve_status);
                   // return false;
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
           					var oTable;

@@ -1052,8 +1052,6 @@ class FrontstoreController extends Controller
 
               $sRow->save();
 
-              $this->fncUpdateDeliveryAddress($sRow->id);
-
                 // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));
 
@@ -1439,26 +1437,21 @@ class FrontstoreController extends Controller
                    DB::select(" UPDATE `db_orders` SET `approve_status`=2 WHERE (`id`=".$sRow->id.") ");
               }
 
-             $this->fncUpdateDeliveryAddress($sRow->id);
+//   `check_press_save` int(1) DEFAULT '0' COMMENT '1=มีการเลือกสินค้าแล้ว 2=มีการกดปุ่ม save แล้ว (เอาไว้เช็คกรณีซื้อที่หลังบ้าน เพื่อไม่ให้การคำนวณเงินผิดเพี้ยนไปจากเดิม)',
+//   `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
+// เช็คดูก่อน ว่า check_press_save = 2 + approve_status <> 0 และดูด้วยว่า มีรหัส code_order แล้วหรือยัง
 
-             return redirect()->to(url("backend/frontstore"));
+              // dd("1305");
 
+              // if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->code_order==""){
 
-        }else{
+              //    $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+              //    DB::select(" UPDATE `db_orders` SET date_setting_code='".date('ym')."' WHERE (`id`=".$sRow->id.") ");
+              //    $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+              //    DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
 
-          // dd($request->all());
-          return $this->form($id);
-        }
+              // }
 
-
-    }
-
-
-
-   public function fncUpdateDeliveryAddress($id)
-    {
-              
-              $sRow = \App\Models\Backend\Frontstore::find($id);
               // dd($sRow->delivery_location);
               if(@$sRow->delivery_location==0){
                 DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=".$sRow->id.") ");
@@ -1501,7 +1494,7 @@ class FrontstoreController extends Controller
 
                       //delivery_location = ที่อยู่ผู้รับ>0=รับสินค้าด้วยตัวเอง|1=ที่อยู่ตามบัตร ปชช.>customers_address_card|2=ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ>customers_detail|3=ที่อยู่กำหนดเอง>customers_addr_frontstore|4=จัดส่งพร้อมบิลอื่น|5=ส่งแบบพิเศษ/พรีเมี่ยม
 
-                      if(@$sRow->delivery_location==1){
+                      if(@$request->delivery_location==1){
 
                           $addr = DB::select(" SELECT
                                       customers_address_card.id,
@@ -1567,7 +1560,7 @@ class FrontstoreController extends Controller
 
 
 
-                      if(@$sRow->delivery_location==2){
+                      if(@$request->delivery_location==2){
 
                           $addr = DB::select("
                             SELECT
@@ -1637,7 +1630,7 @@ class FrontstoreController extends Controller
 
 
 
-                      if(@$sRow->delivery_location==3){
+                      if(@$request->delivery_location==3){
 
                           $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                             dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
@@ -1687,8 +1680,17 @@ class FrontstoreController extends Controller
 
               }
 
-    }
+             return redirect()->to(url("backend/frontstore"));
 
+
+        }else{
+
+          // dd($request->all());
+          return $this->form($id);
+        }
+
+
+    }
 
    public function form($id=NULL)
     {

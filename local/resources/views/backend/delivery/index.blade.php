@@ -73,7 +73,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> สินค้ารอจัดส่ง  </h4>
+            <h4 class="mb-0 font-size-18 "> สินค้ารอจัดส่ง  </h4>
              <!-- <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล) </span> -->
             <!-- test_clear_data -->
         </div>
@@ -472,6 +472,8 @@ var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 $(function() {
+
+  $(".myloading").show();
   
   $.fn.dataTable.ext.errMode = 'throw';
 
@@ -626,7 +628,7 @@ $(function() {
 
                     // }
 
-
+                  $(".myloading").hide();
 
               }
           });
