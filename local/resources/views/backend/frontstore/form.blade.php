@@ -1835,9 +1835,9 @@ if(@$sRow->check_press_save==2){
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
-       <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> -->
+        </button> 
       </div>
 
       <div class="modal-body">
@@ -2709,6 +2709,15 @@ if(@$sRow->check_press_save==2){
 
 
             });
+
+            $('#modalDelivery').on('hidden.bs.modal', function () {
+              $('.myloading').show();
+                setTimeout(function(){
+                  location.reload();
+                },500);
+
+            });
+
 
           $('#modalAddFromPromotion').on('hidden.bs.modal', function () {
                 // $('.myloading').show();
