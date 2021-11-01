@@ -57,9 +57,26 @@ class Check_stockController extends Controller
 
 
 
-    public function stock_card($id)
+    public function stock_card(Request $request,$id)
     {
         // dd($id);
+        // dd($request->business_location_id_fk);
+        $business_location_id_fk = $request->business_location_id_fk;
+        $branch_id_fk = $request->branch_id_fk;
+        // dd($request->branch_id_fk);
+        if(!empty($business_location_id_fk)){
+            $wh_01 = " AND business_location_id_fk = ".$business_location_id_fk." ";
+        }else{
+            $wh_01 = "" ; 
+        }
+
+        if(!empty($branch_id_fk)){
+            $wh_02 = " AND branch_id_fk = ".$branch_id_fk." ";
+        }else{
+            $wh_02 = "" ; 
+        }
+
+
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
@@ -70,7 +87,13 @@ class Check_stockController extends Controller
 
          $sBalance = DB::select(" SELECT sum(amt) as amt
          FROM `db_stocks`
-         WHERE date(lot_expired_date) >= CURDATE() AND product_id_fk=$id
+         WHERE 
+         date(lot_expired_date) >= CURDATE() 
+         AND product_id_fk=$id 
+
+         $wh_01
+         $wh_02
+
          GROUP BY product_id_fk
          ");
          // dd($Products);
@@ -81,6 +104,8 @@ class Check_stockController extends Controller
            'Products'=>$Products,
            'p_name'=>$p_name,
            'sBalance'=>$sBalance,
+           'business_location_id_fk'=>$business_location_id_fk,
+           'branch_id_fk'=>$branch_id_fk,
          ));
 
     }

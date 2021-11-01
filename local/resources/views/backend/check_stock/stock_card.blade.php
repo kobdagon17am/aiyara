@@ -120,8 +120,8 @@ $(document).ready(function() {
 
       $(document).on('click', '.btnProcess', function(event) {
            
-              var business_location_id_fk =  "{{@$sRow[0]->business_location_id_fk}}"; //alert(business_location_id_fk);
-              var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
+              var business_location_id_fk =  "{{@$business_location_id_fk}}"; //alert(business_location_id_fk);
+              var branch_id_fk =  "{{@$branch_id_fk}}"; //alert(branch_id_fk);
               var product_id_fk =  "{{@$Products[0]->product_id}}"; //
               var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
 
