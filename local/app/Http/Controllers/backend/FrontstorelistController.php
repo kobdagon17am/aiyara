@@ -1261,7 +1261,7 @@ class FrontstorelistController extends Controller
         $amt = DB::select(" SELECT amt from db_order_products_list WHERE promotion_id_fk in (".$row->id.") AND frontstore_id_fk in (".$row->frontstore_id_fk.") AND amt>0 limit 1 ");
         $amt = @$amt[0]->amt > 0 ? $amt[0]->amt : 0 ;
 
-        return $row->id.":".(@$row->limited_amt_person>0?$row->limited_amt_person:10000000000).":".$amt;
+        return $row->id.":".(@$row->limited_amt_person>0?$row->limited_amt_person:0).":".$amt;
       })
       ->addColumn('p_img', function($row) {
         if($row->p_img!=""){

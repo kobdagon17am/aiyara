@@ -120,8 +120,8 @@ $(document).ready(function() {
 
       $(document).on('click', '.btnProcess', function(event) {
            
-              var business_location_id_fk =  "{{@$business_location_id_fk}}"; //alert(business_location_id_fk);
-              var branch_id_fk =  "{{@$branch_id_fk}}"; //alert(branch_id_fk);
+              var business_location_id_fk =  "{{@$sRow[0]->business_location_id_fk}}"; //alert(business_location_id_fk);
+              var branch_id_fk =  "{{@$sRow[0]->branch_id_fk}}"; //alert(branch_id_fk);
               var product_id_fk =  "{{@$Products[0]->product_id}}"; //
               var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
 
@@ -222,9 +222,6 @@ $(document).ready(function() {
                                               {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
                                               {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
                                               {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
-                                              {data: 'warehouses',title :'<center>คลังสินค้า</center>', className: 'text-center',render: function(d) {
-                                                    return d;
-                                              }},
                                               {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {
                                                     return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
                                               }},

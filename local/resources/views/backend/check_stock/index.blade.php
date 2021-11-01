@@ -532,7 +532,7 @@
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' )
-                                                  .append( '<td style=" font-weight: bold; "><center><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a></td>' );
+                                                  .append( '<td style=" font-weight: bold; "><center><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+business_location_id_fk+'/'+branch_id_fk+'/" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a></td>' );
 
 
                                            },

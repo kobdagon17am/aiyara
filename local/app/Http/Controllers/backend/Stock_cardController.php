@@ -79,6 +79,13 @@ class Stock_cardController extends Controller
         }else{
           return '';
         }
+      }) 
+      ->addColumn('warehouses', function($row) {
+        $sBranchs = DB::select(" select * from branchs where id=".(@$row->branch_id_fk>0?@$row->branch_id_fk:0)." ");
+        $warehouse = DB::select(" select * from warehouse where id=".(@$row->warehouse_id_fk>0?@$row->warehouse_id_fk:0)." ");
+        $zone = DB::select(" select * from zone where id=".(@$row->zone_id_fk>0?@$row->zone_id_fk:0)." ");
+        $shelf = DB::select(" select * from shelf where id=".(@$row->shelf_id_fk>0?@$row->shelf_id_fk:0)." ");
+        return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
       })   
 
       ->make(true);
