@@ -69,7 +69,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5>ประวัติการสั่งซื้อ</h5>
+                    <h5>ประวัติการสั่งซื้อที่สำเร็จ</h5>
                     {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
                 </div>
                 <div class="card-block">
@@ -85,6 +85,27 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             </div>
         </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="card">
+              <div class="card-header">
+                  <h5>ประวัติการสั่งซื้อที่รอดำเนินการ</h5>
+                  {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
+              </div>
+              <div class="card-block">
+                <div class="dt-responsive table-responsive">
+                    <table id="simpletable" class="table table-striped table-bordered nowrap">
+
+                    </table>
+                </div>
+
+            </div>
+
+
+          </div>
+      </div>
+  </div>
 
     <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-md" role="document">
@@ -288,6 +309,77 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             e.preventDefault();
         });
     });
+</script>
+
+<script type="text/javascript">
+  var oTable;
+  $(function() {
+      oTable = $('#simpletable').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+          ajax: {
+            url: "{{ route('dt_aistockist_panding') }}",
+                  dataType: "json",
+                  type: "GET",
+                  // data: function(d) {
+                  //   // d.startDate = $('#startDate').val();
+                  //   // d.endDate = $('#endDate').val();
+                  // },
+          },
+
+          columns: [
+
+                      {
+                          "data": "created_at",
+                          "name": "created_at",
+                          "title": '<center>Date</center>',
+                      },
+                      {"data": "order_code",
+                      "name": "order_code",
+                      "title": '<center>OrderCode</center>',
+                      },
+                      {
+                          "data": "customer_id",
+                          "name": "customer_id",
+                          "title": '<center>Send</center>',
+                      },
+                      {
+                          "data": "to_customer_id",
+                          "name": "to_customer_id",
+                          "title": '<center>Receive(UserName)</center>',
+                      },
+                      {
+                          "data": "type",
+                          "name": "type",
+                          "title": '<center>Type</center>',
+                      },
+                      {
+                          "data": "pv",
+                          "name": "pv",
+                          "title": '<center>PV</center>',
+                      },
+                      {
+                          "data": "banlance",
+                          "name": "banlance",
+                          "title": '<center>Banlance</center>',
+                      },
+                      {
+                          "data": "detail",
+                          "name": "detail",
+                          "title": '<center>Detail</center>',
+                      },
+                ],order:[[0,'DESC']],
+      });
+      $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+          oTable.draw();
+      });
+
+      $('#search-form').on('click', function(e) {
+          oTable.draw();
+          e.preventDefault();
+      });
+  });
 </script>
 
 <script type="text/javascript">
