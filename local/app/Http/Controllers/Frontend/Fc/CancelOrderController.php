@@ -258,7 +258,7 @@ class CancelOrderController extends Controller
             }
 
             if ($resule['status'] == 'success') {
-                DB::rollback();
+                DB::commit();
                 return $resule;
             } else {
 

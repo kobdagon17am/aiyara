@@ -96,5 +96,42 @@ class CancelAicashController extends Controller
         }
     }
 
+    public static function cancel_aicash_backend($order_id, $customer_or_admin, $type_user_cancel, $action_type)
+    {
+        DB::BeginTransaction();
+        $order_data = DB::table('db_orders')
+            ->where('id', '=', $order_id)
+            ->first();
+        if (empty($order_data)) {
+            $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
+            return $resule;
+        }
+
+        try {
+            $update_order = DB::table('db_orders') //update บิล
+                ->where('id', $order_id)
+                ->update([
+                    'cancel_by_user_id_fk' => $customer_or_admin,
+                    'order_status_id_fk' => 8, //Status  8 = Cancel
+                    'approve_status' => 4, //status = Cancel
+                    'type_user_cancel' => $type_user_cancel, //Customer
+                    'cancel_action_date' => date('Y-m-d H:i:s'),
+                ]);
+
+                $resule = ['status' => 'success', 'message' => 'Cancle Order Ai-Cash Success'];
+
+            if ($resule['status'] == 'success') {
+                DB::commit();
+                return $resule;
+            } else {
+
+                DB::rollback();
+                return $resule;
+            }
+        } catch (Exception $e) {
+            DB::rollback();
+            return $e;
+        }
+    }
 
 }

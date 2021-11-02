@@ -289,7 +289,7 @@ class HistoryController extends Controller
 
               }else{
 
-                if(($row->pay_type_id_fk == 6 || $row->pay_type_id_fk == 9 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 14) and $row->order_status_id_fk == 2 ){
+                if(($row->pay_type_id_fk == 3 || $row->pay_type_id_fk == 6 || $row->pay_type_id_fk == 9 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 14) and $row->order_status_id_fk == 2 ){
 
                   $action = '<div class="dropdown-primary btn-sm dropdown open">
                   <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
