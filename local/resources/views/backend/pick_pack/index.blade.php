@@ -40,7 +40,7 @@
 <style>
     @media screen and (min-width: 676px) {
         .modal-dialog {
-          max-width: 1200px !important; /* New width for default modal */
+          max-width: 700 !important; /* New width for default modal */
         }
     }
 
@@ -238,6 +238,11 @@
 
               </form>
 
+
+                  <div class=" divBtnSave " style="">
+                   <b>หมายเหตุ</b> รายการที่ ที่อยู่จัดส่ง <b> * จัดส่งพร้อมบิลอื่น </b> ให้ไปทำการรวมบิลจัดจัดส่งที่หน้า สินค้ารอจัดส่ง 
+                  </div>
+
  </div>
 
               <div class="myBorder">
@@ -306,6 +311,147 @@
 </div>
 
 
+
+
+<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true" data-backdrop="static" >
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> 
+      </div>
+
+      <div class="modal-body">
+
+
+        <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+          <input name="update_delivery_custom_from_pick_pack" type="hidden" value="1">
+          <input id="customers_addr_frontstore_id" name="customers_addr_frontstore_id"  type="hidden" value="">
+          <input id="customer_id" name="customer_id"  type="hidden" value="">
+
+          {{ csrf_field() }}
+
+          <div class="col-12">
+
+                 <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ชื่อ-นามสกุล (ผู้รับ) : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_cusname" name="delivery_cusname" class="form-control" value="" required >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ที่อยู่ : </label>
+                  <div class="col-md-7">
+                    <textarea id="delivery_addr" name="delivery_addr" class="form-control" rows="3"  required ></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_province" name="delivery_province" class="form-control select2-templating " >
+                       <option value="">Select</option>
+                       @if(@$sProvince)
+                        @foreach(@$sProvince AS $r)
+                        <option value="{{$r->id}}" >
+                          {{$r->province_name}}
+                        </option>
+                        @endforeach
+                        @endif
+                    </select>
+
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_amphur" name="delivery_amphur" class="form-control select2-templating " required >
+                      @if(@$CusAddrFrontstore[0]->amphur_code)
+                           <option value="">Select</option>
+                           @if(@$sAmphures)
+                            @foreach(@$sAmphures AS $r)
+                            <option value="{{$r->id}}" >
+                              {{$r->amphur_name}}
+                            </option>
+                            @endforeach
+                            @endif
+                      @else
+                        <option disabled selected>กรุณาเลือกจังหวัดก่อน</option>
+                      @endif
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> ตำบล/แขวง : </label>
+                  <div class="col-md-7">
+                    <select id="delivery_tambon" name="delivery_tambon" class="form-control select2-templating " required >
+                      @if(@$CusAddrFrontstore[0]->tambon_code)
+                           <option value="">Select</option>
+                           @if(@$sTambons)
+                            @foreach(@$sTambons AS $r)
+                            <option value="{{$r->id}}" >
+                              {{$r->tambon_name}}
+                            </option>
+                            @endforeach
+                            @endif
+                      @else
+                        <option disabled selected>กรุณาเลือกอำเภอก่อน</option>
+                      @endif
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> รหัสไปรษณีย์ : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_zipcode" name="delivery_zipcode" class="form-control" value="" required >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> เบอร์มือถือ : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_tel" name="delivery_tel" class="form-control" value=""  required >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> เบอร์บ้าน : </label>
+                  <div class="col-md-7">
+                    <input type="text" id="delivery_tel_home" name="delivery_tel_home" class="form-control" value=""  >
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="" class="col-md-4 col-form-label"> </label>
+                  <div class="col-md-7">
+                    <button type="submit" class="btn btn-primary float-right "><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
+                    <!-- <button type="button" class="btn btn-secondary float-right " data-dismiss="modal">Close</button> -->
+                  </div>
+                </div>
+
+          </div>
+
+
+        </form>
+
+
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
 @endsection
 
 @section('script')
@@ -366,17 +512,12 @@ $(function() {
                   {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
                   {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
-                  // {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                  //         if(d){
-                  //           return d.replace(/ *, */g, '<br>');
-                  //         }else{
-                  //           return '-';
-                  //         }
-                  //     }},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
+                  {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  // {data: 'id', title :'พิมพ์', className: 'text-center '},
                   {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
                     if(d=='1'){
                         return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
@@ -384,7 +525,6 @@ $(function() {
                         return '-รอจัดเบิก-';
                     }
                   }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
               ],
               'columnDefs': [
                {
@@ -395,11 +535,15 @@ $(function() {
                }
               ],
               'select': {
-                 'style': 'multi'
+                 'style': 'multi',
+                 // 'selector': 'td:not(:eq(5))',
+
               },
 
               rowCallback: function(nRow, aData, dataIndex){
- 
+
+                 
+
                  if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                       $('td:eq(2)', nRow).html(
 
@@ -472,6 +616,23 @@ $(function() {
                     // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
                 }
+
+                console.log(aData['delivery_location']);
+                if(aData['delivery_location']==4){
+                   // alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
+                   $("td:eq(0)", nRow).prop('disabled',true); 
+                   $("td:eq(1)", nRow).prop('disabled',true); 
+                   $("td:eq(2)", nRow).prop('disabled',true); 
+                   $("td:eq(3)", nRow).prop('disabled',true); 
+                   $("td:eq(4)", nRow).prop('disabled',true); 
+                   $("td:eq(5)", nRow).prop('disabled',true); 
+                   $("td:eq(6)", nRow).prop('disabled',true); 
+                   $("td:eq(7)", nRow).prop('disabled',true); 
+                   $("td:eq(8)", nRow).prop('disabled',true); 
+                   $("td:eq(9)", nRow).prop('disabled',true); 
+                }
+
+                $("td:eq(6)", nRow).prop('disabled',true); 
 
                 $(".myloading").hide();
 
@@ -986,8 +1147,111 @@ $(function() {
 
               
             });
+
+
+
+
                 
       });
+
+
+
+      // ที่อยู่การจัดส่ง (กำหนดเอง)
+       $(document).on('click', '.class_add_address', function(event) {
+              var id = $(this).data('id');
+              // console.log(id);
+              if(id){
+                // ส่ง ajax ไปเอา orders_id_fk
+                $.ajax({
+                        url: " {{ url('backend/ajaxGetOrdersIDtoDeliveryAddr02') }} ",
+                        method: "post",
+                        dataType: "json", 
+                        data: {
+                          id:id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+                            console.log(data);
+                            if(data=='0'){
+                              alert("Invalid ! รายการข้อมูลไม่ถูกต้อง กรุณาติดต่อ Admin");
+                              return false;
+                            }
+                            $.each(data, function( index, value ) {
+                                  $('#customers_addr_frontstore_id').val(value.frontstore_id_fk);
+                                  $('#customer_id').val(value.customer_id);
+
+                                  $('#delivery_cusname').val(value.recipient_name);
+                                  $('#delivery_addr').val(value.addr_no);
+                                  $('#delivery_province').val(value.province_id_fk).select2();
+                                  // $('#delivery_amphur').val(value.amphur_code).select2();
+                                  // $('#delivery_tambon').val(value.tambon_code).select2();
+                                  $('#delivery_zipcode').val(value.zip_code);
+                                  $('#delivery_tel').val(value.tel);
+                                  $('#delivery_tel_home').val(value.tel_home);
+
+                                   if(value.province_id_fk != '' && typeof value.province_id_fk !== "undefined" ){
+                                         $.ajax({
+                                               url: " {{ url('backend/ajaxGetAmphur') }} ",
+                                              method: "post",
+                                              data: {
+                                                province_id:value.province_id_fk,
+                                                "_token": "{{ csrf_token() }}",
+                                              },
+                                              success:function(data2)
+                                              {
+                                                // console.log(value.amphur_code);
+                                                // console.log(data2);
+                                                $.each(data2, function( index2, value2 ) {
+                                                  if(value2.id==value.amphur_code){
+                                                       $('#delivery_amphur').html('<option value='+value.id+' selected >'+value2.amphur_name+'</option>');
+                                                  }
+                                                  
+                                                });
+                                              }
+                                            })
+                                       }
+
+                                      // alert(value.amphur_code);
+
+                                     if(value.amphur_code != '' &&  typeof value.amphur_code !== "undefined" ){
+                                           $.ajax({
+                                                 url: " {{ url('backend/ajaxGetTambon') }} ",
+                                                method: "post",
+                                                data: {
+                                                  amphur_id:value.amphur_code,
+                                                  "_token": "{{ csrf_token() }}",
+                                                },
+                                                success:function(data2)
+                                                {
+
+                                                 // console.log(value.tambon_code);
+                                                 // console.log(data2);
+
+                                                 $.each(data2, function( index2, value2 ) {
+                                                  if(value2.id==value.tambon_code){
+                                                       $('#delivery_tambon').html('<option value='+value.id+' selected >'+value2.tambon_name+'</option>');
+                                                  }
+                                                  
+                                                });
+
+                                                }
+                                              })
+                                         }
+
+                                 
+                            });
+
+                             $('#modalDelivery').modal('show');
+
+
+                        }
+                      })
+
+                   
+              }
+        });
+
 
     </script>
 

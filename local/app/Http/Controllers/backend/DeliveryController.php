@@ -469,6 +469,93 @@ class DeliveryController extends Controller
             return redirect()->to(url("backend/delivery"));
 
 
+       }else if(isset($request->update_delivery_custom_from_pick_pack)){
+
+
+          $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)." ");
+                    // dd(count($ch));
+                    if(count($ch)==0){
+
+                      DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id,customers_id_fk, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+                          VALUES
+                          ('".$request->customers_addr_frontstore_id."',
+                           '".$request->customer_id."',
+                           '".$request->customer_id."',
+                           '".$request->delivery_cusname."',
+                            '".$request->delivery_addr."',
+                             '".$request->delivery_province."',
+                             '".$request->delivery_amphur."',
+                             '".$request->delivery_tambon."',
+                             '".$request->delivery_zipcode."',
+                             '".$request->delivery_tel."',
+                             '".$request->delivery_tel_home."',
+                             now()
+                          )
+                        ");
+
+                    }else{
+
+                       // dd($request->all());
+
+                       DB::select(" UPDATE customers_addr_frontstore
+                        SET recipient_name = '".$request->delivery_cusname."',
+                        addr_no = '".$request->delivery_addr."',
+                        province_id_fk  = '".$request->delivery_province."',
+                        amphur_code = '".$request->delivery_amphur."',
+                        tambon_code = '".$request->delivery_tambon."',
+                        zip_code = '".$request->delivery_zipcode."',
+                        tel = '".$request->delivery_tel."',
+                        tel_home = '".$request->delivery_tel_home."',
+                        updated_at = now() where frontstore_id_fk=".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)."
+                      ");
+
+                    }
+
+
+                       $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                                    dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
+                                    from customers_addr_frontstore
+                                    Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                                    Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                                    Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                                    WHERE
+                                    frontstore_id_fk in (".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0).") ;");
+
+                                   if(@$addr){
+                                      foreach ($addr as $key => $v) {
+
+                                          @$address = @$v->addr_no;
+                                          @$address .= ", ต.". @$v->tamname. " ";
+                                          @$address .= ", อ.". @$v->ampname;
+                                          @$address .= ", จ.". @$v->provname;
+
+                                          if(!empty(@$v->tel)){
+                                              $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
+                                          }else{
+                                              $tel = '';
+                                          }
+
+                                          DB::select(" UPDATE db_delivery  
+                                          SET 
+                                          recipient_name = '".@$v->recipient_name."',
+                                          addr_send = '".@$address."',
+                                          postcode = '".@$v->zip_code."',
+                                          mobile = '".@$tel."',
+                                          province_id_fk = '".@$v->province_id_fk."',
+                                          province_name = '".@$v->provname."',
+                                          set_addr_send_this = '1'
+                                          where orders_id_fk = '".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)."'
+
+                                         ");
+                                      }
+
+                                    }
+
+
+                    return redirect()->to(url("backend/pick_pack"));
+
+
+
        }else if(isset($request->save_to_packing)){
 
       	if(empty($request->row_id)){

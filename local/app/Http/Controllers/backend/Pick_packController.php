@@ -15,7 +15,19 @@ class Pick_packController extends Controller
 
     public function index(Request $request)
     {
-      return View('backend.pick_pack.index');
+
+
+      $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
+      $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
+      $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
+
+        return View('backend.pick_pack.index')->with(
+          array(
+             'sProvince'=>$sProvince,
+             'sAmphures'=>$sAmphures,
+             'sTambons'=>$sTambons,
+          ) );
+
     }
 
 
@@ -353,9 +365,87 @@ class Pick_packController extends Controller
              return @$row->packing_code;
         }
       })
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
+   ->addColumn('addr_to_send', function($row) { 
+
+            $addr = DB::select(" 
+                  SELECT
+                  db_delivery.set_addr_send_this,
+                  db_delivery.recipient_name,
+                  db_delivery.addr_send,
+                  db_delivery.postcode,
+                  db_delivery.mobile,
+                  db_delivery.total_price,
+                  db_delivery.receipt,
+                  db_orders.delivery_location
+                  FROM
+                  db_delivery
+                  left Join db_orders ON db_delivery.orders_id_fk = db_orders.id
+                  WHERE 
+                  db_delivery.id =".$row->id." AND set_addr_send_this=1 ");
+            
+            if(@$addr){
+              if(@$addr[0]->delivery_location!=4){
+                return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+              }
+            }else{
+
+                   $addr2 = DB::select(" 
+                          SELECT
+                          db_delivery.set_addr_send_this,
+                          db_delivery.recipient_name,
+                          db_delivery.addr_send,
+                          db_delivery.postcode,
+                          db_delivery.mobile,
+                          db_delivery.total_price,
+                          db_delivery.receipt,
+                          db_orders.delivery_location
+                          FROM
+                          db_delivery
+                          left Join db_orders ON db_delivery.orders_id_fk = db_orders.id
+                          WHERE 
+                          db_delivery.id =".$row->id." ");
+                    
+                    if(@$addr2){
+                      if(@$addr2[0]->delivery_location==4){
+                        return "<b>* จัดส่งพร้อมบิลอื่น</b>";
+                      }
+                    }else{
+                        return "-";
+                    }
+
+
+            }
+
+
       })
+      ->escapeColumns('addr_to_send')
+
+       ->addColumn('delivery_location', function($row) { 
+
+             $addr2 = DB::select(" 
+                    SELECT
+                    db_delivery.set_addr_send_this,
+                    db_delivery.recipient_name,
+                    db_delivery.addr_send,
+                    db_delivery.postcode,
+                    db_delivery.mobile,
+                    db_delivery.total_price,
+                    db_delivery.receipt,
+                    db_orders.delivery_location
+                    FROM
+                    db_delivery
+                    left Join db_orders ON db_delivery.orders_id_fk = db_orders.id
+                    WHERE 
+                    db_delivery.id =".$row->id." ");
+              
+              if(@$addr2){
+                  return @$addr2[0]->delivery_location;
+              }
+
+
+      })
+      ->escapeColumns('delivery_location')
+
       ->make(true);
     }
 
