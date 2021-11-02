@@ -103,8 +103,10 @@ class DeliveryPackingCodeController extends Controller
           if(@$DP){
             foreach ($DP as $key => $value) {
               $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-              $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
-              array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
+              if(!empty(@$rs[0]->customer_id)){
+                $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
+                array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
+              }
             }
             $arr = implode(',', $array);
             return $arr;

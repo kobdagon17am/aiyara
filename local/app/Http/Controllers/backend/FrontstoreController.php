@@ -3151,6 +3151,19 @@ ORDER BY created_at DESC
           return $r[0]->status_delivery;
 
       })
+      ->addColumn('status_delivery_02', function($row) {
+          $r = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
+          if(!empty($r)){
+             $orders_id_fk = explode(',',@$r[0]->orders_id_fk);
+
+              if (in_array($row->id, @$orders_id_fk)){
+                return 1;
+              }else{
+                return 0;
+              }
+          }
+
+      })
       ->addColumn('status_sent_product', function($row) {
         if(!empty($row->code_order)){
           $r1 = DB::select(" SELECT receipts FROM `db_pick_pack_requisition_code` where status=1 ; ");
