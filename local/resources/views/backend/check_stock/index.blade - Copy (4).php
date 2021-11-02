@@ -458,6 +458,8 @@
                   var shelf_id_fk = $('#shelf_id_fk').val();
                   var shelf_floor = $('#shelf_floor').val();
 
+                  console.log(product);
+
                   // return false;
                         var oTable;
                         $(function() {
@@ -470,7 +472,8 @@
                                       scrollX: true,
                                       ordering: false,
                                       destroy:true,
-                                      iDisplayLength: 10,
+                                      stateSave:true,
+                                      iDisplayLength: 15,
                                       "searching": false,
                                         ajax: {
                                             url: '{{ route('backend.check_stock.datatable') }}',

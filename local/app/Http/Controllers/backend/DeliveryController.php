@@ -734,17 +734,46 @@ class DeliveryController extends Controller
     public function Datatable(Request $req)
     {
 
-        if(!empty($req->business_location_id_fk) && $req->business_location_id_fk > 0 ){
-            $business_location_id = " and db_delivery.business_location_id =  ".$req->business_location_id_fk ;
+
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+
+
+        if(@\Auth::user()->permission==1){
+
+            if(!empty( $req->business_location_id_fk) ){
+                $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
+            }else{
+                $business_location_id = "";
+            }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " and db_delivery.branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
         }else{
-            $business_location_id = "";
+
+            $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
         }
 
-        if(!empty($req->branch_id_fk) && $req->branch_id_fk > 0 ){
-            $branch_id_fk = " and db_delivery.branch_id_fk =  ".$req->branch_id_fk ;
-        }else{
-            $branch_id_fk = "";
-        }
+
+
+        // if(!empty($req->business_location_id_fk) && $req->business_location_id_fk > 0 ){
+        //     $business_location_id = " and db_delivery.business_location_id =  ".$req->business_location_id_fk ;
+        // }else{
+        //     $business_location_id = "";
+        // }
+
+        // if(!empty($req->branch_id_fk) && $req->branch_id_fk > 0 ){
+        //     $branch_id_fk = " and db_delivery.branch_id_fk =  ".$req->branch_id_fk ;
+        // }else{
+        //     $branch_id_fk = "";
+        // }
 
         if(!empty($req->receipt)){
             $receipt = " and db_delivery.receipt =  '".$req->receipt."'" ;

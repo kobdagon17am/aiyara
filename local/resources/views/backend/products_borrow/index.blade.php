@@ -925,8 +925,13 @@ $(document).ready(function() {
 
           var return_datetime = $("#return_datetime").val();
           // alert(return_datetime);
-
           $("#branch_id_select_to_products_borrow").val(branch_id_fk);
+
+          // console.log(branch_id_fk);
+          // console.log(product_id);
+          // console.log(borrow_cause_id_fk);
+          // console.log(return_datetime);
+          // return false;
 
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
