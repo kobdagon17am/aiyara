@@ -307,6 +307,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetVoucher', 'AjaxController@ajaxGetVoucher');
     
     Route::post('ajaxGetOrdersIDtoDeliveryAddr', 'AjaxController@ajaxGetOrdersIDtoDeliveryAddr');
+    Route::post('ajaxGetOrdersIDtoDeliveryAddr02', 'AjaxController@ajaxGetOrdersIDtoDeliveryAddr02');
 
     // Route::post('ajaxFetchData', 'AjaxController@ajaxFetchData');
     // Route::get('ajaxFetchData', 'AjaxController@ajaxFetchData');

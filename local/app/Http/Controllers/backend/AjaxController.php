@@ -6279,6 +6279,29 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
     }
 
 
+
+  public function ajaxGetOrdersIDtoDeliveryAddr02(Request $request)
+    {
+
+      if($request->ajax()){
+
+        // return $request->id;
+        $d2 =  DB::select(" SELECT * FROM `db_delivery` where id in ($request->id) LIMIT 1 ");
+        $d3 = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".$d2[0]->orders_id_fk." ");
+        if($d3){
+            return response()->json($d3);
+        }else{
+            $d2 =  DB::select(" SELECT orders_id_fk as frontstore_id_fk,customer_id FROM `db_delivery` where id in ($request->id) LIMIT 1 ");
+            return response()->json($d2);
+        }
+
+
+      }
+    }
+
+
+
+
   public function ajaxDelFunction(Request $request)
     {
 
