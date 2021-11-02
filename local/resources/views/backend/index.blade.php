@@ -56,23 +56,23 @@
                                                 <div class="pt-4">
     <?php
 
-            $PromotionCode = \App\Models\Backend\PromotionCode::get();
-            if(@$PromotionCode){
-                foreach ($PromotionCode as $key => $value) {
+            // $PromotionCode = \App\Models\Backend\PromotionCode::get();
+            // if(@$PromotionCode){
+                // foreach ($PromotionCode as $key => $value) {
                     
-                    if($value->pro_edate < date("Y-m-d")){
-                        // echo $value->pro_edate;
-                        DB::select(" UPDATE `db_promotion_code` SET `status`='0' WHERE ( `pro_edate` < CURDATE() )  ");
-                        DB::select(" UPDATE
-                        db_promotion_cus
-                        Inner Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
-                        SET
-                        db_promotion_cus.pro_status=3
-                        WHERE
-                        date(db_promotion_code.pro_edate) < curdate()  ");
-                    }
-                }
-            }
+                //     if($value->pro_edate < date("Y-m-d")){
+                //         // echo $value->pro_edate;
+                //         DB::select(" UPDATE `db_promotion_code` SET `status`='0' WHERE ( `pro_edate` < CURDATE() )  ");
+                //         DB::select(" UPDATE
+                //         db_promotion_cus
+                //         Inner Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+                //         SET
+                //         db_promotion_cus.pro_status=3
+                //         WHERE
+                //         date(db_promotion_code.pro_edate) < curdate()  ");
+                //     }
+                // }
+            // }
 
     ?>
                                                 </div>
