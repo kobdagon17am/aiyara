@@ -281,15 +281,10 @@ class AiCashController extends Controller
 
     public function cancel_aicash_backend(Request $rs)
     {
-
-      dd($rs->all());
-
-        $cancel_aicash_id = $rs->cancel_aicash_id;
-        if ($cancel_aicash_id) {
+        $order_id = $rs->cancel_aicash_backend_order_id;
+        if ($order_id) {
             $customer_id = Auth::guard('c_user')->user()->id;
-
-
-            $resule = CancelAicashController::cancel_aicash($cancel_aicash_id, $customer_id, 'customer');
+            $resule = CancelAicashController::cancel_aicash_backend($order_id,$customer_id,'2','customer');
 
             if ($resule['status'] == 'success') {
                 return redirect('product-history')->withSuccess($resule['message']);

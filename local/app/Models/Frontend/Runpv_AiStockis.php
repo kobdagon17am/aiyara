@@ -17,11 +17,13 @@ class Runpv_AiStockis extends Model
                 DB::BeginTransaction();
 
                 $user = DB::table('customers')
-                ->select('pv_aistockist','user_name')
+                ->select('id','pv_aistockist','user_name')
                 ->where('user_name', '=', $username)
                 ->first();
 
+
                 $to_customer= DB::table('customers')
+                ->select('id','pv_aistockist','user_name','pv_mt_active','status_pv_mt','pv_mt','pv_tv','pv')
                 ->where('user_name', '=', $to_customer_user)
                 ->first();
 
@@ -32,7 +34,7 @@ class Runpv_AiStockis extends Model
 
 
                   $update_use = Customer::find($user->id);
-                  dd('sss');
+
 
                   $update_to_customer = Customer::find($to_customer->id);
 
@@ -163,7 +165,6 @@ class Runpv_AiStockis extends Model
                                 ->select('*')
                                 ->where('code', '=', 'pv_tv')
                                 ->first();
-
                             $pro_tv = $promotion_tv->pv;
                             $pv_tv = $to_customer->pv_tv;
                             $pv_tv_all = $pv + $pv_tv;
