@@ -308,6 +308,41 @@
                   </div>
 
 
+                  <div class="modal fade" id="confirm_aicash" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-md" role="document">
+                        <form action="{{ route('confirm_aicash') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+
+                                    <h5 class="modal-title" id="confirm_aicash_title">Comfirm Ai Cash</h5>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12 text-center">
+                                            <button type="button" class="btn btn-default waves-effect "
+                                                data-dismiss="modal">Close</button>
+                                            <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
+
+                                            <input type="hidden" name="confirm_aicash_order_id" id="confirm_aicash_order_id" value="">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {{-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect "
+                        data-dismiss="modal">Close</button>
+
+                </div> --}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
                   <div class="modal fade" id="cancel_aicash" tabindex="-1" role="dialog">
                       <div class="modal-dialog modal-md" role="document">
                           <form action="{{ route('cancel_aicash') }}" method="POST" enctype="multipart/form-data">
@@ -338,6 +373,38 @@
                           </form>
                       </div>
                   </div>
+
+
+                  <div class="modal fade" id="cancel_aicash_backend" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-md" role="document">
+                        <form action="{{ route('cancel_aicash_backend') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="cancel_title_aicashbackend">ยืนยันการยกเลิกรายการ Ai-Cash</h5>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12 text-center">
+                                            <button type="button" class="btn btn-default waves-effect "
+                                                data-dismiss="modal">Close</button>
+                                            <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
+                                            <input type="hidden" name="cancel_aicash_backend_order_id" id="cancel_aicash_backend_order_id" value="">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {{-- <div class="modal-footer">
+                  <button type="button" class="btn btn-default waves-effect "
+                      data-dismiss="modal">Close</button>
+
+              </div> --}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
                   <div class="modal fade" id="view_aicash" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-md" role="document">
@@ -475,9 +542,20 @@ function qrcode(id,type='') {
             $('#cancel_title').html('ยืนยันการยกเลิกรายการ (' + code + ')');
         }
 
+        function cancel_aicash_backend(order_id, code) {
+            $('#cancel_aicash_backend_order_id').val(order_id);
+            $('#cancel_title_aicashbackend').html('ยืนยันการยกเลิกรายการ (' + code + ')');
+        }
+
         function re_new_payment_truemoney(order_id,code) {
             $('#truemoney_order_id').val(order_id);
             $('#truemoney_title').html('Repeat TrueMouney (' + code + ')');
+
+        }
+
+        function confirm_aicash(order_id,code) {
+            $('#confirm_aicash_order_id').val(order_id);
+            $('#confirm_aicash_title').html('Confirm Ai Cash (' + code + ')');
 
         }
 
