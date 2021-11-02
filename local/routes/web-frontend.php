@@ -191,7 +191,10 @@ Route::get('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_ai
 Route::get('ai-cash','Frontend\AiCashController@index')->name('ai-cash');
 Route::post('dt_aicash','Frontend\AiCashController@dt_aicash')->name('dt_aicash');
 Route::post('delete_aicash','Frontend\AiCashController@delete_aicash')->name('delete_aicash');
+Route::post('confirm_aicash','Frontend\AiCashController@confirm_aicash')->name('confirm_aicash');
+
 Route::post('cancel_aicash','Frontend\AiCashController@cancel_aicash')->name('cancel_aicash');
+Route::post('cancel_aicash_backend','Frontend\AiCashController@cancel_aicash_backend')->name('cancel_aicash_backend');
 Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
 Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
 Route::get('datatable_order_aicash','Frontend\AiCashController@datatable_order_aicash')->name('datatable_order_aicash');

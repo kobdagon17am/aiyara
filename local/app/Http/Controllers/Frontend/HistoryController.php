@@ -294,8 +294,8 @@ class HistoryController extends Controller
                   $action = '<div class="dropdown-primary btn-sm dropdown open">
                   <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
                   <div class="dropdown-menu" aria-labelledby="dropdown-5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#promptpay" onclick="re_new_payment_promptpay('.$row->id.',\''.$row->code_order.'\')">Confirm</a>
-                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#cancel" onclick="cancel_order(' . $row->id . ',\'' . $row->code_order . '\')">Cancel</a>
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#confirm_aicash" onclick="confirm_aicash('.$row->id.',\''.$row->code_order.'\')">Confirm</a>
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#cancel_aicash_backend" onclick="cancel_aicash_backend(' . $row->id . ',\'' . $row->code_order . '\')">Cancel</a>
 
                   </div>
               </div>';

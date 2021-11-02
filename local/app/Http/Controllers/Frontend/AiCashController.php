@@ -279,6 +279,49 @@ class AiCashController extends Controller
         }
     }
 
+    public function cancel_aicash_backend(Request $rs)
+    {
+
+      dd($rs->all());
+
+        $cancel_aicash_id = $rs->cancel_aicash_id;
+        if ($cancel_aicash_id) {
+            $customer_id = Auth::guard('c_user')->user()->id;
+
+
+            $resule = CancelAicashController::cancel_aicash($cancel_aicash_id, $customer_id, 'customer');
+
+            if ($resule['status'] == 'success') {
+                return redirect('product-history')->withSuccess($resule['message']);
+            } else {
+                return redirect('product-history')->withError($resule['message']);
+            }
+
+        } else {
+            return redirect('product-history')->withError('Cancel Ai-Cash Fail : Data is null');
+        }
+    }
+
+    public function confirm_aicash(Request $rs)
+    {
+
+        $order_id = $rs->confirm_aicash_order_id;
+        if ($order_id) {
+
+            $customer_id = Auth::guard('c_user')->user()->id;
+            $resule = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($order_id,$customer_id,'2','customer');
+
+            if ($resule['status'] == 'success') {
+                return redirect('product-history')->withSuccess($resule['message']);
+            } else {
+                return redirect('product-history')->withError($resule['message']);
+            }
+
+        } else {
+            return redirect('product-history')->withError('Cancel Ai-Cash Fail : Data is null');
+        }
+    }
+
     public function upload_slip_aicash(Request $request)
     {
       //ไม่ใช้เเล้ว
