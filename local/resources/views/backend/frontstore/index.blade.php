@@ -575,13 +575,24 @@ $(function() {
                           if(sD=='1'){
                             str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
                           }
+
+                          var str_V2 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="เบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+
                           if(sU!='1' && sD!='1'){
                              $('td:last-child', nRow).html('-');
                           }else{
 
-                               $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                            // console.log(aData['status_delivery_02']);
 
-                                    var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                            if(aData['status_delivery_02']==1){
+
+                                 $('td:last-child', nRow).html( str_U + str_V2).addClass('input');
+
+                            }else{
+
+                                 $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+
+                                    // var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
 
                                       // console.log(aData['status_sent_product']+" : "+aData['code_order']);
                                     // if(aData['status_sent_product']!="" && aData['status_sent_product']>=2){
@@ -593,7 +604,7 @@ $(function() {
                                     //    }
                                     // }
 
-
+                            }
 
                           }
 
