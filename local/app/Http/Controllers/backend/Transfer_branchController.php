@@ -252,28 +252,28 @@ class Transfer_branchController extends Controller
 
 
 // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
-          $db_select = DB::select("
-            SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$id."
-             ");
-          foreach ($db_select as $key => $v) {
+          // $db_select = DB::select("
+          //   SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$id."
+          //    ");
+          // foreach ($db_select as $key => $v) {
 
-                 $fnCheckStock = new  AjaxController();
-                 $r_check_stcok = $fnCheckStock->fnCheckStock(
-                  $v->branch_id_fk,
-                  $v->product_id_fk,
-                  $v->amt,
-                  $v->lot_number,
-                  $v->lot_expired_date,
-                  $v->warehouse_id_fk,
-                  $v->zone_id_fk,
-                  $v->shelf_id_fk,
-                  $v->shelf_floor);
-                // return $r_check_stcok;
-                if($r_check_stcok==0){
-                  return redirect()->to(url("backend/transfer_branch/".$id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
-                }
+          //        $fnCheckStock = new  AjaxController();
+          //        $r_check_stcok = $fnCheckStock->fnCheckStock(
+          //         $v->branch_id_fk,
+          //         $v->product_id_fk,
+          //         $v->amt,
+          //         $v->lot_number,
+          //         $v->lot_expired_date,
+          //         $v->warehouse_id_fk,
+          //         $v->zone_id_fk,
+          //         $v->shelf_id_fk,
+          //         $v->shelf_floor);
+          //       // return $r_check_stcok;
+          //       if($r_check_stcok==0){
+          //         return redirect()->to(url("backend/transfer_branch/".$id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
+          //       }
 
-          }
+          // }
 
 
 

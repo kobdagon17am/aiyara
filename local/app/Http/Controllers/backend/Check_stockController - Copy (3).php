@@ -76,7 +76,7 @@ class Check_stockController extends Controller
             $wh_02 = "" ; 
         }
 
-// date(lot_expired_date) >= CURDATE() 
+
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
@@ -87,7 +87,8 @@ class Check_stockController extends Controller
 
          $sBalance = DB::select(" SELECT sum(amt) as amt
          FROM `db_stocks`
-         WHERE 1
+         WHERE 
+         date(lot_expired_date) >= CURDATE() 
          AND product_id_fk=$id 
 
          $wh_01
@@ -127,8 +128,8 @@ class Check_stockController extends Controller
 
            $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
-// date(lot_expired_date) >= CURDATE()
-          $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$Stock[0]->product_id_fk." 
+
+          $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where date(lot_expired_date) >= CURDATE() AND product_id_fk=".$Stock[0]->product_id_fk." 
           AND lot_number='".$Stock[0]->lot_number."' 
           AND lot_expired_date='".$Stock[0]->lot_expired_date."' 
           AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."' 
@@ -228,7 +229,7 @@ class Check_stockController extends Controller
         '$w08' as w08,
         '$w09' as w09
          FROM `db_stocks`
-         WHERE 1
+         WHERE date(lot_expired_date) >= CURDATE() 
           $w01
           $w02
           $w03
@@ -242,7 +243,7 @@ class Check_stockController extends Controller
         ORDER BY db_stocks.id
 
         ");
-// date(lot_expired_date) >= CURDATE()
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
@@ -258,11 +259,11 @@ class Check_stockController extends Controller
            return @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
       })
-// date(lot_expired_date) >= CURDATE()
+
       ->addColumn('lot_number', function($row) {
         // $d = strtotime($row->lot_expired_date);
         // return date("d/m/", $d).(date("Y", $d)+543);
-            $d = DB::select(" SELECT lot_number FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+            $d = DB::select(" SELECT lot_number FROM `db_stocks` where date(lot_expired_date) >= CURDATE() AND product_id_fk=".$row->product_id_fk." 
 
           ".$row->w01."
           ".$row->w02."
@@ -286,8 +287,7 @@ class Check_stockController extends Controller
       ->addColumn('lot_expired_date', function($row) {
         // $d = strtotime($row->lot_expired_date);
         // return date("d/m/", $d).(date("Y", $d)+543);
-        // date(lot_expired_date) >= CURDATE()
-            $d = DB::select(" SELECT lot_expired_date FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+            $d = DB::select(" SELECT lot_expired_date FROM `db_stocks` where date(lot_expired_date) >= CURDATE() AND product_id_fk=".$row->product_id_fk." 
 
           ".$row->w01."
           ".$row->w02."
@@ -310,8 +310,7 @@ class Check_stockController extends Controller
        ->addColumn('amt_desc', function($row) {
         // $d = strtotime($row->lot_expired_date);
         // return date("d/m/", $d).(date("Y", $d)+543);
-        // date(lot_expired_date) >= CURDATE()
-            $d = DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+            $d = DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where date(lot_expired_date) >= CURDATE() AND product_id_fk=".$row->product_id_fk." 
           
           ".$row->w01."
           ".$row->w02."
@@ -337,9 +336,8 @@ class Check_stockController extends Controller
         // $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         // $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         // return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
-        // date(lot_expired_date) >= CURDATE()
 
-            $d = DB::select(" SELECT * FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
+            $d = DB::select(" SELECT * FROM `db_stocks` where date(lot_expired_date) >= CURDATE() AND product_id_fk=".$row->product_id_fk."
 
           ".$row->w01."
           ".$row->w02."
@@ -370,8 +368,8 @@ class Check_stockController extends Controller
       })
       ->addColumn('stock_card', function($row) {
         // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
-// date(lot_expired_date) >= CURDATE()
-            $d = DB::select(" SELECT id FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+
+            $d = DB::select(" SELECT id FROM `db_stocks` where date(lot_expired_date) >= CURDATE() AND product_id_fk=".$row->product_id_fk." 
           
           ".$row->w01."
           ".$row->w02."

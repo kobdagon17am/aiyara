@@ -180,23 +180,23 @@ class Products_borrowController extends Controller
          foreach ($rsWarehouses_details as $key => $v) {
 
           // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
-             $fnCheckStock = new  AjaxController();
-                 $r_check_stcok = $fnCheckStock->fnCheckStock(
-                  $v->branch_id_fk,
-                  $v->product_id_fk,
-                  $v->amt,
-                  $v->lot_number,
-                  $v->lot_expired_date,
-                  $v->warehouse_id_fk,
-                  $v->zone_id_fk,
-                  $v->shelf_id_fk,
-                  $v->shelf_floor);
-                // return $r_check_stcok;
-                if($r_check_stcok==0){
-                  return redirect()->to(url("backend/products_borrow"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
-                }
+             // $fnCheckStock = new  AjaxController();
+             //     $r_check_stcok = $fnCheckStock->fnCheckStock(
+             //      $v->branch_id_fk,
+             //      $v->product_id_fk,
+             //      $v->amt,
+             //      $v->lot_number,
+             //      $v->lot_expired_date,
+             //      $v->warehouse_id_fk,
+             //      $v->zone_id_fk,
+             //      $v->shelf_id_fk,
+             //      $v->shelf_floor);
+             //    // return $r_check_stcok;
+             //    if($r_check_stcok==0){
+             //      return redirect()->to(url("backend/products_borrow"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
+             //    }
 
-              DB::update(" UPDATE db_stocks SET amt = (amt - ".$v->amt.") where id =".$v->stocks_id_fk."  ");
+                DB::update(" UPDATE db_stocks SET amt = (amt - ".$v->amt.") where id =".$v->stocks_id_fk."  ");
          }
 
       }

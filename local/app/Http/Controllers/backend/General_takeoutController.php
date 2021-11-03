@@ -144,21 +144,21 @@ class General_takeoutController extends Controller
           $sRow->created_at = date('Y-m-d H:i:s');
 
           // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
-           $fnCheckStock = new  AjaxController();
-           $r_check_stcok = $fnCheckStock->fnCheckStock(
-            request('branch_id_fk'),
-            request('product_id_fk'),
-            request('amt'),
-            request('lot_number'),
-            request('lot_expired_date'),
-            request('warehouse_id_fk'),
-            request('zone_id_fk'),
-            request('shelf_id_fk'),
-            request('shelf_floor'));
-          // return $r_check_stcok;
-          if($r_check_stcok==0){
-            return redirect()->to(url("backend/general_takeout/".$sRow->id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
-          }
+          //  $fnCheckStock = new  AjaxController();
+          //  $r_check_stcok = $fnCheckStock->fnCheckStock(
+          //   request('branch_id_fk'),
+          //   request('product_id_fk'),
+          //   request('amt'),
+          //   request('lot_number'),
+          //   request('lot_expired_date'),
+          //   request('warehouse_id_fk'),
+          //   request('zone_id_fk'),
+          //   request('shelf_id_fk'),
+          //   request('shelf_floor'));
+          // // return $r_check_stcok;
+          // if($r_check_stcok==0){
+          //   return redirect()->to(url("backend/general_takeout/".$sRow->id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
+          // }
 
 
           $sRow->save();
