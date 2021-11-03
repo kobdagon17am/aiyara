@@ -5280,7 +5280,7 @@ if($frontstore[0]->check_press_save==2){
 
   public function truncateStockMovement(){
         DB::select(" TRUNCATE db_stock_movement_tmp; ");
-        // DB::select(" TRUNCATE db_stock_movement; ");
+        DB::select(" TRUNCATE db_stock_movement; ");
    }
 
   public function insertStockMovement($data){

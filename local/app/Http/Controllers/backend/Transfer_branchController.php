@@ -31,6 +31,18 @@ class Transfer_branchController extends Controller
           return $query->where('id', auth()->user()->branch_id_fk);
         })->get();
         $Warehouse = \App\Models\Backend\Warehouse::get();
+
+        // $toBranchs = \App\Models\Backend\Branchs::get();
+        // dd($User_branch_id);
+        if($sPermission==1){
+          $toBranchs = \App\Models\Backend\Branchs::get();
+        }else{
+          $User_branch_id = @$User_branch_id?$User_branch_id:0;
+          $toBranchs = DB::select("SELECT * from branchs where id not in($User_branch_id) ");
+        }
+        
+        // dd($toBranchs);
+
         $Zone = \App\Models\Backend\Zone::get();
         $Shelf = \App\Models\Backend\Shelf::get();
 
@@ -62,6 +74,7 @@ class Transfer_branchController extends Controller
            'tr_number'=>$tr_number,
            'sAction_user'=>$sAction_user,
            'sPermission'=>$sPermission,
+           'toBranchs'=>$toBranchs,
 
         ) );
 

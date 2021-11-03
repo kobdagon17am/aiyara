@@ -987,21 +987,29 @@ if(@$sRow->check_press_save==2){
                            <br><?=@$address?>
                         </th>
                       </tr>
-<?php // echo @$shipping_special[0]->status_special ?>
-<?php // echo @$sRow->shipping_special ?>
-<?php // echo @$disChannel3 ?>
-<?php // echo @$pay_type_transfer_aicash ?>
-<?php // echo @$dis_addr ?>
-<!-- if @$sRow->updated_at >= @$shipping_special[0]->updated_at -->
-        @IF(@$shipping_special[0]->status_special==1 || @$sRow->shipping_special == 1)
+<?php echo @$shipping_special[0]->status_special ?>
+<?php echo @$sRow->shipping_special ?>
+<?php echo @$disChannel3 ?>
+<?php echo @$pay_type_transfer_aicash ?>
+<?php echo @$dis_addr ?>
 
+        @IF(@$shipping_special[0]->status_special==1 || @$sRow->shipping_special == 1)
+          @if( @$sRow->updated_at >= @$shipping_special[0]->updated_at  )
+                      <tr>
+                        <th scope="row"  style="">
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
+                        </th>
+                      </tr>
+                    @ELSE
                   <tr>
                         <th scope="row"  style="">
                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
-        @ENDIF
+                      @ENDIF
+                 @ENDIF
 
                     </tbody>
                   </table>

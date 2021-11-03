@@ -134,8 +134,8 @@
                     <div class="col-md-9">
                       <select name="to_branch" id="to_branch" class="form-control select2-templating " required >
                               <option value="">-Select-</option>
-                                 @if(@$sBranchs)
-                                  @foreach(@$sBranchs AS $r)
+                                 @if(@$toBranchs)
+                                  @foreach(@$toBranchs AS $r)
                                     <option value="{{$r->id}}"  >
                                       {{$r->b_name}} 
                                     </option>

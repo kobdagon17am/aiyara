@@ -84,6 +84,10 @@ class Products_borrowController extends Controller
             $sRow->amt    = request('amt_products_borrow')[$i];
             $sRow->product_unit_id_fk    = $Check_stock->product_unit_id_fk;
             $sRow->date_in_stock    = $Check_stock->date_in_stock;
+            $sRow->warehouse_id_fk    = $Check_stock->warehouse_id_fk;
+            $sRow->zone_id_fk    = $Check_stock->zone_id_fk;
+            $sRow->shelf_id_fk    = $Check_stock->shelf_id_fk;
+            $sRow->shelf_floor    = $Check_stock->shelf_floor;
             $sRow->action_user = \Auth::user()->id;
             $sRow->action_date = date('Y-m-d H:i:s');
             $sRow->created_at = date('Y-m-d H:i:s');
@@ -92,6 +96,7 @@ class Products_borrowController extends Controller
             }
           }
 
+  
           return redirect()->to(url("backend/products_borrow"));
 
       }else if(isset($request->save_set_to_warehouse)){
@@ -195,9 +200,62 @@ class Products_borrowController extends Controller
              //    if($r_check_stcok==0){
              //      return redirect()->to(url("backend/products_borrow"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
              //    }
-
+                // ตัด stock 
                 DB::update(" UPDATE db_stocks SET amt = (amt - ".$v->amt.") where id =".$v->stocks_id_fk."  ");
          }
+
+            // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
+            $Data = DB::select("
+                    SELECT db_products_borrow_code.business_location_id_fk,
+                    (
+                    CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE borrow_number END
+                    ) as doc_no
+                    ,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
+
+                    db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number,lot_expired_date,
+                    db_products_borrow_details.amt,2 as 'in_out',product_unit_id_fk
+                    ,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_products_borrow_code.approve_status as status,
+                    'เบิก/ยืม' as note, db_products_borrow_code.created_at as dd,
+                    db_products_borrow_details.action_user as action_user,db_products_borrow_details.approver as approver,db_products_borrow_details.approve_date as approve_date
+                    FROM
+                    db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
+              ");
+
+              $insertStockMovement = new  AjaxController();
+
+              foreach ($Data as $key => $value) {
+
+                   $insertData = array(
+                      "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                      "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                      "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                      "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                      "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                      "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                      "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                      "amt" =>  @$value->amt?$value->amt:0,
+                      "in_out" =>  @$value->in_out?$value->in_out:0,
+                      "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                      "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                      "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                      "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                      "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                      "status" =>  @$value->status?$value->status:0,
+                      "note" =>  @$value->note?$value->note:NULL,
+
+                        "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                        "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                        "approver" =>  @$value->approver?$value->approver:NULL,
+                        "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                      "created_at" =>@$value->dd?$value->dd:NULL
+                  );
+
+                    $insertStockMovement->insertStockMovement($insertData);
+
+                }
+
+                DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
 
       }
 

@@ -70,7 +70,7 @@
                 <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                 <div class="col-md-8">
                   <select id="business_location_id_fk" name="business_location_id_fk"
-                    class="form-control select2-templating " required="" @if($sPermission !== 1) disabled @endif>
+                    class="form-control select2-templating " required="" @if($sPermission !== 1)  @endif>
                     <option value="">-Business Location-</option>
                     @if(@$sBusiness_location)
                       @foreach(@$sBusiness_location AS $r)
@@ -88,10 +88,11 @@
                 <div class="col-md-8">
 
                   <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating" >
+                    <option value="">Select</option>
                     @if(@$sBranchs)
                     @foreach(@$sBranchs AS $r)
-                    <?=$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
-                    <option value="{{$r->id}}" {{ ( @$r->id==$branch_id_fk) ? 'selected': ''  }}>
+                    <?php //$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
+                    <option value="{{$r->id}}" {{ ( @$r->id==@$sRow->branch_id_fk) ? 'selected': ''  }}>
                       {{$r->b_name}}
                     </option>
                     @endforeach

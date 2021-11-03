@@ -86,6 +86,7 @@ class Transfer_warehouses_codeController extends Controller
                        ,shelf_floor=? 
                        ,action_user=? 
                        ,action_date=? 
+                       ,remark=? 
                        ",
                       [
                         $Transfer_warehouses_code->id
@@ -102,10 +103,11 @@ class Transfer_warehouses_codeController extends Controller
                         ,$Transfer_choose->shelf_floor
                         ,$Transfer_choose->action_user
                         ,$Transfer_choose->action_date
+                        ,'1'
                       ]);
                 }
 
-               DB::update(" DELETE FROM db_transfer_choose where action_user=? ",[\Auth::user()->id]);
+                DB::update(" DELETE FROM db_transfer_choose where action_user=? ",[\Auth::user()->id]);
 
                 return redirect()->to(url("backend/transfer_warehouses"));
 
@@ -214,7 +216,11 @@ class Transfer_warehouses_codeController extends Controller
       //       $sTable = \App\Models\Backend\Transfer_warehouses_code::search()->orderBy('action_date', 'desc');
       // 	}
       // }
-
+      if(@$req->id>0){
+        $id = "  id = ".$req->id." AND ";
+      }else{
+        $id = "";
+      }
 
       $branch_id = !empty($req->branch_id) ? $req->branch_id : 0 ;
       if($branch_id>0){
@@ -249,12 +255,13 @@ class Transfer_warehouses_codeController extends Controller
 
       $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
           WHERE 
+          $id
           ".$branch_id2." 
           ".$approve_status." 
           (action_user LIKE ".(\Auth::user()->id)." OR 
           (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
           ".$action_date." 
-          ORDER BY action_date DESC ");
+          ORDER BY updated_at DESC ");
           		
       $sQuery = \DataTables::of($sTable);
        return $sQuery

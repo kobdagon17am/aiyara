@@ -249,13 +249,11 @@
                 scrollY: ''+($(window).height()-370)+'px',
                 ajax: {
                 url: '{{ route('backend.transfer_warehouses_code.datatable') }}',
-                data: function ( d ) {
-                  d.Where={};
-                  d.Where['id'] = list_id ;
-                  oData = d;
+                 data :{
+                      id:list_id,
+                    },
+                  method: 'POST',
                 },
-                 method: 'POST',
-               },
 
               columns: [
                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},

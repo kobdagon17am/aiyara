@@ -942,23 +942,12 @@ $(document).ready(function() {
   					        searching: false,
   					        // paging: false,
 
-  					        // ajax: {
-  					        //   url: '{{ route('backend.check_stock.datatable') }}',
-  					        //   data: function ( d ) {
-  					        //     d.Where={};
-  					        //     d.Where['branch_id_fk'] = branch_id_fk ;
-               //          d.Where['product_id_fk'] = product_id ;
-  					        //     oData = d;
-  					        //   },
-  					        //   method: 'POST'
-  					        // },
-
                     ajax: {
-                        url: '{{ route('backend.check_stock.datatable') }}',
+                        url: '{{ route('backend.check_stock_transfer_warehouses.datatable') }}',
                         data :{
                               _token: '{{csrf_token()}}',
                               branch_id_fk:branch_id_fk,
-                              product:product_id,
+                              product_id_fk:product_id,
                             },
                           method: 'POST',
                         },

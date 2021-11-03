@@ -738,8 +738,6 @@ class DeliveryController extends Controller
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
 
-
-
         if(@\Auth::user()->permission==1){
 
             if(!empty( $req->business_location_id_fk) ){

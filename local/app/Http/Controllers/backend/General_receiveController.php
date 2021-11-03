@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use App\Http\Controllers\backend\AjaxController;
+
 
 class General_receiveController extends Controller
 {
@@ -215,6 +217,68 @@ class General_receiveController extends Controller
                         'amt' => $value[0]->amt + request('amt'),
                       ));
                 }
+
+        $insertStockMovement = new  AjaxController();
+
+                   // ดึงจากตารางรับเข้า > db_general_receive
+        $Data = DB::select("
+                SELECT db_general_receive.business_location_id_fk,
+                (
+                CASE WHEN po_invoice_no='-' or po_invoice_no is null THEN CONCAT('CODE',db_general_receive.id) ELSE CONCAT('CODE',po_invoice_no) END
+                ) as doc_no
+                ,db_general_receive.created_at as doc_date,branch_id_fk,
+                db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
+                concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd,
+                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date
+                FROM
+                db_general_receive
+                left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
+          ");
+
+          foreach ($Data as $key => $value) {
+/*
+  `action_user` int(11) DEFAULT '0' COMMENT 'ผู้ดำเนินการ',
+  `action_date` datetime DEFAULT NULL COMMENT 'วันทำการ',
+  `approver` int(11) DEFAULT '0' COMMENT 'ผู้อนุมัติ',
+  `approve_date` datetime DEFAULT NULL COMMENT 'วันเวลาอนุมัติ',
+  `sender` int(11) DEFAULT '0' COMMENT 'ผู้จัดส่ง Ref>ck_users_admin>id',
+  `sent_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการจัดส่ง',
+  `who_cancel` int(11) DEFAULT '0' COMMENT 'ผู้ยกเลิกการเบิกครั้งนี้ Ref>ck_users_admin>id',
+  `cancel_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการยกเลิก',
+*/
+               $insertData = array(
+                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                  "amt" =>  @$value->amt?$value->amt:0,
+                  "in_out" =>  @$value->in_out?$value->in_out:0,
+                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+
+                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+
+                  "status" =>  @$value->status?$value->status:0,
+                  "note" =>  @$value->note?$value->note:NULL,
+
+                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                  "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                  "approver" =>  @$value->approver?$value->approver:NULL,
+                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                  "created_at" =>@$value->dd?$value->dd:NULL
+              );
+
+                $insertStockMovement->insertStockMovement($insertData);
+
+            }
+
+             DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
 
         }
 
