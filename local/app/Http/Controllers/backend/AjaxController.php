@@ -5280,11 +5280,11 @@ if($frontstore[0]->check_press_save==2){
 
   public function truncateStockMovement(){
         DB::select(" TRUNCATE db_stock_movement_tmp; ");
-        DB::select(" TRUNCATE db_stock_movement; ");
+        // DB::select(" TRUNCATE db_stock_movement; ");
    }
 
   public function insertStockMovement($data){
-        DB::table('db_stock_movement_tmp')->insert($data);
+        DB::table('db_stock_movement_tmp')->insertOrIgnore($data);
    }
 
 
@@ -5551,7 +5551,7 @@ if($frontstore[0]->check_press_save==2){
         $Data = DB::select("
                 SELECT db_products_borrow_code.business_location_id_fk,
                 (
-                CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE CONCAT('CODE',borrow_number) END
+                CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE borrow_number END
                 ) as doc_no
                 ,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
 
