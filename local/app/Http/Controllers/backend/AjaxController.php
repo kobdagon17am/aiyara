@@ -5612,31 +5612,90 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
+// มี 2 ฝั่ง ๆ นึง รับเข้า อีกฝั่ง จ่ายออก
+
         // ดึงจาก การโอนภายในสาขา > db_transfer_warehouses_code > db_transfer_warehouses_details
         $Data = DB::select("
 
-                SELECT
-                db_transfer_warehouses_code.business_location_id_fk,
-                db_transfer_warehouses_code.tr_number as doc_no,
-                db_transfer_warehouses_code.updated_at as doc_date,
-                db_transfer_warehouses_code.branch_id_fk,
-                db_transfer_warehouses_details.product_id_fk,
-                db_transfer_warehouses_details.lot_number,
-                db_transfer_warehouses_details.lot_expired_date,
-                db_transfer_warehouses_details.amt,
-                2 as 'in_out',
-                product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
+                 SELECT
+                          db_transfer_warehouses_code.business_location_id_fk,
+                          db_transfer_warehouses_code.tr_number as doc_no,
+                          db_transfer_warehouses_code.updated_at as doc_date,
+                          db_transfer_warehouses_code.branch_id_fk,
+                          db_transfer_warehouses_details.product_id_fk,
+                          db_transfer_warehouses_details.lot_number,
+                          db_transfer_warehouses_details.lot_expired_date,
+                          db_transfer_warehouses_details.amt,
+                          1 as 'in_out',
+                          product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
 
-                'โอนภายในสาขา' as note,
-                db_transfer_warehouses_code.updated_at as dd,
-                db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
-                FROM
-                db_transfer_warehouses_details
-                Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          'โอนภายในสาขา' as note,
+                          db_transfer_warehouses_code.updated_at as dd,
+                          db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
+                          FROM
+                          db_transfer_warehouses_details
+                          Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          where db_transfer_warehouses_details.remark = 1 
 
           ");
 
           foreach ($Data as $key => $value) {
+
+               $insertData = array(
+                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                  "amt" =>  @$value->amt?$value->amt:0,
+                  "in_out" =>  @$value->in_out?$value->in_out:0,
+                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                  "status" =>  @$value->status?$value->status:0,
+                  "note" =>  @$value->note?$value->note:NULL,
+
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                  "created_at" =>@$value->dd?$value->dd:NULL
+              );
+
+                AjaxController::insertStockMovement($insertData);
+
+            }
+
+   $Data2 = DB::select("
+
+                 SELECT
+                          db_transfer_warehouses_code.business_location_id_fk,
+                          db_transfer_warehouses_code.tr_number as doc_no,
+                          db_transfer_warehouses_code.updated_at as doc_date,
+                          db_transfer_warehouses_code.branch_id_fk,
+                          db_transfer_warehouses_details.product_id_fk,
+                          db_transfer_warehouses_details.lot_number,
+                          db_transfer_warehouses_details.lot_expired_date,
+                          db_transfer_warehouses_details.amt,
+                          2 as 'in_out',
+                          product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
+
+                          'โอนภายในสาขา' as note,
+                          db_transfer_warehouses_code.updated_at as dd,
+                          db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
+                          FROM
+                          db_transfer_warehouses_details
+                          Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          where db_transfer_warehouses_details.remark = 2
+
+          ");
+
+          foreach ($Data2 as $key => $value) {
 
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,

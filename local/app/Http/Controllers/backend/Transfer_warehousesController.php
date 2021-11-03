@@ -91,7 +91,7 @@ class Transfer_warehousesController extends Controller
             $sRow->date_in_stock    = $Check_stock->date_in_stock;
 
 // ส่วนนี้ยังไม่ได้นำเข้า ต้องรอให้เลือกสาขาปลายทางก่อน
-            
+
             // $sRow->warehouse_id_fk    = $Check_stock->warehouse_id_fk;
             // $sRow->zone_id_fk    = $Check_stock->zone_id_fk;
             // $sRow->shelf_id_fk    = $Check_stock->shelf_id_fk;
@@ -180,7 +180,7 @@ class Transfer_warehousesController extends Controller
           // dd($request->approve_status);
 
         $rsWarehouses_details = DB::select("
-           select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." ");
+           select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." AND remark=1  ");
         $arr1 = [];
         foreach ($rsWarehouses_details as $key => $value) {
           array_push($arr1, $value->stocks_id_fk);
@@ -191,15 +191,37 @@ class Transfer_warehousesController extends Controller
         $rsStock = DB::select(" select * from  db_stocks  where id in (".$arr1.")  ");
               // dd($rsStock);
         foreach ($rsStock as $key => $value) {
-            DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
+            DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id." AND remark=1  ");
         }
 
         
          $insertStockMovement = new  AjaxController();
 
          $rsWarehouses_details = DB::select("
-           select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." ");
+           select * from db_transfer_warehouses_details where transfer_warehouses_code_id = ".$request->id." AND remark=1 ");
          // dd($rsWarehouses_details);
+
+          $r = DB::select(" SELECT * FROM db_stocks where id =".$rsWarehouses_details[0]->stocks_id_fk."  ");
+           // dd($r);
+
+           if(@$r){
+
+           DB::table('db_transfer_warehouses_details')
+            ->where('transfer_warehouses_code_id', $request->id)
+            ->where('stocks_id_fk', @$r[0]->id)
+            ->where('remark', '2')
+            ->update(array(
+              'product_unit_id_fk' => @$r[0]->product_unit_id_fk,
+              'warehouse_id_fk' => @$r[0]->warehouse_id_fk,
+              'zone_id_fk' => @$r[0]->zone_id_fk,
+              'shelf_id_fk' => @$r[0]->shelf_id_fk,
+              'shelf_floor' => @$r[0]->shelf_floor,
+              'updated_at' => date("Y-m-d H:i:s"),
+            ));
+
+          }
+
+
          foreach ($rsWarehouses_details as $key => $value) {
 
         
@@ -218,7 +240,6 @@ class Transfer_warehousesController extends Controller
                 if($v->count() == 0){
 
                   // ฝั่งรับเข้า
-
                       DB::table('db_stocks')->insert(array(
                         'business_location_id_fk' => @\Auth::user()->business_location_id_fk,
                         'branch_id_fk' => @$value->branch_id_fk,
@@ -227,7 +248,6 @@ class Transfer_warehousesController extends Controller
                         'lot_expired_date' => @$value->lot_expired_date,
                         'amt' => @$value->amt,
                         'product_unit_id_fk' => @$value->product_unit_id_fk,
-                        'date_in_stock' => date("Y-m-d H:i:s"),
                         'warehouse_id_fk' => @$value->warehouse_id_fk,
                         'zone_id_fk' => @$value->zone_id_fk,
                         'shelf_id_fk' => @$value->shelf_id_fk,
@@ -241,11 +261,11 @@ class Transfer_warehousesController extends Controller
                 }else{
                   // ฝั่งจ่ายออก
                      DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
-
                 }
 
-                // 
+         }
 
+ 
 
 // มี 2 ฝั่ง ๆ นึง รับเข้า อีกฝั่ง จ่ายออก
 
@@ -270,6 +290,7 @@ class Transfer_warehousesController extends Controller
                           FROM
                           db_transfer_warehouses_details
                           Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          where db_transfer_warehouses_details.remark = 1 
 
                     ");
 
@@ -305,11 +326,65 @@ class Transfer_warehousesController extends Controller
 
                       }
 
+                      DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+
+                       $Data2 = DB::select("
+
+                          SELECT
+                          db_transfer_warehouses_code.business_location_id_fk,
+                          db_transfer_warehouses_code.tr_number as doc_no,
+                          db_transfer_warehouses_code.updated_at as doc_date,
+                          db_transfer_warehouses_code.branch_id_fk,
+                          db_transfer_warehouses_details.product_id_fk,
+                          db_transfer_warehouses_details.lot_number,
+                          db_transfer_warehouses_details.lot_expired_date,
+                          db_transfer_warehouses_details.amt,
+                          2 as 'in_out',
+                          product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
+
+                          'โอนภายในสาขา' as note,
+                          db_transfer_warehouses_code.updated_at as dd,
+                          db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
+                          FROM
+                          db_transfer_warehouses_details
+                          Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          where db_transfer_warehouses_details.remark = 2 
+
+                    ");
+
+                    foreach ($Data2 as $key => $value) {
+
+                         $insertData = array(
+                            "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                            "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                            "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                            "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                            "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                            "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                            "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                            "amt" =>  @$value->amt?$value->amt:0,
+                            "in_out" =>  @$value->in_out?$value->in_out:0,
+                            "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                            "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                            "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                            "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                            "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                            "status" =>  @$value->status?$value->status:0,
+                            "note" =>  @$value->note?$value->note:NULL,
+
+                              "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                              "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                              "approver" =>  @$value->approver?$value->approver:NULL,
+                              "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                            "created_at" =>@$value->dd?$value->dd:NULL
+                        );
+
+                          $insertStockMovement->insertStockMovement($insertData);
+
+                      }
+
                          DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
-
-
-
-         }
 
 
 
@@ -367,7 +442,7 @@ class Transfer_warehousesController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Transfer_warehouses::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Transfer_warehouses::where('remark','1')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
       $sQuery = \DataTables::of($sTable);
       return $sQuery
      ->addColumn('product_name', function($row) {

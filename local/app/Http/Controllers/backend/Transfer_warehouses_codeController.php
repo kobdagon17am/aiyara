@@ -67,7 +67,7 @@ class Transfer_warehouses_codeController extends Controller
                 $Transfer_warehouses_code->save();
 
                 DB::update(" update db_transfer_warehouses_code set tr_number=? where id=? ",["TR".sprintf("%05d",$Transfer_warehouses_code->id),$Transfer_warehouses_code->id]);
-
+// ฝั่งรับโอน
                 for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 
                     $Transfer_choose = \App\Models\Backend\Transfer_choose::find($request->transfer_choose_id[$i]);
                     DB::insert("  
@@ -104,6 +104,46 @@ class Transfer_warehouses_codeController extends Controller
                         ,$Transfer_choose->action_user
                         ,$Transfer_choose->action_date
                         ,'1'
+                      ]);
+                }
+
+// ฝั่งโอนให้ ใส่ไว้ก่อน แล้วค่อยไปหักลบยอดออกตอน อนุมัติ อีกที 
+                for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 
+                    $Transfer_choose = \App\Models\Backend\Transfer_choose::find($request->transfer_choose_id[$i]);
+                    DB::insert("  
+                       insert into db_transfer_warehouses_details set  
+                       transfer_warehouses_code_id=? 
+                       ,stocks_id_fk=? 
+                       ,product_id_fk=? 
+                       ,lot_number=? 
+                       ,lot_expired_date=? 
+                       ,amt=? 
+                       ,product_unit_id_fk=? 
+                       ,branch_id_fk=? 
+                       ,warehouse_id_fk=? 
+                       ,zone_id_fk=? 
+                       ,shelf_id_fk=? 
+                       ,shelf_floor=? 
+                       ,action_user=? 
+                       ,action_date=? 
+                       ,remark=? 
+                       ",
+                      [
+                        $Transfer_warehouses_code->id
+                        ,$Transfer_choose->stocks_id_fk
+                        ,$Transfer_choose->product_id_fk
+                        ,$Transfer_choose->lot_number
+                        ,$Transfer_choose->lot_expired_date
+                        ,$Transfer_choose->amt
+                        ,$Transfer_choose->product_unit_id_fk
+                        ,$Transfer_choose->branch_id_fk
+                        ,$Transfer_choose->warehouse_id_fk
+                        ,$Transfer_choose->zone_id_fk
+                        ,$Transfer_choose->shelf_id_fk
+                        ,$Transfer_choose->shelf_floor
+                        ,$Transfer_choose->action_user
+                        ,$Transfer_choose->action_date
+                        ,'2'
                       ]);
                 }
 
