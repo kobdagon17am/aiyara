@@ -239,8 +239,8 @@
               </form>
 
 
-                  <div class=" divBtnSave " style="">
-                   <b>หมายเหตุ</b> รายการที่ ที่อยู่จัดส่ง <b> * จัดส่งพร้อมบิลอื่น </b> ให้ไปทำการรวมบิลจัดจัดส่งที่หน้า สินค้ารอจัดส่ง 
+                  <div>
+                   <b>หมายเหตุ</b> รายการที่ ที่อยู่จัดส่ง <b> * จัดส่งพร้อมบิลอื่น </b> ให้ไปทำการรวมบิลจัดจัดส่งที่หน้า สินค้ารอจัดส่ง / กรณี <b> * ไม่พบข้อมูลที่อยู่ </b> อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้ 
                   </div>
 
  </div>
@@ -518,12 +518,13 @@ $(function() {
                       }},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
-                    if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-                    }else{
-                        return '-รอจัดเบิก-';
-                    }
+                  {data: 'status_delivery',   title :'<center>สถานะการเบิก </center>', className: 'text-center ',render: function(d) {
+                    // if(d=='1'){
+                    //     return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+                    // }else{
+                    //     return '-รอจัดเบิก-';
+                    // }
+                    return '-รอจัดเบิก-';
                   }},
               ],
               'columnDefs': [
@@ -583,26 +584,26 @@ $(function() {
                       
                  // }
 
-                 if (aData['status_delivery'] == "1") {
-                        $('td', nRow).css('background-color', '#ffd9b3');
-                        $("td:eq(0)", nRow).html('');
-                        $("td:eq(7)", nRow).html('');
-                        $("td:eq(6)", nRow).html('');
-                        $("td:eq(10)", nRow).html('');
-                        var i;
-                        for (i = 0; i < 10 ; i++) {
-                           $("td:eq("+i+")", nRow).prop('disabled',true); 
-                        } 
+                //  if (aData['status_delivery'] == "1") {
+                //         $('td', nRow).css('background-color', '#ffd9b3');
+                //         $("td:eq(0)", nRow).html('');
+                //         $("td:eq(7)", nRow).html('');
+                //         $("td:eq(6)", nRow).html('');
+                //         $("td:eq(10)", nRow).html('');
+                //         var i;
+                //         for (i = 0; i < 10 ; i++) {
+                //            $("td:eq("+i+")", nRow).prop('disabled',true); 
+                //         } 
 
-                }else{
-                    $("td:eq(7)", nRow).prop('disabled',true); 
-                    $("td:eq(8)", nRow).prop('disabled',true); 
-                    $("td:eq(10)", nRow).prop('disabled',true); 
-                } 
+                // }else{
+                //     $("td:eq(7)", nRow).prop('disabled',true); 
+                //     $("td:eq(8)", nRow).prop('disabled',true); 
+                //     $("td:eq(10)", nRow).prop('disabled',true); 
+                // } 
 
-                if(sU!=''&&sD!=''){
-                    $('td:last-child', nRow).html('-');
-                }else{ 
+                // if(sU!=''&&sD!=''){
+                //     $('td:last-child', nRow).html('-');
+                // }else{ 
 
                   if (aData['status_delivery'] != "1") {
 
@@ -615,7 +616,7 @@ $(function() {
 
                     // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
-                }
+                // }
 
                 console.log(aData['delivery_location']);
                 if(aData['delivery_location']==4){
@@ -759,7 +760,7 @@ $(function() {
                       // {data: 'receipt02', title :'<center>รหัสใบเสร็จ </center>', className: 'text-center'},
 
                       {data: 'action_user_name', title :'<center>พนักงานที่ดำเนินการ </center>', className: 'text-center'},
-                      {data: 'status_delivery',   title :'<center>สถานะการเบิก</center>', className: 'text-center ',render: function(d) {
+                      {data: 'status_delivery',   title :'<center>สถานะการเบิก </center>', className: 'text-center ',render: function(d) {
 	                  	if(d=='1'){
 	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
 	                  	}else{
@@ -1069,6 +1070,113 @@ $(function() {
     	}
       */
     	
+
+
+             $('#delivery_province').change(function(){
+
+              $(".myloading").show();
+
+                var province_id = this.value;
+                // alert(province_id);
+
+                 if(province_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetAmphur') }} ",
+                        method: "post",
+                        data: {
+                          province_id:province_id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลอำเภอ !!.');
+                         }else{
+                             var layout = '<option value="" selected>- เลือกอำเภอ -</option>';
+                             $.each(data,function(key,value){
+                                layout += '<option value='+value.id+'>'+value.amphur_name+'</option>';
+                             });
+                             $('#delivery_amphur').html(layout);
+                             $('#delivery_tambon').html('<option value="" selected >กรุณาเลือกอำเภอก่อน</option>');
+                         }
+                         $(".myloading").hide();
+                        }
+                      })
+                 }
+
+            });
+
+
+             $('#delivery_amphur').change(function(){
+
+              $(".myloading").show();
+
+                var amphur_id = this.value;
+                // alert(amphur_id);
+
+                 if(amphur_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetTambon') }} ",
+                        method: "post",
+                        data: {
+                          amphur_id:amphur_id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+
+                         $('#delivery_zipcode').val('');
+
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลตำบล !!.');
+                         }else{
+                             var layout = '<option value="" selected>- เลือกตำบล -</option>';
+                             $.each(data,function(key,value){
+                                layout += '<option value='+value.id+'>'+value.tambon_name+'</option>';
+                             });
+                             $('#delivery_tambon').html(layout);
+                         }
+                         $(".myloading").hide();
+                        }
+                      })
+                 }
+
+            });
+
+
+             $('#delivery_tambon').change(function(){
+
+              $(".myloading").show();
+
+                var tambon_id = this.value;
+                // alert(tambon_id);
+
+                 if(tambon_id != ''){
+                   $.ajax({
+                         url: " {{ url('backend/ajaxGetZipcode') }} ",
+                        method: "post",
+                        data: {
+                          tambon_id:tambon_id,
+                          "_token": "{{ csrf_token() }}",
+                        },
+                        success:function(data)
+                        {
+                          //  console.log(data);
+                         if(data == ''){
+                             alert('ไม่พบข้อมูลรหัส ปณ. !!.');
+                         }else{
+                             $.each(data,function(key,value){
+                                $('#delivery_zipcode').val(value.zip_code);
+                             });
+
+                         }
+                         $(".myloading").hide();
+                        }
+                      })
+                 }
+
+            });
+
         
 	</script>
 

@@ -304,6 +304,7 @@
               <div id="last_form"></div>
 
               </form>
+ 
 
  </div>
 
@@ -331,7 +332,9 @@
                           </div>
                         </div>
                       </div>
-                   
+                        <div>
+                   <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้ 
+                  </div>
                     </div>
 
 
@@ -790,11 +793,12 @@ $(function() {
                   columns: [
                       {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
+                          // if(d){
+                          //   return d.replace(/ *, */g, '<br>');
+                          // }else{
+                          //   return '-';
+                          // }
+                          return d ;
                       }},
                       {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
@@ -1448,7 +1452,9 @@ $(function() {
 
 
 
-             $('#delivery_province').change(function(){
+               $('#delivery_province').change(function(){
+
+              $(".myloading").show();
 
                 var province_id = this.value;
                 // alert(province_id);
@@ -1473,6 +1479,7 @@ $(function() {
                              $('#delivery_amphur').html(layout);
                              $('#delivery_tambon').html('<option value="" selected >กรุณาเลือกอำเภอก่อน</option>');
                          }
+                         $(".myloading").hide();
                         }
                       })
                  }
@@ -1481,6 +1488,8 @@ $(function() {
 
 
              $('#delivery_amphur').change(function(){
+
+              $(".myloading").show();
 
                 var amphur_id = this.value;
                 // alert(amphur_id);
@@ -1507,6 +1516,7 @@ $(function() {
                              });
                              $('#delivery_tambon').html(layout);
                          }
+                         $(".myloading").hide();
                         }
                       })
                  }
@@ -1515,6 +1525,8 @@ $(function() {
 
 
              $('#delivery_tambon').change(function(){
+
+              $(".myloading").show();
 
                 var tambon_id = this.value;
                 // alert(tambon_id);
@@ -1538,11 +1550,13 @@ $(function() {
                              });
 
                          }
+                         $(".myloading").hide();
                         }
                       })
                  }
 
             });
+
 
 
     </script>
