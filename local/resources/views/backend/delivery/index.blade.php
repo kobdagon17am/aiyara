@@ -318,11 +318,11 @@
                           <div class="col-md-12">
 
 
-              <?php if($can_payproduct=='1'){ ?>
+              <?php //if($can_payproduct=='1'){ ?>
 
                     <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-              <?php }?>
+              <?php //}?>
 
 							<center>
 							<a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_pack") }}">ไปหน้า สร้างใบเบิก ></a>
@@ -813,35 +813,34 @@ $(function() {
   	                  		return '-รอเบิกสินค้าจากคลัง-';
   	                  	}
 	                    }},
-                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                      {data: 'id', title :'Tools ', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                //   	if (aData['status_delivery'] == "1") {
+                        var sPermission = "<?=\Auth::user()->permission?>";
+                        var sU = sessionStorage.getItem("sU");
+                        var sD = sessionStorage.getItem("sD");
+                        if(sPermission==1){
+                          sU = 1;
+                          sD = 1;
+                        }
+                        var str_U = '';
+                        if(sU=='1'){
+                          str_U = '<a href="{{ route('backend.account_bank.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                        }
+                        var str_D = '';
+                        if(sD=='1'){
+                          str_D = '<button class="btn btn-sm btn-danger" onclick="go_to_rem('+aData['id']+')"><i class="bx bx-trash font-size-16 align-middle"></i></button>';
+                          // str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.account_bank.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                        }
+                        // if(sU!='1' && sD!='1'){
+                        //    $('td:last-child', nRow).html('-');
+                        // }else{
+                        //   $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                        // }
 
-        				    //     $('td', nRow).css('background-color', '#ffd9b3');
-        				    //     $("td:eq(4)", nRow).html('');
-        				    //     $("td:eq(6)", nRow).html('');
-        				    //     var i;
-            				// 		for (i = 0; i < 10 ; i++) {
-            				// 		   $("td:eq("+i+")", nRow).prop('disabled',true); 
-            				// 		} 
-			      	      // }
 
-                    // if(aData['status_pick_pack']=='1'){
-                    //     $('td', nRow).css('background-color', '#ffd9b3');
-                    //     var i;
-                    //     for (i = 0; i < 10 ; i++) {
-                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
-                    //     }
-                    //     $('td:last-child', nRow).html('-');
-                        // $('td:eq(4)', nRow).html(''
-                        //    + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
-                        //  ).addClass('input');
-
-                    // }else{
-
-                        if(sU!=''&&sD!=''){
+                        if(sU!='1' && sD!='1'){
                             $('td:last-child', nRow).html('-');
                         }else{ 
 

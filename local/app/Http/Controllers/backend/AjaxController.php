@@ -4690,7 +4690,7 @@ if($frontstore[0]->check_press_save==2){
 
           $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$id)->get();
           foreach ($DP as $key => $value) {
-              DB::update(" UPDATE db_delivery SET status_pack='0' WHERE id = ".$value->delivery_id_fk."  ");
+              DB::update(" UPDATE db_delivery SET status_pack='0',`packing_code`='0', `packing_code_desc`=NULL WHERE id = ".$value->delivery_id_fk."  ");
           }
 
           DB::update(" DELETE FROM db_delivery_packing WHERE packing_code_id_fk = $id  ");

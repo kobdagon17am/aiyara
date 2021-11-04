@@ -2009,7 +2009,7 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  '.trans('message.all_payment_list').' ('.$sD3.')  (ไม่รวมบิล <font color=red>* รอดำเนินการต่อ และ ไม่รวมบิลที่ ยกเลิก </font>)
+                  '.trans('message.all_payment_list').' ('.$sD3.') (<font color=red>ไม่รวมบิล * รอดำเนินการต่อ และ ไม่รวมบิลที่ ยกเลิก </font>)
                 </th></tr>
                 <tr>
                   <th width="10%">'.trans('message.seller').'</th>

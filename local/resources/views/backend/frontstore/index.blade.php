@@ -325,7 +325,8 @@
               </div>
               <div class="divTableCell" style="text-align: right;" >
                     <a  href="{{ route('backend.frontstore.create') }}">
-                <button type="button" class="btn btn-success btnAdd class_btn_add " ><i class="fa fa-plus font-size-18 align-middle "></i> {{ __('message.add') }}</button>
+                <button type="button" class="btn btn-success btnAdd  " ><i class="fa fa-plus font-size-18 align-middle "></i> {{ __('message.add') }}</button>
+                <!-- class_btn_add -->
                  </a>
               </div>
             </div>
