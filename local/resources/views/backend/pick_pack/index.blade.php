@@ -216,15 +216,15 @@
                   </div> -->
 
 
-              <?php if($can_packing_list=='1'){ ?>
+              <?php //if($can_packing_list=='1'){ ?>
 
                     <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
 
-              <?php }else{ ?>
+              <?php //}else{ ?>
 
                     <!-- <table id="data-table-no-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
               
-              <?php }?>
+              <?php //}?>
 
                  <div class=" divBtnSave " style="display: none;">
                   <center>

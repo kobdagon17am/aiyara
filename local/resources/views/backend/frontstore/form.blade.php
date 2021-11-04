@@ -4901,6 +4901,16 @@ $(document).ready(function() {
                     }
                 });
 
+              $(document).on('change', '#fee', function(event) {
+                    event.preventDefault();
+                    $("#credit_price").attr('disabled', false);
+                    $("#credit_price").val('');
+                    $("#credit_price").focus();
+                    $("#fee_amt").val('');
+                    $("#sum_credit_price").val('');
+                    $("#cash_pay").val('');
+                });
+
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
@@ -5075,7 +5085,7 @@ $(document).ready(function() {
                             if(pay_type_id_fk==7){
                               // เครดิต
                               $(".show_div_credit").show();
-                              $("#credit_price").attr('disabled', false);
+                              // $("#credit_price").attr('disabled', false);
                               $("#credit_price").val('');
                               $(".div_fee").show();
                               $("#fee_amt").val('');
@@ -5084,6 +5094,13 @@ $(document).ready(function() {
                               // เงินสด
                               $(".show_div_cash_pay").show();
                               $("#cash_pay").val('');
+                              var fee = $("#fee").val();
+                              if(fee==''){
+                                $("#fee").select2('open');
+                              }else{
+                                $("#credit_price").attr('disabled', false);
+                                $("#credit_price").focus();
+                              }
 
                             }else
                         // 4  เครดิต + เงินโอน
@@ -5091,7 +5108,7 @@ $(document).ready(function() {
                               // เครดิต
                               $(".show_div_credit").show();
                               $("#credit_price").val('');
-                              $("#credit_price").attr('disabled', false);
+                              // $("#credit_price").attr('disabled', false);
                               $(".div_fee").show();
                               $("#fee_amt").val('');
                               $('#fee').val("").select2();
@@ -5110,6 +5127,14 @@ $(document).ready(function() {
 
                               $(".show_div_cash_pay").hide();
 
+                              var fee = $("#fee").val();
+                              if(fee==''){
+                                $("#fee").select2('open');
+                              }else{
+                                $("#credit_price").attr('disabled', false);
+                                $("#credit_price").focus();
+                              }
+
                             }else
                         // 5  เครดิต + Ai-Cash
                              if(pay_type_id_fk==9){
@@ -5117,7 +5142,7 @@ $(document).ready(function() {
                               $(".show_div_credit").show();
                               $(".div_fee").show();
                               $("#credit_price").val('');
-                              $("#credit_price").attr('disabled', false);
+                              // $("#credit_price").attr('disabled', false);
                               $("#fee_amt").val('');
                               $("#sum_credit_price").val('');
                               $("#cash_pay").val('');
@@ -5140,6 +5165,13 @@ $(document).ready(function() {
                               $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
                               $('#member_id_aicash').attr('required', true);
+                              var fee = $("#fee").val();
+                              if(fee==''){
+                                $("#fee").select2('open');
+                              }else{
+                                $("#credit_price").attr('disabled', false);
+                                $("#credit_price").focus();
+                              }
 
                             }else
                               // 6  เงินโอน + เงินสด

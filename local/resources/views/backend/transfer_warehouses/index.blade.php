@@ -1053,14 +1053,17 @@ $(document).ready(function() {
                       $('td:last-child', nRow).html(''
                         + '<input type="hidden" name="transfer_choose_id[]" value="'+aData['id']+'"> '
                         + '<a href="#" class="btn btn-sm btn-success btnEditToWarehouse " data-id="'+aData['id']+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        // + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_transfer_choose" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
                       ).addClass('input');
 
                     }else{
 
                       $('td:last-child', nRow).html(''
                         + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        // + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_transfer_choose" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
     		              
@@ -1512,6 +1515,41 @@ $(document).ready(function() {
             });
 
         }); 
+    </script>
+    <script>
+      
+      $(document).on('click', '.remove_01', function(event) {
+
+            var id = $(this).data('id');
+            var table = $(this).data('table');
+            var file = $(this).data('file');
+
+            // alert(id+" : "+table+" : "+file);
+            // return false;
+
+            if (!confirm("Are you sure ? ")){
+                return false;
+            }else{
+
+            $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
+                success:function(data){
+                     console.log(data); 
+                     location.reload();
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+        }
+
+    });
+
     </script>
 
 

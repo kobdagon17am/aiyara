@@ -1310,19 +1310,7 @@ if($frontstore[0]->check_press_save==2){
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
-        
-
-         // กรณีส่งฟรี
-        $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
-        $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$sFrontstore->business_location_id_fk."' AND shipping_type_id=1 ");
-
-        if($sum_price>=$shipping[0]->purchase_amt){
-            DB::select(" UPDATE db_orders SET  shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
-            $shipping_price = 0 ;
-        }
-
         $sum_price = ($sum_price+$shipping_price) ;
-
 
         if($request->purchase_type_id_fk==5){
 
@@ -1644,6 +1632,7 @@ if($frontstore[0]->check_press_save==2){
 
             }
         }
+
 
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");

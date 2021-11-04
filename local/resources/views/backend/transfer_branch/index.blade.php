@@ -290,14 +290,14 @@
                     <label  class="col-md-3 col-form-label"><i class="bx bx-play"></i>สาขาปลายทาง :</label>
                     <div class="col-md-9">
                        <select id="branch_id_fk_to" name="branch_id_fk_to" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                         @if(@$sBranchs)
-                          @foreach(@$sBranchs AS $r)
-                          <option value="{{$r->id}}" {{ (@$r->id==@$sTransfer_choose[0]->branch_id_fk_to)?'selected':'' }} >
-                            {{$r->b_name}}
-                          </option>
-                          @endforeach
-                          @endif
+                          <option value="">-Select-</option>
+                                 @if(@$toBranchs)
+                                  @foreach(@$toBranchs AS $r)
+                                    <option value="{{$r->id}}"  >
+                                      {{$r->b_name}} 
+                                    </option>
+                                  @endforeach
+                                @endif
                        </select>
                     </div>
 
