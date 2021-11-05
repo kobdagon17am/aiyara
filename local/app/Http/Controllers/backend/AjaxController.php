@@ -3437,7 +3437,7 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-            DB::select(" TRUNCATE db_consignments; ");
+            // DB::select(" TRUNCATE db_consignments; ");
 
             $data = DB::select(" SELECT invoice_code from db_pick_warehouse_tmp GROUP BY invoice_code ");
 

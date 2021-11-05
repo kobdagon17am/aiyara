@@ -586,7 +586,7 @@ $(function() {
                           }else{
 
                             // console.log(aData['code_order']+" : "+aData['status_delivery_packing']);
-                            // console.log(aData['code_order']+" : "+aData['status_delivery_02']);
+                            console.log(aData['code_order']+" : "+aData['status_delivery_02']);
 
                             if(aData['status_delivery_02']==1){
 

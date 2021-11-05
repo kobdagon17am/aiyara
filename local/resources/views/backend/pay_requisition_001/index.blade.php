@@ -472,7 +472,7 @@
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                          // console.log(aData['status']);
+                          console.log(aData['status']);
 
                           if(aData['status']==1){
 
@@ -502,7 +502,7 @@
 
                               $('td:last-child', nRow).html(''
 
-                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ดูข้อมูลการจ่ายแต่ละครั้ง" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                              
                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
 

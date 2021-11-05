@@ -113,7 +113,8 @@ class Pick_packPackingCodeController extends Controller
               $arr_inv = implode(",",$arr);
               return $t."</div>" .' <input type="hidden" class="arr_inv" value="'.$arr_inv.'"> ';
             }else{
-              return @$row->receipt;
+              $arr_inv = implode("<br>",$r);
+              return @$arr_inv;
             }
         }
       })

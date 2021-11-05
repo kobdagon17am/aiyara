@@ -3162,16 +3162,28 @@ ORDER BY created_at DESC
 
       })
       ->addColumn('status_delivery_02', function($row) {
+          $ch = 0;
           $r = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
-          if(!empty($r)){
-             $orders_id_fk = explode(',',@$r[0]->orders_id_fk);
+          // if(!empty($r)){
+          //    $orders_id_fk = explode(',',@$r[0]->orders_id_fk);
 
-              if (in_array($row->id, @$orders_id_fk)){
-                return 1;
-              }else{
-                return 0;
+          //     // if (in_array($row->id, @$orders_id_fk)){
+          //     //   return 1;
+          //     // }else{
+          //     //   return 0;
+          //     // }
+          // }
+          foreach ($r as $key => $value) {
+
+             $orders_id_fk = explode(',',@$value->orders_id_fk);
+             if (in_array($row->id, @$orders_id_fk)){
+                $ch = 1;
               }
+
           }
+          // return $row->id;
+          // return @$r[0]->orders_id_fk;
+          return @$ch;
 
       })
       ->addColumn('status_sent_product', function($row) {

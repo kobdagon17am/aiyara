@@ -388,10 +388,16 @@
                      // $(".myloading").hide();
                      // var info = $(this).DataTable().page.info();
                      //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
+                  },
+                  fnDrawCallback : function() {
+                      if ($(this).find('.dataTables_empty').length == 1) {
+                         $(this).parent().hide();
+                      }
                   }
               });
          
          });
+
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
 
@@ -431,10 +437,17 @@
                      // $(".myloading").hide();
                      // var info = $(this).DataTable().page.info();
                      //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
+
+                  },
+                  fnDrawCallback : function() {
+                      if ($(this).find('.dataTables_empty').length == 1) {
+                         $(this).parent().hide();
+                      }
                   }
               });
          
          });
+
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
 
