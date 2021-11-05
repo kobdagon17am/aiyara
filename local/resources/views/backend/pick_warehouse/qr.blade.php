@@ -313,7 +313,6 @@
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
           var id = "{{$id}}"; //alert(id);
-          var packing_id = "{{$packing_id}}"; //alert(packing_id);
           var oTable0001;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
@@ -334,7 +333,6 @@
                             method: "POST",
                             data:{ _token: '{{csrf_token()}}',
                             id:id,
-                            picking_id:id,
                           },
                         },
                   columns: [

@@ -240,7 +240,7 @@
 
 
                   <div>
-                   <b>หมายเหตุ</b> รายการที่ ที่อยู่จัดส่ง <b> * จัดส่งพร้อมบิลอื่น </b> ให้ไปทำการรวมบิลจัดจัดส่งที่หน้า สินค้ารอจัดส่ง / กรณี <b> * ไม่พบข้อมูลที่อยู่ </b> อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้ 
+                   <br><b>หมายเหตุ</b> รายการที่ ที่อยู่จัดส่ง <b> * จัดส่งพร้อมบิลอื่น </b> ให้ไปทำการรวมบิลจัดจัดส่งที่หน้า สินค้ารอจัดส่ง / กรณี <b><font color=red> * ไม่พบข้อมูลที่อยู่ </font></b> อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้ <br>
                   </div>
 
  </div>
@@ -257,15 +257,15 @@
                           <div class="col-md-12">
 
 
-                          <?php if($can_payproduct=='1'){ ?>
+                          <?php //if($can_payproduct=='1'){ ?>
 
                                 <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-                          <?php }else{ ?>
+                          <?php //}else{ ?>
 
                                  <!-- <table id="data-table-no-payproduct" class="table table-bordered dt-responsive" style="width: 100%;"></table> -->
                           
-                          <?php } ?>
+                          <?php //} ?>
 
                     <center>
                         <!-- <a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_warehouse") }}"> -->
@@ -290,10 +290,10 @@
 
 
 <div class="modal fade" id="modalOne" tabindex="-1" role="dialog" aria-labelledby="modalOneTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered " role="document" style="width:30%;">
+  <div class="modal-dialog modal-dialog-centered " role="document" style="width:25%;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalOneTitle"><b><i class="bx bx-play"></i>รายการใบเสร็จ (เพิ่มเติม)</b></h5>
+        <h5 class="modal-title" id="modalOneTitle"><b><i class="bx bx-play"></i>รายการใบเสร็จในใบเบิก</b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -618,20 +618,28 @@ $(function() {
 
                 // }
 
+                console.log(aData['check_case_sent_free']);
                 console.log(aData['delivery_location']);
-                if(aData['delivery_location']==4){
-                   // alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
-                   $("td:eq(0)", nRow).prop('disabled',true); 
-                   $("td:eq(1)", nRow).prop('disabled',true); 
-                   $("td:eq(2)", nRow).prop('disabled',true); 
-                   $("td:eq(3)", nRow).prop('disabled',true); 
-                   $("td:eq(4)", nRow).prop('disabled',true); 
-                   $("td:eq(5)", nRow).prop('disabled',true); 
-                   $("td:eq(6)", nRow).prop('disabled',true); 
-                   $("td:eq(7)", nRow).prop('disabled',true); 
-                   $("td:eq(8)", nRow).prop('disabled',true); 
-                   $("td:eq(9)", nRow).prop('disabled',true); 
+
+                // ยกเว้นกรณีส่งฟรี 
+                if(aData['check_case_sent_free']=="sent_free"){
+                }else{
+
+                      if(aData['delivery_location']==4){
+                         // alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
+                         $("td:eq(0)", nRow).prop('disabled',true); 
+                         $("td:eq(1)", nRow).prop('disabled',true); 
+                         $("td:eq(2)", nRow).prop('disabled',true); 
+                         $("td:eq(3)", nRow).prop('disabled',true); 
+                         $("td:eq(4)", nRow).prop('disabled',true); 
+                         $("td:eq(5)", nRow).prop('disabled',true); 
+                         $("td:eq(6)", nRow).prop('disabled',true); 
+                         $("td:eq(7)", nRow).prop('disabled',true); 
+                         $("td:eq(8)", nRow).prop('disabled',true); 
+                         $("td:eq(9)", nRow).prop('disabled',true); 
+                      }
                 }
+                
 
                 $("td:eq(6)", nRow).prop('disabled',true); 
 
@@ -796,9 +804,9 @@ $(function() {
                 //         $('td:last-child', nRow).html('-');
                 //     }else{
 
-                        if(sU!=''&&sD!=''){
-                            $('td:last-child', nRow).html('-');
-                        }else{ 
+                        // if(sU!=''&&sD!=''){
+                        //     $('td:last-child', nRow).html('-');
+                        // }else{ 
 
                            // console.log(aData['id']);
 
@@ -816,7 +824,7 @@ $(function() {
     	                        ).addClass('input');
                     		}
 
-                        }
+                        // }
                   }
 
 
@@ -1368,7 +1376,8 @@ $(function() {
 
            $(document).on('click','.invoice_code_list',function(event){
                var t = $(this).siblings('.arr_inv').val();
-               var tt = t.split(",").join("\r\n");
+               // console.log(t);
+               var tt = t.split(",").join("\r\n<br>");
                $('.invoice_list').html(tt);
                $('#modalOne').modal('show');
             });

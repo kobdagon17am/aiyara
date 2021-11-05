@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Session;
 
 class Pick_warehouse_fifoController extends Controller
 {
@@ -193,6 +194,8 @@ class Pick_warehouse_fifoController extends Controller
           // }else{
           //   $wh_branch_id_fk = " AND db_stocks.branch_id_fk='$branch_id_fk' ";
           // }
+
+          // return $arr_product_id_fk;
 
           DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
           WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
@@ -638,12 +641,14 @@ class Pick_warehouse_fifoController extends Controller
 
                   $ch01 =  DB::select(" SELECT time_pay FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1 ");
 
-                  $ch02 =  DB::select(" SELECT * FROM db_pay_requisition_002_cancel_log WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' AND time_pay=5 and status_cancel=1 ");
+                  $ch02 =  DB::select(" SELECT * FROM db_pay_requisition_002_cancel_log WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' and status_cancel=1 GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1 ");
     
                 // return count($ch);
                 if(count($ch02)>0){
-                  DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
-                  DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
+                  // 2=สินค้าไม่พอ มีบางรายการค้างจ่าย,3=สินค้าพอต่อการจ่ายครั้งนี้ 
+                  DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
+                  // 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
+                  DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
                 }else{
 
 
@@ -652,11 +657,11 @@ class Pick_warehouse_fifoController extends Controller
                         $ch03 =  DB::select(" SELECT * FROM `db_pay_requisition_002_pay_history` WHERE time_pay in (".$ch01[0]->time_pay.") AND amt_remain > 0 ");
 
                         if(count($ch03)>0){
-                           DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
-                           DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
-                        }else{
                            DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
                            DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
+                        }else{
+                           DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
+                           DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
                         }
                    }
 
@@ -957,7 +962,7 @@ class Pick_warehouse_fifoController extends Controller
             GROUP BY db_order_products_list.product_id_fk
             ORDER BY db_order_products_list.product_id_fk ");
 
-
+          $z = 1;
           foreach ($Products as $key => $value) {
 
             // return $value->amt;
@@ -1170,7 +1175,10 @@ class Pick_warehouse_fifoController extends Controller
 
                     $pn .=     
                     '<div class="divTableRow">
-                    <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                    '.@$value->product_name.'</b><br>
+                        ('.@$invoice_code.')
+                    </div>
                     <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -1377,7 +1385,10 @@ class Pick_warehouse_fifoController extends Controller
 
                     $pn .=     
                     '<div class="divTableRow">
-                    <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                    '.@$value->product_name.'</b><br>
+                        ('.@$invoice_code.')
+                    </div>
                     <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
                     <div class="divTableCell" style="width:400px;text-align:center;"> ';
@@ -1389,14 +1400,16 @@ class Pick_warehouse_fifoController extends Controller
                             </div>
                             ';
 
-
                             @$_SESSION['check_product_instock'] = 0;
 
-                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                              // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_ppp_002 WHERE  product_id_fk=".$value->product_id_fk." ");
                     
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
 
+
+                       
                              // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
                                      $p_unit  = DB::select("  SELECT product_unit
                                       FROM
@@ -1407,7 +1420,7 @@ class Pick_warehouse_fifoController extends Controller
                                      $_choose=DB::table("$temp_ppp_004")
                                       ->where('pick_pack_requisition_code_id_fk', $row->pick_pack_requisition_code_id_fk)
                                       ->where('product_id_fk', $v_02->product_id_fk)
-                                      ->where('branch_id_fk', $v_02->branch_id_fk)
+                                      ->where('branch_id_fk', @\Auth::user()->branch_id_fk )
                                       ->get();
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppp_004 (
@@ -1425,12 +1438,12 @@ class Pick_warehouse_fifoController extends Controller
                                               created_at
                                               )
                                               VALUES (
-                                                '".$v_02->business_location_id_fk."',
-                                                '".$v_02->branch_id_fk."',
-                                                '".$value->pick_pack_requisition_code_id_fk."',
+                                                '".@\Auth::user()->business_location_id_fk."',
+                                                '".@\Auth::user()->branch_id_fk."',
+                                                '".$row->pick_pack_requisition_code_id_fk."',
                                                 '".$v_02->product_id_fk."',
-                                                '".$value->product_name."',
-                                                '".$value->amt."',
+                                                '".$v_02->product_name."',
+                                                '".$v_02->amt."',
                                                 '0',
                                                 '0',
                                                 '".$amt_pay_remain."',
@@ -1442,12 +1455,16 @@ class Pick_warehouse_fifoController extends Controller
                                         }
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
 
+                              $i++;
+
                         }
 
                 }
 
             $pn .= '</div>';  
             $pn .= '</div>';  
+
+            $z++;
           }
 
           $pn .= '</div>';  
@@ -1826,7 +1843,9 @@ class Pick_warehouse_fifoController extends Controller
 
                     $pn .=     
                     '<div class="divTableRow">
-                    <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                    '.@$value->product_name.'</b><br>
+                    </div>
                     <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>  
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -1960,7 +1979,9 @@ class Pick_warehouse_fifoController extends Controller
 
                     $pn .=     
                     '<div class="divTableRow">
-                    <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                    '.@$value->product_name.'</b><br>
+                    </div>
                     <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -2163,7 +2184,10 @@ class Pick_warehouse_fifoController extends Controller
 
                     $pn .=     
                     '<div class="divTableRow">
-                    <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                    '.@$value->product_name.'</b><br>
+                        
+                    </div>
                     <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                     <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .' </div>  
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -2175,6 +2199,8 @@ class Pick_warehouse_fifoController extends Controller
                             <div class="divTableCell" style="width:80px;text-align:center;">  </div>
                             </div>
                             ';
+
+                      @$_SESSION['check_product_instock'] = 0;
                     
                       $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                     
@@ -2493,7 +2519,9 @@ class Pick_warehouse_fifoController extends Controller
 
                             $pn .=     
                             '<div class="divTableRow">
-                            <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                             <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                            '.@$value->product_name.'</b><br>
+                            </div>
                             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                             <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>  
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -2627,7 +2655,9 @@ class Pick_warehouse_fifoController extends Controller
 
                             $pn .=     
                             '<div class="divTableRow">
-                            <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                             <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                            '.@$value->product_name.'</b><br>
+                            </div>
                             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                             <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -2822,13 +2852,16 @@ class Pick_warehouse_fifoController extends Controller
 
                         }else{ // กรณีไม่มีสินค้าในคลังเลย 
 
+
                              $amt_pay_remain = $value->amt_remain ;
                              $pay_this = 0 ;
                              $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
                             $pn .=     
                             '<div class="divTableRow">
-                            <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
+                             <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                              '.@$value->product_name.'</b><br>
+                              </div>
                             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
                             <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
@@ -2840,6 +2873,9 @@ class Pick_warehouse_fifoController extends Controller
                                     <div class="divTableCell" style="width:80px;text-align:center;">  </div>
                                     </div>
                                     ';
+
+                             @$_SESSION['check_product_instock'] = 0;
+
                             
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                             
@@ -3014,7 +3050,16 @@ class Pick_warehouse_fifoController extends Controller
                 return 0;
             }
 
-         })          
+         })     
+      ->addColumn('check_product_instock', function($row) { 
+      // ดูว่าไม่มีสินค้าในคลังบางรายการ
+          if(@$_SESSION['check_product_instock']=="0"){
+            return "N"; 
+          }else{
+            return "Y"; 
+          }
+
+       })      
         ->make(true);
       }
 

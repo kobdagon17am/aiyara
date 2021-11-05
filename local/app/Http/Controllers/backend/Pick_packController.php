@@ -277,10 +277,26 @@ class Pick_packController extends Controller
     }
 
      public function Datatable(){
+
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+         
+            $billing_employee = '';
+
+        }else{
+
+            $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
+
+        }
+
+
       $sTable = DB::select(" 
-        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL
+        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $billing_employee
         UNION
-        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0  AND orders_id_fk is not NULL GROUP BY packing_code
+        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0  AND orders_id_fk is not NULL $billing_employee GROUP BY packing_code
         ORDER BY updated_at DESC
      ");
       $sQuery = \DataTables::of($sTable);
@@ -503,12 +519,45 @@ class Pick_packController extends Controller
 
                     if(@$addr2[0]->delivery_location==1 || @$addr2[0]->delivery_location==2){
                         // return "* ".@$d[0]->txt_desc."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-                        return '* ไม่พบข้อมูลที่อยู่ <br>(ระบุในบิล : '.@$d[0]->txt_desc.")<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                        return '<font color=red>* ไม่พบข้อมูลที่อยู่ </font> <br>(ระบุในบิล : '.@$d[0]->txt_desc.")<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
                       }else{
                         if(@$addr2[0]->delivery_location==4){
                           return "<b>* ".@$d[0]->txt_desc."</b>";
                         }else{
-                          return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
+
+                            // เช็คกรณี ส่งฟรี
+                              $shipping_cost = DB::select(" SELECT purchase_amt FROM `dataset_shipping_cost` WHERE shipping_type_id=1 ; ");
+                              $shipping_cost= $shipping_cost[0]->purchase_amt;
+
+                              $d1 = DB::select(" SELECT * from db_delivery where id=$row->id ");
+
+                              if($d1[0]->packing_code>0){
+
+                              $total_p = DB::select(" 
+                                  SELECT sum(db_delivery.total_price) as total_price
+                                  FROM
+                                  db_delivery
+                                  WHERE 
+                                  shipping_price=0 and packing_code=".$d1[0]->packing_code." GROUP BY packing_code ");
+
+                               if(@$total_p[0]->total_price>0){
+
+                                 if(@$total_p[0]->total_price>=$shipping_cost){
+                                    return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
+                                  }else{
+                                    return "<b>* จัดส่งพร้อมบิลอื่น</b>";
+                                  }
+
+                                }
+
+                               }else{
+
+                                  // return "<b>* ".@$d[0]->txt_desc."</b>";
+                                 return @$addr2[0]->recipient_name."<br>".@$addr2[0]->addr_send."<br>".@$addr2[0]->postcode." ".@$addr2[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+
+                               }
+
+                          // return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
                         }
                         
                       }
@@ -544,6 +593,37 @@ class Pick_packController extends Controller
 
       })
       ->escapeColumns('delivery_location')
+
+      ->addColumn('check_case_sent_free', function($row) { 
+        // เช็คกรณี ส่งฟรี
+            $shipping_cost = DB::select(" SELECT purchase_amt FROM `dataset_shipping_cost` WHERE shipping_type_id=1 ; ");
+            $shipping_cost= $shipping_cost[0]->purchase_amt;
+
+            $d1 = DB::select(" SELECT * from db_delivery where id=$row->id ");
+
+            if($d1[0]->packing_code>0){
+
+            $total_p = DB::select(" 
+                SELECT sum(db_delivery.total_price) as total_price
+                FROM
+                db_delivery
+                WHERE 
+                shipping_price=0 and packing_code=".$d1[0]->packing_code." GROUP BY packing_code ");
+
+             if(@$total_p[0]->total_price>0){
+
+               if(@$total_p[0]->total_price>=$shipping_cost){
+                  return "sent_free";
+                }else{
+                  return "";
+                }
+
+              }else{
+                return "";
+              }
+          }
+      })
+      ->escapeColumns('check_case_sent_free')
 
       ->make(true);
     }

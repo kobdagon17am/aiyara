@@ -3703,7 +3703,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=4 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET status=4 WHERE id='".$request->id."' ");
 
@@ -3718,7 +3718,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=5 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET sender=".(\Auth::user()->id).",sent_date=now(),status=5 WHERE id='".$request->id."' ");
 
@@ -3824,10 +3824,10 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-      //    DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
-
+        // 3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
-          DB::select(" UPDATE `db_pick_pack_packing_code` SET status=2 WHERE id='".$request->id."' ");
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
+          DB::select(" UPDATE `db_pick_pack_packing_code` SET status=3 WHERE id='".$request->id."' ");
 
 
 

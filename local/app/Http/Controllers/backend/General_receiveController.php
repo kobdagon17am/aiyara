@@ -45,7 +45,8 @@ class General_receiveController extends Controller
         ->get();
 
       $User_branch_id = \Auth::user()->branch_id_fk;
-      $sBranchs = \App\Models\Backend\Branchs::whereIn('business_location_id_fk', $sBusiness_location->pluck('id'))->get();
+      // $sBranchs = \App\Models\Backend\Branchs::whereIn('business_location_id_fk', $sBusiness_location->pluck('id'))->get();
+      $sBranchs = \App\Models\Backend\Branchs::get();
 
       // dd($sBranchs);
 

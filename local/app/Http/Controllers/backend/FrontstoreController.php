@@ -3145,10 +3145,20 @@ ORDER BY created_at DESC
           // return substr($total_price,0,strpos($total_price,'.')+3); ;
 
       })
-      ->addColumn('status_delivery', function($row) {
-          $r = DB::select(" select status_delivery FROM db_orders WHERE id = ".$row->id." ");
-          if($r)
-          return $r[0]->status_delivery;
+      // ->addColumn('status_delivery', function($row) {
+      //     $r = DB::select(" select status_delivery FROM db_orders WHERE id = ".$row->id." ");
+      //     if($r)
+      //     return $r[0]->status_delivery;
+
+      // })
+      ->addColumn('status_delivery_packing', function($row) {
+          $r = DB::select(" select receipt FROM db_delivery WHERE receipt = '".$row->code_order."' AND status_pack=1 ");
+          if(@$r){
+            return 1;
+          }else{
+            return 0;
+          }
+          // return $r[0]->receipt;
 
       })
       ->addColumn('status_delivery_02', function($row) {

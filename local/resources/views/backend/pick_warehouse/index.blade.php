@@ -405,14 +405,10 @@
         });
 
 
-
-          // $('.btnCreatePackBill ').trigger('click');
-                    
-                    
           var table = $('#data-table-packing').DataTable();
            
            $('#data-table-packing').on( 'click', 'tr', function () {
-              console.log( table.row( this ).data().id );
+              // console.log( table.row( this ).data().id );
 
                  $("input[name^=row_id]").remove();
                  $('#data-table-0002').hide();
@@ -436,7 +432,8 @@
                                 .val(table.row( this ).data().id)
                          );
 
-                        $('.divCreatePackBill').show();
+                        // $('.divCreatePackBill').show();
+                         $('.btnCreatePackBill ').trigger('click');
 
                   }
 

@@ -639,16 +639,111 @@ class Pick_warehouseController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
+        // if(@$row->packing_code){
+        //   return '<b>'.$row->packing_code.'</b>' ;
+        // }else{
+        //   return "-";
+        // }
+
            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
            return $DP->packing_code;
+
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
-         
+
+            $pn = '<div class="divTable"><div class="divTableBody">';
+            // $pn .=     
+            // '<div class="divTableRow">
+            //   <div class="divTableCell" style="width:200px;font-weight:bold;">xxxxxxxxxxx </div>
+            // </div>
+            // ';
+
+            $D = DB::select(" 
+              SELECT 
+              CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists 
+              FROM `db_pick_pack_packing` 
+              LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+              LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+              WHERE db_pick_pack_packing.packing_code_id_fk =".$row->packing_code_id_fk." ORDER BY db_pick_pack_packing.id ");
+
+              $i = 1;
+              foreach ($D as $key => $value) {
+
+                $pn .=     
+                '<div class="divTableRow">
+                 <div class="divTableCell" style="padding-bottom:15px;width:250px;text-align:left !important;"><b>
+                '.'('.$i.') '.$value->lists.'</b>
+                </div>
+                ';
+
+                $pn .= '</div>';  
+
+                $i++;
+              
+              }
+
+              // $pn .=     
+              // '<div class="divTableRow">
+              //  <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+              // </div>
+              // ';
+
+          $pn .= '</div>';  
+          return $pn;
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
-         
+
+
+            $pn = '<div class="divTable"><div class="divTableBody">';
+            // $pn .=     
+            // '<div class="divTableRow">
+            //   <div class="divTableCell" style="width:200px;font-weight:bold;">xxxxxxxxxxx </div>
+            // </div>
+            // ';
+
+            $D1 = DB::select(" 
+              SELECT 
+              db_delivery.packing_code 
+              FROM `db_pick_pack_packing` 
+              LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+              LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+              WHERE db_pick_pack_packing.packing_code_id_fk =".$row->packing_code_id_fk." AND db_delivery.packing_code<>0 ORDER BY db_pick_pack_packing.id ");
+
+             $arr01 = [];
+             foreach ($D1 as $key => $value) {
+                array_push($arr01,$value->packing_code);
+             } 
+             $arr01 = implode(',',$arr01);
+
+             $D2 = DB::select(" 
+              SELECT receipt FROM db_delivery WHERE packing_code in ($arr01) ");
+
+             $arr02 = [];
+             foreach ($D2 as $key => $value) {
+                array_push($arr02,$value->receipt);
+             } 
+             $arr02 = implode(' , ',$arr02);
+
+                $pn .=     
+                '<div class="divTableRow">
+                 <div class="divTableCell" style="padding-bottom:15px;width:250px;text-align:left !important;"><b>
+                '.$arr02.'</b>
+                </div>
+                ';
+
+                $pn .= '</div>';  
+              
+
+              // $pn .=     
+              // '<div class="divTableRow">
+              //  <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+              // </div>
+              // ';
+
+          $pn .= '</div>';  
+          return $pn;
   
         })
       ->escapeColumns('column_003')        

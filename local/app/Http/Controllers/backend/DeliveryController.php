@@ -752,10 +752,13 @@ class DeliveryController extends Controller
                 $branch_id_fk = "";
             }
 
+            $billing_employee = '';
+
         }else{
 
             $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
             $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+            $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
 
         }
 
@@ -804,6 +807,7 @@ class DeliveryController extends Controller
         $receipt
         $customer_id_fk
         $delivery_date
+        $billing_employee
 
         order by updated_at desc
 

@@ -103,7 +103,7 @@ class Pick_packPackingCodeController extends Controller
             $t = ' <div class="invoice_code_list" data-toggle="tooltip" data-placement="top" title="คลิ้กเพื่อดูใบเสร็จทั้งหมด" style="cursor:pointer;" >';
             if(count($r)>3){
               for ($i=0; $i < 3 ; $i++) { 
-                 $t .= $r[$i].",";
+                 $t .= $r[$i]."<br>";
               }
               $t .= "...";
               $arr = [];
