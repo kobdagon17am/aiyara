@@ -642,12 +642,6 @@
                                     success: function(response){ // What to do if we succeed
                                       // console.log(response);
                                        // return false;
-                                      // // console.log(ids[0]);
-
-                                      // $("#pick_pack_requisition_code_id_fk").val(response);
-                                      // var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
-                                      // return false;
-
                                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
                                         $('#data-table-0002').DataTable().clear().draw();
@@ -683,7 +677,6 @@
                                                                            data:{ _token:
                                                                             '{{csrf_token()}}',
                                                                             picking_id:picking_id,
-                                                                            // db_pick_pack_packing_code_id:db_pick_pack_packing_code_id 
                                                                           },
                                                                             success:function(d2){
                                                                                  // console.log(d2);

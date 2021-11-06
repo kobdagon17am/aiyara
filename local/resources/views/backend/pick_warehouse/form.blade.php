@@ -570,17 +570,17 @@
                           // console.log(data);
                           // return false;
 
-                          if(data==0){
-                            Swal.fire({
-                              position: 'top-end',
-                              title: '! ค้นไม่พบใบเสร็จ',
-                              showConfirmButton: false,
-                              timer: 2500
-                            })
-                            $(".myloading").hide();
-                            return false;
+                          // if(data==0){
+                          //   Swal.fire({
+                          //     position: 'top-end',
+                          //     title: '! ค้นไม่พบใบเสร็จ',
+                          //     showConfirmButton: false,
+                          //     timer: 2500
+                          //   })
+                          //   $(".myloading").hide();
+                          //   return false;
 
-                          }else{
+                          // }else{
 
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
                       // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
@@ -743,7 +743,7 @@
                                   });
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@                      
 
-                          } // ปิด if(data==0){
+                          // } // ปิด if(data==0){
 
                       } // ปิด success:function(data)
                 
