@@ -769,10 +769,19 @@ GROUP BY db_order_products_list.product_id_fk
                  ");
 
               $sum_amt = 0 ;
+              $r_ch_t = '';
 
          if(@$Products){
             
               foreach ($Products as $key => $value) {
+
+
+                $r_ch = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." AND `status`=2  ");
+                if(count($r_ch)>0){
+                   $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ เนื่องจากไม่มีในคลัง)';
+                }else{
+                   $r_ch_t = '';
+                }
   
                   // บิลปกติ
                 $arr_inv = [];
@@ -804,12 +813,14 @@ GROUP BY db_order_products_list.product_id_fk
 
                 $invoice_code = implode(",",$arr_inv);
 
+
                 $sum_amt += $value->amt;
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                 '.@$value->product_name.'</b><br>
-                ('.@$invoice_code.')
+                ('.@$invoice_code.')<br>
+                <font color=red>'.$r_ch_t.'</font>
                 </div>
                 <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
@@ -1015,16 +1026,25 @@ GROUP BY db_order_products_list.product_id_fk
                  ");
 
               $sum_amt = 0 ;
+              $r_ch_t = '';
 
          if(@$Products){
             
               foreach ($Products as $key => $value) {
+
+                $r_ch = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND pick_pack_packing_code_id_fk=".$row->id." AND `status`=2  ");
+                if(count($r_ch)>0){
+                   $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ เนื่องจากไม่มีในคลัง)';
+                }else{
+                   $r_ch_t = '';
+                }
   
                 $sum_amt += $value->amt;
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                 '.@$value->product_name.'</b><br>
+                <font color=red>'.$r_ch_t.'</font>
                 </div>
                 <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 

@@ -282,6 +282,16 @@ foreach ($sTable as $key => $row) {
                  }
                  DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".@$row->total_price."'); ");
 
+
+                $r_ch_t = '';
+                $r_ch = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$row->product_id_fk.") AND pick_pack_packing_code_id_fk=".$data[1]." AND `status`=2  ");
+                if(count($r_ch)>0){
+                   $r_ch_t = '&nbsp;(รายการนี้ค้างจ่ายในรอบนี้ เนื่องจากไม่มีในคลัง)';
+                   DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                }else{
+                   $r_ch_t = '';
+                }
+
             }else{
 
 
@@ -431,8 +441,7 @@ $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_gi
                   
          }
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                                       
-                                       
+                                    
 
 $cnt_all = DB::select(" SELECT count(*) as cnt FROM $TABLE_tmp ");
 // echo $cnt_all[0]->cnt;
