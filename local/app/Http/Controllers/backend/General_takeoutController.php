@@ -80,7 +80,9 @@ class General_takeoutController extends Controller
             products_details
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
+
       $sBusiness_location = \App\Models\Backend\Business_location::get();
+      // dd($sBusiness_location);
 
 
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
@@ -193,7 +195,23 @@ class General_takeoutController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'asc');
+
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'asc');
+
+        }else{
+
+           $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+
+        }
+
+
+      // $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {

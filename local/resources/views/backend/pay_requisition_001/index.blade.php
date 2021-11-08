@@ -466,7 +466,10 @@
                       {data: 'action_user', title :'<center>ผู้สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
                       {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
-                      {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},
+                      {data: 'status_desc', title :'<center>สถานะ</center>', className: 'text-center'},
+                      {data: 'status_amt_remain',   title :'<center>ค้างจ่าย</center>', className: 'text-center ',render: function(d) {
+                          return d;
+                      }},
                     {data: 'id', title :'Tools', className: 'text-center w150'}, 
 
                   ],
@@ -770,7 +773,10 @@
                       {data: 'action_user', title :'<center>ผู้สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
                       {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
-                      {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},
+                      {data: 'status_desc', title :'<center>สถานะ</center>', className: 'text-center'},
+                      {data: 'status_amt_remain',   title :'<center>ค้างจ่าย</center>', className: 'text-center ',render: function(d) {
+                          return d;
+                      }},
                     {data: 'id', title :'Tools', className: 'text-center w150'}, 
 
                   ],

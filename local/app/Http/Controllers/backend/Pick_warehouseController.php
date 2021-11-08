@@ -539,6 +539,7 @@ class Pick_warehouseController extends Controller
         // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
+
            @$rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
 
            if(count(@$rs_pay_history)>0){
@@ -546,6 +547,7 @@ class Pick_warehouseController extends Controller
            }else{
                return 3; // เบิกจากคลังมาไว้เตรียมแพ็คกล่องส่ง > จัดเตรียมสินค้าแล้ว
            }
+
 
        })
       ->addColumn('ch_amt_lot_wh', function($row) { 
@@ -774,15 +776,17 @@ GROUP BY db_order_products_list.product_id_fk
          if(@$Products){
             
               foreach ($Products as $key => $value) {
-
-
-                $r_ch = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." AND `status`=2  ");
-                if(count($r_ch)>0){
-                   $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ เนื่องจากไม่มีในคลัง)';
-                }else{
-                   $r_ch_t = '';
-                }
   
+                // หา max time_pay ก่อน 
+                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+              // Check ว่ามี status=2 ? (ค้างจ่าย)
+                 $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                 if(count($r_ch02)>0){
+                    $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                 }else{
+                   $r_ch_t = '';
+                 }
+
                   // บิลปกติ
                 $arr_inv = [];
                 $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
@@ -1032,13 +1036,17 @@ GROUP BY db_order_products_list.product_id_fk
             
               foreach ($Products as $key => $value) {
 
-                $r_ch = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND pick_pack_packing_code_id_fk=".$row->id." AND `status`=2  ");
-                if(count($r_ch)>0){
-                   $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ เนื่องจากไม่มีในคลัง)';
-                }else{
+                // หา max time_pay ก่อน 
+                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+              // Check ว่ามี status=2 ? (ค้างจ่าย)
+                 $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                 if(count($r_ch02)>0){
+                    $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                 }else{
                    $r_ch_t = '';
-                }
-  
+                 }
+
+
                 $sum_amt += $value->amt;
                 $pn .=     
                 '<div class="divTableRow">

@@ -79,7 +79,7 @@
                                        @if( empty(@$sRow) )
                                          <input type="hidden" name="business_location_id_fk" value="{{@\Auth::user()->business_location_id_fk}}">
                                        @else
-                                        <input type="hidden" name="business_location_id_fk" value="{{@$sRow-business_location_id_fk}}">
+                                        <input type="hidden" name="business_location_id_fk" value="{{@$sRow->business_location_id_fk}}">
                                        @endif
 
                                       <select  class="form-control select2-templating " disabled="" >
@@ -115,7 +115,7 @@
                                        @if( empty(@$sRow) )
                                          <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
                                        @else
-                                        <input type="hidden" name="branch_id_fk" value="{{@$sRow-branch_id_fk}}">
+                                        <input type="hidden" name="branch_id_fk" value="{{@$sRow->branch_id_fk}}">
                                        @endif
 
                                       <select  class="form-control select2-templating" disabled="" >

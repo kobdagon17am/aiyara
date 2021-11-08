@@ -311,7 +311,23 @@ class Products_borrowController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Products_borrow::search()->orderBy('id', 'asc');
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $sTable = \App\Models\Backend\Products_borrow::search()->orderBy('id', 'asc');
+
+        }else{
+
+           $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+
+        }
+
+
+      // $sTable = \App\Models\Backend\Products_borrow::search()->orderBy('id', 'asc');
+      
       $sQuery = \DataTables::of($sTable);
       return $sQuery
      ->addColumn('product_name', function($row) {

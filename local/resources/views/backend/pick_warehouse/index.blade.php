@@ -616,6 +616,7 @@
 
     <script>
 
+
        $(document).on('click', '.btnSave', function(e) {
 
                 $(".myloading").show();

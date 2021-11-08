@@ -1416,6 +1416,7 @@ class Pay_requisition_001Controller extends Controller
                     "action_user" =>  @$value->action_user,
                     "branch_id_fk" =>  @$value->branch_id_fk,
                     "pick_pack_requisition_code_id_fk" =>  @$pick_pack_requisition_code_id_fk,
+                    "pick_pack_packing_code_id_fk" =>  @$db_pick_pack_packing_code_id,
                     "action_date" =>  @$value->action_date,
                     "pay_user" =>  @$value->pay_user,
                     "pay_date" =>  @$value->pay_date,
@@ -1663,6 +1664,7 @@ class Pay_requisition_001Controller extends Controller
           $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
 
           $requisition_code = $request->requisition_code;
+          $pick_pack_packing_code_id_fk = $request->pick_pack_packing_code_id_fk;
 
         // หา time+pay ครั้งที่จ่าย
           $rs_time_pay = DB::select(" SELECT * FROM db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk in ($requisition_code)  order by time_pay DESC limit 1 ");
@@ -1702,6 +1704,7 @@ class Pay_requisition_001Controller extends Controller
                     "action_user" =>  @$value->action_user,
                     "branch_id_fk" =>  @$value->branch_id_fk,
                     "pick_pack_requisition_code_id_fk" =>  @$requisition_code,
+                    "pick_pack_packing_code_id_fk" =>  @$pick_pack_packing_code_id_fk,
                     "action_date" =>  @$value->action_date,
                     "pay_user" =>  @$value->pay_user,
                     "pay_date" =>  @$value->pay_date,
@@ -1723,7 +1726,7 @@ class Pay_requisition_001Controller extends Controller
 
                DB::select(" 
                   INSERT IGNORE INTO db_pick_pack_requisition_code(requisition_code,pick_pack_packing_code_id_fk,pick_pack_packing_code,action_user,receipts,status,status_picked,created_at,updated_at) 
-                  select requisition_code,pick_pack_packing_code_id_fk,pick_pack_packing_code,action_user,receipts,status,status_picked,created_at,updated_at
+                  select requisition_code,pick_pack_packing_code_id_fk,@$pick_pack_packing_code_id_fk,action_user,receipts,status,status_picked,created_at,updated_at
                   from $temp_db_pick_pack_requisition_code 
 
                 ");
@@ -1764,7 +1767,7 @@ class Pay_requisition_001Controller extends Controller
 
                 }
 
-                DB::select(" INSERT IGNORE INTO  db_pay_requisition_002_pay_history (time_pay,pick_pack_requisition_code_id_fk,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,pick_pack_requisition_code_id_fk,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppp_004 where pick_pack_requisition_code_id_fk=$requisition_code ");
+                DB::select(" INSERT IGNORE INTO  db_pay_requisition_002_pay_history (time_pay,pick_pack_requisition_code_id_fk,pick_pack_packing_code_id_fk,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,pick_pack_requisition_code_id_fk,$pick_pack_packing_code_id_fk,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppp_004 where pick_pack_requisition_code_id_fk=$requisition_code ");
 
 
                 DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_requisition_code_id_fk=$requisition_code ");

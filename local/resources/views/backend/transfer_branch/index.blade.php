@@ -961,16 +961,15 @@
                     destroy: true,
                     searching: false,
                     // paging: false,
-                    ajax: {
-                      url: '{{ route('backend.check_stock.datatable') }}',
-                      data: function ( d ) {
-                        d.Where={};
-                        d.Where['branch_id_fk'] = branch_id_fk ;
-                        d.Where['product_id_fk'] = product_id ;
-                        oData = d;
-                      },
-                      method: 'POST'
-                    },
+                     ajax: {
+                        url: '{{ route('backend.check_stock_transfer_branch.datatable') }}',
+                        data :{
+                              _token: '{{csrf_token()}}',
+                              branch_id_fk:branch_id_fk,
+                              product_id_fk:product_id,
+                            },
+                          method: 'POST',
+                        },
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},

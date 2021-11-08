@@ -489,4 +489,65 @@ class Check_stockController extends Controller
 
 
 
+        public function DatatableTransfer_branch(Request $req){
+
+
+              $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk);
+              
+              $sQuery = \DataTables::of($sTable);
+              return $sQuery
+              ->addColumn('product_name', function($row) {
+                
+                  $Products = DB::select("SELECT products.id as product_id,
+                    products.product_code,
+                    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+                    FROM
+                    products_details
+                    Left Join products ON products_details.product_id_fk = products.id
+                    WHERE products.id=".$row->product_id_fk." AND lang_id=1");
+
+                return @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+              })
+              ->addColumn('lot_expired_date', function($row) {
+                $d = strtotime($row->lot_expired_date); 
+                return date("d/m/", $d).(date("Y", $d)+543);
+              })
+              ->addColumn('date_in_stock', function($row) {
+                $d = strtotime($row->pickup_firstdate); 
+                return date("d/m/", $d).(date("Y", $d)+543);
+              })
+              ->addColumn('warehouses', function($row) {
+                $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
+                if(@$row->warehouse_id_fk){
+                    $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
+                    $warehouse= @$warehouse[0]->w_name;
+                }else{
+                    $warehouse = '-';
+                }
+                if(@$row->zone_id_fk){
+                    $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
+                    $zone = @$zone[0]->z_name;
+                }else{
+                    $zone = '-';
+                }
+                if(@$row->shelf_id_fk){
+                    $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
+                    $shelf = @$shelf[0]->s_name;
+                }else{
+                    $shelf = '-';
+                }
+
+                return @$sBranchs[0]->b_name.'/'.@$warehouse.'/'.@$zone.'/'.@$shelf.'/ชั้น>'.(@$row->shelf_floor?@$row->shelf_floor:"-");
+                // return @$sBranchs[0]->b_name.'/'.@$warehouse;
+                // return $row->warehouse_id_fk;
+              })      
+              ->addColumn('stock_card', function($row) {
+                // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
+              })
+              ->escapeColumns('stock_card')
+              ->make(true);
+            }
+
+
 }

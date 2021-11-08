@@ -479,11 +479,31 @@ CREATE TABLE `db_transfer_branch_get` (
 
     public function Datatable(Request $req){
 
-      if(isset($req->id)){
-            $sTable = \App\Models\Backend\Transfer_branch::where('id',$req->id)->search()->orderBy('id', 'asc');
-      }else{
-           $sTable = \App\Models\Backend\Transfer_branch::search()->orderBy('id', 'asc');
-      }
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+                             
+                if(isset($req->id)){
+                      $sTable = \App\Models\Backend\Transfer_branch::where('id',$req->id)->search()->orderBy('id', 'asc');
+                }else{
+                     $sTable = \App\Models\Backend\Transfer_branch::search()->orderBy('id', 'asc');
+                }
+
+
+        }else{
+
+                             
+                if(isset($req->id)){
+                      $sTable = \App\Models\Backend\Transfer_branch::where('branch_id_fk',$User_branch_id)->where('id',$req->id)->search()->orderBy('id', 'asc');
+                }else{
+                     $sTable = \App\Models\Backend\Transfer_branch::where('branch_id_fk',$User_branch_id)->search()->orderBy('id', 'asc');
+                }
+
+
+        }
+
 
 
       $sQuery = \DataTables::of($sTable);

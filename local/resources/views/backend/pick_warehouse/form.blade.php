@@ -754,10 +754,13 @@
  
     <script>
 
+     // var pick_pack_packing_code_id_fk = "{{$id}}"; alert(pick_pack_packing_code_id_fk);
+
        $(document).on('click', '.btnSave004', function(e) {
 
                 $(".myloading").show();
                 var requisition_code = "{{$pick_pack_requisition_code_id_fk}}"; 
+                var pick_pack_packing_code_id_fk = "{{$id}}"; //alert(pick_pack_packing_code_id_fk);
                 // var packing_id = packing_id.split('');
                 // alert(packing_id);
                 // return false;
@@ -800,10 +803,12 @@
                                                                       
                                                                     $(".myloading").show();
 
+                                                                    // alert(pick_pack_packing_code_id_fk);
+
                                                                       $.ajax({
                                                                          type:'POST',
                                                                          url: " {{ url('backend/ajaxSavePay_requisition_edit') }} ",
-                                                                         data:{ _token: '{{csrf_token()}}',requisition_code:requisition_code },
+                                                                         data:{ _token: '{{csrf_token()}}',requisition_code:requisition_code,pick_pack_packing_code_id_fk:pick_pack_packing_code_id_fk },
                                                                           success:function(d2){
                                                                                console.log(d2);
                                                                                location.reload();

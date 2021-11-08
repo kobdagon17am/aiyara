@@ -306,11 +306,25 @@ class General_receiveController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\General_receive::search()
-        ->when(auth()->user()->permission !== 1, function ($query) {
-          return $query->where('recipient', auth()->id());
-        })
-        ->orderBy('updated_at', 'desc');
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $sTable = \App\Models\Backend\General_receive::search()->orderBy('id', 'asc');
+
+        }else{
+
+           $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+
+        }
+
+      // $sTable = \App\Models\Backend\General_receive::search()
+      //   ->when(auth()->user()->permission !== 1, function ($query) {
+      //     return $query->where('recipient', auth()->id());
+      //   })
+      //   ->orderBy('updated_at', 'desc');
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery

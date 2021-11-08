@@ -282,15 +282,17 @@ foreach ($sTable as $key => $row) {
                  }
                  DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".@$row->total_price."'); ");
 
-
-                $r_ch_t = '';
-                $r_ch = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$row->product_id_fk.") AND pick_pack_packing_code_id_fk=".$data[1]." AND `status`=2  ");
-                if(count($r_ch)>0){
-                   $r_ch_t = '&nbsp;(รายการนี้ค้างจ่ายในรอบนี้ เนื่องจากไม่มีในคลัง)';
-                   DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
-                }else{
+                // หา max time_pay ก่อน 
+                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$row->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$data[1]." order by time_pay desc limit 1  ");
+              // Check ว่ามี status=2 ? (ค้างจ่าย)
+                 $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$row->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$data[1]." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                 if(count($r_ch02)>0){
+                    $r_ch_t = '&nbsp;(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                 }else{
                    $r_ch_t = '';
-                }
+                 }
+
 
             }else{
 
@@ -317,7 +319,6 @@ foreach ($sTable as $key => $row) {
                       $product_name = iconv_substr($product_name,0,100, "UTF-8")."...";
                      }
                     DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".number_format(@$row->total_price,2)."'); ");
-
 
 
                 if($row->promotion_id_fk!='' && $row->promotion_code!=''){

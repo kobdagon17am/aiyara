@@ -290,6 +290,21 @@ class Pick_packPackingCodeController extends Controller
       })
       ->escapeColumns('status_desc')
 
+      ->addColumn('status_amt_remain', function($row) {
+        // หา max time_pay ก่อน 
+           $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." order by time_pay desc limit 1  ");
+        // Check ว่ามี status=2 ? (ค้างจ่าย)
+           if(@$r_ch01){
+           $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+           if(count($r_ch02)>0){
+               return '<font color=red> * มีค้างจ่าย</font>';
+           }else{
+             return '';
+           }
+         }
+     
+      })
+      ->escapeColumns('status_amt_remain')
 
       ->make(true);
     }
