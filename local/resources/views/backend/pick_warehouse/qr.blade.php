@@ -266,7 +266,7 @@
 
                 @IF(@$sUser[0]->status_sent==4)
                 <span style="color:red;font-size:16px;">*** Packing เรียบร้อยแล้ว *** </span>
-                <input style="color: black;" type='button' class="btn btn-warning btnCancelStatusPacking font-size-16 " value="ยกเลิกสถานะการ Packing " >
+                <!-- <input style="color: black;" type='button' class="btn btn-warning btnCancelStatusPacking font-size-16 " value="ยกเลิกสถานะการ Packing " > -->
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                 @ENDIF
