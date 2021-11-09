@@ -254,8 +254,9 @@ class Check_money_dailyController extends Controller
           }
       })  
       ->addColumn('action_date', function($row) {
-          $d = strtotime($row->action_date);
-          return date("d/m/", $d).(date("Y", $d)+543);
+          if(!empty($row->action_date)){
+            return $row->action_date;
+          }
       })      
       ->make(true);
     }

@@ -166,8 +166,11 @@ class Pickup_goodsController extends Controller
       // 	}
       // })
       ->addColumn('delivery_date', function($row) {
-          $d = strtotime($row->delivery_date);
-          return date("d/m/", $d).(date("Y", $d)+543);
+
+        if(!empty($row->delivery_date)){
+          return $row->delivery_date;
+        }
+
       })
       ->addColumn('customer_name', function($row) {
 

@@ -521,14 +521,6 @@ CREATE TABLE `db_transfer_branch_get` (
         return @$Products[0]->product_code." <br> ".@$Products[0]->product_name;
 
       })
-      // ->addColumn('lot_expired_date', function($row) {
-      //   $d = strtotime($row->lot_expired_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
-      // ->addColumn('action_date', function($row) {
-      //   $d = strtotime($row->action_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
        ->escapeColumns('product_name')
       ->addColumn('warehouses', function($row) {
         $Check_stock = \App\Models\Backend\Check_stock::where('product_id_fk',$row->product_id_fk)->where('lot_number',$row->lot_number)->first();
@@ -577,14 +569,6 @@ CREATE TABLE `db_transfer_branch_get` (
         return @$Products[0]->product_code." <br> ".@$Products[0]->product_name;
 
       })
-      // ->addColumn('lot_expired_date', function($row) {
-      //   $d = strtotime($row->lot_expired_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
-      // ->addColumn('action_date', function($row) {
-      //   $d = strtotime($row->action_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
        ->escapeColumns('product_name')
       ->addColumn('warehouses', function($row) {
         $Check_stock = \App\Models\Backend\Check_stock::where('product_id_fk',$row->product_id_fk)->where('lot_number',$row->lot_number)->first();

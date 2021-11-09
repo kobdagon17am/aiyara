@@ -817,10 +817,6 @@ class DeliveryController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('delivery_date', function($row) {
-      //     $d = strtotime($row->delivery_date);
-      //     return date("d/m/", $d).(date("Y", $d)+543);
-      // })
       ->addColumn('customer_name', function($row) {
       	if(@$row->customer_id!=''){
          	$Customer = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=".@$row->customer_id." ");

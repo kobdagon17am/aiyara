@@ -61,13 +61,13 @@ class Transfer_chooseController extends Controller
         return @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
       })
-      ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date); 
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
+
       ->addColumn('date_in_stock', function($row) {
-        $d = strtotime($row->pickup_firstdate); 
-        return date("d/m/", $d).(date("Y", $d)+543);
+
+        if(!empty($row->pickup_firstdate)){
+          return $row->pickup_firstdate;
+        }
+
       })
       ->addColumn('amt_in_warehouse', function($row) {
         // $Check_stock = \App\Models\Backend\Check_stock::where('id',$row->stock_id_fk);

@@ -301,8 +301,8 @@ class Products_borrow_codeController extends Controller
         }
       })  
       ->addColumn('action_date', function($row) {
-        if(@$row->action_date!=''){
-          $d = strtotime($row->action_date); return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->action_date)){
+          return $row->action_date;
         }else{
           return '';
         }
@@ -316,8 +316,8 @@ class Products_borrow_codeController extends Controller
         }
       })  
       ->addColumn('approve_date', function($row) {
-        if(@$row->approve_date!=''){
-          $d = strtotime($row->approve_date); return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->approve_date)){
+          return $row->approve_date;
         }else{
           return '-';
         }

@@ -98,14 +98,14 @@ class WarehouseController extends Controller
       })  
       ->addColumn('created_at', function($row) {
         if(!is_null($row->created_at)){
-            $d = strtotime($row->created_at); return date("d/m/", $d).(date("Y", $d)+543).' '.date("H:i:s", $d);
+            return $row->created_at;
         }else{
             return '';
         }
       })
       ->addColumn('updated_at', function($row) {
         if(!is_null($row->updated_at)){
-            $d = strtotime($row->updated_at); return date("d/m/", $d).(date("Y", $d)+543).' '.date("H:i:s", $d);
+            return $row->updated_at;
         }else{
             return '';
         }

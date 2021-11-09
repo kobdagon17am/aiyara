@@ -70,14 +70,6 @@ class Check_stock_checkController extends Controller
       
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('ref_code', function($row) {
-        /*
-        A + business location + ymd + 00001
-        */
-      //   $d = strtotime($row->lot_expired_date); 
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
-
       ->addColumn('action_user_id', function($row) {
         $sTable = DB::select("SELECT action_user FROM db_stocks_account_code  WHERE id=$row->stocks_account_code_id_fk ");
         return @$sTable[0]->action_user;
@@ -97,13 +89,8 @@ class Check_stock_checkController extends Controller
 
       })
       ->addColumn('lot_number', function($row) {
-        $d = strtotime($row->lot_expired_date); 
-        return $row->lot_number." : ".date("d/m/", $d).(date("Y", $d)+543);
+        return @$row->lot_number." : ".@$row->lot_expired_date;
       })
-      // ->addColumn('date_in_stock', function($row) {
-      //   $d = strtotime($row->pickup_firstdate); 
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
       ->addColumn('warehouses', function($row) {
         $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
@@ -137,13 +124,8 @@ class Check_stock_checkController extends Controller
 
       })
       ->addColumn('lot_number', function($row) {
-        $d = strtotime($row->lot_expired_date); 
-        return $row->lot_number." : ".date("d/m/", $d).(date("Y", $d)+543);
+        return @$row->lot_number." : ".@$row->lot_expired_date;
       })
-      // ->addColumn('date_in_stock', function($row) {
-      //   $d = strtotime($row->pickup_firstdate); 
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
       ->addColumn('warehouses', function($row) {
         $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");

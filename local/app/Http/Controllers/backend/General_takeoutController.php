@@ -235,13 +235,10 @@ class General_takeoutController extends Controller
         $d = \App\Models\Backend\Product_out_cause::find($row->product_out_cause_id_fk);
         return $d->txt_desc;
       })
-      ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date);
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
       ->addColumn('pickup_date', function($row) {
-        $d = strtotime($row->pickup_firstdate);
-        return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->pickup_firstdate)){
+          return $row->pickup_firstdate;
+        }
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

@@ -155,13 +155,13 @@ class Pick_warehouse_fifo_noController extends Controller
           }
 
           })
-          ->addColumn('lot_expired_date', function($row) {
-            $d = strtotime($row->lot_expired_date); 
-            return date("d/m/", $d).(date("Y", $d)+543);
-          })
+
           ->addColumn('date_in_stock', function($row) {
-            $d = strtotime($row->pickup_firstdate); 
-            return date("d/m/", $d).(date("Y", $d)+543);
+           
+              if(!empty($row->pickup_firstdate)){
+                return $row->pickup_firstdate;
+              }
+
           })
           ->addColumn('warehouses', function($row) {
             $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");

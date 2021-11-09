@@ -300,11 +300,7 @@ class Pick_packController extends Controller
         ORDER BY updated_at DESC
      ");
       $sQuery = \DataTables::of($sTable);
-      return $sQuery
-      // ->addColumn('delivery_date', function($row) {
-      //     $d = strtotime($row->delivery_date);
-      //     return date("d/m/", $d).(date("Y", $d)+543);
-      // })      
+      return $sQuery     
       ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");

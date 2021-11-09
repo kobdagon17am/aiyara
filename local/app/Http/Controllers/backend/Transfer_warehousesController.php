@@ -477,14 +477,7 @@ class Transfer_warehousesController extends Controller
         return @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
       })
-      ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date);
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
-      ->addColumn('action_date', function($row) {
-        $d = strtotime($row->action_date);
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
+
       ->addColumn('warehouses', function($row) {
         $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
