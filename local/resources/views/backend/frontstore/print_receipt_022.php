@@ -939,9 +939,12 @@ if(!empty($db_orders[0]->action_user)){
 
         $m++;
 
+        $rPt = DB::select(" SELECT * FROM dataset_orders_type where id=".$sRow->purchase_type_id_fk." ");
 
+        $purchase_type = "ประเภทการซื้อ : ".$rPt[0]->orders_type;
 
-        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ] $purchase_type ' WHERE id = (($n*$i)+16) ; ");
+
         DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
 
         DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
@@ -1123,11 +1126,11 @@ for ($j=0; $j < $amt_page ; $j++) {
 
   <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;" >
     <tr>
-      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+      <td colspan="2" style="margin-left:33px !important;width:80%;font-size: 14px;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+16) ; "); ?>
         <?php echo @$DB[0]->a ; ?>
       </td>
-      <td style="text-align: right;"></td>
+      <!-- <td style="text-align: right;"></td> -->
       <td style="text-align: right;"></td>
       <td style="text-align: right;"></td>
     </tr>
