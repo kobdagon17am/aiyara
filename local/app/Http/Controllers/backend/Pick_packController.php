@@ -278,25 +278,39 @@ class Pick_packController extends Controller
 
      public function Datatable(){
 
+
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
 
         if(@\Auth::user()->permission==1){
 
-         
+            if(!empty( $req->business_location_id_fk) ){
+                $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
+            }else{
+                $business_location_id = "";
+            }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " and db_delivery.branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
             $billing_employee = '';
 
         }else{
 
+            $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
             $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
 
         }
 
 
       $sTable = DB::select(" 
-        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $billing_employee
+        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk
         UNION
-        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0  AND orders_id_fk is not NULL $billing_employee GROUP BY packing_code
+        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0  AND orders_id_fk is not NULL $branch_id_fk GROUP BY packing_code
         ORDER BY updated_at DESC
      ");
       $sQuery = \DataTables::of($sTable);

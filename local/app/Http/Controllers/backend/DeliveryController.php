@@ -797,7 +797,24 @@ class DeliveryController extends Controller
         // return $receipt;
 
       // $sTable = \App\Models\Backend\Delivery::search()->where('status_pack','0')->where('approver','NULL')->orderBy('id', 'asc');
-      $sTable = DB::select(" 
+      // $sTable = DB::select(" 
+
+      //   SELECT * from db_delivery  
+      //   WHERE status_pack=0 AND approver=0 AND status_delivery<>1 AND status_pick_pack<>1
+
+      //   $business_location_id
+      //   $branch_id_fk
+      //   $receipt
+      //   $customer_id_fk
+      //   $delivery_date
+      //   $billing_employee
+
+      //   order by updated_at desc
+
+
+      //   ");
+      
+    $sTable = DB::select(" 
 
         SELECT * from db_delivery  
         WHERE status_pack=0 AND approver=0 AND status_delivery<>1 AND status_pick_pack<>1
@@ -807,7 +824,6 @@ class DeliveryController extends Controller
         $receipt
         $customer_id_fk
         $delivery_date
-        $billing_employee
 
         order by updated_at desc
 

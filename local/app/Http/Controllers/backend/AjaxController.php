@@ -5012,7 +5012,7 @@ if($frontstore[0]->check_press_save==2){
                 $w02
                 $w03
                 $w05
-                GROUP BY product_id_fk,doc_no
+                GROUP BY product_id_fk,doc_no,in_out
           ");
 
 
@@ -5233,7 +5233,7 @@ if($frontstore[0]->check_press_save==2){
                             $w08
             $w09
             $w10
-                GROUP BY product_id_fk,doc_no
+                GROUP BY product_id_fk,doc_no,in_out
           ");
 
 
@@ -5316,7 +5316,7 @@ if($frontstore[0]->check_press_save==2){
         $Data = DB::select("
                 SELECT db_general_receive.business_location_id_fk,
                 (
-                CASE WHEN po_invoice_no='-' or po_invoice_no is null THEN CONCAT('CODE',db_general_receive.id) ELSE CONCAT('CODE',po_invoice_no) END
+                CASE WHEN loan_ref_number='-' or loan_ref_number is null THEN CONCAT('CODE',db_general_receive.id) ELSE loan_ref_number END
                 ) as doc_no
                 ,db_general_receive.created_at as doc_date,branch_id_fk,
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,

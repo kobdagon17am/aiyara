@@ -30,7 +30,7 @@ class General_receiveController extends Controller
 
  public function create()
     {
-      $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
+      $Product_in_cause  = DB::select(" SELECT * FROM `dataset_product_in_cause` where id not in(1)  ");
       $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
@@ -81,8 +81,9 @@ class General_receiveController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\General_receive::find($id);
-       $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
+       // $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
        // dd($Product_in_cause);
+       $Product_in_cause  = DB::select(" SELECT * FROM `dataset_product_in_cause` where id not in(1)  ");
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
        $Approver  = DB::select(" select * from ck_users_admin where id=".$sRow->approver." ");
        $Products = DB::select("SELECT products.id as product_id,
@@ -148,7 +149,7 @@ class General_receiveController extends Controller
           $sRow->description    = request('description');
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->product_status_id_fk    = request('product_status_id_fk');
-          $sRow->po_invoice_no    = request('po_invoice_no');
+          $sRow->loan_ref_number    = request('loan_ref_number');
           $sRow->lot_number    = request('lot_number');
           $sRow->lot_expired_date    = request('lot_expired_date');
           $sRow->amt    = request('amt');
@@ -225,7 +226,7 @@ class General_receiveController extends Controller
         $Data = DB::select("
                 SELECT db_general_receive.business_location_id_fk,
                 (
-                CASE WHEN po_invoice_no='-' or po_invoice_no is null THEN CONCAT('CODE',db_general_receive.id) ELSE CONCAT('CODE',po_invoice_no) END
+                  CASE WHEN loan_ref_number='-' or loan_ref_number is null THEN CONCAT('CODE',db_general_receive.id) ELSE loan_ref_number END
                 ) as doc_no
                 ,db_general_receive.created_at as doc_date,branch_id_fk,
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
