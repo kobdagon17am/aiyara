@@ -257,29 +257,47 @@ class Transfer_warehouses_codeController extends Controller
       // 	}
       // }
       if(@$req->id>0){
-        $id = "  id = ".$req->id." AND ";
+        $id = " AND id = ".$req->id."  ";
       }else{
         $id = "";
       }
 
-      $branch_id = !empty($req->branch_id) ? $req->branch_id : 0 ;
-      if($branch_id>0){
-        $branch_id2 = " branch_id_fk = ".$req->branch_id." AND ";
-      }else{
-        $branch_id2 = "";
-      }
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            // if(!empty( $req->business_location_id_fk) ){
+            //     $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
+            // }else{
+            //     $business_location_id = "";
+            // }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " AND branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
+        }else{
+
+            // $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " AND branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
+        }
+
       // '0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ'
       switch ($req->approve_status) {
         case '':
           $approve_status = "";
           break;
         case '0':
-          $approve_status = " approve_status = 0 AND ";
+          $approve_status = " AND approve_status = 0  ";
           break;    
         case '1' :
         case '2' :
         case '3' :
-          $approve_status = " approve_status = ".$req->approve_status." AND ";
+          $approve_status = " AND approve_status = ".$req->approve_status."  ";
           break;                 
         default:
           $approve_status = "";
@@ -292,15 +310,22 @@ class Transfer_warehouses_codeController extends Controller
           $action_date = "";
       }
       
+      // $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
+      //     WHERE 
+      //     $id
+      //     ".$branch_id2." 
+      //     ".$approve_status." 
+      //     (action_user LIKE ".(\Auth::user()->id)." OR 
+      //     (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
+      //     ".$action_date." 
+      //     ORDER BY updated_at DESC ");
 
       $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
-          WHERE 
+          WHERE 1
           $id
-          ".$branch_id2." 
-          ".$approve_status." 
-          (action_user LIKE ".(\Auth::user()->id)." OR 
-          (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
-          ".$action_date." 
+          $branch_id_fk
+          $approve_status
+          $action_date
           ORDER BY updated_at DESC ");
           		
       $sQuery = \DataTables::of($sTable);

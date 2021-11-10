@@ -423,32 +423,6 @@ class Add_ai_cashController extends Controller
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
 
-       // dd($User_branch_id);
-
-        // if(!empty($req->business_location_id_fk)){
-        //    $w01 = " AND db_add_ai_cash.business_location_id_fk=".$req->business_location_id_fk ;
-        // }else{
-        //    $w01 = "";
-        // }
-
-
-        //   if($sPermission==1){
-        //     if(!empty($req->branch_id_fk)){
-        //      $w02 = " AND db_add_ai_cash.branch_id_fk = ".$req->branch_id_fk." " ;
-        //     }else{
-        //      $w02 = "" ;
-        //     }
-
-        //   }else{
-        
-        //         if($User_branch_id){
-        //          $w02 = " AND db_add_ai_cash.branch_id_fk = ".$User_branch_id." " ;
-        //         }else{
-        //           $w02 =  " AND db_add_ai_cash.branch_id_fk = '999999999999' " ;
-        //         }
-        // }
-
-
         if(@\Auth::user()->permission==1){
 
             if(!empty( $req->business_location_id_fk) ){

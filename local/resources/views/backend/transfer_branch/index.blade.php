@@ -942,6 +942,9 @@
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
             return false;
+          }else if(branch_id_fk_to==''){
+            $("#branch_id_fk_to").select2('open');
+            return false;
           }else if(product_id==''){
             $("#product").select2('open');
             return false;

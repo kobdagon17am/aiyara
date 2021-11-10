@@ -147,6 +147,10 @@
                 // เคสนี้ ต้องรับสินค้าครบทั้งหมดก่อนถึงจะมีสิทธิ์อนุมัติใบโอนได้ และค่อยดึงเข้าคลังต่อไปได้
                 (can_approve==1)?($(".div_approve_transfer_branch_get").show()):($(".div_approve_transfer_branch_get").remove());
                 (can_approve==1)?($(".div_confirm_transfer_slip").show()):($(".div_confirm_transfer_slip").remove());
+                (can_approve==1)?($(".div_confirm_transfer_branch").show()):($(".div_confirm_transfer_branch").remove());
+                (can_approve==1)?($(".div_confirm_transfer_warehouses").show()):($(".div_confirm_transfer_warehouses").remove());
+
+                console.log('can_approve : '+can_approve);
 
               }
         

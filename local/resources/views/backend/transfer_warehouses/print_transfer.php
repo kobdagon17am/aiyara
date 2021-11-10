@@ -258,7 +258,7 @@ tr.border_bottom td {
         SELECT *
         FROM db_transfer_warehouses_details 
         WHERE
-        transfer_warehouses_code_id = ".$data[0]."
+        transfer_warehouses_code_id = ".$data[0]." AND remark=1
      ");
 
      $j=1;

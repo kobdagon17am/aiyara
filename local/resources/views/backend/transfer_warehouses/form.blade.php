@@ -69,11 +69,10 @@
               @endif
                 {{ csrf_field() }}
 <!-- Session::get('roleApprove') -->
- @if( $sPermission==1 || @$menu_permit->can_approve==1 )
 
       @if( @$sRow->approve_status!='2' )
 
-            <div class="myBorder">
+            <div class="myBorder div_confirm_transfer_warehouses ">
 
                  <div class="form-group row">
                       <label for="example-text-input" class="col-md-3 col-form-label"><i class="bx bx-play"></i>ผู้อนุมัติ (Admin Login) :</label>
@@ -150,15 +149,6 @@
                 </div>
            @endif
 
-  @else
-         <div class="form-group mb-0 row">
-          <div class="col-md-6">
-            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_warehouses") }}">
-              <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-            </a>
-          </div>
-        </div>
-  @endif
             </div>
         </div>
     </div> <!-- end col -->

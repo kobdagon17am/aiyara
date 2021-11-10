@@ -201,7 +201,9 @@
                   </div>
 
                   <div class="row">
+
                     <div class="col-12 d-flex ">
+                      <!--  
                       <div class="col-md-3 ">
                         <div class="form-group row">
                           <select id="branch_id_search" name="branch_id_search" class="form-control select2-templating " >
@@ -223,6 +225,7 @@
                           </select>
                         </div>
                       </div>
+    -->                  
                       <div class="col-md-1">
                         <div class="form-group row">
                           <select id="status_search" name="status_search" class="form-control select2-templating " >
