@@ -23,7 +23,7 @@ class Transfer_branchController extends Controller
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
+            WHERE lang_id=1 AND products.status=1 ORDER BY products.product_code ");
 
         $sPermission  = \Auth::user()->permission ;
         $User_branch_id = \Auth::user()->branch_id_fk;

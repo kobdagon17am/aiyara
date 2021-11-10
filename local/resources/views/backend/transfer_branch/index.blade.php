@@ -971,7 +971,7 @@
                           method: 'POST',
                         },
                     columns: [
-                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'id', title :'No.', className: 'text-center w50'},
                         {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
                         {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                         {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -984,6 +984,12 @@
                         }},
 
                     ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                                                
+                      var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                    }
 
                 });
               
@@ -1040,7 +1046,7 @@
             },
 
            columns: [
-                  {data: 'id', title :'ID', className: 'text-center w50'},
+                  {data: 'id', title :'No.', className: 'text-center w50'},
                   {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
                   {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                   {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -1056,6 +1062,9 @@
                   {data: 'id', title :'Tools', className: 'text-center w150'}, 
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
+
+                  var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
                
 
                       $('td:last-child', nRow).html(''
