@@ -510,4 +510,114 @@ public static function check_line_aipocket($username){
 }
 
 
+public static function check_line_backend($username_by,$username_check){
+
+	$data_user =  DB::table('customers')
+  ->select('customers.*')
+  // ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
+  // ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
+	->where('user_name','=',$username_check)
+	->first();
+
+  //dd($data_user);
+
+	if(!empty($data_user)){
+
+		$username = $data_user->user_name;
+		//$use_username =Auth::guard('c_user')->user()->user_name;
+    $use_username = $username_by;
+		if( $username == $use_username){
+
+			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];
+			return $resule;
+		}
+
+		//group 1 หาภายใต้ตัวเอง
+
+		$username = $data_user->upline_id;
+		$j = 2;
+		for ($i=1; $i <= $j ; $i++){
+			if($i == 1){
+				$data = DB::table('customers')
+				->select('upline_id','user_name','upline_id')
+				->where('user_name','=',$username)
+			//->where('upline_id','=',$use_id)
+				->first();
+			}
+
+			if($data){
+
+				if($data->user_name == $use_username || $data->upline_id == $use_username ){
+					$resule = ['status'=>'success','message'=>'Under line','data'=>$data_user];
+					$j =0;
+					return $resule;
+
+				}elseif($data->upline_id == 'AA'){
+
+					$resule = ['status'=>'fail','message'=>'No Under line'];
+					$j =0;
+				}else{
+
+					$data = DB::table('customers')
+					->select('upline_id','user_name','upline_id')
+					->where('user_name','=',$data->upline_id)
+					->first();
+
+					$j = $j+1;
+				}
+
+			}else{
+				$resule = ['status'=>'fail','message'=>'No Under line'];
+				$j =0;
+			}
+		}
+
+		//end group 1 หาภายใต้ตัวเอง
+		/////////////////////////////////////////////////////////////////////////////////////
+
+		//หาด้านบนตัวเอง
+		$upline_id_arr = array();
+
+		if($resule['status'] == 'fail'){
+
+			$data_account = DB::table('customers')
+			->select('*')
+			->where('user_name','=',$use_username)
+			->first();
+
+			$id = $data_account->upline_id;
+			$j = 2;
+			for ($i=1; $i <= $j ; $i++){
+				if($id == 'AA'){
+					$upline_id_arr[] = $data_account->user_name;
+					$j =0;
+				}else{
+					$data_account = DB::table('customers')
+					->select('upline_id','user_name','upline_id')
+					->where('id','=',$id)
+					->first();
+					$upline_id_arr[] = $data_account->user_name;
+					$username = $data_account->upline_id;
+					$j = $j+1;
+				}
+			}
+
+			//return $resule;
+		}
+		if (in_array($username, $upline_id_arr)) {
+			$resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
+		}else{
+			$resule = ['status'=>'fail','message'=>'No Underline and Upline '];
+
+		}
+		return $resule;
+
+	}else{
+		$resule = ['status'=>'fail','message'=>'No data'];
+		return $resule;
+
+	}
+}
+
+
 }
