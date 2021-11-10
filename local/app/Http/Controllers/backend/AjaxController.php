@@ -392,7 +392,7 @@ class AjaxController extends Controller
         // dd($id);
         $data = [$id];
         $pdf = PDF::loadView('backend.transfer_warehouses.print_transfer',compact('data'));
-        $pdf->setPaper('A4', 'landscape');
+        // $pdf->setPaper('A4', 'landscape');
 
         // $pdf->showWatermarkImage = true;
         // $pdf->showWatermarkImage(public_path('images/logo.png'));
@@ -406,7 +406,7 @@ class AjaxController extends Controller
         // dd($id);
         $data = [$id];
         $pdf = PDF::loadView('backend.transfer_branch.print_transfer',compact('data'));
-        $pdf->setPaper('A4', 'landscape');
+        // $pdf->setPaper('A4', 'landscape');
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
 

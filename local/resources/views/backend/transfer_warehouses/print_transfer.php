@@ -175,7 +175,7 @@ tr.border_bottom td {
           This should center it vertically
       **/
       top:   4.5cm;
-      left:     4.5cm;
+      /*left:     4.5cm;*/
 
       /** Change image dimensions**/
       /*width:    8cm;*/

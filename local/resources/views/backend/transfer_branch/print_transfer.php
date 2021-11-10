@@ -176,7 +176,7 @@ tr.border_bottom td {
           This should center it vertically
       **/
       top:   4.5cm;
-      left:     4.5cm;
+      /*left:     4.5cm;*/
 
       /** Change image dimensions**/
       /*width:    8cm;*/
@@ -261,7 +261,7 @@ tr.border_bottom td {
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
-        <td style="border-left: 1px solid #ccc;width: 50%;font-weight: bold;">สาขาต้นทาง : <?=@$branchs_from[0]->b_name?>
+        <td style="border-left: 1px solid #ccc;width: 50.7%;font-weight: bold;">สาขาต้นทาง : <?=@$branchs_from[0]->b_name?>
           <br>
           <br>
         </td>
