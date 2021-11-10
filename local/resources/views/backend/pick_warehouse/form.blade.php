@@ -570,17 +570,17 @@
                           // console.log(data);
                           // return false;
 
-                          if(data==0){
-                            Swal.fire({
-                              position: 'top-end',
-                              title: '! ค้นไม่พบใบเสร็จ',
-                              showConfirmButton: false,
-                              timer: 2500
-                            })
-                            $(".myloading").hide();
-                            return false;
+                          // if(data==0){
+                          //   Swal.fire({
+                          //     position: 'top-end',
+                          //     title: '! ค้นไม่พบใบเสร็จ',
+                          //     showConfirmButton: false,
+                          //     timer: 2500
+                          //   })
+                          //   $(".myloading").hide();
+                          //   return false;
 
-                          }else{
+                          // }else{
 
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
                       // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
@@ -614,6 +614,8 @@
 
                                             $(".myloading").hide();
 
+                                            var check_product_instock = "<?=@$_SESSION['check_product_instock']?>";
+                                            console.log(check_product_instock);
                                               // console.log(aData['ch_amt_remain']);
                                               // console.log(aData['ch_amt_lot_wh']);
                                               // console.log(aData['status_sent']);
@@ -621,6 +623,8 @@
 
                                               // aData['status_cancel_all']==1 > มีการยกเลิก
                                               // aData['status_cancel_all']==0 > ไม่มีการยกเลิก
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 3=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
 
                                               // ถ้าจ่ายครบแล้ว aData['status_sent']==3
                                               if(aData['status_sent']==3){
@@ -638,7 +642,7 @@
                                                             $(".div_datatables_003").hide();
                                                             $(".div_datatables_004").show();
 
-                                                            if(aData['ch_amt_lot_wh']==0){
+                                                            if(aData['ch_amt_lot_wh']<=0){
                                                                 $(".div_btn_save_004").hide();
                                                             }else{
                                                                 $(".div_btn_save_004").show();
@@ -651,7 +655,7 @@
 
                                                             // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
                                                             // ถ้าไม่มีสินค้าในคลังเลย
-                                                            if(aData['ch_amt_lot_wh']==0){
+                                                            if(aData['ch_amt_lot_wh']<=0){
                                                                 $(".div_btn_save_004").hide();
                                                             }else{
                                                                 $(".div_btn_save_004").show();
@@ -699,6 +703,8 @@
 
                                             $(".myloading").hide();
 
+                                            // console.log(aData['check_product_instock']);
+
                                               // console.log(aData['ch_amt_remain']);
                                               // console.log(aData['ch_amt_lot_wh']);
                                               // console.log(aData['status_sent']);
@@ -737,7 +743,7 @@
                                   });
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@                      
 
-                          } // ปิด if(data==0){
+                          // } // ปิด if(data==0){
 
                       } // ปิด success:function(data)
                 
@@ -748,10 +754,13 @@
  
     <script>
 
+     // var pick_pack_packing_code_id_fk = "{{$id}}"; alert(pick_pack_packing_code_id_fk);
+
        $(document).on('click', '.btnSave004', function(e) {
 
                 $(".myloading").show();
                 var requisition_code = "{{$pick_pack_requisition_code_id_fk}}"; 
+                var pick_pack_packing_code_id_fk = "{{$id}}"; //alert(pick_pack_packing_code_id_fk);
                 // var packing_id = packing_id.split('');
                 // alert(packing_id);
                 // return false;
@@ -794,10 +803,12 @@
                                                                       
                                                                     $(".myloading").show();
 
+                                                                    // alert(pick_pack_packing_code_id_fk);
+
                                                                       $.ajax({
                                                                          type:'POST',
                                                                          url: " {{ url('backend/ajaxSavePay_requisition_edit') }} ",
-                                                                         data:{ _token: '{{csrf_token()}}',requisition_code:requisition_code },
+                                                                         data:{ _token: '{{csrf_token()}}',requisition_code:requisition_code,pick_pack_packing_code_id_fk:pick_pack_packing_code_id_fk },
                                                                           success:function(d2){
                                                                                console.log(d2);
                                                                                location.reload();

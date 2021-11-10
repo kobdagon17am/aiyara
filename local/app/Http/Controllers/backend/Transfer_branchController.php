@@ -23,7 +23,7 @@ class Transfer_branchController extends Controller
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
+            WHERE lang_id=1 AND products.status=1 ORDER BY products.product_code ");
 
         $sPermission  = \Auth::user()->permission ;
         $User_branch_id = \Auth::user()->branch_id_fk;
@@ -31,6 +31,18 @@ class Transfer_branchController extends Controller
           return $query->where('id', auth()->user()->branch_id_fk);
         })->get();
         $Warehouse = \App\Models\Backend\Warehouse::get();
+
+        // $toBranchs = \App\Models\Backend\Branchs::get();
+        // dd($User_branch_id);
+        if($sPermission==1){
+          $toBranchs = \App\Models\Backend\Branchs::get();
+        }else{
+          $User_branch_id = @$User_branch_id?$User_branch_id:0;
+          $toBranchs = DB::select("SELECT * from branchs where id not in($User_branch_id) ");
+        }
+        
+        // dd($toBranchs);
+
         $Zone = \App\Models\Backend\Zone::get();
         $Shelf = \App\Models\Backend\Shelf::get();
 
@@ -62,6 +74,7 @@ class Transfer_branchController extends Controller
            'tr_number'=>$tr_number,
            'sAction_user'=>$sAction_user,
            'sPermission'=>$sPermission,
+           'toBranchs'=>$toBranchs,
 
         ) );
 
@@ -252,28 +265,28 @@ class Transfer_branchController extends Controller
 
 
 // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
-          $db_select = DB::select("
-            SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$id."
-             ");
-          foreach ($db_select as $key => $v) {
+          // $db_select = DB::select("
+          //   SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$id."
+          //    ");
+          // foreach ($db_select as $key => $v) {
 
-                 $fnCheckStock = new  AjaxController();
-                 $r_check_stcok = $fnCheckStock->fnCheckStock(
-                  $v->branch_id_fk,
-                  $v->product_id_fk,
-                  $v->amt,
-                  $v->lot_number,
-                  $v->lot_expired_date,
-                  $v->warehouse_id_fk,
-                  $v->zone_id_fk,
-                  $v->shelf_id_fk,
-                  $v->shelf_floor);
-                // return $r_check_stcok;
-                if($r_check_stcok==0){
-                  return redirect()->to(url("backend/transfer_branch/".$id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
-                }
+          //        $fnCheckStock = new  AjaxController();
+          //        $r_check_stcok = $fnCheckStock->fnCheckStock(
+          //         $v->branch_id_fk,
+          //         $v->product_id_fk,
+          //         $v->amt,
+          //         $v->lot_number,
+          //         $v->lot_expired_date,
+          //         $v->warehouse_id_fk,
+          //         $v->zone_id_fk,
+          //         $v->shelf_id_fk,
+          //         $v->shelf_floor);
+          //       // return $r_check_stcok;
+          //       if($r_check_stcok==0){
+          //         return redirect()->to(url("backend/transfer_branch/".$id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
+          //       }
 
-          }
+          // }
 
 
 
@@ -466,11 +479,31 @@ CREATE TABLE `db_transfer_branch_get` (
 
     public function Datatable(Request $req){
 
-      if(isset($req->id)){
-            $sTable = \App\Models\Backend\Transfer_branch::where('id',$req->id)->search()->orderBy('id', 'asc');
-      }else{
-           $sTable = \App\Models\Backend\Transfer_branch::search()->orderBy('id', 'asc');
-      }
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+                             
+                if(isset($req->id)){
+                      $sTable = \App\Models\Backend\Transfer_branch::where('id',$req->id)->search()->orderBy('id', 'asc');
+                }else{
+                     $sTable = \App\Models\Backend\Transfer_branch::search()->orderBy('id', 'asc');
+                }
+
+
+        }else{
+
+                             
+                if(isset($req->id)){
+                      $sTable = \App\Models\Backend\Transfer_branch::where('branch_id_fk',$User_branch_id)->where('id',$req->id)->search()->orderBy('id', 'asc');
+                }else{
+                     $sTable = \App\Models\Backend\Transfer_branch::where('branch_id_fk',$User_branch_id)->search()->orderBy('id', 'asc');
+                }
+
+
+        }
+
 
 
       $sQuery = \DataTables::of($sTable);
@@ -488,14 +521,6 @@ CREATE TABLE `db_transfer_branch_get` (
         return @$Products[0]->product_code." <br> ".@$Products[0]->product_name;
 
       })
-      // ->addColumn('lot_expired_date', function($row) {
-      //   $d = strtotime($row->lot_expired_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
-      // ->addColumn('action_date', function($row) {
-      //   $d = strtotime($row->action_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
        ->escapeColumns('product_name')
       ->addColumn('warehouses', function($row) {
         $Check_stock = \App\Models\Backend\Check_stock::where('product_id_fk',$row->product_id_fk)->where('lot_number',$row->lot_number)->first();
@@ -544,14 +569,6 @@ CREATE TABLE `db_transfer_branch_get` (
         return @$Products[0]->product_code." <br> ".@$Products[0]->product_name;
 
       })
-      // ->addColumn('lot_expired_date', function($row) {
-      //   $d = strtotime($row->lot_expired_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
-      // ->addColumn('action_date', function($row) {
-      //   $d = strtotime($row->action_date);
-      //   return date("d/m/", $d).(date("Y", $d)+543);
-      // })
        ->escapeColumns('product_name')
       ->addColumn('warehouses', function($row) {
         $Check_stock = \App\Models\Backend\Check_stock::where('product_id_fk',$row->product_id_fk)->where('lot_number',$row->lot_number)->first();

@@ -70,7 +70,7 @@
                 <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                 <div class="col-md-8">
                   <select id="business_location_id_fk" name="business_location_id_fk"
-                    class="form-control select2-templating " required="" @if($sPermission !== 1) disabled @endif>
+                    class="form-control select2-templating " required="" @if($sPermission !== 1)  @endif>
                     <option value="">-Business Location-</option>
                     @if(@$sBusiness_location)
                       @foreach(@$sBusiness_location AS $r)
@@ -88,10 +88,11 @@
                 <div class="col-md-8">
 
                   <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating" >
+                    <option value="">Select</option>
                     @if(@$sBranchs)
                     @foreach(@$sBranchs AS $r)
-                    <?=$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
-                    <option value="{{$r->id}}" {{ ( @$r->id==$branch_id_fk) ? 'selected': ''  }}>
+                    <?php //$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
+                    <option value="{{$r->id}}" {{ ( @$r->id==@$sRow->branch_id_fk) ? 'selected': ''  }}>
                       {{$r->b_name}}
                     </option>
                     @endforeach
@@ -140,16 +141,22 @@
                   </select>
                 </div>
               </div>
-
+<!-- 
               <div class="form-group row">
                 <label for="po_invoice_no" class="col-md-3 col-form-label">เลขที่ PO : </label>
                 <div class="col-md-8">
                   <input class="form-control" type="text" value="{{ @$sRow->po_invoice_no }}" name="po_invoice_no">
                 </div>
               </div>
-
-
+ -->
               <div class="form-group row">
+                <label for="loan_ref_number " class="col-md-3 col-form-label">เลขที่อ้างอิงใบยืม (กรณีรับคืนจากการยืม) : </label>
+                <div class="col-md-8">
+                  <input class="form-control" type="text" value="{{ @$sRow->loan_ref_number }}" id="loan_ref_number" name="loan_ref_number">
+                </div>
+              </div>
+
+<!--               <div class="form-group row">
                 <label for="delivery_person" class="col-md-3 col-form-label">ชื่อ Supplier : </label>
                 <div class="col-md-8">
                   <select name="supplier_id_fk" class="form-control select2-templating ">
@@ -163,7 +170,7 @@
                     @endif
                   </select>
                 </div>
-              </div>
+              </div> -->
 
               <div class="form-group row">
                 <label for="delivery_person" class="col-md-3 col-form-label">ผู้ส่งมอบ : *</label>
@@ -452,10 +459,16 @@
 
   function g_import(id){
     var a = document.getElementById(id).value;
+    // alert(a);
     if(a==4){
       $('#what_import').removeClass('d-none');
     }else{
       $('#what_import').addClass('d-none');
+    }
+    if(a==2){
+      $('#loan_ref_number').prop('required',true);
+    }else{
+      $('#loan_ref_number').prop('required',false);
     }
   }
   $('#business_location_id_fk').change(function(){

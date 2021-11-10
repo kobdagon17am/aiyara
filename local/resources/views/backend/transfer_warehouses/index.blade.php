@@ -201,7 +201,9 @@
                   </div>
 
                   <div class="row">
+
                     <div class="col-12 d-flex ">
+                      <!--  
                       <div class="col-md-3 ">
                         <div class="form-group row">
                           <select id="branch_id_search" name="branch_id_search" class="form-control select2-templating " >
@@ -223,6 +225,7 @@
                           </select>
                         </div>
                       </div>
+    -->                  
                       <div class="col-md-1">
                         <div class="form-group row">
                           <select id="status_search" name="status_search" class="form-control select2-templating " >
@@ -942,29 +945,18 @@ $(document).ready(function() {
   					        searching: false,
   					        // paging: false,
 
-  					        // ajax: {
-  					        //   url: '{{ route('backend.check_stock.datatable') }}',
-  					        //   data: function ( d ) {
-  					        //     d.Where={};
-  					        //     d.Where['branch_id_fk'] = branch_id_fk ;
-               //          d.Where['product_id_fk'] = product_id ;
-  					        //     oData = d;
-  					        //   },
-  					        //   method: 'POST'
-  					        // },
-
                     ajax: {
-                        url: '{{ route('backend.check_stock.datatable') }}',
+                        url: '{{ route('backend.check_stock_transfer_warehouses.datatable') }}',
                         data :{
                               _token: '{{csrf_token()}}',
                               branch_id_fk:branch_id_fk,
-                              product:product_id,
+                              product_id_fk:product_id,
                             },
                           method: 'POST',
                         },
 
   					        columns: [
-  					            {data: 'id', title :'ID', className: 'text-center w50'},
+  					            {data: 'id', title :'No.', className: 'text-center w50'},
   					            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
   					            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
   					            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -977,6 +969,12 @@ $(document).ready(function() {
   					            }},
 
   					        ],
+                      rowCallback: function(nRow, aData, dataIndex){
+                                                
+                      var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                    }
 
   					    });
   					  
@@ -1039,7 +1037,7 @@ $(document).ready(function() {
             },
 
            columns: [
-    	            {data: 'id', title :'ID', className: 'text-center w50'},
+    	            {data: 'id', title :'No.', className: 'text-center w50'},
     	            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
     	            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
     	            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -1055,6 +1053,10 @@ $(document).ready(function() {
     	          	{data: 'id', title :'Tools', className: 'text-center w150'}, 
     		        ],
     		        rowCallback: function(nRow, aData, dataIndex){
+
+                  var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                      
     		          // if(sU!=''&&sD!=''){
     		          //     $('td:last-child', nRow).html('-');
     		          // }else{ 
@@ -1064,14 +1066,17 @@ $(document).ready(function() {
                       $('td:last-child', nRow).html(''
                         + '<input type="hidden" name="transfer_choose_id[]" value="'+aData['id']+'"> '
                         + '<a href="#" class="btn btn-sm btn-success btnEditToWarehouse " data-id="'+aData['id']+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        // + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_transfer_choose" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
                       ).addClass('input');
 
                     }else{
 
                       $('td:last-child', nRow).html(''
                         + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        // + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_transfer_choose" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
     		              
@@ -1523,6 +1528,41 @@ $(document).ready(function() {
             });
 
         }); 
+    </script>
+    <script>
+      
+      $(document).on('click', '.remove_01', function(event) {
+
+            var id = $(this).data('id');
+            var table = $(this).data('table');
+            var file = $(this).data('file');
+
+            // alert(id+" : "+table+" : "+file);
+            // return false;
+
+            if (!confirm("Are you sure ? ")){
+                return false;
+            }else{
+
+            $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
+                success:function(data){
+                     console.log(data); 
+                     location.reload();
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+        }
+
+    });
+
     </script>
 
 

@@ -205,6 +205,8 @@ class PromotionsController extends Controller
         ".$w02."
         ".$w03."
 
+        order by updated_at desc
+
         ");
 
       $sQuery = \DataTables::of($sTable);

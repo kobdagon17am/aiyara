@@ -103,7 +103,7 @@ class Pick_packPackingCodeController extends Controller
             $t = ' <div class="invoice_code_list" data-toggle="tooltip" data-placement="top" title="คลิ้กเพื่อดูใบเสร็จทั้งหมด" style="cursor:pointer;" >';
             if(count($r)>3){
               for ($i=0; $i < 3 ; $i++) { 
-                 $t .= $r[$i].",";
+                 $t .= $r[$i]."<br>";
               }
               $t .= "...";
               $arr = [];
@@ -113,7 +113,8 @@ class Pick_packPackingCodeController extends Controller
               $arr_inv = implode(",",$arr);
               return $t."</div>" .' <input type="hidden" class="arr_inv" value="'.$arr_inv.'"> ';
             }else{
-              return @$row->receipt;
+              $arr_inv = implode("<br>",$r);
+              return @$arr_inv;
             }
         }
       })
@@ -289,6 +290,21 @@ class Pick_packPackingCodeController extends Controller
       })
       ->escapeColumns('status_desc')
 
+      ->addColumn('status_amt_remain', function($row) {
+        // หา max time_pay ก่อน 
+           $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." order by time_pay desc limit 1  ");
+        // Check ว่ามี status=2 ? (ค้างจ่าย)
+           if(@$r_ch01){
+           $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+           if(count($r_ch02)>0){
+               return '<font color=red> * มีค้างจ่าย</font>';
+           }else{
+             return '';
+           }
+         }
+     
+      })
+      ->escapeColumns('status_amt_remain')
 
       ->make(true);
     }

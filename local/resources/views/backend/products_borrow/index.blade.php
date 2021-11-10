@@ -925,8 +925,13 @@ $(document).ready(function() {
 
           var return_datetime = $("#return_datetime").val();
           // alert(return_datetime);
-
           $("#branch_id_select_to_products_borrow").val(branch_id_fk);
+
+          console.log(branch_id_fk);
+          console.log(product_id);
+          // console.log(borrow_cause_id_fk);
+          // console.log(return_datetime);
+          // return false;
 
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
@@ -957,16 +962,15 @@ $(document).ready(function() {
   					        destroy: true,
   					        searching: false,
   					        // paging: false,
-  					        ajax: {
-  					          url: '{{ route('backend.check_stock.datatable') }}',
-  					          data: function ( d ) {
-  					            d.Where={};
-  					            d.Where['branch_id_fk'] = branch_id_fk ;
-                        d.Where['product_id_fk'] = product_id ;
-  					            oData = d;
-  					          },
-  					          method: 'POST'
-  					        },
+                    ajax: {
+                        url: '{{ route('backend.check_stock_borrow.datatable') }}',
+                        data :{
+                              branch_id_fk:branch_id_fk,
+                              product_id_fk:product_id,
+                            },
+                          method: 'POST',
+                        },
+                        
   					        columns: [
   					            {data: 'id', title :'ID', className: 'text-center w50'},
   					            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},

@@ -18,27 +18,6 @@
 </div>
 <!-- end page title -->
 
-  <?php 
-    $sPermission = \Auth::user()->permission ;
-    // $menu_id = @$_REQUEST['menu_id'];
-    $menu_id = Session::get('session_menu_id');
-    $role_group_id = @$_REQUEST['role_group_id'];
-    if($sPermission==1){
-      $sC = '';
-      $sU = '';
-      $sD = '';
-      $sA = '';
-    }else{
-      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-      $sC = @$menu_permit->c==1?'':'display:none;';
-      $sA = @$menu_permit->can_answer==1?'':'display:none;';
-    }
-
-      //   echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;  
-
-   ?>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -69,11 +48,9 @@
                 {{ csrf_field() }}
 
 
- @if( $sPermission==1 || @$menu_permit->can_approve==1 )
-
       @if( @$sRow->approve_status!='2' )
 
-            <div class="myBorder">
+            <div class="myBorder div_confirm_transfer_branch ">
 
               <h4><i class="bx bx-play"></i> อนุมัติโอนสินค้า</h4>
 
@@ -153,15 +130,7 @@
                           </div>
             @endif
 
-  @else
-         <div class="form-group mb-0 row">
-          <div class="col-md-6">
-            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/transfer_branch") }}">
-              <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-            </a>
-          </div>
-        </div>
-  @endif  
+ 
             </div>
         </div>
     </div> <!-- end col -->

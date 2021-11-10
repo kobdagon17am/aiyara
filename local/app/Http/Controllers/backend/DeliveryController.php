@@ -734,17 +734,47 @@ class DeliveryController extends Controller
     public function Datatable(Request $req)
     {
 
-        if(!empty($req->business_location_id_fk) && $req->business_location_id_fk > 0 ){
-            $business_location_id = " and db_delivery.business_location_id =  ".$req->business_location_id_fk ;
+
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            if(!empty( $req->business_location_id_fk) ){
+                $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
+            }else{
+                $business_location_id = "";
+            }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " and db_delivery.branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
+            $billing_employee = '';
+
         }else{
-            $business_location_id = "";
+
+            $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+            $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
+
         }
 
-        if(!empty($req->branch_id_fk) && $req->branch_id_fk > 0 ){
-            $branch_id_fk = " and db_delivery.branch_id_fk =  ".$req->branch_id_fk ;
-        }else{
-            $branch_id_fk = "";
-        }
+
+
+        // if(!empty($req->business_location_id_fk) && $req->business_location_id_fk > 0 ){
+        //     $business_location_id = " and db_delivery.business_location_id =  ".$req->business_location_id_fk ;
+        // }else{
+        //     $business_location_id = "";
+        // }
+
+        // if(!empty($req->branch_id_fk) && $req->branch_id_fk > 0 ){
+        //     $branch_id_fk = " and db_delivery.branch_id_fk =  ".$req->branch_id_fk ;
+        // }else{
+        //     $branch_id_fk = "";
+        // }
 
         if(!empty($req->receipt)){
             $receipt = " and db_delivery.receipt =  '".$req->receipt."'" ;
@@ -767,7 +797,24 @@ class DeliveryController extends Controller
         // return $receipt;
 
       // $sTable = \App\Models\Backend\Delivery::search()->where('status_pack','0')->where('approver','NULL')->orderBy('id', 'asc');
-      $sTable = DB::select(" 
+      // $sTable = DB::select(" 
+
+      //   SELECT * from db_delivery  
+      //   WHERE status_pack=0 AND approver=0 AND status_delivery<>1 AND status_pick_pack<>1
+
+      //   $business_location_id
+      //   $branch_id_fk
+      //   $receipt
+      //   $customer_id_fk
+      //   $delivery_date
+      //   $billing_employee
+
+      //   order by updated_at desc
+
+
+      //   ");
+      
+    $sTable = DB::select(" 
 
         SELECT * from db_delivery  
         WHERE status_pack=0 AND approver=0 AND status_delivery<>1 AND status_pick_pack<>1
@@ -786,10 +833,6 @@ class DeliveryController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      // ->addColumn('delivery_date', function($row) {
-      //     $d = strtotime($row->delivery_date);
-      //     return date("d/m/", $d).(date("Y", $d)+543);
-      // })
       ->addColumn('customer_name', function($row) {
       	if(@$row->customer_id!=''){
          	$Customer = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=".@$row->customer_id." ");

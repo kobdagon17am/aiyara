@@ -213,10 +213,10 @@
                         <i class="bx bx-search align-middle "></i> SEARCH
                       </a>
 
-
-                <!--     <a class="btn btn-info btn-sm float-right " style="{{@$sC}}" href="{{ route('backend.po_receive.create') }}">
+<!-- 
+                     <a class="btn btn-info btn-sm float-right "  href="{{ route('backend.po_receive.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle"></i>ADD สร้างใบรับสินค้าจาก PO
-                    </a> -->
+                    </a>  -->
 
 
                     </div>

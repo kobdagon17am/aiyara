@@ -325,7 +325,8 @@
               </div>
               <div class="divTableCell" style="text-align: right;" >
                     <a  href="{{ route('backend.frontstore.create') }}">
-                <button type="button" class="btn btn-success btnAdd class_btn_add " ><i class="fa fa-plus font-size-18 align-middle "></i> {{ __('message.add') }}</button>
+                <button type="button" class="btn btn-success btnAdd  " ><i class="fa fa-plus font-size-18 align-middle "></i> {{ __('message.add') }}</button>
+                <!-- class_btn_add -->
                  </a>
               </div>
             </div>
@@ -505,7 +506,7 @@ $(function() {
                 + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
 
-            {data: 'id', title :'Tools.', className: 'text-center w80'},
+            {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
            "columnDefs": [ {
               // "targets": [0,2,6,7,8,9] ,
@@ -578,11 +579,14 @@ $(function() {
 
                           var str_V2 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="เบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
 
+                          var str_V3 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="รวมในบิล Packing List แล้ว" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+
                           if(sU!='1' && sD!='1'){
                              $('td:last-child', nRow).html('-');
                           }else{
 
-                            // console.log(aData['status_delivery_02']);
+                            // console.log(aData['code_order']+" : "+aData['status_delivery_packing']);
+                            console.log(aData['code_order']+" : "+aData['status_delivery_02']);
 
                             if(aData['status_delivery_02']==1){
 
@@ -590,7 +594,11 @@ $(function() {
 
                             }else{
 
-                                 $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                              if(aData['status_delivery_packing']==1){
+                                $('td:last-child', nRow).html( str_U + str_V3).addClass('input');
+                              }else{
+                                $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                              }
 
                                     // var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
 
@@ -970,113 +978,146 @@ $(document).ready(function() {
                                                         + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                                                     }},
 
-                                                    {data: 'id', title :'Tools.', className: 'text-center w80'},
+                                                    {data: 'id', title :'Tools', className: 'text-center w80'},
                                                 ],
                                                    "columnDefs": [ {
                                                       // "targets": [0,2,6,7,8,9] ,
                                                       "targets": [0,11,12] ,
                                                       "orderable": false
                                                   } ],
-                                               rowCallback: function(nRow, aData, dataIndex){
+                                                rowCallback: function(nRow, aData, dataIndex){
 
-                                                   // var info = $(this).DataTable().page.info();
-                                                   // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                                                       // var info = $(this).DataTable().page.info();
+                                                       // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                                                    if(aData['total_price']){
-                                                      $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
-                                                    }
+                                                       // console.log(aData['status']);
 
-                                                   if(aData['type']!='0'){
-                                                      $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
-                                                      // $("td:eq(6)", nRow).html('');
-                                                      $("td:eq(8)", nRow).html('');
-                                                    }
+                                                        if(aData['total_price']){
+                                                          $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+                                                        }
 
-                                                    if(aData['pay_type']=='ai_cash'){
-                                                      $("td:eq(7)", nRow).html('เติม Ai-Cash');
-                                                    }
+                                                       if(aData['type']!='0'){
+                                                          $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
+                                                          // $("td:eq(6)", nRow).html('');
+                                                          $("td:eq(8)", nRow).html('');
+                                                        }
 
-                                                    $("td:eq(4)", nRow).html(aData['customer_name']);
+                                                        if(aData['pay_type']=='ai_cash'){
+                                                          $("td:eq(7)", nRow).html('เติม Ai-Cash');
+                                                        }
+
+                                                        $("td:eq(4)", nRow).html(aData['customer_name']);
 
 
 
-                                                    if(aData['approve_status']==5){
+                                                        if(aData['approve_status']==5){
 
-                                                      $('td:last-child', nRow).html('-');
+                                                          $('td:last-child', nRow).html('-');
 
-                                                    }else{
+                                                        }else{
 
-                                                            var sPermission = "<?=\Auth::user()->permission?>";
-                                                            var sU = sessionStorage.getItem("sU");
-                                                            var sD = sessionStorage.getItem("sD");
-                                                            var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
-                                                            var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
+                                                                var sPermission = "<?=\Auth::user()->permission?>";
+                                                                var sU = sessionStorage.getItem("sU");
+                                                                var sD = sessionStorage.getItem("sD");
+                                                                var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                                                                var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
 
-                                                            if(sPermission==1){
-                                                              sU = 1;
-                                                              sD = 1;
-                                                              can_cancel_bill = 1;
-                                                              can_cancel_bill_across_day = 1;
-                                                            }
+                                                                if(sPermission==1){
+                                                                  sU = 1;
+                                                                  sD = 1;
+                                                                  can_cancel_bill = 1;
+                                                                  can_cancel_bill_across_day = 1;
+                                                                }
 
-                                                            if(sU!='1'&&sD!='1'){
-                                                                $('td:last-child', nRow).html('-');
-                                                            }else{
+                                                                if(sU!='1'&&sD!='1'){
+                                                                    $('td:last-child', nRow).html('-');
+                                                                }else{
 
-                                                              if(aData['type']!='0'){ // เติม Ai-Cash
-                                                              }else{
-
-                                                                  var str_V = '';
-
-                                                                  str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
-
-                                                                  var str_U = '';
-                                                                  if(sU=='1'){
-                                                                    str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                                                                  }
-                                                                  var str_D = '';
-                                                                  if(sD=='1'){
-                                                                    str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
-                                                                  }
-                                                                  if(sU!='1' && sD!='1'){
-                                                                     $('td:last-child', nRow).html('-');
+                                                                  if(aData['type']!='0'){ // เติม Ai-Cash
                                                                   }else{
 
-                                                                       $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                                                                  }
+                                                                      var str_V = '';
 
-                                                            }
+                                                                      str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
 
-                                                            if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
-                                                               $('td:last-child', nRow).html('-');
-                                                               $("td:eq(9)", nRow).html(aData['status_sent_desc']);
-                                                            }
+                                                                      var str_U = '';
+                                                                      if(sU=='1'){
+                                                                        str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                                                      }
+                                                                      var str_D = '';
+                                                                      if(sD=='1'){
+                                                                        str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                                                      }
 
-                                                            if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
-                                                               $("td:eq(9)", nRow).html('Success');
-                                                            }
-                                                       }
+                                                                      var str_V2 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="เบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+
+                                                                      var str_V3 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="รวมในบิล Packing List แล้ว" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+
+                                                                      if(sU!='1' && sD!='1'){
+                                                                         $('td:last-child', nRow).html('-');
+                                                                      }else{
+
+                                                                        // console.log(aData['code_order']+" : "+aData['status_delivery_packing']);
+                                                                        // console.log(aData['code_order']+" : "+aData['status_delivery_02']);
+
+                                                                        if(aData['status_delivery_02']==1){
+
+                                                                             $('td:last-child', nRow).html( str_U + str_V2).addClass('input');
+
+                                                                        }else{
+
+                                                                          if(aData['status_delivery_packing']==1){
+                                                                            $('td:last-child', nRow).html( str_U + str_V3).addClass('input');
+                                                                          }else{
+                                                                            $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                                                          }
+
+                                                                                // var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+
+                                                                                  // console.log(aData['status_sent_product']+" : "+aData['code_order']);
+                                                                                // if(aData['status_sent_product']!="" && aData['status_sent_product']>=2){
+                                                                                //  if(aData['status_sent_product']==aData['code_order']){
+                                                                                //    $('td:last-child', nRow).html(str_U + st2);
+                                                                                //    $("td:eq(9)", nRow).html(aData['status_sent_desc']);
+                                                                                //    if(aData['status_sent_product']==6){
+                                                                                //     $('td:last-child', nRow).html(str_U + str_D);
+                                                                                //    }
+                                                                                // }
+
+                                                                        }
+
+                                                                      }
+
+
+
+                                                                }
+
+
+                                                                if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
+                                                                   $("td:eq(9)", nRow).html('Success');
+                                                                }
+                                                           }
+
+                                                        }
+
+                                                          if(aData['approve_status']==0){
+                                                            $("td:eq(11)", nRow).html('-');
+                                                          }
+
+                                                          if(aData['approve_status']==5){
+                                                            $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
+                                                            $("td:eq(10)", nRow).html('-');
+                                                          }
+                                                          if(aData['type']=="เติม Ai-Cash"){
+                                                            $("td:eq(11)", nRow).html('-');
+                                                            $("td:eq(12)", nRow).html('-');
+                                                          }
 
                                                     }
-
-                                                      if(aData['approve_status']==0){
-                                                        $("td:eq(11)", nRow).html('');
-                                                      }
-
-                                                      if(aData['approve_status']==5){
-                                                        $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
-                                                        $("td:eq(10)", nRow).html('');
-                                                      }
-                                                      if(aData['type']=="เติม Ai-Cash"){
-                                                        $("td:eq(11)", nRow).html('-');
-                                                        $("td:eq(12)", nRow).html('-');
-                                                      }
-
-                                                }
-                                            });
-                                            oTable.on( 'draw', function () {
-                                              $('[data-toggle="tooltip"]').tooltip();
-                                            });
+                                                });
+                                                oTable.on( 'draw', function () {
+                                                  $('[data-toggle="tooltip"]').tooltip();
+                                                });
 
                                   // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -1284,7 +1325,7 @@ $(document).ready(function() {
                                           + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                                       }},
 
-                                      {data: 'id', title :'Tools.', className: 'text-center w80'},
+                                      {data: 'id', title :'Tools', className: 'text-center w80'},
                                   ],
                                      "columnDefs": [ {
                                         // "targets": [0,2,6,7,8,9] ,
@@ -1293,104 +1334,137 @@ $(document).ready(function() {
                                     } ],
                                  rowCallback: function(nRow, aData, dataIndex){
 
-                                     // var info = $(this).DataTable().page.info();
-                                     // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                                                       // var info = $(this).DataTable().page.info();
+                                                       // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                                      if(aData['total_price']){
-                                        $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
-                                      }
+                                                       // console.log(aData['status']);
 
-                                     if(aData['type']!='0'){
-                                        $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
-                                        // $("td:eq(6)", nRow).html('');
-                                        $("td:eq(8)", nRow).html('');
-                                      }
+                                                        if(aData['total_price']){
+                                                          $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
+                                                        }
 
-                                      if(aData['pay_type']=='ai_cash'){
-                                        $("td:eq(7)", nRow).html('เติม Ai-Cash');
-                                      }
+                                                       if(aData['type']!='0'){
+                                                          $("td:eq(3)", nRow).html('<span class="badge badge-pill badge-soft-success font-size-16" data-toggle="tooltip" data-placement="right" title="เติม Ai-Stockist"> <i class="fas fa-wallet"></i> </span>');
+                                                          // $("td:eq(6)", nRow).html('');
+                                                          $("td:eq(8)", nRow).html('');
+                                                        }
 
-                                      $("td:eq(4)", nRow).html(aData['customer_name']);
+                                                        if(aData['pay_type']=='ai_cash'){
+                                                          $("td:eq(7)", nRow).html('เติม Ai-Cash');
+                                                        }
+
+                                                        $("td:eq(4)", nRow).html(aData['customer_name']);
 
 
 
-                                      if(aData['approve_status']==5){
+                                                        if(aData['approve_status']==5){
 
-                                        $('td:last-child', nRow).html('-');
+                                                          $('td:last-child', nRow).html('-');
 
-                                      }else{
+                                                        }else{
 
-                                              var sPermission = "<?=\Auth::user()->permission?>";
-                                              var sU = sessionStorage.getItem("sU");
-                                              var sD = sessionStorage.getItem("sD");
-                                              var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
-                                              var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
+                                                                var sPermission = "<?=\Auth::user()->permission?>";
+                                                                var sU = sessionStorage.getItem("sU");
+                                                                var sD = sessionStorage.getItem("sD");
+                                                                var can_cancel_bill = sessionStorage.getItem("can_cancel_bill");
+                                                                var can_cancel_bill_across_day = sessionStorage.getItem("can_cancel_bill_across_day");
 
-                                              if(sPermission==1){
-                                                sU = 1;
-                                                sD = 1;
-                                                can_cancel_bill = 1;
-                                                can_cancel_bill_across_day = 1;
-                                              }
+                                                                if(sPermission==1){
+                                                                  sU = 1;
+                                                                  sD = 1;
+                                                                  can_cancel_bill = 1;
+                                                                  can_cancel_bill_across_day = 1;
+                                                                }
 
-                                              if(sU!='1'&&sD!='1'){
-                                                  $('td:last-child', nRow).html('-');
-                                              }else{
+                                                                if(sU!='1'&&sD!='1'){
+                                                                    $('td:last-child', nRow).html('-');
+                                                                }else{
 
-                                                if(aData['type']!='0'){ // เติม Ai-Cash
-                                                }else{
+                                                                  if(aData['type']!='0'){ // เติม Ai-Cash
+                                                                  }else{
 
-                                                    var str_V = '';
+                                                                      var str_V = '';
 
-                                                    str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
+                                                                      str_V = '<a href="{{ URL('backend/frontstore/viewdata') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-info-circle font-size-16 align-middle"></i></a> ';
 
-                                                    var str_U = '';
-                                                    if(sU=='1'){
-                                                      str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                                                      var str_U = '';
+                                                                      if(sU=='1'){
+                                                                        str_U = '<a href="{{ route('backend.frontstore.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                                                                      }
+                                                                      var str_D = '';
+                                                                      if(sD=='1'){
+                                                                        str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                                                      }
+
+                                                                      var str_V2 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="เบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+
+                                                                      var str_V3 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="รวมในบิล Packing List แล้ว" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+
+                                                                      if(sU!='1' && sD!='1'){
+                                                                         $('td:last-child', nRow).html('-');
+                                                                      }else{
+
+                                                                        // console.log(aData['code_order']+" : "+aData['status_delivery_packing']);
+                                                                        // console.log(aData['code_order']+" : "+aData['status_delivery_02']);
+
+                                                                        if(aData['status_delivery_02']==1){
+
+                                                                             $('td:last-child', nRow).html( str_U + str_V2).addClass('input');
+
+                                                                        }else{
+
+                                                                          if(aData['status_delivery_packing']==1){
+                                                                            $('td:last-child', nRow).html( str_U + str_V3).addClass('input');
+                                                                          }else{
+                                                                            $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                                                          }
+
+                                                                                // var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+
+                                                                                  // console.log(aData['status_sent_product']+" : "+aData['code_order']);
+                                                                                // if(aData['status_sent_product']!="" && aData['status_sent_product']>=2){
+                                                                                //  if(aData['status_sent_product']==aData['code_order']){
+                                                                                //    $('td:last-child', nRow).html(str_U + st2);
+                                                                                //    $("td:eq(9)", nRow).html(aData['status_sent_desc']);
+                                                                                //    if(aData['status_sent_product']==6){
+                                                                                //     $('td:last-child', nRow).html(str_U + str_D);
+                                                                                //    }
+                                                                                // }
+
+                                                                        }
+
+                                                                      }
+
+
+
+                                                                }
+
+
+                                                                if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
+                                                                   $("td:eq(9)", nRow).html('Success');
+                                                                }
+                                                           }
+
+                                                        }
+
+                                                          if(aData['approve_status']==0){
+                                                            $("td:eq(11)", nRow).html('-');
+                                                          }
+
+                                                          if(aData['approve_status']==5){
+                                                            $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
+                                                            $("td:eq(10)", nRow).html('-');
+                                                          }
+                                                          if(aData['type']=="เติม Ai-Cash"){
+                                                            $("td:eq(11)", nRow).html('-');
+                                                            $("td:eq(12)", nRow).html('-');
+                                                          }
+
                                                     }
-                                                    var str_D = '';
-                                                    if(sD=='1'){
-                                                      str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
-                                                    }
-                                                    if(sU!='1' && sD!='1'){
-                                                       $('td:last-child', nRow).html('-');
-                                                    }else{
-
-                                                         $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                                                    }
-
-                                              }
-
-                                              if(aData['status_sent_product']!="" && aData['status_sent_product']>=4){
-                                                 $('td:last-child', nRow).html('-');
-                                                 $("td:eq(9)", nRow).html(aData['status_sent_desc']);
-                                              }
-
-                                              if(aData['purchase_type_id_fk']==6 && aData['approve_status']>=4){
-                                                 $("td:eq(9)", nRow).html('Success');
-                                              }
-                                         }
-
-                                      }
-
-                                        if(aData['approve_status']==0){
-                                          $("td:eq(11)", nRow).html('');
-                                        }
-
-                                        if(aData['approve_status']==5){
-                                          $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
-                                          $("td:eq(10)", nRow).html('');
-                                        }
-                                        if(aData['type']=="เติม Ai-Cash"){
-                                          $("td:eq(11)", nRow).html('-');
-                                          $("td:eq(12)", nRow).html('-');
-                                        }
-
-                                  }
-                              });
-                              oTable.on( 'draw', function () {
-                                $('[data-toggle="tooltip"]').tooltip();
-                              });
+                                                });
+                                                oTable.on( 'draw', function () {
+                                                  $('[data-toggle="tooltip"]').tooltip();
+                                                });
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 

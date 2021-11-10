@@ -92,11 +92,13 @@ class DeliveryPackingCodeController extends Controller
                 $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
                 array_push($array, @$rs[0]->receipt);
               }
-              $arr = implode(',', $array);
+              $arr = array_filter($array);
+              $arr = implode('<br>', $arr);
               return $arr;
             }
           }
       })
+      ->escapeColumns('receipt')
       ->addColumn('customer_name', function($row) {
           $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
           $array = array();

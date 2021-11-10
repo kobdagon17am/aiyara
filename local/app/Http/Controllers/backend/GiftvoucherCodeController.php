@@ -173,18 +173,7 @@ class GiftvoucherCodeController extends Controller
           @$d = DB::select(" SELECT giftvoucher_code_id_fk,count(*) as cnt FROM db_giftvoucher_cus where giftvoucher_code_id_fk='".$row->id."' GROUP BY giftvoucher_code_id_fk ;");
           return @$d[0]->cnt;
 
-      }) 
-
-      // ->addColumn('pro_sdate', function($row) {
-      //   if($row->pro_sdate!=''){
-      //     $d = strtotime($row->pro_sdate); return date("d/m/", $d).(date("Y", $d)+543);
-      //   }
-      // }) 
-      // ->addColumn('pro_edate', function($row) {
-      //   if($row->pro_edate!=''){
-      //     $d = strtotime($row->pro_edate); return date("d/m/", $d).(date("Y", $d)+543);
-      //   }
-      // })       
+      })       
       ->make(true);
     }
 

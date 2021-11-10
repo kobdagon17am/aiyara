@@ -134,8 +134,8 @@
                     <div class="col-md-9">
                       <select name="to_branch" id="to_branch" class="form-control select2-templating " required >
                               <option value="">-Select-</option>
-                                 @if(@$sBranchs)
-                                  @foreach(@$sBranchs AS $r)
+                                 @if(@$toBranchs)
+                                  @foreach(@$toBranchs AS $r)
                                     <option value="{{$r->id}}"  >
                                       {{$r->b_name}} 
                                     </option>
@@ -290,14 +290,14 @@
                     <label  class="col-md-3 col-form-label"><i class="bx bx-play"></i>สาขาปลายทาง :</label>
                     <div class="col-md-9">
                        <select id="branch_id_fk_to" name="branch_id_fk_to" class="form-control select2-templating " >
-                         <option value="">Select</option>
-                         @if(@$sBranchs)
-                          @foreach(@$sBranchs AS $r)
-                          <option value="{{$r->id}}" {{ (@$r->id==@$sTransfer_choose[0]->branch_id_fk_to)?'selected':'' }} >
-                            {{$r->b_name}}
-                          </option>
-                          @endforeach
-                          @endif
+                          <option value="">-Select-</option>
+                                 @if(@$toBranchs)
+                                  @foreach(@$toBranchs AS $r)
+                                    <option value="{{$r->id}}"  >
+                                      {{$r->b_name}} 
+                                    </option>
+                                  @endforeach
+                                @endif
                        </select>
                     </div>
 
@@ -942,6 +942,9 @@
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
             return false;
+          }else if(branch_id_fk_to==''){
+            $("#branch_id_fk_to").select2('open');
+            return false;
           }else if(product_id==''){
             $("#product").select2('open');
             return false;
@@ -961,18 +964,17 @@
                     destroy: true,
                     searching: false,
                     // paging: false,
-                    ajax: {
-                      url: '{{ route('backend.check_stock.datatable') }}',
-                      data: function ( d ) {
-                        d.Where={};
-                        d.Where['branch_id_fk'] = branch_id_fk ;
-                        d.Where['product_id_fk'] = product_id ;
-                        oData = d;
-                      },
-                      method: 'POST'
-                    },
+                     ajax: {
+                        url: '{{ route('backend.check_stock_transfer_branch.datatable') }}',
+                        data :{
+                              _token: '{{csrf_token()}}',
+                              branch_id_fk:branch_id_fk,
+                              product_id_fk:product_id,
+                            },
+                          method: 'POST',
+                        },
                     columns: [
-                        {data: 'id', title :'ID', className: 'text-center w50'},
+                        {data: 'id', title :'No.', className: 'text-center w50'},
                         {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
                         {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                         {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -985,6 +987,12 @@
                         }},
 
                     ],
+                    rowCallback: function(nRow, aData, dataIndex){
+                                                
+                      var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                    }
 
                 });
               
@@ -1041,7 +1049,7 @@
             },
 
            columns: [
-                  {data: 'id', title :'ID', className: 'text-center w50'},
+                  {data: 'id', title :'No.', className: 'text-center w50'},
                   {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
                   {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                   {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -1057,6 +1065,9 @@
                   {data: 'id', title :'Tools', className: 'text-center w150'}, 
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
+
+                  var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
                
 
                       $('td:last-child', nRow).html(''

@@ -339,7 +339,7 @@ class Products_fifo_billController extends Controller
       ->make(true);
     }
 
-// http://localhost/aiyara.host/backend/pay_product_receipt
+// /backend/pay_product_receipt
 // %%%%%%%%%%%%%%%%%%%%%%%
    public function DatatablePayReceiptFIFO(Request $req){
 
@@ -1099,7 +1099,7 @@ group by promotions_products.product_id_fk
         // $Data = DB::select(" SELECT * FROM $temp_ppr_002; ");
         // return $Data;
 
-// เอาไปแสดงชั่วคราวไว้ในตารางที่ค้นก่อน หน้า จ่ายสินค้าตามใบเสร็จ http://localhost/aiyara.host/backend/pay_product_receipt
+// เอาไปแสดงชั่วคราวไว้ในตารางที่ค้นก่อน หน้า จ่ายสินค้าตามใบเสร็จ /backend/pay_product_receipt
 // ตารางส่วนบน
 // ดึงจาก $temp_ppr_001 & $temp_ppr_002 ลง temp ก่อน แค่แสดง แต่หลังจากกดปุ่ม save แล้ว ค่อยเก็บลงตารางจริง
 
@@ -1195,7 +1195,7 @@ group by promotions_products.product_id_fk
     }// Close > function
 
 
-// http://localhost/aiyara.host/backend/pay_product_receipt/1/edit (กรณีที่ยังไม่มีการยกเลิกการจ่าย status_cancel==0)
+// /backend/pay_product_receipt/1/edit (กรณีที่ยังไม่มีการยกเลิกการจ่าย status_cancel==0)
 // %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable009FIFO(Request $req){
      
@@ -1858,7 +1858,7 @@ group by promotions_products.product_id_fk
 
 
 
-// http://localhost/aiyara.host/backend/pay_product_receipt/1/edit (กรณีที่มีการยกเลิกการจ่าย status_cancel==1 บ้างบางรายการหรือทั้งหมด)
+// /backend/pay_product_receipt/1/edit (กรณีที่มีการยกเลิกการจ่าย status_cancel==1 บ้างบางรายการหรือทั้งหมด)
 // %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable010FIFO(Request $req){
      

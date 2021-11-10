@@ -392,7 +392,7 @@ class AjaxController extends Controller
         // dd($id);
         $data = [$id];
         $pdf = PDF::loadView('backend.transfer_warehouses.print_transfer',compact('data'));
-        $pdf->setPaper('A4', 'landscape');
+        // $pdf->setPaper('A4', 'landscape');
 
         // $pdf->showWatermarkImage = true;
         // $pdf->showWatermarkImage(public_path('images/logo.png'));
@@ -406,7 +406,7 @@ class AjaxController extends Controller
         // dd($id);
         $data = [$id];
         $pdf = PDF::loadView('backend.transfer_branch.print_transfer',compact('data'));
-        $pdf->setPaper('A4', 'landscape');
+        // $pdf->setPaper('A4', 'landscape');
         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
         return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
 
@@ -1310,7 +1310,19 @@ if($frontstore[0]->check_press_save==2){
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
+        
+
+         // กรณีส่งฟรี
+        $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
+        $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$sFrontstore->business_location_id_fk."' AND shipping_type_id=1 ");
+
+        if($sum_price>=$shipping[0]->purchase_amt){
+            DB::select(" UPDATE db_orders SET  shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
+            $shipping_price = 0 ;
+        }
+
         $sum_price = ($sum_price+$shipping_price) ;
+
 
         if($request->purchase_type_id_fk==5){
 
@@ -1632,7 +1644,6 @@ if($frontstore[0]->check_press_save==2){
 
             }
         }
-
 
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
@@ -3426,7 +3437,7 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-            DB::select(" TRUNCATE db_consignments; ");
+            // DB::select(" TRUNCATE db_consignments; ");
 
             $data = DB::select(" SELECT invoice_code from db_pick_warehouse_tmp GROUP BY invoice_code ");
 
@@ -3692,7 +3703,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=4 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET status=4 WHERE id='".$request->id."' ");
 
@@ -3707,7 +3718,7 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=5 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET sender=".(\Auth::user()->id).",sent_date=now(),status=5 WHERE id='".$request->id."' ");
 
@@ -3813,10 +3824,18 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-      //    DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
+        // 3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย
+          // DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
+// 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
+          // DB::select(" UPDATE `db_pick_pack_packing_code` SET status=3 WHERE id='".$request->id."' ");
 
-          DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
-          DB::select(" UPDATE `db_pick_pack_packing_code` SET status=2 WHERE id='".$request->id."' ");
+            // $r_ch_t = '';
+            // $r_ch = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." AND `status`=2  ");
+            // if(count($r_ch)>0){
+            //    $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ เนื่องจากไม่มีในคลัง)';
+            // }else{
+            //    $r_ch_t = '';
+            // }
 
 
 
@@ -4679,7 +4698,7 @@ if($frontstore[0]->check_press_save==2){
 
           $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$id)->get();
           foreach ($DP as $key => $value) {
-              DB::update(" UPDATE db_delivery SET status_pack='0' WHERE id = ".$value->delivery_id_fk."  ");
+              DB::update(" UPDATE db_delivery SET status_pack='0',`packing_code`='0', `packing_code_desc`=NULL WHERE id = ".$value->delivery_id_fk."  ");
           }
 
           DB::update(" DELETE FROM db_delivery_packing WHERE packing_code_id_fk = $id  ");
@@ -4993,7 +5012,7 @@ if($frontstore[0]->check_press_save==2){
                 $w02
                 $w03
                 $w05
-                GROUP BY product_id_fk,doc_no
+                GROUP BY product_id_fk,doc_no,in_out
           ");
 
 
@@ -5214,7 +5233,7 @@ if($frontstore[0]->check_press_save==2){
                             $w08
             $w09
             $w10
-                GROUP BY product_id_fk,doc_no
+                GROUP BY product_id_fk,doc_no,in_out
           ");
 
 
@@ -5284,7 +5303,7 @@ if($frontstore[0]->check_press_save==2){
    }
 
   public function insertStockMovement($data){
-        DB::table('db_stock_movement_tmp')->insert($data);
+        DB::table('db_stock_movement_tmp')->insertOrIgnore($data);
    }
 
 
@@ -5297,7 +5316,7 @@ if($frontstore[0]->check_press_save==2){
         $Data = DB::select("
                 SELECT db_general_receive.business_location_id_fk,
                 (
-                CASE WHEN po_invoice_no='-' or po_invoice_no is null THEN CONCAT('CODE',db_general_receive.id) ELSE CONCAT('CODE',po_invoice_no) END
+                CASE WHEN loan_ref_number='-' or loan_ref_number is null THEN CONCAT('CODE',db_general_receive.id) ELSE loan_ref_number END
                 ) as doc_no
                 ,db_general_receive.created_at as doc_date,branch_id_fk,
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
@@ -5551,7 +5570,7 @@ if($frontstore[0]->check_press_save==2){
         $Data = DB::select("
                 SELECT db_products_borrow_code.business_location_id_fk,
                 (
-                CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE CONCAT('CODE',borrow_number) END
+                CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE borrow_number END
                 ) as doc_no
                 ,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
 
@@ -5612,31 +5631,90 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
+// มี 2 ฝั่ง ๆ นึง รับเข้า อีกฝั่ง จ่ายออก
+
         // ดึงจาก การโอนภายในสาขา > db_transfer_warehouses_code > db_transfer_warehouses_details
         $Data = DB::select("
 
-                SELECT
-                db_transfer_warehouses_code.business_location_id_fk,
-                db_transfer_warehouses_code.tr_number as doc_no,
-                db_transfer_warehouses_code.updated_at as doc_date,
-                db_transfer_warehouses_code.branch_id_fk,
-                db_transfer_warehouses_details.product_id_fk,
-                db_transfer_warehouses_details.lot_number,
-                db_transfer_warehouses_details.lot_expired_date,
-                db_transfer_warehouses_details.amt,
-                2 as 'in_out',
-                product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
+                 SELECT
+                          db_transfer_warehouses_code.business_location_id_fk,
+                          db_transfer_warehouses_code.tr_number as doc_no,
+                          db_transfer_warehouses_code.updated_at as doc_date,
+                          db_transfer_warehouses_code.branch_id_fk,
+                          db_transfer_warehouses_details.product_id_fk,
+                          db_transfer_warehouses_details.lot_number,
+                          db_transfer_warehouses_details.lot_expired_date,
+                          db_transfer_warehouses_details.amt,
+                          1 as 'in_out',
+                          product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
 
-                'โอนภายในสาขา' as note,
-                db_transfer_warehouses_code.updated_at as dd,
-                db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
-                FROM
-                db_transfer_warehouses_details
-                Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          'โอนภายในสาขา' as note,
+                          db_transfer_warehouses_code.updated_at as dd,
+                          db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
+                          FROM
+                          db_transfer_warehouses_details
+                          Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          where db_transfer_warehouses_details.remark = 1 
 
           ");
 
           foreach ($Data as $key => $value) {
+
+               $insertData = array(
+                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                  "amt" =>  @$value->amt?$value->amt:0,
+                  "in_out" =>  @$value->in_out?$value->in_out:0,
+                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                  "status" =>  @$value->status?$value->status:0,
+                  "note" =>  @$value->note?$value->note:NULL,
+
+                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                    "approver" =>  @$value->approver?$value->approver:NULL,
+                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                  "created_at" =>@$value->dd?$value->dd:NULL
+              );
+
+                AjaxController::insertStockMovement($insertData);
+
+            }
+
+   $Data2 = DB::select("
+
+                 SELECT
+                          db_transfer_warehouses_code.business_location_id_fk,
+                          db_transfer_warehouses_code.tr_number as doc_no,
+                          db_transfer_warehouses_code.updated_at as doc_date,
+                          db_transfer_warehouses_code.branch_id_fk,
+                          db_transfer_warehouses_details.product_id_fk,
+                          db_transfer_warehouses_details.lot_number,
+                          db_transfer_warehouses_details.lot_expired_date,
+                          db_transfer_warehouses_details.amt,
+                          2 as 'in_out',
+                          product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_warehouses_code.approve_status as status,
+
+                          'โอนภายในสาขา' as note,
+                          db_transfer_warehouses_code.updated_at as dd,
+                          db_transfer_warehouses_details.action_user as action_user,db_transfer_warehouses_code.approver as approver,db_transfer_warehouses_code.approve_date as approve_date
+                          FROM
+                          db_transfer_warehouses_details
+                          Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                          where db_transfer_warehouses_details.remark = 2
+
+          ");
+
+          foreach ($Data2 as $key => $value) {
 
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,

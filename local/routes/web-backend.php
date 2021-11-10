@@ -559,6 +559,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('frontstore/print_receipt_022/{id}', 'PrintController@frontstore_print_receipt_022');
     Route::get('frontstore/print_receipt_023/{id}', 'PrintController@frontstore_print_receipt_023');
+    Route::get('frontstore/print_receipt_023/{id}/{pick_pack_packing_code_id_fk}', 'PrintController@frontstore_print_receipt_023');
 
     Route::get('delivery/pdf02/{id}', 'AjaxController@createPDFCoverSheet02');
     Route::get('delivery/print_receipt02/{id}', 'AjaxController@createPDFReceipt02');
@@ -747,6 +748,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+    Route::post('check_stock_borrow/datatable', 'Check_stockController@DatatableBorrow')->name('check_stock_borrow.datatable');
+    Route::post('check_stock_transfer_warehouses/datatable', 'Check_stockController@DatatableTransfer_warehouses')->name('check_stock_transfer_warehouses.datatable');
+    Route::post('check_stock_transfer_branch/datatable', 'Check_stockController@DatatableTransfer_branch')->name('check_stock_transfer_branch.datatable');
 
     // Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
     // Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');

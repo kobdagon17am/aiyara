@@ -186,12 +186,16 @@
 18  Gift Voucher + TrueMoney
 
 */
+if(@$sRow->check_press_save==2){
 
     if(@$sRow->pay_type_id_fk==6||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11){
       $pay_type_transfer_aicash = " disabled ";
     }else{
       $pay_type_transfer_aicash = "";
     }
+  }else{
+    $pay_type_transfer_aicash = "";
+  }
 
  ?>
 
@@ -286,11 +290,34 @@
                             </div>
 
 
+
                          <div class="row">
                               <div class="col-md-6">
                                 <div class="form-group row">
                                   <label for="" class="col-md-4 col-form-label">ช่องทางการจำหน่าย : * </label>
                                   <div class="col-md-6">
+
+@IF(@$sRow->distribution_channel_id_fk==3)
+@php
+ $disChannel3 = 'disabled'
+@endphp
+
+                                    <select id="distribution_channel_id_fk"  class="form-control select2-templating " disabled="" >
+                                          @if(@$sDistribution_channel3)
+                                            @foreach(@$sDistribution_channel3 AS $r)
+                                         
+                                                    <option value="{{$r->id}}"
+                                                      {{ (@$r->id==@$sRow->distribution_channel_id_fk)?'selected':'' }}  >{{$r->txt_desc}}
+                                                    </option>
+                                            @endforeach
+                                          @endif
+                                    </select>
+
+@else
+@php
+ $disChannel3 = ''
+@endphp
+
                                     <select id="distribution_channel_id_fk" name="distribution_channel_id_fk" class="form-control select2-templating " required >
                                       <option value="">Select</option>
                                           @if(@$sDistribution_channel)
@@ -307,6 +334,9 @@
                                             @endforeach
                                           @endif
                                     </select>
+
+@ENDIF
+
                                   </div>
                                 </div>
                               </div>
@@ -334,7 +364,7 @@
 
  ?>
 
-                                         <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " <?=$disAiStockist?>  required >
+                                         <select {{@$disChannel3}} id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " <?=$disAiStockist?>  required >
                                           <option value="">Select</option>
                                           @if(@$sPurchase_type)
                                             @foreach(@$sPurchase_type AS $r)
@@ -407,13 +437,13 @@
                                     @if($ChangePurchaseType==1)
                                          <input type="hidden" class="agency" name="agency" value="{{@$sRow->agency}}"  >
                                        @IF(@$sRow->agency!=="")
-                                          <select id="agency" class="form-control select2-templating "  >
+                                          <select {{@$disChannel3}} id="agency" class="form-control select2-templating "  >
                                                   <option  selected >
                                                     {{@$CusAgencyName}}
                                                   </option>
                                           </select>
                                         @ELSE
-                                         <select id="agency" class="form-control select2-templating "  >
+                                         <select {{@$disChannel3}} id="agency" class="form-control select2-templating "  >
                                          </select>
                                         @ENDIF
                                     @else
@@ -452,13 +482,13 @@
                                     @if($ChangePurchaseType==1)
                                          <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
                                        @IF(@$sRow->aistockist!=="")
-                                          <select id="aistockist" class="form-control select2-templating "  >
+                                          <select {{@$disChannel3}} id="aistockist" class="form-control select2-templating "  >
                                                   <option  selected >
                                                     {{@$CusAistockistName}}
                                                   </option>
                                           </select>
                                         @ELSE
-                                         <select id="aistockist" class="form-control select2-templating "  >
+                                         <select {{@$disChannel3}} id="aistockist" class="form-control select2-templating "  >
                                          </select>
                                         @ENDIF
                                     @else
@@ -615,109 +645,59 @@
           </div>
 
 
-          <div class="form-group row " style="margin-left: 5%;" >
-            <div class="col-md-4">
+          <div class="form-group row " style="margin-left: 1%;" >
+            <div class="col-md-10">
+       <!-- แถม -->
+           @if (!empty(@$check_giveaway))
+                     <?php //dd($check_giveaway); ?>
+                     <?php $i = 1; ?>
+                          @foreach ($check_giveaway as $check_giveaway_value)
 
-             
+                          @if(@$check_giveaway_value['status'] == 'success')
 
-                  @if(@$sRow->purchase_type_id_fk!=6)
-                     
-                     @IF(@$check_giveaway)
+                          <h5 class="text-danger" style="margin-bottom: 0px;" >Promotion Free {{ $i++ }}</h5>
+                            <div class="table-responsive p-3">
+                            <table class="table">
+                                 <tr class="table-success">
+                                     <td><strong>{{ $check_giveaway_value['rs']['name'] }} x
+                                             [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
+                                     <td class="text-right">รวม</td>
+                                 </tr>
+                                 @if ($check_giveaway_value['rs']['type'] == 1)
+                                     {{-- Product --}}
+                                     <?php //dd($check_giveaway_value['rs']['product']); ?>
+                                     @foreach ($check_giveaway_value['rs']['product'] as $product_value)
+                                         <tr>
+                                             <td><strong style="font-size: 12px">{{ $product_value->product_name }}
+                                                     [{{ $product_value->product_amt }}] x
+                                                     [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
+                                             <td align="right"><strong>
+                                                     {{ $product_value->product_amt * $check_giveaway_value['rs']['count_free'] }}
+                                                     {{ $product_value->product_unit }}</strong></td>
+                                         </tr>
+                                     @endforeach
+                                 @else
+                                     {{-- GiftVoucher --}}
+                                     <tr>
+                                         <td><strong style="font-size: 12px">GiftVoucher {{ $check_giveaway_value['rs']['gv'] }} x
+                                                 [{{ $check_giveaway_value['rs']['count_free'] }}]</strong></td>
+                                         <?php $gv_total = $check_giveaway_value['rs']['gv'] *
+                                         $check_giveaway_value['rs']['count_free']; ?>
+                                         <td align="right"><strong> {{ number_format($gv_total) }} GV</strong></td>
+                                     </tr>
+                                 @endif
+                                </table>
+                            </div>
+                                 @endif
+                            @endforeach
 
-                      <?php
+                     @endif
 
-                      if(@$check_giveaway){
-
-                         for ($i=0; $i < count($check_giveaway) ; $i++) { 
-
-                          if(@$check_giveaway[$i]['status']=='success'){
-                              $arr = [];
-                              foreach ($check_giveaway as $key => $v) {
-                                  // print_r($v);
-                                  if($v['status']=='success'){
-                                    // print_r($v['gv_id']);
-                                    array_push($arr,$v['gv_id']);
-                                  }
-                              }
-                              $im = implode(',',$arr);
-                          }
-                 
-                         }
-                         // dd($im);
-                         if(@$im){
-                          $rg = DB::select("select * from db_giveaway where id in ($im); ");
-                          // dd($rg);
-                          if(@$rg){
-
-                            foreach ($rg as $key => $v) {
-                               // echo $v->giveaway_option_id_fk;
-                              
-                                if($v->giveaway_option_id_fk==1){ // แถมสินค้า
-                                 echo '<span style="color:red;font-weight:bold;">* ได้รับสินค้าแถม </span> ';
-
-                                 $rg_p = DB::select(" 
-
-                                  SELECT db_giveaway_products.*,
-                                  (SELECT product_code FROM products WHERE id=db_giveaway_products.product_id_fk limit 1) as product_code,
-                                  (SELECT product_name FROM products_details WHERE product_id_fk=db_giveaway_products.product_id_fk and lang_id=1 limit 1) as product_name,
-                                  dataset_product_unit.product_unit
-                                  FROM
-                                  db_giveaway_products
-                                  Left Join dataset_product_unit ON db_giveaway_products.product_unit = dataset_product_unit.id
-                                  WHERE giveaway_id_fk in (".$v->id.") ; ");
-
-                                 ?>
-
-                                  <div class="divTable">
-                                  
-                                 <div class="divTableBody">
-                                  <?php
-
-                                 if(@$rg_p){
-                                  $i = 1;
-                                  foreach ($rg_p as $key => $v2) {
-
-                                ?>
-
-                                  <div class="divTableRow">
-                                  <div class="divTableCell" style="width: 2%;"><center><?=$i?>)</div>
-                                  <div class="divTableCell" style="width: 25%;text-align: left !important;"><?=$v2->product_code." : ".$v2->product_name?>
-                                  </div>
-                                  <div class="divTableCell" style="width: 5%;"><center><?=$v2->product_amt?></div>
-                                  <div class="divTableCell" style="width: 5%;"><?=$v2->product_unit?></div>
-                                  </div>
-                                 
-
-                                <?php 
-                                 $i++;
-
-                                   }
-                                 }
-
-                                 ?>
-                                  </div>
-                                  </div>
-                                  <?php
-
-                               }
-
-                               // if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
-                               //    // แสดงยอดเงิน giveaway_voucher
-                               //   echo '<span style="color:red;font-weight:bold;">* แถม AiVoucher '.$v->giveaway_voucher.' บาท </span>' ;
-
-                               // }
-                            }
-                          }
-                         }
-                      }
-                                       
-                      ?>
-
-                @ENDIF
-                @ENDIF
-
+            </div>
           </div>
-          </div>
+
+
+
 
                 <div class="form-group row" style="display: none;">
                   <label for="" class="col-md-9 col-form-label"> Total : * </label>
@@ -778,6 +758,11 @@
 // $data = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(1,'Aip','200');////ประเภทการซื้อ ,customer_username,pv order
 // dd($data);
 
+                    // dd(@$sRow->check_press_save);
+                    // dd(@$disChannel3);
+                    // dd(@$sRow->shipping_special);
+                    // dd(@$pay_type_transfer_aicash);
+
                     ?>
 
 
@@ -793,10 +778,10 @@
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_04?>" >
 
                           @IF(@$sRow->shipping_special == 1)
-                           <input {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?>  > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?>  > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                           @ELSE
 
-                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                           @ENDIF
 
                         </th>
@@ -807,10 +792,10 @@
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
                           @IF(@$sRow->shipping_special == 1)
 
-                           <input {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$pay_type_transfer_aicash}} disabled id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             <select {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                   @if(@$sRow->sentto_branch_id>0))
@@ -833,10 +818,10 @@
 
 
                           @ELSE
-                           <input {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$pay_type_transfer_aicash}} id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             <select {{@$disChannel3}} {{@$pay_type_transfer_aicash}} id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                              @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                   @if(@$sRow->sentto_branch_id>0))
@@ -911,7 +896,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_01?>">
-                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -963,7 +948,7 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_02?>">
-                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province?>"
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province?>"
                            class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ </label>
                            <br><?=@$address?>
                         </th>
@@ -998,24 +983,28 @@
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_03?>">
-                          <input {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province_id_fk?>"  name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province_id_fk?>"  name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
-
+<?php echo @$shipping_special[0]->status_special ?>
+<?php echo @$sRow->shipping_special ?>
+<?php echo @$disChannel3 ?>
+<?php echo @$pay_type_transfer_aicash ?>
+<?php echo @$dis_addr ?>
 
         @IF(@$shipping_special[0]->status_special==1 || @$sRow->shipping_special == 1)
           @if( @$sRow->updated_at >= @$shipping_special[0]->updated_at  )
                       <tr>
                         <th scope="row"  style="">
-                          <input {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
                     @ELSE
                   <tr>
                         <th scope="row"  style="">
-                          <input {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
@@ -1215,7 +1204,7 @@
 <?php //echo @$disAfterSave."xxxxxxxxxxxxxxxxxxxxxxxxx".$sRow->pay_type_id_fk; ?>
                         <input type="hidden" name="<?=($disAfterSave=="disabled"?"pay_type_id_fk":"")?>" value="{{@$sRow->pay_type_id_fk}}">
 
-                             <select id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " {{@$disAfterSave}} required >
+                             <select {{@$disChannel3}} id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " {{@$disAfterSave}} required >
                               <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
@@ -1351,181 +1340,6 @@
                       </div>
                       </div>
 
-                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" > </label>
-                      </div>
-                      <div class="divTableCell">
-
-                          <div class="d-flex">
-
-                           <button {{@$disAfterSave}} type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip " style="">อัพไฟล์สลิป (ถ้ามี)</button>
-                            <?php if(!empty(@$sRow->transfer_money_datetime)){
-                              $ds1 = substr(@$sRow->transfer_money_datetime, 0,10);
-                              $ds = explode("-", $ds1);
-                              $ds_d = $ds[2];
-                              $ds_m = $ds[1];
-                              $ds_y = $ds[0];
-                              $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
-                            }else{$ds='';} ?>
-                              <input {{@$disAfterSave}} class="form-control transfer_money_datetime class_transfer_edit " autocomplete="off" value="{{@$ds!='00/00/0000 00:00'?@$ds:null}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
-                              <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
-                          </div>
-
-                              <input {{@$disAfterSave}} type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" style="display: none;" >
-
-                         <span width="100" class="span_file_slip" >
-
-                                @IF(!empty(@$sRow->file_slip))
-
-                                 <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" >
-
-                                @ELSE
-                                  <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
-                                @ENDIF
-
-                                  <button {{@$disAfterSave}} type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-                         </span>
-
-
-                      </div>
-                      <div class="divTableCell">
-                      </div>
-                    </div>
-
-
-
-                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                        <div class="divTableCell" ></div>
-                        <div class="divTH">
-                          <label for="" class="label_transfer_price" > หมายเหตุ (1) : </label>
-                        </div>
-                        <div class="divTableCell">
-
-                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
-
-                        </div>
-                         <div class="divTableCell">
-                        </div>
-                      </div>
-
-
-                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" >  </label>
-                      </div>
-                      <div class="divTableCell">
-
-                          <div class="d-flex">
-
-                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_02 " style="">อัพไฟล์สลิป (ถ้ามี)</button>
-                            <?php if(!empty(@$sRow->transfer_money_datetime_02)){
-                              $ds1_02 = substr(@$sRow->transfer_money_datetime_02, 0,10);
-                              $ds_02 = explode("-", $ds1_02);
-                              $ds_d_02 = $ds_02[2];
-                              $ds_m_02 = $ds_02[1];
-                              $ds_y_02 = $ds_02[0];
-                              $ds_02 = $ds_d_02.'/'.$ds_m_02.'/'.$ds_y_02.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_02)));
-                            }else{$ds_02='';} ?>
-                              <input class="form-control transfer_money_datetime_02 class_transfer_edit " autocomplete="off" value="{{$ds_02}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
-                              <input type="hidden" id="transfer_money_datetime_02" name="transfer_money_datetime_02" value="{{@$sRow->transfer_money_datetime_02}}"  />
-                          </div>
-
-                              <input type="file" accept="image/*" id="image02" name="image02" class="form-control" OnChange="showPreview_02(this)" style="display: none;" >
-
-                         <span width="100" class="span_file_slip_02" >
-                                @IF(!empty(@$sRow->file_slip_02))
-                                  <img id="imgAvatar_02" src="{{ asset(@$sRow->file_slip_02) }}" style="margin-top: 5px;height: 180px;" >
-
-                                @ELSE
-                                  <img id="imgAvatar_02" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
-                                @ENDIF
-
-                                 <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_02 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-                         </span>
-
-
-                      </div>
-                      <div class="divTableCell">
-                      </div>
-                    </div>
-
-
-                   <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                        <div class="divTableCell" ></div>
-                        <div class="divTH">
-                          <label for="" class="label_transfer_price" > หมายเหตุ (2) : </label>
-                        </div>
-                        <div class="divTableCell">
-
-                             <input type="text" class="form-control" id="note_fullpayonetime_02" name="note_fullpayonetime_02" placeholder="" value="{{@$sRow->note_fullpayonetime_02}}" >
-
-                        </div>
-                         <div class="divTableCell">
-                        </div>
-                      </div>
-
-
-                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        <label for="" >  </label>
-                      </div>
-                      <div class="divTableCell">
-
-                          <div class="d-flex">
-
-                           <button type="button" class="btn btn-success btn-sm font-size-12 btnUpSlip_03  " style="">อัพไฟล์สลิป (ถ้ามี)</button>
-                            <?php if(!empty(@$sRow->transfer_money_datetime_03)){
-                              $ds1_03 = substr(@$sRow->transfer_money_datetime_03, 0,10);
-                              $ds_03 = explode("-", $ds1_03);
-                              $ds_d_03 = $ds_03[2];
-                              $ds_m_03 = $ds_03[1];
-                              $ds_y_03 = $ds_03[0];
-                              $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
-                            }else{$ds_03='';} ?>
-                              <input class="form-control transfer_money_datetime_03 class_transfer_edit " autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
-                              <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
-                          </div>
-
-                              <input type="file" accept="image/*" id="image03" name="image03" class="form-control" OnChange="showPreview_03(this)" style="display: none;" >
-
-                         <span width="100" class="span_file_slip_03" >
-                                @IF(!empty(@$sRow->file_slip_03))
-                                  <img id="imgAvatar_03" src="{{ asset(@$sRow->file_slip_03) }}" style="margin-top: 5px;height: 180px;" >
-
-                                @ELSE
-                                  <img id="imgAvatar_03" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" >
-                                @ENDIF
-
-                                 <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip_03 " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-
-                         </span>
-
-
-                      </div>
-                      <div class="divTableCell">
-                      </div>
-                    </div>
-
-
-
-                    <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
-                        <div class="divTableCell" ></div>
-                        <div class="divTH">
-                          <label for="" class="label_transfer_price" > หมายเหตุ (3) : </label>
-                        </div>
-                        <div class="divTableCell">
-
-                             <input type="text" class="form-control" id="note_fullpayonetime_03" name="note_fullpayonetime_03" placeholder="" value="{{@$sRow->note_fullpayonetime_03}}" >
-
-                        </div>
-                         <div class="divTableCell">
-                        </div>
-                      </div>
-
 
                    <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
                     <div class="divTableRow show_div_transfer_price " style="<?=$show_div_transfer_price?>" >
@@ -1640,11 +1454,8 @@
                       </div>
                       <div class="divTableCell">
 <!-- CalPriceAicash -->
-            @IF(@$sRow->pay_type_id_fk==6)
-              <input {{@$disAfterSave}} class="form-control CalPriceAicash input-airight f-ainumber-18-b NumberOnly in-tx input-aifill " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" >
-            @ELSE
-              <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
-            @ENDIF
+      
+                      <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
 
                       </div>
                        <div class="divTableCell">
@@ -1663,7 +1474,6 @@
                           <input class="form-control input-airight f-ainumber-18 " id="cash_price" name="cash_price" value="{{number_format(@$sRow->cash_price,2)}}" readonly >
                       </div>
                     </div>
-
 
 
                     <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==''||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
@@ -1706,6 +1516,75 @@
 
                       </div>
 
+                      <!-- slip โอน -->
+                      <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                        <div class="divTableCell" >
+                        </div>
+                        <div class="divTH">
+                          <label for="" class="label_cash_pay" > </label>
+                        </div>
+                        <div class="divTableCell">
+
+                         <button type="button" class="btn btn-info btn-sm waves-effect font-size-14  " data-toggle="modal" data-target="#cancel" style=""  >
+                          <i class="bx bx-plus font-size-14 align-middle mr-1"></i> แนบไฟล์สลิปเงินโอน
+                          </button>
+
+                        </div>
+
+                        <div class="divTableCell">
+                        </div>
+
+                      </div>
+
+
+                   <?php $div_pay_with_other_bill = @$sRow->pay_with_other_bill==0||@$sRow->pay_with_other_bill==''?"display: none;":''; ?>
+
+                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
+                      <div class="divTableCell">&nbsp; </div>
+                      <div class="divTH">
+                        <label for="" > </label>
+                      </div>
+                      <div class="divTableCell">
+
+                        @if(@$PaymentSlip)
+
+                          @foreach(@$PaymentSlip AS $slip)
+
+                             <span width="100" class="span_file_slip" >
+
+                                      <img src="{{ $slip->url }}/{{ @$slip->file }}" style="margin-top: 5px;height: 180px;" >
+
+                                      <button type="button" data-id="{{@$slip->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+
+                                      <input {{@$disAfterSave}} type="text" class="form-control" name="note" placeholder="" value="หมายเหตุ : {{@$slip->note}}" >
+
+                             </span>
+
+                          @endforeach
+
+                        @ENDIF
+
+
+                      </div>
+                      <div class="divTableCell">
+                      </div>
+                    </div>
+
+
+
+                    <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
+                     <!--    <div class="divTableCell" ></div>
+                        <div class="divTH">
+                          <label for="" class="label_transfer_price" > หมายเหตุ : </label>
+                        </div>
+                        <div class="divTableCell">
+
+                             <input {{@$disAfterSave}} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{@$sRow->note_fullpayonetime}}" >
+
+                        </div>
+                         <div class="divTableCell">
+                        </div> -->
+                      </div>
 
 
 
@@ -1719,6 +1598,7 @@
                         </div>
                       </div>
 
+
                       <div class="divTableRow">
                         <div class="divTableCell" >
                         </div>
@@ -1731,6 +1611,8 @@
                                 <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                                 </button> -->
 
+@IF(@$sRow->distribution_channel_id_fk==3)
+@else
                     <?php
                                 // ประเภทโอน
                     if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12){
@@ -1754,7 +1636,7 @@
                                 <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                                 </button>
   -->
-
+@endif
                         </div>
                       </div>
 
@@ -1957,9 +1839,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
-       <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> -->
+        </button> 
       </div>
 
       <div class="modal-body">
@@ -2258,6 +2140,84 @@
   </div>
 </div>
 
+
+
+<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+
+
+
+                                    <div class="modal fade" id="cancel" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+
+
+                                       <form   action="{{ route('backend.frontstore.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+
+                                           <input name="upload_file" type="hidden" value="1">
+                                           <input name="id" type="hidden" value="{{@$sRow->id}}">
+
+                                    {{ csrf_field() }}
+
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title mt-0" id="cancel">อัพโหลดไฟล์</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                    <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" required="" >
+                                                       <center>
+                                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" >
+                                                    </center>
+                                                    <br>
+
+                                                     
+
+                                                      <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
+                                                        <div class="divTH" >
+                                                          <label >   </label>
+                                                        </div>
+                                                        <div class="divTableCell" >
+                                                           <input  class="form-control transfer_money_datetime " autocomplete="off"  name="transfer_money_datetime" style="width: 45%;font-weight: bold;" required="" placeholder="วัน เวลา ที่โอน" />
+                                                        </div>
+                                                      </div>
+
+
+                                                      <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
+                                                        <div class="divTH">
+                                                          <label > หมายเหตุ </label>
+                                                        </div>
+                                                        <div class="divTableCell" style="width: 90%;" >
+                                                          <input type="text" class="form-control" name="note" placeholder="หมายเหตุ" value="" >
+                                                        </div>
+                                                      </div>
+
+
+                                                </div>
+                                                <div class="modal-footer">
+
+                                                       <button type="submit" class="btn btn-primary">อัพโหลด</button>
+
+                                                        <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                </div>
+
+                                                    </form>
+
+
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+
+
+
+
+                            
+<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
 
 @endsection
@@ -2612,7 +2572,7 @@
           // alert(frontstore_id_fk);
           // alert(order_type);
 
-            $("#spinner_frame").show();
+            $('.myloading').show();
 
             var oTable;
             $(function() {
@@ -2700,7 +2660,7 @@
 
 
             $('#modalAddFromProductsList').on('focus', function () {
-                $("#spinner_frame").hide();
+                $('.myloading').hide();
             });
 
 
@@ -2733,7 +2693,9 @@
 
 
             $('#modalAddFromProductsList,#modalAddList').on('hidden.bs.modal', function () {
-                // $("#spinner_frame").show();
+                // $('.myloading').show();
+                    $('.myloading').hide();
+
                     setTimeout(function(){
                       window.location.reload(true);
                     },500);
@@ -2752,8 +2714,17 @@
 
             });
 
+            $('#modalDelivery').on('hidden.bs.modal', function () {
+              $('.myloading').show();
+                setTimeout(function(){
+                  location.reload();
+                },500);
+
+            });
+
+
           $('#modalAddFromPromotion').on('hidden.bs.modal', function () {
-                $("#spinner_frame").show();
+                // $('.myloading').show();
                 setTimeout(function(){
                   $("#addr_00").trigger('click');
                 },500);
@@ -2780,14 +2751,25 @@
         $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
           e.preventDefault();
 
+          var v = $(e.target).closest('.input-group').find('input.quantity').val();
           var limited_amt_person = $(this).attr('limited_amt_person');
-          $(e.target).closest('.input-group').find('input.quantity').attr('max',limited_amt_person);
+          // alert(v+":"+limited_amt_person);
+          if(limited_amt_person>0){
+              if(v>=limited_amt_person){
+                alert("Promotion นี้ กำหนดจำนวนจำกัดต่อคน ไว้เท่ากับ "+limited_amt_person);
+                $(e.target).closest('.input-group').find('input.quantity').val(limited_amt_person);
+              }
+
+               $(e.target).closest('.input-group').find('input.quantity').attr('max',limited_amt_person);
+          }
 
           const isNegative = $(e.target).closest('.btn-minus-product-pro').is('.btn-minus-product-pro');
           const input = $(e.target).closest('.input-group').find('input');
           if (input.is('input')) {
             input[0][isNegative ? 'stepDown' : 'stepUp']()
           }
+
+
         })
 
 
@@ -2818,9 +2800,6 @@
             // localStorage.setItem('branch_id_fk', id);
         });
 
-        // if(localStorage.getItem('branch_id_fk')){
-        //     $('#branch_id_fk').val(localStorage.getItem('branch_id_fk')).select2();
-        // }
 
 
         // if(localStorage.getItem('aicash_remain')){
@@ -2847,12 +2826,12 @@
                           // $(".label_money_cash").html("ยอด"+value.pay_type+" :");
                           $("#gift_voucher_cost").val(value.banlance);
                        });
-                       $("#spinner_frame").hide();
+                       $('.myloading').hide();
                     },
                   error: function(jqXHR, textStatus, errorThrown) {
                       //  console.log(JSON.stringify(jqXHR));
                       //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                      $("#spinner_frame").hide();
+                      $('.myloading').hide();
                   }
               });
 
@@ -2928,6 +2907,7 @@
           var v = parseInt($(this).val()-1);
           $(this).val(v);
           $(this).closest(".input-group-prepend").find(".btn-plus").trigger('click');
+          $(this).closest(".input-group-prepend").find(".btn-plus-product-pro").trigger('click');
           return false;
         });
 
@@ -2955,9 +2935,9 @@
                // data:{ d:d , _token: '{{csrf_token()}}' },
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                 success: function(response){ // What to do if we succeed
-                       //  console.log(response);
+                        console.log(response);
                        //  console.log(frontstore_id_fk);
-                       // return false;
+                       return false;
                         var oTable;
 
                           $(function() {
@@ -3511,7 +3491,7 @@
           var category_id = $(this).data('value');
           // alert(category_id);
 
-          // $("#spinner_frame").show();
+          // $('.myloading').show();
 
           var frontstore_id_fk = $("#frontstore_id_fk").val();
           var order_type = $("#purchase_type_id_fk").val();
@@ -3611,7 +3591,7 @@
                 }, 500);
 
                 $('#modalAddFromProductsList').on('focus', function () {
-                    $("#spinner_frame").hide();
+                    $('.myloading').hide();
                 });
 
             });
@@ -3633,7 +3613,7 @@
           $('#frmFrontstorelist').hide();
           $('.div-data-table-list-pro').show();
 
-          // $("#spinner_frame").show();
+          // $('.myloading').show();
             var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
             var order_type = $("#purchase_type_id_fk").val();
             // alert(order_type);
@@ -3751,7 +3731,7 @@
           // return false;
 
           var txtSearchPro = $("#txtSearchPro").val();
-          // $("#spinner_frame").show();
+          // $('.myloading').show();
           if(txtSearchPro==''){
             $("#txtSearchPro").focus();
             $(".myloading").hide();
@@ -3956,7 +3936,7 @@ $(document).ready(function() {
                         error: function(jqXHR, textStatus, errorThrown) {
                             //  console.log(JSON.stringify(jqXHR));
                             //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -3979,16 +3959,17 @@ $(document).ready(function() {
 
         $(document).on('change', '#amt', function(event) {
             event.preventDefault();
-            $("#spinner_frame").show();
+            $('.myloading').show();
             $("#frmFrontstoreAddList").submit();
-            setTimeout(function(){$("#spinner_frame").hide();},1000);
+            setTimeout(function(){$(".btnSaveAddlist").trigger('click');},1000);
+            setTimeout(function(){$('.myloading').hide();},1000);
         });
 
         $(document).on('click', '.btnSaveAddlist', function(event) {
             event.preventDefault();
-            $("#spinner_frame").show();
+            $('.myloading').show();
             $("#frmFrontstoreAddList").submit();
-            setTimeout(function(){$("#spinner_frame").hide();},1000);
+            setTimeout(function(){$('.myloading').hide();},1000);
         });
 
 
@@ -4126,7 +4107,7 @@ $(document).ready(function() {
 
                         var category_id = $(this).data('value');
 
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
 
                      setTimeout(function(){
 
@@ -4184,9 +4165,9 @@ $(document).ready(function() {
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
 
-                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  // $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  // $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  // $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -4220,10 +4201,10 @@ $(document).ready(function() {
 
                               $("input[name=_method]").val('PUT');
                               // alert("A");
-                              // $("#spinner_frame").hide();
+                              // $('.myloading').hide();
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             }
                       });
 
@@ -4242,7 +4223,7 @@ $(document).ready(function() {
 
 
                 $('#data-table-list').on('focus', function () {
-                    $("#spinner_frame").hide();
+                    $('.myloading').hide();
                 });
 
 
@@ -4474,7 +4455,7 @@ $(document).ready(function() {
 
                     if(v!=5){
 
-                      $("#spinner_frame").show();
+                      $('.myloading').show();
                       $(".bg_addr").css("background-color", "");
                       $(this).closest('.bg_addr').css("background-color", "#00e673");
 
@@ -4494,7 +4475,7 @@ $(document).ready(function() {
 
            $('.ShippingCalculate02').on('click', function(e) {
 
-                $("#spinner_frame").show();
+                $('.myloading').show();
                     var province_id = $('.ShippingCalculate02').attr('province_id');
                     fnShippingCalculate(province_id);
                     //fnGetDBfrontstore();
@@ -4511,7 +4492,7 @@ $(document).ready(function() {
 
 
                  $('#modalAddFromPromotion,#modalAddList,#modalAddList').on('hidden.bs.modal', function () {
-                    $("#spinner_frame").show();
+                    $('.myloading').show();
                     fnCheckDBfrontstore();
                     setTimeout(function(){
                       $(".ShippingCalculate02").trigger('click');
@@ -4521,7 +4502,7 @@ $(document).ready(function() {
 
 
                  $('#modalAddFromProductsList').on('hidden.bs.modal', function () {
-                    // $("#spinner_frame").show();
+                    // $('.myloading').show();
                     fnCheckDBfrontstore();
                     setTimeout(function(){
                       $(".ShippingCalculate02").trigger('click');
@@ -4580,7 +4561,7 @@ $(document).ready(function() {
 
                           $('.div_cost').show();
                          }
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                         }
                       });
 
@@ -4604,11 +4585,11 @@ $(document).ready(function() {
 
                             }
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -4640,10 +4621,10 @@ $(document).ready(function() {
                             $("#shipping_price").val(formatNumber(parseFloat(data).toFixed(2)));
                             //fnGetDBfrontstore();
                             $("input[name=_method]").val('PUT');
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
         }
@@ -4666,9 +4647,11 @@ $(document).ready(function() {
       $('.transfer_money_datetime').datetimepicker({
           value: '',
           rtl: false,
-          format: 'd/m/Y H:i',
+          // format: 'd/m/Y H:i',
+          format: 'Y-m-d H:i',
           formatTime: 'H:i',
-          formatDate: 'd/m/Y',
+          // formatDate: 'd/m/Y',
+          formatDate: 'Y-m-d',
           monthChangeSpinner: true,
           closeOnTimeSelect: true,
           closeOnWithoutClick: true,
@@ -4680,78 +4663,78 @@ $(document).ready(function() {
           // minDate: 0,
       });
 
-      $('.transfer_money_datetime').change(function(event) {
-        var d = $(this).val();
-        // / // console.log(d);
-        var t = d.substring(d.length - 5);
-        // / // console.log();
-        var d = d.substring(0, 10);
-        // / // console.log();
-        var d = d.split("/").reverse().join("-");
-        // / // console.log();
-        $('#transfer_money_datetime').val(d+' '+t);
-      });
+      // $('.transfer_money_datetime').change(function(event) {
+      //   var d = $(this).val();
+      //   // / // console.log(d);
+      //   var t = d.substring(d.length - 5);
+      //   // / // console.log();
+      //   var d = d.substring(0, 10);
+      //   // / // console.log();
+      //   var d = d.split("/").reverse().join("-");
+      //   // / // console.log();
+      //   $('#transfer_money_datetime').val(d+' '+t);
+      // });
 
 
 
-      $('.transfer_money_datetime_02').datetimepicker({
-          value: '',
-          rtl: false,
-          format: 'd/m/Y H:i',
-          formatTime: 'H:i',
-          formatDate: 'd/m/Y',
-          monthChangeSpinner: true,
-          closeOnTimeSelect: true,
-          closeOnWithoutClick: true,
-          closeOnInputClick: true,
-          openOnFocus: true,
-          timepicker: true,
-          datepicker: true,
-          weeks: false,
-          // minDate: 0,
-      });
+      // $('.transfer_money_datetime_02').datetimepicker({
+      //     value: '',
+      //     rtl: false,
+      //     format: 'd/m/Y H:i',
+      //     formatTime: 'H:i',
+      //     formatDate: 'd/m/Y',
+      //     monthChangeSpinner: true,
+      //     closeOnTimeSelect: true,
+      //     closeOnWithoutClick: true,
+      //     closeOnInputClick: true,
+      //     openOnFocus: true,
+      //     timepicker: true,
+      //     datepicker: true,
+      //     weeks: false,
+      //     // minDate: 0,
+      // });
 
-      $('.transfer_money_datetime_02').change(function(event) {
-        var d = $(this).val();
-        // / // console.log(d);
-        var t = d.substring(d.length - 5);
-        // / // console.log();
-        var d = d.substring(0, 10);
-        // / // console.log();
-        var d = d.split("/").reverse().join("-");
-        // / // console.log();
-        $('#transfer_money_datetime_02').val(d+' '+t);
-      });
+      // $('.transfer_money_datetime_02').change(function(event) {
+      //   var d = $(this).val();
+      //   // / // console.log(d);
+      //   var t = d.substring(d.length - 5);
+      //   // / // console.log();
+      //   var d = d.substring(0, 10);
+      //   // / // console.log();
+      //   var d = d.split("/").reverse().join("-");
+      //   // / // console.log();
+      //   $('#transfer_money_datetime_02').val(d+' '+t);
+      // });
 
 
-      $('.transfer_money_datetime_03').datetimepicker({
-          value: '',
-          rtl: false,
-          format: 'd/m/Y H:i',
-          formatTime: 'H:i',
-          formatDate: 'd/m/Y',
-          monthChangeSpinner: true,
-          closeOnTimeSelect: true,
-          closeOnWithoutClick: true,
-          closeOnInputClick: true,
-          openOnFocus: true,
-          timepicker: true,
-          datepicker: true,
-          weeks: false,
-          // minDate: 0,
-      });
+      // $('.transfer_money_datetime_03').datetimepicker({
+      //     value: '',
+      //     rtl: false,
+      //     format: 'd/m/Y H:i',
+      //     formatTime: 'H:i',
+      //     formatDate: 'd/m/Y',
+      //     monthChangeSpinner: true,
+      //     closeOnTimeSelect: true,
+      //     closeOnWithoutClick: true,
+      //     closeOnInputClick: true,
+      //     openOnFocus: true,
+      //     timepicker: true,
+      //     datepicker: true,
+      //     weeks: false,
+      //     // minDate: 0,
+      // });
 
-      $('.transfer_money_datetime_03').change(function(event) {
-        var d = $(this).val();
-        // / // console.log(d);
-        var t = d.substring(d.length - 5);
-        // / // console.log();
-        var d = d.substring(0, 10);
-        // / // console.log();
-        var d = d.split("/").reverse().join("-");
-        // / // console.log();
-        $('#transfer_money_datetime_03').val(d+' '+t);
-      });
+      // $('.transfer_money_datetime_03').change(function(event) {
+      //   var d = $(this).val();
+      //   // / // console.log(d);
+      //   var t = d.substring(d.length - 5);
+      //   // / // console.log();
+      //   var d = d.substring(0, 10);
+      //   // / // console.log();
+      //   var d = d.split("/").reverse().join("-");
+      //   // / // console.log();
+      //   $('#transfer_money_datetime_03').val(d+' '+t);
+      // });
 
 
 </script>
@@ -4815,9 +4798,10 @@ $(document).ready(function() {
                                    data:{ _token: '{{csrf_token()}}',id:id },
                                   success: function(data){
                                     // / // console.log(data);
-                                    $(".span_file_slip").hide();
-                                    $(".transfer_money_datetime").val('');
-                                    $("#note_fullpayonetime").val('');
+                                    // $(".span_file_slip").hide();
+                                    // $(".transfer_money_datetime").val('');
+                                    // $("#note_fullpayonetime").val('');
+                                    location.reload();
                                   }
                               });
 
@@ -4839,7 +4823,7 @@ $(document).ready(function() {
                                   success: function(data){
                                     // / // console.log(data);
                                     $(".span_file_slip_02").hide();
-                                    $(".transfer_money_datetime_02").val('');
+                                    // $(".transfer_money_datetime_02").val('');
                                     $("#note_fullpayonetime_02").val('');
                                   }
                               });
@@ -4862,7 +4846,7 @@ $(document).ready(function() {
                                   success: function(data){
                                     // / // console.log(data);
                                     $(".span_file_slip_03").hide();
-                                    $(".transfer_money_datetime_03").val('');
+                                    // $(".transfer_money_datetime_03").val('');
                                     $("#note_fullpayonetime_03").val('');
                                   }
                               });
@@ -4897,23 +4881,23 @@ $(document).ready(function() {
 
               $(document).on('change', '#fee', function(event) {
                     event.preventDefault();
-                    $("#spinner_frame").show();
+                    $('.myloading').show();
                     $('#credit_price').attr('required', true);
                     setTimeout(function(){
                       $('#credit_price').focus();
-                      $("#spinner_frame").hide();
+                      $('.myloading').hide();
                     });
                 });
 
-              $(document).on('change', '.transfer_money_datetime,.transfer_money_datetime_02,.transfer_money_datetime_03', function(event) {
-                    event.preventDefault();
-                    $("#spinner_frame").show();
-                    $('#transfer_price').attr('required', true);
-                    setTimeout(function(){
-                        // $('#transfer_price').focus();
-                        $("#spinner_frame").hide();
-                    });
-                });
+              // $(document).on('change', '.transfer_money_datetime,.transfer_money_datetime_02,.transfer_money_datetime_03', function(event) {
+              //       event.preventDefault();
+              //       $('.myloading').show();
+              //       $('#transfer_price').attr('required', true);
+              //       setTimeout(function(){
+              //           // $('#transfer_price').focus();
+              //           $('.myloading').hide();
+              //       });
+              //   });
 
 
               $(document).on('change', '#credit_price', function(event) {
@@ -4929,10 +4913,16 @@ $(document).ready(function() {
 
 
 
+              $(document).on('change', '#sentto_branch_id', function(event) {
+                  var id = $("#sentto_branch_id").val();
+                  localStorage.setItem('sentto_branch_id',id);
+              });
+
+
                 $(document).on('change', '#pay_type_id_fk', function(event) {
 
                         // event.preventDefault();
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
 
                         var pay_type_id_fk = $("#pay_type_id_fk").val();
                         localStorage.setItem('pay_type_id_fk', pay_type_id_fk);
@@ -5034,14 +5024,14 @@ $(document).ready(function() {
                               alert("! กรุณา กรอกยอด Ai Voucher ");
                               $(this).val('').select2();
                               $("#gift_voucher_price").focus();
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                               return false;
                             }
 
                         }
 
                         if(pay_type_id_fk==''){
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                           return false;
                         }
 
@@ -5059,14 +5049,14 @@ $(document).ready(function() {
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
                                   $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
 
-                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  $(".transfer_money_datetime").val(value.transfer_money_datetime);
+                                  // $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  // $(".transfer_money_datetime").val(value.transfer_money_datetime);
 
-                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  $(".transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  // $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  // $(".transfer_money_datetime_02").val(value.transfer_money_datetime_02);
 
-                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
-                                  $(".transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  // $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  // $(".transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                 });
 
@@ -5080,9 +5070,9 @@ $(document).ready(function() {
                             if(pay_type_id_fk==6){
 
                                 $("#aicash_price").val('');
-                                $("#aicash_price").removeAttr('readonly');
-                                $('#aicash_price').attr('required', true);
-                                $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+                                // $("#aicash_price").removeAttr('readonly');
+                                // $('#aicash_price').attr('required', true);
+                                // $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
                                 $("#cash_pay").val('');
                                 $(".show_div_aicash_price").show();
                                 $(".show_div_cash_pay").show();
@@ -5122,7 +5112,7 @@ $(document).ready(function() {
                               $(".div_account_bank_id").show();
                               $(".div_pay_with_other_bill").show();
                               $("#transfer_price").val('');
-                              $(".transfer_money_datetime").attr('required', true);
+                              // $(".transfer_money_datetime").attr('required', true);
                               $("#transfer_price").removeAttr('required');
                               $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
@@ -5153,7 +5143,7 @@ $(document).ready(function() {
                               $(".show_div_cash_pay").hide();
 
                               $('input[name=account_bank_id]').removeAttr('required');
-                              $(".transfer_money_datetime").removeAttr('required');
+                              // $(".transfer_money_datetime").removeAttr('required');
                               $("#transfer_price").removeAttr('required');
                               $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
@@ -5170,7 +5160,7 @@ $(document).ready(function() {
                                 $(".div_account_bank_id").show();
                                 $(".div_pay_with_other_bill").show();
                                 $("#transfer_price").val('');
-                                $(".transfer_money_datetime").attr('required', true);
+                                // $(".transfer_money_datetime").attr('required', true);
                                 $("#transfer_price").attr('required',true);
                                 $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
 
@@ -5190,7 +5180,7 @@ $(document).ready(function() {
                                   $(".div_account_bank_id").show();
                                   $(".div_pay_with_other_bill").show();
                                   $("#transfer_price").val('');
-                                  $(".transfer_money_datetime").attr('required', true);
+                                  // $(".transfer_money_datetime").attr('required', true);
                                   $("#transfer_price").attr('required',true);
                                   $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
 
@@ -5209,7 +5199,7 @@ $(document).ready(function() {
                               }else{
                                   $('#fee').removeAttr('required');
                                   $('input[name=account_bank_id]').removeAttr('required');
-                                  $('.transfer_money_datetime').removeAttr('required');
+                                  // $('.transfer_money_datetime').removeAttr('required');
                                   $('#aicash_price').removeAttr('required');
                                   $(".show_div_cash_pay").hide();
                                   $(".show_div_transfer_price").hide();
@@ -5222,13 +5212,13 @@ $(document).ready(function() {
                                 $('.class_btnSave').removeAttr( "disabled" );
                                 $('.class_btnSave').show();
 
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
                               //  console.log(JSON.stringify(jqXHR));
                               //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -5246,7 +5236,7 @@ $(document).ready(function() {
       $(document).on('change', '.CalPrice', function(event) {
 
               event.preventDefault();
-              $("#spinner_frame").show();
+              $('.myloading').show();
 
               var id = "{{@$sRow->id}}";
 
@@ -5261,7 +5251,7 @@ $(document).ready(function() {
                   $("#cash_pay").val(0);
                   $("#cash_price").val(0);
                   $("#transfer_price").focus();
-                  $("#spinner_frame").hide();
+                  $('.myloading').hide();
                   return false;
                 }
 
@@ -5270,7 +5260,7 @@ $(document).ready(function() {
               if(pay_type_id_fk==''){
                 $("#cash_price").val('');
                 $("#cash_pay").val('');
-                $("#spinner_frame").hide();
+                $('.myloading').hide();
                 $(".show_div_cash_pay").hide();
                 return false;
               }
@@ -5299,20 +5289,20 @@ $(document).ready(function() {
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  $("#spinner_frame").hide();
+                                  $('.myloading').hide();
 
                                 });
 
                                  $("input[name=_method]").val('PUT');
 
 
-                               $("#spinner_frame").hide();
+                               $('.myloading').hide();
 
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
                               //  console.log(JSON.stringify(jqXHR));
                               //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -5321,7 +5311,7 @@ $(document).ready(function() {
 
               $(document).on('change', '.CalPriceAicash', function(event) {
 
-                $("#spinner_frame").show();
+                $('.myloading').show();
 
                 var this_element = $(this).attr('id');
                 var aicash_remain = $('#aicash_remain').val();
@@ -5350,10 +5340,10 @@ $(document).ready(function() {
                                 $('.class_btnSave').show();
 
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5398,10 +5388,10 @@ $(document).ready(function() {
                                 });
 
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5433,7 +5423,7 @@ $(document).ready(function() {
                                // $.each(data,function(key,value){
                                //    if(value.ai_cash==0){
                                //      alert('! กรุณา ทำการเติม Ai-Cash ก่อนเลือกชำระช่องทางนี้ ขอบคุณค่ะ');
-                               //       $("#spinner_frame").hide();
+                               //       $('.myloading').hide();
                                //    }
                                //  });
 
@@ -5441,10 +5431,10 @@ $(document).ready(function() {
                                  $("#credit_price").focus();
                               });
 
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5453,7 +5443,7 @@ $(document).ready(function() {
 
               $(document).on('change', '#member_id_aicash_select', function(event) {
 
-                  $("#spinner_frame").show();
+                  $('.myloading').show();
 
                       var member_id_aicash = $(this).val();
                       var frontstore_id_fk = $("#frontstore_id_fk").val();
@@ -5462,7 +5452,7 @@ $(document).ready(function() {
 
                       if(member_id_aicash==''){
                           alert('! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                           return false;
                       }
 
@@ -5484,7 +5474,7 @@ $(document).ready(function() {
                                   // $("#aicash_remain").val(value.ai_cash);
                                   if(value.ai_cash==0 || value.ai_cash=="0.00" ){
                                       // alert('! กรุณา ทำการเติม Ai-Cash สำหรับสมาชิกที่ระบุเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
-                                      $("#spinner_frame").hide();
+                                      $('.myloading').hide();
                                       $(".btnCalAddAicash").hide();
                                       $(".btnSave").attr("disabled", true);
                                       $("#aicash_price").attr("disabled", true);
@@ -5505,10 +5495,10 @@ $(document).ready(function() {
 
                                 });
 
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            $("#spinner_frame").hide();
+                            $('.myloading').hide();
                         }
                     });
 
@@ -5519,7 +5509,7 @@ $(document).ready(function() {
 
               $(document).on('click', '.btnCalAddAicash', function(event) {
 
-                  $("#spinner_frame").show();
+                  $('.myloading').show();
 
                       var this_element = "aicash_price";
                               // alert(this_element);
@@ -5548,10 +5538,10 @@ $(document).ready(function() {
                                 $('.class_btnSave').show();
 
                                 $("input[name=_method]").val('PUT');
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             },
                           error: function(jqXHR, textStatus, errorThrown) {
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                           }
                       });
 
@@ -5618,15 +5608,15 @@ $(document).ready(function() {
                                      $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
 
-                                  if(value.transfer_money_datetime){
-                                    $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  }
-                                  if(value.transfer_money_datetime_02){
-                                    $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  }
-                                  if(value.transfer_money_datetime_03){
-                                    $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
-                                  }
+                                  // if(value.transfer_money_datetime){
+                                  //   $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  // }
+                                  // if(value.transfer_money_datetime_02){
+                                  //   $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  // }
+                                  // if(value.transfer_money_datetime_03){
+                                  //   $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  // }
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -5665,10 +5655,10 @@ $(document).ready(function() {
                                }
 
                               $("input[name=_method]").val('PUT');
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             }
                       });
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -5744,9 +5734,9 @@ $(document).ready(function() {
                                   }
 
 
-                                  $("#transfer_money_datetime").val(value.transfer_money_datetime);
-                                  $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
-                                  $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
+                                  // $("#transfer_money_datetime").val(value.transfer_money_datetime);
+                                  // $("#transfer_money_datetime_02").val(value.transfer_money_datetime_02);
+                                  // $("#transfer_money_datetime_03").val(value.transfer_money_datetime_03);
 
                                   if(value.shipping_free==1){
                                       $('.input_shipping_free').show();
@@ -5780,13 +5770,13 @@ $(document).ready(function() {
 
                               $("input[name=_method]").val('PUT');
 
-                              $("#spinner_frame").hide();
+                              $('.myloading').hide();
 
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
                                 //  console.log(JSON.stringify(jqXHR));
                                 //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                                $("#spinner_frame").hide();
+                                $('.myloading').hide();
                             }
                       });
 
@@ -5868,7 +5858,7 @@ $(document).ready(function() {
 
          $(document).on('change', '.amt_apply', function(event) {
             // event.preventDefault();
-             $("#spinner_frame").show();
+             $('.myloading').show();
              let amt_apply = $(this).val();
              let id_course = $(this).attr('id_course');
              let user_name = $(this).attr('user_name');
@@ -5893,12 +5883,12 @@ $(document).ready(function() {
                           alert("! ไม่สามารถสมัครคอร์สนี้ได้ เนื่องจากไม่เข้าเงื่อนไขเกณฑ์ที่กำหนด โปรดตรวจสอบอีกครั้ง");
                           $('.amt_apply').val('');
                           $('.amt_apply').focus();
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                           $(".btnSaveCourse").prop('disabled', true);
                           return false;
                          }else{
                           $(".btnSaveCourse").prop('disabled', false);
-                          $("#spinner_frame").hide();
+                          $('.myloading').hide();
                          }
 
                     },
@@ -5913,7 +5903,7 @@ $(document).ready(function() {
 
          $(document).on('click', '.btnAddAiCashModal02', function(event) {
             event.preventDefault();
-             $("#spinner_frame").show();
+             $('.myloading').show();
             // var customer_id = "{{@$sRow->customers_id_fk}}";
             var customer_id = $("#member_id_aicash").val();
             var member_name_aicash = $("#member_name_aicash").val();
@@ -5922,7 +5912,7 @@ $(document).ready(function() {
 
             if(customer_id==''){
               alert("! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ");
-              $("#spinner_frame").hide();
+              $('.myloading').hide();
               return false;
             }
             var frontstore_id_fk = $("#frontstore_id_fk").val();
@@ -5951,11 +5941,11 @@ $(document).ready(function() {
                                   // / // console.log(result);
                                     if (result.value) {
                                      // $("form").submit();
-                                     // $("#spinner_frame").show();
+                                     // $('.myloading').show();
 
                                      // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                                        $("#frm-main").valid();
-                                       $("#spinner_frame").hide();
+                                       $('.myloading').hide();
 
                                                    // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
                                         if(pay_type_id_fk==6||pay_type_id_fk==9||pay_type_id_fk==11){
@@ -5981,7 +5971,7 @@ $(document).ready(function() {
                                      // OK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
                                     }else{
-                                       $("#spinner_frame").hide();
+                                       $('.myloading').hide();
                                        return false;
                                     }
                               });
@@ -6039,7 +6029,7 @@ $(document).ready(function() {
     //  // สำหรับกรณี Autocomplete
     //  $( "#customer" ).autocomplete({
     //        source: function( request, response ) {
-    //          $("#spinner_frame").show();
+    //          $('.myloading').show();
     //          var txt = $('#customer').val();
     //          $.ajax({
     //           url: " {{ url('backend/ajaxGetCustomer') }} ",
@@ -6052,7 +6042,7 @@ $(document).ready(function() {
     //           success:function(data){
     //              // / // console.log(data);
     //              response( data );
-    //              $("#spinner_frame").hide();
+    //              $('.myloading').hide();
 
     //               $.each(data, function( index, value ) {
     //                     $('#customers_id_fk').val(value.id);
@@ -6193,7 +6183,7 @@ $(document).ready(function() {
          $(document).ready(function() {
 
                     $(document).on('change', '#customers_id_fk', function(event) {
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
                         var customer_id = $(this).val();
                          $.ajax({
                              type:'POST',
@@ -6213,7 +6203,7 @@ $(document).ready(function() {
                                               $(".btn_btnsave").attr("disabled", false);
                                             }
 
-                                            $("#spinner_frame").hide();
+                                            $('.myloading').hide();
                                     });
                             },
 
@@ -6224,7 +6214,7 @@ $(document).ready(function() {
 
              $(document).on('change', '.class_transfer_edit', function(event) {
 
-                        $("#spinner_frame").show();
+                        $('.myloading').show();
                         $(".btnCalAddAicash").trigger('click');
                         $('.class_btnSave').addClass(' btnSave ');
                         $('.class_btnSave').removeAttr( "disabled" );
@@ -6243,8 +6233,12 @@ $(document).ready(function() {
               $('#pay_type_id_fk').val(localStorage.getItem('pay_type_id_fk')).select2();
           }
 
+          if(localStorage.getItem('sentto_branch_id')){
+              $('#sentto_branch_id').val(localStorage.getItem('sentto_branch_id')).select2();
+          }
+
           $(document).on('submit', '#frm-main', function(event) {
-              $("#spinner_frame").show();
+              $('.myloading').show();
           });
 
           $.fn.toggleSelect2 = function(state) {
@@ -6336,7 +6330,7 @@ $(document).ready(function() {
             $(".show_div_transfer_price").show();
             $(".div_account_bank_id").show();
             $(".div_pay_with_other_bill").show();
-            $(".show_div_cash_pay").show();
+            // $(".show_div_cash_pay").show();
 
           }
 
@@ -6362,7 +6356,7 @@ $(document).ready(function() {
             if($('#pay_with_other_bill').is(':checked')==true){
                 $("#pay_with_other_bill_note").prop('required',true);
                 $("input[name='account_bank_id']").removeAttr("required");
-                $(".transfer_money_datetime").removeAttr("required");
+                // $(".transfer_money_datetime").removeAttr("required");
                 $("#pay_with_other_bill_note").focus();
             }else{
                 $("#pay_with_other_bill_note").removeAttr("required");

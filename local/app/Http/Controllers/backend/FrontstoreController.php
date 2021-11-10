@@ -2009,7 +2009,7 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  '.trans('message.all_payment_list').' ('.$sD3.')  (ไม่รวมบิล <font color=red>* รอดำเนินการต่อ และ ไม่รวมบิลที่ ยกเลิก </font>)
+                  '.trans('message.all_payment_list').' ('.$sD3.') (<font color=red>ไม่รวมบิล * รอดำเนินการต่อ และ ไม่รวมบิลที่ ยกเลิก </font>)
                 </th></tr>
                 <tr>
                   <th width="10%">'.trans('message.seller').'</th>
@@ -3145,23 +3145,45 @@ ORDER BY created_at DESC
           // return substr($total_price,0,strpos($total_price,'.')+3); ;
 
       })
-      ->addColumn('status_delivery', function($row) {
-          $r = DB::select(" select status_delivery FROM db_orders WHERE id = ".$row->id." ");
-          if($r)
-          return $r[0]->status_delivery;
+      // ->addColumn('status_delivery', function($row) {
+      //     $r = DB::select(" select status_delivery FROM db_orders WHERE id = ".$row->id." ");
+      //     if($r)
+      //     return $r[0]->status_delivery;
+
+      // })
+      ->addColumn('status_delivery_packing', function($row) {
+          $r = DB::select(" select receipt FROM db_delivery WHERE receipt = '".$row->code_order."' AND status_pack=1 ");
+          if(@$r){
+            return 1;
+          }else{
+            return 0;
+          }
+          // return $r[0]->receipt;
 
       })
       ->addColumn('status_delivery_02', function($row) {
+          $ch = 0;
           $r = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
-          if(!empty($r)){
-             $orders_id_fk = explode(',',@$r[0]->orders_id_fk);
+          // if(!empty($r)){
+          //    $orders_id_fk = explode(',',@$r[0]->orders_id_fk);
 
-              if (in_array($row->id, @$orders_id_fk)){
-                return 1;
-              }else{
-                return 0;
+          //     // if (in_array($row->id, @$orders_id_fk)){
+          //     //   return 1;
+          //     // }else{
+          //     //   return 0;
+          //     // }
+          // }
+          foreach ($r as $key => $value) {
+
+             $orders_id_fk = explode(',',@$value->orders_id_fk);
+             if (in_array($row->id, @$orders_id_fk)){
+                $ch = 1;
               }
+
           }
+          // return $row->id;
+          // return @$r[0]->orders_id_fk;
+          return @$ch;
 
       })
       ->addColumn('status_sent_product', function($row) {

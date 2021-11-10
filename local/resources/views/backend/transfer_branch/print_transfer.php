@@ -176,7 +176,7 @@ tr.border_bottom td {
           This should center it vertically
       **/
       top:   4.5cm;
-      left:     4.5cm;
+      /*left:     4.5cm;*/
 
       /** Change image dimensions**/
       /*width:    8cm;*/
@@ -208,7 +208,7 @@ tr.border_bottom td {
       <table style="border-collapse: collapse;" >
         <tr>
           <th style="text-align: left;">
-            <img src="http://krit.orangeworkshop.info/aiyara/backend/images/logo2.png" >
+            <img src="<?=public_path('images/logo2.png')?>" >
           </th>
           <th style="text-align: right;">
             <span style="font-size: 24px;font-weight: bold;">[ <?php echo $tr_number[0]->tr_number; ?> ]</span><br>
@@ -261,7 +261,7 @@ tr.border_bottom td {
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
-        <td style="border-left: 1px solid #ccc;width: 50%;font-weight: bold;">สาขาต้นทาง : <?=@$branchs_from[0]->b_name?>
+        <td style="border-left: 1px solid #ccc;width: 50.7%;font-weight: bold;">สาขาต้นทาง : <?=@$branchs_from[0]->b_name?>
           <br>
           <br>
         </td>
@@ -394,15 +394,15 @@ tr.border_bottom td {
 
       <?php if(@$warehouses_code[0]->approve_status==0){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/pending_approval.png"  />
+            <img src="<?=public_path('images/pending_approval.png')?>"  />
         </div>
       <?php }else if(@$warehouses_code[0]->approve_status==2){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/canceled.png"  />
+            <img src="<?=public_path('images/canceled.png')?>"  />
         </div>
       <?php }else if(@$warehouses_code[0]->approve_status==3){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/disapproved.png"  />
+            <img src="<?=public_path('images/disapproved.png')?>"  />
         </div>
       <?php } ?>
 

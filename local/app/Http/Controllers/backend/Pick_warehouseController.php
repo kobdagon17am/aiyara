@@ -105,6 +105,10 @@ class Pick_warehouseController extends Controller
       // dd($id);
 
       $r = DB::select("SELECT * FROM db_pay_requisition_001 where id in($id) ");
+      // dd($r[0]->status_sent);
+      if(@$r[0]->status_sent==6){
+        return redirect()->to(url("backend/pick_warehouse/".$id."/cancel"));
+      }
       // $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
       $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
       // dd($sRow);
@@ -173,6 +177,11 @@ class Pick_warehouseController extends Controller
     public function qr($id)
     {
           // return $id;
+
+      // $r1 = DB::select(" SELECT * FROM db_pick_pack_packing_code where id=$id ");
+      // dd($r1);
+
+
       $r = DB::select("SELECT db_pay_requisition_001.*,db_pick_pack_requisition_code.requisition_code FROM db_pay_requisition_001 LEFT Join db_pick_pack_requisition_code ON db_pay_requisition_001.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
       where db_pay_requisition_001.pick_pack_requisition_code_id_fk =$id ");
       $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
@@ -530,6 +539,7 @@ class Pick_warehouseController extends Controller
         // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
+
            @$rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
 
            if(count(@$rs_pay_history)>0){
@@ -537,6 +547,7 @@ class Pick_warehouseController extends Controller
            }else{
                return 3; // เบิกจากคลังมาไว้เตรียมแพ็คกล่องส่ง > จัดเตรียมสินค้าแล้ว
            }
+
 
        })
       ->addColumn('ch_amt_lot_wh', function($row) { 
@@ -625,111 +636,21 @@ class Pick_warehouseController extends Controller
 
   public function warehouse_qr_0001(Request $reg){
 
-      $sTable = DB::select(" SELECT * FROM `db_pick_pack_packing` WHERE packing_code_id_fk =".$reg->id." GROUP BY packing_code  ");
+      // $sTable = DB::select(" SELECT * FROM `db_pick_pack_packing` WHERE packing_code_id_fk =".$reg->id." GROUP BY packing_code  ");
+      $sTable = DB::select(" SELECT * FROM db_pick_pack_packing_code where id=".$reg->id."  ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
-        if(@$row->packing_code){
-          return '<b>'.$row->packing_code.'</b>' ;
-        }else{
-          return "-";
-        }
+           $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
+           return $DP->packing_code;
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
-
-            $pn = '<div class="divTable"><div class="divTableBody">';
-            // $pn .=     
-            // '<div class="divTableRow">
-            //   <div class="divTableCell" style="width:200px;font-weight:bold;">xxxxxxxxxxx </div>
-            // </div>
-            // ';
-
-            $D = DB::select(" 
-              SELECT 
-              CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists 
-              FROM `db_pick_pack_packing` 
-              LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-              LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
-              WHERE db_pick_pack_packing.packing_code_id_fk =".$row->packing_code_id_fk." ORDER BY db_pick_pack_packing.id ");
-
-              $i = 1;
-              foreach ($D as $key => $value) {
-
-                $pn .=     
-                '<div class="divTableRow">
-                 <div class="divTableCell" style="padding-bottom:15px;width:250px;text-align:left !important;"><b>
-                '.'('.$i.') '.$value->lists.'</b>
-                </div>
-                ';
-
-                $pn .= '</div>';  
-
-                $i++;
-              
-              }
-
-              // $pn .=     
-              // '<div class="divTableRow">
-              //  <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
-              // </div>
-              // ';
-
-          $pn .= '</div>';  
-          return $pn;
+         
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
-
-
-            $pn = '<div class="divTable"><div class="divTableBody">';
-            // $pn .=     
-            // '<div class="divTableRow">
-            //   <div class="divTableCell" style="width:200px;font-weight:bold;">xxxxxxxxxxx </div>
-            // </div>
-            // ';
-
-            $D1 = DB::select(" 
-              SELECT 
-              db_delivery.packing_code 
-              FROM `db_pick_pack_packing` 
-              LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-              LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
-              WHERE db_pick_pack_packing.packing_code_id_fk =".$row->packing_code_id_fk." AND db_delivery.packing_code<>0 ORDER BY db_pick_pack_packing.id ");
-
-             $arr01 = [];
-             foreach ($D1 as $key => $value) {
-                array_push($arr01,$value->packing_code);
-             } 
-             $arr01 = implode(',',$arr01);
-
-             $D2 = DB::select(" 
-              SELECT receipt FROM db_delivery WHERE packing_code in ($arr01) ");
-
-             $arr02 = [];
-             foreach ($D2 as $key => $value) {
-                array_push($arr02,$value->receipt);
-             } 
-             $arr02 = implode(' , ',$arr02);
-
-                $pn .=     
-                '<div class="divTableRow">
-                 <div class="divTableCell" style="padding-bottom:15px;width:250px;text-align:left !important;"><b>
-                '.$arr02.'</b>
-                </div>
-                ';
-
-                $pn .= '</div>';  
-              
-
-              // $pn .=     
-              // '<div class="divTableRow">
-              //  <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
-              // </div>
-              // ';
-
-          $pn .= '</div>';  
-          return $pn;
+         
   
         })
       ->escapeColumns('column_003')        
@@ -850,11 +771,22 @@ GROUP BY db_order_products_list.product_id_fk
                  ");
 
               $sum_amt = 0 ;
+              $r_ch_t = '';
 
          if(@$Products){
             
               foreach ($Products as $key => $value) {
   
+                // หา max time_pay ก่อน 
+                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+              // Check ว่ามี status=2 ? (ค้างจ่าย)
+                 $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                 if(count($r_ch02)>0){
+                    $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                 }else{
+                   $r_ch_t = '';
+                 }
+
                   // บิลปกติ
                 $arr_inv = [];
                 $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
@@ -885,12 +817,14 @@ GROUP BY db_order_products_list.product_id_fk
 
                 $invoice_code = implode(",",$arr_inv);
 
+
                 $sum_amt += $value->amt;
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                 '.@$value->product_name.'</b><br>
-                ('.@$invoice_code.')
+                ('.@$invoice_code.')<br>
+                <font color=red>'.$r_ch_t.'</font>
                 </div>
                 <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
@@ -1096,16 +1030,29 @@ GROUP BY db_order_products_list.product_id_fk
                  ");
 
               $sum_amt = 0 ;
+              $r_ch_t = '';
 
          if(@$Products){
             
               foreach ($Products as $key => $value) {
-  
+
+                // หา max time_pay ก่อน 
+                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+              // Check ว่ามี status=2 ? (ค้างจ่าย)
+                 $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                 if(count($r_ch02)>0){
+                    $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                 }else{
+                   $r_ch_t = '';
+                 }
+
+
                 $sum_amt += $value->amt;
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                 '.@$value->product_name.'</b><br>
+                <font color=red>'.$r_ch_t.'</font>
                 </div>
                 <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 

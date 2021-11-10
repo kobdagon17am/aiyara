@@ -379,7 +379,7 @@
               <div class="myBorder" >
                  <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;"></table>
               </div>
-
+<!-- 
               <div class="myBorder" style="margin-top: 2%;">
 
                 <div style="">
@@ -390,13 +390,12 @@
                   </div>
                   <div class="form-group row">
                     <div class="col-md-12">
-                      <!-- ตารางนี้ถ้ามีการโอนค่อยแสดง -->
                       <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;">
                       </table>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
 
 
             </div>
@@ -470,8 +469,7 @@
                                       scrollX: true,
                                       ordering: false,
                                       destroy:true,
-                                      stateSave:true,
-                                      iDisplayLength: 15,
+                                      iDisplayLength: 10,
                                       "searching": false,
                                         ajax: {
                                             url: '{{ route('backend.check_stock.datatable') }}',

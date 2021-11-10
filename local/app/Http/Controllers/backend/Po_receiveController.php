@@ -36,7 +36,11 @@ class Po_receiveController extends Controller
     {
        $po_supplier = DB::select(" SELECT CONVERT(SUBSTRING(po_number, -3),UNSIGNED INTEGER) AS cnt FROM db_po_supplier WHERE po_number is not null  order by po_number desc limit 1  ");
        // dd($po_supplier[0]->cnt);
-       $po_runno = "PO".date("ymd").sprintf("%03d", $po_supplier[0]->cnt + 1);
+       if(!empty($po_supplier)){
+            $po_runno = "PO".date("ymd").sprintf("%03d", $po_supplier[0]->cnt + 1);
+        }else{
+            $po_runno = "PO".date("ymd").sprintf("%03d", 1);
+        }
        // dd($po_runno);
 
        $sBusiness_location = \App\Models\Backend\Business_location::get();

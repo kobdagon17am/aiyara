@@ -74,7 +74,7 @@ class InitModel extends Model
     public function scopesearch($sQuery)
     {
 
-      // ใช้กับ http://localhost/aiyara.host/backend/check_stock
+      // ใช้กับ /backend/check_stock
       if( request('myWhereStock') ){
         foreach(request('myWhereStock') AS $sKey => $sValue){
           if( $sValue && $sKey!='lot_expired_date'){
@@ -91,7 +91,7 @@ class InitModel extends Model
       }
 
 
-      // ใช้กับ http://localhost/aiyara.host/backend/check_stock_account
+      // ใช้กับ /backend/check_stock_account
       if( request('myWhere') ){
         foreach(request('myWhere') AS $sKey => $sValue){
           if( $sValue && $sKey!='action_date'){

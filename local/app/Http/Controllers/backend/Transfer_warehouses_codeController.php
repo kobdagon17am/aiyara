@@ -67,7 +67,7 @@ class Transfer_warehouses_codeController extends Controller
                 $Transfer_warehouses_code->save();
 
                 DB::update(" update db_transfer_warehouses_code set tr_number=? where id=? ",["TR".sprintf("%05d",$Transfer_warehouses_code->id),$Transfer_warehouses_code->id]);
-
+// ฝั่งรับโอน
                 for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 
                     $Transfer_choose = \App\Models\Backend\Transfer_choose::find($request->transfer_choose_id[$i]);
                     DB::insert("  
@@ -86,6 +86,7 @@ class Transfer_warehouses_codeController extends Controller
                        ,shelf_floor=? 
                        ,action_user=? 
                        ,action_date=? 
+                       ,remark=? 
                        ",
                       [
                         $Transfer_warehouses_code->id
@@ -102,10 +103,51 @@ class Transfer_warehouses_codeController extends Controller
                         ,$Transfer_choose->shelf_floor
                         ,$Transfer_choose->action_user
                         ,$Transfer_choose->action_date
+                        ,'1'
                       ]);
                 }
 
-               DB::update(" DELETE FROM db_transfer_choose where action_user=? ",[\Auth::user()->id]);
+// ฝั่งโอนให้ ใส่ไว้ก่อน แล้วค่อยไปหักลบยอดออกตอน อนุมัติ อีกที 
+                for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 
+                    $Transfer_choose = \App\Models\Backend\Transfer_choose::find($request->transfer_choose_id[$i]);
+                    DB::insert("  
+                       insert into db_transfer_warehouses_details set  
+                       transfer_warehouses_code_id=? 
+                       ,stocks_id_fk=? 
+                       ,product_id_fk=? 
+                       ,lot_number=? 
+                       ,lot_expired_date=? 
+                       ,amt=? 
+                       ,product_unit_id_fk=? 
+                       ,branch_id_fk=? 
+                       ,warehouse_id_fk=? 
+                       ,zone_id_fk=? 
+                       ,shelf_id_fk=? 
+                       ,shelf_floor=? 
+                       ,action_user=? 
+                       ,action_date=? 
+                       ,remark=? 
+                       ",
+                      [
+                        $Transfer_warehouses_code->id
+                        ,$Transfer_choose->stocks_id_fk
+                        ,$Transfer_choose->product_id_fk
+                        ,$Transfer_choose->lot_number
+                        ,$Transfer_choose->lot_expired_date
+                        ,$Transfer_choose->amt
+                        ,$Transfer_choose->product_unit_id_fk
+                        ,$Transfer_choose->branch_id_fk
+                        ,$Transfer_choose->warehouse_id_fk
+                        ,$Transfer_choose->zone_id_fk
+                        ,$Transfer_choose->shelf_id_fk
+                        ,$Transfer_choose->shelf_floor
+                        ,$Transfer_choose->action_user
+                        ,$Transfer_choose->action_date
+                        ,'2'
+                      ]);
+                }
+
+                DB::update(" DELETE FROM db_transfer_choose where action_user=? ",[\Auth::user()->id]);
 
                 return redirect()->to(url("backend/transfer_warehouses"));
 
@@ -214,26 +256,48 @@ class Transfer_warehouses_codeController extends Controller
       //       $sTable = \App\Models\Backend\Transfer_warehouses_code::search()->orderBy('action_date', 'desc');
       // 	}
       // }
-
-
-      $branch_id = !empty($req->branch_id) ? $req->branch_id : 0 ;
-      if($branch_id>0){
-        $branch_id2 = " branch_id_fk = ".$req->branch_id." AND ";
+      if(@$req->id>0){
+        $id = " AND id = ".$req->id."  ";
       }else{
-        $branch_id2 = "";
+        $id = "";
       }
+
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            // if(!empty( $req->business_location_id_fk) ){
+            //     $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
+            // }else{
+            //     $business_location_id = "";
+            // }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " AND branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
+        }else{
+
+            // $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " AND branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
+        }
+
       // '0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ'
       switch ($req->approve_status) {
         case '':
           $approve_status = "";
           break;
         case '0':
-          $approve_status = " approve_status = 0 AND ";
+          $approve_status = " AND approve_status = 0  ";
           break;    
         case '1' :
         case '2' :
         case '3' :
-          $approve_status = " approve_status = ".$req->approve_status." AND ";
+          $approve_status = " AND approve_status = ".$req->approve_status."  ";
           break;                 
         default:
           $approve_status = "";
@@ -246,15 +310,23 @@ class Transfer_warehouses_codeController extends Controller
           $action_date = "";
       }
       
+      // $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
+      //     WHERE 
+      //     $id
+      //     ".$branch_id2." 
+      //     ".$approve_status." 
+      //     (action_user LIKE ".(\Auth::user()->id)." OR 
+      //     (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
+      //     ".$action_date." 
+      //     ORDER BY updated_at DESC ");
 
       $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
-          WHERE 
-          ".$branch_id2." 
-          ".$approve_status." 
-          (action_user LIKE ".(\Auth::user()->id)." OR 
-          (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
-          ".$action_date." 
-          ORDER BY action_date DESC ");
+          WHERE 1
+          $id
+          $branch_id_fk
+          $approve_status
+          $action_date
+          ORDER BY updated_at DESC ");
           		
       $sQuery = \DataTables::of($sTable);
        return $sQuery
@@ -267,8 +339,8 @@ class Transfer_warehouses_codeController extends Controller
         }
       })  
       ->addColumn('action_date', function($row) {
-        if(@$row->action_date!=''){
-          $d = strtotime($row->action_date); return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->action_date)){
+          return $row->action_date;
         }else{
           return '';
         }
@@ -282,10 +354,10 @@ class Transfer_warehouses_codeController extends Controller
         }
       })  
       ->addColumn('approve_date', function($row) {
-        if(@$row->approve_date!=''){
-          $d = strtotime($row->approve_date); return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->approve_date)){
+          return $row->approve_date;
         }else{
-          return '-';
+          return '';
         }
       })                         
       ->addColumn('updated_at', function($row) {

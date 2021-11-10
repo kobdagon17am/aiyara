@@ -104,6 +104,10 @@ class Products_borrow_codeController extends Controller
                        ,amt=? 
                        ,product_unit_id_fk=? 
                        ,branch_id_fk=? 
+                       ,warehouse_id_fk=? 
+                       ,zone_id_fk=? 
+                       ,shelf_id_fk=? 
+                       ,shelf_floor=? 
                        ,action_user=? 
                        ,action_date=? 
                        ",
@@ -116,6 +120,10 @@ class Products_borrow_codeController extends Controller
                         ,$Products_borrow_choose->amt
                         ,$Products_borrow_choose->product_unit_id_fk
                         ,$Products_borrow_choose->branch_id_fk
+                        ,$Products_borrow_choose->warehouse_id_fk
+                        ,$Products_borrow_choose->zone_id_fk
+                        ,$Products_borrow_choose->shelf_id_fk
+                        ,$Products_borrow_choose->shelf_floor
                         ,$Products_borrow_choose->action_user
                         ,$Products_borrow_choose->action_date
                       ]);
@@ -214,17 +222,35 @@ class Products_borrow_codeController extends Controller
 		3) ถ้ามีสิทธิ์อนุมัติ แสดงปุ่มอนุมัติ  (0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ)
       */
       if($req->id>0){
-        $id = " id = ".$req->id." AND ";
+        $id = " AND id = ".$req->id."  ";
       }else{
         $id = "";
       }
 
-      $branch_id = !empty($req->branch_id) ? $req->branch_id : 0 ;
-      if($branch_id>0){
-        $branch_id2 = " branch_id_fk = ".$req->branch_id." AND ";
-      }else{
-        $branch_id2 = "";
-      }
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            if(!empty( $req->business_location_id_fk) ){
+                $business_location_id = " and db_products_borrow_code.business_location_id_fk = ".$req->business_location_id_fk." " ;
+            }else{
+                $business_location_id = "";
+            }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " and db_products_borrow_code.branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
+        }else{
+
+            $business_location_id = " and db_products_borrow_code.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and db_products_borrow_code.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
+        }
+
       // '0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ'
       switch ($req->approve_status) {
         case '':
@@ -250,14 +276,11 @@ class Products_borrow_codeController extends Controller
       }
       
       $sTable = DB::select(" SELECT * FROM db_products_borrow_code 
-          WHERE 
-          ".$id." 
-          ".$branch_id2." 
-          ".$approve_status." 
-          (action_user LIKE ".(\Auth::user()->id)." OR 
-          (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
-          ".$action_date." 
-          ORDER BY action_date DESC ");
+          where 1 
+          $id
+          $business_location_id
+          $branch_id_fk
+          ORDER BY updated_at DESC ");
           		
       $sQuery = \DataTables::of($sTable);
        return $sQuery
@@ -278,8 +301,8 @@ class Products_borrow_codeController extends Controller
         }
       })  
       ->addColumn('action_date', function($row) {
-        if(@$row->action_date!=''){
-          $d = strtotime($row->action_date); return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->action_date)){
+          return $row->action_date;
         }else{
           return '';
         }
@@ -293,8 +316,8 @@ class Products_borrow_codeController extends Controller
         }
       })  
       ->addColumn('approve_date', function($row) {
-        if(@$row->approve_date!=''){
-          $d = strtotime($row->approve_date); return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->approve_date)){
+          return $row->approve_date;
         }else{
           return '-';
         }

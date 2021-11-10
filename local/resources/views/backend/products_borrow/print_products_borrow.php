@@ -221,7 +221,7 @@ tr.border_bottom td {
       <table style="border-collapse: collapse;" >
         <tr>
            <th style="text-align: left;">
-            <img src="http://krit.orangeworkshop.info/aiyara/backend/images/logo2.png" >
+            <img src="<?=public_path('images/logo2.png')?>" >
           </th> 
 
 
@@ -388,15 +388,15 @@ tr.border_bottom td {
 
       <?php if(@$warehouses_code[0]->approve_status==0){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/pending_approval.png"  />
+            <img src="<?=public_path('images/pending_approval.png')?>"  />
         </div>
       <?php }else if(@$warehouses_code[0]->approve_status==2){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/canceled.png"  />
+            <img src="<?=public_path('images/canceled.png')?>"  />
         </div>
       <?php }else if(@$warehouses_code[0]->approve_status==3){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/disapproved.png"  />
+            <img src="<?=public_path('images/disapproved.png')?>"  />
         </div>
       <?php } ?>
 

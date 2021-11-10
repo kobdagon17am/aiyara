@@ -405,14 +405,10 @@
         });
 
 
-
-          // $('.btnCreatePackBill ').trigger('click');
-                    
-                    
           var table = $('#data-table-packing').DataTable();
            
            $('#data-table-packing').on( 'click', 'tr', function () {
-              console.log( table.row( this ).data().id );
+              // console.log( table.row( this ).data().id );
 
                  $("input[name^=row_id]").remove();
                  $('#data-table-0002').hide();
@@ -436,7 +432,8 @@
                                 .val(table.row( this ).data().id)
                          );
 
-                        $('.divCreatePackBill').show();
+                        // $('.divCreatePackBill').show();
+                         $('.btnCreatePackBill ').trigger('click');
 
                   }
 
@@ -619,6 +616,7 @@
 
     <script>
 
+
        $(document).on('click', '.btnSave', function(e) {
 
                 $(".myloading").show();
@@ -645,12 +643,6 @@
                                     success: function(response){ // What to do if we succeed
                                       // console.log(response);
                                        // return false;
-                                      // // console.log(ids[0]);
-
-                                      // $("#pick_pack_requisition_code_id_fk").val(response);
-                                      // var pick_pack_requisition_code_id_fk = $("#pick_pack_requisition_code_id_fk").val();
-                                      // return false;
-
                                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
                                         $('#data-table-0002').DataTable().clear().draw();
@@ -686,7 +678,6 @@
                                                                            data:{ _token:
                                                                             '{{csrf_token()}}',
                                                                             picking_id:picking_id,
-                                                                            // db_pick_pack_packing_code_id:db_pick_pack_packing_code_id 
                                                                           },
                                                                             success:function(d2){
                                                                                  // console.log(d2);

@@ -175,7 +175,7 @@ tr.border_bottom td {
           This should center it vertically
       **/
       top:   4.5cm;
-      left:     4.5cm;
+      /*left:     4.5cm;*/
 
       /** Change image dimensions**/
       /*width:    8cm;*/
@@ -207,7 +207,7 @@ tr.border_bottom td {
       <table style="border-collapse: collapse;" >
         <tr>
            <th style="text-align: left;">
-            <img src="http://krit.orangeworkshop.info/aiyara/backend/images/logo2.png" >
+            <img src="<?=public_path('images/logo2.png')?>" >
           </th> 
 
 
@@ -258,7 +258,7 @@ tr.border_bottom td {
         SELECT *
         FROM db_transfer_warehouses_details 
         WHERE
-        transfer_warehouses_code_id = ".$data[0]."
+        transfer_warehouses_code_id = ".$data[0]." AND remark=1
      ");
 
      $j=1;
@@ -357,15 +357,15 @@ tr.border_bottom td {
 
       <?php if(@$warehouses_code[0]->approve_status==0){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/pending_approval.png"  />
+            <img src="<?=public_path('images/pending_approval.png')?>"  />
         </div>
       <?php }else if(@$warehouses_code[0]->approve_status==2){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/canceled.png"  />
+            <img src="<?=public_path('images/canceled.png')?>"  />
         </div>
       <?php }else if(@$warehouses_code[0]->approve_status==3){ ?>
         <div id="watermark">
-            <img src="http://localhost/aiyara.host/backend/images/disapproved.png"  />
+            <img src="<?=public_path('images/disapproved.png')?>"  />
         </div>
       <?php } ?>
 

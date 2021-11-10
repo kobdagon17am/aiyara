@@ -175,7 +175,7 @@
           <div class="col-12">
             <div class="form-group row  " >
               <div class="col-md-12 ">
-                <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+                <!-- <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> -->
                 <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
                 <table id="data-table-00022" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
               </div>
@@ -266,7 +266,7 @@
 
                 @IF(@$sUser[0]->status_sent==4)
                 <span style="color:red;font-size:16px;">*** Packing เรียบร้อยแล้ว *** </span>
-                <input style="color: black;" type='button' class="btn btn-warning btnCancelStatusPacking font-size-16 " value="ยกเลิกสถานะการ Packing " >
+                <!-- <input style="color: black;" type='button' class="btn btn-warning btnCancelStatusPacking font-size-16 " value="ยกเลิกสถานะการ Packing " > -->
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                 @ENDIF
@@ -313,7 +313,6 @@
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
           var id = "{{$id}}"; //alert(id);
-          var packing_id = "{{$packing_id}}"; //alert(packing_id);
           var oTable0001;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
@@ -334,7 +333,6 @@
                             method: "POST",
                             data:{ _token: '{{csrf_token()}}',
                             id:id,
-                            picking_id:id,
                           },
                         },
                   columns: [
@@ -390,10 +388,16 @@
                      // $(".myloading").hide();
                      // var info = $(this).DataTable().page.info();
                      //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
+                  },
+                  fnDrawCallback : function() {
+                      if ($(this).find('.dataTables_empty').length == 1) {
+                         $(this).parent().hide();
+                      }
                   }
               });
          
          });
+
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
 
@@ -433,10 +437,17 @@
                      // $(".myloading").hide();
                      // var info = $(this).DataTable().page.info();
                      //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
+
+                  },
+                  fnDrawCallback : function() {
+                      if ($(this).find('.dataTables_empty').length == 1) {
+                         $(this).parent().hide();
+                      }
                   }
               });
          
          });
+
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
 
@@ -553,9 +564,10 @@
               $(".myloading").show();
 
               var id = $(this).data('id');
+              var pick_pack_packing_code_id_fk = 2 ;
               // console.log(id);
               setTimeout(function(){
-                 window.open("{{ url('backend/frontstore/print_receipt_023') }}"+"/"+id);
+                 window.open("{{ url('backend/frontstore/print_receipt_023') }}"+"/"+id+"/"+pick_pack_packing_code_id_fk);
                  $(".myloading").hide();
               }, 500);
               

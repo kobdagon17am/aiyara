@@ -120,14 +120,48 @@
 
         <div class="myBorder" >
 
-             <div class="row" >
+            
+@if(@\Auth::user()->permission==1)
 
+              <div class="row" >
                  <div class="col-md-6 " >
                       <div class="form-group row">
                         <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
                         <div class="col-md-9">
                          <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
                               <option value="">-Business Location-</option>
+                              @if(@$sBusiness_location)
+                                @foreach(@$sBusiness_location AS $r)
+                                  <option value="{{@$r->id}}"  >{{$r->txt_desc}}</option>
+                                @endforeach
+                              @endif
+                            </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 " >
+                      <div class="form-group row">
+                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
+                            <div class="col-md-9">
+
+                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
+                              </select>
+
+                            </div>
+                          </div>
+                    </div>
+               </div>
+@ELSE
+
+
+              <div class="row" >
+                 <div class="col-md-6 " >
+                      <div class="form-group row">
+                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
+                        <div class="col-md-9">
+                         <select  class="form-control select2-templating " disabled="" >
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
                                   <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
@@ -143,28 +177,21 @@
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
 
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
+                                 <select  class="form-control select2-templating " disabled=""  >
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
-                                   @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
-                                    @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
-                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
-                                    @endif
-                                    @endif
                                   @endforeach
-                                @endif
-                              </select>
+                                 @endif
+                                </select>
 
                             </div>
                           </div>
                     </div>
-
                </div>
+
+@ENDIF
+
 
                <div class="row" >
                 <div class="col-md-6 " >
@@ -277,6 +304,7 @@
               <div id="last_form"></div>
 
               </form>
+ 
 
  </div>
 
@@ -291,11 +319,11 @@
                           <div class="col-md-12">
 
 
-              <?php if($can_payproduct=='1'){ ?>
+              <?php //if($can_payproduct=='1'){ ?>
 
                     <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-              <?php }?>
+              <?php //}?>
 
 							<center>
 							<a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_pack") }}">ไปหน้า สร้างใบเบิก ></a>
@@ -304,7 +332,9 @@
                           </div>
                         </div>
                       </div>
-                   
+                        <div>
+                   <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้ 
+                  </div>
                     </div>
 
 
@@ -763,11 +793,12 @@ $(function() {
                   columns: [
                       {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
+                          // if(d){
+                          //   return d.replace(/ *, */g, '<br>');
+                          // }else{
+                          //   return '-';
+                          // }
+                          return d ;
                       }},
                       {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           if(d){
@@ -786,35 +817,34 @@ $(function() {
   	                  		return '-รอเบิกสินค้าจากคลัง-';
   	                  	}
 	                    }},
-                      {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                      {data: 'id', title :'Tools ', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                //   	if (aData['status_delivery'] == "1") {
+                        var sPermission = "<?=\Auth::user()->permission?>";
+                        var sU = sessionStorage.getItem("sU");
+                        var sD = sessionStorage.getItem("sD");
+                        if(sPermission==1){
+                          sU = 1;
+                          sD = 1;
+                        }
+                        var str_U = '';
+                        if(sU=='1'){
+                          str_U = '<a href="{{ route('backend.account_bank.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                        }
+                        var str_D = '';
+                        if(sD=='1'){
+                          str_D = '<button class="btn btn-sm btn-danger" onclick="go_to_rem('+aData['id']+')"><i class="bx bx-trash font-size-16 align-middle"></i></button>';
+                          // str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.account_bank.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                        }
+                        // if(sU!='1' && sD!='1'){
+                        //    $('td:last-child', nRow).html('-');
+                        // }else{
+                        //   $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                        // }
 
-        				    //     $('td', nRow).css('background-color', '#ffd9b3');
-        				    //     $("td:eq(4)", nRow).html('');
-        				    //     $("td:eq(6)", nRow).html('');
-        				    //     var i;
-            				// 		for (i = 0; i < 10 ; i++) {
-            				// 		   $("td:eq("+i+")", nRow).prop('disabled',true); 
-            				// 		} 
-			      	      // }
 
-                    // if(aData['status_pick_pack']=='1'){
-                    //     $('td', nRow).css('background-color', '#ffd9b3');
-                    //     var i;
-                    //     for (i = 0; i < 10 ; i++) {
-                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
-                    //     }
-                    //     $('td:last-child', nRow).html('-');
-                        // $('td:eq(4)', nRow).html(''
-                        //    + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
-                        //  ).addClass('input');
-
-                    // }else{
-
-                        if(sU!=''&&sD!=''){
+                        if(sU!='1' && sD!='1'){
                             $('td:last-child', nRow).html('-');
                         }else{ 
 
@@ -1422,7 +1452,9 @@ $(function() {
 
 
 
-             $('#delivery_province').change(function(){
+               $('#delivery_province').change(function(){
+
+              $(".myloading").show();
 
                 var province_id = this.value;
                 // alert(province_id);
@@ -1447,6 +1479,7 @@ $(function() {
                              $('#delivery_amphur').html(layout);
                              $('#delivery_tambon').html('<option value="" selected >กรุณาเลือกอำเภอก่อน</option>');
                          }
+                         $(".myloading").hide();
                         }
                       })
                  }
@@ -1455,6 +1488,8 @@ $(function() {
 
 
              $('#delivery_amphur').change(function(){
+
+              $(".myloading").show();
 
                 var amphur_id = this.value;
                 // alert(amphur_id);
@@ -1481,6 +1516,7 @@ $(function() {
                              });
                              $('#delivery_tambon').html(layout);
                          }
+                         $(".myloading").hide();
                         }
                       })
                  }
@@ -1489,6 +1525,8 @@ $(function() {
 
 
              $('#delivery_tambon').change(function(){
+
+              $(".myloading").show();
 
                 var tambon_id = this.value;
                 // alert(tambon_id);
@@ -1512,11 +1550,13 @@ $(function() {
                              });
 
                          }
+                         $(".myloading").hide();
                         }
                       })
                  }
 
             });
+
 
 
     </script>

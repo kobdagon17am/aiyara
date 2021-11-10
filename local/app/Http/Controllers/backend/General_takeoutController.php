@@ -80,7 +80,9 @@ class General_takeoutController extends Controller
             products_details
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1");
+
       $sBusiness_location = \App\Models\Backend\Business_location::get();
+      // dd($sBusiness_location);
 
 
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
@@ -144,21 +146,21 @@ class General_takeoutController extends Controller
           $sRow->created_at = date('Y-m-d H:i:s');
 
           // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
-           $fnCheckStock = new  AjaxController();
-           $r_check_stcok = $fnCheckStock->fnCheckStock(
-            request('branch_id_fk'),
-            request('product_id_fk'),
-            request('amt'),
-            request('lot_number'),
-            request('lot_expired_date'),
-            request('warehouse_id_fk'),
-            request('zone_id_fk'),
-            request('shelf_id_fk'),
-            request('shelf_floor'));
-          // return $r_check_stcok;
-          if($r_check_stcok==0){
-            return redirect()->to(url("backend/general_takeout/".$sRow->id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
-          }
+          //  $fnCheckStock = new  AjaxController();
+          //  $r_check_stcok = $fnCheckStock->fnCheckStock(
+          //   request('branch_id_fk'),
+          //   request('product_id_fk'),
+          //   request('amt'),
+          //   request('lot_number'),
+          //   request('lot_expired_date'),
+          //   request('warehouse_id_fk'),
+          //   request('zone_id_fk'),
+          //   request('shelf_id_fk'),
+          //   request('shelf_floor'));
+          // // return $r_check_stcok;
+          // if($r_check_stcok==0){
+          //   return redirect()->to(url("backend/general_takeout/".$sRow->id."/edit"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
+          // }
 
 
           $sRow->save();
@@ -193,7 +195,23 @@ class General_takeoutController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'asc');
+
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'asc');
+
+        }else{
+
+           $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+
+        }
+
+
+      // $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
@@ -217,13 +235,10 @@ class General_takeoutController extends Controller
         $d = \App\Models\Backend\Product_out_cause::find($row->product_out_cause_id_fk);
         return $d->txt_desc;
       })
-      ->addColumn('lot_expired_date', function($row) {
-        $d = strtotime($row->lot_expired_date);
-        return date("d/m/", $d).(date("Y", $d)+543);
-      })
       ->addColumn('pickup_date', function($row) {
-        $d = strtotime($row->pickup_firstdate);
-        return date("d/m/", $d).(date("Y", $d)+543);
+        if(!empty($row->pickup_firstdate)){
+          return $row->pickup_firstdate;
+        }
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

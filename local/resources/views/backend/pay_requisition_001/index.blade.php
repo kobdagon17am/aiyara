@@ -115,7 +115,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> รายการใบเบิก </h4>
+            <h4 class="mb-0 font-size-18 test_clear_data "> รายการใบเบิก </h4>
             <!-- test_clear_data -->
         </div>
     </div>
@@ -466,13 +466,16 @@
                       {data: 'action_user', title :'<center>ผู้สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
                       {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
-                      {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},
+                      {data: 'status_desc', title :'<center>สถานะ</center>', className: 'text-center'},
+                      {data: 'status_amt_remain',   title :'<center>ค้างจ่าย</center>', className: 'text-center ',render: function(d) {
+                          return d;
+                      }},
                     {data: 'id', title :'Tools', className: 'text-center w150'}, 
 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
-                          // console.log(aData['status']);
+                          console.log(aData['status']);
 
                           if(aData['status']==1){
 
@@ -502,7 +505,7 @@
 
                               $('td:last-child', nRow).html(''
 
-                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ดูข้อมูลการจ่ายแต่ละครั้ง" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                              
                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
 
@@ -770,7 +773,10 @@
                       {data: 'action_user', title :'<center>ผู้สร้างใบเบิก </center>', className: 'text-center'},
                       {data: 'approver', title :'<center>ผู้อนุมัติเบิก </center>', className: 'text-center'},
                       {data: 'sender', title :'<center>ผู้จัดส่ง </center>', className: 'text-center'},
-                      {data: 'status_desc', title :'<center>สถานะ </center>', className: 'text-center'},
+                      {data: 'status_desc', title :'<center>สถานะ</center>', className: 'text-center'},
+                      {data: 'status_amt_remain',   title :'<center>ค้างจ่าย</center>', className: 'text-center ',render: function(d) {
+                          return d;
+                      }},
                     {data: 'id', title :'Tools', className: 'text-center w150'}, 
 
                   ],

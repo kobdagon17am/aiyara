@@ -987,25 +987,21 @@ if(@$sRow->check_press_save==2){
                            <br><?=@$address?>
                         </th>
                       </tr>
-
-
+<?php // echo @$shipping_special[0]->status_special ?>
+<?php // echo @$sRow->shipping_special ?>
+<?php // echo @$disChannel3 ?>
+<?php // echo @$pay_type_transfer_aicash ?>
+<?php // echo @$dis_addr ?>
+<!-- if @$sRow->updated_at >= @$shipping_special[0]->updated_at -->
         @IF(@$shipping_special[0]->status_special==1 || @$sRow->shipping_special == 1)
-          @if( @$sRow->updated_at >= @$shipping_special[0]->updated_at  )
-                      <tr>
-                        <th scope="row"  style="">
-                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
-                          <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
-                        </th>
-                      </tr>
-                    @ELSE
+
                   <tr>
                         <th scope="row"  style="">
                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
-                      @ENDIF
-                 @ENDIF
+        @ENDIF
 
                     </tbody>
                   </table>
@@ -1828,8 +1824,6 @@ if(@$sRow->check_press_save==2){
 
 
 
-
-
 <div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true" data-backdrop="static" >
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
@@ -2000,7 +1994,7 @@ if(@$sRow->check_press_save==2){
               <div class="card-body" >
 
 
-            <!--     <iframe id="main" src="http://localhost/aiyara.host/backend/frontstore/2/edit" width=420 height=250 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=1 scrolling="yes"></iframe> -->
+            <!--     <iframe id="main" src="/backend/frontstore/2/edit" width=420 height=250 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=1 scrolling="yes"></iframe> -->
 
 
             <form id="frmFrontstoreAddList" action="{{ url('backend/frontstorelist/plus') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -4905,6 +4899,16 @@ $(document).ready(function() {
                     }
                 });
 
+              $(document).on('change', '#fee', function(event) {
+                    event.preventDefault();
+                    $("#credit_price").attr('disabled', false);
+                    $("#credit_price").val('');
+                    $("#credit_price").focus();
+                    $("#fee_amt").val('');
+                    $("#sum_credit_price").val('');
+                    $("#cash_pay").val('');
+                });
+
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
@@ -5079,7 +5083,7 @@ $(document).ready(function() {
                             if(pay_type_id_fk==7){
                               // เครดิต
                               $(".show_div_credit").show();
-                              $("#credit_price").attr('disabled', false);
+                              // $("#credit_price").attr('disabled', false);
                               $("#credit_price").val('');
                               $(".div_fee").show();
                               $("#fee_amt").val('');
@@ -5088,6 +5092,13 @@ $(document).ready(function() {
                               // เงินสด
                               $(".show_div_cash_pay").show();
                               $("#cash_pay").val('');
+                              var fee = $("#fee").val();
+                              if(fee==''){
+                                $("#fee").select2('open');
+                              }else{
+                                $("#credit_price").attr('disabled', false);
+                                $("#credit_price").focus();
+                              }
 
                             }else
                         // 4  เครดิต + เงินโอน
@@ -5095,7 +5106,7 @@ $(document).ready(function() {
                               // เครดิต
                               $(".show_div_credit").show();
                               $("#credit_price").val('');
-                              $("#credit_price").attr('disabled', false);
+                              // $("#credit_price").attr('disabled', false);
                               $(".div_fee").show();
                               $("#fee_amt").val('');
                               $('#fee').val("").select2();
@@ -5114,6 +5125,14 @@ $(document).ready(function() {
 
                               $(".show_div_cash_pay").hide();
 
+                              var fee = $("#fee").val();
+                              if(fee==''){
+                                $("#fee").select2('open');
+                              }else{
+                                $("#credit_price").attr('disabled', false);
+                                $("#credit_price").focus();
+                              }
+
                             }else
                         // 5  เครดิต + Ai-Cash
                              if(pay_type_id_fk==9){
@@ -5121,7 +5140,7 @@ $(document).ready(function() {
                               $(".show_div_credit").show();
                               $(".div_fee").show();
                               $("#credit_price").val('');
-                              $("#credit_price").attr('disabled', false);
+                              // $("#credit_price").attr('disabled', false);
                               $("#fee_amt").val('');
                               $("#sum_credit_price").val('');
                               $("#cash_pay").val('');
@@ -5144,6 +5163,13 @@ $(document).ready(function() {
                               $("#transfer_price").removeClass('input-aifill').addClass('input-aireadonly');
 
                               $('#member_id_aicash').attr('required', true);
+                              var fee = $("#fee").val();
+                              if(fee==''){
+                                $("#fee").select2('open');
+                              }else{
+                                $("#credit_price").attr('disabled', false);
+                                $("#credit_price").focus();
+                              }
 
                             }else
                               // 6  เงินโอน + เงินสด
