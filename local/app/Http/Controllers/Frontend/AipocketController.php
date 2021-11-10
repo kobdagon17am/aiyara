@@ -126,6 +126,8 @@ class AipocketController extends Controller
                     $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $row->status . '</b></span>';
                 } else {
                     $class_css = 'danger';
+                    $class_css = 'danger';
+                    $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $row->status . '</b></span>';
                 }
 
                 return $banlance;
@@ -160,11 +162,10 @@ class AipocketController extends Controller
             ->leftjoin('users', 'users.id', '=', 'ai_stockist.user_id_fk')
             ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
             ->where('dataset_orders_type.lang_id', '=', '1')
-            ->where('ai_stockist.status', '=', 'panding')
-            ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')->get();
+            ->whereRaw('(ai_stockist.status = "panding" or ai_stockist.status ="fail") and (ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')
+            ->get();
 
         $sQuery = DataTables::of($sTable);
-
         return $sQuery
 
             ->addColumn('created_at', function ($row) {
@@ -240,6 +241,7 @@ class AipocketController extends Controller
                     $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $row->status . '</b></span>';
                 } else {
                     $class_css = 'danger';
+                    $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $row->status . '</b></span>';
                 }
 
                 return $banlance;
