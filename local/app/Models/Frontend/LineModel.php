@@ -510,7 +510,8 @@ public static function check_line_aipocket($username){
 }
 
 
-public static function check_line_backend($username_by,$username_check){
+
+public static function check_line_backend($username_buy,$username_check){
 
 	$data_user =  DB::table('customers')
   ->select('customers.*')
@@ -525,7 +526,7 @@ public static function check_line_backend($username_by,$username_check){
 
 		$username = $data_user->user_name;
 		//$use_username =Auth::guard('c_user')->user()->user_name;
-    $use_username = $username_by;
+    $use_username = $username_buy;
 		if( $username == $use_username){
 
 			$resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];
