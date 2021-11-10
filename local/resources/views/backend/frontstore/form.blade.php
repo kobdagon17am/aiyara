@@ -1824,8 +1824,6 @@ if(@$sRow->check_press_save==2){
 
 
 
-
-
 <div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true" data-backdrop="static" >
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
@@ -1996,7 +1994,7 @@ if(@$sRow->check_press_save==2){
               <div class="card-body" >
 
 
-            <!--     <iframe id="main" src="http://localhost/aiyara.host/backend/frontstore/2/edit" width=420 height=250 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=1 scrolling="yes"></iframe> -->
+            <!--     <iframe id="main" src="/backend/frontstore/2/edit" width=420 height=250 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=1 scrolling="yes"></iframe> -->
 
 
             <form id="frmFrontstoreAddList" action="{{ url('backend/frontstorelist/plus') }}" method="POST" enctype="multipart/form-data" autocomplete="off">

@@ -809,7 +809,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
 
-// http://localhost/aiyara.host/backend/pay_product_receipt
+// /backend/pay_product_receipt
 // http://localhost/aiyara/backend/pick_warehouse
 // %%%%%%%%%%%%%%%%%%%%%%%
    public function Datatable0002FIFO(Request $request){
@@ -1653,7 +1653,7 @@ class Pick_warehouse_fifoController extends Controller
         // $Data = DB::select(" SELECT * FROM $temp_ppp_002; ");
         // return $Data;
 
-        // เอาไปแสดงชั่วคราวไว้ในตารางที่ค้นก่อน หน้า จ่ายสินค้าตามใบเสร็จ http://localhost/aiyara.host/backend/pay_product_receipt
+        // เอาไปแสดงชั่วคราวไว้ในตารางที่ค้นก่อน หน้า จ่ายสินค้าตามใบเสร็จ /backend/pay_product_receipt
         // ตารางส่วนบน
         // ดึงจาก $temp_ppp_001 & $temp_ppp_002 ลง temp ก่อน แค่แสดง แต่หลังจากกดปุ่ม save แล้ว ค่อยเก็บลงตารางจริง
 
@@ -1742,7 +1742,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
 
-// http://localhost/aiyara.host/backend/pick_warehouse/1/edit (กรณีที่ยังไม่มีการยกเลิกการจ่าย status_cancel==0)
+// /backend/pick_warehouse/1/edit (กรณีที่ยังไม่มีการยกเลิกการจ่าย status_cancel==0)
 // %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable0003(Request $req){
      
@@ -2401,7 +2401,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
 
-// http://localhost/aiyara.host/backend/pick_warehouse/1/edit (กรณีที่มีการยกเลิกการจ่าย status_cancel==1 บ้างบางรายการหรือทั้งหมด)
+// /backend/pick_warehouse/1/edit (กรณีที่มีการยกเลิกการจ่าย status_cancel==1 บ้างบางรายการหรือทั้งหมด)
 // %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable0004(Request $req){
      

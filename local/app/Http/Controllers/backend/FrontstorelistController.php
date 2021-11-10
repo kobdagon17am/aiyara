@@ -1170,7 +1170,7 @@ class FrontstorelistController extends Controller
 
     public function DatatablePro(Request $req){
 
-// เอา รหัสคนซื้อ มาตรวจสอบกับเงื่อนไขของ promotions ทุกกรณีที่ระบุไว้ใน  http://localhost/aiyara.host/backend/promotions/1/edit
+// เอา รหัสคนซื้อ มาตรวจสอบกับเงื่อนไขของ promotions ทุกกรณีที่ระบุไว้ใน  /backend/promotions/1/edit
 
        $sTable = DB::select("
           SELECT promotions.*, (SELECT concat(img_url,promotion_img) FROM promotions_images WHERE promotions_images.promotion_id_fk=promotions.id AND image_default=1 limit 1) as p_img ,
