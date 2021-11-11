@@ -15,6 +15,7 @@ use App\Models\Backend\PromotionCode_add;
 use App\Models\Backend\GiftvoucherCode_add;
 use App\Models\Frontend\CourseCheckRegis;
 use App\Models\Frontend\PvPayment;
+use App\Models\Frontend\LineModel;
 
 class AjaxController extends Controller
 {
@@ -1168,6 +1169,17 @@ if($frontstore[0]->check_press_save==2){
         if($pay_type_id_fk==5){
             DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
+
+        
+         // กรณีส่งฟรี
+        $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
+        $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$sFrontstore->business_location_id_fk."' AND shipping_type_id=1 ");
+
+        if($sum_price>=$shipping[0]->purchase_amt){
+            DB::select(" UPDATE db_orders SET  shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
+            $shipping_price = 0 ;
+        }
+
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
@@ -4366,15 +4378,19 @@ if($frontstore[0]->check_press_save==2){
 
      public function fnSearchIntroduceId($user_name) {
 
-            $sql =  DB::select("  SELECT * FROM customers where user_name ='$user_name' ");
+            $sql =  DB::select("  
+                SELECT * FROM customers where user_name ='$user_name' UNION 
+                SELECT * FROM customers where upline_id ='$user_name'
+             ");
             $arr = [];
             foreach ($sql as $key => $row) {
-                // if ($row->line_type=="AA" || !$row) break;
-                if (!$row) break;
+                if ($row->line_type=="AA" || !$row) break;
+                // if (!$row) break;
                  DB::select("  INSERT IGNORE INTO `temp_cus_ai_cash`
-                    (`admin_id_login`, `user_name`, `introduce_id`, `line_type`, `ai_cash`, `cus_id_fk`, `prefix_name`, `first_name`, `last_name`) VALUES
-                    ('".\Auth::user()->id."', '".$row->user_name."', '".$row->introduce_id."', '".$row->line_type."', '".$row->ai_cash."', '".$row->id."', '".$row->prefix_name."', '".$row->first_name."', '".$row->last_name."') ");
-                 $this->fnSearchIntroduceId($row->introduce_id);
+                    (`admin_id_login`, `user_name`, `introduce_id`, `line_type`, `ai_cash`, `cus_id_fk`, `prefix_name`, `first_name`, `last_name`, `upline_id`) VALUES
+                    ('".\Auth::user()->id."', '".$row->user_name."', '".$row->introduce_id."', '".$row->line_type."', '".$row->ai_cash."', '".$row->id."', '".$row->prefix_name."', '".$row->first_name."', '".$row->last_name."', '".$row->upline_id."') ");
+                 // $this->fnSearchIntroduceId($row->introduce_id);
+                 $this->fnSearchIntroduceId($row->upline_id);
             }
 
     }
@@ -4413,6 +4429,39 @@ if($frontstore[0]->check_press_save==2){
         DB::select(" UPDATE db_orders set member_id_aicash=".$request->customer_id." where id=".$request->frontstore_id_fk." ");
         $rs =  DB::select(" select ai_cash,user_name,prefix_name,first_name,last_name from customers where id=".$request->customer_id." ");
         return response()->json($rs);
+    }
+
+
+
+   public function ajaxSearchMemberAicash(Request $request)
+    {
+
+       // $resule = LineModel::check_line_backend($request->username_buy,$request->username_check);
+       // $resule = LineModel::check_line_backend('A567838','A10263');
+       $resule = LineModel::check_line_backend('A567838','A10263');
+       // return($resule);
+       if (@$resule['status'] == 'success') {
+            
+            if (@$resule['data']) {
+               return $resule['data']->id;
+            // }
+
+                 // $customers = DB::table('customers')
+                 //        ->where('id', $resule['data']->id)
+                 //        ->get();
+                 //        $json_result = [];
+                 //        foreach($customers as $k => $v){
+                            // $json_result[] = [
+                            //     'id'    => $resule['data']->id,
+                            //     'text'  => $resule['data']->user_name.':'.$resule['data']->first_name.' '.$resule['data']->last_name.' ('.$resule['data']->ai_cash.')',
+                            // ];
+                        // }
+                        // return json_encode($json_result);
+
+             }
+
+       }
+       
     }
 
 
@@ -5008,10 +5057,7 @@ if($frontstore[0]->check_press_save==2){
 
           $Data = DB::select("
                 SELECT * FROM db_stock_movement where 1
-                $w01
-                $w02
                 $w03
-                $w05
                 GROUP BY product_id_fk,doc_no,in_out
           ");
 

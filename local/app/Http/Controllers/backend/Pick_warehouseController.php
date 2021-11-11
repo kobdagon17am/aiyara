@@ -1036,6 +1036,8 @@ GROUP BY db_order_products_list.product_id_fk
             
               foreach ($Products as $key => $value) {
 
+                if(!empty($value->product_id_fk)){
+
                 // หา max time_pay ก่อน 
                  $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
               // Check ว่ามี status=2 ? (ค้างจ่าย)
@@ -1104,6 +1106,7 @@ GROUP BY db_order_products_list.product_id_fk
 
           $pn .= '</div>';  
           return $pn;
+        }
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {

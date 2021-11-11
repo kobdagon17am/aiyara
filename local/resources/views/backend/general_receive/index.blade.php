@@ -16,32 +16,7 @@
         </div>
     </div>
 </div>
-<!-- end page title -->
-    <?php
 
-    // echo Session::get('session_menu_id');
-
-      $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-        $role_group_id = '%';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        // echo $role_group_id;
-        // echo $menu_id;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;
-   ?>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -52,8 +27,8 @@
                     <!-- <input type="text" class="form-control float-left text-center w125 myLike" placeholder="ชื่อ Supplier" name="supplier_name" style="margin-left: 1%;"> -->
                   </div>
 
-                  <div class="col-4 text-right" style="{{ @$sC }}">
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_receive.create') }}?role_group_id={{$role_group_id}}&menu_id={{$menu_id}}">
+                  <div class="col-4 text-right sC " >
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_receive.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
                     </a>
                   </div>
@@ -73,10 +48,6 @@
 @section('script')
 
 <script>
-var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
-var sU = "{{@$sU}}"; //alert(sU);
-var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -116,7 +87,7 @@ $(function() {
         },
 
         columns: [
-            // {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'ref_code', title :'Ref. Code', className: 'text-center w50'},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
             {data: 'product_in_cause', title :'<center>สาเหตุที่รับเข้า </center>', className: 'text-left'},
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
@@ -135,16 +106,16 @@ $(function() {
             {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
-          if(sU!=''&&sD!=''){
-              $('td:last-child', nRow).html('-');
-          }else{
+          // if(sU!=''&&sD!=''){
+          //     $('td:last-child', nRow).html('-');
+          // }else{
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.general_receive.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="{{ route('backend.general_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                 // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_receive.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
 
-          }
+          // }
         }
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){

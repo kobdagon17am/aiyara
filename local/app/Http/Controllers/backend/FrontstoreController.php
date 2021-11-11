@@ -16,6 +16,7 @@ use App\Models\Frontend\PvPayment;
 use App\Models\Frontend\CourseCheckRegis;
 use App\Http\Controllers\Frontend\Fc\CancelOrderController;
 use App\Models\DbOrderProductsList;
+use App\Models\Frontend\LineModel;
 
 class FrontstoreController extends Controller
 {
@@ -349,6 +350,8 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
+
+
 // $data =  CancelOrderController::cancel_order('204',\Auth::user()->id,'1','admin');
 // dd($data);
 
@@ -388,6 +391,20 @@ class FrontstoreController extends Controller
       $sRow = \App\Models\Backend\Frontstore::find($id);
       // dd($sRow);
       // dd($sRow->business_location_id_fk);
+
+       // $resule = LineModel::check_line_backend('A0000008','A0000008');
+       // dd($resule['status']);
+       // dd($resule['message']);
+       // dd($resule['data']);
+       // dd($resule['data']->id);
+       // dd($resule['data']->user_name);
+       // if (@$resule['data']) {
+       //      foreach ($resule['data'] as $key  ) {
+       //          // return (@$v['user_name']);
+       //        return @$key;
+       //      }
+       // }
+       // dd();
 
       // dd($sRow->customers_id_fk);
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
@@ -1176,15 +1193,15 @@ class FrontstoreController extends Controller
 
               $db_orders = DB::select(" select code_order from db_orders where id=".$sRow->id." ");
 
-             if(@$request->delivery_location  == 0 || @$request->delivery_location  == 4 ){
-                   $sentto_branch_id = request('sentto_branch_id')?request('sentto_branch_id'):0;
+             // if(@$request->delivery_location  == 0 || @$request->delivery_location  == 4 ){
+                   // $sentto_branch_id = request('sentto_branch_id')?request('sentto_branch_id'):0;
               // dd($sentto_branch_id);
               // dd(request('sentto_branch_id'));
               // dd($request->frontstore_id);
                    
                    $sRow->sentto_branch_id    = request('sentto_branch_id');
-                   DB::select("UPDATE db_orders SET sentto_branch_id=".$sentto_branch_id.", address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
-              }
+                   // DB::select("UPDATE db_orders SET sentto_branch_id=".$sentto_branch_id.", address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
+              // }
 
              if(@$request->delivery_location==1){
 

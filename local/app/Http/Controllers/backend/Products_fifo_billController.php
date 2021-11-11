@@ -1119,11 +1119,11 @@ group by promotions_products.product_id_fk
 
            // สินค้าปกติ + สินค้าโปรโมชั่น
             $product = DB::select(" 
-                select product_id_fk from temp_ppr_0021 where temp_ppr_0021.type_product='product'
+                select product_id_fk from $temp_ppr_002 where $temp_ppr_002.type_product='product'
                 UNION 
                 SELECT product_id_fk FROM `promotions_products` where promotion_id_fk in (
-                SELECT temp_ppr_0021.promotion_id_fk from temp_ppr_0021 
-                where temp_ppr_0021.type_product='promotion' )
+                SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002
+                where $temp_ppr_002.type_product='promotion' )
              ");
             // return $product;
 

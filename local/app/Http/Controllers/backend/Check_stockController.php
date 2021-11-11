@@ -350,9 +350,9 @@ class Check_stockController extends Controller
             foreach ($d as $key => $v) {
                     
                     $sBranchs = DB::select(" select * from branchs where id=".$v->branch_id_fk." ");
-                    $warehouse = DB::select(" select * from warehouse where id=".($v->warehouse_id_fk?$v->warehouse_id_fk:1)." ");
-                    $zone = DB::select(" select * from zone where id=".($v->zone_id_fk?$v->zone_id_fk:1)." ");
-                    $shelf = DB::select(" select * from shelf where id=".($v->shelf_id_fk?$v->shelf_id_fk:1)." ");
+                    $warehouse = DB::select(" select * from warehouse where id=".($v->warehouse_id_fk?$v->warehouse_id_fk:0)." ");
+                    $zone = DB::select(" select * from zone where id=".($v->zone_id_fk?$v->zone_id_fk:0)." ");
+                    $shelf = DB::select(" select * from shelf where id=".($v->shelf_id_fk?$v->shelf_id_fk:0)." ");
                     $t = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v->shelf_floor;
 
                array_push($f,$t);
@@ -415,9 +415,9 @@ class Check_stockController extends Controller
               })
               ->addColumn('warehouses', function($row) {
                 $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-                $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
-                $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
-                $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
+                $warehouse = DB::select(" select * from warehouse where id=".($row->warehouse_id_fk?$row->warehouse_id_fk:0)." ");
+                $zone = DB::select(" select * from zone where id=".($row->zone_id_fk?$row->zone_id_fk:0)." ");
+                $shelf = DB::select(" select * from shelf where id=".($row->shelf_id_fk?$row->shelf_id_fk:0)." ");
                 return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
               })      
               ->addColumn('stock_card', function($row) {
@@ -453,9 +453,9 @@ class Check_stockController extends Controller
               })
               ->addColumn('warehouses', function($row) {
                 $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-                $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
-                $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
-                $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
+                $warehouse = DB::select(" select * from warehouse where id=".($row->warehouse_id_fk?$row->warehouse_id_fk:0)." ");
+                $zone = DB::select(" select * from zone where id=".($row->zone_id_fk?$row->zone_id_fk:0)." ");
+                $shelf = DB::select(" select * from shelf where id=".($row->shelf_id_fk?$row->shelf_id_fk:0)." ");
                 return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
               })      
               ->addColumn('stock_card', function($row) {

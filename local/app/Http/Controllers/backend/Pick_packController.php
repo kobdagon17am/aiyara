@@ -293,7 +293,7 @@ class Pick_packController extends Controller
             if(!empty( $req->branch_id_fk) ){
                 $branch_id_fk = " and db_delivery.branch_id_fk = ".$req->branch_id_fk." " ;
             }else{
-                $branch_id_fk = "";
+                $branch_id_fk = " ";
             }
 
             $billing_employee = '';
@@ -302,6 +302,7 @@ class Pick_packController extends Controller
 
             $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
             $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+            // $branch_id_fk = " and db_delivery.branch_id_fk in (1,6) ";
             $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
 
         }
@@ -310,7 +311,7 @@ class Pick_packController extends Controller
       $sTable = DB::select(" 
         select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk
         UNION
-        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0  AND orders_id_fk is not NULL $branch_id_fk GROUP BY packing_code
+        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk GROUP BY packing_code
         ORDER BY updated_at DESC
      ");
       $sQuery = \DataTables::of($sTable);

@@ -332,16 +332,16 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link tab_b  " data-toggle="tab" href="#profile" role="tab">
+           <!--      <a class="nav-link tab_b  " data-toggle="tab" href="#profile" role="tab">
                   <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
                   <span class="d-none d-sm-block">สินค้า</span>
-                </a>
+                </a> -->
               </li>
               <li class="nav-item">
-                <a class="nav-link tab_c  " data-toggle="tab" href="#inv" role="tab">
+           <!--      <a class="nav-link tab_c  " data-toggle="tab" href="#inv" role="tab">
                   <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
                   <span class="d-none d-sm-block">INVOICE DETAILS</span>
-                </a>
+                </a> -->
               </li>
             </ul>
             <!-- Tab panes -->

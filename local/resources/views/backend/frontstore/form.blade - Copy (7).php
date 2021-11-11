@@ -1381,6 +1381,10 @@ if(@$sRow->check_press_save==2){
                           <select id="aicash_choose" class="form-control "  >
                             <option value=""  >-Select-</option>
                           </select>
+
+                          <select id="search_member_aicash" class="form-control select2-templating "  >
+                         <!--  <input type="text" class="form-control" name="search_member_aicash" id="search_member_aicash" placeholder="กรอกรหัสสมาชิกที่จะชำระด้วย AiCash "> -->
+
                         @endif
 
                          <select  id="member_id_aicash_select" name="member_id_aicash_select" class="form-control"  ></select>
@@ -5042,7 +5046,7 @@ $(document).ready(function() {
                          url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ",
                          data: $("#frm-main").serialize(),
                           success:function(data){
-                                console.log(data);
+                                // / // console.log(data);
                                 // return false;
                                 $.each(data,function(key,value){
                                   $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
@@ -5463,6 +5467,62 @@ $(document).ready(function() {
               });
 
 
+               $(document).on('change', '#search_member_aicash', function(event) {
+                      $('.myloading').show();
+                      // $username_buy,$username_check
+                      var username_check = $(this).val();
+                      var username_buy = '{{@$user_name}}' ;
+                      // alert(username_check+":"+username_buy);
+
+                      if(username_check==''){
+                          alert('! กรุณา ระบุสมาชิกเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
+                          $('.myloading').hide();
+                          return false;
+                      }
+
+                     $.ajax({
+                       type:'POST',
+                       dataType:'JSON',
+                       url: " {{ url('backend/ajaxSearchMemberAicash') }} ",
+                       data: { _token: '{{csrf_token()}}',username_check:username_check,username_buy:username_buy},
+                        success:function(data){
+                               
+                               console.log(data);
+                               // return false;
+                               // $.each(data,function(key,value){
+                               //    // $("#aicash_remain").val(value.ai_cash);
+                               //    if(value.ai_cash==0 || value.ai_cash=="0.00" ){
+                               //        // alert('! กรุณา ทำการเติม Ai-Cash สำหรับสมาชิกที่ระบุเพื่อชำระด้วย Ai-Cash ก่อนค่ะ ขอบคุณค่ะ');
+                               //        $('.myloading').hide();
+                               //        $(".btnCalAddAicash").hide();
+                               //        $(".btnSave").attr("disabled", true);
+                               //        $("#aicash_price").attr("disabled", true);
+                               //    }else{
+                               //       $(".btnCalAddAicash").show();
+                               //       $(".btnCalAddAicash").attr("disabled", false);
+                               //       $(".btnSave").attr("disabled", false);
+                               //       $("#aicash_price").attr("disabled", false);
+                               //    }
+
+                                   // $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
+                                   //   var Customer_name_Aicash = value.user_name+" : "+value.prefix_name+''+value.first_name+" "+value.last_name;
+
+                                   // $('#member_name_aicash').val(Customer_name_Aicash);
+
+                                // });
+
+                              $('.myloading').hide();
+                          },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            $('.myloading').hide();
+                        }
+                    });
+
+
+
+                });     
+
+// ไม่ได้ใช้แล้ว
               $(document).on('change', '#member_id_aicash_select', function(event) {
 
                   $('.myloading').show();

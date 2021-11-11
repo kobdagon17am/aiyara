@@ -5042,7 +5042,7 @@ $(document).ready(function() {
                          url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ",
                          data: $("#frm-main").serialize(),
                           success:function(data){
-                                console.log(data);
+                                // / // console.log(data);
                                 // return false;
                                 $.each(data,function(key,value){
                                   $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));

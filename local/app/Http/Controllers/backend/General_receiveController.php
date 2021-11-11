@@ -82,6 +82,7 @@ class General_receiveController extends Controller
     {
        $sRow = \App\Models\Backend\General_receive::find($id);
        // $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
+       $ref_code = "CODE".$sRow->id;
        // dd($Product_in_cause);
        $Product_in_cause  = DB::select(" SELECT * FROM `dataset_product_in_cause` where id not in(1)  ");
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
@@ -125,6 +126,7 @@ class General_receiveController extends Controller
            'Check_stock'=>$Check_stock,
            'Product_status'=>$Product_status,
            'Approver'=>$Approver,
+           'ref_code'=>$ref_code,
         ) );
     }
 
@@ -359,6 +361,9 @@ class General_receiveController extends Controller
         if(!empty($row->pickup_firstdate)){
           return $row->pickup_firstdate;
         }
+      })
+      ->addColumn('ref_code', function($row) {
+          return 'CODE'.$row->id;
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

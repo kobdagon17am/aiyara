@@ -1650,8 +1650,8 @@ class Pick_warehouse_fifoController extends Controller
         DB::select(" CREATE TABLE $temp_ppp_002 LIKE db_order_products_list ");
         DB::select(" INSERT $temp_ppp_002 
         SELECT db_order_products_list.* FROM db_order_products_list INNER Join $temp_ppp_001 ON db_order_products_list.frontstore_id_fk = $temp_ppp_001.id ");
-        // $Data = DB::select(" SELECT * FROM $temp_ppp_002; ");
-        // return $Data;
+        $Data = DB::select(" SELECT * FROM $temp_ppp_002; ");
+        return $Data;
 
         // เอาไปแสดงชั่วคราวไว้ในตารางที่ค้นก่อน หน้า จ่ายสินค้าตามใบเสร็จ /backend/pay_product_receipt
         // ตารางส่วนบน
@@ -1675,6 +1675,7 @@ class Pick_warehouse_fifoController extends Controller
             $product_id_fk = [];
             foreach ($product as $key => $value) {
                array_push($product_id_fk,$value->product_id_fk);
+               array_push($product_id_fk,0);
             }
             // return $product_id_fk;
             $arr_product_id_fk = array_unique($product_id_fk);
