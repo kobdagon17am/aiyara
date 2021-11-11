@@ -91,6 +91,7 @@ class General_takeoutController extends Controller
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
       $Check_stock = \App\Models\Backend\Check_stock::get();
+      // dd($Check_stock);
       return View('backend.general_takeout.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id,
@@ -129,6 +130,7 @@ class General_takeoutController extends Controller
           $sRow->lot_expired_date    = request('lot_expired_date');
           $sRow->amt    = request('amt');
           $sRow->product_unit_id_fk    = request('product_unit_id_fk');
+          $sRow->stocks_id_fk    = request('stocks_id_fk');
 
           $sRow->branch_id_fk    = request('branch_id_fk');
           $sRow->warehouse_id_fk    = request('warehouse_id_fk');
@@ -166,7 +168,57 @@ class General_takeoutController extends Controller
           $sRow->save();
 
           if(request('approve_status')=='1'){
-              DB::select(" UPDATE db_stocks SET amt = (amt - ".request('amt')." ) WHERE product_id_fk = ".request('product_id_fk')." AND lot_number='".request('lot_number')."' AND lot_expired_date='".request('lot_expired_date')."' ");
+              // DB::select(" UPDATE db_stocks SET amt = (amt - ".request('amt')." ) WHERE product_id_fk = ".request('product_id_fk')." AND lot_number='".request('lot_number')."' AND lot_expired_date='".request('lot_expired_date')."' ");
+              DB::select(" UPDATE db_stocks SET amt = (amt - ".request('amt')." ) WHERE id = ".request('stocks_id_fk')." ");
+
+                 $insertStockMovement = new  AjaxController();
+
+            // ดึงจากตารางนำสินค้าออกทั่วไป > db_general_takeout
+                $Data = DB::select("
+                        SELECT db_general_takeout.business_location_id_fk,CONCAT('CODE',db_general_takeout.id) as doc_no,db_general_takeout.created_at as doc_date,branch_id_fk,
+                        db_general_takeout.product_id_fk, db_general_takeout.lot_number, lot_expired_date, db_general_takeout.amt,2 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
+                        concat('นำสินค้าออกทั่วไป ',dataset_product_out_cause.txt_desc) as note, db_general_takeout.created_at as dd,
+                        db_general_takeout.recipient as action_user,db_general_takeout.approver as approver,db_general_takeout.updated_at as approve_date
+                        FROM
+                        db_general_takeout
+                        left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
+                  ");
+
+                  foreach ($Data as $key => $value) {
+
+                       $insertData = array(
+                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                          "amt" =>  @$value->amt?$value->amt:0,
+                          "in_out" =>  @$value->in_out?$value->in_out:0,
+                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+
+                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+
+                          "status" =>  @$value->status?$value->status:0,
+                          "note" =>  @$value->note?$value->note:NULL,
+
+                          "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                          "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                          "approver" =>  @$value->approver?$value->approver:NULL,
+                          "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                          "created_at" =>@$value->dd?$value->dd:NULL
+                      );
+
+                $insertStockMovement->insertStockMovement($insertData);
+
+            }
+
+              DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
 
               return redirect()->to(url("backend/general_takeout"));
 
@@ -240,9 +292,12 @@ class General_takeoutController extends Controller
           return $row->pickup_firstdate;
         }
       })
-      ->addColumn('updated_at', function($row) {
-        return is_null($row->updated_at) ? '-' : $row->updated_at;
+      ->addColumn('ref_code', function($row) {
+          return 'CODE'.$row->id;
       })
+      // ->addColumn('updated_at', function($row) {
+      //   return is_null($row->updated_at) ? '-' : $row->updated_at;
+      // })
       ->make(true);
     }
 

@@ -17,28 +17,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
-      $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-        $role_group_id = '%';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        // echo $role_group_id;
-        // echo $menu_id;     
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;     
-   ?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -49,7 +28,7 @@
                     <!-- <input type="text" class="form-control float-left text-center w125 myLike" placeholder="ชื่อ Supplier" name="supplier_name" style="margin-left: 1%;"> -->
                   </div>
 
-                  <div class="col-4 text-right" style="{{@$sC}}">
+                  <div class="col-4 text-right sC " >
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_takeout.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
                     </a>
@@ -113,7 +92,7 @@ $(function() {
         },
 
         columns: [
-            // {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'ref_code', title :'Ref. Code', className: 'text-center w50'},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
             {data: 'product_out_cause', title :'<center>สาเหตุที่นำออก </center>', className: 'text-left'},
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},

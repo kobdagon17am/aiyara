@@ -161,6 +161,15 @@
                             </div>
                           </div>
 
+                        @IF(!empty(@$sRow->description))
+                          <div class="form-group row" >
+                            <label for="" class="col-md-3 col-form-label"> </label>
+                            <div class="col-md-8">
+                              <textarea  class='form-control' cols="30" rows="10">{{@$sRow->description}}</textarea>
+                            </div>
+                          </div>
+                        @ENDIF
+
                           <div class="form-group row">
                             <label for="receive_person" class="col-md-3 col-form-label">ผู้รับ (นำออกไปให้ใคร) : *</label>
                             <div class="col-md-8">
@@ -198,13 +207,19 @@
                                   </select>
                                 @else
                                   <select id="lot_number" class="form-control select2-templating " >
-                                      <option {{ (@$Check_stock[0]->lot_number==@$sRow->lot_number)?'selected':'' }} >
-                                        {{@$Check_stock[0]->lot_number}}
+
+                                  @if(@$Check_stock)
+                                    @foreach(@$Check_stock AS $r)
+                                      <option value="{{$r->lot_number}}" {{ (@$r->lot_number==@$sRow->lot_number)?'selected':'' }} >
+                                        {{$r->lot_number}}
                                       </option>
+                                    @endforeach
+                                  @endif
+
                                   </select>
                                 @endif
 
-                              <input type="hidden" id="stocks_id_fk" value="{{@$Check_stock[0]->id}}" >
+                              <input type="hidden" name="stocks_id_fk" id="stocks_id_fk" value="{{@$sRow->stocks_id_fk}}" >
                               <input type="hidden" name="lot_number" id="lot_number_txt" value="{{@$sRow->lot_number}}" >
                               <input type="hidden" name="lot_expired_date" id="lot_expired_date" value="{{@$sRow->lot_expired_date}}" >
 
@@ -216,6 +231,14 @@
                             <label for="" class="col-md-3 col-form-label">Product details : </label>
                             <div class="col-md-8">
                               <div id="div_product_details"></div>
+
+                              <input type="hidden" name="product_unit_id_fk" id="product_unit_id_fk" value="{{@$sRow->product_unit_id_fk}}" >
+                              <input type="hidden" name="warehouse_id_fk" id="warehouse_id_fk" value="{{@$sRow->warehouse_id_fk}}" >
+                              <input type="hidden" name="zone_id_fk" id="zone_id_fk" value="{{@$sRow->zone_id_fk}}" >
+                              <input type="hidden" name="shelf_id_fk" id="shelf_id_fk" value="{{@$sRow->shelf_id_fk}}" >
+                              <input type="hidden" name="shelf_floor" id="shelf_floor" value="{{@$sRow->shelf_floor}}" >
+
+
                             </div>
                           </div>
 
@@ -500,7 +523,7 @@ function g_export(id){
                        var layout = '<option value="" selected>- เลือก Lot number -</option>';
                        $.each(data,function(key,value){
                         layout += '<option value='+value.id+'>'+value.lot_number+' [Expired:'+value.lot_expired_date+']</option>';
-                        $('#lot_number_txt').val(value.lot_number);
+                        // $('#lot_number_txt').val(value.lot_number);
 
                        });
                        $('#lot_number').html(layout);
@@ -526,7 +549,10 @@ function g_export(id){
 
                  var id = this.value;
                  var product_id_fk = $('#product_id_fk').val();
-                 // alert(lot_number+":"+product_id_fk);
+                 // alert(id+":"+product_id_fk);
+
+                 $('#stocks_id_fk').val(id);
+
                  if(id==''){
                    $(".myloading").hide();
                    $('#div_product_details').html('');
@@ -555,15 +581,17 @@ function g_export(id){
                         success:function(data)
                         {
 
-                         // if(data == ''){
-                         //     $('#amt_in_stock').val(0);
-                         // }else{
-                         //     $('#amt_in_stock').val(data);
-                         //     // localStorage.setItem('amt_in_stock', data);
-                         // }
-
                          $.each(data,function(key,value){
+                           $('#lot_number_txt').val(value.lot_number);
                            $('#amt_in_stock').val(value.amt);
+                           if(value.amt==0){
+                              alert("! สินค้าในคลังไม่มี");
+                              $('#amt').val(0);
+                              $('#amt').prop('disabled',true);
+                           }else{
+                              $('#amt').prop('disabled',false);
+                              $('#amt').focus();
+                           }
                            $('#div_product_details').html(
                             "วันล๊อตหมดอายุ : "+value.lot_expired_date+'<br/>'+"หน่วยนับ : "+value.product_unit+
                             '<br/>'+"Business Location : "+value.business_location+
@@ -575,6 +603,12 @@ function g_export(id){
                             );
 
                            $('#lot_expired_date').val(value.lot_expired_date);
+                           $('#product_unit_id_fk').val(value.product_unit_id_fk);
+                           $('#warehouse_id_fk').val(value.warehouse_id_fk);
+                           $('#zone_id_fk').val(value.zone_id_fk);
+                           $('#shelf_id_fk').val(value.shelf_id_fk);
+                           $('#shelf_floor').val(value.shelf_floor);
+
 
                          });
 
