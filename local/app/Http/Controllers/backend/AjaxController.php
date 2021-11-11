@@ -3411,12 +3411,12 @@ if($frontstore[0]->check_press_save==2){
          // $r= DB::select(" SELECT amt FROM db_stocks where product_id_fk = $request->product_id_fk AND id = $request->id ");
          // return @$r[0]->amt;
           $rs = DB::select("
-            SELECT db_stocks.*,dataset_product_unit.product_unit,
+            SELECT db_stocks.*,dataset_product_unit.product_unit,dataset_product_unit.id as product_unit_id_fk,
             dataset_business_location.txt_desc AS business_location,
             branchs.b_name AS branch,
-            warehouse.w_name,
-            zone.z_name,
-            shelf.s_name
+            warehouse.w_name,warehouse.id as warehouse_id_fk,
+            zone.z_name,zone.id as zone_id_fk,
+            shelf.s_name,shelf.id as shelf_id_fk,db_stocks.shelf_floor
              FROM db_stocks
             Left Join dataset_product_unit ON db_stocks.product_unit_id_fk = dataset_product_unit.id
             Left Join dataset_business_location ON db_stocks.business_location_id_fk = dataset_business_location.id
@@ -5384,7 +5384,7 @@ if($frontstore[0]->check_press_save==2){
 
       if($request->ajax()){
 
-        // ดึงจากตารางรับเข้า > db_general_receive
+        // ดึงจากตารางนำสินค้าออกทั่วไป > db_general_takeout
         $Data = DB::select("
                 SELECT db_general_takeout.business_location_id_fk,CONCAT('CODE',db_general_takeout.id) as doc_no,db_general_takeout.created_at as doc_date,branch_id_fk,
                 db_general_takeout.product_id_fk, db_general_takeout.lot_number, lot_expired_date, db_general_takeout.amt,2 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,

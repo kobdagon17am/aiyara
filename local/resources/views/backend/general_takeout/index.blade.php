@@ -92,7 +92,7 @@ $(function() {
         },
 
         columns: [
-            // {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'ref_code', title :'Ref. Code', className: 'text-center w50'},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
             {data: 'product_out_cause', title :'<center>สาเหตุที่นำออก </center>', className: 'text-left'},
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
