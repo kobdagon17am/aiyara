@@ -509,12 +509,10 @@ public static function check_line_aipocket($username){
 	}
 }
 
-
-
 public static function check_line_backend($username_buy,$username_check){
 
 	$data_user =  DB::table('customers')
-  ->select('customers.*')
+	->select('upline_id','user_name')
   // ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
   // ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 	->where('user_name','=',$username_check)
@@ -548,12 +546,12 @@ public static function check_line_backend($username_buy,$username_check){
 
 			if($data){
 
-				if($data->user_name == $use_username || $data->upline_id == $use_username ){
+				if($data->user_name == $use_username || $data->upline_id == $use_username || empty($data)){
 					$resule = ['status'=>'success','message'=>'Under line','data'=>$data_user];
 					$j =0;
 					return $resule;
 
-				}elseif($data->upline_id == 'AA'){
+				}elseif($data->upline_id == 'AA' || empty($data)){
 
 					$resule = ['status'=>'fail','message'=>'No Under line'];
 					$j =0;
@@ -582,30 +580,31 @@ public static function check_line_backend($username_buy,$username_check){
 		if($resule['status'] == 'fail'){
 
 			$data_account = DB::table('customers')
-			->select('*')
+			->select('upline_id','user_name')
 			->where('user_name','=',$use_username)
 			->first();
 
 			$id = $data_account->upline_id;
 			$j = 2;
 			for ($i=1; $i <= $j ; $i++){
-				if($id == 'AA'){
+				if($id == 'AA' || empty($data_account)){
 					$upline_id_arr[] = $data_account->user_name;
 					$j =0;
 				}else{
 					$data_account = DB::table('customers')
-					->select('upline_id','user_name','upline_id')
-					->where('id','=',$id)
+					->select('upline_id','user_name')
+					->where('user_name','=',$id)
 					->first();
 					$upline_id_arr[] = $data_account->user_name;
-					$username = $data_account->upline_id;
+					$id = $data_account->upline_id;
 					$j = $j+1;
 				}
 			}
 
 			//return $resule;
 		}
-		if (in_array($username, $upline_id_arr)) {
+
+		if (in_array($username_check, $upline_id_arr)) {
 			$resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
 		}else{
 			$resule = ['status'=>'fail','message'=>'No Underline and Upline '];
