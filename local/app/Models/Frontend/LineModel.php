@@ -512,7 +512,7 @@ public static function check_line_aipocket($username){
 public static function check_line_backend($username_buy,$username_check){
 
 	$data_user =  DB::table('customers')
-	->select('upline_id','user_name')
+	->select('upline_id','user_name','first_name','last_name','ai_cash')
   // ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
   // ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 	->where('user_name','=',$username_check)
@@ -580,7 +580,7 @@ public static function check_line_backend($username_buy,$username_check){
 		if($resule['status'] == 'fail'){
 
 			$data_account = DB::table('customers')
-			->select('upline_id','user_name')
+			->select('upline_id','user_name','first_name','last_name','ai_cash')
 			->where('user_name','=',$use_username)
 			->first();
 
@@ -592,7 +592,7 @@ public static function check_line_backend($username_buy,$username_check){
 					$j =0;
 				}else{
 					$data_account = DB::table('customers')
-					->select('upline_id','user_name')
+          ->select('upline_id','user_name','first_name','last_name','ai_cash')
 					->where('user_name','=',$id)
 					->first();
 					$upline_id_arr[] = $data_account->user_name;
