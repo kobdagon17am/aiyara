@@ -161,6 +161,15 @@
                             </div>
                           </div>
 
+                        @IF(!empty(@$sRow->description))
+                          <div class="form-group row" >
+                            <label for="" class="col-md-3 col-form-label"> </label>
+                            <div class="col-md-8">
+                              <textarea  class='form-control' cols="30" rows="10">{{@$sRow->description}}</textarea>
+                            </div>
+                          </div>
+                        @ENDIF
+
                           <div class="form-group row">
                             <label for="receive_person" class="col-md-3 col-form-label">ผู้รับ (นำออกไปให้ใคร) : *</label>
                             <div class="col-md-8">
@@ -572,16 +581,17 @@ function g_export(id){
                         success:function(data)
                         {
 
-                         // if(data == ''){
-                         //     $('#amt_in_stock').val(0);
-                         // }else{
-                         //     $('#amt_in_stock').val(data);
-                         //     // localStorage.setItem('amt_in_stock', data);
-                         // }
-
                          $.each(data,function(key,value){
                            $('#lot_number_txt').val(value.lot_number);
                            $('#amt_in_stock').val(value.amt);
+                           if(value.amt==0){
+                              alert("! สินค้าในคลังไม่มี");
+                              $('#amt').val(0);
+                              $('#amt').prop('disabled',true);
+                           }else{
+                              $('#amt').prop('disabled',false);
+                              $('#amt').focus();
+                           }
                            $('#div_product_details').html(
                             "วันล๊อตหมดอายุ : "+value.lot_expired_date+'<br/>'+"หน่วยนับ : "+value.product_unit+
                             '<br/>'+"Business Location : "+value.business_location+
@@ -598,7 +608,7 @@ function g_export(id){
                            $('#zone_id_fk').val(value.zone_id_fk);
                            $('#shelf_id_fk').val(value.shelf_id_fk);
                            $('#shelf_floor').val(value.shelf_floor);
-                           
+
 
                          });
 
