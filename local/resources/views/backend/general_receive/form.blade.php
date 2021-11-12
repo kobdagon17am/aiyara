@@ -76,17 +76,17 @@
               </div>
                @endif
 
+
+@if(@\Auth::user()->permission==1)
+
               <div class="form-group row">
                 <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                 <div class="col-md-8">
-                  <select id="business_location_id_fk" name="business_location_id_fk"
-                    class="form-control select2-templating " required="" @if($sPermission !== 1)  @endif>
+                  <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
                     <option value="">-Business Location-</option>
                     @if(@$sBusiness_location)
                       @foreach(@$sBusiness_location AS $r)
-                          <option value="{{$r->id}}" {{ (@$r->id == @$sRow->business_location_id_fk || $r->id == auth()->user()->business_location_id_fk && auth()->user()->permission !== 1)?'selected':'' }}>
-                            {{$r->txt_desc}}
-                          </option>
+                        <option value="{{@$r->id}}"  >{{$r->txt_desc}}</option>
                       @endforeach
                     @endif
                   </select>
@@ -96,22 +96,44 @@
               <div class="form-group row">
                 <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                 <div class="col-md-8">
-
-                  <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating" >
-                    <option value="">Select</option>
-                    @if(@$sBranchs)
-                    @foreach(@$sBranchs AS $r)
-                    <?php //$branch_id_fk=(@$sRow->branch_id_fk?@$sRow->branch_id_fk : @\Auth::user()->branch_id_fk)?>
-                    <option value="{{$r->id}}" {{ ( @$r->id==@$sRow->branch_id_fk) ? 'selected': ''  }}>
-                      {{$r->b_name}}
-                    </option>
-                    @endforeach
-                    @endif
-                  </select>
-
-
+                    <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
+                       <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
+                    </select>
                 </div>
               </div>
+@ELSE
+
+
+              <div class="form-group row">
+                <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
+                <div class="col-md-8">
+                   <select  class="form-control select2-templating " disabled="" >
+                      @if(@$sBusiness_location)
+                        @foreach(@$sBusiness_location AS $r)
+                          <option value="{{@$r->id}}" {{ (@$r->id==(@\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
+                        @endforeach
+                      @endif
+                    </select>
+                    <input type="hidden" name="business_location_id_fk" value="{{@\Auth::user()->business_location_id_fk}}">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
+                <div class="col-md-8">
+                     <select  class="form-control select2-templating " disabled=""  >
+                     @if(@$sBranchs)
+                      @foreach(@$sBranchs AS $r)
+                        <option value="{{@$r->id}}" {{ (@$r->id==(@\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                      @endforeach
+                     @endif
+                    </select>
+                    <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
+                </div>
+              </div>
+
+@ENDIF
+
 
 
 
@@ -272,14 +294,34 @@
 
               @if( empty(@$sRow) )
 
-              <div class="form-group row">
-                <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
-                <div class="col-md-8">
-                  <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required>
-                    <option disabled selected>กรุณาเลือกสาขาก่อน</option>
-                  </select>
-                </div>
-              </div>
+
+                  @if(@\Auth::user()->permission==1)
+                                <div class="form-group row">
+                                  <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
+                                  <div class="col-md-8">
+                                    <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required>
+                                      <option disabled selected>กรุณาเลือกสาขาก่อน</option>
+                                    </select>
+                                  </div>
+                                </div>
+                  @ELSE
+                                <div class="form-group row">
+                                  <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : * </label>
+                                  <div class="col-md-8">
+                                     <select id="warehouse_id_fk" name="warehouse_id_fk" class="form-control select2-templating " required>
+                                      <option value="">Select</option>
+                                      @if(@$Warehouse)
+                                        @foreach(@$Warehouse AS $r)
+                                          <option value="{{$r->id}}">
+                                            {{$r->w_name}}
+                                          </option>
+                                        @endforeach
+                                      @endif
+                                    </select>
+                                  </div>
+                                </div>
+                  @ENDIF
+
 
               <div class="form-group row">
                 <label for="" class="col-md-3 col-form-label"> Zone : * </label>
@@ -740,6 +782,7 @@
 
 
         $(document).on('change', '#lot_number_auto', function(event) {
+            $('.myloading').show();
             var this_v = $(this).val();
             // alert(this_v);
              var product_id_fk = $('#product_id_fk').val();
@@ -765,6 +808,7 @@
                       $('#lot_expired_date').prop('type','date');
                     }
                  });
+                 $('.myloading').hide();
               }
              });
         });

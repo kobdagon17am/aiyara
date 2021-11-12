@@ -456,7 +456,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="setToWarehouseModalEditTitle"><b><i class="bx bx-play"></i>เลือกคลัง (แก้ไข) </b></h5>
+        <h5 class="modal-title" id="setToWarehouseModalEditTitle"><b><i class="bx bx-play"></i>เลือกคลังปลายทาง</b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -474,42 +474,12 @@
             <div class="card">
               <div class="card-body">
                
-
-
-                <div class="row" >
-          
-                  <div class="col-md-12" >
-                      <div class="form-group row">
-                        <label for="" class="col-md-2 col-form-label">  </label>
-                        <div class="col-md-9">
-                          <span id="from_wh_e" style="text-align: left !important;"><b> <!-- คลังต้นทาง : WAREHOUSE/คลัง 1 > คลังเก็บ/Zone-1/Shelf-1/ชั้น>1 --></span>
-                          <input type="hidden" id="stocks_id_fk_e">
-                        </div>
-                      </div>
-                    </div>
-
-                </div>
-
-                <div class="row" >
-          
-                  <div class="col-md-12 " >
-                      <div class="form-group row">
-                        <label for="" class="col-md-2 col-form-label">  </label>
-                         <div class="col-md-9">
-                          <span style="text-align: left !important;"><b> เลือกคลังปลายทาง :</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                </div>
-
-
                 <div class="row" >
                     <div class="col-md-6 " >
                       <div class="form-group row">
                         <label for="branch_id_fk_c_e" class="col-md-3 col-form-label"> สาขา : </label>
                         <div class="col-md-9">
-                            <select id="branch_id_fk_c_e" name="branch_id_fk_c_e" class="form-control select2-templating check_dub_warehouse_e" >
+                            <select id="branch_id_fk_c_e" name="branch_id_fk_c_e" class="form-control select2-templating " >
                              <option value="">Select</option>
                              @if(@$sBranchs)
                               @foreach(@$sBranchs AS $r)
@@ -526,7 +496,7 @@
                       <div class="form-group row">
                             <label for="warehouse_id_fk_c_e" class="col-md-2 col-form-label"> คลัง : </label>
                             <div class="col-md-10">
-                              <select id="warehouse_id_fk_c_e" name="warehouse_id_fk_c_e" class="form-control select2-templating check_dub_warehouse_e" required >
+                              <select id="warehouse_id_fk_c_e" name="warehouse_id_fk_c_e" class="form-control select2-templating " required >
                                <option value="">Select</option>
                                  @if(@$Warehouse)
                                   @foreach(@$Warehouse AS $r)
@@ -546,7 +516,7 @@
                        <div class="form-group row">
                             <label for="zone_id_fk_c_e" class="col-md-3 col-form-label"> Zone : </label>
                             <div class="col-md-9">
-                              <select id="zone_id_fk_c_e" name="zone_id_fk_c_e" class="form-control select2-templating check_dub_warehouse_e" required >
+                              <select id="zone_id_fk_c_e" name="zone_id_fk_c_e" class="form-control select2-templating " required >
                                 <option value="">เลือก Zone</option>
                                  @if(@$Zone)
                                   @foreach(@$Zone AS $r)
@@ -566,7 +536,7 @@
                         <div class="form-group row">
                             <label for="shelf_id_fk_c_e" class="col-md-2 col-form-label"> Shelf : </label>
                             <div class="col-md-6">
-                              <select id="shelf_id_fk_c_e"  name="shelf_id_fk_c_e" class="form-control select2-templating check_dub_warehouse_e" required >
+                              <select id="shelf_id_fk_c_e"  name="shelf_id_fk_c_e" class="form-control select2-templating " required >
                                  <option value="">เลือก Shelf</option>
                                  @if(@$Shelf)
                                   @foreach(@$Shelf AS $r)
@@ -578,7 +548,7 @@
                               </select>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control NumberOnly check_dub_warehouse_e" id="shelf_floor_c_e" name="shelf_floor_c_e" placeholder="ชั้นของ Shelf"  required >
+                                <input type="text" class="form-control NumberOnly " id="shelf_floor_c_e" name="shelf_floor_c_e" placeholder="ชั้นของ Shelf"  required >
                             </div>
                           </div>
                     </div>
@@ -1128,7 +1098,7 @@ $(document).ready(function() {
 
                       $('td:last-child', nRow).html(''
                         + '<input type="hidden" name="transfer_choose_id[]" value="'+aData['id']+'"> '
-                        + '<a href="#" class="btn btn-sm btn-success btnEditToWarehouse " data-id="'+aData['id']+'" stocks_id_fk="'+aData['stocks_id_fk']+'"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                        + '<a href="#" class="btn btn-sm btn-success btnEditToWarehouse " data-id="'+aData['id']+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                         // + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_transfer_choose" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
@@ -1213,43 +1183,7 @@ $(document).ready(function() {
 
         });
       
-     $('.check_dub_warehouse_e').change(function() {
 
-           $(".myloading").show();
-
-           var stocks_id_fk = $('#stocks_id_fk_e').val();
-           var branch_id_fk_c = $('#branch_id_fk_c_e').val();
-           var warehouse_id_fk_c = $('#warehouse_id_fk_c_e').val();
-           var zone_id_fk_c = $('#zone_id_fk_c_e').val();
-           var shelf_id_fk_c = $('#shelf_id_fk_c_e').val();
-           var shelf_floor_c = $('#shelf_floor_c_e').val();
-
-           $.ajax({
-                     url: " {{ url('backend/ajaxCheckDubWarehouse') }} ", 
-                    method: "post",
-                    data: {
-                      stocks_id_fk:stocks_id_fk,
-                      branch_id_fk_c:branch_id_fk_c,
-                      warehouse_id_fk_c:warehouse_id_fk_c,
-                      zone_id_fk_c:zone_id_fk_c,
-                      shelf_id_fk_c:shelf_id_fk_c,
-                      shelf_floor_c:shelf_floor_c,
-                      "_token": "{{ csrf_token() }}", 
-                    },
-                    success:function(data)
-                    { 
-                      console.log(data);
-                      if(data == '1'){
-                         alert('!!! ข้อมูลไม่ถูกต้อง ต้นทาง กับ ปลายทาง ไม่ควรเป็นค่าเดียวกันทั้งหมด');
-                         $('#shelf_floor_c_e').focus();
-                         $('#shelf_floor_c_e').val('');
-                     }
-                     $(".myloading").hide();
-                    }
-                  })
-
-        });
-      
        $(window).keydown(function(event){
           if(event.keyCode == 13) {
             event.preventDefault();
@@ -1391,10 +1325,6 @@ $(document).ready(function() {
            var id = $(this).data('id');
            // alert(id);
 
-           var stocks_id_fk = $(this).attr('stocks_id_fk');
-           $("#stocks_id_fk_e").val(stocks_id_fk);
-
-
            var branch_id_fk = $("#branch_id_fk").val();
            $('#branch_id_set_to_warehouse_e').val(branch_id_fk);
 
@@ -1402,22 +1332,6 @@ $(document).ready(function() {
            // $('#setToWarehouseModal').modal('show');
 
            if(id != ''){
-
-            // แสดงข้อมูลคลังต้นทาง
-               $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouseFrom') }} ", 
-                    method: "post",
-                    data: {
-                      stocks_id_fk:stocks_id_fk,
-                      "_token": "{{ csrf_token() }}", 
-                    },
-                    success:function(data)
-                    { 
-                      // console.log(data);
-                      $("#from_wh_e").html("<b> คลังต้นทาง : "+data);
-                    }
-                  });
-
 
                  $.ajax({
 

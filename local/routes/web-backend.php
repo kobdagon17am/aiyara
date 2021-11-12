@@ -914,6 +914,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('products_borrow/print_products_borrow/{id}', 'AjaxController@createPDFBorrow');
 
 
+    Route::post('ajaxCheckDubWarehouse', 'AjaxController@ajaxCheckDubWarehouse');
+    Route::post('ajaxGetWarehouseFrom', 'AjaxController@ajaxGetWarehouseFrom');
+    
     Route::post('ajaxSentMoneyDaily', 'AjaxController@ajaxSentMoneyDaily');
     Route::post('ajaxCancelSentMoney', 'AjaxController@ajaxCancelSentMoney');
 

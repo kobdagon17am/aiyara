@@ -77,17 +77,29 @@ class Transfer_chooseController extends Controller
         }
         
       })      
-      ->addColumn('warehouses', function($row) {
-        $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-        $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
-        $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
-        $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
-        if($row->warehouse_id_fk!=""){
-          return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$row->shelf_floor;
+      ->addColumn('warehouses_from', function($row) {
+        $d = DB::select("SELECT * from db_stocks where id=".$row->stocks_id_fk." ");
+        $sBranchs = DB::select(" select * from branchs where id=".(@$d[0]->branch_id_fk?$d[0]->branch_id_fk:0)." ");
+        $warehouse = DB::select(" select * from warehouse where id=".(@$d[0]->warehouse_id_fk?$d[0]->warehouse_id_fk:0)." ");
+        $zone = DB::select(" select * from zone where id=".(@$d[0]->zone_id_fk?$d[0]->zone_id_fk:0)." ");
+        $shelf = DB::select(" select * from shelf where id=".(@$d[0]->shelf_id_fk?$d[0]->shelf_id_fk:0)." ");
+        if(!empty(@$d[0]->warehouse_id_fk)){
+          return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$d[0]->shelf_floor;
         }else{
           return 0;
         }
-      })      
+      }) 
+      ->addColumn('warehouses_to', function($row) {
+        $sBranchs = DB::select(" select * from branchs where id=".(@$row->branch_id_fk?$row->branch_id_fk:0)." ");
+        $warehouse = DB::select(" select * from warehouse where id=".(@$row->warehouse_id_fk?$row->warehouse_id_fk:0)." ");
+        $zone = DB::select(" select * from zone where id=".(@$row->zone_id_fk?$row->zone_id_fk:0)." ");
+        $shelf = DB::select(" select * from shelf where id=".(@$row->shelf_id_fk?$row->shelf_id_fk:0)." ");
+        if(!empty(@$row->warehouse_id_fk)){
+          return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
+        }else{
+          return 0;
+        }
+      })        
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

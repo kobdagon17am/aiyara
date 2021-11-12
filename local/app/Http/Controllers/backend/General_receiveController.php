@@ -37,7 +37,7 @@ class General_receiveController extends Controller
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
+            WHERE lang_id=1 order by products.product_code asc ");
 
       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
           return $query->where('id', auth()->user()->business_location_id_fk);
@@ -45,14 +45,22 @@ class General_receiveController extends Controller
         ->get();
 
       $User_branch_id = \Auth::user()->branch_id_fk;
+      // dd(\Auth::user()->branch_id_fk);
       // $sBranchs = \App\Models\Backend\Branchs::whereIn('business_location_id_fk', $sBusiness_location->pluck('id'))->get();
       $sBranchs = \App\Models\Backend\Branchs::get();
 
       // dd($sBranchs);
 
       // dd($Products);
-      $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
-      $Warehouse = \App\Models\Backend\Warehouse::get();
+      $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->where('status', 1)->get();
+
+      if(@\Auth::user()->permission==1){
+        $Warehouse = \App\Models\Backend\Warehouse::get();
+      }else{
+        $Warehouse = \App\Models\Backend\Warehouse::where('branch_id_fk',\Auth::user()->branch_id_fk)->get();
+        // dd($Warehouse);
+      }
+
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
       $sSupplier = \App\Models\Backend\Supplier::get();
@@ -63,7 +71,10 @@ class General_receiveController extends Controller
         array(
            'Product_in_cause'=>$Product_in_cause,
            'Products'=>$Products,
-           'sProductUnit'=>$sProductUnit,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,
+           'sProductUnit'=>$sProductUnit,
+           'Warehouse'=>$Warehouse,
+           'Zone'=>$Zone,
+           'Shelf'=>$Shelf,
            'sBranchs'=>$sBranchs,
            'User_branch_id'=>$User_branch_id,
            'sSupplier'=>$sSupplier,
@@ -315,11 +326,11 @@ class General_receiveController extends Controller
 
         if(@\Auth::user()->permission==1){
 
-            $sTable = \App\Models\Backend\General_receive::search()->orderBy('id', 'asc');
+            $sTable = \App\Models\Backend\General_receive::search()->orderBy('id', 'desc');
 
         }else{
 
-           $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+           $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->orderBy('id', 'desc');
 
         }
 

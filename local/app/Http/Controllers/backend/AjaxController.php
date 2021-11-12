@@ -469,6 +469,70 @@ class AjaxController extends Controller
         }
     }
 
+
+    public function ajaxCheckDubWarehouse(Request $request)
+    {
+        // return $request;
+
+        if($request->ajax()){
+            $r1 = DB::select(" select * from db_stocks 
+                where id=".(@$request->stocks_id_fk?$request->stocks_id_fk:0)." 
+                and branch_id_fk=".(@$request->branch_id_fk_c?$request->branch_id_fk_c:0)."
+                and warehouse_id_fk=".(@$request->warehouse_id_fk_c?$request->warehouse_id_fk_c:0)."
+                and zone_id_fk=".(@$request->zone_id_fk_c?$request->zone_id_fk_c:0)."
+                and shelf_id_fk=".(@$request->shelf_id_fk_c?$request->shelf_id_fk_c:0)."
+                and shelf_floor=".(@$request->shelf_floor_c?$request->shelf_floor_c:0)."
+                ");
+            if(!empty($r1)){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
+
+    public function ajaxGetWarehouseFrom(Request $request)
+    {
+        // return $request;
+        
+        if($request->ajax()){
+            $r1 = DB::select(" 
+                SELECT
+                    db_stocks.id,
+                    db_stocks.business_location_id_fk,
+                    db_stocks.branch_id_fk,
+                    db_stocks.product_id_fk,
+                    db_stocks.lot_number,
+                    db_stocks.lot_expired_date,
+                    db_stocks.amt,
+                    db_stocks.product_unit_id_fk,
+                    db_stocks.date_in_stock,
+                    db_stocks.warehouse_id_fk,
+                    db_stocks.zone_id_fk,
+                    db_stocks.shelf_id_fk,
+                    db_stocks.shelf_floor,
+                    branchs.b_name,
+                    warehouse.w_name,
+                    zone.z_name,
+                    shelf.s_name
+                    FROM
+                    db_stocks
+                    Inner Join branchs ON db_stocks.branch_id_fk = branchs.id
+                    Inner Join warehouse ON db_stocks.warehouse_id_fk = warehouse.id
+                    Inner Join zone ON db_stocks.zone_id_fk = zone.id
+                    Inner Join shelf ON db_stocks.shelf_id_fk = shelf.id
+                    WHERE db_stocks.id=
+                     ".(@$request->stocks_id_fk?$request->stocks_id_fk:0)." 
+                    ");
+            if(!empty($r1)){
+                return @$r1[0]->b_name.' > '.@$r1[0]->w_name.' > '.@$r1[0]->s_name.' > ชั้น '.@$r1[0]->shelf_floor;
+            }else{
+                return 'No data';
+            }
+        }
+    }
+
+
     public function ajaxGetWarehouse(Request $request)
     {
         if($request->ajax()){
