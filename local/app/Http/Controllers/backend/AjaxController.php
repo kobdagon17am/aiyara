@@ -5118,9 +5118,9 @@ if($frontstore[0]->check_press_save==2){
         // return "to here" ;
         // dd();
 
-
+// กรณีโอนย้ายภายในสาขา ไม่ต้องดึงมาแสดง เพราะยอดเท่าเดิม
           $Data = DB::select("
-                SELECT * FROM db_stock_movement where 1
+                SELECT * FROM db_stock_movement where SUBSTRING(doc_no, 1, 2)<>'TR'
                 $w03
                 GROUP BY product_id_fk,doc_no,in_out
           ");
@@ -5431,23 +5431,14 @@ if($frontstore[0]->check_press_save==2){
                 ,db_general_receive.created_at as doc_date,branch_id_fk,
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
                 concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd,
-                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date
+                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date,db_general_receive.description
                 FROM
                 db_general_receive
                 left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
           ");
 
           foreach ($Data as $key => $value) {
-/*
-  `action_user` int(11) DEFAULT '0' COMMENT 'ผู้ดำเนินการ',
-  `action_date` datetime DEFAULT NULL COMMENT 'วันทำการ',
-  `approver` int(11) DEFAULT '0' COMMENT 'ผู้อนุมัติ',
-  `approve_date` datetime DEFAULT NULL COMMENT 'วันเวลาอนุมัติ',
-  `sender` int(11) DEFAULT '0' COMMENT 'ผู้จัดส่ง Ref>ck_users_admin>id',
-  `sent_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการจัดส่ง',
-  `who_cancel` int(11) DEFAULT '0' COMMENT 'ผู้ยกเลิกการเบิกครั้งนี้ Ref>ck_users_admin>id',
-  `cancel_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการยกเลิก',
-*/
+
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
@@ -5467,6 +5458,7 @@ if($frontstore[0]->check_press_save==2){
 
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+                  "note2" =>  @$value->description?$value->description:NULL,
 
                   "action_user" =>  @$value->action_user?$value->action_user:NULL,
                   "action_date" =>  @$value->action_date?$value->action_date:NULL,

@@ -573,10 +573,10 @@ CREATE TABLE `db_transfer_branch_get` (
       ->addColumn('warehouses', function($row) {
         $Check_stock = \App\Models\Backend\Check_stock::where('product_id_fk',$row->product_id_fk)->where('lot_number',$row->lot_number)->first();
         // return $Check_stock->branch_id_fk;
-        $sBranchs = DB::select(" select * from branchs where id=".$Check_stock->branch_id_fk." ");
-        $warehouse = DB::select(" select * from warehouse where id=".$Check_stock->warehouse_id_fk." ");
-        $zone = DB::select(" select * from zone where id=".$Check_stock->zone_id_fk." ");
-        $shelf = DB::select(" select * from shelf where id=".$Check_stock->shelf_id_fk." ");
+        $sBranchs = DB::select(" select * from branchs where id=".(@$Check_stock->branch_id_fk?$Check_stock->branch_id_fk:0)." ");
+        $warehouse = DB::select(" select * from warehouse where id=".(@$Check_stock->warehouse_id_fk?$Check_stock->warehouse_id_fk:0)." ");
+        $zone = DB::select(" select * from zone where id=".(@$Check_stock->zone_id_fk?$Check_stock->zone_id_fk:0)." ");
+        $shelf = DB::select(" select * from shelf where id=".(@$Check_stock->shelf_id_fk?$Check_stock->shelf_id_fk:0)." ");
         return str_replace(">","/",@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น '.@$Check_stock->shelf_floor);
       })
       ->escapeColumns('warehouses')

@@ -972,7 +972,7 @@ $(document).ready(function() {
                         },
                         
   					        columns: [
-  					            {data: 'id', title :'ID', className: 'text-center w50'},
+  					            {data: 'id', title :'No.', className: 'text-center w50'},
   					            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
   					            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
   					            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -985,6 +985,14 @@ $(document).ready(function() {
   					            }},
 
   					        ],
+
+                    rowCallback: function(nRow, aData, dataIndex){
+                                                
+                      var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                    }
+
 
   					    });
 
@@ -1044,7 +1052,7 @@ $(document).ready(function() {
             },
 
            columns: [
-                  {data: 'id', title :'ID', className: 'text-center w50'},
+                  {data: 'id', title :'No.', className: 'text-center w50'},
                   {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
                   {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
                   {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
@@ -1054,6 +1062,10 @@ $(document).ready(function() {
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
+                          
+                      var info = $(this).DataTable().page.info();
+                      $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                      
                       $('td:last-child', nRow).html(''
                         + '<input type="hidden" name="business_location_id_fk[]" value="'+aData['business_location_id_fk']+'"> '
                         + '<input type="hidden" name="products_borrow_choose_id[]" value="'+aData['id']+'"> '

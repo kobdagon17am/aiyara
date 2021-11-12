@@ -105,22 +105,22 @@ $(function() {
               if(d==1){
                 return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
               }else{
-                  return '* รออนุมัติ';
+                  return '<span class="badge badge-pill badge-soft-warning font-size-16" style="color:black">รออนุมัติ</span> ';
               }
             }},
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
-          if(sU!=''&&sD!=''){
-              $('td:last-child', nRow).html('-');
-          }else{ 
+          // if(sU!=''&&sD!=''){
+          //     $('td:last-child', nRow).html('-');
+          // }else{ 
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
 
-          }
+          // }
         }
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){

@@ -462,6 +462,22 @@ class Check_stockController extends Controller
                 // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
               })
               ->escapeColumns('stock_card')
+              ->addColumn('amt_now', function($row) {
+                    $d1 = DB::select("
+
+                        SELECT
+sum(amt) AS amt
+FROM
+db_transfer_warehouses_details
+Inner Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
+                        where db_transfer_warehouses_details.stocks_id_fk=".$row->id." and db_transfer_warehouses_details.remark=1 and db_transfer_warehouses_details.approve_status=0
+                        and db_transfer_warehouses_code.approve_status=0 ");
+                    $d2 = DB::select("SELECT sum(amt) as amt FROM `db_transfer_choose` where stocks_id_fk=".$row->id." ");
+                    $amt1 = @$d1[0]->amt?$d1[0]->amt:0;
+                    $amt2 = @$d2[0]->amt?$d2[0]->amt:0;
+                    $r = @$row->amt - $amt1 - $amt2 ;
+                    return $r>0?$r:0;
+              })
               ->make(true);
             }
 

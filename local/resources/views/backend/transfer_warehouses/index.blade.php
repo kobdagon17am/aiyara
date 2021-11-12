@@ -269,7 +269,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>รายการสินค้า</b></h5>
+        <h5 class="modal-title" id="exampleModalCenterTitle"><b><i class="bx bx-play"></i>รายการสินค้า </b></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -285,8 +285,7 @@
 					<div class="col-12">
 						<div class="card">
 							<div class="card-body">
-								<table id="data-table-choose" class="table table-bordered dt-responsive" style="width: 100%;">
-                 				 </table>
+								<table id="data-table-choose" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 							</div>
 						</div>
 					</div>
@@ -299,9 +298,11 @@
                     </div>
                   </div>
 			</div>
-            <div class="modal-footer">
+            <div style="margin-bottom: 1%;">
+              <!-- modal-footer -->
               <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
               <!-- <button type="submit" class="btn btn-primary">Save</button> -->
+           <span style="text-align: left !important;padding: 2%;"> หมายเหตุ จำนวนที่มีในคลัง คือ จำนวนในคลัง ลบด้วย จำนวนรายการในใบโอนที่กำลังรอโอน (ถ้ามี) เพื่อป้องกันการกรอกเกินจำนวนที่มีในคลัง </span><br>
             </div>
 
       </form>
@@ -1023,7 +1024,7 @@ $(document).ready(function() {
   					            {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
   					            {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
   					            {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
-                        {data: 'amt',   title :'<center>จำนวนที่มีในคลัง</center>', className: 'text-center',render: function(d) {
+                        {data: 'amt_now',   title :'<center>จำนวนที่มีในคลัง</center>', className: 'text-center',render: function(d) {
                            return '<center>'+(d)+'<input type="hidden" class="amt_in_warehouse" value="'+(d)+'" > ' ;
                         }},
   					            {data: 'id',   title :'<center>จำนวนโอน</center>', className: 'text-center',render: function(d) {

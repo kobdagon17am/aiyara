@@ -71,6 +71,7 @@ class General_takeoutController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\General_takeout::find($id);
+       $ref_code = "CODE".$sRow->id;
        $Product_out_cause = \App\Models\Backend\Product_out_cause::get();
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
        $Products = DB::select("SELECT products.id as product_id,
@@ -102,6 +103,7 @@ class General_takeoutController extends Controller
            'Check_stock'=>$Check_stock,
            'sBusiness_location'=>$sBusiness_location,
            'sBranchs'=>$sBranchs,
+           'ref_code'=>$ref_code,
 
         ) );
     }
@@ -254,11 +256,11 @@ class General_takeoutController extends Controller
 
         if(@\Auth::user()->permission==1){
 
-            $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'asc');
+            $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'desc');
 
         }else{
 
-           $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+           $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->orderBy('id', 'desc');
 
         }
 

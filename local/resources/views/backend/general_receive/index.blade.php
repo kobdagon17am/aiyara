@@ -106,6 +106,7 @@ $(function() {
             {data: 'id', title :'Tools', className: 'text-center w80'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
+
           // if(sU!=''&&sD!=''){
           //     $('td:last-child', nRow).html('-');
           // }else{

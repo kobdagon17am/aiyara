@@ -55,11 +55,22 @@
 
                       <div class="myBorder">
 
+
+                            @if( !empty(@$sRow) )
+                            <div class="form-group row">
+                              <label for="" class="col-md-3 col-form-label"> Ref. code : * </label>
+                              <div class="col-md-8">
+                                  <input class="form-control" type="text" value="{{ @$ref_code }}"  readonly="">
+                              </div>
+                            </div>
+                             @endif
+
+
                           <div class="form-group row">
                             <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                             <div class="col-md-8">
 
-                            @if($sPermission==1)
+                            @if(@$sPermission==1)
 
                                      <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
 
