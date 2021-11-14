@@ -22,20 +22,33 @@ class General_takeoutController extends Controller
     {
       $Product_out_cause = \App\Models\Backend\Product_out_cause::get();
 
-      $Products = DB::select("
 
-        SELECT products.id as product_id,
-        products.product_code,
-        (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
-        FROM
-        products_details
-        Left Join products ON products_details.product_id_fk = products.id
-        WHERE
-        products.id in (SELECT product_id_fk FROM db_stocks WHERE business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk.")
-        AND
-        lang_id=1
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
 
-            ");
+        if(@\Auth::user()->permission==1){
+
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE lang_id=1 ");
+
+        }else{
+
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+            ORDER BY products.product_code");
+
+        }
+
 
       // dd($Products);
 
@@ -74,13 +87,32 @@ class General_takeoutController extends Controller
        $ref_code = "CODE".$sRow->id;
        $Product_out_cause = \App\Models\Backend\Product_out_cause::get();
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
-       $Products = DB::select("SELECT products.id as product_id,
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
+            WHERE lang_id=1 ");
+
+        }else{
+
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+            ORDER BY products.product_code");
+
+        }
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       // dd($sBusiness_location);

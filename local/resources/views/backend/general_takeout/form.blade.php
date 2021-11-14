@@ -263,7 +263,7 @@
                           <div class="form-group row">
                             <label for="amt" class="col-md-3 col-form-label">จำนวนที่นำออก : * </label>
                             <div class="col-md-3">
-                              <input class="form-control" type="number" value="{{ @$sRow->amt }}" id="amt"  name="amt" required >
+                              <input class="form-control" type="number" value="{{ @$sRow->amt }}" id="amt"  name="amt"  min="1" required >
                             </div>
                           </div>
 

@@ -31,13 +31,33 @@ class General_receiveController extends Controller
  public function create()
     {
       $Product_in_cause  = DB::select(" SELECT * FROM `dataset_product_in_cause` where id not in(1)  ");
-      $Products = DB::select("SELECT products.id as product_id,
+
+       // $sPermission = @\Auth::user()->permission ;
+       // $User_branch_id = @\Auth::user()->branch_id_fk;
+
+       //  if(@\Auth::user()->permission==1){
+
+            $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1 order by products.product_code asc ");
+            WHERE lang_id=1 ORDER BY products.product_code ");
+
+        // }else{
+
+        //     $Products = DB::select("SELECT products.id as product_id,
+        //     products.product_code,
+        //     (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+        //     FROM
+        //     products_details
+        //     Left Join products ON products_details.product_id_fk = products.id
+        //     WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+        //     ORDER BY products.product_code");
+
+        // }
+
 
       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
           return $query->where('id', auth()->user()->business_location_id_fk);
@@ -98,13 +118,33 @@ class General_receiveController extends Controller
        $Product_in_cause  = DB::select(" SELECT * FROM `dataset_product_in_cause` where id not in(1)  ");
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
        $Approver  = DB::select(" select * from ck_users_admin where id=".$sRow->approver." ");
-       $Products = DB::select("SELECT products.id as product_id,
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
+            WHERE lang_id=1 ");
+
+        }else{
+
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+            ORDER BY products.product_code");
+
+        }
+
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
 
@@ -239,28 +279,20 @@ class General_receiveController extends Controller
         $Data = DB::select("
                 SELECT db_general_receive.business_location_id_fk,
                 (
-                  CASE WHEN loan_ref_number='-' or loan_ref_number is null THEN CONCAT('CODE',db_general_receive.id) ELSE loan_ref_number END
+                CASE WHEN loan_ref_number='-' or loan_ref_number is null THEN CONCAT('CODE',db_general_receive.id) ELSE loan_ref_number END
                 ) as doc_no
                 ,db_general_receive.created_at as doc_date,branch_id_fk,
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
                 concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd,
-                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date
+                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date,db_general_receive.description  as note2,
+                (CASE WHEN product_status_id_fk=2 THEN 'สินค้าชำรุดเสียหาย' ELSE '' END) as note3
                 FROM
                 db_general_receive
                 left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
           ");
 
           foreach ($Data as $key => $value) {
-/*
-  `action_user` int(11) DEFAULT '0' COMMENT 'ผู้ดำเนินการ',
-  `action_date` datetime DEFAULT NULL COMMENT 'วันทำการ',
-  `approver` int(11) DEFAULT '0' COMMENT 'ผู้อนุมัติ',
-  `approve_date` datetime DEFAULT NULL COMMENT 'วันเวลาอนุมัติ',
-  `sender` int(11) DEFAULT '0' COMMENT 'ผู้จัดส่ง Ref>ck_users_admin>id',
-  `sent_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการจัดส่ง',
-  `who_cancel` int(11) DEFAULT '0' COMMENT 'ผู้ยกเลิกการเบิกครั้งนี้ Ref>ck_users_admin>id',
-  `cancel_date` datetime DEFAULT NULL COMMENT 'วันที่ทำการยกเลิก',
-*/
+
                $insertData = array(
                   "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                   "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
@@ -280,6 +312,7 @@ class General_receiveController extends Controller
 
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
+                  "note2" =>  (@$value->note2?$value->note2:NULL).' '.(@$value->note3?$value->note3:NULL),
 
                   "action_user" =>  @$value->action_user?$value->action_user:NULL,
                   "action_date" =>  @$value->action_date?$value->action_date:NULL,

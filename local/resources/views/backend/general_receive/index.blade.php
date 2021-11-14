@@ -87,7 +87,7 @@ $(function() {
         },
 
         columns: [
-            {data: 'ref_code', title :'Ref. Code', className: 'text-center w50'},
+            {data: 'ref_code', title :'Ref. Code', className: 'text-center w80'},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
             {data: 'product_in_cause', title :'<center>สาเหตุที่รับเข้า </center>', className: 'text-left'},
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
@@ -107,24 +107,73 @@ $(function() {
         ],
         rowCallback: function(nRow, aData, dataIndex){
 
-          // if(sU!=''&&sD!=''){
-          //     $('td:last-child', nRow).html('-');
-          // }else{
+          if(aData['approve_status']=='1'){
+              // $('td:last-child', nRow).html('-');
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.general_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_receive.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                + '<a href="{{ route('backend.general_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a>'
+                // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_general_takeout" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                + ' <a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อนุมัติแล้ว ห้ามลบ" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
 
-          // }
+          }else{ 
+
+              $('td:last-child', nRow).html(''
+                + '<a href="{{ route('backend.general_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a>'
+                // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                + ' <a href="javascript: void(0);" data-url="{{ route('backend.general_receive.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_general_receive" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+              ).addClass('input');
+
+          }
+
+
         }
     });
-    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
-      oTable.draw();
+    // $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+    //   oTable.draw();
+    // });
+    oTable.on( 'draw', function () {
+      $('[data-toggle="tooltip"]').tooltip();
     });
 });
 </script>
 
 
+  <script>
+      
+      $(document).on('click', '.remove_01', function(event) {
+
+            var id = $(this).data('id');
+            var table = $(this).data('table');
+            var file = $(this).data('file');
+
+            // alert(id+" : "+table+" : "+file);
+            // return false;
+
+            if (!confirm("Are you sure ? ")){
+                return false;
+            }else{
+
+            $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
+                success:function(data){
+                     console.log(data); 
+                     location.reload();
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+        }
+
+    });
+
+    </script>
 @endsection
 

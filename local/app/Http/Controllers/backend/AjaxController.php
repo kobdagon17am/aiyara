@@ -5367,7 +5367,7 @@ if($frontstore[0]->check_press_save==2){
                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "details" =>  @$value->note?$value->note:NULL,
+                  "details" => (@$value->note?$value->note:NULL).' '.(@$value->note2?$value->note2:NULL),
                   "amt_in" =>  @$value->in_out==1?$value->amt:0,
                   "amt_out" =>  @$value->in_out==2?$value->amt:0,
                   "created_at" =>@$value->dd?$value->dd:NULL
@@ -5431,7 +5431,8 @@ if($frontstore[0]->check_press_save==2){
                 ,db_general_receive.created_at as doc_date,branch_id_fk,
                 db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
                 concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd,
-                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date,db_general_receive.description
+                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date,db_general_receive.description  as note2,
+                (CASE WHEN product_status_id_fk=2 THEN 'สินค้าชำรุดเสียหาย' ELSE '' END) as note3
                 FROM
                 db_general_receive
                 left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
@@ -5458,7 +5459,7 @@ if($frontstore[0]->check_press_save==2){
 
                   "status" =>  @$value->status?$value->status:0,
                   "note" =>  @$value->note?$value->note:NULL,
-                  "note2" =>  @$value->description?$value->description:NULL,
+                  "note2" =>  (@$value->note2?$value->note2:NULL).' '.(@$value->note3?$value->note3:NULL),
 
                   "action_user" =>  @$value->action_user?$value->action_user:NULL,
                   "action_date" =>  @$value->action_date?$value->action_date:NULL,

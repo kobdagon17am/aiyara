@@ -16,13 +16,33 @@ class Products_borrowController extends Controller
 
       // dd(\Auth::user()->permission .":". \Auth::user()->branch_id_fk.":". \Auth::user()->id);
 
-      $Products = DB::select("SELECT products.id as product_id,
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
+            WHERE lang_id=1 ");
+
+        }else{
+
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+            ORDER BY products.product_code");
+
+        }
+
+
 
       $User_branch_id = \Auth::user()->branch_id_fk;
       // dd($User_branch_id);
@@ -70,33 +90,35 @@ class Products_borrowController extends Controller
 
       if(isset($request->save_select_to_products_borrow)){
         // dd($request->all());
+        if(!empty($request->id)){
 
-        for ($i=0; $i < count($request->id) ; $i++) {
-            $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
-            // echo $Check_stock->product_id_fk;
-            $sRow = new \App\Models\Backend\Products_borrow_choose;
-            $sRow->business_location_id_fk    = $Check_stock->business_location_id_fk;
-            $sRow->branch_id_fk    = request('branch_id_select_to_products_borrow');
-            $sRow->stocks_id_fk    = $Check_stock->id;
-            $sRow->product_id_fk    = $Check_stock->product_id_fk;
-            $sRow->lot_number    = $Check_stock->lot_number;
-            $sRow->lot_expired_date    = $Check_stock->lot_expired_date;
-            $sRow->amt    = request('amt_products_borrow')[$i];
-            $sRow->product_unit_id_fk    = $Check_stock->product_unit_id_fk;
-            $sRow->date_in_stock    = $Check_stock->date_in_stock;
-            $sRow->warehouse_id_fk    = $Check_stock->warehouse_id_fk;
-            $sRow->zone_id_fk    = $Check_stock->zone_id_fk;
-            $sRow->shelf_id_fk    = $Check_stock->shelf_id_fk;
-            $sRow->shelf_floor    = $Check_stock->shelf_floor;
-            $sRow->action_user = \Auth::user()->id;
-            $sRow->action_date = date('Y-m-d H:i:s');
-            $sRow->created_at = date('Y-m-d H:i:s');
-            if(!empty(request('amt_products_borrow')[$i])){
-              $sRow->save();
-            }
-          }
+            for ($i=0; $i < count($request->id) ; $i++) {
+                $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
+                // echo $Check_stock->product_id_fk;
+                $sRow = new \App\Models\Backend\Products_borrow_choose;
+                $sRow->business_location_id_fk    = $Check_stock->business_location_id_fk;
+                $sRow->branch_id_fk    = request('branch_id_select_to_products_borrow');
+                $sRow->stocks_id_fk    = $Check_stock->id;
+                $sRow->product_id_fk    = $Check_stock->product_id_fk;
+                $sRow->lot_number    = $Check_stock->lot_number;
+                $sRow->lot_expired_date    = $Check_stock->lot_expired_date;
+                $sRow->amt    = request('amt_products_borrow')[$i];
+                $sRow->product_unit_id_fk    = $Check_stock->product_unit_id_fk;
+                $sRow->date_in_stock    = $Check_stock->date_in_stock;
+                $sRow->warehouse_id_fk    = $Check_stock->warehouse_id_fk;
+                $sRow->zone_id_fk    = $Check_stock->zone_id_fk;
+                $sRow->shelf_id_fk    = $Check_stock->shelf_id_fk;
+                $sRow->shelf_floor    = $Check_stock->shelf_floor;
+                $sRow->action_user = \Auth::user()->id;
+                $sRow->action_date = date('Y-m-d H:i:s');
+                $sRow->created_at = date('Y-m-d H:i:s');
+                if(!empty(request('amt_products_borrow')[$i])){
+                  $sRow->save();
+                }
+              }
 
-  
+        }
+
           return redirect()->to(url("backend/products_borrow"));
 
       }else if(isset($request->save_set_to_warehouse)){

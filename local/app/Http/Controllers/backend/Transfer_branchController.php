@@ -17,13 +17,32 @@ class Transfer_branchController extends Controller
           return $query->where('id', auth()->user()->business_location_id_fk);
         })->get();
 
-        $Products = DB::select("SELECT products.id as product_id,
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1 AND products.status=1 ORDER BY products.product_code ");
+            WHERE lang_id=1 ");
+
+        }else{
+
+            $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+            ORDER BY products.product_code");
+
+        }
 
         $sPermission  = \Auth::user()->permission ;
         $User_branch_id = \Auth::user()->branch_id_fk;
