@@ -147,6 +147,72 @@ class Pay_requisition_001Controller extends Controller
                     FROM db_pay_product_receipt_002 WHERE time_pay not in(select time_pay from db_stocks_return where time_pay=db_pay_product_receipt_002.time_pay and business_location_id_fk=db_pay_product_receipt_002.business_location_id_fk AND branch_id_fk=db_pay_product_receipt_002.branch_id_fk AND product_id_fk=db_pay_product_receipt_002.product_id_fk AND lot_number=db_pay_product_receipt_002.lot_number AND lot_expired_date=db_pay_product_receipt_002.lot_expired_date AND amt=db_pay_product_receipt_002.amt_get AND product_unit_id_fk=db_pay_product_receipt_002.product_unit_id_fk AND warehouse_id_fk=db_pay_product_receipt_002.warehouse_id_fk AND zone_id_fk=db_pay_product_receipt_002.zone_id_fk AND shelf_id_fk=db_pay_product_receipt_002.shelf_id_fk AND shelf_floor=db_pay_product_receipt_002.shelf_floor AND invoice_code=db_pay_product_receipt_002.invoice_code) ; ");
 
 
+                        $insertStockMovement = new  AjaxController();
+
+                              // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
+                              $Data = DB::select("
+                                      SELECT
+                                      db_stocks_return.business_location_id_fk,
+                                      db_stocks_return.invoice_code as doc_no,
+                                      db_stocks_return.updated_at as doc_date,
+                                      db_stocks_return.branch_id_fk,
+                                      product_id_fk,
+                                      lot_number,
+                                      lot_expired_date,
+                                      amt,
+                                      1 as 'in_out',
+                                      product_unit_id_fk,
+                                      warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
+                                      'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
+                                      db_stocks_return.updated_at as dd,
+                                      db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
+
+                                      FROM db_stocks_return
+                                      LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
+                                      WHERE
+                                      db_stocks_return.status_cancel=1
+
+                                ");
+
+                              if(@$Data){
+
+                                  foreach ($Data as $key => $value) {
+
+                                       $insertData = array(
+                                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                                          "amt" =>  @$value->amt?$value->amt:0,
+                                          "in_out" =>  @$value->in_out?$value->in_out:0,
+                                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                                          "status" =>  @$value->status?$value->status:0,
+                                          "note" =>  @$value->note?$value->note:NULL,
+
+                                          "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                                          "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                                          "approver" =>  @$value->approver?$value->approver:NULL,
+                                          "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                                          "created_at" =>@$value->dd?$value->dd:NULL
+                                      );
+
+                                        $insertStockMovement->insertStockMovement($insertData);
+
+                                    }
+
+                                    DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+
+                               }
+
+
                 // }
 
        // }
@@ -230,7 +296,10 @@ class Pay_requisition_001Controller extends Controller
                         time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,invoice_code, created_at,now(),1
                          FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."' AND time_pay='".$v->time_pay."' ; ");
 
-                   }
+
+
+                     }
+
 
                      DB::select(" UPDATE db_pay_product_receipt_001 SET status_sent=2 WHERE invoice_code='".$request->invoice_code."' ; ");
 
@@ -249,6 +318,74 @@ class Pay_requisition_001Controller extends Controller
    
 
            }
+
+
+
+                             $insertStockMovement = new  AjaxController();
+
+                              // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
+                              $Data = DB::select("
+                                      SELECT
+                                      db_stocks_return.business_location_id_fk,
+                                      db_stocks_return.invoice_code as doc_no,
+                                      db_stocks_return.updated_at as doc_date,
+                                      db_stocks_return.branch_id_fk,
+                                      product_id_fk,
+                                      lot_number,
+                                      lot_expired_date,
+                                      amt,
+                                      1 as 'in_out',
+                                      product_unit_id_fk,
+                                      warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
+                                      'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
+                                      db_stocks_return.updated_at as dd,
+                                      db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
+
+                                      FROM db_stocks_return
+                                      LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
+                                      WHERE
+                                      db_stocks_return.status_cancel=1
+
+                                ");
+
+                              if(@$Data){
+
+                                  foreach ($Data as $key => $value) {
+
+                                       $insertData = array(
+                                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                                          "amt" =>  @$value->amt?$value->amt:0,
+                                          "in_out" =>  @$value->in_out?$value->in_out:0,
+                                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                                          "status" =>  @$value->status?$value->status:0,
+                                          "note" =>  @$value->note?$value->note:NULL,
+
+                                          "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                                          "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                                          "approver" =>  @$value->approver?$value->approver:NULL,
+                                          "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                                          "created_at" =>@$value->dd?$value->dd:NULL
+                                      );
+
+                                        $insertStockMovement->insertStockMovement($insertData);
+
+                                    }
+
+                                    DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+
+                               }
+
 
       $r2 = DB::select(" 
         SELECT * FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."' AND time_pay='".$request->time_pay."' AND status_cancel=1 ; ");

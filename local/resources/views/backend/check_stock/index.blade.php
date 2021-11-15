@@ -879,26 +879,26 @@
 
                             // },2000);
 
-                          setTimeout(function(){
+                          // setTimeout(function(){
 
-                               $("#spinner_frame").show();
+                          //      $("#spinner_frame").show();
 
-                               $.ajax({
-                                   url: " {{ url('backend/insertStockMovement_From_db_general_takeout') }} ",
-                                  method: "post",
-                                  data: {
-                                    "_token": "{{ csrf_token() }}",
-                                  },
-                                  success:function(data)
-                                  {
+                          //      $.ajax({
+                          //          url: " {{ url('backend/insertStockMovement_From_db_general_takeout') }} ",
+                          //         method: "post",
+                          //         data: {
+                          //           "_token": "{{ csrf_token() }}",
+                          //         },
+                          //         success:function(data)
+                          //         {
 
-                                    console.log(data);
+                          //           console.log(data);
 
-                                  }
-                                });
+                          //         }
+                          //       });
 
 
-                          },2000);
+                          // },2000);
 
 
                           setTimeout(function(){
@@ -922,47 +922,47 @@
 
                           },2000);
 
-                           setTimeout(function(){
+                          //  setTimeout(function(){
 
-                               $("#spinner_frame").show();
+                          //      $("#spinner_frame").show();
 
-                               $.ajax({
-                                   url: " {{ url('backend/insertStockMovement_From_db_products_borrow_code') }} ",
-                                  method: "post",
-                                  data: {
-                                    "_token": "{{ csrf_token() }}",
-                                  },
-                                  success:function(data)
-                                  {
+                          //      $.ajax({
+                          //          url: " {{ url('backend/insertStockMovement_From_db_products_borrow_code') }} ",
+                          //         method: "post",
+                          //         data: {
+                          //           "_token": "{{ csrf_token() }}",
+                          //         },
+                          //         success:function(data)
+                          //         {
 
-                                    console.log(data);
+                          //           console.log(data);
 
-                                  }
-                                });
-
-
-                          },2000);
-
-                           setTimeout(function(){
-
-                               $("#spinner_frame").show();
-
-                               $.ajax({
-                                   url: " {{ url('backend/insertStockMovement_From_db_transfer_warehouses_code') }} ",
-                                  method: "post",
-                                  data: {
-                                    "_token": "{{ csrf_token() }}",
-                                  },
-                                  success:function(data)
-                                  {
-
-                                    console.log(data);
-
-                                  }
-                                });
+                          //         }
+                          //       });
 
 
-                          },2000);
+                          // },2000);
+
+                          //  setTimeout(function(){
+
+                          //      $("#spinner_frame").show();
+
+                          //      $.ajax({
+                          //          url: " {{ url('backend/insertStockMovement_From_db_transfer_warehouses_code') }} ",
+                          //         method: "post",
+                          //         data: {
+                          //           "_token": "{{ csrf_token() }}",
+                          //         },
+                          //         success:function(data)
+                          //         {
+
+                          //           console.log(data);
+
+                          //         }
+                          //       });
+
+
+                          // },2000);
 
                           //  setTimeout(function(){
 
@@ -985,7 +985,7 @@
 
                           // },2000);
 
-
+                  // จ่ายสินค้าตามใบเสร็จ
                           setTimeout(function(){
 
                                $("#spinner_frame").show();
@@ -1007,25 +1007,25 @@
                           },2000);
 
 
-                      setTimeout(function(){
+                      // setTimeout(function(){
 
-                           $("#spinner_frame").show();
+                      //      $("#spinner_frame").show();
 
-                           $.ajax({
-                               url: " {{ url('backend/insertStockMovement_From_db_stocks_return') }} ",
-                              method: "post",
-                              data: {
-                                "_token": "{{ csrf_token() }}",
-                              },
-                              success:function(data)
-                              {
+                      //      $.ajax({
+                      //          url: " {{ url('backend/insertStockMovement_From_db_stocks_return') }} ",
+                      //         method: "post",
+                      //         data: {
+                      //           "_token": "{{ csrf_token() }}",
+                      //         },
+                      //         success:function(data)
+                      //         {
 
-                                console.log(data);
+                      //           console.log(data);
 
-                              }
-                            });
+                      //         }
+                      //       });
 
-                      },2000);
+                      // },2000);
 
         // จ่ายสินค้าตามใบเบิก
                       setTimeout(function(){

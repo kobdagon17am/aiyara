@@ -3990,6 +3990,75 @@ if($frontstore[0]->check_press_save==2){
 
 
                }
+
+
+
+                             $insertStockMovement = new  AjaxController();
+
+                              // รับคืนจากการยกเลิกใบเบิก db_stocks_return
+                              $Data = DB::select("
+                                      SELECT
+                                      db_stocks_return.business_location_id_fk,
+                                      db_stocks_return.invoice_code as doc_no,
+                                      db_stocks_return.updated_at as doc_date,
+                                      db_stocks_return.branch_id_fk,
+                                      product_id_fk,
+                                      lot_number,
+                                      lot_expired_date,
+                                      amt,
+                                      1 as 'in_out',
+                                      product_unit_id_fk,
+                                      warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
+                                      'รับคืนจากการยกเลิกใบเบิก' as note,
+                                      db_stocks_return.updated_at as dd,
+                                      db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
+
+                                      FROM db_stocks_return
+                                      LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
+                                      WHERE
+                                      db_stocks_return.status_cancel=1
+
+                                ");
+
+                              if(@$Data){
+
+                                  foreach ($Data as $key => $value) {
+
+                                       $insertData = array(
+                                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                                          "amt" =>  @$value->amt?$value->amt:0,
+                                          "in_out" =>  @$value->in_out?$value->in_out:0,
+                                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                                          "status" =>  @$value->status?$value->status:0,
+                                          "note" =>  @$value->note?$value->note:NULL,
+
+                                          "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                                          "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                                          "approver" =>  @$value->approver?$value->approver:NULL,
+                                          "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                                          "created_at" =>@$value->dd?$value->dd:NULL
+                                      );
+
+                                        $insertStockMovement->insertStockMovement($insertData);
+
+                                    }
+
+                                    DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+
+                               }
+
+
           }
 
           $r2 = DB::select("
@@ -6148,60 +6217,59 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
 
       if($request->ajax()){
 
-        // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
-        $Data = DB::select("
-SELECT
-db_stocks_return.business_location_id_fk,
-db_stocks_return.invoice_code as doc_no,
-db_stocks_return.updated_at as doc_date,
-db_stocks_return.branch_id_fk,
-product_id_fk,
-lot_number,
-lot_expired_date,
-amt,
-1 as 'in_out',
-product_unit_id_fk,
-warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
-'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
-db_stocks_return.updated_at as dd,
-db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
+            // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
+            $Data = DB::select("
+                    SELECT
+                    db_stocks_return.business_location_id_fk,
+                    db_stocks_return.invoice_code as doc_no,
+                    db_stocks_return.updated_at as doc_date,
+                    db_stocks_return.branch_id_fk,
+                    product_id_fk,
+                    lot_number,
+                    lot_expired_date,
+                    amt,
+                    1 as 'in_out',
+                    product_unit_id_fk,
+                    warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
+                    'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
+                    db_stocks_return.updated_at as dd,
+                    db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
 
-FROM db_stocks_return
-LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
-WHERE
-db_stocks_return.status_cancel=1
+                    FROM db_stocks_return
+                    LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
+                    WHERE
+                    db_stocks_return.status_cancel=1
 
-          ");
+              ");
 
                 if(@$Data){
 
                   foreach ($Data as $key => $value) {
 
                        $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
+                            "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                            "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                            "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                            "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                            "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                            "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                            "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                            "amt" =>  @$value->amt?$value->amt:0,
+                            "in_out" =>  @$value->in_out?$value->in_out:0,
+                            "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                            "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                            "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                            "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                            "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                            "status" =>  @$value->status?$value->status:0,
+                            "note" =>  @$value->note?$value->note:NULL,
 
-                                              "action_user" =>  @$value->action_user?$value->action_user:NULL,
-                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
-                    "approver" =>  @$value->approver?$value->approver:NULL,
-                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+                            "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                            "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                            "approver" =>  @$value->approver?$value->approver:NULL,
+                            "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
 
-
-                          "created_at" =>@$value->dd?$value->dd:NULL
+                            "created_at" =>@$value->dd?$value->dd:NULL
                       );
 
                         AjaxController::insertStockMovement($insertData);
