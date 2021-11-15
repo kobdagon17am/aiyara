@@ -506,7 +506,7 @@ $(function() {
                 + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
 
-            {data: 'id', title :'Tools', className: 'text-center w80'},
+            {data: 'id', title :'Tools.', className: 'text-center w80'},
         ],
            "columnDefs": [ {
               // "targets": [0,2,6,7,8,9] ,
@@ -581,12 +581,16 @@ $(function() {
 
                           var str_V3 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="รวมในบิล Packing List แล้ว" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
 
+                          var str_V4 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="เบิกจ่ายสินค้าแล้ว" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+
                           if(sU!='1' && sD!='1'){
                              $('td:last-child', nRow).html('-');
                           }else{
 
+                            console.log(aData['status_pay_product_receipt']);
+
                             // console.log(aData['code_order']+" : "+aData['status_delivery_packing']);
-                            console.log(aData['code_order']+" : "+aData['status_delivery_02']);
+                            // console.log(aData['code_order']+" : "+aData['status_delivery_02']);
 
                             if(aData['status_delivery_02']==1){
 
@@ -596,6 +600,8 @@ $(function() {
 
                               if(aData['status_delivery_packing']==1){
                                 $('td:last-child', nRow).html( str_U + str_V3).addClass('input');
+                              }else if(aData['status_pay_product_receipt']==1){
+                                $('td:last-child', nRow).html( str_U + str_V4).addClass('input');
                               }else{
                                 $('td:last-child', nRow).html( str_U + str_D).addClass('input');
                               }

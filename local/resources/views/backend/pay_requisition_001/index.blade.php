@@ -527,6 +527,7 @@
                               $('td:last-child', nRow).html(''
 
                                  + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ดูข้อมูล" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 + '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="ใบเบิกมีสถานะถูกยกเลิก" disabled style="background-color:grey;color:white;" >จัดส่ง</a> '
                              
 
                               ).addClass('input');

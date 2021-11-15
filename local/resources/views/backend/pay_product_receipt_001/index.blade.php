@@ -324,12 +324,12 @@
         <div class="card">
           <div class="card-body">
             <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs" role="tablist" style="display: none;" >
               <li class="nav-item">
-                <a class="nav-link tab_a active " data-toggle="tab" href="#home" role="tab">
+           <!--      <a class="nav-link tab_a active " data-toggle="tab" href="#home" role="tab">
                   <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
                   <span class="d-none d-sm-block">ใบเสร็จ</span>
-                </a>
+                </a> -->
               </li>
               <li class="nav-item">
            <!--      <a class="nav-link tab_b  " data-toggle="tab" href="#profile" role="tab">
@@ -350,7 +350,7 @@
                 <p class="mb-0">
                   <div class="row">
                   <div class="col-8">
-                    <input type="text" class="form-control float-left text-center w200 myLike1 " placeholder="ค้น > รหัสใบเสร็จ" name="txtSearch_001">
+                    <!-- <input type="text" class="form-control float-left text-center w200 myLike1 " placeholder="ค้น > รหัสใบเสร็จ" name="txtSearch_001"> -->
                   </div>
                                               <!-- @$sC -->
                   <div class="col-4 text-right" style="" >
@@ -474,6 +474,8 @@
                                         
                                       ).addClass('input');
 
+                                      // $('td:eq(4)', nRow).html('-');
+
                                   }else{
 
                
@@ -485,7 +487,7 @@
             
                               // console.log(can_cancel_bill);
                               // console.log(can_cancel_bill_across_day);
-                              console.log(aData['status_sent_2']);
+                              // console.log(aData['status_sent_2']);
 
                               if(can_cancel_bill=='1' && aData['status_sent_2']==3){
 
@@ -494,6 +496,8 @@
                                        + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'"  data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                  ).addClass('input');
 
+                                 
+
                               }else{
                                       $('td:last-child', nRow).html(''
                                       + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -501,7 +505,14 @@
                                         ).addClass('input');
                               }
 
-                       
+                              if(aData['status_sent_2']==3){
+                                $('td:eq(6)', nRow).html('');
+                              }
+                              if(aData['status_sent_2']==1){
+                                $('td:eq(5)', nRow).html('');
+                                $('td:eq(6)', nRow).html('');
+                              }
+
                    
                   }
               });
@@ -545,7 +556,7 @@ $(function() {
 
 });
 </script>
-
+<!-- 
 
   <script>
         $(document).ready(function() {
@@ -662,7 +673,7 @@ $(function() {
 
         }); 
     </script>
-
+ -->
 
 
   <script>
@@ -1140,39 +1151,70 @@ $(function() {
                             ],
                             rowCallback: function(nRow, aData, dataIndex){
 
-                              var info = $(this).DataTable().page.info();
-                              $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                                    var info = $(this).DataTable().page.info();
+                                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                              if(sU!=''&&sD!=''){
-                                  $('td:last-child', nRow).html('-');
-                              }else{ 
+                                    if(sU!=''&&sD!=''){
+                                        $('td:last-child', nRow).html('-');
+                                    }else{ 
 
+                                          // console.log(aData['status_sent_2']);
+                                          // console.log(aData['status_cancel_all']);
+                                          // console.log(aData['status_cancel_some']);
+                                          // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป 
+                                          if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){ 
+
+                                              $('td:last-child', nRow).html(''
+                                                + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                                
+                                              ).addClass('input');
+
+                                              // $('td:eq(4)', nRow).html('-');
+
+                                          }else{
+
+                       
+                                              
+                                          }
+
+                                   }
+                            
+                    
+                                      // console.log(can_cancel_bill);
+                                      // console.log(can_cancel_bill_across_day);
                                       // console.log(aData['status_sent_2']);
 
-                                      if(aData['status_sent_2']==4){ // ยกเลิกบิล
-
-                                          $('td:last-child', nRow).html(''
-                                            + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                            
-                                          ).addClass('input');
-
-                                      }else{
+                                      if(can_cancel_bill=='1' && aData['status_sent_2']==3){
 
                                          $('td:last-child', nRow).html(''
-                                            + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                             + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'" style="'+sD+'" data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                                          ).addClass('input');
-                   
-                                          
+                                              + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                               + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'"  data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                         ).addClass('input');
+
+                                         
+
+                                      }else{
+                                              $('td:last-child', nRow).html(''
+                                              + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                              
+                                                ).addClass('input');
                                       }
 
-                             }
+                                      if(aData['status_sent_2']==3){
+                                        $('td:eq(6)', nRow).html('');
+                                      }
+                                      if(aData['status_sent_2']==1){
+                                        $('td:eq(5)', nRow).html('');
+                                        $('td:eq(6)', nRow).html('');
+                                      }
 
-                            }
-                        });
-                          oTable_001.on( 'draw', function () {
-                            $('[data-toggle="tooltip"]').tooltip();
-                          });          
+                           
+                                  }
+                              });
+
+                              oTable_001.on( 'draw', function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                              });         
                       });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                     	var txtSearch_002 = $("input[name=txtSearch_002]").val();

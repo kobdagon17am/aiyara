@@ -394,6 +394,10 @@ class Pick_packController extends Controller
       })
    ->addColumn('addr_to_send', function($row) { 
 
+        if(@$row->set_addr_send_this==1){
+               return @$row->recipient_name."<br>".@$row->addr_send."<br>".@$row->postcode." ".@$row->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [เปลี่ยนที่อยู่] </span> ";
+        }else{
+
             $d = DB::select(" 
                 SELECT
                 db_delivery.orders_id_fk,
@@ -407,46 +411,7 @@ class Pick_packController extends Controller
                 WHERE
                 db_delivery.orders_id_fk=".$row->orders_id_fk." ");
 
-            // $addr = DB::select(" 
-            //       SELECT
-            //       db_delivery.set_addr_send_this,
-            //       db_delivery.recipient_name,
-            //       db_delivery.addr_send,
-            //       db_delivery.postcode,
-            //       db_delivery.mobile,
-            //       db_delivery.total_price,
-            //       db_delivery.receipt,
-            //       db_orders.delivery_location
-            //       FROM
-            //       db_delivery
-            //       left Join db_orders ON db_delivery.orders_id_fk = db_orders.id
-            //       WHERE 
-            //       db_delivery.id =".$row->id." AND set_addr_send_this=1 ");
-            
-            // if(@$addr){
-            //   if(@$addr[0]->delivery_location!=4){
-            //     return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-            //   }else{
-            //     // เช็คกรณี ส่งฟรี
-            //           $shipping_cost = DB::select(" SELECT purchase_amt FROM `dataset_shipping_cost` WHERE shipping_type_id=1 ; ");
-            //           $shipping_cost= $shipping_cost[0]->purchase_amt;
-
-            //           $total_p = DB::select(" 
-            //               SELECT sum(db_delivery.total_price) as total_price
-            //               FROM
-            //               db_delivery
-            //               WHERE 
-            //               shipping_price=0 and packing_code=".$row->packing_code." GROUP BY packing_code ");
-
-            //           if(@$total_p[0]->total_price>=$shipping_cost){
-            //            return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-            //           }else{
-            //             return "-";
-            //           }
-
-            //             // return @$d[0]->txt_desc;
-            //   }
-            // }else{
+           
 
                    $addr2 = DB::select(" 
                           SELECT
@@ -464,38 +429,7 @@ class Pick_packController extends Controller
                           WHERE 
                           db_delivery.id =".$row->id." ");
                     
-            //         if(@$addr2){
-            //           if(@$addr2[0]->delivery_location==4){
-
-            //           // เช็คกรณี ส่งฟรี
-            //           $shipping_cost = DB::select(" SELECT purchase_amt FROM `dataset_shipping_cost` WHERE shipping_type_id=1 ; ");
-            //           $shipping_cost= $shipping_cost[0]->purchase_amt;
-
-            //           $total_p = DB::select(" 
-            //               SELECT sum(db_delivery.total_price) as total_price
-            //               FROM
-            //               db_delivery
-            //               WHERE 
-            //               shipping_price=0 and packing_code=".$row->packing_code." GROUP BY packing_code ");
-
-            //           if(@$total_p[0]->total_price>=$shipping_cost){
-            //             return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
-            //           }else{
-            //             return "<b>* จัดส่งพร้อมบิลอื่น</b>";
-            //           }
-
-
-            //           }else if(@$addr2[0]->delivery_location==1 || @$addr2[0]->delivery_location==2){
-            //             return "* ".@$d[0]->txt_desc."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-            //           }else{
-            //             return "* ไม่ได้ระบุ ";
-            //           }
-            //         }else{
-            //             return "* ไม่ได้ระบุ ";
-            //         }
-
-
-            // }
+          
             $array = array(0);
              if($row->id!==""){
                 $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->packing_code)->get();
@@ -573,6 +507,7 @@ class Pick_packController extends Controller
                         
                       }
 
+                  }
               }
 
 

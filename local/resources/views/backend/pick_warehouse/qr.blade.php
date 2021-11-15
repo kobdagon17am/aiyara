@@ -564,7 +564,7 @@
               $(".myloading").show();
 
               var id = $(this).data('id');
-              var pick_pack_packing_code_id_fk = 2 ;
+              var pick_pack_packing_code_id_fk = "{{$id}}";
               // console.log(id);
               setTimeout(function(){
                  window.open("{{ url('backend/frontstore/print_receipt_023') }}"+"/"+id+"/"+pick_pack_packing_code_id_fk);

@@ -208,6 +208,7 @@ class Pay_product_receipt_001Controller extends Controller
     {
 
       DB::update(" UPDATE db_pay_product_receipt_002 SET status_cancel=1 WHERE invoice_code='".$request->invoice_code."' AND time_pay='".$request->time_pay."' ");
+      DB::update(" UPDATE `db_orders` SET `approve_status`='2' , `order_status_id_fk`='6' WHERE (`code_order`='".$request->invoice_code."') ");
       // เอาสินค้าคืนคลัง
 
       $r = DB::select(" 
@@ -506,6 +507,7 @@ class Pay_product_receipt_001Controller extends Controller
                       DB::select(" UPDATE `db_pay_product_receipt_001` SET status_sent=2 WHERE invoice_code='$invoice_code' ");
                     }else{
                       DB::select(" UPDATE `db_pay_product_receipt_001` SET status_sent=3 WHERE invoice_code='$invoice_code' ");
+                      DB::select(" UPDATE `db_orders` SET approve_status=9 ,order_status_id_fk=7 WHERE code_order='$invoice_code' ");
                     }
 
              }
@@ -691,7 +693,8 @@ class Pay_product_receipt_001Controller extends Controller
             return $row->invoice_code;
       })  
       ->addColumn('invoice_code', function($row) {
-            return "<span style='cursor:pointer;' class='invoice_code' data-toggle='tooltip' data-placement='top' title='คลิ้กเพื่อดูรายละเอียด' data-invoice_code='".$row->invoice_code."' >".$row->invoice_code."</span>";
+            // return "<span style='cursor:pointer;' class='invoice_code' data-toggle='tooltip' data-placement='top' title='คลิ้กเพื่อดูรายละเอียด' data-invoice_code='".$row->invoice_code."' >".$row->invoice_code."</span>";
+        return @$row->invoice_code;
       })  
       ->escapeColumns('invoice_code')       
       ->addColumn('customer', function($row) {
@@ -752,7 +755,7 @@ class Pay_product_receipt_001Controller extends Controller
       }) 
        ->addColumn('address_send_type', function($row) {
             if(@$row->address_send_type==1){
-                 return 'มารับด้วยตนเองที่สาขา';
+                 return 'รับสินค้าด้วยตนเอง';
             }else if(@$row->address_send_type==2){
               if(@$row->branch_id_fk_tosent==(\Auth::user()->branch_id_fk)){
                 return 'รับที่สาขานี้';
@@ -1360,6 +1363,11 @@ group by promotions_products.product_id_fk
           return $pn;
       })
       ->escapeColumns('column_002')  
+      ->addColumn('column_003', function($row) {
+          // return "<b>".@$row->invoice_code."</b>";
+          return '<a href="javascript: void(0);" target=_blank data-id="'.$row->orders_id_fk.'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a>';
+      })
+      ->escapeColumns('column_003')  
       ->make(true);
     }
 

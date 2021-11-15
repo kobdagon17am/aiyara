@@ -1674,10 +1674,10 @@ class FrontstoreController extends Controller
                                   @$address .= ", อ.". @$v->ampname;
                                   @$address .= ", จ.". @$v->provname;
 
-                                  if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
-                                  }else{
-                                      @$address = null;
-                                  }
+                                  // if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
+                                  // }else{
+                                  //     @$address = null;
+                                  // }
 
                                   if(!empty(@$v->tel)){
                                       $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
@@ -3170,6 +3170,17 @@ ORDER BY created_at DESC
       // })
       ->addColumn('status_delivery_packing', function($row) {
           $r = DB::select(" select receipt FROM db_delivery WHERE receipt = '".$row->code_order."' AND status_pack=1 ");
+          if(@$r){
+            return 1;
+          }else{
+            return 0;
+          }
+          // return $r[0]->receipt;
+
+      })
+      ->addColumn('status_pay_product_receipt', function($row) {
+        // 1=สินค้ารอจ่าย 2=ค้างจ่ายบางรายการ 3=จ่ายสินค้าแล้ว 4=ใบเสร็จที่ยกเลิกการจ่าย
+          $r = DB::select(" SELECT * FROM db_pay_product_receipt_001 WHERE invoice_code = '".$row->code_order."' AND status_sent<>4 ");
           if(@$r){
             return 1;
           }else{

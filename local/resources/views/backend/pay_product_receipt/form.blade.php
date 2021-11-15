@@ -332,7 +332,8 @@
                           },
                     columns: [
                         {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w150 '},
-                        {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left '},
+                        {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า. </span></center> ', className: 'text-left '},
+                        {data: 'column_003', title :'<span style="vertical-align: middle;"> พิมพ์ใบเสร็จ </span> ', className: 'text-center w150 '},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
@@ -967,7 +968,7 @@
 
                                           if(time_pay==1){
 
-                                            location.replace('{{ url("backend/pay_requisition_001") }}');
+                                            location.replace('{{ url("backend/pay_product_receipt_001") }}');
 
                                           }else{
                                             location.reload();
@@ -987,6 +988,27 @@
 
     });
    </script>
+
+    <script>
+      $(document).ready(function() {
+
+          $(document).on('click', '.print02', function(event) {
+
+              event.preventDefault();
+              $(".myloading").show();
+
+              var id = $(this).data('id');
+              // console.log(id);
+              setTimeout(function(){
+                 window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
+                 $(".myloading").hide();
+              }, 500);
+              
+            });
+                
+      });
+
+    </script>
 
 @endsection
 

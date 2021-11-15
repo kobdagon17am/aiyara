@@ -946,37 +946,6 @@ class Pick_warehouse_fifoController extends Controller
           $z = 1;
           foreach ($Products as $key => $value) {
 
-            // return $value->amt;
-               //  $arr_inv = [];
-               //  $arr_inv2 = [];
-               //  $r_invoice_code = DB::select(" select db_orders.invoice_code,db_order_products_list.* FROM db_order_products_list
-               //  LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-               //  WHERE frontstore_id_fk in ($orders_id_fk) AND db_order_products_list.product_id_fk=".$value->product_id_fk." ");
-               //  foreach ($r_invoice_code as $inv) {
-               //      array_push($arr_inv,$inv->invoice_code);
-               //      array_push($arr_inv2,'"'.$inv->invoice_code.'"');
-               //  }
-
-               // // รวม product promotion ด้วย (ถ้ามี)
-               //  $sPromotion = DB::select("
-               //    SELECT db_orders.code_order,promotions_products.product_id_fk FROM promotions_products 
-               //    LEFT JOIN promotions on promotions.id=promotions_products.promotion_id_fk
-               //    JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions.id
-               //    LEFT JOIN db_orders on db_orders.id=db_order_products_list.frontstore_id_fk
-               //    WHERE db_order_products_list.frontstore_id_fk in ($orders_id_fk) and promotions_products.product_id_fk=".$value->product_id_fk." ;
-               //  ");
-               //  if($sPromotion){
-               //          foreach ($sPromotion as $v) {
-               //              array_push($arr_inv,$v->code_order);
-               //          }
-               //  }
-
-
-               //  $invoice_code = implode(",",array_unique($arr_inv));
-
-                // if(!empty($row->requisition_code)){$requisition_code=$row->requisition_code;}else{$requisition_code=0;}
-                // if(!empty($invoice_code)){$invoice_code=$invoice_code;}else{$invoice_code=0;}
-
                // บิลปกติ
                 $arr_inv = [];
                 $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
@@ -1042,9 +1011,10 @@ class Pick_warehouse_fifoController extends Controller
                           $pay_this = @$rs_[0]->amt_remain?@$rs_[0]->amt_remain:$value->amt ;
 
                           $branch = DB::select(" select * from branchs where id=".$v_02->branch_id_fk." ");
+                          $warehouse = DB::select(" select * from warehouse where id=".$v_02->warehouse_id_fk." ");
                           $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
-                          $sWarehouse = @$branch[0]->b_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
+                          $sWarehouse = @$branch[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
                           // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
