@@ -858,26 +858,26 @@
                       success:function(data)
                       {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                            setTimeout(function(){
+                            // setTimeout(function(){
 
-                                 $("#spinner_frame").show();
+                            //      $("#spinner_frame").show();
 
-                                 $.ajax({
-                                     url: " {{ url('backend/insertStockMovement_From_db_general_receive') }} ",
-                                    method: "post",
-                                    data: {
-                                      "_token": "{{ csrf_token() }}",
-                                    },
-                                    success:function(data)
-                                    {
+                            //      $.ajax({
+                            //          url: " {{ url('backend/insertStockMovement_From_db_general_receive') }} ",
+                            //         method: "post",
+                            //         data: {
+                            //           "_token": "{{ csrf_token() }}",
+                            //         },
+                            //         success:function(data)
+                            //         {
 
-                                      console.log(data);
+                            //           console.log(data);
 
-                                    }
-                                  });
+                            //         }
+                            //       });
 
 
-                            },2000);
+                            // },2000);
 
                           setTimeout(function(){
 
@@ -964,26 +964,26 @@
 
                           },2000);
 
-                           setTimeout(function(){
+                          //  setTimeout(function(){
 
-                               $("#spinner_frame").show();
+                          //      $("#spinner_frame").show();
 
-                               $.ajax({
-                                   url: " {{ url('backend/insertStockMovement_From_db_transfer_branch_code') }} ",
-                                  method: "post",
-                                  data: {
-                                    "_token": "{{ csrf_token() }}",
-                                  },
-                                  success:function(data)
-                                  {
+                          //      $.ajax({
+                          //          url: " {{ url('backend/insertStockMovement_From_db_transfer_branch_code') }} ",
+                          //         method: "post",
+                          //         data: {
+                          //           "_token": "{{ csrf_token() }}",
+                          //         },
+                          //         success:function(data)
+                          //         {
 
-                                    console.log(data);
+                          //           console.log(data);
 
-                                  }
-                                });
+                          //         }
+                          //       });
 
 
-                          },2000);
+                          // },2000);
 
 
                           setTimeout(function(){

@@ -1484,37 +1484,11 @@ class Pay_requisition_001Controller extends Controller
                 DB::select(" INSERT IGNORE INTO  db_pay_requisition_002_pay_history (time_pay,pick_pack_requisition_code_id_fk,pick_pack_packing_code_id_fk,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,pick_pack_requisition_code_id_fk,$db_pick_pack_packing_code_id,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppp_004 ");
 
 
-                DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk ");
-
-// 3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย
-                // $rs_pay_history = DB::select(" SELECT * FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk AND status in(2) ");
-                // if(count($rs_pay_history) > 0){
-
-                //       DB::table('db_pay_requisition_001')
-                //       ->where('pick_pack_requisition_code_id_fk', $pick_pack_requisition_code_id_fk)
-                //       ->update(array(
-                //         'status_sent' => 2 ,
-                //       ));
-
-                // }else{
-                //   DB::table('db_pay_requisition_001')
-                //       ->where('pick_pack_requisition_code_id_fk', $pick_pack_requisition_code_id_fk)
-                //       ->update(array(
-                //         'status_sent' => 3 ,
-                //       ));
-                // }
-             
-             // return "1512";
+              DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk ");
 
 
               DB::select(" TRUNCATE $temp_db_stocks_compare ;");
-
               DB::select(" UPDATE db_pay_requisition_001 SET pay_date=now(),pay_user=".\Auth::user()->id." WHERE (id='$lastInsertId') ");
-
-              // return $lastInsertId;
-              // dd();
-
-              // return $pick_pack_requisition_code_id_fk;
 
               // เช็คว่ามีสินค้าค้างจ่ายหรือไม่
                   $ch01 =  DB::select(" SELECT * FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ORDER BY time_pay DESC LIMIT 1 ");
@@ -1557,6 +1531,7 @@ class Pay_requisition_001Controller extends Controller
                  ");
 
               // return $db_select;
+              // dd();
 
               foreach ($db_select as $key => $v) {
 
@@ -1587,9 +1562,29 @@ class Pay_requisition_001Controller extends Controller
                       ->get();
                       if($_choose->count() > 0){
                         if($v->amt_get<=$_choose[0]->amt){
-                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' 
+
+                            and business_location_id_fk='".$v->business_location_id_fk."' 
+                            and branch_id_fk='".$v->branch_id_fk."' 
+                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                            and zone_id_fk='".$v->zone_id_fk."' 
+                            and shelf_id_fk='".$v->shelf_id_fk."' 
+                            and shelf_floor='".$v->shelf_floor."' 
+
+                            ");
+
                         }else{
-                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' 
+
+                            and business_location_id_fk='".$v->business_location_id_fk."' 
+                            and branch_id_fk='".$v->branch_id_fk."' 
+                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                            and zone_id_fk='".$v->zone_id_fk."' 
+                            and shelf_id_fk='".$v->shelf_id_fk."' 
+                            and shelf_floor='".$v->shelf_floor."' 
+
+                            ");
+
                         }
                       }
        
@@ -1843,9 +1838,29 @@ class Pay_requisition_001Controller extends Controller
                       ->get();
                       if($_choose->count() > 0){
                         if($v->amt_get<=$_choose[0]->amt){
-                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."'
+           
+                            and business_location_id_fk='".$v->business_location_id_fk."' 
+                            and branch_id_fk='".$v->branch_id_fk."' 
+                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                            and zone_id_fk='".$v->zone_id_fk."' 
+                            and shelf_id_fk='".$v->shelf_id_fk."' 
+                            and shelf_floor='".$v->shelf_floor."' 
+
+                            ");
+
                         }else{
-                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."'
+
+                            and business_location_id_fk='".$v->business_location_id_fk."' 
+                            and branch_id_fk='".$v->branch_id_fk."' 
+                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                            and zone_id_fk='".$v->zone_id_fk."' 
+                            and shelf_id_fk='".$v->shelf_id_fk."' 
+                            and shelf_floor='".$v->shelf_floor."' 
+
+                            ");
+
                         }
                       }
        

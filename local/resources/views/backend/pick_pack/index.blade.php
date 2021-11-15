@@ -818,7 +818,8 @@ $(function() {
 
 
 
-                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                 // + '<a href="javascript: void(0);" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.pick_pack_packing_code.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_pick_pack_packing_code" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
 
 
     	                        ).addClass('input');
@@ -1384,6 +1385,44 @@ $(function() {
                 
      });
     </script>
+
+
+  <script>
+      
+      $(document).on('click', '.remove_01', function(event) {
+
+            var id = $(this).data('id');
+            var table = $(this).data('table');
+            var file = $(this).data('file');
+
+            // alert(id+" : "+table+" : "+file);
+            // return false;
+
+            if (!confirm("Are you sure ? ")){
+                return false;
+            }else{
+
+            $.ajax({
+
+               type:'POST',
+               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
+                success:function(data){
+                     console.log(data); 
+                     location.reload();
+                  },
+                error: function(jqXHR, textStatus, errorThrown) { 
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                }
+            });
+
+        }
+
+    });
+
+    </script>
+
 
     <script>
 

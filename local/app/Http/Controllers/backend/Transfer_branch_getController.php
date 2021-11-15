@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use App\Http\Controllers\backend\AjaxController;
+
 
 class Transfer_branch_getController extends Controller
 {
@@ -323,6 +325,63 @@ CREATE TABLE `db_stocks` (
 
                  }
 
+
+                 $insertStockMovement = new  AjaxController();
+
+                  // รับเข้าจากการโอน
+                  $Data = DB::select("
+                          SELECT
+                          db_transfer_branch_get.business_location_id_fk,
+                          db_transfer_branch_get.tr_number as doc_no,
+                          db_transfer_branch_get.updated_at as doc_date,
+                          db_transfer_branch_get.branch_id_fk,
+                          db_transfer_branch_get_products_receive.product_id_fk,
+                          db_transfer_branch_get_products_receive.lot_number,
+                          db_transfer_branch_get_products_receive.lot_expired_date,
+                          db_transfer_branch_get_products_receive.amt_get as amt,1 as 'in_out',
+                          product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_transfer_branch_get.approve_status as status
+                          ,(case WHEN db_transfer_branch_get.tr_status_get=6 THEN 'โอนระหว่างสาขา (รับคืนจากการฏิเสธการรับ)'
+                          ELSE 'โอนระหว่างสาขา (รับเข้าจากการโอน)' END) as note,
+                          db_transfer_branch_get.updated_at as dd,
+                          db_transfer_branch_get_products_receive.action_user as action_user,db_transfer_branch_get.approver as approver,db_transfer_branch_get.approve_date as approve_date
+                          FROM
+                          db_transfer_branch_get_products_receive
+                          Left Join db_transfer_branch_get ON db_transfer_branch_get_products_receive.transfer_branch_get_id_fk = db_transfer_branch_get.id
+                          ");
+
+                          foreach ($Data as $key => $value) {
+
+                               $insertData = array(
+                                    "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                    "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                    "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                                    "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                                    "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                                    "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                                    "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                                    "amt" =>  @$value->amt?$value->amt:0,
+                                    "in_out" =>  @$value->in_out?$value->in_out:0,
+                                    "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                                    "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                                    "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                                    "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                                    "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                                    "status" =>  @$value->status?$value->status:0,
+                                    "note" =>  @$value->note?$value->note:NULL,
+
+                                      "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                                      "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                                      "approver" =>  @$value->approver?$value->approver:NULL,
+                                      "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+
+                                    "created_at" =>@$value->dd?$value->dd:NULL
+                              );
+
+                                $insertStockMovement->insertStockMovement($insertData);
+
+                            }
+
+                             DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
 
 
             }

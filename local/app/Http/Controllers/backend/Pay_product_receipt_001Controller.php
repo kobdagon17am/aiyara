@@ -464,9 +464,29 @@ class Pay_product_receipt_001Controller extends Controller
                       ->get();
                       if($_choose->count() > 0){
                         if($v->amt_get<=$_choose[0]->amt){
-                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' 
+
+                            and business_location_id_fk='".$v->business_location_id_fk."' 
+                            and branch_id_fk='".$v->branch_id_fk."' 
+                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                            and zone_id_fk='".$v->zone_id_fk."' 
+                            and shelf_id_fk='".$v->shelf_id_fk."' 
+                            and shelf_floor='".$v->shelf_floor."' 
+
+                            ");
+
                         }else{
-                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' ");
+                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."'
+
+                            and business_location_id_fk='".$v->business_location_id_fk."' 
+                            and branch_id_fk='".$v->branch_id_fk."' 
+                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                            and zone_id_fk='".$v->zone_id_fk."' 
+                            and shelf_id_fk='".$v->shelf_id_fk."' 
+                            and shelf_floor='".$v->shelf_floor."' 
+
+                            ");
+
                         }
                       }
        

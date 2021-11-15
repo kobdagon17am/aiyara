@@ -912,13 +912,13 @@
                                        setTimeout(function () {
                                           // $('#data-table-0002').DataTable().clear().draw();
 
-                                          if(time_pay==1){
+                                          // if(time_pay==1){
 
-                                            location.replace('{{ url("backend/pay_requisition_001") }}');
+                                          //   location.replace('{{ url("backend/pay_requisition_001") }}');
 
-                                          }else{
+                                          // }else{
                                             location.reload();
-                                          }
+                                          // }
                                           
                                       }, 1000);
                                 }
@@ -988,7 +988,6 @@
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
-      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");

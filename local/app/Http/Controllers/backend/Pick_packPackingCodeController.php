@@ -83,11 +83,12 @@ class Pick_packPackingCodeController extends Controller
               $Customer = DB::select(" select * from customers where id=".@$value->customers_id_fk." ");
               array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
             }
-            $arr = implode(',', $array);
-            // return $arr;
-            return $array[0];
+            $arr = implode('<br>', $array);
+            return $arr;
+            // return $array[0];
           }
       })
+      ->escapeColumns('customer_name')
       ->addColumn('action_user_name', function($row) {
         if(@$row->action_user!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
