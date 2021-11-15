@@ -625,7 +625,7 @@ $(function() {
                 if(aData['check_case_sent_free']=="sent_free"){
                 }else{
 
-                      if(aData['delivery_location']==4){
+                      if(aData['status_pack'] != "1" && aData['delivery_location']==4){
                          // alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
                          $("td:eq(0)", nRow).prop('disabled',true); 
                          $("td:eq(1)", nRow).prop('disabled',true); 

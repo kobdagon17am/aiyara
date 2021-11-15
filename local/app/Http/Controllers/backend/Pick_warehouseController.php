@@ -1297,9 +1297,7 @@ GROUP BY db_order_products_list.product_id_fk
         
 
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");
-              // return $d3[0]->addr_send;
               foreach ($d3 as $key => $v3) {
-                 // echo $v3->addr_send;
                  $recipient_code = $v3->packing_code!=0?"P1".sprintf("%05d",$v3->packing_code):$v3->receipt;
                  DB::select(" INSERT IGNORE INTO `db_consignments` 
                   SET 

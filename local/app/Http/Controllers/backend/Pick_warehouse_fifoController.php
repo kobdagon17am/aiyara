@@ -512,6 +512,8 @@ class Pick_warehouse_fifoController extends Controller
           // เอาสินค้าคืนคลัง
           // return "OK";
 
+          DB::select(" DELETE FROM db_consignments WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
+
           $r = DB::select(" 
             SELECT 
             time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now()
@@ -614,36 +616,6 @@ class Pick_warehouse_fifoController extends Controller
                }
 
             }else{
-
-
-                //   $ch01 =  DB::select(" SELECT time_pay FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1 ");
-
-                //   $ch02 =  DB::select(" SELECT * FROM db_pay_requisition_002_cancel_log WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' and status_cancel=1 GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1 ");
-    
-                // // return count($ch);
-                // if(count($ch02)>0){
-                //   // 2=สินค้าไม่พอ มีบางรายการค้างจ่าย,3=สินค้าพอต่อการจ่ายครั้งนี้ 
-                //   DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
-                //   // 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
-                //   DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
-                // }else{
-
-
-                //    if(!empty($ch01[0]->time_pay)){
-
-                //         $ch03 =  DB::select(" SELECT * FROM `db_pay_requisition_002_pay_history` WHERE time_pay in (".$ch01[0]->time_pay.") AND amt_remain > 0 ");
-
-                //         if(count($ch03)>0){
-                //            DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
-                //            DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
-                //         }else{
-                //            DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
-                //            DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
-                //         }
-                //    }
-
-                // }
-
           
                // เช็คว่ามีสินค้าค้างจ่ายหรือไม่
                   $ch01 =  DB::select(" SELECT * FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ORDER BY time_pay DESC LIMIT 1 ");
