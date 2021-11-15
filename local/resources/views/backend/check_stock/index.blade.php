@@ -347,7 +347,7 @@
                             <i class="bx bx-search align-middle "></i> SEARCH
                           </a>
 
-                         <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;" >
+                         <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;display: none;" >
                             <i class="bx bx-cog align-middle "></i> Process Stock movement
                           </a>
 
@@ -418,7 +418,7 @@
             $(document).on('click', '.btnSearch', function(event) {
                   event.preventDefault();
 
-                  $("#spinner_frame").show();
+                  // $("#spinner_frame").show();
 
                   // return false;
 
@@ -551,9 +551,9 @@
                             });
 
 
-                  setTimeout(function(){
-                    $("#spinner_frame").hide();
-                  },2000);
+                  // setTimeout(function(){
+                  //   $("#spinner_frame").hide();
+                  // },2000);
 
             });
 
@@ -828,8 +828,8 @@
   $(document).ready(function(){
 
     setTimeout(function(){
-       // $('.btnStockMovement').trigger('click');
-    },1500);
+       $('.btnStockMovement').trigger('click');
+    },1000);
 
     setTimeout(function(){
        $('.btnSearch').trigger('click');
@@ -849,15 +849,20 @@
                   $("#spinner_frame").show();
 
 
-                   $.ajax({
-                       url: " {{ url('backend/truncateStockMovement') }} ",
-                      method: "post",
-                      data: {
-                        "_token": "{{ csrf_token() }}",
-                      },
-                      success:function(data)
-                      {
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//                    $.ajax({
+//                        url: " {{ url('backend/truncateStockMovement') }} ",
+//                       method: "post",
+//                       data: {
+//                         "_token": "{{ csrf_token() }}",
+//                       },
+//                       success:function(data)
+//                       {
+// // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+// // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//                       }
+//                     });
+
                             // setTimeout(function(){
 
                             //      $("#spinner_frame").show();
@@ -1062,16 +1067,17 @@
                               {
 
                                 console.log(data);
-                                $("#spinner_frame").hide();
+                                if(data){
+                                  $("#spinner_frame").hide();
+                                }
+                                
 
                               }
                             });
 
                       },2000);
 
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                      }
-                    });
+
 
              });
 

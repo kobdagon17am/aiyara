@@ -6296,24 +6296,24 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
         // ดึงจาก จ่ายสินค้าตามใบเบิก db_pay_requisition_001
         $Data = DB::select("
 
-SELECT
-db_pay_requisition_002.business_location_id_fk,
-db_pick_pack_packing.packing_code as doc_no,
-db_pick_pack_packing.created_at as doc_date,
-db_pay_requisition_002.branch_id_fk,
-product_id_fk,
-db_pay_requisition_002.lot_number,
-db_pay_requisition_002.lot_expired_date,
-amt_get as amt,
-2 as 'in_out',
-db_pay_requisition_002.product_unit_id_fk,
-warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-(SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
-concat('จ่ายสินค้าตามใบเบิก') as note,
-(SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
-FROM db_pay_requisition_002
-Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
-Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
+                SELECT
+                db_pay_requisition_002.business_location_id_fk,
+                db_pick_pack_packing.packing_code as doc_no,
+                db_pick_pack_packing.created_at as doc_date,
+                db_pay_requisition_002.branch_id_fk,
+                product_id_fk,
+                db_pay_requisition_002.lot_number,
+                db_pay_requisition_002.lot_expired_date,
+                amt_get as amt,
+                2 as 'in_out',
+                db_pay_requisition_002.product_unit_id_fk,
+                warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+                (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+                concat('จ่ายสินค้าตามใบเบิก') as note,
+                (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
+                FROM db_pay_requisition_002
+                Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+                Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
 
           ");
 
@@ -6323,28 +6323,28 @@ Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packin
 
                     $Data1 = DB::select("
 
-SELECT
-db_pay_requisition_002.business_location_id_fk,
-db_pick_pack_packing.packing_code as doc_no,
-db_pick_pack_packing.created_at as doc_date,
-db_pay_requisition_002.branch_id_fk,
-product_id_fk,
-db_pay_requisition_002.lot_number,
-db_pay_requisition_002.lot_expired_date,
-amt_get as amt,
-2 as 'in_out',
-db_pay_requisition_002.product_unit_id_fk,
-warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-(SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
-concat('จ่ายสินค้าตามใบเบิก') as note,
-(SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
-,
-db_pick_pack_requisition_code.action_user as action_user,db_pick_pack_packing_code.approver as approver, db_pick_pack_packing_code.aprove_date as approve_date
+                        SELECT
+                        db_pay_requisition_002.business_location_id_fk,
+                        db_pick_pack_packing.packing_code as doc_no,
+                        db_pick_pack_packing.created_at as doc_date,
+                        db_pay_requisition_002.branch_id_fk,
+                        product_id_fk,
+                        db_pay_requisition_002.lot_number,
+                        db_pay_requisition_002.lot_expired_date,
+                        amt_get as amt,
+                        2 as 'in_out',
+                        db_pay_requisition_002.product_unit_id_fk,
+                        warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+                        (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+                        concat('จ่ายสินค้าตามใบเบิก') as note,
+                        (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd
+                        ,
+                        db_pick_pack_requisition_code.action_user as action_user,db_pick_pack_packing_code.approver as approver, db_pick_pack_packing_code.aprove_date as approve_date
 
-FROM db_pay_requisition_002
-Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
-Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
-Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pack_packing.packing_code_id_fk
+                        FROM db_pay_requisition_002
+                        Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+                        Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
+                        Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pack_packing.packing_code_id_fk
 
 
                   ");
@@ -6353,30 +6353,29 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
 
                   foreach (@$Data1 as $key => $value) {
                        $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
+                            "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                            "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                            "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                            "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                            "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                            "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                            "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                            "amt" =>  @$value->amt?$value->amt:0,
+                            "in_out" =>  @$value->in_out?$value->in_out:0,
+                            "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                            "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                            "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                            "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                            "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                            "status" =>  @$value->status?$value->status:0,
+                            "note" =>  @$value->note?$value->note:NULL,
 
-                    "action_user" =>  @$value->action_user?$value->action_user:NULL,
-                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
-                    "approver" =>  @$value->approver?$value->approver:NULL,
-                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+                            "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                            "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                            "approver" =>  @$value->approver?$value->approver:NULL,
+                            "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
 
-
-                          "created_at" =>@$value->dd?$value->dd:NULL
+                            "created_at" =>@$value->dd?$value->dd:NULL
                       );
 
                         AjaxController::insertStockMovement($insertData);
@@ -6391,29 +6390,27 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
 
                     $Data1 = DB::select("
 
-SELECT
-db_pay_requisition_002.business_location_id_fk,
-db_pick_pack_packing.packing_code as doc_no,
-db_pick_pack_packing.created_at as doc_date,
-db_pay_requisition_002.branch_id_fk,
-product_id_fk,
-db_pay_requisition_002.lot_number,
-db_pay_requisition_002.lot_expired_date,
-amt_get as amt,
-2 as 'in_out',
-db_pay_requisition_002.product_unit_id_fk,
-warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
-(SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
-concat('จ่ายสินค้าตามใบเบิก ครั้งที่ ', time_pay) as note,
-(SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd,
-db_pick_pack_requisition_code.action_user as action_user,db_pick_pack_packing_code.approver as approver, db_pick_pack_packing_code.aprove_date as approve_date
+                        SELECT
+                        db_pay_requisition_002.business_location_id_fk,
+                        db_pick_pack_packing.packing_code as doc_no,
+                        db_pick_pack_packing.created_at as doc_date,
+                        db_pay_requisition_002.branch_id_fk,
+                        product_id_fk,
+                        db_pay_requisition_002.lot_number,
+                        db_pay_requisition_002.lot_expired_date,
+                        amt_get as amt,
+                        2 as 'in_out',
+                        db_pay_requisition_002.product_unit_id_fk,
+                        warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,
+                        (SELECT status_sent from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as status,
+                        concat('จ่ายสินค้าตามใบเบิก ครั้งที่ ', time_pay) as note,
+                        (SELECT pay_date from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk=db_pay_requisition_002.pick_pack_requisition_code_id_fk limit 1) as dd,
+                        db_pick_pack_requisition_code.action_user as action_user,db_pick_pack_packing_code.approver as approver, db_pick_pack_packing_code.aprove_date as approve_date
 
-FROM db_pay_requisition_002
-Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
-Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
-Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pack_packing.packing_code_id_fk
-
-
+                        FROM db_pay_requisition_002
+                        Left Join db_pick_pack_requisition_code ON db_pay_requisition_002.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+                        Left Join db_pick_pack_packing ON db_pick_pack_requisition_code.pick_pack_packing_code_id_fk = db_pick_pack_packing.packing_code_id_fk
+                        Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pack_packing.packing_code_id_fk
 
                   ");
 
@@ -6424,30 +6421,29 @@ Left Join db_pick_pack_packing_code ON db_pick_pack_packing_code.id = db_pick_pa
                   foreach (@$Data1 as $key => $value) {
 
                        $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
+                            "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                            "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                            "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                            "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                            "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                            "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                            "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+                            "amt" =>  @$value->amt?$value->amt:0,
+                            "in_out" =>  @$value->in_out?$value->in_out:0,
+                            "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+                            "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+                            "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+                            "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+                            "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+                            "status" =>  @$value->status?$value->status:0,
+                            "note" =>  @$value->note?$value->note:NULL,
 
-                                              "action_user" =>  @$value->action_user?$value->action_user:NULL,
-                    "action_date" =>  @$value->action_date?$value->action_date:NULL,
-                    "approver" =>  @$value->approver?$value->approver:NULL,
-                    "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+                            "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                            "action_date" =>  @$value->action_date?$value->action_date:NULL,
+                            "approver" =>  @$value->approver?$value->approver:NULL,
+                            "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
 
-
-                          "created_at" =>@$value->dd?$value->dd:NULL
+                            "created_at" =>@$value->dd?$value->dd:NULL
                       );
                         AjaxController::insertStockMovement($insertData);
                 }
