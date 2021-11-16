@@ -115,7 +115,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> รายการใบเบิก </h4>
+            <h4 class="mb-0 font-size-18 "> รายการใบเบิก </h4>
             <!-- test_clear_data -->
         </div>
     </div>
@@ -998,7 +998,8 @@
       ?>
           <script>
           // location.replace( "{{ url('backend/pick_pack') }}");
-          location.replace( "{{ url('backend/delivery') }}");
+          // location.replace( "{{ url('backend/delivery') }}");
+          location.replace( "{{ url('backend/pay_requisition_001') }}");
           </script>
           <?php
       }

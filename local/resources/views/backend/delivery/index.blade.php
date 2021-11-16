@@ -1662,10 +1662,63 @@ $(function() {
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+      DB::select("TRUNCATE db_pay_product_receipt_001;");
+      DB::select("TRUNCATE db_pay_product_receipt_002;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      DB::select("TRUNCATE `db_pay_requisition_001`;");
+      DB::select("TRUNCATE `db_pay_requisition_002`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      DB::select("TRUNCATE `db_pick_pack_packing`;");
+      DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      DB::select("TRUNCATE db_stocks_return;");
+      DB::select("TRUNCATE db_stock_card;");
+      DB::select("TRUNCATE db_stock_card_tmp;");
+          
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
       DB::select("TRUNCATE `db_consignments`;");
       DB::select("UPDATE `db_delivery` SET `status_pick_pack`='0' ;");
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+      DB::select("TRUNCATE `db_transfer_warehouses_code`;");
+      DB::select("TRUNCATE `db_stock_movement_tmp`;");
+      DB::select("TRUNCATE `db_stock_movement`;");
+      DB::select("TRUNCATE `db_transfer_warehouses_details`;");
+      DB::select("TRUNCATE `db_stocks`;");
+      DB::select("TRUNCATE `db_transfer_choose`;");
+      DB::select("TRUNCATE `db_general_receive`;");
+      DB::select("TRUNCATE `db_general_takeout`;");
+      DB::select("TRUNCATE `db_products_borrow_code`;");
+      DB::select("TRUNCATE `db_products_borrow_details`;");
+      DB::select("TRUNCATE `db_products_borrow_choose`;");
+      DB::select("TRUNCATE `db_transfer_branch_code`;");
+      DB::select("TRUNCATE `db_transfer_branch_get_products`;");
+      DB::select("TRUNCATE `db_transfer_branch_get_products_receive`;");
+      DB::select("TRUNCATE `db_transfer_branch_get`;");
+      DB::select("TRUNCATE `db_transfer_branch_details_log`;");
+      DB::select("TRUNCATE `db_transfer_branch_details`;");
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
       ?>
           <script>
