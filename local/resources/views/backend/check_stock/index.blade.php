@@ -53,7 +53,14 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Check Stock </h4>
+          <?php
+              //Super Admin
+              if(@\Auth::user()->id==1){
+                  ?><h4 class="mb-0 font-size-18 test_clear_data "> Check Stock </h4><?php
+              }else{
+                  ?><h4 class="mb-0 font-size-18"> Check Stock </h4><?php
+              }
+          ?>
             <h4 class="mb-0 font-size-18">
 
    <!--           <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;" >
@@ -828,12 +835,12 @@
   $(document).ready(function(){
 
     setTimeout(function(){
-       $('.btnStockMovement').trigger('click');
+       // $('.btnStockMovement').trigger('click');
     },1000);
 
     setTimeout(function(){
        $('.btnSearch').trigger('click');
-    },1500);
+    },500);
 
   });
 </script>
@@ -1083,5 +1090,136 @@
 
         });
     </script>
+
+
+
+        <script>
+
+      $(document).ready(function() {
+            $(".test_clear_data").on('click',function(){
+              
+                  if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสำหรับเมนูนี้ ? ")){
+                      return false;
+                  }else{
+                  
+                      location.replace( window.location.href+"?test_clear_data=test_clear_data ");
+       
+                  }
+              
+            });
+                
+      });
+
+    </script>
+   
+    <?php 
+    if(isset($_REQUEST['test_clear_data'])){
+      // DB::select("TRUNCATE `db_delivery` ;");
+      // DB::select("TRUNCATE `db_delivery_packing` ;");
+      // DB::select("TRUNCATE `db_delivery_packing_code` ;");
+      // DB::select("TRUNCATE `db_pick_warehouse_packing_code` ;");
+      // DB::select("TRUNCATE db_consignments;");
+
+      // DB::select("TRUNCATE `db_pick_pack_packing`;");
+      // DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+
+      // DB::select("TRUNCATE db_pay_product_receipt_001;");
+      // DB::select("TRUNCATE db_pay_product_receipt_002;");
+      // DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      // DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      // DB::select("TRUNCATE `db_pay_requisition_001`;");
+      // DB::select("TRUNCATE `db_pay_requisition_002`;");
+      // DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      // DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      // DB::select("TRUNCATE `db_pick_pack_packing`;");
+      // DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      // DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      // DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      // DB::select("TRUNCATE db_stocks_return;");
+      // DB::select("TRUNCATE db_stock_card;");
+      // DB::select("TRUNCATE db_stock_card_tmp;");
+          
+      // $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      // $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      // $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+      // DB::select("TRUNCATE db_pay_product_receipt_001;");
+      // DB::select("TRUNCATE db_pay_product_receipt_002;");
+      // DB::select("TRUNCATE db_pay_product_receipt_002_pay_history;");
+      // DB::select("TRUNCATE db_pay_product_receipt_002_cancel_log;");
+
+      // DB::select("TRUNCATE `db_pay_requisition_001`;");
+      // DB::select("TRUNCATE `db_pay_requisition_002`;");
+      // DB::select("TRUNCATE `db_pay_requisition_002_cancel_log`;");
+      // DB::select("TRUNCATE `db_pay_requisition_002_pay_history`;");
+
+      // DB::select("TRUNCATE `db_pick_pack_packing`;");
+      // DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      
+      // DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
+
+      // DB::select("TRUNCATE db_pick_warehouse_qrcode;");
+      // DB::select("TRUNCATE db_stocks_return;");
+      // DB::select("TRUNCATE db_stock_card;");
+      // DB::select("TRUNCATE db_stock_card_tmp;");
+          
+      // $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      // $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+      // $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+
+      // DB::select("TRUNCATE `db_pick_pack_packing`;");
+      // DB::select("TRUNCATE `db_pick_pack_packing_code`;");
+      // DB::select("TRUNCATE `db_consignments`;");
+      // DB::select("UPDATE `db_delivery` SET `status_pick_pack`='0' ;");
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// Stock case
+      DB::select("TRUNCATE `db_stocks`;");
+      DB::select("TRUNCATE `db_stock_movement`;");
+      DB::select("TRUNCATE `db_general_receive`;");
+
+      // DB::select("TRUNCATE `db_transfer_warehouses_code`;");
+      // DB::select("TRUNCATE `db_stock_movement_tmp`;");
+      // DB::select("TRUNCATE `db_transfer_warehouses_details`;");
+      // DB::select("TRUNCATE `db_transfer_choose`;");
+      // DB::select("TRUNCATE `db_general_receive`;");
+      // DB::select("TRUNCATE `db_general_takeout`;");
+      // DB::select("TRUNCATE `db_products_borrow_code`;");
+      // DB::select("TRUNCATE `db_products_borrow_details`;");
+      // DB::select("TRUNCATE `db_products_borrow_choose`;");
+      // DB::select("TRUNCATE `db_transfer_branch_code`;");
+      // DB::select("TRUNCATE `db_transfer_branch_get_products`;");
+      // DB::select("TRUNCATE `db_transfer_branch_get_products_receive`;");
+      // DB::select("TRUNCATE `db_transfer_branch_get`;");
+      // DB::select("TRUNCATE `db_transfer_branch_details_log`;");
+      // DB::select("TRUNCATE `db_transfer_branch_details`;");
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+      ?>
+          <script>
+          location.replace( "{{ url('backend/check_stock') }}");
+          $(".myloading").hide();
+          </script>
+          <?php
+      }
+    ?>
 
 @endsection

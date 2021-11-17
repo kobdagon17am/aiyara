@@ -69,13 +69,12 @@
 
               @if( !empty(@$sRow) )
               <div class="form-group row">
-                <label for="" class="col-md-3 col-form-label"> Ref. code : * </label>
+                <label for="" class="col-md-3 col-form-label"> Ref. code : </label>
                 <div class="col-md-8">
-                    <input class="form-control" type="text" value="{{ @$ref_code }}"  readonly="">
+                    <input class="form-control" type="text" value="{{ @$sRow->ref_doc }}"  readonly="">
                 </div>
               </div>
                @endif
-
 
 @if(@\Auth::user()->permission==1)
 
@@ -84,11 +83,17 @@
                 <div class="col-md-8">
                   <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
                     <option value="">-Business Location-</option>
-                    @if(@$sBusiness_location)
-                      @foreach(@$sBusiness_location AS $r)
-                        <option value="{{@$r->id}}"  >{{$r->txt_desc}}</option>
-                      @endforeach
-                    @endif
+
+                        @if(@$sBusiness_location)
+                          @foreach(@$sBusiness_location AS $r)
+                               @IF(!empty(@$sRow->business_location_id_fk))
+                                <option value="{{@$r->id}}" {{ (@$r->id==(@$sRow->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
+                                @ELSE
+                               <option value="{{@$r->id}}" >{{$r->txt_desc}}</option>
+                                @endif
+                              @endforeach
+                          @endif
+
                   </select>
                 </div>
               </div>
@@ -97,8 +102,17 @@
                 <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                 <div class="col-md-8">
                     <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                       <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
+                      @IF(!empty(@$sRow->branch_id_fk))
+                         @if(@$sBranchs)
+                          @foreach(@$sBranchs AS $r)
+                            <option value="{{@$r->id}}" {{ (@$r->id==(@$sRow->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                          @endforeach
+                         @endif
+                      @ELSE
+                           <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
+                      @endif
                     </select>
+
                 </div>
               </div>
 @ELSE
@@ -346,7 +360,7 @@
               <div class="form-group row">
                 <label for="shelf_floor" class="col-md-3 col-form-label">รับเข้าชั้นของ Shelf :</label>
                 <div class="col-md-3">
-                  <input class="form-control" type="number" id="shelf_floor" name="shelf_floor" required>
+                  <input class="form-control" type="number" id="shelf_floor" name="shelf_floor" min="1" required>
                 </div>
               </div>
 
@@ -411,7 +425,7 @@
                 <label for="shelf_floor" class="col-md-3 col-form-label">รับเข้าชั้นของ Shelf : *</label>
                 <div class="col-md-3">
                   <input class="form-control" type="number" value="{{ @$sRow->shelf_floor }}" id="shelf_floor"
-                    name="shelf_floor" required>
+                    name="shelf_floor" min="1" required>
                 </div>
               </div>
 

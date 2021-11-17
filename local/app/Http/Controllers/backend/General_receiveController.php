@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use PDO;
 use File;
 use App\Http\Controllers\backend\AjaxController;
 
@@ -113,7 +114,6 @@ class General_receiveController extends Controller
     {
        $sRow = \App\Models\Backend\General_receive::find($id);
        // $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
-       $ref_code = "CODE".$sRow->id;
        // dd($Product_in_cause);
        $Product_in_cause  = DB::select(" SELECT * FROM `dataset_product_in_cause` where id not in(1)  ");
        $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
@@ -122,7 +122,7 @@ class General_receiveController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
-        if(@\Auth::user()->permission==1){
+        // if(@\Auth::user()->permission==1){
 
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -132,18 +132,18 @@ class General_receiveController extends Controller
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1 ");
 
-        }else{
+        // }else{
 
-            $Products = DB::select("SELECT products.id as product_id,
-            products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
-            FROM
-            products_details
-            Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
-            ORDER BY products.product_code");
+        //     $Products = DB::select("SELECT products.id as product_id,
+        //     products.product_code,
+        //     (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+        //     FROM
+        //     products_details
+        //     Left Join products ON products_details.product_id_fk = products.id
+        //     WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+        //     ORDER BY products.product_code");
 
-        }
+        // }
 
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
@@ -177,7 +177,6 @@ class General_receiveController extends Controller
            'Check_stock'=>$Check_stock,
            'Product_status'=>$Product_status,
            'Approver'=>$Approver,
-           'ref_code'=>$ref_code,
         ) );
     }
 
@@ -199,9 +198,16 @@ class General_receiveController extends Controller
 
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_in_cause_id_fk    = request('product_in_cause_id_fk');
-          $sRow->description    = request('description');
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->product_status_id_fk    = request('product_status_id_fk');
+          
+          if(request('product_in_cause_id_fk')==4){
+              $sRow->description    = request('description');
+          }else{
+              $description = DB::select("SELECT * FROM `dataset_product_status` where id=".request('product_status_id_fk')."");
+              $sRow->description    = $description[0]->txt_desc;
+          }
+
           $sRow->loan_ref_number    = request('loan_ref_number');
           $sRow->lot_number    = request('lot_number');
           $sRow->lot_expired_date    = request('lot_expired_date');
@@ -217,15 +223,28 @@ class General_receiveController extends Controller
 
           $sRow->pickup_firstdate    = date('Y-m-d H:i:s');
           $sRow->recipient    = request('recipient');
+          $sRow->action_date    = date('Y-m-d H:i:s');
+
           $sRow->approver    = request('approver');
           $sRow->approve_status    = request('approve_status')?request('approve_status'):0;
+          $sRow->approve_date    = date('Y-m-d H:i:s');
 
           $sRow->created_at = date('Y-m-d H:i:s');
+
+
           $sRow->save();
 
 
+          $stock_type_id_fk = 3 ; // `dataset_stock_type` 3 รับสินค้าเข้าทั่วไป
+          $ref_table_id = $sRow->id ;
+          // รหัสอ้างอิงเอกสาร (แสดงรหัสอ้างอิงในตารางที่เชื่อมโยงกันทุกตาราง) REF+BL+branch+stock_type_id_fk+(yy+mm+dd)+ref_table_id
+          $ref_doc = 'REF'.$sRow->business_location_id_fk.$sRow->branch_id_fk.$stock_type_id_fk.date('ymd').$ref_table_id;
+          DB::select(" UPDATE `db_general_receive` SET ref_doc='".$ref_doc."' WHERE id=".$sRow->id." ");
+
+          // `approve_status` int(11) DEFAULT '0' COMMENT '1=อนุมัติแล้ว',
         if(request('approve_status')=='1'){
 
+// นำเข้า Stock 
                 $value=DB::table('db_stocks')
                 ->where('business_location_id_fk', request('business_location_id_fk'))
                 ->where('branch_id_fk', request('branch_id_fk'))
@@ -256,6 +275,8 @@ class General_receiveController extends Controller
                         'created_at' => date("Y-m-d H:i:s"),
                       ));
 
+                     $lastID = DB::getPdo()->lastInsertId();
+
                 }else{
 
                     DB::table('db_stocks')
@@ -271,11 +292,16 @@ class General_receiveController extends Controller
                       ->update(array(
                         'amt' => $value[0]->amt + request('amt'),
                       ));
+
+                    $lastID = DB::table('db_stocks')->latest()->first();
                 }
 
-        $insertStockMovement = new  AjaxController();
+        // $insertStockMovement = new  AjaxController();
 
-                   // ดึงจากตารางรับเข้า > db_general_receive
+        // ดึงจากตารางรับเข้า > db_general_receive
+        // สคริปต์เดิม กวาดมาทั้งหมด 
+
+        /*
         $Data = DB::select("
                 SELECT db_general_receive.business_location_id_fk,
                 (
@@ -327,14 +353,82 @@ class General_receiveController extends Controller
             }
 
              DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+  */
+
+/*
+เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+1 จ่ายสินค้าตามใบเบิก 26
+2 จ่ายสินค้าตามใบเสร็จ  27
+3 รับสินค้าเข้าทั่วไป 28
+4 รับสินค้าเข้าตาม PO 29
+5 นำสินค้าออก 30
+6 สินค้าเบิก-ยืม  31
+7 โอนภายในสาขา  32
+8 โอนระหว่างสาขา  33
+*/
+                $stock_type_id_fk = 3 ;
+                $stock_id_fk = $lastID ;
+                $ref_table = 'db_general_receive' ;
+                $ref_table_id = $sRow->id ;
+                $ref_doc = $sRow->ref_doc;
+
+                $value=DB::table('db_stock_movement')
+                ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+                ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+                ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+                ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+                ->get();
+
+                if($value->count() == 0){
+
+                      DB::table('db_stock_movement')->insert(array(
+                          "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                          "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                          "ref_table" =>  @$ref_table?$ref_table:0,
+                          "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                          "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                          // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                          "doc_date" =>  $sRow->created_at,
+                          "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+                          "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
+                          "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+                          "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+                          "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+                          "amt" =>  @$sRow->amt?$sRow->amt:0,
+                          "in_out" =>  1,
+                          "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+
+                          "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
+                          "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
+                          "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
+                          "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+
+                          "status" =>  @$sRow->approve_status?$sRow->approve_status:0,
+                          "note" =>  'รับสินค้าเข้าทั่วไป ',
+                          "note2" =>  @$sRow->description?$sRow->description:NULL,
+
+                          "action_user" =>  @$sRow->recipient?$sRow->recipient:NULL,
+                          "action_date" =>  @$sRow->action_date?$sRow->action_date:NULL,
+                          "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+                          "approve_date" =>  @$sRow->approve_date?$sRow->approve_date:NULL,
+
+                          "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                      ));
+
+                }
+
 
         }
 
 
           \DB::commit();
 
-           return redirect()->to(url("backend/general_receive/".$sRow->id."/edit"));
-
+          if(request('approve_status')=='1'){
+            return redirect()->to(url("backend/general_receive"));
+          }else{
+            return redirect()->to(url("backend/general_receive/".$sRow->id."/edit"));
+          }
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -405,9 +499,6 @@ class General_receiveController extends Controller
         if(!empty($row->pickup_firstdate)){
           return $row->pickup_firstdate;
         }
-      })
-      ->addColumn('ref_code', function($row) {
-          return 'CODE'.$row->id;
       })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;

@@ -46,11 +46,31 @@ class Stock_cardController extends Controller
     }
 
     
-    public function Datatable(){
+    public function Datatable(Request $req){
       // $sTable = \App\Models\Backend\Stock_card::search()->orderBy('action_date', 'asc');
       // ดึงข้อมูลเข้าตารางสรุป
       $temp_db_stock_card = "temp_db_stock_card".\Auth::user()->id;
       // return $temp_db_stock_card ;
+
+
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+        // if(@\Auth::user()->permission==1){
+        //     if(!empty( $req->business_location_id_fk) ){
+        //         $business_location_id = " and business_location_id = ".$req->business_location_id_fk." " ;
+        //     }else{
+        //         $business_location_id = "";
+        //     }
+        //     if(!empty( $req->branch_id_fk) ){
+        //         $branch_id_fk = " and branch_id_fk = ".$req->branch_id_fk." " ;
+        //     }else{
+        //         $branch_id_fk = " ";
+        //     }
+        // }else{
+            $business_location_id = " and business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+        // }
 
       DB::select(" SET @csum := 0; ");
       // $sTable = DB::select(" 
@@ -60,7 +80,9 @@ class Stock_cardController extends Controller
       //      as remain FROM db_stock_card ORDER BY action_date;
       //     ");
       $sTable = DB::select(" 
-          SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM $temp_db_stock_card ORDER BY action_date;
+          SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain FROM $temp_db_stock_card 
+          where 1 $business_location_id 
+           ORDER BY action_date;
           ");     
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -99,6 +121,9 @@ class Stock_cardController extends Controller
       $temp_db_stock_card = "temp_db_stock_card_01".\Auth::user()->id;
       // return $temp_db_stock_card ;
 
+            $business_location_id = " and business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
       DB::select(" SET @csum := 0; ");
       // $sTable = DB::select(" 
       //     SELECT db_stock_card.*,
@@ -109,7 +134,7 @@ class Stock_cardController extends Controller
       $sTable = DB::select(" 
           SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain 
           FROM $temp_db_stock_card 
-          WHERE 1 
+          WHERE 1  $business_location_id
           ORDER BY action_date;
           ");     
       $sQuery = \DataTables::of($sTable);
