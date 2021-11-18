@@ -57,57 +57,141 @@ class Check_stockController extends Controller
 
 
 
-    public function stock_card(Request $request,$id)
+    public function stock_card(Request $request,$product_id_fk)
     {
-        // dd($id);
+        // dd($product_id_fk);
         // dd($request->business_location_id_fk);
         // dd($request->branch_id_fk);
+             // return View('backend.stock_card_01.index');
+          $business_location_id_fk = $request->business_location_id_fk;
+          $branch_id_fk = $request->branch_id_fk;
+          $lot_number = $request->lot_number;
 
-        $business_location_id_fk = $request->business_location_id_fk;
-        $branch_id_fk = $request->branch_id_fk;
-        // dd($request->branch_id_fk);
-        if(!empty($business_location_id_fk)){
-            $wh_01 = " AND business_location_id_fk = ".$business_location_id_fk." ";
-        }else{
-            $wh_01 = "" ; 
-        }
+          // dd($business_location_id_fk);
 
-        if(!empty($branch_id_fk)){
-            $wh_02 = " AND branch_id_fk = ".$branch_id_fk." ";
-        }else{
-            $wh_02 = "" ; 
-        }
+          if(!empty($request->business_location_id_fk) && $request->business_location_id_fk != 'null'){
+            $w_business_location_id_fk_01 = "business_location_id_fk" ;
+            $w_business_location_id_fk_02 = $request->business_location_id_fk ;
+            $w_business_location_id_fk = " AND business_location_id_fk=".$request->business_location_id_fk."" ;
+          }else{
+            $w_business_location_id_fk_01 = "1" ;
+            $w_business_location_id_fk_02 = "1" ;
+            $w_business_location_id_fk = '';
+          }
+          // dd($w_business_location_id_fk_01);
 
-// date(lot_expired_date) >= CURDATE() 
-        $Products = DB::select("SELECT products.id as product_id,
+          if(!empty($request->branch_id_fk) && $request->branch_id_fk != 'null'){
+            $w_branch_id_fk_01 = "branch_id_fk" ;
+            $w_branch_id_fk_02 = $request->branch_id_fk ;
+            $w_branch_id_fk = " AND branch_id_fk=".$request->branch_id_fk."" ;
+          }else{
+            $w_branch_id_fk_01 = "1" ;
+            $w_branch_id_fk_02 = "1" ;
+            $w_branch_id_fk = '';
+          }
+
+          if(!empty($request->warehouse_id_fk) && $request->warehouse_id_fk != 'null'){
+            $w_warehouse_id_fk_01 = "warehouse_id_fk" ;
+            $w_warehouse_id_fk_02 = $request->warehouse_id_fk ;
+            $w_warehouse_id_fk = " AND warehouse_id_fk=".$request->warehouse_id_fk."" ;
+          }else{
+            $w_warehouse_id_fk_01 = "1" ;
+            $w_warehouse_id_fk_02 = "1" ;
+            $w_warehouse_id_fk = '';
+          }
+
+          if(!empty($request->zone_id_fk) && $request->zone_id_fk != 'null'){
+            $w_zone_id_fk_01 = "zone_id_fk" ;
+            $w_zone_id_fk_02 = $request->zone_id_fk ;
+            $w_zone_id_fk = " AND zone_id_fk=".$request->zone_id_fk."" ;
+          }else{
+            $w_zone_id_fk_01 = "1" ;
+            $w_zone_id_fk_02 = "1" ;
+            $w_zone_id_fk = '';
+          }
+
+          if(!empty($request->shelf_id_fk) && $request->shelf_id_fk != 'null'){
+            $w_shelf_id_fk_01 = "shelf_id_fk" ;
+            $w_shelf_id_fk_02 = $request->shelf_id_fk ;
+            $w_shelf_id_fk = " AND shelf_id_fk=".$request->shelf_id_fk."" ;
+          }else{
+            $w_shelf_id_fk_01 = "1" ;
+            $w_shelf_id_fk_02 = "1" ;
+            $w_shelf_id_fk = '';
+          }
+
+          if(!empty($request->shelf_floor) && $request->shelf_floor != 'null'){
+            $w_shelf_floor_01 = "shelf_floor" ;
+            $w_shelf_floor_02 = $request->shelf_floor ;
+            $w_shelf_floor = " AND shelf_floor=".$request->shelf_floor."" ;
+          }else{
+            $w_shelf_floor_01 = "1" ;
+            $w_shelf_floor_02 = "1" ;
+            $w_shelf_floor = '';
+          }
+
+          if(!empty($request->lot_number) && $request->lot_number != 'null'){
+            $w_lot_number_01 = "lot_number" ;
+            $w_lot_number_02 = $request->lot_number ;
+            $w_lot_number = " AND lot_number=".$request->lot_number."" ;
+          }else{
+            $w_lot_number_01 = "1" ;
+            $w_lot_number_02 = "1" ;
+            $w_lot_number = '';
+          }
+
+// dd($w_business_location_id_fk_01);
+
+           $Stock = \App\Models\Backend\Check_stock::where('product_id_fk',$product_id_fk)
+           ->where(DB::raw($w_business_location_id_fk_01), "=", $w_business_location_id_fk_02)
+           ->where(DB::raw($w_branch_id_fk_01), "=", $w_branch_id_fk_02)
+           ->where(DB::raw($w_warehouse_id_fk_01), "=", $w_warehouse_id_fk_02)
+           ->where(DB::raw($w_zone_id_fk_01), "=", $w_zone_id_fk_02)
+           ->where(DB::raw($w_shelf_id_fk_01), "=", $w_shelf_id_fk_02)
+           ->where(DB::raw($w_shelf_floor_01), "=", $w_shelf_floor_02)
+           ->where(DB::raw($w_lot_number_01), "=", $w_lot_number_02)
+           ->get();
+           // dd($Stock);
+
+        if(!empty($Stock[0]->product_id_fk)){
+
+          $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE products.id=".$id." AND lang_id=1");
+            WHERE products.id=".$Stock[0]->product_id_fk." AND lang_id=1");
 
-         $sBalance = DB::select(" SELECT sum(amt) as amt
-         FROM `db_stocks`
-         WHERE 1
-         AND product_id_fk=$id 
+           $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
-         $wh_01
-         $wh_02
+           $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt 
+            FROM `db_stocks` 
+            where 1 
 
-         GROUP BY product_id_fk
-         ");
-         // dd($Products);
-         // dd($sBalance);
-        $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+            AND product_id_fk=".@$Stock[0]->product_id_fk." 
+
+            $w_business_location_id_fk
+            $w_branch_id_fk
+            $w_warehouse_id_fk
+            $w_zone_id_fk
+            $w_shelf_id_fk
+            $w_shelf_floor
+            $w_lot_number
+
+
+            ");
+
+        }
+
          return View('backend.check_stock.stock_card')->with(
-         // return View('backend.stock_card.index')->with(
          array(
-           'Products'=>$Products,
-           'p_name'=>$p_name,
-           'sBalance'=>$sBalance,
-           'business_location_id_fk'=>$business_location_id_fk,
-           'branch_id_fk'=>$branch_id_fk,
+            'product_id_fk'=>$product_id_fk,
+            'business_location_id_fk'=>$business_location_id_fk,
+            'branch_id_fk'=>$branch_id_fk,
+            'lot_number'=>@$lot_number?$lot_number:'',
+            'p_name'=>@$p_name?@$p_name:'',
+            'sBalance'=>@$sBalance?@$sBalance:0,
          ));
 
     }

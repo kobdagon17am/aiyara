@@ -29,7 +29,8 @@ class Transfer_branchController extends Controller
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1 ");
+            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks)
+            ORDER BY products.product_code ");
 
         }else{
 
@@ -226,7 +227,7 @@ class Transfer_branchController extends Controller
 
     public function update(Request $request, $id)
     {
-      // dd($request->all());
+      dd($request->all());
       if(!empty($request->approve_transfer_branch_code)){
             return $this->form($id);
 

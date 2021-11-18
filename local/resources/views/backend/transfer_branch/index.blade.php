@@ -80,6 +80,11 @@
             <div class="card-body">
 
 
+ <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)!=0){ ?>
+      <div class="myBorder  " style="display: none;" >
+  <?php }else{ ?>
+      <div class="myBorder  " >
+  <?php } ?>
 
               <div class="row div_TransferList " >
 
@@ -233,7 +238,7 @@
                   </div>
                 </div>
               </div>
-
+</div>
 
 <!-- display: none; -->
  <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>

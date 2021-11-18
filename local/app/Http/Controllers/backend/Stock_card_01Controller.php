@@ -116,7 +116,7 @@ class Stock_card_01Controller extends Controller
                 AND zone_id_fk='".$Stock[0]->zone_id_fk."' 
                 AND shelf_id_fk='".$Stock[0]->shelf_id_fk."' 
                 AND shelf_floor='".$Stock[0]->shelf_floor."' 
-                GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+                GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ");
                 $amt_balance_stock = @$sBalance[0]->amt?$sBalance[0]->amt:0;
 
                $txt = "ยอดคงเหลือ";

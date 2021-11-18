@@ -773,9 +773,17 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('stock_card', 'Stock_cardController');
     Route::post('stock_card/datatable', 'Stock_cardController@Datatable')->name('stock_card.datatable');
     
-    Route::get('check_stock/stock_card/{id}', 'Check_stockController@stock_card');
-    Route::get('check_stock/stock_card/{id}/{business_location_id_fk}', 'Check_stockController@stock_card');
-    Route::get('check_stock/stock_card/{id}/{business_location_id_fk}/{branch_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}/{shelf_id_fk}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}/{shelf_id_fk}/{shelf_floor}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}/{shelf_id_fk}/{shelf_floor}/{lot_number}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}/{shelf_id_fk}/{shelf_floor}/{lot_number}/{lot_expired_date_s}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}/{shelf_id_fk}/{shelf_floor}/{lot_number}/{lot_expired_date_s}/{lot_expired_date_e}', 'Check_stockController@stock_card');
     
 
     Route::resource('stock_card_01', 'Stock_card_01Controller');

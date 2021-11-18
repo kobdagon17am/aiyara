@@ -355,18 +355,21 @@ class General_receiveController extends Controller
              DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
   */
 
-/*
-เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
-นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
-1 จ่ายสินค้าตามใบเบิก 26
-2 จ่ายสินค้าตามใบเสร็จ  27
-3 รับสินค้าเข้าทั่วไป 28
-4 รับสินค้าเข้าตาม PO 29
-5 นำสินค้าออก 30
-6 สินค้าเบิก-ยืม  31
-7 โอนภายในสาขา  32
-8 โอนระหว่างสาขา  33
-*/
+
+                // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+
+                /*
+                เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                1 จ่ายสินค้าตามใบเบิก 26
+                2 จ่ายสินค้าตามใบเสร็จ  27
+                3 รับสินค้าเข้าทั่วไป 28
+                4 รับสินค้าเข้าตาม PO 29
+                5 นำสินค้าออก 30
+                6 สินค้าเบิก-ยืม  31
+                7 โอนภายในสาขา  32
+                8 โอนระหว่างสาขา  33
+                */
                 $stock_type_id_fk = 3 ;
                 $stock_id_fk = $lastID ;
                 $ref_table = 'db_general_receive' ;
@@ -417,6 +420,7 @@ class General_receiveController extends Controller
                       ));
 
                 }
+                // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
         }
@@ -457,7 +461,7 @@ class General_receiveController extends Controller
 
         }else{
 
-           $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->orderBy('id', 'desc');
+           $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
 
         }
 

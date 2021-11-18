@@ -106,10 +106,12 @@ $(document).ready(function() {
     
      
       $(document).on('click', '.btnProcess', function(event) {
+
+             $(".myloading").show();
            
               var business_location_id_fk =  "{{@$business_location_id_fk}}"; //alert(business_location_id_fk);
               var branch_id_fk =  "{{@$branch_id_fk}}"; //alert(branch_id_fk);
-              var product_id_fk =  "{{@$Products[0]->product_id}}"; //
+              var product_id_fk =  "{{@$product_id_fk}}"; //
               var lot_number =  "{{@$lot_number}}"; //alert(lot_number);
 
               var start_date =  $('#start_date').val();
@@ -124,148 +126,109 @@ $(document).ready(function() {
                 return false;
               }     
 
-              // console.log(business_location_id_fk);   
-              // console.log(branch_id_fk);   
-              // console.log(product_id_fk);   
+              console.log(business_location_id_fk);   
+              console.log(branch_id_fk);   
+              console.log(product_id_fk);   
               // console.log(lot_number);   
-              // console.log(start_date);   
-              // console.log(end_date);   
+              console.log(start_date);   
+              console.log(end_date);   
 
-              $(".myloading").show();
+                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+               var oTable;
+                      $(function() {
+                          oTable = $('#data-table').DataTable({
+                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                              processing: true,
+                              serverSide: true,
+                              scroller: true,
+                              scrollCollapse: true,
+                              scrollX: true,
+                              ordering: false,
+                              info:     false,
+                              destroy:true,
+                               "searching": false,
+                              // scrollY: ''+($(window).height()-370)+'px',
+                              // iDisplayLength: 25,
+                              paging: false,
+                              iDisplayLength: -1,
+                              ajax: {
+                                url: '{{ route('backend.stock_card.datatable') }}',
+                                data :{
+                                  _token: '{{csrf_token()}}',
+                                    business_location_id_fk:business_location_id_fk,
+                                    branch_id_fk:branch_id_fk,
+                                    product_id_fk:product_id_fk,
+                                    start_date:start_date,
+                                    end_date:end_date,
+                                    lot_number:lot_number,
+                                    },
+                                  method: 'POST',
+                                },
 
-               setTimeout(function(){
+                              dom: 'Bfrtip',
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    title: 'STOCK CARD'
+                                },
+                           
+                            ],
+                              columns: [
+                                  {data: 'id', title :'Row(s)', className: 'text-center w50'},
+                                  {data: 'action_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
+                                  {data: 'details', title :'<center>Item Type  </center>', className: 'text-left'},
+                                  {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
+                                  {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
+                                  {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
+                                  {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {
+                                        return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                  }},
+                                  {data: 'amt_out',title :'<center>จ่ายออก</center>', className: 'text-center',render: function(d) {
+                                        return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
+                                  }},
+                           
+                                  {data: 'remain', title :'<center>ยอดคงเหลือ</center>', className: 'text-center'},
+                              ],
+                              rowCallback: function(nRow, aData, dataIndex){
+                                var info = $(this).DataTable().page.info();
+                                $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                      $.ajax({
-                          url: " {{ url('backend/ajaxProcessStockcard') }} ", 
-                          method: "post",
-                          data: {
-                            business_location_id_fk:business_location_id_fk,
-                            branch_id_fk:branch_id_fk,
-                            product_id_fk:product_id_fk,
-                            lot_number:lot_number,
-                            start_date:start_date,
-                            end_date:end_date,
-                            "_token": "{{ csrf_token() }}", 
-                          },
-                          success:function(data)
-                          { 
-                            console.log(data);
-                            // return false;
-                                /* datatables */
-                                  var oTable;
-                                  $(function() {
-                                      oTable = $('#data-table').DataTable({
-                                      "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                                          processing: true,
-                                          serverSide: true,
-                                          scroller: true,
-                                          scrollCollapse: true,
-                                          scrollX: true,
-                                          ordering: false,
-                                          info:     false,
-                                          destroy:true,
-                                           "searching": false,
-                                          // scrollY: ''+($(window).height()-370)+'px',
-                                          // iDisplayLength: 25,
-                                          paging: false,
-                                          iDisplayLength: -1,
-                                          ajax: {
-                                            url: '{{ route('backend.stock_card.datatable') }}',
-                                            data: function ( d ) {
-                                              d.Where={};
-                                              $('.myWhere').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Where[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              d.Like={};
-                                              $('.myLike').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Like[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              d.Custom={};
-                                              $('.myCustom').each(function() {
-                                                if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                  d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                                                }
-                                              });
-                                              oData = d;
-                                            },
-                                            method: 'POST'
-                                          },
-                                          dom: 'Bfrtip',
-                                        buttons: [
-                                            {
-                                                extend: 'excelHtml5',
-                                                title: 'STOCK CARD'
-                                            },
-                                       
-                                        ],
-                                          columns: [
-                                              {data: 'id', title :'Row(s)', className: 'text-center w50'},
-                                              {data: 'action_date', title :'<center>Date : Processing  </center>', className: 'text-left'},
-                                              {data: 'details', title :'<center>Item Type  </center>', className: 'text-left'},
-                                              {data: 'ref_inv', title :'<center>Reference code  </center>', className: 'text-center'},
-                                              {data: 'action_user', title :'<center>Operator  </center>', className: 'text-center'},
-                                              {data: 'approver', title :'<center>Approval  </center>', className: 'text-center'},
-                                              {data: 'warehouses',title :'<center>คลังสินค้า</center>', className: 'text-center',render: function(d) {
-                                                    return d;
-                                              }},
-                                              {data: 'amt_in',title :'<center>รับเข้า</center>', className: 'text-center',render: function(d) {
-                                                    return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
-                                              }},
-                                              {data: 'amt_out',title :'<center>จ่ายออก</center>', className: 'text-center',render: function(d) {
-                                                    return d>0?formatNumber(parseFloat(d).toFixed(0)):'';
-                                              }},
-                                       
-                                              {data: 'remain', title :'<center>ยอดคงเหลือ</center>', className: 'text-center'},
-                                          ],
-                                          rowCallback: function(nRow, aData, dataIndex){
-                                            var info = $(this).DataTable().page.info();
-                                            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+                                if(aData['id']=='1'){
+                                  $("td:eq(6)", nRow).html('');
+                                  $("td:eq(7)", nRow).html('');
+                                  // $("td:eq(8)", nRow).html(aData['amt_in']);
+                                }
 
-                                            if(aData['id']=='1'){
-                                              $("td:eq(6)", nRow).html('');
-                                              $("td:eq(7)", nRow).html('');
-                                              // $("td:eq(8)", nRow).html(aData['amt_in']);
-                                            }
+                                // if(aData['remain']!=0){
+                                  $('td:last-child', nRow).html(formatNumber(parseFloat(aData['remain']).toFixed(0)));
+                                // }else{
+                                //   $('td:last-child', nRow).html('');
+                                //   $(".buttons-html5").hide();
+                                // }
 
-                                            $('td:last-child', nRow).html(formatNumber(parseFloat(aData['remain']).toFixed(0)));
+                                $(".myloading").hide();
 
-                                            var count = $('#data-table').dataTable().fnSettings().aoData.length;
-                                            // alert(count);
-                                            if (count <= 1)
-                                            {
-                                               $(".btnPrint").hide();
-                                            }else{
-                                                // $(".btnPrint").show();
-                                            }
-
-                                            // $(".amt_remain").load(location.href + " .amt_remain");
+                                 // console.log(aData['id']);
+                                 // console.log(aData['remain']);
 
 
-                                          }
-                                      });
+                              }
+                          });
+                      });
+              // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-                                  });
-                                  /* datatables */
-
-                                  $(".myloading").hide();
-
-
-                          }
-                        })
-
-
-                $(".myloading").hide();
-
-              }, 3000);
-
+              // var count = $('#data-table').dataTable().fnSettings().aoData.length;
+              // console.log(count);
+              // if (count == 0)
+              // {
+              //    $(".buttons-html5").hide();
+              //    $(".myloading").hide();
+              // }
 
       });
 
 });
+
 
 
 </script>

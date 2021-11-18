@@ -330,7 +330,7 @@
 
       <div class="row" >
                     <div class="col-md-6 " >
-                       <div class="form-group row">
+                       <div class="form-group row" style="display:none;">
                             <label for="ref_code" class="col-md-3 col-form-label">Lot expired date : </label>
                             <div class="col-md-9 d-flex">
                               <?php
@@ -354,9 +354,9 @@
                             <i class="bx bx-search align-middle "></i> SEARCH
                           </a>
 
-                         <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;display: none;" >
+                        <!--  <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;display: none;" >
                             <i class="bx bx-cog align-middle "></i> Process Stock movement
-                          </a>
+                          </a> -->
 
                   
                          </div>
@@ -386,7 +386,7 @@
               <div class="myBorder" >
                  <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;"></table>
               </div>
-<!-- 
+ 
               <div class="myBorder" style="margin-top: 2%;">
 
                 <div style="">
@@ -402,7 +402,7 @@
                     </div>
                   </div>
                 </div>
-              </div> -->
+              </div> 
 
 
             </div>
@@ -434,6 +434,7 @@
                   var start_date = $('#start_date').val();
                   var end_date = $('#end_date').val();
 
+
                    // if(business_location_id_fk==''){
                    //    $("#business_location_id_fk").select2('open');
                    //    $("#spinner_frame").hide();
@@ -463,6 +464,12 @@
                   var zone_id_fk = $('#zone_id_fk').val();
                   var shelf_id_fk = $('#shelf_id_fk').val();
                   var shelf_floor = $('#shelf_floor').val();
+
+                  console.log(business_location_id_fk);
+                  console.log(branch_id_fk);
+                  console.log(start_date);
+                  console.log(end_date);
+
 
                   // return false;
                         var oTable;
@@ -532,16 +539,20 @@
                                                   var lot_expired_date = rows.data().pluck('lot_expired_date').toArray();
                                                   var lot_number = lot_number[0];
 
-                  // var warehouse_id_fk = $('#warehouse_id_fk').val();
-                  // var zone_id_fk = $('#zone_id_fk').val();
-                  // var shelf_id_fk = $('#shelf_id_fk').val();
-                  // var shelf_floor = $('#shelf_floor').val();
+                                                    var warehouse_id_fk = $('#warehouse_id_fk').val();
+                                                    var zone_id_fk = $('#zone_id_fk').val();
+                                                    var shelf_id_fk = $('#shelf_id_fk').val();
+                                                    var shelf_floor = $('#shelf_floor').val();
+                                                    var lot_number = $('#lot_number').val();
+
+                                                    var lot_expired_date_s = $('#start_date').val();
+                                                    var lot_expired_date_e = $('#end_date').val();
 
                                                    return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>' )
-                                                  .append( '<td style=" font-weight: bold; "><center><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+business_location_id_fk+'/'+branch_id_fk+'/" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a></td>' );
+                                                  .append( '<td style=" font-weight: bold; "><center><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/'+product_id_fk+'/'+business_location_id_fk+'/'+branch_id_fk+'/'+warehouse_id_fk+'/'+zone_id_fk+'/'+shelf_id_fk+'/'+shelf_floor+'/'+lot_number+'/'+lot_expired_date_s+'/'+lot_expired_date_e+'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a></td>' );
 
 
                                            },
@@ -841,9 +852,9 @@
   /** It is done after the page load is complete . **/
   $(document).ready(function(){
 
-    setTimeout(function(){
+    // setTimeout(function(){
        // $('.btnStockMovement').trigger('click');
-    },1000);
+    // },1000);
 
     setTimeout(function(){
        $('.btnSearch').trigger('click');
