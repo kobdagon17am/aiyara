@@ -61,6 +61,8 @@ class Check_stockController extends Controller
     {
         // dd($id);
         // dd($request->business_location_id_fk);
+        // dd($request->branch_id_fk);
+
         $business_location_id_fk = $request->business_location_id_fk;
         $branch_id_fk = $request->branch_id_fk;
         // dd($request->branch_id_fk);
@@ -99,6 +101,7 @@ class Check_stockController extends Controller
          // dd($sBalance);
         $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
          return View('backend.check_stock.stock_card')->with(
+         // return View('backend.stock_card.index')->with(
          array(
            'Products'=>$Products,
            'p_name'=>$p_name,
@@ -110,55 +113,11 @@ class Check_stockController extends Controller
     }
 
 
-    public function stock_card_01($id)
+    public function show()
     {
-        // dd($id);
-
-         $Stock = \App\Models\Backend\Check_stock::where('id',$id)->get();
-        // dd($Stock[0]->product_id_fk);
-        
-          $Products = DB::select("SELECT products.id as product_id,
-            products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
-            FROM
-            products_details
-            Left Join products ON products_details.product_id_fk = products.id
-            WHERE products.id=".$Stock[0]->product_id_fk." AND lang_id=1");
-
-           $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
-
-// date(lot_expired_date) >= CURDATE()
-          $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$Stock[0]->product_id_fk." 
-          AND lot_number='".$Stock[0]->lot_number."' 
-          AND lot_expired_date='".$Stock[0]->lot_expired_date."' 
-          AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."' 
-          AND zone_id_fk='".$Stock[0]->zone_id_fk."' 
-          AND shelf_id_fk='".$Stock[0]->shelf_id_fk."' 
-          AND shelf_floor='".$Stock[0]->shelf_floor."' 
-          GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
-
-          $lot_number = $Stock[0]->lot_number;
-          $lot_expired_date = $Stock[0]->lot_expired_date;
-
-
-        $b = DB::select(" select * from branchs where id=".($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0)." ");
-        $warehouse = DB::select(" select * from warehouse where id=".($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0)." ");
-        $zone = DB::select(" select * from zone where id=".($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0)." ");
-        $shelf = DB::select(" select * from shelf where id=".($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0)." ");
-        $wh = 'สาขา '.(@$b[0]->b_name?@$b[0]->b_name:'').'/'.(@$warehouse[0]->w_name?@$warehouse[0]->w_name:'').'/'.(@$zone[0]->z_name?@$zone[0]->z_name:'').'/'.(@$shelf[0]->s_name?@$shelf[0]->s_name:'').'/ชั้น>'.($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:'');
-
-         return View('backend.check_stock.stock_card_01')->with(
-         array(
-            'id'=>$id,
-            'Stock'=>$Stock,
-            'p_name'=>$p_name,
-           'lot_number'=>$lot_number,
-           'lot_expired_date'=>$lot_expired_date,
-           'sBalance'=>$sBalance,
-           'wh'=>$wh,
-         ));
-
+        return redirect()->to(url("backend/check_stock"));
     }
+
 
     public function Datatable(Request $req){
 
@@ -380,7 +339,7 @@ class Check_stockController extends Controller
           GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
-               array_push($f,'<a class="btn btn-outline-success waves-effect waves-light" href="backend/check_stock/stock_card_01/'.$v->id.'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>');
+               array_push($f,'<a class="btn btn-outline-success waves-effect waves-light" href="backend/stock_card_01?stock_id='.$v->id.'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>');
             }
             $f = implode('<br>',$f);
 

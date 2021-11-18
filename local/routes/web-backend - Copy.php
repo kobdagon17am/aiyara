@@ -752,10 +752,31 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('check_stock_transfer_warehouses/datatable', 'Check_stockController@DatatableTransfer_warehouses')->name('check_stock_transfer_warehouses.datatable');
     Route::post('check_stock_transfer_branch/datatable', 'Check_stockController@DatatableTransfer_branch')->name('check_stock_transfer_branch.datatable');
 
+    // Route::post('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
+    // Route::get('check_stock/stock_card/{id}/{lot_number}/{date}', 'Check_stockController@stock_card');
+
+    Route::post('check_stock/stock_card/{id}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{id}', 'Check_stockController@stock_card');
+
+    // รวมหลายเงื่อนไข
+    Route::get('check_stock/stock_card/{id}/{business_location_id_fk}/{branch_id_fk}', 'Check_stockController@stock_card');
+    
+    Route::post('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
+    Route::get('check_stock/stock_card/{id}/{lot_number}/{date}/{total}', 'Check_stockController@stock_card');
+
+    Route::post('check_stock/stock_card_01/{id}', 'Check_stockController@stock_card_01');
+    Route::get('check_stock/stock_card_01/{id}', 'Check_stockController@stock_card_01');
+
+    Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
+    // Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}', 'Check_stockController@stock_card_01');
+
+    Route::post('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}/{wh}', 'Check_stockController@stock_card_01');
+    Route::get('check_stock/stock_card_01/{id}/{lot_number}/{date}/{total}/{wh}', 'Check_stockController@stock_card_01');
 
     Route::resource('check_stock_check', 'Check_stock_checkController');
     Route::post('check_stock_check/datatable', 'Check_stock_checkController@Datatable')->name('check_stock_check.datatable');
     Route::post('check_stock_check_02/datatable', 'Check_stock_checkController@Datatable02')->name('check_stock_check_02.datatable');
+
 
     Route::resource('member_regis', 'Member_regisController');
     Route::post('member_regis/datatable', 'Member_regisController@Datatable')->name('member_regis.datatable');
@@ -769,18 +790,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('stocks_account_code', 'Stocks_account_codeController');
     Route::post('stocks_account_code/datatable', 'Stocks_account_codeController@Datatable')->name('stocks_account_code.datatable');
 
-
     Route::resource('stock_card', 'Stock_cardController');
     Route::post('stock_card/datatable', 'Stock_cardController@Datatable')->name('stock_card.datatable');
-    
-    Route::get('check_stock/stock_card/{id}', 'Check_stockController@stock_card');
-    Route::get('check_stock/stock_card/{id}/{business_location_id_fk}', 'Check_stockController@stock_card');
-    Route::get('check_stock/stock_card/{id}/{business_location_id_fk}/{branch_id_fk}', 'Check_stockController@stock_card');
-    
-
-    Route::resource('stock_card_01', 'Stock_card_01Controller');
-    Route::post('stock_card_01/datatable', 'Stock_card_01Controller@Datatable')->name('stock_card_01.datatable');
-
+    Route::post('stock_card_01/datatable', 'Stock_cardController@Datatable01')->name('stock_card_01.datatable');
 
     Route::get('check_stock/print/{id}/{lot_number}', 'AjaxController@createPDFStock_card');
     Route::get('pick_warehouse/print/{id}', 'AjaxController@createPDFPick_warehouse');

@@ -115,51 +115,6 @@ class Stock_cardController extends Controller
 
 
  
-    public function Datatable01(Request $request){
-  // $sTable = \App\Models\Backend\Stock_card::search()->orderBy('action_date', 'asc');
-      // ดึงข้อมูลเข้าตารางสรุป
-      $temp_db_stock_card = "temp_db_stock_card_01".\Auth::user()->id;
-      // return $temp_db_stock_card ;
-
-            $business_location_id = " and business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
-            $branch_id_fk = " and branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
-
-      DB::select(" SET @csum := 0; ");
-      // $sTable = DB::select(" 
-      //     SELECT db_stock_card.*,
-      //     CASE WHEN @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END ) > 0 THEN 
-      //     (@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) ELSE 0 END
-      //      as remain FROM db_stock_card ORDER BY action_date;
-      //     ");
-      $sTable = DB::select(" 
-          SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain 
-          FROM $temp_db_stock_card 
-          WHERE 1  $business_location_id
-          ORDER BY action_date;
-          ");     
-      $sQuery = \DataTables::of($sTable);
-      return $sQuery
-      ->addColumn('action_user', function($row) {
-        if(@$row->action_user!=''){
-          $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
-           return @$sD[0]->name;
-        }else{
-          return '';
-        }
-      })      
-      ->addColumn('approver', function($row) {
-        if(@$row->approver!=''){
-          $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
-           return @$sD[0]->name;
-        }else{
-          return '';
-        }
-      })   
-
-      ->make(true);
-    }
-
-
 
 
 

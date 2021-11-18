@@ -532,7 +532,11 @@
                                                   var lot_expired_date = rows.data().pluck('lot_expired_date').toArray();
                                                   var lot_number = lot_number[0];
 
-                                       
+                  // var warehouse_id_fk = $('#warehouse_id_fk').val();
+                  // var zone_id_fk = $('#zone_id_fk').val();
+                  // var shelf_id_fk = $('#shelf_id_fk').val();
+                  // var shelf_floor = $('#shelf_floor').val();
+
                                                    return $('<tr>')
                                                   .append( '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for '+group+'</td>' )
                                                   .append( '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
@@ -823,9 +827,12 @@
             }
         });
 
-         $('#start_date').change(function(event) {
-           $('#end_date').val($(this).val());
-         });
+        $('#start_date').change(function(event) {
+            if($('#end_date').val()>$(this).val()){
+            }else{
+              $('#end_date').val($(this).val());
+            }
+        });
 
   </script>
 

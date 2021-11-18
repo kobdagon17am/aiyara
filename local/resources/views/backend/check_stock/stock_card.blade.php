@@ -22,7 +22,8 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$p_name }} </h4>
+            <h4 class="mb-0 font-size-18"> Stock Card <i class="bx bx-play"></i> {{ @$p_name }} 
+             </h4>
                <a class="btn btn-secondary btn-sm waves-effect float-right " href="{{ url("backend/check_stock") }}">
                 <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
               </a>
@@ -31,22 +32,6 @@
     </div>
 </div>
 <!-- end page title -->
-
-  <?php 
-    $sPermission = \Auth::user()->permission ;
-    $menu_id = @$_REQUEST['menu_id'];
-    if($sPermission==1){
-      $sC = '';
-      $sU = '';
-      $sD = '';
-    }else{
-      $role_group_id = \Auth::user()->role_group_id_fk;
-      $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-      $sC = @$menu_permit->c==1?'':'display:none;';
-      $sU = @$menu_permit->u==1?'':'display:none;';
-      $sD = @$menu_permit->d==1?'':'display:none;';
-    }
-   ?>
 
 <div class="row">
     <div class="col-12">
@@ -73,6 +58,7 @@
                         </div>
                       </div>
 
+                    
                     <div class="col-md-4">
                       <!-- <div class="amt_remain" style="float: right;font-size: 18px !important;font-weight: bold;"> -->
                       <div style="float: right;font-size: 18px !important;font-weight: bold;">
@@ -86,14 +72,14 @@
 
                 <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-                <div class="row" >
+         <!--        <div class="row" >
                   <div class="col-11 "></div>
                   <div class="col-1 ">
                     <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock/print') }}/{{@$Products[0]->product_id}}/{{@$lot_number}}" style="font-size: 14px !important;display: none;margin-right: 5%;margin-top: 2%;" target="_blank" >
                       <i class="bx bx-printer align-middle "></i> Print
                     </a>
                   </div>
-                </div>
+                </div> -->
 
 
             </div>
@@ -106,7 +92,7 @@
 @section('script')
 
 <script>
-
+ 
 </script>
 
 <script>
@@ -117,7 +103,8 @@ $(document).ready(function() {
           return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
       }
 
-
+    
+     
       $(document).on('click', '.btnProcess', function(event) {
            
               var business_location_id_fk =  "{{@$business_location_id_fk}}"; //alert(business_location_id_fk);
@@ -308,25 +295,14 @@ $(document).ready(function() {
             }
         });
 
-         // $('#start_date').change(function(event) {
-         //  if($('#end_date').val()!=""){
-         //   $('#end_date').val($(this).val());
-         //  }
-         // });
+        $('#start_date').change(function(event) {
+            if($('#end_date').val()>$(this).val()){
+            }else{
+              $('#end_date').val($(this).val());
+            }
+        });
 
-
-      // $(document).ready(function() {
-      //     var date_s_e = "{{@$date_s_e}}"; //alert(date_s_e);
-      //     var res = date_s_e.split(":");
-      //     var start_date = res[0]; //alert(start_date);
-      //     var end_date = res[1]; //alert(end_date);
-      //     $('#start_date').val(start_date);
-      //     $('#end_date').val(end_date);
-
-      // });
-
-
-  </script>   
+    </script>   
 
 
 @endsection
