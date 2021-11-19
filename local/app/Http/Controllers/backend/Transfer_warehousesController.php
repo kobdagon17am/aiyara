@@ -442,76 +442,91 @@ class Transfer_warehousesController extends Controller
           $sRow->save();
 
 
-     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
-          if(request('approve_status')=='1'){
-                /*
-                เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
-                นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
-                1 จ่ายสินค้าตามใบเบิก 26
-                2 จ่ายสินค้าตามใบเสร็จ  27
-                3 รับสินค้าเข้าทั่วไป 28
-                4 รับสินค้าเข้าตาม PO 29
-                5 นำสินค้าออก 30
-                6 สินค้าเบิก-ยืม  31
-                7 โอนภายในสาขา  32
-                8 โอนระหว่างสาขา  33
-                */
-                $stock_type_id_fk = 5 ;
-                $stock_id_fk = request('stocks_id_fk') ;
-                $ref_table = 'db_general_takeout' ;
-                $ref_table_id = $sRow->id ;
-                // $ref_doc = $sRow->ref_doc;
-                $ref_doc = DB::select(" select * from `db_general_takeout` WHERE id=".$sRow->id." ");
-                // dd($ref_doc[0]->ref_doc);
-                $ref_doc = @$ref_doc[0]->ref_doc;
-                // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
-                // @$ref_doc = @$General_takeout[0]->ref_doc;
 
-                $value=DB::table('db_stock_movement')
-                ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
-                ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
-                ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
-                ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
-                ->get();
+     // // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+     //      if(request('approve_status')=='1'){
 
-                if($value->count() == 0){
+     //            $rsWarehouses_details = DB::select("
+     //             select 
+     //              db_transfer_warehouses_details.*,db_transfer_warehouses_code.tr_number,db_transfer_warehouses_code.business_location_id_fk,db_transfer_warehouses_code.note
+     //              from db_transfer_warehouses_details 
+     //              LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id 
+     //              where db_transfer_warehouses_details.transfer_warehouses_code_id = ".$id." ");
+           
+     //           if(!empty($rsWarehouses_details)){
 
-                      DB::table('db_stock_movement')->insert(array(
-                          "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
-                          "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
-                          "ref_table" =>  @$ref_table?$ref_table:0,
-                          "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
-                          "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
-                          // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  $sRow->created_at,
-                          "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
-                          "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
-                          "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
-                          "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
-                          "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
-                          "amt" =>  @$sRow->amt?$sRow->amt:0,
-                          "in_out" =>  2,
-                          "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+     //           foreach ($rsWarehouses_details as $key => $sRow) {
 
-                          "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
-                          "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+     //            /*
+     //            เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+     //            นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+     //            1 จ่ายสินค้าตามใบเบิก 26
+     //            2 จ่ายสินค้าตามใบเสร็จ  27
+     //            3 รับสินค้าเข้าทั่วไป 28
+     //            4 รับสินค้าเข้าตาม PO 29
+     //            5 นำสินค้าออก 30
+     //            6 สินค้าเบิก-ยืม  31
+     //            7 โอนภายในสาขา  32
+     //            8 โอนระหว่างสาขา  33
+     //            */
+     //            $stock_type_id_fk = 7 ;
+     //            $stock_id_fk = request('stocks_id_fk') ;
+     //            $ref_table = 'db_general_takeout' ;
+     //            $ref_table_id = $sRow->id ;
+     //            // $ref_doc = $sRow->ref_doc;
+     //            $ref_doc = DB::select(" select * from `db_general_takeout` WHERE id=".$sRow->id." ");
+     //            // dd($ref_doc[0]->ref_doc);
+     //            $ref_doc = @$ref_doc[0]->ref_doc;
+     //            // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
+     //            // @$ref_doc = @$General_takeout[0]->ref_doc;
 
-                          "status" =>  @$sRow->approve_status?$sRow->approve_status:0,
-                          "note" =>  'นำสินค้าออก ',
-                          "note2" =>  @$sRow->description?$sRow->description:NULL,
+     //            $value=DB::table('db_stock_movement')
+     //            ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+     //            ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+     //            ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+     //            ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+     //            ->get();
 
-                          "action_user" =>  @$sRow->recipient?$sRow->recipient:NULL,
-                          "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
-                          "approver" =>  @$sRow->approver?$sRow->approver:NULL,
-                          "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+     //            if($value->count() == 0){
 
-                          "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
-                      ));
+     //                  DB::table('db_stock_movement')->insert(array(
+     //                      "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+     //                      "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+     //                      "ref_table" =>  @$ref_table?$ref_table:0,
+     //                      "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+     //                      "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+     //                      // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+     //                      "doc_date" =>  $sRow->created_at,
+     //                      "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+     //                      "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
+     //                      "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+     //                      "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+     //                      "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+     //                      "amt" =>  @$sRow->amt?$sRow->amt:0,
+     //                      "in_out" =>  2,
+     //                      "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
 
-                }
-              }
+     //                      "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
+     //                      "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
+     //                      "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
+     //                      "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+
+     //                      "status" =>  @$sRow->approve_status?$sRow->approve_status:0,
+     //                      "note" =>  'นำสินค้าออก ',
+     //                      "note2" =>  @$sRow->description?$sRow->description:NULL,
+
+     //                      "action_user" =>  @$sRow->recipient?$sRow->recipient:NULL,
+     //                      "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
+     //                      "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+     //                      "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+
+     //                      "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+     //                  ));
+
+     //             }
+     //            }
+     //           }
+     //          }
                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
