@@ -593,6 +593,23 @@ class AjaxController extends Controller
            }
     }
 
+    public function ajaxGetLotnumber3(Request $request)
+    {
+        if($request->ajax()){
+          // $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
+          if(@\Auth::user()->permission==1){
+
+            $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." GROUP BY  product_id_fk,lot_number ");
+
+          }else{
+
+             $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".$request->business_location_id_fk." AND branch_id_fk=".$request->branch_id_fk." GROUP BY  product_id_fk,lot_number ");
+          }
+
+          return response()->json($query);
+        }
+    }
+
 
     public function ajaxGetAmphur(Request $request)
     {

@@ -227,7 +227,7 @@ class Transfer_branchController extends Controller
 
     public function update(Request $request, $id)
     {
-      dd($request->all());
+      // dd($request->all());
       if(!empty($request->approve_transfer_branch_code)){
             return $this->form($id);
 

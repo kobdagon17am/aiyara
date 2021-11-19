@@ -129,7 +129,7 @@
               }
 
               
-              // console.log('menu_id : '+menu_id);
+              console.log('menu_id : '+menu_id);
               // console.log('sPermission : '+sPermission);
               // console.log('can_approve : '+can_approve);
               // console.log('sPermission : '+sPermission);
@@ -149,10 +149,16 @@
                 (can_approve==1)?($(".div_confirm_transfer_slip").show()):($(".div_confirm_transfer_slip").remove());
                 (can_approve==1)?($(".div_confirm_transfer_branch").show()):($(".div_confirm_transfer_branch").remove());
                 (can_approve==1)?($(".div_confirm_transfer_warehouses").show()):($(".div_confirm_transfer_warehouses").remove());
+                (can_approve==1)?($(".div_confirm_general_receive").show()):($(".div_confirm_general_receive").remove());
+                (can_approve==1)?($(".div_confirm_general_takeout").show()):($(".div_confirm_general_takeout").remove());
 
-                console.log('can_approve : '+can_approve);
+                // console.log('can_approve : '+can_approve);
 
               }
+              // Test
+              // (can_approve==1)?($(".div_confirm_general_receive").show()):($(".div_confirm_general_receive").remove());
+
+               console.log('can_approve : '+can_approve);
         
 
            });

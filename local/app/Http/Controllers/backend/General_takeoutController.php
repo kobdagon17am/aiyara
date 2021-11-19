@@ -26,17 +26,17 @@ class General_takeoutController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
-        if(@\Auth::user()->permission==1){
+        // if(@\Auth::user()->permission==1){
 
-            $Products = DB::select("SELECT products.id as product_id,
-            products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
-            FROM
-            products_details
-            Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1 ");
+        //     $Products = DB::select("SELECT products.id as product_id,
+        //     products.product_code,
+        //     (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+        //     FROM
+        //     products_details
+        //     Left Join products ON products_details.product_id_fk = products.id
+        //     WHERE lang_id=1 ");
 
-        }else{
+        // }else{
 
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -47,7 +47,7 @@ class General_takeoutController extends Controller
             WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
             ORDER BY products.product_code");
 
-        }
+        // }
 
 
       // dd($Products);
@@ -159,6 +159,14 @@ class General_takeoutController extends Controller
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_out_cause_id_fk    = request('product_out_cause_id_fk');
           $sRow->description    = request('description');
+
+          if(request('product_out_cause_id_fk')==5){
+              $sRow->description    = request('description');
+          }else{
+              $description = DB::select("SELECT * FROM `dataset_product_out_cause` where id=".request('product_out_cause_id_fk')."");
+              $sRow->description    = $description[0]->txt_desc;
+          }
+
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->lot_number    = request('lot_number');
           $sRow->lot_expired_date    = request('lot_expired_date');
@@ -201,58 +209,141 @@ class General_takeoutController extends Controller
 
           $sRow->save();
 
+
+          $stock_type_id_fk = 5 ; // `dataset_stock_type` 5 นำสินค้าออก take out
+          $ref_table_id = $sRow->id ;
+          // รหัสอ้างอิงเอกสาร (แสดงรหัสอ้างอิงในตารางที่เชื่อมโยงกันทุกตาราง) REF+BL+branch+stock_type_id_fk+(yy+mm+dd)+ref_table_id
+          $ref_doc = 'REF'.$sRow->business_location_id_fk.$sRow->branch_id_fk.$stock_type_id_fk.date('ymd').$ref_table_id;
+          DB::select(" UPDATE `db_general_takeout` SET ref_doc='".$ref_doc."' WHERE id=".$sRow->id." ");
+
+          // dd($ref_doc);
+
+
           if(request('approve_status')=='1'){
               // DB::select(" UPDATE db_stocks SET amt = (amt - ".request('amt')." ) WHERE product_id_fk = ".request('product_id_fk')." AND lot_number='".request('lot_number')."' AND lot_expired_date='".request('lot_expired_date')."' ");
               DB::select(" UPDATE db_stocks SET amt = (amt - ".request('amt')." ) WHERE id = ".request('stocks_id_fk')." ");
 
-                 $insertStockMovement = new  AjaxController();
+                 // $insertStockMovement = new  AjaxController();
 
             // ดึงจากตารางนำสินค้าออกทั่วไป > db_general_takeout
-                $Data = DB::select("
-                        SELECT db_general_takeout.business_location_id_fk,CONCAT('CODE',db_general_takeout.id) as doc_no,db_general_takeout.created_at as doc_date,branch_id_fk,
-                        db_general_takeout.product_id_fk, db_general_takeout.lot_number, lot_expired_date, db_general_takeout.amt,2 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
-                        concat('นำสินค้าออกทั่วไป ',dataset_product_out_cause.txt_desc) as note, db_general_takeout.created_at as dd,
-                        db_general_takeout.recipient as action_user,db_general_takeout.approver as approver,db_general_takeout.updated_at as approve_date
-                        FROM
-                        db_general_takeout
-                        left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
-                  ");
+            //     $Data = DB::select("
+            //             SELECT db_general_takeout.business_location_id_fk,CONCAT('CODE',db_general_takeout.id) as doc_no,db_general_takeout.created_at as doc_date,branch_id_fk,
+            //             db_general_takeout.product_id_fk, db_general_takeout.lot_number, lot_expired_date, db_general_takeout.amt,2 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
+            //             concat('นำสินค้าออกทั่วไป ',dataset_product_out_cause.txt_desc) as note, db_general_takeout.created_at as dd,
+            //             db_general_takeout.recipient as action_user,db_general_takeout.approver as approver,db_general_takeout.updated_at as approve_date
+            //             FROM
+            //             db_general_takeout
+            //             left Join dataset_product_out_cause ON db_general_takeout.product_out_cause_id_fk = dataset_product_out_cause.id
+            //       ");
 
-                  foreach ($Data as $key => $value) {
+            //       foreach ($Data as $key => $value) {
 
-                       $insertData = array(
-                          "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                          "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                          "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
-                          "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                          "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                          "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                          "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                          "amt" =>  @$value->amt?$value->amt:0,
-                          "in_out" =>  @$value->in_out?$value->in_out:0,
-                          "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+            //            $insertData = array(
+            //               "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+            //               "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+            //               "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+            //               "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+            //               "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+            //               "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+            //               "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+            //               "amt" =>  @$value->amt?$value->amt:0,
+            //               "in_out" =>  @$value->in_out?$value->in_out:0,
+            //               "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
 
-                          "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                          "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                          "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                          "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+            //               "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+            //               "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+            //               "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+            //               "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
 
-                          "status" =>  @$value->status?$value->status:0,
-                          "note" =>  @$value->note?$value->note:NULL,
+            //               "status" =>  @$value->status?$value->status:0,
+            //               "note" =>  @$value->note?$value->note:NULL,
 
-                          "action_user" =>  @$value->action_user?$value->action_user:NULL,
-                          "action_date" =>  @$value->action_date?$value->action_date:NULL,
-                          "approver" =>  @$value->approver?$value->approver:NULL,
-                          "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+            //               "action_user" =>  @$value->action_user?$value->action_user:NULL,
+            //               "action_date" =>  @$value->action_date?$value->action_date:NULL,
+            //               "approver" =>  @$value->approver?$value->approver:NULL,
+            //               "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
 
-                          "created_at" =>@$value->dd?$value->dd:NULL
-                      );
+            //               "created_at" =>@$value->dd?$value->dd:NULL
+            //           );
 
-                $insertStockMovement->insertStockMovement($insertData);
+            //     $insertStockMovement->insertStockMovement($insertData);
 
-            }
+            // }
 
-              DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+            //   DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+
+
+                     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+
+                /*
+                เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                1 จ่ายสินค้าตามใบเบิก 26
+                2 จ่ายสินค้าตามใบเสร็จ  27
+                3 รับสินค้าเข้าทั่วไป 28
+                4 รับสินค้าเข้าตาม PO 29
+                5 นำสินค้าออก 30
+                6 สินค้าเบิก-ยืม  31
+                7 โอนภายในสาขา  32
+                8 โอนระหว่างสาขา  33
+                */
+                $stock_type_id_fk = 5 ;
+                $stock_id_fk = request('stocks_id_fk') ;
+                $ref_table = 'db_general_takeout' ;
+                $ref_table_id = $sRow->id ;
+                // $ref_doc = $sRow->ref_doc;
+                $ref_doc = DB::select(" select * from `db_general_takeout` WHERE id=".$sRow->id." ");
+                // dd($ref_doc[0]->ref_doc);
+                $ref_doc = @$ref_doc[0]->ref_doc;
+                // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
+                // @$ref_doc = @$General_takeout[0]->ref_doc;
+
+                $value=DB::table('db_stock_movement')
+                ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+                ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+                ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+                ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+                ->get();
+
+                if($value->count() == 0){
+
+                      DB::table('db_stock_movement')->insert(array(
+                          "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                          "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                          "ref_table" =>  @$ref_table?$ref_table:0,
+                          "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                          "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                          // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                          "doc_date" =>  $sRow->created_at,
+                          "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+                          "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
+                          "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+                          "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+                          "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+                          "amt" =>  @$sRow->amt?$sRow->amt:0,
+                          "in_out" =>  2,
+                          "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+
+                          "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
+                          "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
+                          "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
+                          "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+
+                          "status" =>  @$sRow->approve_status?$sRow->approve_status:0,
+                          "note" =>  'นำสินค้าออก ',
+                          "note2" =>  @$sRow->description?$sRow->description:NULL,
+
+                          "action_user" =>  @$sRow->recipient?$sRow->recipient:NULL,
+                          "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
+                          "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+                          "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+
+                          "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                      ));
+
+                }
+                // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
               return redirect()->to(url("backend/general_takeout"));
 
@@ -292,7 +383,7 @@ class General_takeoutController extends Controller
 
         }else{
 
-           $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->orderBy('id', 'desc');
+           $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
 
         }
 

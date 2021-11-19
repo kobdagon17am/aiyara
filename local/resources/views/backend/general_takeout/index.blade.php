@@ -28,7 +28,7 @@
                     <!-- <input type="text" class="form-control float-left text-center w125 myLike" placeholder="ชื่อ Supplier" name="supplier_name" style="margin-left: 1%;"> -->
                   </div>
 
-                  <div class="col-4 text-right sC " >
+                  <div class="col-4 text-right class_btn_add " >
                     <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_takeout.create') }}">
                       <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD 
                     </a>
@@ -92,7 +92,7 @@ $(function() {
         },
 
         columns: [
-            {data: 'ref_code', title :'Ref. Code', className: 'text-center w50'},
+            {data: 'ref_doc', title :'Ref. Code', className: 'text-center w100'},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
             {data: 'product_out_cause', title :'<center>สาเหตุที่นำออก </center>', className: 'text-left'},
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},
@@ -111,25 +111,56 @@ $(function() {
             {data: 'id', title :'Tools', className: 'text-center w80'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
-          if(aData['approve_status']=='1'){
-              // $('td:last-child', nRow).html('-');
 
-              $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_general_takeout" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                + ' <a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อนุมัติแล้ว ห้ามลบ" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-              ).addClass('input');
 
-          }else{ 
+              var sPermission = "<?=\Auth::user()->permission?>";
+              var sU = sessionStorage.getItem("sU");
+              var sD = sessionStorage.getItem("sD");
+              if(sPermission==1){
+                sU = 1;
+                sD = 1;
+              }
+              var str_U = '';
+              if(sU=='1'){
+                str_U = '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+              }
+              var str_D = '';
+              if(sD=='1'){
+                str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_general_receive" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                // str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.account_bank.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+              }
 
-              $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-                + ' <a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_general_takeout" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-              ).addClass('input');
+              str_V = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อนุมัติแล้ว ห้ามลบ" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
 
-          }
+              if(sU!='1' && sD!='1'){
+                 $('td:last-child', nRow).html('-');
+              }else if(aData['approve_status']=='1'){
+                $('td:last-child', nRow).html( str_U + str_V).addClass('input');
+              }else{
+                $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+              }
+
+
+
+          // if(aData['approve_status']=='1'){
+          //     // $('td:last-child', nRow).html('-');
+
+          //     $('td:last-child', nRow).html(''
+          //       + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+          //       // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+          //       // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_general_takeout" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+          //       + ' <a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อนุมัติแล้ว ห้ามลบ" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+          //     ).addClass('input');
+
+          // }else{ 
+
+          //     $('td:last-child', nRow).html(''
+          //       + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+          //       // + '<a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+          //       + ' <a href="javascript: void(0);" data-url="{{ route('backend.general_takeout.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_general_takeout" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+          //     ).addClass('input');
+
+          // }
         }
     });
     // $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){

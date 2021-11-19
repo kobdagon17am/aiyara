@@ -353,10 +353,10 @@
                           <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
                             <i class="bx bx-search align-middle "></i> SEARCH
                           </a>
-
-                        <!--  <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;display: none;" >
+<!-- 
+                         <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;" >
                             <i class="bx bx-cog align-middle "></i> Process Stock movement
-                          </a> -->
+                          </a>  -->
 
                   
                          </div>

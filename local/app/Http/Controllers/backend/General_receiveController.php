@@ -204,7 +204,7 @@ class General_receiveController extends Controller
           if(request('product_in_cause_id_fk')==4){
               $sRow->description    = request('description');
           }else{
-              $description = DB::select("SELECT * FROM `dataset_product_status` where id=".request('product_status_id_fk')."");
+              $description = DB::select("SELECT * FROM `dataset_product_out_cause` where id=".request('product_in_cause_id_fk')."");
               $sRow->description    = $description[0]->txt_desc;
           }
 
@@ -374,7 +374,10 @@ class General_receiveController extends Controller
                 $stock_id_fk = $lastID ;
                 $ref_table = 'db_general_receive' ;
                 $ref_table_id = $sRow->id ;
-                $ref_doc = $sRow->ref_doc;
+                // $ref_doc = $sRow->ref_doc;
+                $ref_doc = DB::select(" select * from `db_general_receive` WHERE id=".$sRow->id." ");
+                // dd($ref_doc[0]->ref_doc);
+                $ref_doc = @$ref_doc[0]->ref_doc;
 
                 $value=DB::table('db_stock_movement')
                 ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )

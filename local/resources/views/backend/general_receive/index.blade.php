@@ -87,7 +87,7 @@ $(function() {
         },
 
         columns: [
-            {data: 'ref_doc', title :'Ref. Code', className: 'text-center w80'},
+            {data: 'ref_doc', title :'Ref. Code', className: 'text-center w100 '},
             {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
             {data: 'product_in_cause', title :'<center>สาเหตุที่รับเข้า </center>', className: 'text-left'},
             {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},

@@ -26,6 +26,29 @@
 </div>
 <!-- end page title -->
 
+<?php
+      $sPermission = \Auth::user()->permission ;
+      // $menu_id = @$_REQUEST['menu_id'];
+      $menu_id = Session::get('session_menu_id');
+      if($sPermission==1){
+        $sC = '';
+        $sU = '';
+        $sD = '';
+        $role_group_id = '%';
+      }else{
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        // echo $role_group_id;
+        // echo $menu_id;
+        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+        $sC = @$menu_permit->c==1?'':'display:none;';
+        $sU = @$menu_permit->u==1?'':'display:none;';
+        $sD = @$menu_permit->d==1?'':'display:none;';
+      }
+      // echo $sPermission;
+      // echo $role_group_id;
+      // echo $menu_id;
+   ?>
+
 <div class="row">
   <div class="col-10">
     <div class="card">
@@ -247,10 +270,10 @@
                 <label for="lot_expired_date" class="col-md-3 col-form-label">วันหมดอายุ : * </label>
                 <div class="col-md-3">
                   @IF(!empty(@$sRow->lot_expired_date))
-                  <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date"
+                  <input class="form-control" type="text" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date"
                     id="lot_expired_date"
                     pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))"
-                    >
+                    readonly>
                   @ELSE
                   <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date"
                     id="lot_expired_date" required>
@@ -774,38 +797,38 @@
        });
 
 
-        // $(document).on('blur', '#lot_number_auto', function(event) {
-        //     $('.myloading').show();
-        //     var this_v = $(this).val();
-        //     // alert(this_v);
-        //      var product_id_fk = $('#product_id_fk').val();
-        //      $.ajax({
-        //       url: " {{ url('backend/ajaxGetLotnumber2') }} ",
-        //       method: "post",
-        //       dataType: "json",
-        //       data: {
-        //         product_id_fk:product_id_fk,
-        //         "_token": "{{ csrf_token() }}",
-        //       },
-        //       success:function(data){
-        //          console.log(data);
-        //          console.log(this_v);
-        //          $.each(data, function( index, value ) {
-        //             // if(this_v==value.value){
-        //               $('#lot_expired_date').val(value.lot_expired_date);
-        //             //   $('#lot_expired_date').prop('readonly',true);
-        //             //   $('#lot_expired_date').prop('type','text');
-        //             // }else{
-        //             //   $('#lot_expired_date').val('');
-        //             //   $('#lot_expired_date').prop('readonly',false);
-        //             //   $('#lot_expired_date').prop('required',true);
-        //             //   $('#lot_expired_date').prop('type','date');
-        //             // }
-        //          });
-        //          $('.myloading').hide();
-        //       }
-        //      });
-        // });
+        $(document).on('blur', '#lot_number_auto', function(event) {
+            $('.myloading').show();
+            var this_v = $(this).val();
+            // alert(this_v);
+             var product_id_fk = $('#product_id_fk').val();
+             $.ajax({
+              url: " {{ url('backend/ajaxGetLotnumber2') }} ",
+              method: "post",
+              dataType: "json",
+              data: {
+                product_id_fk:product_id_fk,
+                "_token": "{{ csrf_token() }}",
+              },
+              success:function(data){
+                 console.log(data);
+                 console.log(this_v);
+                 $.each(data, function( index, value ) {
+                    if(this_v==value.value){
+                      $('#lot_expired_date').val(value.lot_expired_date);
+                      $('#lot_expired_date').prop('readonly',true);
+                      $('#lot_expired_date').prop('type','text');
+                    }else{
+                      $('#lot_expired_date').val('');
+                      $('#lot_expired_date').prop('readonly',false);
+                      $('#lot_expired_date').prop('required',true);
+                      $('#lot_expired_date').prop('type','date');
+                    }
+                 });
+                 $('.myloading').hide();
+              }
+             });
+        });
 
 
 
