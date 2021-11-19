@@ -196,10 +196,19 @@ class Products_borrowController extends Controller
 
         $arr1 = implode(",", $arr1);
 
+        $stock_id_fk = $arr1[0];
+        // dd($stock_id_fk);
+
         $rsStock = DB::select(" select * from  db_stocks  where id in (".$arr1.")  ");
               // dd($rsStock);
         foreach ($rsStock as $key => $value) {
-            DB::update(" UPDATE db_products_borrow_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where products_borrow_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
+            DB::update(" UPDATE db_products_borrow_details 
+              SET stock_amt_before_up =".$value->amt." , 
+              stock_date_before_up = '".$value->date_in_stock."'  ,
+              approve_status = '1'  ,
+              approver = '".@\Auth::user()->id."'  ,
+              approve_date = curdate() 
+              where products_borrow_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
         }
 
          $rsWarehouses_details = DB::select("
@@ -227,57 +236,61 @@ class Products_borrowController extends Controller
          }
 
             // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
-            $Data = DB::select("
-                    SELECT db_products_borrow_code.business_location_id_fk,
-                    (
-                    CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE borrow_number END
-                    ) as doc_no
-                    ,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
+            // $Data = DB::select("
+            //         SELECT db_products_borrow_code.business_location_id_fk,
+            //         (
+            //         CASE WHEN borrow_number='-' or borrow_number is null THEN CONCAT('CODE',db_products_borrow_details.id) ELSE borrow_number END
+            //         ) as doc_no
+            //         ,db_products_borrow_code.updated_at as doc_date,db_products_borrow_details.branch_id_fk,
 
-                    db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number,lot_expired_date,
-                    db_products_borrow_details.amt,2 as 'in_out',product_unit_id_fk
-                    ,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_products_borrow_code.approve_status as status,
-                    'เบิก/ยืม' as note, db_products_borrow_code.created_at as dd,
-                    db_products_borrow_details.action_user as action_user,db_products_borrow_details.approver as approver,db_products_borrow_details.approve_date as approve_date
-                    FROM
-                    db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
-              ");
+            //         db_products_borrow_details.product_id_fk, db_products_borrow_details.lot_number,lot_expired_date,
+            //         db_products_borrow_details.amt,2 as 'in_out',product_unit_id_fk
+            //         ,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_products_borrow_code.approve_status as status,
+            //         'เบิก/ยืม' as note, db_products_borrow_code.created_at as dd,
+            //         db_products_borrow_details.action_user as action_user,db_products_borrow_details.approver as approver,db_products_borrow_details.approve_date as approve_date
+            //         FROM
+            //         db_products_borrow_details LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
+            //   ");
 
-              $insertStockMovement = new  AjaxController();
+            //   $insertStockMovement = new  AjaxController();
 
-              foreach ($Data as $key => $value) {
+            //   foreach ($Data as $key => $value) {
 
-                   $insertData = array(
-                      "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                      "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                      "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
-                      "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                      "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                      "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                      "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                      "amt" =>  @$value->amt?$value->amt:0,
-                      "in_out" =>  @$value->in_out?$value->in_out:0,
-                      "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-                      "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                      "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                      "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                      "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-                      "status" =>  @$value->status?$value->status:0,
-                      "note" =>  @$value->note?$value->note:NULL,
+            //        $insertData = array(
+            //           "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+            //           "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
+            //           "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+            //           "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+            //           "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+            //           "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+            //           "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
+            //           "amt" =>  @$value->amt?$value->amt:0,
+            //           "in_out" =>  @$value->in_out?$value->in_out:0,
+            //           "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
+            //           "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
+            //           "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
+            //           "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
+            //           "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
+            //           "status" =>  @$value->status?$value->status:0,
+            //           "note" =>  @$value->note?$value->note:NULL,
 
-                        "action_user" =>  @$value->action_user?$value->action_user:NULL,
-                        "action_date" =>  @$value->action_date?$value->action_date:NULL,
-                        "approver" =>  @$value->approver?$value->approver:NULL,
-                        "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+            //             "action_user" =>  @$value->action_user?$value->action_user:NULL,
+            //             "action_date" =>  @$value->action_date?$value->action_date:NULL,
+            //             "approver" =>  @$value->approver?$value->approver:NULL,
+            //             "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
 
-                      "created_at" =>@$value->dd?$value->dd:NULL
-                  );
+            //           "created_at" =>@$value->dd?$value->dd:NULL
+            //       );
 
-                    $insertStockMovement->insertStockMovement($insertData);
+            //         $insertStockMovement->insertStockMovement($insertData);
 
-                }
+            //     }
 
-                DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+            //     DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+
+
+              
+
 
       }
 
@@ -298,17 +311,108 @@ class Products_borrowController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Products_borrow_code::find($id);
+            $sRow1 = \App\Models\Backend\Products_borrow_code::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Products_borrow_code;
+            $sRow1 = new \App\Models\Backend\Products_borrow_code;
           }
 
-          $sRow->approver    = \Auth::user()->id;
-          $sRow->approve_status    = request('approve_status');
-          $sRow->note    = request('note');
-          $sRow->approve_date = date('Y-m-d H:i:s');
+          $sRow1->approver    = \Auth::user()->id;
+          $sRow1->approve_status    = request('approve_status');
+          $sRow1->note    = request('note');
+          $sRow1->approve_date = date('Y-m-d H:i:s');
 
-          $sRow->save();
+          $sRow1->save();
+
+      if(request('approve_status')==1){
+        // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
+         $rsWarehouses_details = DB::select("
+           select 
+           db_products_borrow_details.*,db_products_borrow_code.borrow_number,db_products_borrow_code.business_location_id_fk,db_products_borrow_code.note,dataset_borrow_cause.txt_desc as borrow_cause
+           from db_products_borrow_details 
+           LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id 
+           Left Join dataset_borrow_cause ON db_products_borrow_code.borrow_cause_id_fk = dataset_borrow_cause.id
+           where db_products_borrow_details.products_borrow_code_id = ".$id." ");
+     
+         if(!empty($rsWarehouses_details)){
+
+            foreach ($rsWarehouses_details as $key => $sRow) {
+
+               // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+
+                /*
+                เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                1 จ่ายสินค้าตามใบเบิก 26
+                2 จ่ายสินค้าตามใบเสร็จ  27
+                3 รับสินค้าเข้าทั่วไป 28
+                4 รับสินค้าเข้าตาม PO 29
+                5 นำสินค้าออก 30
+                6 สินค้าเบิก-ยืม  31
+                7 โอนภายในสาขา  32
+                8 โอนระหว่างสาขา  33
+                */
+                $stock_type_id_fk = 6 ;
+                $stock_id_fk = $sRow->stocks_id_fk ;
+                $ref_table = 'db_products_borrow_details' ;
+                $ref_table_id = $sRow->id ;
+                // $ref_doc = $sRow->ref_doc;
+                // $ref_doc = DB::select(" select * from `db_general_takeout` WHERE id=".$sRow->id." ");
+                // dd($ref_doc[0]->ref_doc);
+                $ref_doc = $sRow->borrow_number;
+                // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
+                // @$ref_doc = @$General_takeout[0]->ref_doc;
+
+                $value2=DB::table('db_stock_movement')
+                ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+                ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+                ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+                ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+                ->get();
+
+                if($value2->count() == 0){
+
+                      DB::table('db_stock_movement')->insert(array(
+                          "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                          "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                          "ref_table" =>  @$ref_table?$ref_table:0,
+                          "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                          "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                          // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                          "doc_date" =>  $sRow->created_at,
+                          "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+                          "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
+                          "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+                          "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+                          "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+                          "amt" =>  @$sRow->amt?$sRow->amt:0,
+                          "in_out" =>  2,
+                          "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+
+                          "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
+                          "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
+                          "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
+                          "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+
+                          "status" =>  @$sRow->approve_status?$sRow->approve_status:0,
+                          "note" =>  '(เบิก/ยืม)('.@$sRow->borrow_cause.')',
+                          "note2" =>  @$sRow->note?$sRow->note:NULL,
+
+                          "action_user" =>  @$sRow->action_user?$sRow->action_user:NULL,
+                          "action_date" =>  @$sRow->action_date?$sRow->action_date:NULL,
+                          "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+                          "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+
+                          "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                      ));
+
+                }
+                // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+            }
+
+         }
+         }
+
 
           \DB::commit();
 
@@ -332,18 +436,18 @@ class Products_borrowController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-    public function Datatable(){
+    public function Datatable(Request $request){
 
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
         if(@\Auth::user()->permission==1){
 
-            $sTable = \App\Models\Backend\Products_borrow::search()->orderBy('id', 'asc');
+            $sTable = \App\Models\Backend\Products_borrow::where('products_borrow_code_id',$request->products_borrow_code_id)->orderBy('id', 'asc');
 
         }else{
 
-           $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+           $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->where('action_user',@\Auth::user()->id)->where('products_borrow_code_id',$request->products_borrow_code_id)->orderBy('id', 'asc');
 
         }
 

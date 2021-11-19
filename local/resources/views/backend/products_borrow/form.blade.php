@@ -68,12 +68,10 @@
                 <input name="id" type="hidden" value="{{@$_REQUEST['list_id']}}">
               @endif
                 {{ csrf_field() }}
-<!-- Session::get('roleApprove') -->
- @if( $sPermission==1 || @$menu_permit->can_approve==1 )
 
       @if( @$sRow->approve_status!='2' )
 
-            <div class="myBorder">
+            <div class="myBorder div_confirm_products_borrow ">
 
                  <div class="form-group row">
                       <label for="example-text-input" class="col-md-3 col-form-label"><i class="bx bx-play"></i>ผู้อนุมัติ (Admin Login) :</label>
@@ -150,15 +148,6 @@
                 </div>
            @endif
 
-  @else
-         <div class="form-group mb-0 row">
-          <div class="col-md-6">
-            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products_borrow") }}">
-              <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-            </a>
-          </div>
-        </div>
-  @endif
             </div>
         </div>
     </div> <!-- end col -->
@@ -192,17 +181,15 @@
               "lengthChange": false,
               "paging":   false,
               scrollY: ''+($(window).height()-370)+'px',
-              ajax: {
-              url: '{{ route('backend.products_borrow.datatable') }}',
-              data: function ( d ) {
-                  d.Where={};
-                  d.Where['products_borrow_code_id'] = list_id ;
-                  oData = d;
-                },
-                 method: 'POST',
-               },
+               ajax: {
+                  url: '{{ route('backend.products_borrow.datatable') }}',
+                  data :{
+                        products_borrow_code_id:list_id,
+                      },
+                    method: 'POST',
+                  },
 
-           columns: [
+             columns: [
                   {data: 'id', title :'ลำดับ', className: 'text-center w50'},
                   {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
                   {data: 'lot_number', title :'<center>ล็อตนัมเบอร์ </center>', className: 'text-left'},

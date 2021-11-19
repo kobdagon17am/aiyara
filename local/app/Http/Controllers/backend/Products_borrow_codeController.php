@@ -110,6 +110,7 @@ class Products_borrow_codeController extends Controller
                        ,shelf_floor=? 
                        ,action_user=? 
                        ,action_date=? 
+                       ,created_at=? 
                        ",
                       [
                          $Products_borrow_code->id
@@ -126,6 +127,7 @@ class Products_borrow_codeController extends Controller
                         ,$Products_borrow_choose->shelf_floor
                         ,$Products_borrow_choose->action_user
                         ,$Products_borrow_choose->action_date
+                        ,$Products_borrow_choose->created_at
                       ]);
                 }
 
@@ -230,6 +232,20 @@ class Products_borrow_codeController extends Controller
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
 
+
+        $menu_id = '31';
+
+        if($sPermission==1){
+            $role_group_id = '%';
+            $can_approve = 1;
+        }else{
+            $role_group_id = \Auth::user()->role_group_id_fk;
+            $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+            $can_approve = @$menu_permit->can_approve;
+            // dd($can_approve);
+        }
+
+
         if(@\Auth::user()->permission==1){
 
             if(!empty( $req->business_location_id_fk) ){
@@ -244,10 +260,25 @@ class Products_borrow_codeController extends Controller
                 $branch_id_fk = "";
             }
 
+            $action_user = '';
+
         }else{
+
+          if($can_approve==1){
 
             $business_location_id = " and db_products_borrow_code.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
             $branch_id_fk = " and db_products_borrow_code.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
+            $action_user = '';
+            
+          }else{
+
+            $business_location_id = " and db_products_borrow_code.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and db_products_borrow_code.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
+            $action_user = " AND action_user=".@\Auth::user()->id."  ";
+          }
+
 
         }
 
@@ -280,6 +311,7 @@ class Products_borrow_codeController extends Controller
           $id
           $business_location_id
           $branch_id_fk
+          $action_user
           ORDER BY updated_at DESC ");
           		
       $sQuery = \DataTables::of($sTable);

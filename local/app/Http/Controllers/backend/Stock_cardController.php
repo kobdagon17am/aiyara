@@ -241,7 +241,7 @@ class Stock_cardController extends Controller
                                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                                  "details" =>  @$value->note?$value->note:NULL,
+                                  "details" =>  (@$value->note?$value->note:NULL).' '.(@$value->note2?$value->note2:NULL),
                                   "amt_in" =>  @$value->in_out==1?$value->amt:0,
                                   "amt_out" =>  @$value->in_out==2?$value->amt:0,
                                   "warehouse_id_fk" =>  @$value->warehouse_id_fk>0?$value->warehouse_id_fk:0,

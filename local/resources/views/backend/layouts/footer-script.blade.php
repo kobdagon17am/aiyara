@@ -141,6 +141,11 @@
               // console.log('can_cancel_bill_across_day : '+can_cancel_bill_across_day);
               // $(".get_menu_id").val(menu_id);
 
+              // Test
+              // var can_approve = 0;
+              // var sC = 0;
+              
+
               if(sPermission!=1){
 
                 (sC==1)?($(".class_btn_add").show()):($(".class_btn_add").remove());
@@ -151,13 +156,15 @@
                 (can_approve==1)?($(".div_confirm_transfer_warehouses").show()):($(".div_confirm_transfer_warehouses").remove());
                 (can_approve==1)?($(".div_confirm_general_receive").show()):($(".div_confirm_general_receive").remove());
                 (can_approve==1)?($(".div_confirm_general_takeout").show()):($(".div_confirm_general_takeout").remove());
+                (can_approve==1)?($(".div_confirm_products_borrow").show()):($(".div_confirm_products_borrow").remove());
+                (can_approve==1)?($(".div_confirm_transfer_warehouses").show()):($(".div_confirm_transfer_warehouses").remove());
 
                 // console.log('can_approve : '+can_approve);
 
               }
               // Test
               // (can_approve==1)?($(".div_confirm_general_receive").show()):($(".div_confirm_general_receive").remove());
-
+               console.log('sC : '+sC);
                console.log('can_approve : '+can_approve);
         
 

@@ -25,7 +25,7 @@
             <h4 class="mb-0 font-size-18"> โอนภายในสาขา </h4>
 
           <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>
-              <button type="button" class="btn btn-primary btn-sm btnAddTransferItem " style="font-size: 14px !important;" >
+              <button type="button" class="btn btn-primary btn-sm btnAddTransferItem class_btn_add " style="font-size: 14px !important;" >
                + เพิ่มรายการโอนสินค้า 
               </button>
           <?php } ?>
@@ -54,32 +54,7 @@
     </div>
 
 
-<!-- end page title -->
-  <?php 
-    
-    // echo Session::get('session_menu_id');
 
-      $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-        $role_group_id = '%';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        // echo $role_group_id;
-        // echo $menu_id;     
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;     
-   ?>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -917,7 +892,7 @@ $(document).ready(function() {
                },
 
               columns: [
-                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
+                  {data: 'tr_number', title :'รหัสใบโอน.', className: 'text-center w80'},
                   {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
                   // {data: 'amt', title :'<center>จำนวนรายการที่โอน </center>', className: 'text-center'},
                   {data: 'action_user', title :'<center>พนักงานที่ทำการโอน </center>', className: 'text-center'},

@@ -16,6 +16,20 @@ class General_receiveController extends Controller
     public function index(Request $request)
     {
 
+        // $sPermission = \Auth::user()->permission ;
+        // $menu_id = '28';
+
+        // if($sPermission==1){
+        //     $role_group_id = '%';
+        //     $can_approve = 1;
+        // }else{
+        //     $role_group_id = \Auth::user()->role_group_id_fk;
+        //     $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+        //     $can_approve = @$menu_permit->can_approve;
+        //     dd($can_approve);
+        // }
+
+
       $User_branch_id = \Auth::user()->branch_id_fk;
       $sBranchs = \App\Models\Backend\Branchs::get();
       $Warehouse = \App\Models\Backend\Warehouse::get();
@@ -113,11 +127,18 @@ class General_receiveController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\General_receive::find($id);
+       // dd($sRow->recipient);
        // $Product_in_cause = \App\Models\Backend\Product_in_cause::get();
        // dd($Product_in_cause);
+       // dd($sRow->recipient);
        $Product_in_cause  = DB::select(" SELECT * FROM `dataset_product_in_cause` where id not in(1)  ");
-       $Recipient  = DB::select(" select * from ck_users_admin where id=".$sRow->recipient." ");
-       $Approver  = DB::select(" select * from ck_users_admin where id=".$sRow->approver." ");
+       $Recipient  = DB::select(" select * from ck_users_admin where id=".@$sRow->recipient." ");
+       if(!empty($sRow->approver)){
+        $Approver  = DB::select(" select * from ck_users_admin where id=".$sRow->approver." ");
+      }else{
+        $Approver  = DB::select(" select * from ck_users_admin where id=".@\Auth::user()->id." ");
+      }
+       
 
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
@@ -204,7 +225,7 @@ class General_receiveController extends Controller
           if(request('product_in_cause_id_fk')==4){
               $sRow->description    = request('description');
           }else{
-              $description = DB::select("SELECT * FROM `dataset_product_out_cause` where id=".request('product_in_cause_id_fk')."");
+              $description = DB::select("SELECT * FROM `dataset_product_in_cause` where id=".request('product_in_cause_id_fk')."");
               $sRow->description    = $description[0]->txt_desc;
           }
 
@@ -225,7 +246,7 @@ class General_receiveController extends Controller
           $sRow->recipient    = request('recipient');
           $sRow->action_date    = date('Y-m-d H:i:s');
 
-          $sRow->approver    = request('approver');
+          $sRow->approver    = @\Auth::user()->id ;
           $sRow->approve_status    = request('approve_status')?request('approve_status'):0;
           $sRow->approve_date    = date('Y-m-d H:i:s');
 
@@ -294,67 +315,10 @@ class General_receiveController extends Controller
                       ));
 
                     $lastID = DB::table('db_stocks')->latest()->first();
+                    $lastID = $lastID->id;
                 }
 
-        // $insertStockMovement = new  AjaxController();
-
-        // ดึงจากตารางรับเข้า > db_general_receive
-        // สคริปต์เดิม กวาดมาทั้งหมด 
-
-        /*
-        $Data = DB::select("
-                SELECT db_general_receive.business_location_id_fk,
-                (
-                CASE WHEN loan_ref_number='-' or loan_ref_number is null THEN CONCAT('CODE',db_general_receive.id) ELSE loan_ref_number END
-                ) as doc_no
-                ,db_general_receive.created_at as doc_date,branch_id_fk,
-                db_general_receive.product_id_fk, db_general_receive.lot_number, lot_expired_date, db_general_receive.amt,1 as 'in_out',product_unit_id_fk,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,approve_status as status,
-                concat('รับเข้า ',dataset_product_in_cause.txt_desc) as note, db_general_receive.created_at as dd,
-                db_general_receive.recipient as action_user,db_general_receive.approver as approver,db_general_receive.updated_at as approve_date,db_general_receive.description  as note2,
-                (CASE WHEN product_status_id_fk=2 THEN 'สินค้าชำรุดเสียหาย' ELSE '' END) as note3
-                FROM
-                db_general_receive
-                left Join dataset_product_in_cause ON db_general_receive.product_in_cause_id_fk = dataset_product_in_cause.id
-          ");
-
-          foreach ($Data as $key => $value) {
-
-               $insertData = array(
-                  "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                  "doc_date" =>  @$value->doc_date?$value->doc_date:NULL,
-                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
-                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                  "lot_expired_date" =>  @$value->lot_expired_date?$value->lot_expired_date:NULL,
-                  "amt" =>  @$value->amt?$value->amt:0,
-                  "in_out" =>  @$value->in_out?$value->in_out:0,
-                  "product_unit_id_fk" =>  @$value->product_unit_id_fk?$value->product_unit_id_fk:0,
-
-                  "warehouse_id_fk" =>  @$value->warehouse_id_fk?$value->warehouse_id_fk:0,
-                  "zone_id_fk" =>  @$value->zone_id_fk?$value->zone_id_fk:0,
-                  "shelf_id_fk" =>  @$value->shelf_id_fk?$value->shelf_id_fk:0,
-                  "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
-
-                  "status" =>  @$value->status?$value->status:0,
-                  "note" =>  @$value->note?$value->note:NULL,
-                  "note2" =>  (@$value->note2?$value->note2:NULL).' '.(@$value->note3?$value->note3:NULL),
-
-                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
-                  "action_date" =>  @$value->action_date?$value->action_date:NULL,
-                  "approver" =>  @$value->approver?$value->approver:NULL,
-                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
-
-                  "created_at" =>@$value->dd?$value->dd:NULL
-              );
-
-                $insertStockMovement->insertStockMovement($insertData);
-
-            }
-
-             DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
-  */
-
+                // dd($lastID);
 
                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
 
@@ -371,7 +335,7 @@ class General_receiveController extends Controller
                 8 โอนระหว่างสาขา  33
                 */
                 $stock_type_id_fk = 3 ;
-                $stock_id_fk = $lastID ;
+                // $stock_id_fk =  @$lastID?$lastID:0 ;
                 $ref_table = 'db_general_receive' ;
                 $ref_table_id = $sRow->id ;
                 // $ref_doc = $sRow->ref_doc;
@@ -381,20 +345,19 @@ class General_receiveController extends Controller
 
                 $value=DB::table('db_stock_movement')
                 ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
-                ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+                ->where('stock_id_fk', $lastID )
                 ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
                 ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
                 ->get();
 
                 if($value->count() == 0){
 
-                      DB::table('db_stock_movement')->insert(array(
+                      DB::table('db_stock_movement')->insertOrignore(array(
                           "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
-                          "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                          "stock_id_fk" =>  $lastID,
                           "ref_table" =>  @$ref_table?$ref_table:0,
                           "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
                           "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
-                          // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
                           "doc_date" =>  $sRow->created_at,
                           "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
                           "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
@@ -402,7 +365,7 @@ class General_receiveController extends Controller
                           "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
                           "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
                           "amt" =>  @$sRow->amt?$sRow->amt:0,
-                          "in_out" =>  1,
+                          "in_out" =>  '1',
                           "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
 
                           "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
@@ -416,10 +379,10 @@ class General_receiveController extends Controller
 
                           "action_user" =>  @$sRow->recipient?$sRow->recipient:NULL,
                           "action_date" =>  @$sRow->action_date?$sRow->action_date:NULL,
-                          "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+                          "approver" =>  @\Auth::user()->id,
                           "approve_date" =>  @$sRow->approve_date?$sRow->approve_date:NULL,
 
-                          "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                          "created_at" =>@$sRow->created_at,
                       ));
 
                 }
@@ -458,14 +421,34 @@ class General_receiveController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
+
+        $menu_id = '28';
+
+        if($sPermission==1){
+            $role_group_id = '%';
+            $can_approve = 1;
+        }else{
+            $role_group_id = \Auth::user()->role_group_id_fk;
+            $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+            $can_approve = @$menu_permit->can_approve;
+            // dd($can_approve);
+        }
+
+
         if(@\Auth::user()->permission==1){
 
             $sTable = \App\Models\Backend\General_receive::search()->orderBy('id', 'desc');
 
         }else{
 
-           $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
+          if($can_approve==1){
+            $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->orderBy('id', 'desc');
 
+          }else{
+            $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
+
+          }
+           
         }
 
       // $sTable = \App\Models\Backend\General_receive::search()

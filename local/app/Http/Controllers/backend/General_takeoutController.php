@@ -377,14 +377,33 @@ class General_takeoutController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
+        $menu_id = '30';
+
+        if($sPermission==1){
+            $role_group_id = '%';
+            $can_approve = 1;
+        }else{
+            $role_group_id = \Auth::user()->role_group_id_fk;
+            $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+            $can_approve = @$menu_permit->can_approve;
+            // dd($can_approve);
+        }
+
+
         if(@\Auth::user()->permission==1){
 
             $sTable = \App\Models\Backend\General_takeout::search()->orderBy('id', 'desc');
 
         }else{
 
-           $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
+          if($can_approve==1){
+            $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->orderBy('id', 'desc');
 
+          }else{
+            $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
+
+          }
+           
         }
 
 

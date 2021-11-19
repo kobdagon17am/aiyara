@@ -74,7 +74,7 @@
 
       @if( @$sRow->approve_status!='2' )
 <!-- div_confirm_transfer_warehouses -->
-            <div class="myBorder  ">
+            <div class="myBorder div_confirm_transfer_warehouses ">
 
                  <div class="form-group row">
                       <label for="example-text-input" class="col-md-3 col-form-label"><i class="bx bx-play"></i>ผู้อนุมัติ (Admin Login) :</label>

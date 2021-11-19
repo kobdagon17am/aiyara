@@ -153,9 +153,9 @@ class Stock_notifyController extends Controller
 
       })
       ->addColumn('warehouses', function($row) {
-        $BL = DB::select(" select * from dataset_business_location where id=".$row->business_location_id_fk." ");
-        $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-        $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
+        $BL = DB::select(" select * from dataset_business_location where id=".(@$row->business_location_id_fk?$row->business_location_id_fk:0)." ");
+        $sBranchs = DB::select(" select * from branchs where id=".(@$row->branch_id_fk?$row->branch_id_fk:0)." ");
+        $warehouse = DB::select(" select * from warehouse where id=".(@$row->warehouse_id_fk?$row->warehouse_id_fk:0)." ");
         return @$BL[0]->txt_desc.'/'.@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name;
       })
       ->make(true);
@@ -189,9 +189,9 @@ class Stock_notifyController extends Controller
 
       })
       ->addColumn('warehouses', function($row) {
-        $BL = DB::select(" select * from dataset_business_location where id=".$row->business_location_id_fk." ");
-        $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
-        $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
+        $BL = DB::select(" select * from dataset_business_location where id=".(@$row->business_location_id_fk?$row->business_location_id_fk:0)." ");
+        $sBranchs = DB::select(" select * from branchs where id=".(@$row->branch_id_fk?$row->branch_id_fk:0)." ");
+        $warehouse = DB::select(" select * from warehouse where id=".(@$row->warehouse_id_fk?$row->warehouse_id_fk:0)." ");
         return @$BL[0]->txt_desc.'/'.@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name;
       })
       ->make(true);

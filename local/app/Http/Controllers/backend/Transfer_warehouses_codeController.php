@@ -279,10 +279,14 @@ class Transfer_warehouses_codeController extends Controller
                 $branch_id_fk = "";
             }
 
+            $action_user = '1';
+
         }else{
 
             // $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
             $branch_id_fk = " AND branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
+            $action_user = " action_user=".@\Auth::user()->id." ";
 
         }
 
@@ -321,7 +325,7 @@ class Transfer_warehouses_codeController extends Controller
       //     ORDER BY updated_at DESC ");
 
       $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
-          WHERE 1
+          WHERE $action_user 
           $id
           $branch_id_fk
           $approve_status

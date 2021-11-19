@@ -57,32 +57,6 @@
 
 
 
-<!-- end page title -->
-  <?php
-
-    // echo Session::get('session_menu_id');
-
-      $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
-        $sC = '';
-        $sU = '';
-        $sD = '';
-        $role_group_id = '%';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        // echo $role_group_id;
-        // echo $menu_id;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;
-   ?>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -873,7 +847,7 @@ $(document).ready(function() {
                   }},
                   {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
                   {data: 'approve_date', title :'<center>วันอนุมัติ </center>', className: 'text-center'},
-                  {data: 'id',   title :'พิมพ์ใบยืม', className: 'text-center ',render: function(d) {
+                  {data: 'id',   title :'พิมพ์ใบยืม.', className: 'text-center ',render: function(d) {
                       return '<center><a href="{{ URL::to('backend/products_borrow/print_products_borrow') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
                   }},
                   {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
