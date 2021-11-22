@@ -121,21 +121,14 @@ class Transfer_warehouses_codeController extends Controller
                         ,$Transfer_choose->shelf_floor
                         ,$Transfer_choose->action_user
                         ,$Transfer_choose->action_date
-                        ,'2'
+                        ,'1'
                         ,date("Y-m-d H:i:s")
                       ]);
                 }
 
- // 1=ฝั่งโอนให้ , 2=ฝั่งรับโอน 
-// ฝั่งโอนให้ ใส่ไว้ก่อน แล้วค่อยไปหักลบยอดออกตอน อนุมัติ อีกที  warehouse_id_fk ต้องเป็นอันเดิมตาม db_stocks
-
+// ฝั่งโอนให้ ใส่ไว้ก่อน แล้วค่อยไปหักลบยอดออกตอน อนุมัติ อีกที 
                 for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 
                     $Transfer_choose = \App\Models\Backend\Transfer_choose::find($request->transfer_choose_id[$i]);
-
-                    $Stock = DB::table('db_stocks')
-                            ->where('id', $Transfer_choose->stocks_id_fk)
-                            ->get();
-
                     DB::insert("  
                        insert into db_transfer_warehouses_details set  
                        transfer_warehouses_code_id=? 
@@ -163,22 +156,19 @@ class Transfer_warehouses_codeController extends Controller
                         ,$Transfer_choose->lot_expired_date
                         ,$Transfer_choose->amt
                         ,$Transfer_choose->product_unit_id_fk
-                        ,$Stock[0]->branch_id_fk
-                        ,$Stock[0]->warehouse_id_fk
-                        ,$Stock[0]->zone_id_fk
-                        ,$Stock[0]->shelf_id_fk
-                        ,$Stock[0]->shelf_floor
+                        ,$Transfer_choose->branch_id_fk
+                        ,$Transfer_choose->warehouse_id_fk
+                        ,$Transfer_choose->zone_id_fk
+                        ,$Transfer_choose->shelf_id_fk
+                        ,$Transfer_choose->shelf_floor
                         ,$Transfer_choose->action_user
                         ,$Transfer_choose->action_date
-                        ,'1'
+                        ,'2'
                         ,date("Y-m-d H:i:s")
                       ]);
-
-                      DB::update(" DELETE FROM db_transfer_choose where id=? ",[$Transfer_choose->id]);
-
                 }
 
-                // DB::update(" DELETE FROM db_transfer_choose where action_user=? ",[\Auth::user()->id]);
+                DB::update(" DELETE FROM db_transfer_choose where action_user=? ",[\Auth::user()->id]);
 
                 return redirect()->to(url("backend/transfer_warehouses"));
 

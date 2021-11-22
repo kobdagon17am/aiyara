@@ -69,13 +69,32 @@ class Transfer_branch_codeController extends Controller
                       $Transfer_branch_code = new \App\Models\Backend\Transfer_branch_code;
                       $Transfer_branch_code->business_location_id_fk = request('business_location_id_fk');
                       $Transfer_branch_code->branch_id_fk = request('branch_id_fk');
+                      $Transfer_branch_code->to_branch_id_fk = request('branch_id_fk_to');
                       $Transfer_branch_code->note = request('note');
                       $Transfer_branch_code->action_date = date("Y-m-d");
                       $Transfer_branch_code->action_user = \Auth::user()->id;
                       $Transfer_branch_code->created_at = date("Y-m-d H:i:s");
                       $Transfer_branch_code->save();
 
-                      DB::update(" update db_transfer_branch_code set tr_number=?,to_branch_id_fk=? where id=? ",["TR".sprintf("%05d",$Transfer_branch_code->id),request('branch_id_fk_to'),$Transfer_branch_code->id]);
+                      /*
+                      เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                      นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                      1 จ่ายสินค้าตามใบเบิก 26
+                      2 จ่ายสินค้าตามใบเสร็จ  27
+                      3 รับสินค้าเข้าทั่วไป 28
+                      4 รับสินค้าเข้าตาม PO 29
+                      5 นำสินค้าออก 30
+                      6 สินค้าเบิก-ยืม  31
+                      7 โอนภายในสาขา  32
+                      8 โอนระหว่างสาขา  33
+                      */
+                      // รหัสอ้างอิงเอกสาร (แสดงรหัสอ้างอิงในตารางที่เชื่อมโยงกันทุกตาราง) REF+BL+branch+stock_type_id_fk+(yy+mm+dd)+ref_table_id
+                      $stock_type_id_fk = 8;
+                      $ref_table_id = $Transfer_branch_code->id ;
+                      $ref_doc = 'TR'.$Transfer_branch_code->business_location_id_fk.$Transfer_branch_code->branch_id_fk.$stock_type_id_fk.date('ymd').$ref_table_id;
+                      // DB::update(" update db_transfer_branch_code set tr_number=?,to_branch_id_fk=? where id=? ",["TR".sprintf("%05d",$Transfer_branch_code->id),request('branch_id_fk_to'),$Transfer_branch_code->id]);
+                      DB::update(" update db_Transfer_branch_code set tr_number=? where id=? ",[$ref_doc,$Transfer_branch_code->id]);
+
 
                       for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 
                           $Transfer_choose = \App\Models\Backend\Transfer_choose_branch::find($request->transfer_choose_id[$i]);
@@ -95,6 +114,7 @@ class Transfer_branch_codeController extends Controller
                              ,shelf_floor=? 
                              ,action_user=? 
                              ,action_date=? 
+                             ,created_at=? 
                              ",
                             [
                               $Transfer_branch_code->id
@@ -111,6 +131,7 @@ class Transfer_branch_codeController extends Controller
                               ,$Transfer_choose->shelf_floor
                               ,$Transfer_choose->action_user
                               ,$Transfer_choose->action_date
+                              ,date("Y-m-d H:i:s")
                             ]);
 
 
@@ -130,6 +151,7 @@ class Transfer_branch_codeController extends Controller
                              ,shelf_floor=? 
                              ,action_user=? 
                              ,action_date=? 
+                             ,created_at=? 
                              ",
                             [
                               $Transfer_branch_code->id
@@ -146,11 +168,15 @@ class Transfer_branch_codeController extends Controller
                               ,$Transfer_choose->shelf_floor
                               ,$Transfer_choose->action_user
                               ,$Transfer_choose->action_date
+                              ,date("Y-m-d H:i:s")
                             ]);
+
+                            DB::update(" DELETE FROM db_transfer_choose_branch where id=? ",[$Transfer_choose->id]);
+
 
                       }
 
-                     DB::update(" DELETE FROM db_transfer_choose_branch where action_user=? ",[\Auth::user()->id]);
+                     // DB::update(" DELETE FROM db_transfer_choose_branch where action_user=? ",[\Auth::user()->id]);
 
               }
 

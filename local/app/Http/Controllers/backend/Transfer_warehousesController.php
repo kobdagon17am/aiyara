@@ -19,17 +19,17 @@ class Transfer_warehousesController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
-        if(@\Auth::user()->permission==1){
+        // if(@\Auth::user()->permission==1){
 
-            $Products = DB::select("SELECT products.id as product_id,
-            products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
-            FROM
-            products_details
-            Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1 ");
+        //     $Products = DB::select("SELECT products.id as product_id,
+        //     products.product_code,
+        //     (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+        //     FROM
+        //     products_details
+        //     Left Join products ON products_details.product_id_fk = products.id
+        //     WHERE lang_id=1 ");
 
-        }else{
+        // }else{
 
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -40,7 +40,7 @@ class Transfer_warehousesController extends Controller
             WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
             ORDER BY products.product_code");
 
-        }
+        // }
 
       $User_branch_id = \Auth::user()->branch_id_fk;
       // dd($User_branch_id);
@@ -193,7 +193,7 @@ class Transfer_warehousesController extends Controller
 
     public function update(Request $request, $id)
     {
-      dd($request->all());
+      // dd($request->all());
       if(!empty($request->approve_status) && $request->approve_status==1){
           // dd($request->approve_status);
 
@@ -209,7 +209,12 @@ class Transfer_warehousesController extends Controller
         $rsStock = DB::select(" select * from  db_stocks  where id in (".$arr1.")  ");
               // dd($rsStock);
         foreach ($rsStock as $key => $value) {
-            DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id." AND remark=1  ");
+
+             DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."' 
+            ,approver=".\Auth::user()->id." where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id." AND remark=1  ");
+
+             DB::update(" UPDATE db_transfer_warehouses_details SET approver=".\Auth::user()->id." where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id." AND remark=2 ");
+
         }
 
 
@@ -429,104 +434,271 @@ class Transfer_warehousesController extends Controller
       \DB::beginTransaction();
       try {
           if( $id ){
-            $sRow = \App\Models\Backend\Transfer_warehouses_code::find($id);
+            $sRow1 = \App\Models\Backend\Transfer_warehouses_code::find($id);
           }else{
-            $sRow = new \App\Models\Backend\Transfer_warehouses_code;
+            $sRow1 = new \App\Models\Backend\Transfer_warehouses_code;
           }
 
-          $sRow->approver    = \Auth::user()->id;
-          $sRow->approve_status    = request('approve_status');
-          $sRow->note    = request('note');
-          $sRow->approve_date = date('Y-m-d H:i:s');
+          $sRow1->approver    = \Auth::user()->id;
+          $sRow1->approve_status    = request('approve_status');
+          $sRow1->note    = request('note');
+          $sRow1->approve_date = date('Y-m-d H:i:s');
 
-          $sRow->save();
-
-
+          $sRow1->save();
+          // dd(request('approve_status'));
 
      // // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
-     //      if(request('approve_status')=='1'){
+          if(request('approve_status')=='1'){
 
-     //            $rsWarehouses_details = DB::select("
-     //             select 
-     //              db_transfer_warehouses_details.*,db_transfer_warehouses_code.tr_number,db_transfer_warehouses_code.business_location_id_fk,db_transfer_warehouses_code.note
-     //              from db_transfer_warehouses_details 
-     //              LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id 
-     //              where db_transfer_warehouses_details.transfer_warehouses_code_id = ".$id." ");
+                $rsWarehouses_details = DB::select("
+                 select 
+                  db_transfer_warehouses_details.*,db_transfer_warehouses_code.tr_number,db_transfer_warehouses_code.business_location_id_fk,db_transfer_warehouses_code.note
+                  from db_transfer_warehouses_details 
+                  LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id 
+                  where db_transfer_warehouses_details.transfer_warehouses_code_id = ".$id." AND remark=1 ");
            
-     //           if(!empty($rsWarehouses_details)){
+               if(!empty($rsWarehouses_details)){
 
-     //           foreach ($rsWarehouses_details as $key => $sRow) {
+                 foreach ($rsWarehouses_details as $key => $sRow) {
+              // ฝั่นโอนให้ ลบยอดคลังออก
+                            DB::table('db_stocks')
+                            ->where('id', $sRow->stocks_id_fk)
+                              ->update(array(
+                                'amt' => DB::raw( " amt - $sRow->amt " )
+                              ));
 
-     //            /*
-     //            เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
-     //            นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
-     //            1 จ่ายสินค้าตามใบเบิก 26
-     //            2 จ่ายสินค้าตามใบเสร็จ  27
-     //            3 รับสินค้าเข้าทั่วไป 28
-     //            4 รับสินค้าเข้าตาม PO 29
-     //            5 นำสินค้าออก 30
-     //            6 สินค้าเบิก-ยืม  31
-     //            7 โอนภายในสาขา  32
-     //            8 โอนระหว่างสาขา  33
-     //            */
-     //            $stock_type_id_fk = 7 ;
-     //            $stock_id_fk = request('stocks_id_fk') ;
-     //            $ref_table = 'db_general_takeout' ;
-     //            $ref_table_id = $sRow->id ;
-     //            // $ref_doc = $sRow->ref_doc;
-     //            $ref_doc = DB::select(" select * from `db_general_takeout` WHERE id=".$sRow->id." ");
-     //            // dd($ref_doc[0]->ref_doc);
-     //            $ref_doc = @$ref_doc[0]->ref_doc;
-     //            // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
-     //            // @$ref_doc = @$General_takeout[0]->ref_doc;
+                            $Stock = DB::table('db_stocks')
+                            ->where('id', $sRow->stocks_id_fk)
+                            ->get();
 
-     //            $value=DB::table('db_stock_movement')
-     //            ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
-     //            ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
-     //            ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
-     //            ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
-     //            ->get();
+                                /*
+                                  เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                                  นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                                  1 จ่ายสินค้าตามใบเบิก 26
+                                  2 จ่ายสินค้าตามใบเสร็จ  27
+                                  3 รับสินค้าเข้าทั่วไป 28
+                                  4 รับสินค้าเข้าตาม PO 29
+                                  5 นำสินค้าออก 30
+                                  6 สินค้าเบิก-ยืม  31
+                                  7 โอนภายในสาขา  32
+                                  8 โอนระหว่างสาขา  33
+                                  */
+                                  $stock_type_id_fk = 7 ;
+                                  $stock_id_fk = $sRow->stocks_id_fk;
+                                  $ref_table = 'db_transfer_warehouses_code' ;
+                                  $ref_table_id = $sRow->id ;
+                                  // $ref_doc = $sRow->ref_doc;
+                                  // $ref_doc = DB::select(" select * from `db_transfer_warehouses_code` WHERE id=".$sRow->id." ");
+                                  // dd($ref_doc[0]->ref_doc);
+                                  // $ref_doc = @$ref_doc[0]->tr_number;
+                                  $ref_doc = $sRow->tr_number;
+                                  // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
+                                  // @$ref_doc = @$General_takeout[0]->ref_doc;
 
-     //            if($value->count() == 0){
+                                  $value=DB::table('db_stock_movement')
+                                  ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+                                  ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+                                  ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+                                  ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+                                  ->get();
 
-     //                  DB::table('db_stock_movement')->insert(array(
-     //                      "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
-     //                      "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
-     //                      "ref_table" =>  @$ref_table?$ref_table:0,
-     //                      "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
-     //                      "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
-     //                      // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-     //                      "doc_date" =>  $sRow->created_at,
-     //                      "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
-     //                      "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
-     //                      "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
-     //                      "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
-     //                      "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
-     //                      "amt" =>  @$sRow->amt?$sRow->amt:0,
-     //                      "in_out" =>  2,
-     //                      "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+                                  if($value->count() == 0){
 
-     //                      "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
-     //                      "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
-     //                      "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
-     //                      "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+                                        // if(@$sRow->remark==1){
+                                          $note = 'โอนภายในสาขา (ฝั่งโอน) ';
+                                        // }else if(@$sRow->remark==2){
+                                        //   $note = 'โอนภายในสาขา (ฝั่งรับโอน) ';
+                                        // }
 
-     //                      "status" =>  @$sRow->approve_status?$sRow->approve_status:0,
-     //                      "note" =>  'นำสินค้าออก ',
-     //                      "note2" =>  @$sRow->description?$sRow->description:NULL,
+                                        DB::table('db_stock_movement')->insert(array(
+                                            "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                                            "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                                            "ref_table" =>  @$ref_table?$ref_table:0,
+                                            "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                                            "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                                            // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                            "doc_date" =>  $sRow->created_at,
+                                            "business_location_id_fk" =>  @$Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0,
+                                            "branch_id_fk" =>  @$Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0,
+                                            "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+                                            "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+                                            "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+                                            "amt" =>  @$sRow->amt?$sRow->amt:0,
+                                            "in_out" =>  '2',
+                                            "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
 
-     //                      "action_user" =>  @$sRow->recipient?$sRow->recipient:NULL,
-     //                      "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
-     //                      "approver" =>  @$sRow->approver?$sRow->approver:NULL,
-     //                      "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+                                            "warehouse_id_fk" =>  @$Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0,
+                                            "zone_id_fk" =>  @$Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0,
+                                            "shelf_id_fk" =>  @$Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0,
+                                            "shelf_floor" =>  @$Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0,
 
-     //                      "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
-     //                  ));
+                                            "status" =>  '1',
+                                            "note" =>  $note,
+                                            "note2" =>  @$sRow->description?$sRow->description:NULL,
 
-     //             }
-     //            }
-     //           }
-     //          }
+                                            "action_user" =>  @$sRow->action_user?$sRow->action_user:NULL,
+                                            "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
+                                            "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+                                            "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+
+                                            "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                                        ));
+
+                                   }
+
+
+                 }
+
+               }
+
+
+                $rsWarehouses_details = DB::select("
+                 select 
+                  db_transfer_warehouses_details.*,db_transfer_warehouses_code.tr_number,db_transfer_warehouses_code.business_location_id_fk,db_transfer_warehouses_code.note
+                  from db_transfer_warehouses_details 
+                  LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id 
+                  where db_transfer_warehouses_details.transfer_warehouses_code_id = ".$id." AND remark=2 ");
+           
+               if(!empty($rsWarehouses_details)){
+
+
+                     foreach ($rsWarehouses_details as $key => $sRow) {
+
+      // ฝั่นรับโอน ถ้ามี บวกยอดคลังเข้า ถ้ายังไม่มี สร้างรายการคลังเพิ่ม 
+                      $value=DB::table('db_stocks')
+                      ->where('business_location_id_fk', $sRow->business_location_id_fk )
+                      ->where('branch_id_fk', $sRow->branch_id_fk )
+                      ->where('product_id_fk', $sRow->product_id_fk )
+                      ->where('lot_number', $sRow->lot_number )
+                      ->where('lot_expired_date', $sRow->lot_expired_date )
+                      ->where('warehouse_id_fk', $sRow->warehouse_id_fk )
+                      ->where('zone_id_fk', $sRow->zone_id_fk )
+                      ->where('shelf_id_fk', $sRow->shelf_id_fk )
+                      ->where('shelf_floor', $sRow->shelf_floor )
+                      ->get();
+
+                      if($value->count() > 0){
+
+                          DB::table('db_stocks')
+                          ->where('business_location_id_fk', $sRow->business_location_id_fk)
+                          ->where('branch_id_fk', $sRow->branch_id_fk)
+                          ->where('product_id_fk', $sRow->product_id_fk)
+                          ->where('lot_number', $sRow->lot_number)
+                          ->where('lot_expired_date', $sRow->lot_expired_date)
+                          ->where('warehouse_id_fk', $sRow->warehouse_id_fk)
+                          ->where('zone_id_fk', $sRow->zone_id_fk)
+                          ->where('shelf_id_fk', $sRow->shelf_id_fk)
+                          ->where('shelf_floor', $sRow->shelf_floor)
+                            ->update(array(
+                             'amt' => DB::raw( " amt + $sRow->amt " )
+                            ));
+                          // $lastID = DB::table('db_stocks')->latest()->first();
+                          // $lastID = $lastID->id;
+                      }else{
+
+                           DB::table('db_stocks')->insert(array(
+                              'business_location_id_fk' => $sRow->business_location_id_fk,
+                              'branch_id_fk' => $sRow->branch_id_fk,
+                              'product_id_fk' => $sRow->product_id_fk,
+                              'lot_number' => $sRow->lot_number,
+                              'lot_expired_date' => $sRow->lot_expired_date,
+                              'amt' => $sRow->amt,
+                              'product_unit_id_fk' => $sRow->product_unit_id_fk,
+                              'date_in_stock' => date("Y-m-d H:i:s"),
+                              'warehouse_id_fk' => $sRow->warehouse_id_fk,
+                              'zone_id_fk' => $sRow->zone_id_fk,
+                              'shelf_id_fk' => $sRow->shelf_id_fk,
+                              'shelf_floor' => $sRow->shelf_floor,
+                              'created_at' => date("Y-m-d H:i:s"),
+                            ));
+
+                      }
+
+
+                      /*
+                                  เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                                  นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                                  1 จ่ายสินค้าตามใบเบิก 26
+                                  2 จ่ายสินค้าตามใบเสร็จ  27
+                                  3 รับสินค้าเข้าทั่วไป 28
+                                  4 รับสินค้าเข้าตาม PO 29
+                                  5 นำสินค้าออก 30
+                                  6 สินค้าเบิก-ยืม  31
+                                  7 โอนภายในสาขา  32
+                                  8 โอนระหว่างสาขา  33
+                                  */
+                                  $stock_type_id_fk = 7 ;
+                                  $stock_id_fk = $sRow->stocks_id_fk;
+                                  $ref_table = 'db_transfer_warehouses_code' ;
+                                  $ref_table_id = $sRow->id ;
+                                  // $ref_doc = $sRow->ref_doc;
+                                  // $ref_doc = DB::select(" select * from `db_transfer_warehouses_code` WHERE id=".$sRow->id." ");
+                                  // dd($ref_doc[0]->ref_doc);
+                                  // $ref_doc = @$ref_doc[0]->tr_number;
+                                  $ref_doc = $sRow->tr_number;
+                                  // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
+                                  // @$ref_doc = @$General_takeout[0]->ref_doc;
+
+                                  $value=DB::table('db_stock_movement')
+                                  ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+                                  ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+                                  ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+                                  ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+                                  ->get();
+
+                                  if($value->count() == 0){
+
+                                        // if(@$sRow->remark==1){
+                                        //   $note = 'โอนภายในสาขา (ฝั่งโอน) ';
+                                        // }else if(@$sRow->remark==2){
+                                          $note = 'โอนภายในสาขา (ฝั่งรับโอน) ';
+                                        // }
+
+                                        DB::table('db_stock_movement')->insert(array(
+                                            "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                                            "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                                            "ref_table" =>  @$ref_table?$ref_table:0,
+                                            "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                                            "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                                            // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                            "doc_date" =>  $sRow->created_at,
+                                            "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+                                            "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
+                                            "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+                                            "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+                                            "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+                                            "amt" =>  @$sRow->amt?$sRow->amt:0,
+                                            "in_out" =>  '1',
+                                            "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+
+                                            "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
+                                            "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
+                                            "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
+                                            "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+
+                                            "status" =>  '1',
+                                            "note" =>  $note,
+                                            "note2" =>  @$sRow->description?$sRow->description:NULL,
+
+                                            "action_user" =>  @$sRow->action_user?$sRow->action_user:NULL,
+                                            "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
+                                            "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+                                            "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+
+                                            "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                                        ));
+
+                                   }
+
+
+
+                   }
+
+               }
+
+
+        
+          }
                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 

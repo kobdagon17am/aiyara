@@ -81,9 +81,9 @@
 
 
  <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)!=0){ ?>
-      <div class="myBorder  " style="display: none;" >
+      <div class="myBorder div_TransferList  " style="display: none;" >
   <?php }else{ ?>
-      <div class="myBorder  " >
+      <div class="myBorder div_TransferList " >
   <?php } ?>
 
               <div class="row div_TransferList " >
