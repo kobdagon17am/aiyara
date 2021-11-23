@@ -93,7 +93,7 @@ class Transfer_branch_codeController extends Controller
                       $ref_table_id = $Transfer_branch_code->id ;
                       $ref_doc = 'TR'.$Transfer_branch_code->business_location_id_fk.$Transfer_branch_code->branch_id_fk.$stock_type_id_fk.date('ymd').$ref_table_id;
                       // DB::update(" update db_transfer_branch_code set tr_number=?,to_branch_id_fk=? where id=? ",["TR".sprintf("%05d",$Transfer_branch_code->id),request('branch_id_fk_to'),$Transfer_branch_code->id]);
-                      DB::update(" update db_Transfer_branch_code set tr_number=? where id=? ",[$ref_doc,$Transfer_branch_code->id]);
+                      DB::update(" update db_transfer_branch_code set tr_number=? where id=? ",[$ref_doc,$Transfer_branch_code->id]);
 
 
                       for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 

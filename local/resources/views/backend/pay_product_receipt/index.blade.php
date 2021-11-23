@@ -307,6 +307,16 @@
            }
       });
 
+        $(document).on('keyup', '.in-tx', function(e) {
+
+          if (this.value.length >= 10) {
+
+                 var index = $('.in-tx').index(this) + 1;
+                 $('.in-tx').eq(index).focus();
+                  return false;
+                }
+
+        });
 
       $(document).on('change', '.qr_scan', function(e) {
 

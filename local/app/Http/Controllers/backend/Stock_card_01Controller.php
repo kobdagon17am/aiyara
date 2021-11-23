@@ -17,7 +17,9 @@ class Stock_card_01Controller extends Controller
       // return View('backend.stock_card_01.index');
            $id = $request->stock_id;
            $Stock = \App\Models\Backend\Check_stock::where('id',$id)->get();
+        // dd($Stock);
         // dd($Stock[0]->product_id_fk);
+           $sBalance = @$Stock[0]->amt;
         
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
@@ -30,14 +32,15 @@ class Stock_card_01Controller extends Controller
            $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
 // date(lot_expired_date) >= CURDATE()
-          $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$Stock[0]->product_id_fk." 
-          AND lot_number='".$Stock[0]->lot_number."' 
-          AND lot_expired_date='".$Stock[0]->lot_expired_date."' 
-          AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."' 
-          AND zone_id_fk='".$Stock[0]->zone_id_fk."' 
-          AND shelf_id_fk='".$Stock[0]->shelf_id_fk."' 
-          AND shelf_floor='".$Stock[0]->shelf_floor."' 
-          GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+          // $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$Stock[0]->product_id_fk." 
+          // AND lot_number='".$Stock[0]->lot_number."' 
+          // AND lot_expired_date='".$Stock[0]->lot_expired_date."' 
+          // AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."' 
+          // AND zone_id_fk='".$Stock[0]->zone_id_fk."' 
+          // AND shelf_id_fk='".$Stock[0]->shelf_id_fk."' 
+          // AND shelf_floor='".$Stock[0]->shelf_floor."' 
+          // GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+          // dd($sBalance);
 
           $lot_number = $Stock[0]->lot_number;
           $lot_expired_date = $Stock[0]->lot_expired_date;
@@ -116,7 +119,7 @@ class Stock_card_01Controller extends Controller
                 AND zone_id_fk='".$Stock[0]->zone_id_fk."' 
                 AND shelf_id_fk='".$Stock[0]->shelf_id_fk."' 
                 AND shelf_floor='".$Stock[0]->shelf_floor."' 
-                GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ");
+                GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ");
                 $amt_balance_stock = @$sBalance[0]->amt?$sBalance[0]->amt:0;
 
                $txt = "ยอดคงเหลือ";

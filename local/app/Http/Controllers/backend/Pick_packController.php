@@ -99,6 +99,8 @@ class Pick_packController extends Controller
 
           if( $DeliveryPackingCode ){
 
+              $DeliveryPackingCode->business_location_id = $rsDelivery[0]->business_location_id;
+              $DeliveryPackingCode->branch_id_fk =  $rsDelivery[0]->branch_id_fk;
               $DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
               $DeliveryPackingCode->action_user = (\Auth::user()->id);
               $DeliveryPackingCode->orders_id_fk = $orders_id_fk ;

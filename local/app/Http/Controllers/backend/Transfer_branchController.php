@@ -71,7 +71,8 @@ class Transfer_branchController extends Controller
         $sTransfer_chooseAll = \App\Models\Backend\Transfer_choose_branch::where('action_user','=',(\Auth::user()->id))->get();
         // dd(count($sTransfer_chooseAll));
 
-        $sTransfer_choose = \App\Models\Backend\Transfer_choose_branch::where('branch_id_fk_to','0')->where('action_user','=',\Auth::user()->id)->get();
+        // $sTransfer_choose = \App\Models\Backend\Transfer_choose_branch::where('branch_id_fk_to','0')->where('action_user','=',\Auth::user()->id)->get();
+        $sTransfer_choose = \App\Models\Backend\Transfer_choose_branch::where('branch_id_fk_to','!=','0')->where('action_user','=',\Auth::user()->id)->get();
         // dd(count($sTransfer_choose));
         // dd($User_branch_id);
         // dd($sTransfer_chooseAll);

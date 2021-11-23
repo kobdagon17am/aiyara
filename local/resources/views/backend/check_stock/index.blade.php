@@ -530,6 +530,9 @@
                                                      return a + b*1;
                                                      // return a + b;
                                                  }, 0);
+
+                                            // console.log(sTotal);
+
                                                   sTotal = $.fn.dataTable.render.number(',', '.', 0, '  ').display( sTotal );
 
                                                   var product_id_fk = rows.data().pluck('product_id_fk').toArray();

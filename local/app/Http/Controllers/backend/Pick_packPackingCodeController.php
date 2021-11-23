@@ -130,26 +130,28 @@ class Pick_packPackingCodeController extends Controller
 
  public function packing_list_for_fifo(Request $req){     
 
-        if(!empty($req->business_location_id_fk) && !empty($req->branch_id_fk)){
-           // $w01 = " AND db_pay_product_receipt_001.business_location_id_fk=".$req->business_location_id_fk ;
-          $r_db_pick_pack_packing_code = DB::select(" SELECT action_user FROM db_pick_pack_packing_code where status_picked=1 ");
-          if(@$r_db_pick_pack_packing_code){
-             $r_user = DB::select(" SELECT id FROM ck_users_admin WHERE id in (".$r_db_pick_pack_packing_code[0]->action_user.") AND business_location_id_fk=".$req->business_location_id_fk." AND branch_id_fk=".$req->branch_id_fk." ");
-             $arr = [];
-             if($r_user){
-                   foreach ($r_user as $key => $value) {
-                      array_push($arr,$value->id);
-                   }
-                   $user_id = implode(",",$arr);
-                   $w01 = " AND action_user in (".$user_id.") ";
-             }else{
-              $w01 = " AND action_user in (0) ";
+       $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+
+        if(@\Auth::user()->permission==1){
+
+            if(!empty( $req->business_location_id_fk) ){
+                $business_location_id = " and business_location_id = ".$req->business_location_id_fk." " ;
+            }else{
+                $business_location_id = "";
             }
-          }else{
-            $w01 = "";
-          }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " and branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
         }else{
-           $w01 = "";
+
+            $business_location_id = " and business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+
         }
 
    
@@ -181,9 +183,8 @@ class Pick_packPackingCodeController extends Controller
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
       $sTable = DB::select(" 
 
-        SELECT * FROM db_pick_pack_packing_code where status_picked=1 
+        SELECT * FROM db_pick_pack_packing_code where status_picked=1 $business_location_id $branch_id_fk
 
-        $w01
         $w02
         $w03
         $w04

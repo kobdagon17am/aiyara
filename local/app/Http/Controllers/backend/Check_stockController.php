@@ -165,7 +165,7 @@ class Check_stockController extends Controller
 
            $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
-           $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt 
+           $Amt= DB::select(" SELECT amt 
             FROM `db_stocks` 
             where 1 
 
@@ -179,10 +179,21 @@ class Check_stockController extends Controller
             $w_shelf_floor
             $w_lot_number
 
+            GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
 
             ");
 
         }
+        $sBalance = 0;
+        if(@$Amt){
+            foreach ($Amt as $key => $value) {
+                $sBalance+=$value->amt;
+            }
+        }
+        // dd($w_business_location_id_fk);
+        // dd($w_branch_id_fk);
+        // dd($sBalance);
+        // dd($sBalance);
 
          return View('backend.check_stock.stock_card')->with(
          array(
@@ -315,7 +326,7 @@ class Check_stockController extends Controller
           ".$row->w08."
           ".$row->w09."
 
-          GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+          GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
                array_push($f,$v->lot_number);
@@ -338,7 +349,7 @@ class Check_stockController extends Controller
           ".$row->w08."
           ".$row->w09."
 
-            GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+            GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
                array_push($f,$v->lot_expired_date);
@@ -348,7 +359,7 @@ class Check_stockController extends Controller
       })
        ->addColumn('amt_desc', function($row) {
         // $d = strtotime($row->lot_expired_date);
-            $d = DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+            $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
           
           ".$row->w01."
           ".$row->w02."
@@ -360,12 +371,33 @@ class Check_stockController extends Controller
           ".$row->w08."
           ".$row->w09."
 
-          GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+          GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
                array_push($f,$v->amt);
             }
             $f = implode('<br>',$f);
+            return $f;
+      })
+      ->addColumn('amt', function($row) {
+        // $d = strtotime($row->lot_expired_date);
+            $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+          
+          ".$row->w01."
+          ".$row->w02."
+          ".$row->w03."
+          ".$row->w04."
+          ".$row->w05."
+          ".$row->w06."
+          ".$row->w07."
+          ".$row->w08."
+          ".$row->w09."
+
+          GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+            $f = 0 ;
+            foreach ($d as $key => $v) {
+               $f+=$v->amt;
+            }
             return $f;
       })
       ->addColumn('warehouses', function($row) {
@@ -388,7 +420,7 @@ class Check_stockController extends Controller
           ".$row->w08."
           ".$row->w09."
 
-           GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
                     
@@ -420,7 +452,7 @@ class Check_stockController extends Controller
           ".$row->w08."
           ".$row->w09."
 
-          GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
+          GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
                array_push($f,'<a class="btn btn-outline-success waves-effect waves-light" href="backend/stock_card_01?stock_id='.$v->id.'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>');

@@ -993,7 +993,7 @@ if(@$sRow->check_press_save==2){
 <?php // echo @$pay_type_transfer_aicash ?>
 <?php // echo @$dis_addr ?>
 <!-- if @$sRow->updated_at >= @$shipping_special[0]->updated_at -->
-        <!-- @IF(@$shipping_special[0]->status_special==1 || @$sRow->shipping_special == 1) -->
+        @IF(@$shipping_special[0]->status_special==1 || @$sRow->shipping_special == 1)
 
                   <tr>
                         <th scope="row"  style="">
@@ -1001,7 +1001,7 @@ if(@$sRow->check_press_save==2){
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
-        <!-- @ENDIF -->
+        @ENDIF
 
                     </tbody>
                   </table>
@@ -1194,10 +1194,6 @@ if(@$sRow->check_press_save==2){
 
                         @ENDIF
 <?php //echo @$disAfterSave."xxxxxxxxxxxxxxxxxxxxxxxxx".$sRow->pay_type_id_fk; ?>
-<?php //echo $sRow->pay_type_id_fk ;?>
-<?php //print_r($sPay_type); ?>
-<?php //echo $sRow->gift_voucher_price; ?>
-<?php //echo $sRow->cash_pay; ?>
                         <input type="hidden" name="<?=($disAfterSave=="disabled"?"pay_type_id_fk":"")?>" value="{{@$sRow->pay_type_id_fk}}">
 
                              <select {{@$disChannel3}} id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " {{@$disAfterSave}} required >
@@ -1612,38 +1608,19 @@ if(@$sRow->check_press_save==2){
                     <?php
                                 // ประเภทโอน
                     if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12){
-
-                      // print_r($PaymentSlip); 
-
                     ?>
 
                          <input type="hidden" id="pay_type_transfer_slip" name="pay_type_transfer_slip" value="1">
 
-
-
-                          @IF(!empty(@$PaymentSlip))
-
-                           <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave btnSave " style="float: right;"  >
-                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                           </button>
-
-                          @ELSE
-                      
-                           <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
-                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                           </button>
-
-                          @ENDIF
-
-                          
+                          <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                          </button>
 
                     <?php }else{ ?>
 
                           <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                           </button>
-
-
 
                     <?php }?>
 
@@ -4345,19 +4322,11 @@ $(document).ready(function() {
 
 
                     var pay_type_id_fk =  $('#pay_type_id_fk').val();
-                    var cnt_slip =  "{{@$cnt_slip}}";
-                    // console.log(cnt_slip);
-                   // กรณีเงินโอน ไปอีกช่องทางนึง
+                                  // กรณีเงินโอน ไปอีกช่องทางนึง
                     if(pay_type_id_fk==1 || pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
 
                       // คำนวณ บวกเงินค่าขนส่ง ใส่เข้าไปในยอด โอน หรือ เงินสด บิลเดิมนี้ด้วย
                       // $('#pay_type_id_fk').prop('disabled',true);
-                      if(cnt_slip>0){
-                        $('.class_btnSave').removeAttr( "disabled" );
-                      }else{
-                        $('.class_btnSave').prop('disabled',true);
-                      }
-                      
                       // $('.class_btnSaveTransferType').removeAttr( "disabled" );
                       // $('.class_btnSaveTransferType').show();
 
@@ -5096,10 +5065,6 @@ $(document).ready(function() {
                         // 1 เงินสด
                           if(pay_type_id_fk==5){
                               $(".show_div_cash_pay").show();
-
-                              $('.class_btnSave').addClass(' btnSave ');
-                                    $('.class_btnSave').removeAttr( "disabled" );
-                                    $('.class_btnSave').show();
                             }else
                         // 2  เงินสด + Ai-Cash
                             if(pay_type_id_fk==6){
@@ -5112,10 +5077,6 @@ $(document).ready(function() {
                                 $(".show_div_aicash_price").show();
                                 $(".show_div_cash_pay").show();
                                 $('#member_id_aicash_select').attr('required', true);
-
-                                $('.class_btnSave').addClass(' btnSave ');
-                                    $('.class_btnSave').removeAttr( "disabled" );
-                                    $('.class_btnSave').show();
 
                             }else
                         // 3  เครดิต + เงินสด
@@ -5138,10 +5099,6 @@ $(document).ready(function() {
                                 $("#credit_price").attr('disabled', false);
                                 $("#credit_price").focus();
                               }
-
-                                 $('.class_btnSave').addClass(' btnSave ');
-                                    $('.class_btnSave').removeAttr( "disabled" );
-                                    $('.class_btnSave').show();
 
                             }else
                         // 4  เครดิต + เงินโอน
@@ -5175,9 +5132,6 @@ $(document).ready(function() {
                                 $("#credit_price").attr('disabled', false);
                                 $("#credit_price").focus();
                               }
-
-                              // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
-                              $('.class_btnSave').prop('disabled',true);
 
                             }else
                         // 5  เครดิต + Ai-Cash
@@ -5217,10 +5171,6 @@ $(document).ready(function() {
                                 $("#credit_price").focus();
                               }
 
-                                   $('.class_btnSave').addClass(' btnSave ');
-                                     $('.class_btnSave').removeAttr( "disabled" );
-                                    $('.class_btnSave').show();
-
                             }else
                               // 6  เงินโอน + เงินสด
                               if(pay_type_id_fk==10){
@@ -5240,9 +5190,6 @@ $(document).ready(function() {
                                 $('#fee').removeAttr('required');
                                 $('#aicash_price').removeAttr('required');
                                 $("#cash_pay").val('');
-
-                                // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
-                                 $('.class_btnSave').prop('disabled',true);
 
                               }else
                                 // 7  เงินโอน + Ai-Cash
@@ -5271,9 +5218,6 @@ $(document).ready(function() {
 
                                   $('#member_id_aicash').attr('required', true);
 
-                                  // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
-                                  $('.class_btnSave').prop('disabled',true);
-
                               }else{
                                   $('#fee').removeAttr('required');
                                   $('input[name=account_bank_id]').removeAttr('required');
@@ -5283,14 +5227,12 @@ $(document).ready(function() {
                                   $(".show_div_transfer_price").hide();
                                   $(".div_account_bank_id").hide();
 
-                                    $('.class_btnSave').addClass(' btnSave ');
-                                    $('.class_btnSave').removeAttr( "disabled" );
-                                    $('.class_btnSave').show();
-
                               }
 
 
-                             
+                                $('.class_btnSave').addClass(' btnSave ');
+                                $('.class_btnSave').removeAttr( "disabled" );
+                                $('.class_btnSave').show();
 
                                 $('.myloading').hide();
 
@@ -6007,51 +5949,6 @@ $(document).ready(function() {
            $(document).on('click', '.btnSave', function(event) {
 
             var pay_type_id_fk = $("#pay_type_id_fk").val();
-            if(pay_type_id_fk==8||pay_type_id_fk==10||pay_type_id_fk==11){
-             $('input[name=account_bank_id]').attr('required', true);
-
-                var account_bank = new Array();
-                $("input[name^='account_bank_id']:checked").each(function() {
-                   account_bank.push($("input[name^='account_bank_id']").val());
-                });
-                 // alert("account_bank = "+account_bank);
-                 if(account_bank==""){
-                  // $('#frm-main').submit();
-                  if($('#pay_with_other_bill').is(':checked')==true){
-                    // alert("test");
-                    $('input[name=account_bank_id]').attr('required', false);
-                  }else{
-                    alert("!!! กรุณา เลือกบัญชีสำหรับโอน ");
-                    return false;
-                  }
-                 }
-
-            }
-
-
-              var cnt_slip =  "{{@$cnt_slip}}";
-              // console.log(cnt_slip);
-             // กรณีเงินโอน 
-              if(pay_type_id_fk==1 || pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
-                if(cnt_slip>0){
-                  $('.class_btnSave').removeAttr( "disabled" );
-                }else{
-                 
-
-                   if($('#pay_with_other_bill').is(':checked')==true){
-                     // alert("test");
-                     $('input[name=account_bank_id]').attr('required', false);
-                  }else{
-                     alert("!!! กรุณา แนบไฟล์สลิป ");
-                      $('.class_btnSave').prop('disabled',true);
-                      return false;
-                  }
-
-
-                }
-
-              }
-
             // alert("xx");
             event.preventDefault();
              $("#frm-main").valid();
@@ -6378,12 +6275,10 @@ $(document).ready(function() {
           var frontstore_id_fk = $("#frontstore_id_fk").val();
           var pay_type_id_fk = $("#pay_type_id_fk").val();
           // console.log(pay_type_id_fk);
-
           if(pay_type_id_fk==""){
              $("#pay_type_id_fk").select2('destroy').val("").select2();
              $("#pay_type_id_fk").prop("disabled", false);
           }
-
           var cash_pay = $("#cash_pay").val();
           // / // console.log(cash_pay);
 /*
@@ -6465,14 +6360,8 @@ $(document).ready(function() {
             if(pay_type_id_fk==5){
               // ยอดเงินสดที่ต้องชำระ ต้องไม่เป็น 0 ถ้าเป็น 0 ให้ pay_type_id reset
                if(cash_pay=="0.00"){
-
-                var gift_voucher_price = "{{@$sRow->gift_voucher_price}}";
-                // console.log(gift_voucher_price);
-                if(gift_voucher_price>0){}else{
-
                  $("#pay_type_id_fk").select2('destroy').val("").select2();
                  $(".show_div_cash_pay ").hide();
-               }
                }
             }
 
@@ -6488,7 +6377,6 @@ $(document).ready(function() {
           $('#pay_with_other_bill').click(function(event) {
             if($('#pay_with_other_bill').is(':checked')==true){
                 $("#pay_with_other_bill_note").prop('required',true);
-                $("input[name='account_bank_id']").prop('checked',false);
                 $("input[name='account_bank_id']").removeAttr("required");
                 // $(".transfer_money_datetime").removeAttr("required");
                 $("#pay_with_other_bill_note").focus();

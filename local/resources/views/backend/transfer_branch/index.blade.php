@@ -346,7 +346,9 @@
                 <table id="data-table-to-transfer" class="table table-bordered dt-responsive" style="width: 100%;">
                  </table>
 
+                 <?php //echo count($sTransfer_choose)."xxxxxxxxxxxxxxxxxxxxxxxxxxx" ?>
                  <?php //if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)!=0 && count($sTransfer_choose)==0){ ?>
+                 <?php if(count($sTransfer_choose)!=0){ ?>
                   <div class="row" style="" >
                     <div class="col-md-12 text-center divBtnSave "  >
                       <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave " style="font-size: 14px !important;" >
@@ -354,7 +356,7 @@
                       </button>
                     </div>
                   </div>
-                <?php //} ?>
+                <?php } ?>
 
                 <input type="hidden" name="save_set_to_warehouse_c_e" value="1" >
 

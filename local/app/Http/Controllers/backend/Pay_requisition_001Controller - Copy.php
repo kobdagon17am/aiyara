@@ -1718,21 +1718,45 @@ class Pay_requisition_001Controller extends Controller
                       ->where('shelf_floor', $v->shelf_floor)
                       ->get();
                       if($_choose->count() > 0){
+                        // if($v->amt_get<=$_choose[0]->amt){
+                        //   DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' 
+
+                        //     and business_location_id_fk='".$v->business_location_id_fk."' 
+                        //     and branch_id_fk='".$v->branch_id_fk."' 
+                        //     and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                        //     and zone_id_fk='".$v->zone_id_fk."' 
+                        //     and shelf_id_fk='".$v->shelf_id_fk."' 
+                        //     and shelf_floor='".$v->shelf_floor."' 
+
+                        //     ");
 
                         DB::table('db_stocks')
-                            ->where('branch_id_fk', $v->branch_id_fk)
-                            ->where('product_id_fk', $v->product_id_fk)
-                            ->where('lot_number', $v->lot_number)
-                            ->where('lot_expired_date', $v->lot_expired_date)
-                            ->where('warehouse_id_fk', $v->warehouse_id_fk)
-                            ->where('zone_id_fk', $v->zone_id_fk)
-                            ->where('shelf_id_fk', $v->shelf_id_fk)
-                            ->where('shelf_floor', $v->shelf_floor)
-                          ->update(array(
-                            'amt' => DB::raw( ' amt - '.$v->amt )
-                          ));
+                                  ->where('branch_id_fk', $v->branch_id_fk)
+                                  ->where('product_id_fk', $v->product_id_fk)
+                                  ->where('lot_number', $v->lot_number)
+                                  ->where('lot_expired_date', $v->lot_expired_date)
+                                  ->where('warehouse_id_fk', $v->warehouse_id_fk)
+                                  ->where('zone_id_fk', $v->zone_id_fk)
+                                  ->where('shelf_id_fk', $v->shelf_id_fk)
+                                  ->where('shelf_floor', $v->shelf_floor)
+                                ->update(array(
+                                  'amt' => DB::raw( ' amt - '.$v->amt )
+                                ));
 
 
+                        // }else{
+                        //   DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' 
+
+                        //     and business_location_id_fk='".$v->business_location_id_fk."' 
+                        //     and branch_id_fk='".$v->branch_id_fk."' 
+                        //     and warehouse_id_fk='".$v->warehouse_id_fk."' 
+                        //     and zone_id_fk='".$v->zone_id_fk."' 
+                        //     and shelf_id_fk='".$v->shelf_id_fk."' 
+                        //     and shelf_floor='".$v->shelf_floor."' 
+
+                        //     ");
+
+                        // }
                       }
        
               }

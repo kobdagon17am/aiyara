@@ -928,13 +928,16 @@
 
         });
 
-        // $(document).on('keyup', '.in-tx', function(e) {
+        $(document).on('keyup', '.in-tx', function(e) {
 
-        //          var index = $('.in-tx').index(this) + 1;
-        //          $('.in-tx').eq(index).focus();
-        //           return false;
+          if (this.value.length >= 10) {
 
-        // });
+                 var index = $('.in-tx').index(this) + 1;
+                 $('.in-tx').eq(index).focus();
+                  return false;
+                }
+
+        });
 
                      $(window).scannerDetection();
 
