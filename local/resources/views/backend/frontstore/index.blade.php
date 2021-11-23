@@ -82,7 +82,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <h4 class="mb-0 font-size-18  "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
             <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
@@ -1626,18 +1626,18 @@ $(document).ready(function() {
 
       DB::select("TRUNCATE customers_addr_sent;");
 
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
-      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id;
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
-      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id;
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+      // $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      // $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id;
+      // $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      // $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id;
+      // $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
-      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
-      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
-      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check002 ; ");
-      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
-      DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
-      DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check002 ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
+      // DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
 
       DB::select("TRUNCATE `db_orders`;");
@@ -1659,47 +1659,47 @@ $(document).ready(function() {
       DB::select("TRUNCATE `payment_slip` ;");
 
       // เพิ่มเติม
-DB::select(" TRUNCATE temp_cus_ai_cash ; ");
-DB::select(" TRUNCATE temp_db_pay_product_receipt_fifo ; ");
-DB::select(" TRUNCATE temp_db_stocks1 ; ");
-DB::select(" TRUNCATE temp_db_stocks2 ; ");
-DB::select(" TRUNCATE temp_db_stocks5 ; ");
-DB::select(" TRUNCATE temp_db_stocks_amt_template ; ");
-DB::select(" TRUNCATE temp_db_stocks_amt_template_02 ; ");
-DB::select(" TRUNCATE temp_db_stocks_check002_template ; ");
-DB::select(" TRUNCATE temp_db_stocks_check2 ; ");
-DB::select(" TRUNCATE temp_db_stocks_check5 ; ");
-DB::select(" TRUNCATE temp_db_stocks_check_template ; ");
-DB::select(" TRUNCATE temp_db_stocks_compare002_template ; ");
-DB::select(" TRUNCATE temp_db_stocks_compare2 ; ");
-DB::select(" TRUNCATE temp_db_stocks_compare5 ; ");
-DB::select(" TRUNCATE temp_db_stocks_compare_template ; ");
-DB::select(" TRUNCATE temp_db_stocks_from_return1 ; ");
-DB::select(" TRUNCATE temp_db_stocks_from_return5 ; ");
-DB::select(" TRUNCATE temp_ppp_0011 ; ");
-DB::select(" TRUNCATE temp_ppp_0021 ; ");
-DB::select(" TRUNCATE temp_ppp_00221 ; ");
-DB::select(" TRUNCATE temp_ppp_002_template ; ");
-DB::select(" TRUNCATE temp_ppp_0031 ; ");
-DB::select(" TRUNCATE temp_ppp_003_template ; ");
-DB::select(" TRUNCATE temp_ppp_0041 ; ");
-DB::select(" TRUNCATE temp_ppp_004_template ; ");
-DB::select(" TRUNCATE temp_ppp_006_template ; ");
-DB::select(" TRUNCATE temp_ppr_0011 ; ");
-DB::select(" TRUNCATE temp_ppr_0012 ; ");
-DB::select(" TRUNCATE temp_ppr_0015 ; ");
-DB::select(" TRUNCATE temp_ppr_0021 ; ");
-DB::select(" TRUNCATE temp_ppr_0022 ; ");
-DB::select(" TRUNCATE temp_ppr_0025 ; ");
-DB::select(" TRUNCATE temp_ppr_0031 ; ");
-DB::select(" TRUNCATE temp_ppr_0032 ; ");
-DB::select(" TRUNCATE temp_ppr_0035 ; ");
-DB::select(" TRUNCATE temp_ppr_003_template ; ");
-DB::select(" TRUNCATE temp_ppr_0041 ; ");
-DB::select(" TRUNCATE temp_ppr_0042 ; ");
-DB::select(" TRUNCATE temp_ppr_0045 ; ");
-DB::select(" TRUNCATE temp_ppr_004_template ; ");
-DB::select(" TRUNCATE temp_ppr_006_template ; ");
+// DB::select(" TRUNCATE temp_cus_ai_cash ; ");
+// DB::select(" TRUNCATE temp_db_pay_product_receipt_fifo ; ");
+// DB::select(" TRUNCATE temp_db_stocks1 ; ");
+// DB::select(" TRUNCATE temp_db_stocks2 ; ");
+// DB::select(" TRUNCATE temp_db_stocks5 ; ");
+// DB::select(" TRUNCATE temp_db_stocks_amt_template ; ");
+// DB::select(" TRUNCATE temp_db_stocks_amt_template_02 ; ");
+// DB::select(" TRUNCATE temp_db_stocks_check002_template ; ");
+// DB::select(" TRUNCATE temp_db_stocks_check2 ; ");
+// DB::select(" TRUNCATE temp_db_stocks_check5 ; ");
+// DB::select(" TRUNCATE temp_db_stocks_check_template ; ");
+// DB::select(" TRUNCATE temp_db_stocks_compare002_template ; ");
+// DB::select(" TRUNCATE temp_db_stocks_compare2 ; ");
+// DB::select(" TRUNCATE temp_db_stocks_compare5 ; ");
+// DB::select(" TRUNCATE temp_db_stocks_compare_template ; ");
+// DB::select(" TRUNCATE temp_db_stocks_from_return1 ; ");
+// DB::select(" TRUNCATE temp_db_stocks_from_return5 ; ");
+// DB::select(" TRUNCATE temp_ppp_0011 ; ");
+// DB::select(" TRUNCATE temp_ppp_0021 ; ");
+// DB::select(" TRUNCATE temp_ppp_00221 ; ");
+// DB::select(" TRUNCATE temp_ppp_002_template ; ");
+// DB::select(" TRUNCATE temp_ppp_0031 ; ");
+// DB::select(" TRUNCATE temp_ppp_003_template ; ");
+// DB::select(" TRUNCATE temp_ppp_0041 ; ");
+// DB::select(" TRUNCATE temp_ppp_004_template ; ");
+// DB::select(" TRUNCATE temp_ppp_006_template ; ");
+// DB::select(" TRUNCATE temp_ppr_0011 ; ");
+// DB::select(" TRUNCATE temp_ppr_0012 ; ");
+// DB::select(" TRUNCATE temp_ppr_0015 ; ");
+// DB::select(" TRUNCATE temp_ppr_0021 ; ");
+// DB::select(" TRUNCATE temp_ppr_0022 ; ");
+// DB::select(" TRUNCATE temp_ppr_0025 ; ");
+// DB::select(" TRUNCATE temp_ppr_0031 ; ");
+// DB::select(" TRUNCATE temp_ppr_0032 ; ");
+// DB::select(" TRUNCATE temp_ppr_0035 ; ");
+// DB::select(" TRUNCATE temp_ppr_003_template ; ");
+// DB::select(" TRUNCATE temp_ppr_0041 ; ");
+// DB::select(" TRUNCATE temp_ppr_0042 ; ");
+// DB::select(" TRUNCATE temp_ppr_0045 ; ");
+// DB::select(" TRUNCATE temp_ppr_004_template ; ");
+// DB::select(" TRUNCATE temp_ppr_006_template ; ");
 
 DB::select(" TRUNCATE db_consignments ; ");
 DB::select(" TRUNCATE db_consignments_import ; ");

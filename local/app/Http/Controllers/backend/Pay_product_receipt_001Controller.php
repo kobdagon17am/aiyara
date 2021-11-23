@@ -574,7 +574,7 @@ class Pay_product_receipt_001Controller extends Controller
               $db_select = DB::select(" 
                 SELECT * FROM  `db_pay_product_receipt_002`  WHERE invoice_code='$invoice_code' AND time_pay=$time_pay
                  ");
-              foreach ($db_select as $key => $v) {
+              foreach ($db_select as $key => $sRow) {
 
                 // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
                       // $fnCheckStock = new  AjaxController();
@@ -594,38 +594,110 @@ class Pay_product_receipt_001Controller extends Controller
                       // }
                     
 
+                        $lastID = 0;
+              
                        $_choose=DB::table('db_stocks')
-                      ->where('product_id_fk', $v->product_id_fk)
-                      ->where('lot_number', $v->lot_number)
-                      ->where('lot_expired_date', $v->lot_expired_date)
+                      ->where('branch_id_fk', $sRow->branch_id_fk)
+                      ->where('product_id_fk', $sRow->product_id_fk)
+                      ->where('lot_number', $sRow->lot_number)
+                      ->where('lot_expired_date', $sRow->lot_expired_date)
+                      ->where('warehouse_id_fk', $sRow->warehouse_id_fk)
+                      ->where('zone_id_fk', $sRow->zone_id_fk)
+                      ->where('shelf_id_fk', $sRow->shelf_id_fk)
+                      ->where('shelf_floor', $sRow->shelf_floor)
                       ->get();
                       if($_choose->count() > 0){
-                        if($v->amt_get<=$_choose[0]->amt){
-                          DB::select(" UPDATE db_stocks SET amt=amt-(".$v->amt_get.") WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."' 
 
-                            and business_location_id_fk='".$v->business_location_id_fk."' 
-                            and branch_id_fk='".$v->branch_id_fk."' 
-                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
-                            and zone_id_fk='".$v->zone_id_fk."' 
-                            and shelf_id_fk='".$v->shelf_id_fk."' 
-                            and shelf_floor='".$v->shelf_floor."' 
+                        DB::table('db_stocks')
+                            ->where('branch_id_fk', $sRow->branch_id_fk)
+                            ->where('product_id_fk', $sRow->product_id_fk)
+                            ->where('lot_number', $sRow->lot_number)
+                            ->where('lot_expired_date', $sRow->lot_expired_date)
+                            ->where('warehouse_id_fk', $sRow->warehouse_id_fk)
+                            ->where('zone_id_fk', $sRow->zone_id_fk)
+                            ->where('shelf_id_fk', $sRow->shelf_id_fk)
+                            ->where('shelf_floor', $sRow->shelf_floor)
+                          ->update(array(
+                            'amt' => DB::raw( ' amt - '.$sRow->amt_get )
+                          ));
 
-                            ");
+                          $lastID = DB::table('db_stocks')->latest()->first();
+                          $lastID = $lastID->id;
 
-                        }else{
-                          DB::select(" UPDATE db_stocks SET amt=0 WHERE product_id_fk='".$v->product_id_fk."' and lot_number='".$v->lot_number."' and lot_expired_date='".$v->lot_expired_date."'
+                      }
 
-                            and business_location_id_fk='".$v->business_location_id_fk."' 
-                            and branch_id_fk='".$v->branch_id_fk."' 
-                            and warehouse_id_fk='".$v->warehouse_id_fk."' 
-                            and zone_id_fk='".$v->zone_id_fk."' 
-                            and shelf_id_fk='".$v->shelf_id_fk."' 
-                            and shelf_floor='".$v->shelf_floor."' 
+                         // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
 
-                            ");
+                        /*
+                        เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                        นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                        1 จ่ายสินค้าตามใบเบิก 26
+                        2 จ่ายสินค้าตามใบเสร็จ  27
+                        3 รับสินค้าเข้าทั่วไป 28
+                        4 รับสินค้าเข้าตาม PO 29
+                        5 นำสินค้าออก 30
+                        6 สินค้าเบิก-ยืม  31
+                        7 โอนภายในสาขา  32
+                        8 โอนระหว่างสาขา  33
+                        */
+                        $stock_type_id_fk = 2 ;
+                        $stock_id_fk = $lastID ;
+                        $ref_table = 'db_pay_product_receipt_002' ;
+                        $ref_table_id = $sRow->id ;
+                        // $ref_doc = $sRow->ref_doc;
+                        // $ref_doc = DB::select(" select * from `db_pay_requisition_002` WHERE id=".$sRow->id." ");
+                        // dd($ref_doc[0]->ref_doc);
+                        // $ref_doc = @$ref_doc[0]->ref_doc;
+                        $ref_doc = @$sRow->invoice_code;
+                        // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
+                        // @$ref_doc = @$General_takeout[0]->ref_doc;
+
+                        $value=DB::table('db_stock_movement')
+                        ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+                        ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
+                        ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+                        ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+                        ->get();
+
+                        if($value->count() == 0){
+
+                              DB::table('db_stock_movement')->insert(array(
+                                  "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                                  "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                                  "ref_table" =>  @$ref_table?$ref_table:0,
+                                  "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                                  "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                                  // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                  "doc_date" =>  $sRow->created_at,
+                                  "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+                                  "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
+                                  "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+                                  "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+                                  "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+                                  "amt" =>  @$sRow->amt_get?$sRow->amt_get:0,
+                                  "in_out" =>  2,
+                                  "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+
+                                  "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
+                                  "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
+                                  "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
+                                  "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+
+                                  "status" =>  '1',
+                                  "note" =>  'จ่ายสินค้าตามใบเสร็จ ',
+                                  "note2" =>  @$sRow->description?$sRow->description:NULL,
+
+                                  "action_user" =>  @$sRow->action_user?$sRow->action_user:NULL,
+                                  "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
+                                  "approver" =>  @\Auth::user()->id,
+                                  "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+
+                                  "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                              ));
 
                         }
-                      }
+                        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
        
               }
 

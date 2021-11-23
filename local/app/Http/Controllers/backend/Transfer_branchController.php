@@ -575,6 +575,7 @@ class Transfer_branchController extends Controller
                           // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
                           // @$ref_doc = @$General_takeout[0]->ref_doc;
          // ฝั่งรับโอน
+                  
                           $value=DB::table('db_stock_movement')
                           ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
                           ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
@@ -591,39 +592,39 @@ class Transfer_branchController extends Controller
                                 //   $note = 'โอนภายในสาขา (ฝั่งรับโอน) ';
                                 // }
 
-                                DB::table('db_stock_movement')->insert(array(
-                                    "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
-                                    "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
-                                    "ref_table" =>  @$ref_table?$ref_table:0,
-                                    "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
-                                    "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
-                                    // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
-                                    "doc_date" =>  $sRow->created_at,
-                                    "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
-                                    "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
-                                    "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
-                                    "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
-                                    "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
-                                    "amt" =>  @$sRow->amt?$sRow->amt:0,
-                                    "in_out" =>  '1',
-                                    "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
+                                // DB::table('db_stock_movement')->insert(array(
+                                //     "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                                //     "stock_id_fk" =>  @$stock_id_fk?$stock_id_fk:0,
+                                //     "ref_table" =>  @$ref_table?$ref_table:0,
+                                //     "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                                //     "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                                //     // "doc_no" =>  @$value->doc_no?$value->doc_no:NULL,
+                                //     "doc_date" =>  $sRow->created_at,
+                                //     "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+                                //     "branch_id_fk" =>  @$sRow->branch_id_fk?$sRow->branch_id_fk:0,
+                                //     "product_id_fk" =>  @$sRow->product_id_fk?$sRow->product_id_fk:0,
+                                //     "lot_number" =>  @$sRow->lot_number?$sRow->lot_number:NULL,
+                                //     "lot_expired_date" =>  @$sRow->lot_expired_date?$sRow->lot_expired_date:NULL,
+                                //     "amt" =>  @$sRow->amt?$sRow->amt:0,
+                                //     "in_out" =>  '1',
+                                //     "product_unit_id_fk" =>  @$sRow->product_unit_id_fk?$sRow->product_unit_id_fk:0,
 
-                                    "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
-                                    "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
-                                    "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
-                                    "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
+                                //     "warehouse_id_fk" =>  @$sRow->warehouse_id_fk?$sRow->warehouse_id_fk:0,
+                                //     "zone_id_fk" =>  @$sRow->zone_id_fk?$sRow->zone_id_fk:0,
+                                //     "shelf_id_fk" =>  @$sRow->shelf_id_fk?$sRow->shelf_id_fk:0,
+                                //     "shelf_floor" =>  @$sRow->shelf_floor?$sRow->shelf_floor:0,
 
-                                    "status" =>  '1',
-                                    "note" =>  $note,
-                                    "note2" =>  @$sRow->description?$sRow->description:NULL,
+                                //     "status" =>  '1',
+                                //     "note" =>  $note,
+                                //     "note2" =>  @$sRow->description?$sRow->description:NULL,
 
-                                    "action_user" =>  @$sRow->action_user?$sRow->action_user:NULL,
-                                    "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
-                                    "approver" =>  @$sRow->approver?$sRow->approver:NULL,
-                                    "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
+                                //     "action_user" =>  @$sRow->action_user?$sRow->action_user:NULL,
+                                //     "action_date" =>  @$sRow->created_at?$sRow->created_at:NULL,
+                                //     "approver" =>  @$sRow->approver?$sRow->approver:NULL,
+                                //     "approve_date" =>  @$sRow->updated_at?$sRow->updated_at:NULL,
 
-                                    "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
-                                ));
+                                //     "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
+                                // ));
 
                            }
                          }

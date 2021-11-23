@@ -790,20 +790,27 @@ if(@$sRow->check_press_save==2){
 
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
-                          <input type="hidden" name="sentto_branch_id" value="{{@$User_branch_id}}">
                           @IF(@$sRow->shipping_special == 1)
 
-                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$disChannel3}} disabled  class="form-control select2-templating ShippingCalculate " >
+                             <select {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
-                               
+                                  @if(@$sRow->sentto_branch_id>0))
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
+                                    {{$r->b_name}}
+                                  </option>
+                                  @elseif(@$r->id==$User_branch_id)
                                   <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
-                                
+                                  @else
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
+                                    {{$r->b_name}}
+                                  </option>
+                                  @endif
                                 @endforeach
                               @endif
                              </select>
@@ -811,17 +818,25 @@ if(@$sRow->check_press_save==2){
 
 
                           @ELSE
-                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$disChannel3}} class="form-control select2-templating ShippingCalculate " disabled  >
+                             <select {{@$disChannel3}} {{@$pay_type_transfer_aicash}} id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
                              @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
-                                 
+                                  @if(@$sRow->sentto_branch_id>0))
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
+                                    {{$r->b_name}}
+                                  </option>
+                                  @elseif(@$r->id==$User_branch_id)
                                   <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
-                                
+                                  @else
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
+                                    {{$r->b_name}}
+                                  </option>
+                                  @endif
                                 @endforeach
                               @endif
                              </select>

@@ -171,6 +171,8 @@
           <form id="frm-packing" action="{{ route('backend.pick_warehouse_packing_code.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_to_packing" value="1" >
 
+            <input type="hidden" id="packing_code"  >
+
             {{ csrf_field() }}
          
                 <div class="row">
@@ -349,6 +351,7 @@
                   rowCallback: function(nRow, aData, dataIndex){
 
                     // $("td:eq(1)", nRow).hide();
+                    $("#packing_code").val(aData['packing_code_02']);
 
                     if (aData['status_delivery'] == "1") {
 
@@ -630,8 +633,9 @@
                   // });
 
                   var picking_id = "<?=$_REQUEST['id']?>";
+                  var packing_code = $("#packing_code").val();
 
-                  // alert(picking_id);
+                  // alert(packing_code);
                   // return false;
       
                 // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
@@ -681,6 +685,7 @@
                                                                            data:{ _token:
                                                                             '{{csrf_token()}}',
                                                                             picking_id:picking_id,
+                                                                            packing_code:packing_code,
                                                                           },
                                                                             success:function(d2){
                                                                                  // console.log(d2);
