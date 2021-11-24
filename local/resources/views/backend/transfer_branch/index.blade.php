@@ -886,7 +886,7 @@
               },
 
               columns: [
-                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
+                  {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w100'},
                   {data: 'action_date', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
                   {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
                   {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {

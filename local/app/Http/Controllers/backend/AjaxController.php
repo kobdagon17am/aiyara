@@ -367,6 +367,17 @@ class AjaxController extends Controller
 
     }
 
+    public function createPDFRequisition($id)
+     {
+        // dd($id);
+        $data = [$id];
+        // $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
+        $pdf = PDF::loadView('backend.pick_warehouse.print_requisition',compact('data'));
+        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+    }
+    
     public function createPDFReceipt03($id)
      {
         // dd($id);

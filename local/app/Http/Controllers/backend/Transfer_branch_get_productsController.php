@@ -474,13 +474,22 @@ class Transfer_branch_get_productsController extends Controller
     public function Datatable03(Request $req){
 
 
-      $sTable = \App\Models\Backend\Transfer_branch_code::whereIn('tr_status_from',[2,3,5]) 
-      // ->where(function ($query) use ($w01,$w02) {
-      //     $query->whereIn('transfer_branch_get_id_fk', $w01)
-      //           ->orWhereIn('transfer_branch_get_id_fk', $w02);
-      // })
-      ->orderBy('updated_at', 'desc')
-      ;
+
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        if($sPermission==1){
+            
+          $sTable = \App\Models\Backend\Transfer_branch_code::whereIn('tr_status_from',[2,3,5]) 
+          // ->where(function ($query) use ($w01,$w02) {
+          //     $query->whereIn('transfer_branch_get_id_fk', $w01)
+          //           ->orWhereIn('transfer_branch_get_id_fk', $w02);
+          // })
+          ->orderBy('updated_at', 'desc')
+          ;
+        }else{
+            $sTable = DB::select("SELECT * FROM db_transfer_branch_code WHERE tr_status_from in (2,3,5) and (branch_id_fk=$User_branch_id or to_branch_id_fk=$User_branch_id) ");
+        }
 
 
       $sQuery = \DataTables::of($sTable);

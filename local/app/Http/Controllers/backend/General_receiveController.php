@@ -58,7 +58,9 @@ class General_receiveController extends Controller
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1 ORDER BY products.product_code ");
+            WHERE status=1 and lang_id=1 ORDER BY products.product_code ");
+
+            // dd($Products);
 
         // }else{
 

@@ -430,10 +430,36 @@ tr.border_bottom td {
         วันที่ <?=@$approve_date?>
         </td>
 
+
+            <?php 
+                 $tr_number = $tr_number[0]->tr_number?$tr_number[0]->tr_number:0;
+                 $branch_get = DB::select(" 
+                    SELECT
+                        db_transfer_branch_get.approve_date,
+                        ck_users_admin.`name` as who_get
+                        FROM
+                        db_transfer_branch_get
+                        LEFT Join ck_users_admin ON db_transfer_branch_get.approver = ck_users_admin.id
+                        WHERE
+                        tr_number =  '".$tr_number."'
+                 ");
+
+
+            if(@$branch_get[0]->approve_date!=''){
+              $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date)+543);
+            }else{
+              $get_date =  ' * รอฝั่งรับโอน รับสินค้า * ';
+            }
+
+
+            ?>
+
+
         <td style="border-left: 1px solid #ccc;"> ผู้รับ
         <br>
+        <?=@$branch_get[0]->who_get?$branch_get[0]->who_get:''?>
         <br>
-        วันที่ ...........................
+         <?=@$get_date?>
         </td>
 
       </tr>

@@ -501,54 +501,54 @@ class Transfer_branchController extends Controller
                      foreach ($branch_get as $key => $sRow) {
 
       // ฝั่นรับโอน ถ้ามี บวกยอดคลังเข้า ถ้ายังไม่มี สร้างรายการคลังเพิ่ม 
-                      $value=DB::table('db_stocks')
-                      ->where('business_location_id_fk', $sRow->business_location_id_fk )
-                      ->where('branch_id_fk', $sRow->branch_id_fk )
-                      ->where('product_id_fk', $sRow->product_id_fk )
-                      ->where('lot_number', $sRow->lot_number )
-                      ->where('lot_expired_date', $sRow->lot_expired_date )
-                      ->where('warehouse_id_fk', $sRow->warehouse_id_fk )
-                      ->where('zone_id_fk', $sRow->zone_id_fk )
-                      ->where('shelf_id_fk', $sRow->shelf_id_fk )
-                      ->where('shelf_floor', $sRow->shelf_floor )
-                      ->get();
+                      // $value=DB::table('db_stocks')
+                      // ->where('business_location_id_fk', $sRow->business_location_id_fk )
+                      // ->where('branch_id_fk', $sRow->branch_id_fk )
+                      // ->where('product_id_fk', $sRow->product_id_fk )
+                      // ->where('lot_number', $sRow->lot_number )
+                      // ->where('lot_expired_date', $sRow->lot_expired_date )
+                      // ->where('warehouse_id_fk', $sRow->warehouse_id_fk )
+                      // ->where('zone_id_fk', $sRow->zone_id_fk )
+                      // ->where('shelf_id_fk', $sRow->shelf_id_fk )
+                      // ->where('shelf_floor', $sRow->shelf_floor )
+                      // ->get();
 
-                      if($value->count() > 0){
+                      // if($value->count() > 0){
 
-                          DB::table('db_stocks')
-                          ->where('business_location_id_fk', $sRow->business_location_id_fk)
-                          ->where('branch_id_fk', $sRow->branch_id_fk)
-                          ->where('product_id_fk', $sRow->product_id_fk)
-                          ->where('lot_number', $sRow->lot_number)
-                          ->where('lot_expired_date', $sRow->lot_expired_date)
-                          ->where('warehouse_id_fk', $sRow->warehouse_id_fk)
-                          ->where('zone_id_fk', $sRow->zone_id_fk)
-                          ->where('shelf_id_fk', $sRow->shelf_id_fk)
-                          ->where('shelf_floor', $sRow->shelf_floor)
-                            ->update(array(
-                             'amt' => DB::raw( " amt + $sRow->amt " )
-                            ));
-                          // $lastID = DB::table('db_stocks')->latest()->first();
-                          // $lastID = $lastID->id;
-                      }else{
+                      //     DB::table('db_stocks')
+                      //     ->where('business_location_id_fk', $sRow->business_location_id_fk)
+                      //     ->where('branch_id_fk', $sRow->branch_id_fk)
+                      //     ->where('product_id_fk', $sRow->product_id_fk)
+                      //     ->where('lot_number', $sRow->lot_number)
+                      //     ->where('lot_expired_date', $sRow->lot_expired_date)
+                      //     ->where('warehouse_id_fk', $sRow->warehouse_id_fk)
+                      //     ->where('zone_id_fk', $sRow->zone_id_fk)
+                      //     ->where('shelf_id_fk', $sRow->shelf_id_fk)
+                      //     ->where('shelf_floor', $sRow->shelf_floor)
+                      //       ->update(array(
+                      //        'amt' => DB::raw( " amt + $sRow->amt " )
+                      //       ));
+                      //     // $lastID = DB::table('db_stocks')->latest()->first();
+                      //     // $lastID = $lastID->id;
+                      // }else{
 
-                           DB::table('db_stocks')->insert(array(
-                              'business_location_id_fk' => $sRow->business_location_id_fk,
-                              'branch_id_fk' => $sRow->branch_id_fk,
-                              'product_id_fk' => $sRow->product_id_fk,
-                              'lot_number' => $sRow->lot_number,
-                              'lot_expired_date' => $sRow->lot_expired_date,
-                              'amt' => $sRow->amt,
-                              'product_unit_id_fk' => $sRow->product_unit_id_fk,
-                              'date_in_stock' => date("Y-m-d H:i:s"),
-                              'warehouse_id_fk' => $sRow->warehouse_id_fk,
-                              'zone_id_fk' => $sRow->zone_id_fk,
-                              'shelf_id_fk' => $sRow->shelf_id_fk,
-                              'shelf_floor' => $sRow->shelf_floor,
-                              'created_at' => date("Y-m-d H:i:s"),
-                            ));
+                      //      DB::table('db_stocks')->insert(array(
+                      //         'business_location_id_fk' => $sRow->business_location_id_fk,
+                      //         'branch_id_fk' => $sRow->branch_id_fk,
+                      //         'product_id_fk' => $sRow->product_id_fk,
+                      //         'lot_number' => $sRow->lot_number,
+                      //         'lot_expired_date' => $sRow->lot_expired_date,
+                      //         'amt' => $sRow->amt,
+                      //         'product_unit_id_fk' => $sRow->product_unit_id_fk,
+                      //         'date_in_stock' => date("Y-m-d H:i:s"),
+                      //         'warehouse_id_fk' => $sRow->warehouse_id_fk,
+                      //         'zone_id_fk' => $sRow->zone_id_fk,
+                      //         'shelf_id_fk' => $sRow->shelf_id_fk,
+                      //         'shelf_floor' => $sRow->shelf_floor,
+                      //         'created_at' => date("Y-m-d H:i:s"),
+                      //       ));
 
-                      }
+                      // }
 
 
    /*

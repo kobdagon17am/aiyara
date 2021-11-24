@@ -890,7 +890,17 @@ class PagesController extends Controller{
           // return redirect()->action('PagesController@index');
           // return redirect()->to(url("backend/pick_warehouse"));
           // return redirect()->to(url("backend/pay_product_packing"));
-          return redirect()->to(url("backend/pick_warehouse/1/qr"));
+
+           DB::select(" UPDATE
+              db_consignments
+              Inner Join db_consignments_import ON db_consignments.recipient_code = db_consignments_import.recipient_code
+              SET
+              db_consignments.consignment_no=db_consignments_import.consignment_no ,
+              db_consignments.delivery_id_fk=db_consignments_import.delivery_id_fk
+
+              ");
+           
+          return redirect()->to(url("backend/pick_warehouse/".@$request->id."/qr"));
 
         }
 

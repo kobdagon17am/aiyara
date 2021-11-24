@@ -19,12 +19,13 @@ class Products_borrow_codeController extends Controller
 
       $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
-            WHERE lang_id=1");
-
+            WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
+            ORDER BY products.product_code");
+      
       $sBranchs = \App\Models\Backend\Branchs::get();
 
       $Warehouse = \App\Models\Backend\Warehouse::get();
@@ -64,6 +65,7 @@ class Products_borrow_codeController extends Controller
 */
 
         $return_datetime = request('return_datetime');
+        if(!empty($return_datetime)){
         $t = substr($return_datetime, -5);
         // echo $t;
         $d = substr($return_datetime,0,10);
@@ -72,6 +74,9 @@ class Products_borrow_codeController extends Controller
         $dt = $d[2]."-".$d[1]."-".$d[0]." ".$t; 
         // echo $dt;
         // dd();
+        }else{
+           $dt = null;
+        }
 
 
         if(isset($request->products_borrow_choose_id)){

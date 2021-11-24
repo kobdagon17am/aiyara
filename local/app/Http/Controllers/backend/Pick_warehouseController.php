@@ -1359,11 +1359,6 @@ GROUP BY db_order_products_list.product_id_fk
       ->escapeColumns('column_003')  
 
       ->addColumn('column_004', function($row) {
-          // return " <input type='file' accept='.xlsx' class='form-control' name='fileXLS' required> <input type='button' class=\"btn btn-primary btnImXlsx \" data-id='".$row->pick_pack_requisition_code_id_fk."' value='Import Excel' >";
-      })
-      ->escapeColumns('column_004')  
-
-      ->addColumn('column_005', function($row) {
           
           $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ");
 
@@ -1375,9 +1370,9 @@ GROUP BY db_order_products_list.product_id_fk
           return $f;
 
       })
-      ->escapeColumns('column_005')  
+      ->escapeColumns('column_004')  
 
-      ->addColumn('column_006', function($row) {
+      ->addColumn('column_005', function($row) {
           
           $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ");
 
@@ -1393,8 +1388,12 @@ GROUP BY db_order_products_list.product_id_fk
           return $f;
 
       })
-      ->escapeColumns('column_006')
+      ->escapeColumns('column_005')
 
+      ->addColumn('column_006', function($row) {
+          return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
+      })
+      ->escapeColumns('column_006')  
 
       ->make(true);
     }

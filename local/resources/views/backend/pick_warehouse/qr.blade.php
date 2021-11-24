@@ -211,7 +211,7 @@
                      &nbsp;
                       &nbsp;
                       &nbsp; 
-                      <input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code'  >
+                      <!-- <input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code'  > -->
 
                       &nbsp;
                       &nbsp;
@@ -487,16 +487,14 @@
                       {data: 'column_003',   title :'<span style="vertical-align: middle;"><center> ส่งรายการให้ Kerry เพื่อขอเลขพัสดุ </span> ', className: 'text-center',render: function(d) {
                         return d ;
                       }},
-
-                      // {data: 'column_004',   title :'<span style="vertical-align: middle;"><center> นำเข้าเลขพัสดุจาก Kerry </span> ', className: 'text-center',render: function(d) {
-                      //   return d ;
-                      // }},
-
-                      {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> หมายเลขพัสดุ <br> (Consignment number) </span> ', className: 'text-center w200 ',render: function(d) {
+                      {data: 'column_004',   title :'<span style="vertical-align: middle;"><center> หมายเลขพัสดุ <br> (Consignment number) </span> ', className: 'text-center w200 ',render: function(d) {
                         return d ;
                       }},
 
-                     {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง & ใบเสร็จ  </span> ', className: 'text-center w200 ',render: function(d) {
+                     {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง & ใบเสร็จ  </span> ', className: 'text-center w180 ',render: function(d) {
+                        return d ;
+                      }},
+                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> พิมพ์ใบเบิก  </span> ', className: 'text-center w80 ',render: function(d) {
                         return d ;
                       }},
              

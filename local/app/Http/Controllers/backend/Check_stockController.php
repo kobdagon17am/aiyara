@@ -271,7 +271,7 @@ class Check_stockController extends Controller
 
        $sTable = DB::select("
 
-        SELECT id,product_id_fk,sum(amt) as amt,
+        SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
         '$w01' as w01,
         '$w02' as w02,
         '$w03' as w03,
@@ -281,7 +281,7 @@ class Check_stockController extends Controller
         '$w07' as w07,
         '$w08' as w08,
         '$w09' as w09
-         FROM `db_stocks`
+         FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
          WHERE 1
           $w01
           $w02
@@ -292,8 +292,8 @@ class Check_stockController extends Controller
           $w07
           $w08
           $w09
-        GROUP BY product_id_fk
-        ORDER BY db_stocks.id
+        GROUP BY db_stocks.product_id_fk
+        ORDER BY products.product_code
 
         ");
 // date(lot_expired_date) >= CURDATE()

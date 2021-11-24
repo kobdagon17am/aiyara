@@ -302,7 +302,7 @@ if(@$sRow->check_press_save==2){
  $disChannel3 = 'disabled'
 @endphp
 
-                                    <select id="distribution_channel_id_fk"  class="form-control select2-templating " disabled="" >
+                                    <select id="distribution_channel_id_fk"  class="form-control select2-templating ch_Disabled " disabled=""  >
                                           @if(@$sDistribution_channel3)
                                             @foreach(@$sDistribution_channel3 AS $r)
                                          
@@ -318,7 +318,7 @@ if(@$sRow->check_press_save==2){
  $disChannel3 = ''
 @endphp
 
-                                    <select id="distribution_channel_id_fk" name="distribution_channel_id_fk" class="form-control select2-templating " required >
+                                    <select id="distribution_channel_id_fk" name="distribution_channel_id_fk" class="form-control select2-templating ch_Disabled " required >
                                       <option value="">Select</option>
                                           @if(@$sDistribution_channel)
                                             @foreach(@$sDistribution_channel AS $r)
@@ -364,7 +364,7 @@ if(@$sRow->check_press_save==2){
 
  ?>
 
-                                         <select {{@$disChannel3}} id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " <?=$disAiStockist?>  required >
+                                         <select {{@$disChannel3}} id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating ch_Disabled " <?=$disAiStockist?>  required >
                                           <option value="">Select</option>
                                           @if(@$sPurchase_type)
                                             @foreach(@$sPurchase_type AS $r)
@@ -408,7 +408,7 @@ if(@$sRow->check_press_save==2){
 
                                 @else
 
-                                   <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating " disabled  >
+                                   <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating ch_Disabled " disabled  >
                                       <option value="">Select</option>
                                       @if(@$sPurchase_type)
                                         @foreach(@$sPurchase_type AS $r)
@@ -437,18 +437,18 @@ if(@$sRow->check_press_save==2){
                                     @if($ChangePurchaseType==1)
                                          <input type="hidden" class="agency" name="agency" value="{{@$sRow->agency}}"  >
                                        @IF(@$sRow->agency!=="")
-                                          <select {{@$disChannel3}} id="agency" class="form-control select2-templating "  >
+                                          <select {{@$disChannel3}} id="agency" class="form-control select2-templating ch_Disabled "  >
                                                   <option  selected >
                                                     {{@$CusAgencyName}}
                                                   </option>
                                           </select>
                                         @ELSE
-                                         <select {{@$disChannel3}} id="agency" class="form-control select2-templating "  >
+                                         <select {{@$disChannel3}} id="agency" class="form-control select2-templating ch_Disabled "  >
                                          </select>
                                         @ENDIF
                                     @else
                                          <input type="hidden" class="agency" name="agency" value="{{@$sRow->agency}}"  >
-                                         <select id="agency" class="form-control select2-templating " disabled >
+                                         <select id="agency" class="form-control select2-templating ch_Disabled " disabled >
                                                   <option  selected >
                                                     {{@$CusAgencyName}}
                                                   </option>
@@ -464,7 +464,7 @@ if(@$sRow->check_press_save==2){
                                 <div class="col-md-12 form-group row" style="position: absolute;">
                                    <label for="" class="col-form-label">หมายเหตุ :  </label>
                                   <div class="col-md-10">
-                                       <textarea class="form-control" id="note" name="note" rows="5" >{{ @$sRow->note }}</textarea>
+                                       <textarea class="form-control ch_Disabled " id="note" name="note" rows="5" >{{ @$sRow->note }}</textarea>
                                   </div>
                                 </div>
                               </div>
@@ -482,18 +482,18 @@ if(@$sRow->check_press_save==2){
                                     @if($ChangePurchaseType==1)
                                          <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
                                        @IF(@$sRow->aistockist!=="")
-                                          <select {{@$disChannel3}} id="aistockist" class="form-control select2-templating "  >
+                                          <select {{@$disChannel3}} id="aistockist" class="form-control select2-templating ch_Disabled "  >
                                                   <option  selected >
                                                     {{@$CusAistockistName}}
                                                   </option>
                                           </select>
                                         @ELSE
-                                         <select {{@$disChannel3}} id="aistockist" class="form-control select2-templating "  >
+                                         <select {{@$disChannel3}} id="aistockist" class="form-control select2-templating ch_Disabled "  >
                                          </select>
                                         @ENDIF
                                     @else
                                          <input type="hidden" class="aistockist" name="aistockist" value="{{@$sRow->aistockist}}"  >
-                                         <select id="aistockist" class="form-control select2-templating " disabled >
+                                         <select id="aistockist" class="form-control select2-templating ch_Disabled " disabled >
                                                   <option  selected >
                                                     {{@$CusAistockistName}}
                                                   </option>
@@ -542,7 +542,7 @@ if(@$sRow->check_press_save==2){
 
                            @if(empty(@$sRow->purchase_type_id_fk))
 
-                              <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ">
+                              <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-14 ch_Disabled ">
                               <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                               </button>
 
@@ -569,7 +569,7 @@ if(@$sRow->check_press_save==2){
                      @ELSE
                           <div class="col-md-11 text-right div_btnSaveChangePurchaseType " style="display: none;">
                             <br>
-                            <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ">
+                            <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ch_Disabled ">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > แก้ไขข้อมูล
                             </button>
                           </div>
@@ -778,10 +778,10 @@ if(@$sRow->check_press_save==2){
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_04?>" >
 
                           @IF(@$sRow->shipping_special == 1)
-                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?>  > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?>  > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                           @ELSE
 
-                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                           @ENDIF
 
                         </th>
@@ -793,10 +793,10 @@ if(@$sRow->check_press_save==2){
                           <input type="hidden" name="sentto_branch_id" value="{{@$User_branch_id}}">
                           @IF(@$sRow->shipping_special == 1)
 
-                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$disChannel3}} disabled  class="form-control select2-templating ShippingCalculate " >
+                             <select {{@$disChannel3}} disabled  class="form-control select2-templating ShippingCalculate ch_Disabled " >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                
@@ -811,10 +811,10 @@ if(@$sRow->check_press_save==2){
 
 
                           @ELSE
-                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$disChannel3}} class="form-control select2-templating ShippingCalculate " disabled  >
+                             <select {{@$disChannel3}} class="form-control select2-templating ShippingCalculate ch_Disabled " disabled  >
                              @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
                                  
@@ -881,7 +881,7 @@ if(@$sRow->check_press_save==2){
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_01?>">
-                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate" name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -934,7 +934,7 @@ if(@$sRow->check_press_save==2){
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_02?>">
                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province?>"
-                           class="ShippingCalculate" name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ </label>
+                           class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -968,7 +968,7 @@ if(@$sRow->check_press_save==2){
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_03?>">
-                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province_id_fk?>"  name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
+                          <input class="ch_Disabled" {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province_id_fk?>"  name="delivery_location" id="addr_03" value="3" <?=(@$sRow->delivery_location==3?'checked':'')?> {{@$dis_addr}}  > <label for="addr_03"> ที่อยู่กำหนดเอง </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -982,7 +982,7 @@ if(@$sRow->check_press_save==2){
 
                   <tr>
                         <th scope="row"  style="">
-                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate" id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="checkbox" province_id="0" name="shipping_special" class="ShippingCalculate ch_Disabled " id="addr_05" value="1" <?=(@$sRow->shipping_special==1?'checked':'')?> style="transform: scale(1.5);margin-right:5px; " {{@$dis_addr}}  > <label for="addr_05"> {{@$shipping_special[0]->shipping_name}} </label>
                           <input type="hidden" name="shipping_special_cost" value="{{@$shipping_special[0]->shipping_cost}}">
                         </th>
                       </tr>
@@ -1117,7 +1117,7 @@ if(@$sRow->check_press_save==2){
             <label for="" > ยอด Ai Voucher ที่มี : </label>
           </div>
           <div class="divTableCell">
-            <input class="form-control f-ainumber-18 input-aireadonly" id="gift_voucher_cost" name="gift_voucher_cost" value="{{number_format(@$giftvoucher_this,2)}}" readonly="" >
+            <input class="form-control f-ainumber-18 input-aireadonly ch_Disabled " id="gift_voucher_cost" name="gift_voucher_cost" value="{{number_format(@$giftvoucher_this,2)}}" readonly="" >
           </div>
         </div>
 
@@ -1134,7 +1134,7 @@ if(@$sRow->check_press_save==2){
                       <label for="" class="" >ยอด GIft Voucher ที่ชำระ : </label>
                     </div>
                     <div class="divTableCell">
-                        <input class="form-control CalGiftVoucherPrice NumberOnly input-airight f-ainumber-18 input-aifill" name="gift_voucher_price" id="gift_voucher_price" value="{{@$sRow->gift_voucher_price>0?number_format(@$sRow->gift_voucher_price,2):''}}" required="" >
+                        <input class="form-control CalGiftVoucherPrice NumberOnly input-airight f-ainumber-18 input-aifill ch_Disabled " name="gift_voucher_price" id="gift_voucher_price" value="{{@$sRow->gift_voucher_price>0?number_format(@$sRow->gift_voucher_price,2):''}}" required="" >
                     </div>
                     <div class="divTableCell">
                       <i class="bx bx-check-circle" title="ยอดชำระ"></i>
@@ -1185,7 +1185,7 @@ if(@$sRow->check_press_save==2){
 <?php //echo $sRow->cash_pay; ?>
                         <input type="hidden" name="<?=($disAfterSave=="disabled"?"pay_type_id_fk":"")?>" value="{{@$sRow->pay_type_id_fk}}">
 
-                             <select {{@$disChannel3}} id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating " {{@$disAfterSave}} required >
+                             <select {{@$disChannel3}} id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating ch_Disabled " {{@$disAfterSave}} required >
                               <option value="">Select</option>
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
@@ -1213,7 +1213,7 @@ if(@$sRow->check_press_save==2){
                         <label for="" >ค่าธรรมเนียมบัตรเครดิต : </label>
                       </div>
                       <div class="divTableCell">
-                           <select {{@$disAfterSave}} id="fee" name="fee" class="form-control select2-templating " >
+                           <select {{@$disAfterSave}} id="fee" name="fee" class="form-control select2-templating ch_Disabled " >
                                 <option value="">Select</option>
                                 @if(@$sFee)
                                 @foreach(@$sFee AS $r)
@@ -1238,8 +1238,8 @@ if(@$sRow->check_press_save==2){
                       </div>
                       <div class="divTableCell div_charger_type " style="">
                           <?php $charger_type = @$sRow->charger_type==0||@$sRow->charger_type==''?"checked":''; ?>
-                            <input {{@$disAfterSave}} type="radio" class="" id="charger_type_01" name="charger_type" value="1" <?=(@$sRow->charger_type==1?'checked':$charger_type)?>  > <label for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร </label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input {{@$disAfterSave}} type="radio" class="" id="charger_type_02" name="charger_type" value="2" <?=(@$sRow->charger_type==2?'checked':'')?>  > <label for="charger_type_02">&nbsp;&nbsp;แยกชำระ </label>
+                            <input {{@$disAfterSave}} type="radio" class="ch_Disabled" id="charger_type_01" name="charger_type" value="1" <?=(@$sRow->charger_type==1?'checked':$charger_type)?>  > <label for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input {{@$disAfterSave}} type="radio" class="ch_Disabled" id="charger_type_02" name="charger_type" value="2" <?=(@$sRow->charger_type==2?'checked':'')?>  > <label for="charger_type_02">&nbsp;&nbsp;แยกชำระ </label>
                       </div>
                       <div class="divTableCell">
                       </div>
@@ -1252,7 +1252,7 @@ if(@$sRow->check_press_save==2){
                           <label for="" class="" > ยอดชำระเงินด้วยบัตรเครดิต  :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input {{@$disAfterSave}} class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx " id="credit_price" name="credit_price" placeholder="" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
+                          <input {{@$disAfterSave}} class="form-control CalPrice NumberOnly input-airight f-ainumber-18 input-aifill in-tx ch_Disabled " id="credit_price" name="credit_price" placeholder="" value="{{number_format(@$sRow->credit_price,2)}}" required="" />
                       </div>
                     </div>
 
@@ -1263,7 +1263,7 @@ if(@$sRow->check_press_save==2){
                         <label for="" class="" > ค่าธรรมเนียมบัตร :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input {{@$disAfterSave}} class="form-control f-ainumber-18 input-aireadonly " id="fee_amt" name="fee_amt" value="{{number_format(@$sRow->fee_amt,2)}}" readonly  />
+                          <input {{@$disAfterSave}} class="form-control f-ainumber-18 input-aireadonly ch_Disabled " id="fee_amt" name="fee_amt" value="{{number_format(@$sRow->fee_amt,2)}}" readonly  />
                       </div>
 
                     </div>
@@ -1275,7 +1275,7 @@ if(@$sRow->check_press_save==2){
                         <label for="" class="" > หักจากบัตรเครดิต :  </label>
                       </div>
                       <div class="divTableCell">
-                       <input {{@$disAfterSave}} class="form-control f-ainumber-18-b input-aireadonly " id="sum_credit_price" name="sum_credit_price" value="{{number_format(@$sRow->sum_credit_price,2)}}" readonly />
+                       <input {{@$disAfterSave}} class="form-control f-ainumber-18-b input-aireadonly ch_Disabled " id="sum_credit_price" name="sum_credit_price" value="{{number_format(@$sRow->sum_credit_price,2)}}" readonly />
                       </div>
 
                       <div class="divTableCell">
@@ -1294,7 +1294,7 @@ if(@$sRow->check_press_save==2){
                       <div class="divTableCell">
                               @if(@$sAccount_bank)
                               @foreach(@$sAccount_bank AS $r)
-                                  <input class="class_transfer_edit" {{@$disAfterSave}} type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
+                                  <input class="class_transfer_edit ch_Disabled " {{@$disAfterSave}} type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
                             @endif
 
@@ -1310,11 +1310,11 @@ if(@$sRow->check_press_save==2){
                       </div>
                       <div class="divTableCell">
 
-                            <input class="class_transfer_edit" {{@$disAfterSave}} type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}>
+                            <input class="class_transfer_edit ch_Disabled " {{@$disAfterSave}} type="checkbox" id="pay_with_other_bill" name="pay_with_other_bill" value="1" {{@$sRow->pay_with_other_bill==1?'checked':''}}>
                             <label for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
                             <br>
 
-                            <input {{@$disAfterSave}} type="text" class="form-control" id="pay_with_other_bill_note" name="pay_with_other_bill_note" placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น " value="{{@$sRow->pay_with_other_bill_note}}">
+                            <input {{@$disAfterSave}} type="text" class="form-control ch_Disabled " id="pay_with_other_bill_note" name="pay_with_other_bill_note" placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น " value="{{@$sRow->pay_with_other_bill_note}}">
 
                       </div>
                       <div class="divTableCell">
@@ -1331,9 +1331,9 @@ if(@$sRow->check_press_save==2){
                         <div class="divTableCell">
 
                             @IF(@$sRow->pay_type_id_fk==8)
-                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly  class_transfer_edit " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input class="form-control input-airight f-ainumber-18-b input-aireadonly  class_transfer_edit ch_Disabled " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ELSE
-                            <input  class="form-control CalPrice input-airight f-ainumber-18-b input-aifill class_transfer_edit NumberOnly " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
+                            <input  class="form-control CalPrice input-airight f-ainumber-18-b input-aifill class_transfer_edit NumberOnly ch_Disabled " id="transfer_price" name="transfer_price" value="{{number_format(@$sRow->transfer_price,2)}}" >
                             @ENDIF
 
                         </div>
@@ -1357,7 +1357,7 @@ if(@$sRow->check_press_save==2){
                           <input type="hidden" class="form-control" name="member_id_aicash" id="member_id_aicash" value="{{@$sRow->member_id_aicash}}" >
                           <input type="hidden" class="form-control" name="member_name_aicash" id="member_name_aicash" value="{{@$Customer_name_Aicash}}" >
 
-                          <select {{@$disAfterSave}} id="aicash_choose" class="form-control "  >
+                          <select {{@$disAfterSave}} id="aicash_choose" class="form-control ch_Disabled "  >
                              <option value="{{@$sRow->member_id_aicash}}" selected >{{@$Customer_name_Aicash}}</option>
                           </select>
 
@@ -1367,12 +1367,12 @@ if(@$sRow->check_press_save==2){
 
                           <input type="hidden" name="member_id_aicash" id="member_id_aicash" >
 
-                          <select id="aicash_choose" class="form-control "  >
+                          <select id="aicash_choose" class="form-control ch_Disabled "  >
                             <option value=""  >-Select-</option>
                           </select>
                         @endif
 
-                         <select  id="member_id_aicash_select" name="member_id_aicash_select" class="form-control"  ></select>
+                         <select  id="member_id_aicash_select" name="member_id_aicash_select" class="form-control ch_Disabled "  ></select>
 
                       </div>
                        <div class="divTableCell">
@@ -1399,7 +1399,7 @@ if(@$sRow->check_press_save==2){
                         <div class="divTableCell">
 
 
-                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;">ดำเนินการ</button>
+                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14 btnCalAddAicash ch_Disabled " style="padding: 3px;">ดำเนินการ</button>
 
                         </div>
 
@@ -1413,13 +1413,13 @@ if(@$sRow->check_press_save==2){
                         </div>
 
                         <div class="divTableCell">
-                            <input {{@$disAfterSave}} class="form-control f-ainumber-18 input-aireadonly  " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
+                            <input {{@$disAfterSave}} class="form-control f-ainumber-18 input-aireadonly  ch_Disabled " name="aicash_remain" id="aicash_remain" value="{{@$Cus_Aicash}}" readonly="" >
                         </div>
 
                         <div class="divTableCell">
 
 
-                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14 btnCalAddAicash " style="padding: 3px;">ดำเนินการ</button>
+                         <button {{@$disAfterSave}} type="button" class="btn btn-primary font-size-14 btnCalAddAicash ch_Disabled " style="padding: 3px;">ดำเนินการ</button>
 
                         </div>
 
@@ -1436,7 +1436,7 @@ if(@$sRow->check_press_save==2){
                       <div class="divTableCell">
 <!-- CalPriceAicash -->
       
-                      <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
+                      <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly ch_Disabled " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
 
                       </div>
                        <div class="divTableCell">
@@ -1452,7 +1452,7 @@ if(@$sRow->check_press_save==2){
                         <label for="cash_price" class="" > cash_price :  </label>
                       </div>
                       <div class="divTableCell">
-                          <input class="form-control input-airight f-ainumber-18 " id="cash_price" name="cash_price" value="{{number_format(@$sRow->cash_price,2)}}" readonly >
+                          <input class="form-control input-airight f-ainumber-18 ch_Disabled " id="cash_price" name="cash_price" value="{{number_format(@$sRow->cash_price,2)}}" readonly >
                       </div>
                     </div>
 
@@ -1475,7 +1475,7 @@ if(@$sRow->check_press_save==2){
                                   $cash_pay = @$gift_voucher-@$sRow->sum_price+@$sRow->shipping_price;
                                 }
                                 ?>
-                                <input class="form-control f-ainumber-18 input-aireadonly in-tx " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
+                                <input class="form-control f-ainumber-18 input-aireadonly in-tx ch_Disabled " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
                                 <?php
                               }else{
 
@@ -1483,7 +1483,7 @@ if(@$sRow->check_press_save==2){
 
                                 $cash_pay = @$sRow->cash_pay ;
                                 ?>
-                                <input class="form-control f-ainumber-18-b input-aireadonly in-tx " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
+                                <input class="form-control f-ainumber-18-b input-aireadonly in-tx ch_Disabled " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
                                 <?php
                               }
 
@@ -1506,7 +1506,7 @@ if(@$sRow->check_press_save==2){
                         </div>
                         <div class="divTableCell">
 
-                         <button type="button" class="btn btn-info btn-sm waves-effect font-size-14  " data-toggle="modal" data-target="#cancel" style=""  >
+                         <button type="button" class="btn btn-info btn-sm waves-effect font-size-14 ch_Disabled " data-toggle="modal" data-target="#cancel" style=""  >
                           <i class="bx bx-plus font-size-14 align-middle mr-1"></i> แนบไฟล์สลิปเงินโอน
                           </button>
 
@@ -1535,9 +1535,9 @@ if(@$sRow->check_press_save==2){
 
                                       <img src="{{ $slip->url }}/{{ @$slip->file }}" style="margin-top: 5px;height: 180px;" >
 
-                                      <button type="button" data-id="{{@$slip->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                                      <button type="button" data-id="{{@$slip->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip ch_Disabled " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
 
-                                      <input {{@$disAfterSave}} type="text" class="form-control" name="note" placeholder="" value="หมายเหตุ : {{@$slip->note}}" >
+                                      <input {{@$disAfterSave}} type="text" class="form-control ch_Disabled " name="note" placeholder="" value="หมายเหตุ : {{@$slip->note}}" >
 
                              </span>
 
@@ -6495,6 +6495,16 @@ $(document).ready(function() {
       <script>
 // Clear data in View page
       $(document).ready(function() {
+
+        var ch_Disabled = "{{@$ch_Disabled}}";
+        console.log(ch_Disabled);
+        if(ch_Disabled=='1'){
+          $('.class_btnSave').remove();
+          $('.btnAddFromPromotion').remove();
+          $('.btnAddFromProdutcsList').remove();
+          $('.btnAddList').remove();
+          $(".ch_Disabled").prop('disabled', true); 
+        }
 
         $('.myloading').show();
 

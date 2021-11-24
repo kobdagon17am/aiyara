@@ -350,6 +350,24 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
+      // กำลังเบิกสินค้า ไม่ให้แก้บิล 
+          $ch_Disabled = 0;
+          $r_ch_Disabled = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
+          if(!empty($r_ch_Disabled))
+          foreach ($r_ch_Disabled as $key => $value) {
+
+             $orders_id_fk = explode(',',@$value->orders_id_fk);
+             if (in_array($id, @$orders_id_fk)){
+                $ch_Disabled = 1;
+              }
+
+          }
+
+
+          // return $row->id;
+          // return @$r[0]->orders_id_fk;
+          // dd($ch_Disabled);
+
 
 
 // $data =  CancelOrderController::cancel_order('204',\Auth::user()->id,'1','admin');
@@ -391,6 +409,10 @@ class FrontstoreController extends Controller
       $sRow = \App\Models\Backend\Frontstore::find($id);
       // dd($sRow);
       // dd($sRow->business_location_id_fk);
+      // dd($sRow->approve_status);
+      if($sRow->approve_status==9){
+        $ch_Disabled = 1;
+      }
 
        // $resule = LineModel::check_line_backend('A0000008','A0000008');
        // dd($resule['status']);
@@ -660,6 +682,7 @@ class FrontstoreController extends Controller
            'check_giveaway'=>@$check_giveaway,
            'PaymentSlip'=>@$PaymentSlip,
            'cnt_slip'=>@$cnt_slip,
+           'ch_Disabled'=>@$ch_Disabled,
         ) );
     }
 
