@@ -1535,6 +1535,7 @@ class FrontstoreController extends Controller
                           addr_send = '',
                           postcode = '',
                           mobile = '',
+                          tel_home = '',
                           province_id_fk = '',
                           province_name = '',
                           shipping_price = '".$sRow->shipping_price."',
@@ -1655,12 +1656,6 @@ class FrontstoreController extends Controller
                                       @$address = null;
                                   }
 
-                                  if(!empty(@$v->tel_mobile)){
-                                      $tel = 'Tel. '. @$v->tel_mobile . (@$v->tel_home?', '.@$v->tel_home:'') ;
-                                  }else{
-                                      $tel = '';
-                                  }
-
                                   @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
 
                                   DB::select(" UPDATE db_delivery
@@ -1668,7 +1663,8 @@ class FrontstoreController extends Controller
                                   recipient_name = '".@$recipient_name."',
                                   addr_send = '".@$address."',
                                   postcode = '".@$v->zipcode."',
-                                  mobile = '".@$tel."',
+                                  mobile = '".(@$v->tel?$v->tel:'')."',
+                                  tel_home = '".(@$v->tel_home?$v->tel_home:'')."',
                                   province_id_fk = '".@$v->province_id_fk."',
                                   province_name = '".@$v->provname."',
                                   set_addr_send_this = '1'
@@ -1701,23 +1697,14 @@ class FrontstoreController extends Controller
                                   @$address .= ", อ.". @$v->ampname;
                                   @$address .= ", จ.". @$v->provname;
 
-                                  // if(!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)){
-                                  // }else{
-                                  //     @$address = null;
-                                  // }
-
-                                  if(!empty(@$v->tel)){
-                                      $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
-                                  }else{
-                                      $tel = '';
-                                  }
-
+        
                                   DB::select(" UPDATE db_delivery
                                   SET
                                   recipient_name = '".@$v->recipient_name."',
                                   addr_send = '".@$address."',
                                   postcode = '".@$v->zip_code."',
-                                  mobile = '".@$tel."',
+                                  mobile = '".(@$v->tel?$v->tel:'')."',
+                                  tel_home = '".(@$v->tel_home?$v->tel_home:'')."',
                                   province_id_fk = '".@$v->province_id_fk."',
                                   province_name = '".@$v->provname."',
                                   set_addr_send_this = '1'

@@ -175,7 +175,7 @@
           <div class="col-12">
             <div class="form-group row  " >
               <div class="col-md-12 ">
-                <!-- <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> -->
+                <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
                 <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
                 <table id="data-table-00022" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
               </div>
@@ -336,9 +336,9 @@
                           },
                         },
                   columns: [
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิก </span> ', className: 'text-center w100'},
-                      {data: 'column_002', title :'<span style="vertical-align: middle;"> รายการในใบเบิก </span> ', className: 'text-center w150'},
-                      {data: 'column_003', title :'&nbsp;&nbsp;&nbsp;รายการบิลใน Packing list (กรณีรวมบิลจัดส่ง) ', className: 'text-left w350'},
+                      {data: 'column_001', title :'รหัสใบเบิก', className: 'text-center w231'},
+                      {data: 'column_002', title :'รายการบิลในใบเบิก', className: 'text-center '},
+                      {data: 'column_003', title :'รายละเอียดลูกค้า', className: 'text-center '},
                       // {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการ Packing List </span> ', className: 'text-left',render: function(d) {
                       //   return d;
                       // }},
@@ -491,7 +491,7 @@
                         return d ;
                       }},
 
-                     {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง & ใบเสร็จ  </span> ', className: 'text-center w180 ',render: function(d) {
+                     {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง | ใบเสร็จ  </span> ', className: 'text-center w180 ',render: function(d) {
                         return d ;
                       }},
                       {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> พิมพ์ใบเบิก  </span> ', className: 'text-center w80 ',render: function(d) {
@@ -502,6 +502,10 @@
                   rowCallback: function(nRow, aData, dataIndex){
                      // $(".myloading").hide();
                   }
+              });
+
+              oTable0005.on( 'draw', function () {
+                $('[data-toggle="tooltip"]').tooltip();
               });
          
          });

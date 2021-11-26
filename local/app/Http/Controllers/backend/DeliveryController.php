@@ -164,6 +164,7 @@ class DeliveryController extends Controller
                           addr_send = '',
                           postcode = '',
                           mobile = '',
+                          tel_home = '',
                           province_id_fk = '',
                           province_name = '',
                           shipping_price = '".$sRow->shipping_price."',
@@ -284,12 +285,6 @@ class DeliveryController extends Controller
                                       @$address = null;
                                   }
 
-                                  if(!empty(@$v->tel_mobile)){
-                                      $tel = 'Tel. '. @$v->tel_mobile . (@$v->tel_home?', '.@$v->tel_home:'') ;
-                                  }else{
-                                      $tel = '';
-                                  }
-
                                   @$recipient_name = @$v->prefix_name.@$v->first_name.' '.@$v->last_name;
 
                                   DB::select(" UPDATE db_delivery
@@ -297,7 +292,8 @@ class DeliveryController extends Controller
                                   recipient_name = '".@$recipient_name."',
                                   addr_send = '".@$address."',
                                   postcode = '".@$v->zipcode."',
-                                  mobile = '".@$tel."',
+                                  mobile = '".(@$tel?$tel:'')."',
+                                  tel_home = '".(@$tel_home?$tel_home:'')."',
                                   province_id_fk = '".@$v->province_id_fk."',
                                   province_name = '".@$v->provname."',
                                   set_addr_send_this = '1'
@@ -335,18 +331,13 @@ class DeliveryController extends Controller
                                       @$address = null;
                                   }
 
-                                  if(!empty(@$v->tel)){
-                                      $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
-                                  }else{
-                                      $tel = '';
-                                  }
-
                                   DB::select(" UPDATE db_delivery
                                   SET
                                   recipient_name = '".@$v->recipient_name."',
                                   addr_send = '".@$address."',
                                   postcode = '".@$v->zip_code."',
-                                  mobile = '".@$tel."',
+                                  mobile = '".(@$tel?$tel:'')."',
+                                  tel_home = '".(@$tel_home?$tel_home:'')."',
                                   province_id_fk = '".@$v->province_id_fk."',
                                   province_name = '".@$v->provname."',
                                   set_addr_send_this = '1'
@@ -443,18 +434,13 @@ class DeliveryController extends Controller
                                   @$address .= ", อ.". @$v->ampname;
                                   @$address .= ", จ.". @$v->provname;
 
-                                  if(!empty(@$v->tel)){
-                                      $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
-                                  }else{
-                                      $tel = '';
-                                  }
-
                                   DB::select(" UPDATE db_delivery  
                                   SET 
                                   recipient_name = '".@$v->recipient_name."',
                                   addr_send = '".@$address."',
                                   postcode = '".@$v->zip_code."',
-                                  mobile = '".@$tel."',
+                                  mobile = '".(@$tel?$tel:'')."',
+                                  tel_home = '".(@$tel_home?$tel_home:'')."',
                                   province_id_fk = '".@$v->province_id_fk."',
                                   province_name = '".@$v->provname."',
                                   set_addr_send_this = '1'
@@ -529,18 +515,13 @@ class DeliveryController extends Controller
                                           @$address .= ", อ.". @$v->ampname;
                                           @$address .= ", จ.". @$v->provname;
 
-                                          if(!empty(@$v->tel)){
-                                              $tel = 'Tel. '. @$v->tel . (@$v->tel_home?', '.@$v->tel_home:'') ;
-                                          }else{
-                                              $tel = '';
-                                          }
-
                                           DB::select(" UPDATE db_delivery  
                                           SET 
                                           recipient_name = '".@$v->recipient_name."',
                                           addr_send = '".@$address."',
                                           postcode = '".@$v->zip_code."',
-                                          mobile = '".@$tel."',
+                                          mobile = '".(@$tel?$tel:'')."',
+                                          tel_home = '".(@$tel_home?$tel_home:'')."',
                                           province_id_fk = '".@$v->province_id_fk."',
                                           province_name = '".@$v->provname."',
                                           set_addr_send_this = '1'

@@ -642,15 +642,77 @@ class Pick_warehouseController extends Controller
       return $sQuery
       ->addColumn('column_001', function($row) {
            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
-           return $DP->packing_code;
+           return '<b>'.$DP->packing_code.'</b>';
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
+
+        $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+        if(!empty($DP)){
+
+          $pn = '<div class="divTable"><div class="divTableBody">';
+          $arr = [];
+          foreach ($DP as $key => $value) {
+             $delivery = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+
+             if($delivery[0]->status_pack==1){
+              $d1 = DB::select(" SELECT * FROM `db_delivery_packing` where packing_code_id_fk in (".$delivery[0]->packing_code.")  ");
+              $arr1 = [];
+              foreach ($d1 as $key => $v1) {
+                array_push( $arr1 ,$v1->delivery_id_fk);
+              }
+              $rs1 = implode(',',$arr1);
+              $d2 = DB::select(" SELECT * FROM `db_delivery` where id in (".$rs1.")  ");
+              $arr2 = [];
+              foreach ($d2 as $key => $v2) {
+                array_push( $arr2 ,$v2->receipt);
+              }
+              $rs2 = implode(',',$arr2);
+              $pn .=     
+                '<div class="divTableRow">
+                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - '.@$delivery[0]->packing_code_desc.' (Packing list) : '.$rs2.' </div> 
+                 </div>
+              ';
+             }else{
+
+                $pn .=     
+                '<div class="divTableRow">
+                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - '.@$delivery[0]->receipt.' </div> 
+                 </div>
+              ';
+
+             }
+
+
+          }
+             $pn .= '</div>';  
+           return $pn;
+        }else{
+          return '-';
+        }
          
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
          
+        $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+        if(!empty($DP)){
+
+          $pn = '<div class="divTable"><div class="divTableBody">';
+          $arr = [];
+          foreach ($DP as $key => $value) {
+              $pn .=     
+                '<center> <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$row->id.'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> 
+             ';
+
+          }
+             $pn .= '</div>';  
+           return $pn;
+        }else{
+          return '-';
+        }
+
+
   
         })
       ->escapeColumns('column_003')        
@@ -981,50 +1043,36 @@ ORDER BY db_pick_pack_packing.id
 
               // ต้องรวมสินค้า โปรโมชั่น ด้วย 
 
-          $Products = DB::select("
+           $Products = DB::select("
 
-(SELECT 
+                SELECT
+                db_pay_requisition_002.id,
+                db_pay_requisition_002.time_pay,
+                db_pay_requisition_002.business_location_id_fk,
+                db_pay_requisition_002.branch_id_fk,
+                db_pay_requisition_002.pick_pack_requisition_code_id_fk,
+                db_pay_requisition_002.customers_id_fk,
+                db_pay_requisition_002.product_id_fk,
+                db_pay_requisition_002.product_name,
+                db_pay_requisition_002.amt_need,
+                db_pay_requisition_002.amt_get as amt,
+                db_pay_requisition_002.amt_lot,
+                db_pay_requisition_002.amt_remain,
+                db_pay_requisition_002.product_unit_id_fk,
+                db_pay_requisition_002.product_unit,
+                db_pay_requisition_002.lot_number,
+                db_pay_requisition_002.lot_expired_date,
+                db_pay_requisition_002.warehouse_id_fk,
+                db_pay_requisition_002.zone_id_fk,
+                db_pay_requisition_002.shelf_id_fk,
+                db_pay_requisition_002.shelf_floor,
+                db_pay_requisition_002.status_cancel,
+                db_pay_requisition_002.created_at,
+                db_pay_requisition_002.updated_at,
+                db_pay_requisition_002.deleted_at
+                FROM `db_pay_requisition_002`
+                WHERE pick_pack_requisition_code_id_fk='".@$row->packing_code_id_fk."' 
 
-db_delivery.orders_id_fk,
-db_order_products_list.product_id_fk,
-db_order_products_list.product_name,
-db_order_products_list.product_unit_id_fk,
-SUM(db_order_products_list.amt) AS amt ,
-dataset_product_unit.product_unit
-
-FROM `db_order_products_list` 
-left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-
-WHERE type_product='product' AND db_delivery.receipt = '".$row->lists."' 
-
-GROUP BY db_order_products_list.product_id_fk
-)
-
-UNION
-
-(
-SELECT 
-
-db_delivery.orders_id_fk,
-db_order_products_list.product_id_fk,
-db_order_products_list.product_name,
-db_order_products_list.product_unit_id_fk,
-SUM(db_order_products_list.amt) AS amt ,
-dataset_product_unit.product_unit
-
-FROM `db_order_products_list` 
-left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-
-WHERE type_product='promotion' AND db_delivery.receipt = '".$row->lists."' 
-
-GROUP BY db_order_products_list.product_id_fk
-)
 
 
                  ");
@@ -1294,23 +1342,26 @@ GROUP BY db_order_products_list.product_id_fk
                  }
               }
               $arr2 = implode(',', $arr1);
-        
 
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");
-              foreach ($d3 as $key => $v3) {
-                 $recipient_code = $v3->packing_code!=0?"P1".sprintf("%05d",$v3->packing_code):$v3->receipt;
-                 DB::select(" INSERT IGNORE INTO `db_consignments` 
-                  SET 
-                  `pick_pack_requisition_code_id_fk`='$reg->packing_id' ,
-                  `recipient_code`='$recipient_code' ,
-                  `recipient_name`='$v3->recipient_name' ,
-                  `address`='$v3->addr_send' ,
-                  `postcode`='$v3->postcode' ,
-                  `mobile`='$v3->mobile' ,
-                  `delivery_id_fk`='$v3->id' ,
-                  `created_at`=now() 
+              if(!empty($d3)){
 
-                  ");
+                     foreach ($d3 as $key => $v3) {
+                       $recipient_code = $v3->packing_code!=0?"P1".sprintf("%05d",$v3->packing_code):$v3->receipt;
+                       DB::select(" INSERT IGNORE INTO `db_consignments` 
+                        SET 
+                        `pick_pack_requisition_code_id_fk`='$reg->packing_id' ,
+                        `recipient_code`='$recipient_code' ,
+                        `recipient_name`='$v3->recipient_name' ,
+                        `address`='$v3->addr_send' ,
+                        `postcode`='$v3->postcode' ,
+                        `mobile`='$v3->mobile' ,
+                        `phone_no`='$v3->tel_home' ,
+                        `delivery_id_fk`='$v3->id' ,
+                        `created_at`=now() 
+
+                        ");
+                    }
               }
 
             }
@@ -1344,7 +1395,7 @@ GROUP BY db_order_products_list.product_id_fk
 
           $f = [] ;
           foreach ($d as $key => $v) {
-             array_push($f,@$v->recipient_name." > ".@$v->address ." ".@$v->postcode.(@$v->mobile?" Tel.".@$v->mobile:"") );
+             array_push($f,@$v->recipient_name." > ".@$v->address ." ".@$v->postcode.(@$v->mobile?" Tel.".@$v->mobile:"").(@$v->phone_no?", ".@$v->phone_no:"") );
           }
           $f = implode('<br><br>',$f);
           return $f;
@@ -1380,7 +1431,13 @@ GROUP BY db_order_products_list.product_id_fk
           $tx = '';
           foreach ($d as $key => $v) {
 
-              $tx = '<center> <a href="backend/pick_warehouse/print_envelope/'.$v->recipient_code.'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> <a href="javascript: void(0);" target=_blank data-id="'.$v->recipient_code.'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>' ;
+              $tx = '<center> 
+                 
+                <a href="backend/pick_warehouse/print_envelope/'.$v->recipient_code.'" target=_blank ><i class="bx bx-printer grow " data-toggle="tooltip" data-placement="left" title="ใบปะหน้ากล่อง" style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> 
+
+                <a href="javascript: void(0);" target=_blank data-id="'.$v->recipient_code.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
+
+                 </center>' ;
 
              array_push($f,@$tx);
           }
