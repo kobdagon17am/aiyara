@@ -185,9 +185,11 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             </div>
 
             @if(@$data->business_name)
-             <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
+            <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
             @else
-             <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
+             
+             <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
+
             @endif
 
             <p class="text-muted">PV {{number_format($data->pv)}} | {{$data->q_name}} </p>

@@ -189,7 +189,7 @@
                                          <div class="form-radio">
                                              <div class="radio radio-inline" id="i_sent_address">
                                                  <label>
-                                                     <input type="radio" onchange="sent_address('sent_address',{{$address->province_id_fk}})"
+                                                     <input type="radio" onchange="sent_address('sent_address',{{@$address->province_id_fk}})"
                                                          id="sent_address_check" name="receive" value="sent_address"
                                                          checked="checked">
                                                      <i class="helper"></i><b>จัดส่ง</b>
@@ -225,7 +225,6 @@
 
                                      </div>
                                  </div>
-
 
                                  @if($address)
                                  <div id="sent_address">

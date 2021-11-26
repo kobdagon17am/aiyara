@@ -110,8 +110,8 @@ class RegisterController extends Controller
     // $data =DB::table('customers')
     // ->where('user_name','=',$request->user_name)
     // ->first();
-
-    $data = LineModel::check_line_aipocket($request->user_name);
+    $user_name = Auth::guard('c_user')->user()->user_name;
+    $data = LineModel::check_line_backend($user_name,$request->user_name);
 
     if($data){
       $resule = ['status'=>'success','data'=>$data];
