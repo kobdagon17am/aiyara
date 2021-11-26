@@ -267,7 +267,8 @@ class AipocketController extends Controller
     public function check_customer_id(Request $request)
     {
 
-        $resule = LineModel::check_line_aipocket($request->user_name);
+      $user_name = Auth::guard('c_user')->user()->user_name;
+        $resule = LineModel::check_line_backend($user_name,$request->user_name);
 
         if ($resule['status'] == 'success') {
 
