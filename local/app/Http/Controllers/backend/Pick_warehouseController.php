@@ -597,7 +597,7 @@ class Pick_warehouseController extends Controller
                 '<div class="divTableRow">
                  <div class="divTableCell" >
 
-                  <a href="javascript: void(0);" class="btn btn-sm btn-danger cDelete2 " data-toggle="tooltip" data-placement="left" title="ยกเลิกรายการจ่ายสินค้าครั้งล่าสุด" data-time_pay='.$row->time_pay.' ><i class="bx bx-trash font-size-16 align-middle"></i></a>
+                  <a href="javascript: void(0);" class="btn btn-sm btn-danger cDelete2 " data-toggle="tooltip" data-placement="left" title="ยกเลิกรายการจ่ายสินค้าครั้งล่าสุด" data-time_pay='.$row->time_pay.' style="display:none;"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>
 
                  </div>
                  </div>

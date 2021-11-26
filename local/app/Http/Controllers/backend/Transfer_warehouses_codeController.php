@@ -293,8 +293,34 @@ class Transfer_warehouses_codeController extends Controller
         $id = "";
       }
 
-       $sPermission = \Auth::user()->permission ;
-       $User_branch_id = \Auth::user()->branch_id_fk;
+       $sPermission = @\Auth::user()->permission ;
+       $User_branch_id = @\Auth::user()->branch_id_fk;
+
+        // if(@\Auth::user()->permission==1){
+
+        //     $sTable = \App\Models\Backend\Transfer_warehouses::where('remark','1')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
+
+        // }else{
+
+        //    // $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+        //     $sTable = \App\Models\Backend\Transfer_warehouses::where('branch_id_fk',$User_branch_id)->where('remark','1')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
+
+
+        // }
+
+        $menu_id = '32';
+
+        if($sPermission==1){
+            $role_group_id = '%';
+            $can_approve = 1;
+        }else{
+            $role_group_id = \Auth::user()->role_group_id_fk;
+            $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+            $can_approve = @$menu_permit->can_approve;
+            // dd($can_approve);
+        }
+
+
 
         if(@\Auth::user()->permission==1){
 
@@ -318,6 +344,14 @@ class Transfer_warehouses_codeController extends Controller
             $branch_id_fk = " AND branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
 
             $action_user = " action_user=".@\Auth::user()->id." ";
+
+          if($can_approve==1){
+            $action_user = "";
+
+          }else{
+            $action_user = " and action_user=".@\Auth::user()->id." ";
+
+          }
 
         }
 
@@ -356,7 +390,7 @@ class Transfer_warehouses_codeController extends Controller
       //     ORDER BY updated_at DESC ");
 
       $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
-          WHERE $action_user 
+          WHERE 1 $action_user
           $id
           $branch_id_fk
           $approve_status

@@ -252,8 +252,7 @@ E-MAIL : info@aiyara.co.th
               db_delivery.tel_home,
               db_delivery.status_pack,
               db_delivery.receipt,
-              db_delivery.id as delivery_id_fk,
-              db_delivery.orders_id_fk
+              db_delivery.id as delivery_id_fk
               FROM
               db_delivery
               WHERE 
@@ -264,7 +263,7 @@ E-MAIL : info@aiyara.co.th
               $tel = @$delivery[0]->mobile." ".@$delivery[0]->tel_home;
               $receipt = '';
 
-            if(@$delivery[0]->status_pack==1){
+            if($delivery[0]->status_pack==1){
 
                   $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$delivery[0]->delivery_id_fk."");
                   $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
@@ -320,169 +319,16 @@ E-MAIL : info@aiyara.co.th
 
       <tr>
         <td colspan="2" style="width:30%;vertical-align: top;font-weight: bold" >
-         [ รายการสินค้า ]
+         * รายการสินค้า ใบเสร็จแนบท้าย
+         <br>
+         <br>
        </td>
+  
       </tr>
 
-  <?php
-
-
-$sTable = DB::select(" 
-
-SELECT 
-db_pick_pack_packing.id,
-db_pick_pack_packing.p_size,
-db_pick_pack_packing.p_weight,
-db_pick_pack_packing.p_amt_box,
-db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-db_pick_pack_packing.packing_code as packing_code,
-CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
-CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
-db_delivery.id as db_delivery_id,
-db_delivery.packing_code as db_delivery_packing_code
-FROM `db_pick_pack_packing` 
-LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
-WHERE 
-
-db_pick_pack_packing.packing_code_id_fk =".$data[1]." 
-
-AND db_delivery_packing.packing_code is null
-
-ORDER BY db_pick_pack_packing.id
-
-");
-
-
-
-
-            $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
-            '<div class="divTableRow">
-            <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
-            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
-            <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-            <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
-            </div>
-            ';
-
-
-              // ต้องรวมสินค้า โปรโมชั่น ด้วย 
-
-           $Products = DB::select("
-
-                SELECT
-                db_pay_requisition_002.id,
-                db_pay_requisition_002.time_pay,
-                db_pay_requisition_002.business_location_id_fk,
-                db_pay_requisition_002.branch_id_fk,
-                db_pay_requisition_002.pick_pack_requisition_code_id_fk,
-                db_pay_requisition_002.customers_id_fk,
-                db_pay_requisition_002.product_id_fk,
-                db_pay_requisition_002.product_name,
-                db_pay_requisition_002.amt_need,
-                db_pay_requisition_002.amt_get as amt,
-                db_pay_requisition_002.amt_lot,
-                db_pay_requisition_002.amt_remain,
-                db_pay_requisition_002.product_unit_id_fk,
-                db_pay_requisition_002.product_unit,
-                db_pay_requisition_002.lot_number,
-                db_pay_requisition_002.lot_expired_date,
-                db_pay_requisition_002.warehouse_id_fk,
-                db_pay_requisition_002.zone_id_fk,
-                db_pay_requisition_002.shelf_id_fk,
-                db_pay_requisition_002.shelf_floor,
-                db_pay_requisition_002.status_cancel,
-                db_pay_requisition_002.created_at,
-                db_pay_requisition_002.updated_at,
-                db_pay_requisition_002.deleted_at
-                FROM `db_pay_requisition_002`
-                WHERE pick_pack_requisition_code_id_fk='".@$row->packing_code_id_fk."' 
-
-
-
-                 ");
-
-              $sum_amt = 0 ;
-              $r_ch_t = '';
-
-         if(@$Products){
-            
-              foreach ($Products as $key => $value) {
-
-                if(!empty($value->product_id_fk)){
-
-                // หา max time_pay ก่อน 
-                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
-              // Check ว่ามี status=2 ? (ค้างจ่าย)
-                 $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
-                 if(count($r_ch02)>0){
-                    $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
-                 }else{
-                   $r_ch_t = '';
-                 }
-
-
-                $sum_amt += $value->amt;
-                $pn .=     
-                '<div class="divTableRow">
-                <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-                '.@$value->product_name.'</b><br>
-                <font color=red>'.$r_ch_t.'</font>
-                </div>
-                <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
-                <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
-                <div class="divTableCell" style="text-align:left;"> ';
-
-                $item_id = 1;
-                $amt_scan = @$value->amt;
-
-                for ($i=0; $i < $amt_scan ; $i++) { 
-
-                $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
-                
-                            if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
-
-                              $pn .= 
-                               '
-                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
-                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
-                               ';
-
-                            }else{
-
-                               $pn .= 
-                               '
-                                <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
-                               ';
-
-                            }
-
-                              @$item_id++;
-                              
-                          }  
-
-                $pn .= '</div>';  
-                $pn .= '</div>';  
-              
-              }
-              }
-
-              $pn .=     
-              '<div class="divTableRow">
-              <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
-              <div class="divTableCell" style="text-align:center;font-weight:bold;">'.@$sum_amt.'</div>
-              <div class="divTableCell" style="text-align:center;"> </div>
-              <div class="divTableCell" style="text-align:center;"> </div>
-              </div>
-              ';
-
-          $pn .= '</div>';  
-          return $pn;
-      }
-
-           ?>
 
     </table>
   </div>
+  
+
+  

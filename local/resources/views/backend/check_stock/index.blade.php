@@ -54,9 +54,9 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
           <?php
-              //Super Admin
+              //Super Admin  test_clear_data
               if(@\Auth::user()->id==1){
-                  ?><h4 class="mb-0 font-size-18 test_clear_data "> Check Stock </h4><?php
+                  ?><h4 class="mb-0 font-size-18  "> Check Stock </h4><?php
               }else{
                   ?><h4 class="mb-0 font-size-18"> Check Stock </h4><?php
               }

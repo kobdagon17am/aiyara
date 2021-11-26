@@ -232,32 +232,51 @@ if(@$sRow->check_press_save==2){
                                   <label for="" class="col-md-4 col-form-label">สาขาที่ตั้งธุรกิจ : * </label>
                                   <div class="col-md-6">
 
-                                       @if(!empty(@$sRow->branch_id_fk))
 
-                                         <input type="hidden" name="branch_id_fk" value="{{$sRow->branch_id_fk}}"  >
-                                         <input type="text" class="form-control" value="{{@$BranchName}}"  disabled="" >
+@if(@\Auth::user()->permission==1)
 
-                                       @else
+                       @if(!empty(@$sRow->branch_id_fk))
 
-                                         @if(@$sBranchs)
-                                         <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required >
-                                             <option value="">Select</option>
-                                              @foreach(@$sBranchs AS $r)
-                                               @if(@$r->id==$User_branch_id)
-                                              <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
-                                                {{$r->b_name}}
-                                              </option>
-                                              @else
-                                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
-                                                {{$r->b_name}}
-                                              </option>
-                                              @endif
-                                              @endforeach
-                                            @endif
+                         <input type="hidden" name="branch_id_fk" value="{{$sRow->branch_id_fk}}"  >
+                         <input type="text" class="form-control" value="{{@$BranchName}}"  disabled="" >
 
-                                        @endif
+                       @else
 
-                                      </select>
+                         @if(@$sBranchs)
+                         <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " required >
+                             <option value="">Select</option>
+                              @foreach(@$sBranchs AS $r)
+                               @if(@$r->id==$User_branch_id)
+                              <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
+                                {{$r->b_name}}
+                              </option>
+                              @else
+                              <option value="{{$r->id}}" {{ (@$r->id==@$sRow->branch_id_fk)?'selected':'' }} >
+                                {{$r->b_name}}
+                              </option>
+                              @endif
+                              @endforeach
+                            @endif
+
+                        @endif
+
+                      </select>
+@ELSE
+
+                     <select  class="form-control select2-templating " disabled=""  >
+                     @if(@$sBranchs)
+                      @foreach(@$sBranchs AS $r)
+                        <option value="{{@$r->id}}" {{ (@$r->id==(@\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                      @endforeach
+                     @endif
+                    </select>
+                    <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
+
+
+@ENDIF
+
+
+
                                   </div>
                                 </div>
                               </div>

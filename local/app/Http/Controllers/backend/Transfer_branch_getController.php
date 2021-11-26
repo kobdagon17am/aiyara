@@ -231,6 +231,7 @@ class Transfer_branch_getController extends Controller
             $sRow = new \App\Models\Backend\Transfer_branch_get;
           }
 
+
             if(request('approve_status')==5){
                 $sRow->tr_status_get    = 5 ; // ปฏิเสธการรับ
             }
@@ -248,37 +249,40 @@ class Transfer_branch_getController extends Controller
             if(request('approve_status')==1){
 
 // นำเข้า Stock
-                 $products = DB::select("
+              $products = DB::select("
 
-                    SELECT
-                    sum(amt_get) AS sum_amt,
-                    db_transfer_branch_get_products_receive.id,
-                    db_transfer_branch_get_products_receive.transfer_branch_get_id_fk,
-                    db_transfer_branch_get_products_receive.transfer_branch_get_products,
-                    db_transfer_branch_get_products_receive.product_id_fk,
-                    db_transfer_branch_get_products_receive.lot_number,
-                    db_transfer_branch_get_products_receive.lot_expired_date,
-                    db_transfer_branch_get_products_receive.amt_get,
-                    db_transfer_branch_get_products_receive.product_unit_id_fk,
-                    db_transfer_branch_get_products_receive.branch_id_fk,
-                    db_transfer_branch_get_products_receive.warehouse_id_fk,
-                    db_transfer_branch_get_products_receive.zone_id_fk,
-                    db_transfer_branch_get_products_receive.shelf_id_fk,
-                    db_transfer_branch_get_products_receive.shelf_floor,
-                    db_transfer_branch_get_products_receive.action_user,
-                    db_transfer_branch_get_products_receive.action_date,
-                    db_transfer_branch_get_products_receive.approver,
-                    db_transfer_branch_get_products_receive.approve_status,
-                    db_transfer_branch_get_products_receive.approve_date,
-                    db_transfer_branch_get_products_receive.created_at,
-                    db_transfer_branch_get_products_receive.updated_at,
-                    db_transfer_branch_get_products_receive.deleted_at
-                    from db_transfer_branch_get_products_receive
-                    WHERE transfer_branch_get_id_fk in ($id)
-                    GROUP BY transfer_branch_get_id_fk,branch_id_fk,warehouse_id_fk,zone_id_fk,shelf_floor
+              SELECT
 
-                    ");
+              db_transfer_branch_get_products_receive.id,
+              db_transfer_branch_get_products_receive.transfer_branch_get_id_fk,
+              db_transfer_branch_get_products_receive.transfer_branch_get_products,
+              db_transfer_branch_get_products_receive.product_id_fk,
+              db_transfer_branch_get_products_receive.lot_number,
+              db_transfer_branch_get_products_receive.lot_expired_date,
+              db_transfer_branch_get_products_receive.amt_get,
+              db_transfer_branch_get_products_receive.product_unit_id_fk,
+              db_transfer_branch_get_products_receive.branch_id_fk,
+              db_transfer_branch_get_products_receive.warehouse_id_fk,
+              db_transfer_branch_get_products_receive.zone_id_fk,
+              db_transfer_branch_get_products_receive.shelf_id_fk,
+              db_transfer_branch_get_products_receive.shelf_floor,
+              db_transfer_branch_get_products_receive.action_user,
+              db_transfer_branch_get_products_receive.action_date,
+              db_transfer_branch_get_products_receive.approver,
+              db_transfer_branch_get_products_receive.approve_status,
+              db_transfer_branch_get_products_receive.approve_date,
+              db_transfer_branch_get_products_receive.created_at,
+              db_transfer_branch_get_products_receive.updated_at,
+              db_transfer_branch_get_products_receive.deleted_at
+              from db_transfer_branch_get_products_receive
+              WHERE transfer_branch_get_id_fk in ($id)
 
+
+              ");
+              // วุฒิเปลี่ยนเป็นแบบไม่ sum และไม่กรุ๊ป
+              // sum(amt_get) AS sum_amt,
+              // GROUP BY transfer_branch_get_id_fk,branch_id_fk,warehouse_id_fk,zone_id_fk,shelf_floor
+  
                  $sRow = \App\Models\Backend\Transfer_branch_get::find($id);
 
           // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
@@ -295,6 +299,9 @@ class Transfer_branch_getController extends Controller
                           ->where('shelf_id_fk', $p->shelf_id_fk)
                           ->where('shelf_floor', $p->shelf_floor)
                           ->get();
+
+                     
+
                           if($_check->count() == 0){
 
                               $stock = new  \App\Models\Backend\Check_stock;
@@ -302,7 +309,9 @@ class Transfer_branch_getController extends Controller
                               $stock->product_id_fk = $p->product_id_fk ;
                               $stock->lot_number = $p->lot_number ;
                               $stock->lot_expired_date = $p->lot_expired_date ;
-                              $stock->amt = $p->sum_amt ;
+                              // วุฒิปรับจากเพิ่ม amt แบบรวมเปลี่ยนเป็นแบบรายตัวแทน
+                              $stock->amt = $p->amt_get ;
+                              // $stock->amt = $p->sum_amt ;
                               $stock->product_unit_id_fk = $p->product_unit_id_fk ;
                               $stock->branch_id_fk = $p->branch_id_fk ;
                               $stock->warehouse_id_fk = $p->warehouse_id_fk ;
@@ -328,14 +337,16 @@ class Transfer_branch_getController extends Controller
                                   ->where('shelf_id_fk', $p->shelf_id_fk)
                                   ->where('shelf_floor', $p->shelf_floor)
                                 ->update(array(
-                                  'amt' => DB::raw( ' amt + '.$p->sum_amt )
+                                // วุฒิปรับจากเพิ่ม amt แบบรวมเปลี่ยนเป็นแบบรายตัวแทน
+                                'amt' => DB::raw( ' amt + '.$p->amt_get )
+                                  // 'amt' => DB::raw( ' amt + '.$p->sum_amt )
                                 ));
 
                                 $lastID = DB::table('db_stocks')->latest()->first();
                                $lastID = $lastID->id;
 
                           }
-
+                          
 
                           // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
 
@@ -411,8 +422,6 @@ class Transfer_branch_getController extends Controller
 
 
                  }
-
-
 
             }
 
