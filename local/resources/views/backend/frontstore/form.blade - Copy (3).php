@@ -233,6 +233,7 @@ if(@$sRow->check_press_save==2){
                                   <div class="col-md-6">
 
 
+@if(@\Auth::user()->permission==1)
 
                        @if(!empty(@$sRow->branch_id_fk))
 
@@ -260,6 +261,19 @@ if(@$sRow->check_press_save==2){
                         @endif
 
                       </select>
+@ELSE
+
+                     <select  class="form-control select2-templating " disabled=""  >
+                     @if(@$sBranchs)
+                      @foreach(@$sBranchs AS $r)
+                        <option value="{{@$r->id}}" {{ (@$r->id==(@\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
+                      @endforeach
+                     @endif
+                    </select>
+                    <input type="hidden" name="branch_id_fk" value="{{@\Auth::user()->branch_id_fk}}">
+
+
+@ENDIF
 
 
 
@@ -793,30 +807,22 @@ if(@$sRow->check_press_save==2){
                       </tr>
 
 
-                     
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
+                          <input type="hidden" name="sentto_branch_id" value="{{@$User_branch_id}}">
                           @IF(@$sRow->shipping_special == 1)
 
-                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled type="radio" province_id="0" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?>  > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$disChannel3}} {{@$pay_type_transfer_aicash}} disabled id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             <select {{@$disChannel3}} disabled  class="form-control select2-templating ShippingCalculate ch_Disabled " >
                               @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
-                                  @if(@$sRow->sentto_branch_id>0))
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @elseif(@$r->id==$User_branch_id)
+                               
                                   <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
-                                  @else
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @endif
+                                
                                 @endforeach
                               @endif
                              </select>
@@ -824,25 +830,17 @@ if(@$sRow->check_press_save==2){
 
 
                           @ELSE
-                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate" name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > ระบุสาขา : </label>
+                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_00" value="0" <?=(@$sRow->delivery_location==0?'checked':'')?> > <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง > สาขา : </label>
 
                             <div class="col-md-6">
-                             <select {{@$disChannel3}} {{@$pay_type_transfer_aicash}} id="sentto_branch_id" name="sentto_branch_id" class="form-control select2-templating ShippingCalculate " {{@$dis_addr}}  >
+                             <select {{@$disChannel3}} class="form-control select2-templating ShippingCalculate ch_Disabled " disabled  >
                              @if(@$sBranchs)
                                 @foreach(@$sBranchs AS $r)
-                                  @if(@$sRow->sentto_branch_id>0))
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @elseif(@$r->id==$User_branch_id)
+                                 
                                   <option value="{{$r->id}}" {{ (@$r->id==$User_branch_id)?'selected':'' }} >
                                     {{$r->b_name}}
                                   </option>
-                                  @else
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->sentto_branch_id)?'selected':'' }} >
-                                    {{$r->b_name}}
-                                  </option>
-                                  @endif
+                                
                                 @endforeach
                               @endif
                              </select>

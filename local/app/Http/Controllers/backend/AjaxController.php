@@ -2910,9 +2910,16 @@ if($frontstore[0]->check_press_save==2){
             // return ($sum_price);
             // return ($gift_voucher_cost);
 
+            // $sRow = \App\Models\Backend\Frontstore::find($frontstore_id);
+            // $ThisCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
+            // $data_gv = \App\Helpers\Frontend::get_gitfvoucher(@$ThisCustomer[0]->user_name);
+            // $gv = @$data_gv->sum_gv;
+
 
             if($gift_voucher_price>0){
                 DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
+            }else{
+                DB::select(" UPDATE db_orders SET gift_voucher_cost='0',gift_voucher_price='0' WHERE id=$frontstore_id ");
             }
 
         }

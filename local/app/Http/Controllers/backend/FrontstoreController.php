@@ -414,6 +414,7 @@ class FrontstoreController extends Controller
         $ch_Disabled = 1;
       }
 
+
        // $resule = LineModel::check_line_backend('A0000008','A0000008');
        // dd($resule['status']);
        // dd($resule['message']);
@@ -603,7 +604,7 @@ class FrontstoreController extends Controller
       // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
       // dd($customer_pv);
       // dd($sRow->business_location_id_fk);
-      // dd($ThisCustomer[0]->user_name);
+      
       // dd($pv_total);
       // แถม
       $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
@@ -640,6 +641,17 @@ class FrontstoreController extends Controller
       // dd(count($PaymentSlip));
 
       $cnt_slip = count($PaymentSlip);
+
+      // dd($ThisCustomer[0]->user_name);
+      $data_gv = \App\Helpers\Frontend::get_gitfvoucher(@$ThisCustomer[0]->user_name);
+      // $data_gv = \App\Helpers\Frontend::get_gitfvoucher("A101987");
+      // $gv = \App\Helpers\Frontend::get_gitfvoucher("A436875");
+      // $gv = \App\Helpers\Frontend::get_gitfvoucher("A548815");
+      $gv = @$data_gv->sum_gv;
+      // dd($gv);
+      // $gitfvoucher = @$gv!=null?$gv:0;
+      // $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
+
 
 
       return View('backend.frontstore.form')->with(
@@ -683,6 +695,7 @@ class FrontstoreController extends Controller
            'PaymentSlip'=>@$PaymentSlip,
            'cnt_slip'=>@$cnt_slip,
            'ch_Disabled'=>@$ch_Disabled,
+           'gitfvoucher'=>@$gv,
         ) );
     }
 
