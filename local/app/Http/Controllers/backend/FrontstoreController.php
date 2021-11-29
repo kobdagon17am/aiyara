@@ -1227,8 +1227,10 @@ class FrontstoreController extends Controller
                   $lastInsertId_03 = DB::getPdo()->lastInsertId();
                 }
                 
+
               PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
+              // dd("1233");
 
 // dd(request('sentto_branch_id'));
 // dd(request('branch_id_fk'));
@@ -1284,8 +1286,6 @@ class FrontstoreController extends Controller
 
 
                             DB::select("UPDATE db_orders SET address_sent_id_fk='".(DB::getPdo()->lastInsertId())."' WHERE (id='".$request->frontstore_id."')");
-
-
 
                       }
 
@@ -1576,9 +1576,14 @@ class FrontstoreController extends Controller
                                       customers_address_card.created_at,
                                       customers_address_card.updated_at,
                                       customers_address_card.card_province_id_fk,
+                                      customers_address_card.tel,
+                                      customers_address_card.tel_home,
                                       dataset_provinces.name_th AS provname,
+                                      dataset_provinces.id AS province_id,
+                                      dataset_amphures.id AS amp_id,
                                       dataset_amphures.name_th AS ampname,
                                       dataset_districts.name_th AS tamname,
+                                      dataset_districts.id AS tam_id,
                                       customers.prefix_name,
                                       customers.first_name,
                                       customers.last_name
@@ -1623,8 +1628,26 @@ class FrontstoreController extends Controller
                                            ");
                                         }
 
-                            }
+                        
+                            DB::select("
 
+                              UPDATE db_orders SET 
+                              house_no='".@$v->card_house_no."',
+                              house_name='".@$v->card_house_name."',
+                              moo='".@$v->card_moo."',
+                              soi='".@$v->card_soi."',
+                              road='".@$v->card_road."',
+                              amphures_id_fk='".(@$v->amp_id?@$v->amp_id:0)."',
+                              district_id_fk='".(@$v->tam_id?@$v->tam_id:0)."',
+                              province_id_fk='".(@$v->province_id?@$v->province_id:0)."',
+                              zipcode='".@$v->card_zipcode."',
+                              tel='".@$v->tel."',
+                              tel_home='".@$v->tel_home."',
+                              name='".@$recipient_name."'
+                              WHERE (id='".$id."')");
+
+
+                          }
                       }
 
 
@@ -1647,8 +1670,11 @@ class FrontstoreController extends Controller
                                       customers.first_name,
                                       customers.last_name,
                                       dataset_provinces.name_th AS provname,
+                                      dataset_provinces.id AS province_id,
                                       dataset_amphures.name_th AS ampname,
-                                      dataset_districts.name_th AS tamname
+                                      dataset_amphures.id AS amp_id,
+                                      dataset_districts.name_th AS tamname,
+                                      dataset_districts.id AS tam_id
                                       FROM
                                       customers_detail
                                       Left Join customers ON customers_detail.customer_id = customers.id
@@ -1689,7 +1715,26 @@ class FrontstoreController extends Controller
                                  ");
                               }
 
-                            }
+
+                              DB::select("
+
+                              UPDATE db_orders SET 
+                              house_no='".@$v->house_no."',
+                              house_name='".@$v->house_name."',
+                              moo='".@$v->moo."',
+                              soi='".@$v->soi."',
+                              road='".@$v->road."',
+                              amphures_id_fk='".(@$v->amp_id?@$v->amp_id:0)."',
+                              district_id_fk='".(@$v->tam_id?@$v->tam_id:0)."',
+                              province_id_fk='".(@$v->province_id?@$v->province_id:0)."',
+                              zipcode='".@$v->zipcode."',
+                              tel='".@$v->tel."',
+                              tel_home='".@$v->tel_home."',
+                              name='".@$recipient_name."'
+                              WHERE (id='".$id."')");
+
+
+                          }
                       }
 
 
@@ -1729,8 +1774,21 @@ class FrontstoreController extends Controller
                                  ");
                               }
 
-                            }
+                             DB::select("
+
+                              UPDATE db_orders SET 
+                              house_no='".@$v->addr_no."',
+                              amphures_id_fk='".(@$v->amphur_code?@$v->amphur_code:0)."',
+                              district_id_fk='".(@$v->tambon_code?@$v->tambon_code:0)."',
+                              province_id_fk='".(@$v->province_id_fk?@$v->province_id_fk:0)."',
+                              zipcode='".@$v->zip_code."',
+                              tel='".@$v->tel."',
+                              tel_home='".@$v->tel_home."',
+                              name='".@$v->recipient_name."'
+                              WHERE (id='".$id."')");
+
                       }
+                   }
 
 
               }

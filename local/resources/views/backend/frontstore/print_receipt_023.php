@@ -518,6 +518,48 @@ if(!empty($db_orders[0]->action_user)){
        $cus_user_name = @$cus[0]->user_name;
        $cus_name = @$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name;
 
+       $cus_tax = @$cus[0]->id_card!=""?': '.@$cus[0]->id_card:': เลขผู้เสียภาษี -';
+
+       $address_in_order = DB::select(" 
+            SELECT 
+            house_no,
+            house_name,
+            moo,
+            soi,
+            road,
+            amphures_id_fk,
+            dataset_amphures.name_th AS ampname,
+            district_id_fk,
+            dataset_districts.name_th AS tamname,
+            province_id_fk,
+            dataset_provinces.name_th AS provname,
+            zipcode,
+            tel,
+            tel_home
+            FROM
+            db_orders 
+            Left Join dataset_provinces ON db_orders.province_id_fk = dataset_provinces.id
+            Left Join dataset_amphures ON db_orders.amphures_id_fk = dataset_amphures.id
+            Left Join dataset_districts ON db_orders.district_id_fk = dataset_districts.id
+            WHERE db_orders.id=".$id."
+          ");
+
+            if(!empty(@$address_in_order[0]->provname)){
+              @$cus_address = @$address_in_order[0]->house_no." ". @$address_in_order[0]->house_name." ". @$address_in_order[0]->moo."";
+              @$cus_address .= @$address_in_order[0]->soi." ". @$address_in_order[0]->road;
+              @$cus_address .= ", ต.". @$address_in_order[0]->tamname. " ";
+              @$cus_address .= ", อ.". @$address_in_order[0]->ampname;
+              @$cus_address .= ", จ.". @$address_in_order[0]->provname;
+              @$cus_address .= ", ปณ.". @$address_in_order[0]->zipcode;
+              // @$cus_address .= ", โทร.". @$address_in_order[0]->tel;
+              // @$cus_address .= ", ". @$address_in_order[0]->tel_home;
+
+              @$cus_address = @$cus_address;
+
+           }else{
+              @$cus_address = '';
+           }
+
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$id)->get();
@@ -1062,6 +1104,13 @@ for ($j=0; $j < $amt_page ; $j++) {
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+3) ; "); ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a."</span><br>"; ?>
+
+          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+6) ; "); ?>
+          <?php echo "<span style='font-size:14px;'>".@$cus_address."</span><br>"; ?>
+
+          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+7) ; "); ?>
+          <?php echo "<span style='font-size:15px;'>".@$cus_tax."</span><br>"; ?>
+
       </td>
 
 <!-- THELP  -->
