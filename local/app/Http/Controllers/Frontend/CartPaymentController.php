@@ -326,8 +326,7 @@ class CartPaymentController extends Controller
                     $price_remove_gv = 0;
                 }
                 $price_total = $rs->price + $rs->shipping;
-
-                $rs_log_gift = GiftVoucher::log_gift($price_total, $customer_id, $code_order);
+                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($price_total, $customer_id, $code_order);
 
                 if ($rs_log_gift['status'] == 'fail') {
                     DB::rollback();

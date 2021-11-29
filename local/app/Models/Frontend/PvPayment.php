@@ -14,7 +14,6 @@ class PvPayment extends Model
 
     public static function PvPayment_type_confirme($order_id, $admin_id, $distribution_channel, $action_type)
     {
-
         DB::BeginTransaction();
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
@@ -116,6 +115,13 @@ class PvPayment extends Model
                     }
 
                 }
+
+
+                // if ($order_data->pay_type_id_fk == 4 || $order_data->pay_type_id_fk == 12 || $order_data->pay_type_id_fk == 13 || $order_data->pay_type_id_fk == 14
+                // || $order_data->pay_type_id_fk == 17 || $order_data->pay_type_id_fk == 18 || $order_data->pay_type_id_fk == 19) { //กิฟวอยเชอ
+
+
+                // }
 
                 if ($type_id == 6) { //course
 

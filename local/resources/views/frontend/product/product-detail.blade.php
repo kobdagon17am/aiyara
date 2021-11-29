@@ -162,7 +162,7 @@
                                                      if(@$data['coupong'] != ''){
                                                        $max = $data['product_data']->limited_amt_person;
                                                      }else {
-                                                       $max = 50;
+                                                       $max = 1000;
                                                      }
                                                      ?>
                                                      <input type="text" id="quant" name="quant[1]"
