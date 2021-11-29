@@ -485,7 +485,7 @@
 
                                 + '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="ต้องอนุมัติก่อน" disabled style="background-color:grey;color:white;" >จัดส่ง</a> '
 
-                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                  + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                             
                               ).addClass('input');
 
@@ -495,7 +495,7 @@
                              
                                  // + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
-                                // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก/ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก/ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
 
@@ -799,7 +799,7 @@
 
                                 + '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="ต้องอนุมัติก่อน" disabled style="background-color:grey;color:white;" >จัดส่ง</a> '
 
-                                 // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                  + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                             
                               ).addClass('input');
 
@@ -809,7 +809,7 @@
                              
                                  // + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
-                                // + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก/ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="แก้ไขใบเบิก/ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
                             

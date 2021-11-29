@@ -354,7 +354,7 @@ ORDER BY db_pick_pack_packing.id
 ");
 
 
-
+foreach ($sTable as $key => $row) {
 
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=     
@@ -362,7 +362,6 @@ ORDER BY db_pick_pack_packing.id
             <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
             <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-            <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
             </div>
             ';
 
@@ -432,38 +431,7 @@ ORDER BY db_pick_pack_packing.id
                 </div>
                 <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
-                <div class="divTableCell" style="text-align:left;"> ';
-
-                $item_id = 1;
-                $amt_scan = @$value->amt;
-
-                for ($i=0; $i < $amt_scan ; $i++) { 
-
-                $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
-                
-                            if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
-
-                              $pn .= 
-                               '
-                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
-                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
-                               ';
-
-                            }else{
-
-                               $pn .= 
-                               '
-                                <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
-                               ';
-
-                            }
-
-                              @$item_id++;
-                              
-                          }  
-
-                $pn .= '</div>';  
+                ';
                 $pn .= '</div>';  
               
               }
@@ -474,12 +442,13 @@ ORDER BY db_pick_pack_packing.id
               <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
               <div class="divTableCell" style="text-align:center;font-weight:bold;">'.@$sum_amt.'</div>
               <div class="divTableCell" style="text-align:center;"> </div>
-              <div class="divTableCell" style="text-align:center;"> </div>
               </div>
               ';
 
           $pn .= '</div>';  
-          return $pn;
+          echo $pn;
+        }
+   
       }
 
            ?>

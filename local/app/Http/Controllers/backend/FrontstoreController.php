@@ -503,6 +503,8 @@ class FrontstoreController extends Controller
               ".$sRow->purchase_type_id_fk." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
             )
 
+        order by products.product_code
+
       ");
 
       // dd($Products);
@@ -1988,6 +1990,18 @@ class FrontstoreController extends Controller
 
  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+                // dd($action_user_011);
+                // dd($startDate1);
+                // dd($endDate1);
+                // dd($invoice_code);
+                // dd($purchase_type_id_fk);
+                // dd($customer_username);
+                // dd($customer_name);
+                // dd($action_user_02);
+                // dd($status_sent_money);
+                // dd($approve_status);
+                // dd($viewcondition_01);
+
            $sDBFrontstoreSumCostActionUser = DB::select("
                 SELECT
                 db_orders.action_user,
@@ -2021,7 +2035,7 @@ class FrontstoreController extends Controller
                 db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.approve_status not in (5)
+                WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
                 $action_user_011
                 $startDate1
                 $endDate1
@@ -2033,8 +2047,6 @@ class FrontstoreController extends Controller
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
-
-
 
                 GROUP BY action_user
         ");
@@ -2555,7 +2567,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE 1
+WHERE db_orders.check_press_save=2
 AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (1)
 $action_user_011
@@ -2618,7 +2630,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE 1
+WHERE db_orders.check_press_save=2
 AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (2)
 $action_user_011
@@ -2681,7 +2693,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE 1
+WHERE db_orders.check_press_save=2
  AND approve_status!='' AND approve_status!=0
 and approve_status in (5)
 $action_user_011
@@ -2744,7 +2756,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE 1
+WHERE db_orders.check_press_save=2
 and approve_status not in (1,2,5)
 $action_user_011
 $startDate1
@@ -2806,7 +2818,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE 1
+WHERE db_orders.check_press_save=2
 $action_user_011
 $startDate1
 $endDate1
@@ -2894,7 +2906,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                       </tr>
 
                       <tr>
-                        <th scope="row">'.trans('message.total').'<br>(ยกเว้นรายการ <font color=red>* รอดำเนินการต่อ </font>)</th>
+                        <th scope="row">'.trans('message.total').'<br>(<font color=red>ยกเว้นรายการ * รอดำเนินการต่อ</font>)</th>
                         <td style="text-align: right;font-weight:bold;">'.@$cnt_05.' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$pv_total_05,0).' </td>
                         <td style="text-align: right;font-weight:bold;">'.number_format(@$sum_price_05,2).' </td>
