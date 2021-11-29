@@ -513,8 +513,8 @@ if(!empty($db_orders[0]->action_user)){
               @$cus_address .= ", อ.". @$address_in_order[0]->ampname;
               @$cus_address .= ", จ.". @$address_in_order[0]->provname;
               @$cus_address .= ", ปณ.". @$address_in_order[0]->zipcode;
-              // @$cus_address .= ", โทร.". @$address_in_order[0]->tel;
-              // @$cus_address .= ", ". @$address_in_order[0]->tel_home;
+              @$cus_address .= ", โทร.". @$address_in_order[0]->tel;
+              @$cus_address .= ", ". @$address_in_order[0]->tel_home;
 
               @$cus_address = @$cus_address;
 
