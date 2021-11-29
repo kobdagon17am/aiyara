@@ -1078,7 +1078,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 <div class="NameAndAddress " >
     <table >
       <tr>
-        <td style="width: 50% ;margin-left:35px !important;">
+        <td style="width: 60% ;margin-left:35px !important;">
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
