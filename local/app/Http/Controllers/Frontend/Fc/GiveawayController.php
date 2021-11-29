@@ -44,11 +44,11 @@ class GiveawayController extends Controller
             $arr = array();
             $data = array();
             $rs = array();
-            $set_another_pro = 0; //ทำต่อ 1 หยุด
+            $set_another_pro = 1; //0 หยุด , 1 ทำต่อ
 
             foreach ($giveaway as $key => $value) {
 
-                if ($set_another_pro == 0) {
+                if ($set_another_pro == 1) {
                     $i++;
 
                     $arr_type = explode(',', $value->orders_type_id);
@@ -151,8 +151,8 @@ class GiveawayController extends Controller
                     }
                 }
 
-                if ($value->another_pro == 1) {
-                    $set_another_pro = 1;
+                if ($value->another_pro == 0 and $rs[$i]['status'] == 'success') {
+                    $set_another_pro = 0;
                 }
             }
 
@@ -203,7 +203,7 @@ class GiveawayController extends Controller
             $arr = array();
             $data = array();
             $rs = array();
-            $set_another_pro = 0; //ทำต่อ 1 หยุด
+            $set_another_pro = 1; //ทำต่อ 0 หยุด
 
             foreach ($giveaway as $key => $value) {
 
@@ -307,8 +307,8 @@ class GiveawayController extends Controller
 
                 }
 
-                if ($value->another_pro == 1) {
-                    $set_another_pro = 1;
+                if ($value->another_pro == 0 and $rs[$i]['status'] == 'success' ) {
+                    $set_another_pro = 0;
                 }
 
             }

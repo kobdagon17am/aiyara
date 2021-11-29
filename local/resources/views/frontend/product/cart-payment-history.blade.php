@@ -239,15 +239,13 @@ $get_giveaway = \App\Helpers\Frontend::get_giveaway_detail($value->id, $location
                              <th>มูลค่าสินค้า : </th>
 
                              <?php
-
-$price_vat = $order->sum_price * ($order->tax / 100);
-$price_vat_sum = $order->sum_price - $price_vat;
-?>
+                             $price_vat_sum = $order->sum_price - $order->tax;
+                             ?>
                              <td> {{ number_format($price_vat_sum,2) }}</td>
                          </tr>
                          <tr>
-                             <th>VAT({{ $order->tax }}%) : </th>
-                             <td> {{ number_format($price_vat,2) }}</td>
+                             <th>VAT({{ $order->vat }}%) : </th>
+                             <td> {{ number_format($order->tax,2) }}</td>
                          </tr>
                          <tr>
                              <th>รวม : </th>
@@ -265,7 +263,7 @@ $price_vat_sum = $order->sum_price - $price_vat;
                          @endif
                          <tr>
                              <th>คะแนนที่ได้รับ : </th>
-                             <td class="text-success"><b> {{ $order->pv_total }} PV </b></td>
+                             <td class="text-success"><b> {{ number_format($order->pv_total) }} PV </b></td>
                          </tr>
 
 

@@ -212,13 +212,14 @@
      <table align="right" border="0" cellspacing="0" style="border-spacing: 0px">
          <tr>
              <th  style="text-align: right;font-size: 16px">มูลค่าสินค้า : </th>
-             <?php $price_vat = $order->sum_price * ($order->tax / 100);
-             $price_vat_sum = $order->sum_price - $price_vat;
+             <?php
+             //$price_vat = $order->sum_price * ($order->vat / 100);
+             $price_vat_sum = $order->sum_price - $order->tax;
              ?>
              <th  style="text-align: left;padding-left:10px;font-size: 16px" width="28%"> {{ number_format($price_vat_sum,2) }}</th>
          </tr>
          <tr>
-             <th style="text-align: right;font-size: 16px"> VAT({{ $order->tax }}%) : </th>
+             <th style="text-align: right;font-size: 16px"> VAT({{ $order->vat }}%) : </th>
              <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format($price_vat,2) }}</th>
          </tr>
          <tr>
