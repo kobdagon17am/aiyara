@@ -1226,7 +1226,8 @@ class FrontstoreController extends Controller
                    ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
                   $lastInsertId_03 = DB::getPdo()->lastInsertId();
                 }
-              // PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
+                
+              PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
 
 // dd(request('sentto_branch_id'));
