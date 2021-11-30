@@ -527,7 +527,7 @@ class PvPayment extends Model
 
 
                 //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
-                if ($order_data->pv_total > 10000) {
+                if ($order_data->pv_total >= 10000) {
 
                     $customer_update->aistockist_status = '1';
                     $customer_update->aistockist_date = date('Y-m-d h:i:s');

@@ -113,7 +113,7 @@ class CancelAicashController extends Controller
                 ->update([
                     'cancel_by_user_id_fk' => $customer_or_admin,
                     'order_status_id_fk' => 8, //Status  8 = Cancel
-                    'approve_status' => 4, //status = Cancel
+                    'approve_status' => 5, //status = Cancel
                     'type_user_cancel' => $type_user_cancel, //Customer
                     'cancel_action_date' => date('Y-m-d H:i:s'),
                 ]);

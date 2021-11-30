@@ -26,14 +26,14 @@ class CancelOrderController extends Controller
                 ->update([
                     'cancel_by_user_id_fk' => $customer_or_admin,
                     'order_status_id_fk' => 8, //Status  8 = Cancel
-                    'approve_status' => 4, //status = Cancel
+                    'approve_status' => 5, //status = Cancel
                     'type_user_cancel' => $type_user_cancel, //Customer
                     'cancel_action_date' => date('Y-m-d H:i:s'),
                 ]);
 
             $type_id = $order_data->purchase_type_id_fk;
-
-            if ($order_data->approve_status == 0 || $order_data->approve_status == 2) { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ  0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
+//1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id
+            if ($order_data->approve_status == 0 || $order_data->approve_status == 3) { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ  0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
 
                 if ($type_id == 1 || $type_id == 2 || $type_id == 3 || $type_id == 4 || $type_id == 5) { //1 ทำคุณสมบัติ , 2 รักษาคุณสมบัติ ,3 รักษาคุณสมบัตรท่องเที่ยว ,4 เติม Aistockist
                     $update_order = DB::table('db_orders') //update บิล
@@ -41,7 +41,7 @@ class CancelOrderController extends Controller
                         ->update([
                             'cancel_by_user_id_fk' => $customer_or_admin,
                             'order_status_id_fk' => 8, //Status  8 = Cancel
-                            'approve_status' => 4, //status = Cancel
+                            'approve_status' => 5, //status = Cancel
                             'type_user_cancel' => $type_user_cancel, //Customer
                             'cancel_action_date' => date('Y-m-d H:i:s'),
                         ]);
@@ -91,14 +91,14 @@ class CancelOrderController extends Controller
                     DB::rollback();
                     return $resule;
                 }
-            } elseif ($order_data->approve_status == 1) { //กรณีบัตรเครดิตร หรือ Admin มีการอนุมัติเรียบร้อยเเล้ว
+            } elseif ($order_data->approve_status == 2 || $order_data->approve_status == 4 ){ //กรณีบัตรเครดิตร หรือ Admin มีการอนุมัติเรียบร้อยเเล้ว
 
                 $update_order = DB::table('db_orders') //update บิล
                     ->where('id', $order_id)
                     ->update([
                         'cancel_by_user_id_fk' => $customer_or_admin,
                         'order_status_id_fk' => 8, //Status  8 = Cancel
-                        'approve_status' => 4, //status = Cancel
+                        'approve_status' => 5, //status = Cancel
                         'type_user_cancel' => $type_user_cancel, //Customer
                         'cancel_action_date' => date('Y-m-d H:i:s'),
                     ]);
