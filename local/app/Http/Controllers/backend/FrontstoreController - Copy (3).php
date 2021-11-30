@@ -1752,12 +1752,26 @@ class FrontstoreController extends Controller
           }
 
           if(isset($req->approve_status)){
-             $approve_status = " AND db_orders.approve_status = ".$req->approve_status." " ;
+             if($req->approve_status==7){
+                $approve_status = " AND db_orders.approve_status = 0 " ;
+                if(!empty($req->startDate)){
+
+                }else{
+                    $startDate = '';
+                    $endDate = '';
+                    $startDate2 = '';
+                    $endDate2 = '';
+                }
+
+             }else{
+                $approve_status = " AND db_orders.approve_status = ".$req->approve_status." " ;
+             }
              $approve_status_02 = " AND db_add_ai_cash.approve_status = ".$req->approve_status." " ;
           }else{
              $approve_status = "";
              $approve_status_02 = "";
           }
+
 
         if(isset($req->viewcondition)){
           if(isset($req->viewcondition) && $req->viewcondition=="ViewBuyNormal"){
@@ -1803,27 +1817,16 @@ class FrontstoreController extends Controller
                 ) as total_price,
 
                 SUM(
-                (CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) +
-                (CASE WHEN db_orders.shipping_special is null THEN 0 ELSE db_orders.shipping_special END)
+                 CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
                 FROM
                 db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id_fk<>0
-              --  AND approve_status!='' AND approve_status!=0 AND approve_status!=5
-                $action_user_011
-                $startDate1
-                $endDate1
-                $invoice_code
-                $purchase_type_id_fk
-                $customer_username
-                $customer_name
-                $action_user_02
-                $status_sent_money
-                $approve_status
-                $viewcondition_01
+                WHERE 1
+                AND DATE(db_orders.created_at) >= CURDATE()
+
 
                 GROUP BY action_user
         ");
@@ -1900,27 +1903,13 @@ class FrontstoreController extends Controller
                 ) as total_price,
 
                 SUM(
-                (CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) +
-                (CASE WHEN db_orders.shipping_special is null THEN 0 ELSE db_orders.shipping_special END)
+                 CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
                 FROM
                 db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id_fk<>0
-              --  AND approve_status!='' AND approve_status!=0 AND approve_status!=5
-                $action_user_011
-                $startDate1
-                $endDate1
-                $invoice_code
-                $purchase_type_id_fk
-                $customer_username
-                $customer_name
-                $action_user_02
-                $status_sent_money
-                $approve_status
-                $viewcondition_01
+                WHERE 1
+                AND DATE(db_orders.created_at) >= CURDATE()
 
         ");
 
@@ -2336,7 +2325,8 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (1)
 $action_user_011
 $startDate1
@@ -2361,7 +2351,8 @@ $d2 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.approve_status<>4 AND db_add_ai_cash.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (1)
 $action_user_012
 $startDate2
@@ -2395,7 +2386,8 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (2)
 $action_user_011
 $startDate1
@@ -2419,7 +2411,9 @@ $d4 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.approve_status<>4 AND db_add_ai_cash.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND db_add_ai_cash.approve_status<>4
+AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (2)
 $action_user_012
 $startDate2
@@ -2454,7 +2448,8 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0
+WHERE 1
+ AND approve_status!='' AND approve_status!=0
 and approve_status in (5)
 $action_user_011
 $startDate1
@@ -2478,7 +2473,8 @@ $d6 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.approve_status<>4 AND db_add_ai_cash.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0
+WHERE 1
+AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0
 and approve_status in (5)
 $action_user_012
 $startDate2
@@ -2512,7 +2508,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk
+WHERE 1
 and approve_status not in (1,2,5)
 $action_user_011
 $startDate1
@@ -2536,7 +2532,7 @@ $d8 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.branch_id_fk=$branch_id_fk
+WHERE 1
 and approve_status not in (1,2,5)
 $action_user_012
 $startDate2
@@ -2572,7 +2568,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk
+WHERE 1
 $action_user_011
 $startDate1
 $endDate1
@@ -2595,7 +2591,7 @@ $d10 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.branch_id_fk=$branch_id_fk
+WHERE 1
 $action_user_012
 $startDate2
 $endDate2
@@ -2698,7 +2694,8 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
 
         if($sPermission==1){
             $action_user_01 = "";
-            $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+            $action_user_011 = "";
+            // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
         }else{
             $action_user_01 = " AND action_user = $user_login_id ";
         }

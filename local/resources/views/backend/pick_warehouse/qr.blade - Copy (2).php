@@ -141,7 +141,7 @@
         <div class="page-title-box d-flex align-items-center justify-content-between">
 
           <div class="col-6">
-            <h4 class="font-size-18 "> เบิกจ่ายสินค้าจากคลัง  </h4>
+            <h4 class="font-size-18  "> เบิกจ่ายสินค้าจากคลัง  </h4>
             <!-- test_clear_data -->
           </div>
           
@@ -177,25 +177,30 @@
               <div class="col-md-12 ">
                 <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
                 <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
-                <table id="data-table-00022" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
               </div>
             </div>
           </div>
 
           <div class="col-12">
-            <div class="form-group row  " > 
-
+            <div class="form-group row  " >
               <div class="col-md-12 ">
-                <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการเลขพัสดุบริษัทขนส่ง </span>
+                <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอเบิก </span>
+
+                 <!-- <span style="font-weight: bold;color: red;">*** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>   -->
 
                 <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                <center><input type='button' class="btn btn-primary btnExportElsx " data-id="{{$id}}" value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
+            </div>
+          </div>
+        </div>
 
-                      <div class="col-12">
+
+
+          <div class="col-12">
             <div class="form-group row  " >
-
               <div class="col-md-12 ">
-                <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> นำเข้าเลขพัสดุจาก Kerry </span>
- <center>
+                <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอจ่ายสินค้า (Import จาก KERRY) </span>
+
                 <form class="form-horizontal" method="POST" action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
                   {{ csrf_field() }}
                   <div class="form-group row">
@@ -203,21 +208,16 @@
                     <input type="hidden" name="requisition_code" value="{{@$requisition_code}}">
                     <input type="hidden" name="id" value="{{@$id}}">
                     
+                    <label for="receipt" class="col-md-3 col-form-label">นำเข้าไฟล์ Excel (.xlsx) จาก KERRY :</label>
                     <div class="col-md-3">
                       <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
                     </div>
-                    <div class="col-md-6" style="" >
+                    <div class="col-md-3" style="" >
                       <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='IMPORT'>
-                     &nbsp;
-                      &nbsp;
-                      &nbsp; 
-                      <!-- <input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code'  > -->
-
                       &nbsp;
                       &nbsp;
                       &nbsp;
-                       <input type='button' data-id="{{@$id}}" class="btn btn-danger btnClearImport " value='Clear เพื่อนำเข้าใหม่' > 
-
+                      <input type='button' data-id="{{@$id}}" class="btn btn-danger btnClearImport " value='Clear data Import' >
                     </div>
                     
                   </div>
@@ -232,58 +232,40 @@
                   @endif
                   
                 </form>
-        
+              <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
+              <center><input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code' >
             </div>
           </div>
         </div>
-                
-            </div>
-          </div>
-        </div>
-
-
-          <div class="col-12">
-            <div class="form-group row  " >
-              <div class="col-md-12 ">
-                <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> แจ้งสถานะการจัดส่ง </span>
-
-                <!-- <table id="note" class="table table-bordered dt-responsive" style="width: 60%;" ></table> -->
-                
-            </div>
-          </div>
-        </div>
-
-    
 
        <div class="form-group row">
               <div class="col-md-12">
-                <?php // echo @$sUser[0]->status_sent; ?>
+              <table id="data-table-map-consignments" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+            </div>
+            </div>
+
+
+       <div class="form-group row">
+              <div class="col-md-12">
                   <center>
                 @IF(@$sUser[0]->status_sent==5)
                 <span style="color:red;font-size:16px;">*** บ.ขนส่งเข้ามารับสินค้าแล้ว *** </span>
                 @ELSE
                 @IF($can_cancel_packing_sent==1 || $sPermission==1 )
 
-                @IF(@$sUser[0]->status_sent==4)
-                <span style="color:red;font-size:16px;">*** Packing เรียบร้อยแล้ว *** </span>
-                <!-- <input style="color: black;" type='button' class="btn btn-warning btnCancelStatusPacking font-size-16 " value="ยกเลิกสถานะการ Packing " > -->
+                <input style="color: black;" type='button' class="btn btn-warning btnCancelStatusPacking font-size-16 " value="ยกเลิกสถานะ การ Packing / จัดส่ง " >
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                @ENDIF
-
-                
                  @ENDIF
                  @ENDIF
 
-             
                 @IF(@$sUser[0]->status_sent==5)
-                 
                 @ELSE
                     
                     @IF(@$sUser[0]->status_sent==4)
-                    <input type='button' class="btn btn-primary btnShippingFinished font-size-16 " value="แจ้งสถานะว่าบริษัทขนส่งเข้ารับสินค้าแล้ว" >
+                    <input type='button' class="btn btn-primary btnShippingFinished font-size-16 " value="บริษัทขนส่งเข้ารับสินค้าแล้ว" >
                     @ELSE
-                    <input type='button' class="btn btn-primary btnPackingFinished font-size-16 " value="แจ้งสถานะว่า Packing เรียบร้อยแล้ว" >
+                    <input type='button' class="btn btn-primary btnPackingFinished font-size-16 " value="Packing เรียบร้อยแล้ว" >
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type='button' class="btn btn-primary btnShippingFinished font-size-16 " value="บริษัทขนส่งเข้ารับสินค้าแล้ว" disabled="">
                     @ENDIF
@@ -313,6 +295,7 @@
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
           var id = "{{$id}}"; //alert(id);
+          var packing_id = "{{$packing_id}}"; //alert(packing_id);
           var oTable0001;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
@@ -333,12 +316,13 @@
                             method: "POST",
                             data:{ _token: '{{csrf_token()}}',
                             id:id,
+                            picking_id:id,
                           },
                         },
                   columns: [
-                      {data: 'column_001', title :'รหัสใบเบิก', className: 'text-center w231'},
-                      {data: 'column_002', title :'รายการบิลในใบเบิก', className: 'text-center '},
-                      {data: 'column_003', title :'รายละเอียดลูกค้า', className: 'text-center '},
+                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิก </span> ', className: 'text-center w100'},
+                      {data: 'column_002', title :'<span style="vertical-align: middle;"> รายการในใบเบิก </span> ', className: 'text-center w150'},
+                      {data: 'column_003', title :'&nbsp;&nbsp;&nbsp;รายการบิลใน Packing list (กรณีรวมบิลจัดส่ง) ', className: 'text-left w350'},
                       // {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการ Packing List </span> ', className: 'text-left',render: function(d) {
                       //   return d;
                       // }},
@@ -378,79 +362,65 @@
                             data:{ _token: '{{csrf_token()}}',picking_id:packing_id,id:id},
                         },
                   columns: [
-                      // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รายการจัดส่งรวมแพ็ค (กรณี Packing list )  </span> ', className: 'text-left '},
-                      {data: 'column_002', title :'<span style="vertical-align: middle;"><center> รายการสินค้า  </span> ', className: 'text-left '},
-                      {data: 'column_003', title :'<span style="vertical-align: middle;"><center>   </span> ', className: 'text-left '},
-                   
+                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รหัสใบเบิก  </span> ', className: 'text-center w100'},
+                      {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการสินค้า </span> ', className: 'text-left',render: function(d) {
+                        return d;
+                      }},
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
-                     // $(".myloading").hide();
-                     // var info = $(this).DataTable().page.info();
-                     //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
-                  },
-                  fnDrawCallback : function() {
-                      if ($(this).find('.dataTables_empty').length == 1) {
-                         $(this).parent().hide();
-                      }
+                     $(".myloading").hide();
                   }
               });
          
          });
-
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
 
+  <script type="text/javascript">
+       var oTableMap;
+         var id = "{{$id}}";
 
-<script>
- // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-          var id = "{{$id}}";  //alert(id);
-          var packing_id = "{{$packing_id}}"; //alert(packing_id);
-          var oTable0002;
-          $(function() {
-            $.fn.dataTable.ext.errMode = 'throw';
-              oTable0002 = $('#data-table-00022').DataTable({
-               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                  serverSide: true,
-                  deferRender: true,
-                  scroller: false,
-                  scrollCollapse: false,
-                  scrollX: false,
-                  ordering: false,
-                  ordering: false,
-                  info:     false,
-                  paging:   false,
-                        ajax: {
-                            url: '{{ route('backend.warehouse_qr_00022.datatable') }}',
-                            method: "POST",
-                            data:{ _token: '{{csrf_token()}}',picking_id:packing_id,id:id},
+         if(id){
+
+            $(function() {
+              $.fn.dataTable.ext.errMode = 'throw';
+                oTableMap = $('#data-table-map-consignments').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    deferRender: true,
+                    destroy: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    // scrollY: ''+($(window).height()-370)+'px',
+                    // iDisplayLength: 10,
+                    stateSave: true,
+                     ajax: {
+                          url: '{{ route('backend.consignments_map.datatable') }}',
+                          method: "POST",
+                          data:{ _token: '{{csrf_token()}}',
+                          id:id,
                         },
-                  columns: [
-                      // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รายการจัดส่งแยกแพ็ค (กรณีแยกบิล) </span> ', className: 'text-left '},
-                      {data: 'column_002', title :'<span style="vertical-align: middle;"><center> รายการสินค้า  </span> ', className: 'text-left '},
-                      {data: 'column_003', title :'<span style="vertical-align: middle;"><center>   </span> ', className: 'text-left '},
-                   
-                  ],
-                  rowCallback: function(nRow, aData, dataIndex){
-                     // $(".myloading").hide();
-                     // var info = $(this).DataTable().page.info();
-                     //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
+                      },
+                    columns: [
+                        {data: 'consignment_no', title :'<center>Consignment No </center>', className: 'text-center'},
+                        {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
+                        {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
+                        {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex){
+             
+                    }
+                  });
+           
+                });
 
-                  },
-                  fnDrawCallback : function() {
-                      if ($(this).find('.dataTables_empty').length == 1) {
-                         $(this).parent().hide();
-                      }
-                  }
-              });
-         
-         });
+    }
 
-    // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-    </script>
 
+  </script>
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
  // ส่ง ajax ไป insert data to db_consignments
@@ -480,82 +450,28 @@
                             data:{ _token: '{{csrf_token()}}',packing_id:packing_id,id:id},
                         },
                   columns: [
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> Recipient Code (รหัสผู้รับ)  </span> ', className: 'text-center w250'},
-                      {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> Recipient Name (ชื่อผู้รับ) / Address (ที่อยู่ผู้รับ) </span> ', className: 'text-left',render: function(d) {
+                      {data: 'recipient_code', title :'<span style="vertical-align: middle;"> Recipient Code <br> (รหัสผู้รับ)  </span> ', className: 'text-center w150'},
+                      {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> Recipient Name (ชื่อผู้รับ) <br> Address (ที่อยู่ผู้รับ) </span> ', className: 'text-left',render: function(d) {
                         return d;
                       }},
-                      {data: 'column_003',   title :'<span style="vertical-align: middle;"><center> ส่งรายการให้ Kerry เพื่อขอเลขพัสดุ </span> ', className: 'text-center',render: function(d) {
-                        return d ;
-                      }},
-                      {data: 'column_004',   title :'<span style="vertical-align: middle;"><center> หมายเลขพัสดุ <br> (Consignment number) </span> ', className: 'text-center w200 ',render: function(d) {
-                        return d ;
-                      }},
+                      {data: 'recipient_code',   title :'<span style="vertical-align: top;"><center>ใบปะหน้ากล่อง & ใบเสร็จ ', className: 'text-left',render: function(d) {
+                        return '<center> <a href="{{ URL::to('backend/pick_warehouse/print_envelope') }}/'+d+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> '
+                          // + ' <a href="{{ URL::to('backend/pick_warehouse/print_receipt_03') }}/'+d+'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>'
 
-                     {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง | ใบเสร็จ  </span> ', className: 'text-center w180 ',render: function(d) {
-                        return d ;
+                          + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>'
+
+                          ;
                       }},
-                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> พิมพ์ใบเบิก  </span> ', className: 'text-center w80 ',render: function(d) {
-                        return d ;
-                      }},
-             
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
                      // $(".myloading").hide();
                   }
               });
-
-              oTable0005.on( 'draw', function () {
-                $('[data-toggle="tooltip"]').tooltip();
-              });
          
          });
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
 
-
-<script>
- // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-          var id = "{{$id}}"; 
-          var oTableNote;
-          $(function() {
-            $.fn.dataTable.ext.errMode = 'throw';
-              oTableNote = $('#note').DataTable({
-               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                  serverSide: true,
-                  scroller: false,
-                  deferRender: true,
-                  scrollCollapse: false,
-                  scrollX: false,
-                  ordering: false,
-                  ordering: false,
-                  info:     false,
-                  paging:   false,
-                        ajax: {
-                            url: '{{ route('backend.warehouse_qr_0001.datatable') }}',
-                            method: "POST",
-                            data:{ _token: '{{csrf_token()}}',
-                            id:id,
-                          },
-                        },
-                  columns: [
-                       {data: 'column_001',   title :'<span style="vertical-align: middle;"><center> แจ้งสถานะ </span> ', className: 'text-left',render: function(d) {
-                         return '';
-                       }},
-                       {data: 'column_001',   title :'<span style="vertical-align: middle;"><center> สถานะ </span> ', className: 'text-left',render: function(d) {
-                         return 'รอแจ้งสถานะ/แจ้งแล้ว';
-                       }},
-                       {data: 'column_001',   title :'<span style="vertical-align: middle;"><center> ยกเลิก </span> ', className: 'text-left',render: function(d) {
-                         return '';
-                       }},
-                  ],
-                  rowCallback: function(nRow, aData, dataIndex){
-                  }
-              });
-         
-         });
-    // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-    </script>
 
       <script>
       $(document).ready(function() {
@@ -566,10 +482,9 @@
               $(".myloading").show();
 
               var id = $(this).data('id');
-              var pick_pack_packing_code_id_fk = "{{$id}}";
               // console.log(id);
               setTimeout(function(){
-                 window.open("{{ url('backend/frontstore/print_receipt_023') }}"+"/"+id+"/"+pick_pack_packing_code_id_fk);
+                 window.open("{{ url('backend/frontstore/print_receipt_023') }}"+"/"+id);
                  $(".myloading").hide();
               }, 500);
               
@@ -582,63 +497,6 @@
   <script type="text/javascript">
     $(document).ready(function() {
 
-       $(document).on('change', '.p_size', function(e) {
-          var p_size = $(this).val();
-          var id = $(this).data('id');
-          var box_id = $(this).attr('box-id');
-             $(".myloading").show();
-             $.ajax({
-                 type:'POST',
-                 url: " {{ url('backend/ajaxProductPackingSize') }} ",
-                 data:{ _token: '{{csrf_token()}}',p_size:p_size,id:id ,box_id:box_id},
-                  success:function(data){
-                       // console.log(data);
-                       $(".myloading").hide();
-                    },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      $(".myloading").hide();
-                  }
-              });
-      });
-
-       $(document).on('change', '.p_weight', function(e) {
-          var p_weight = $(this).val();
-          var id = $(this).data('id');
-          var box_id = $(this).attr('box-id');
-             $(".myloading").show();
-             $.ajax({
-                 type:'POST',
-                 url: " {{ url('backend/ajaxProductPackingWeight') }} ",
-                 data:{ _token: '{{csrf_token()}}',p_weight:p_weight,id:id ,box_id:box_id},
-                  success:function(data){
-                       // console.log(data);
-                       $(".myloading").hide();
-                    },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      $(".myloading").hide();
-                  }
-              });
-      });
-
-       $(document).on('change', '.p_amt_box', function(e) {
-          var p_amt_box = $(this).val();
-          var id = $(this).data('id');
-          var box_id = $(this).attr('box-id');
-             $(".myloading").show();
-             $.ajax({
-                 type:'POST',
-                 url: " {{ url('backend/ajaxProductPackingAmtBox') }} ",
-                 data:{ _token: '{{csrf_token()}}',p_amt_box:p_amt_box,id:id ,box_id:box_id},
-                  success:function(data){
-                       // console.log(data);
-                       $(".myloading").hide();
-                    },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      $(".myloading").hide();
-                  }
-              });
-      });
-       
       $(document).on('change', '.qr_scan', function(e) {
 
           var v = $(this).val();
@@ -733,7 +591,7 @@
                 });
 
 
-                $(document).on('click','.btnExportElsx',function(event){
+                $(".btnExportElsx").click(function(event) {
                     /* Act on the event */
                     $(".myloading").show();
                     var id = $(this).data('id');
@@ -761,45 +619,17 @@
                 });
 
 
-               $(document).on('click','.btnImXlsx',function(event){
+
+               $(".btnImXlsx").click(function(event) {
                       /* Act on the event */
                       var v = $("input[name=fileXLS]").val();
                       if(v!=''){
                         $(".myloading").show();
-                       
-
-                              // setTimeout(function(){
-                              //    $(".btnMapConsignments").trigger('click');
-                              // }, 2500);
-
                       }
                       
                 });
 
 
-
-            $(".btnMapConsignments").click(function(event) {
-                  /* Act on the event */
-                  $(".myloading").show();
-
-                  $.ajax({
-
-                         type:'POST',
-                         url: " {{ url('backend/ajaxMapConsignments') }} ", 
-                         data:{ _token: '{{csrf_token()}}' },
-                          success:function(data){
-                               console.log(data); 
-                               $(".myloading").hide();
-                               location.reload();
-                            },
-                          error: function(jqXHR, textStatus, errorThrown) { 
-                              console.log(JSON.stringify(jqXHR));
-                              console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-                              $(".myloading").hide();
-                          }
-                  });
-                  
-              });
 
               $(".btnClearImport").click(function(event) {
                   /* Act on the event */
@@ -825,7 +655,71 @@
 
 
 
-       
+            $(".btnMapConsignments").click(function(event) {
+                  /* Act on the event */
+                  $(".myloading").show();
+
+                  $.ajax({
+
+                         type:'POST',
+                         url: " {{ url('backend/ajaxMapConsignments') }} ", 
+                         data:{ _token: '{{csrf_token()}}' },
+                          success:function(data){
+                               console.log(data); 
+                               // location.reload();
+                               // $('#data-table-map-consignments').DataTable().draw();
+
+                              // setTimeout(function(){
+
+                                    var oTableMap;
+                                    var id = "{{$id}}"; 
+                                    // console.log(requisition_code);
+                                    $(function() {
+                                      $.fn.dataTable.ext.errMode = 'throw';
+                                        oTableMap = $('#data-table-map-consignments').DataTable({
+                                        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                            processing: true,
+                                            serverSide: true,
+                                            deferRender: true,
+                                            destroy: true,
+                                            scroller: true,
+                                            scrollCollapse: true,
+                                            scrollX: true,
+                                            ordering: false,
+                                            // scrollY: ''+($(window).height()-370)+'px',
+                                            // iDisplayLength: 10,
+                                            stateSave: true,
+                                             ajax: {
+                                                  url: '{{ route('backend.consignments_map.datatable') }}',
+                                                  method: "POST",
+                                                  data:{ _token: '{{csrf_token()}}',
+                                                  id:id,
+                                                },
+                                              },
+                                            columns: [
+                                                {data: 'consignment_no', title :'<center>Consignment No </center>', className: 'text-center'},
+                                                {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
+                                                {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
+                                                {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
+                                            ],
+                                            rowCallback: function(nRow, aData, dataIndex){
+                                     
+                                            }
+                                          });
+                                   
+                                        });
+
+                              // }, 3000); 
+                               $(".myloading").hide();
+                            },
+                          error: function(jqXHR, textStatus, errorThrown) { 
+                              console.log(JSON.stringify(jqXHR));
+                              console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                              $(".myloading").hide();
+                          }
+                  });
+                  
+              });
 
 
                $(".btnPackingFinished").click(function(event) {
@@ -912,6 +806,73 @@
       });
 
 
+      var sU = "{{@$sU}}"; //alert(sU);
+      var sD = "{{@$sD}}"; //alert(sD);
+      var id = "{{$id}}"; //alert(id);
+      var oTableIm;
+      $(function() {
+        $.fn.dataTable.ext.errMode = 'throw';
+          oTableIm = $('#data-table-import').DataTable({
+          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+              processing: true,
+              serverSide: true,
+              deferRender: true,
+              scroller: true,
+              scrollCollapse: true,
+              scrollX: true,
+              ordering: false,
+              scrollY: ''+($(window).height()-370)+'px',
+              iDisplayLength: 10,
+              stateSave: true,
+              destroy:true,
+              // ajax: {
+              //   url: '{{ route('backend.consignments_import.datatable') }}',
+              //   data: function ( d ) {
+              //     d.Where={};
+              //     $('.myWhere').each(function() {
+              //       if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              //         d.Where[$(this).attr('name')] = $.trim($(this).val());
+              //       }
+              //     });
+              //     d.Like={};
+              //     $('.myLike').each(function() {
+              //       if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              //         d.Like[$(this).attr('name')] = $.trim($(this).val());
+              //       }
+              //     });
+              //     d.Custom={};
+              //     $('.myCustom').each(function() {
+              //       if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              //         d.Custom[$(this).attr('name')] = $.trim($(this).val());
+              //       }
+              //     });
+              //     oData = d;
+              //   },
+              //   method: 'POST'
+              // },
+
+               ajax: {
+                            url: '{{ route('backend.consignments_import.datatable') }}',
+                            method: "POST",
+                            data:{ _token: '{{csrf_token()}}',
+                            id:id,
+                          },
+                        },
+
+              columns: [
+                  {data: 'consignment_no', title :'<center>Consignment No. <br> (หมายเลขพัสดุ) </center>', className: 'text-center'},
+                  {data: 'recipient_code', title :'<center>Recipient Code <br>(รหัสผู้รับ)</center>', className: 'text-center'},
+                  {data: 'recipient_name', title :'<center>Recipient Name <br>(ชื่อผู้รับ)</center>', className: 'text-center'},
+                  {data: 'address', title :'<center>Address<br>(ที่อยู่ผู้รับ)</center>', className: 'text-center'},
+              ],
+              rowCallback: function(nRow, aData, dataIndex){
+       
+              }
+            });
+     
+          });
+
+
 
     </script>
 
@@ -933,16 +894,13 @@
 
         });
 
-        $(document).on('keyup', '.in-tx', function(e) {
+        // $(document).on('keyup', '.in-tx', function(e) {
 
-          if (this.value.length >= 10) {
+        //          var index = $('.in-tx').index(this) + 1;
+        //          $('.in-tx').eq(index).focus();
+        //           return false;
 
-                 var index = $('.in-tx').index(this) + 1;
-                 $('.in-tx').eq(index).focus();
-                  return false;
-                }
-
-        });
+        // });
 
                      $(window).scannerDetection();
 
@@ -1067,6 +1025,7 @@
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
+      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
 
       ?>
           <script>
@@ -1075,71 +1034,6 @@
           <?php
       }
     ?>
-
-  {{-- วุฒิเพิ่ม --}}
-      <script>
-          $(document).on('click','.btn_0002_add',function(){
-            var row = $(this).closest('.row_0002').clone();
-            var div = $(this).closest('.row_0002');
-            var id =  $(this).closest('.row_0002').find('.p_size').attr('data-id');
-            // insertAfter("div.row_0002:last");
-            // เพิ่มข้อมูลลงฐานข้อมูล
-              var p_size = $(this).val();
-             $.ajax({
-                 type:'POST',
-                 url: " {{ url('backend/ajaxProductPackingAddBox') }} ",
-                 data:{ _token: '{{csrf_token()}}',id:id },
-                  success:function(data){
-                       $(".myloading").hide();
-                      row.find('.p_size').removeAttr('data-id');
-                      row.find('.p_size').attr('data-id',id);
-                      row.find('.p_size').removeAttr('box-id');
-                      row.find('.p_size').attr('box-id',data.box_id);
-                      row.find('.p_size').val('');
-                      row.find('.p_weight').removeAttr('data-id');
-                      row.find('.p_weight').attr('data-id',id);
-                      row.find('.p_weight').removeAttr('box-id');
-                      row.find('.p_weight').attr('box-id',data.box_id);
-                      row.find('.p_weight').val('');
-                      row.find('.p_amt_box').removeAttr('data-id');
-                      row.find('.p_amt_box').attr('data-id',id);
-                      row.find('.p_amt_box').removeAttr('box-id');
-                      row.find('.p_amt_box').attr('box-id',data.box_id);
-                      row.find('.p_amt_box').val('');
-                      div.after(row);
-                    },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      $(".myloading").hide();
-                  }
-              });
-          });
-
-          $(document).on('click','.btn_0002_remove',function(){
-            var l = $('.row_0002').length;
-            var div = $(this).closest('.row_0002');
-            var box_id = div.find('.p_size').attr('box-id');
-            if(l>1){
-              $.ajax({
-                 type:'POST',
-                 url: " {{ url('backend/ajaxProductPackingRemoveBox') }} ",
-                 data:{ _token: '{{csrf_token()}}',id:id ,box_id:box_id},
-                  success:function(data){
-                       $(".myloading").hide();
-                       div.remove();
-                    },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      $(".myloading").hide();
-                  }
-              });
-             
-            }else{
-              alert('ไม่สามารถลบรายการสุดท้ายได้');
-            }
-           
-          });
-      </script>
-
-
 @endsection
 
 

@@ -23,9 +23,6 @@ class FrontstoreController extends Controller
     public function index(Request $request)
     {
 
-      // $r = RunNumberPayment::run_number_order(1);
-      // dd($r);
-
       // dd($request);
       // dd(\Auth::user()->position_level);
       // dd(\Auth::user()->branch_id_fk);
@@ -535,28 +532,62 @@ class FrontstoreController extends Controller
 
       // $type = $sRow->purchase_type_id_fk;
       $pv_total = $sRow->pv_total;
-      $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
-      $check_giveaway = GiveawayController::check_giveaway($sRow->business_location_id_fk,$sRow->purchase_type_id_fk,$customer_pv,$pv_total);
+      // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
+      // dd($customer_pv);
+      // dd($sRow->business_location_id_fk);
+      // dd($ThisCustomer[0]->user_name);
+      // dd($pv_total);
+      $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
+      // dd(@$check_giveaway);
+      // dd(@$check_giveaway[0]['status']);
+      // print_r($check_giveaway);
       // dd($sRow->business_location_id_fk);
       // dd($sRow->purchase_type_id_fk);
       // dd($customer_pv);
       // dd($pv_total);
-      if($check_giveaway){
-              $arr = [];
-              for ($i=0; $i < count($check_giveaway) ; $i++) {
-                   $c = array_column($check_giveaway,$i);
-                   foreach ($c as $key => $value) {
-                   //  // if($value['status'] == "fail"){
-                       // array_push($arr,$value->status);
-                   //  // }
-                   }
-                   // $im = implode(',',$arr);
-              }
-              // print_r($im);
-      }
 
+      // $giveaway_desc = [];
+
+      // if($check_giveaway){
+      //    for ($i=0; $i < count($check_giveaway) ; $i++) {
+
+      //     if(@$check_giveaway[$i]['status']=='success'){
+      //         $arr = [];
+      //         foreach ($check_giveaway as $key => $v) {
+      //             // print_r($v);
+      //             if($v['status']=='success'){
+      //               // print_r($v['gv_id']);
+      //               array_push($arr,$v['gv_id']);
+      //             }
+      //         }
+      //         $im = implode(',',$arr);
+      //     }
+
+      //    }
+      //    // dd($im);
+      //    if(@$im){
+      //     $rg = DB::select("select * from db_giveaway where id in ($im); ");
+      //     // dd($rg);
+      //     if($rg){
+
+      //       foreach ($rg as $key => $v) {
+      //          // echo $v->giveaway_option_id_fk;
+      //          if($v->giveaway_option_id_fk==1){ // แถมสินค้า
+      //            // $arr_desc = '* มีสินค้าแถม';
+      //             array_push($giveaway_desc,'* มีสินค้าแถม');
+      //             array_push($giveaway_desc,$v->giveaway_option_id_fk);
+      //          }
+      //          if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
+      //             // แสดงยอดเงิน giveaway_voucher
+      //            array_push($giveaway_desc,'* แถม GIFT VOUCHER '.$v->giveaway_voucher.' บาท');
+
+      //          }
+      //       }
+      //     }
+      //    }
+      // }
+      // dd($arr_desc);
       // dd($check_giveaway);
-
 
       $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 ORDER BY id=5 DESC ");
 
@@ -623,6 +654,8 @@ class FrontstoreController extends Controller
            'ChangePurchaseType'=>$ChangePurchaseType,
            'CusAistockistName'=>@$CusAistockistName,
            'CusAgencyName'=>@$CusAgencyName,
+           // 'giveaway_desc'=>@$giveaway_desc,
+           'check_giveaway'=>@$check_giveaway,
         ) );
     }
 
@@ -917,6 +950,7 @@ class FrontstoreController extends Controller
                   $sRow->approve_status = 2 ;
                   $sRow->order_status_id_fk = 5  ;
               }
+              $sRow->note    = request('note');
 
               $sRow->save();
 
@@ -1305,13 +1339,20 @@ class FrontstoreController extends Controller
 //   `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
 // เช็คดูก่อน ว่า check_press_save = 2 + approve_status <> 0 และดูด้วยว่า มีรหัส code_order แล้วหรือยัง
 
-              if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->code_order==""){
+              // dd("1305");
 
-                 $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
-                 DB::select(" UPDATE `db_orders` SET date_setting_code='".date('ym')."' WHERE (`id`=".$sRow->id.") ");
-                 $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
-                 DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
+              // if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->code_order==""){
 
+              //    $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+              //    DB::select(" UPDATE `db_orders` SET date_setting_code='".date('ym')."' WHERE (`id`=".$sRow->id.") ");
+              //    $code_order = RunNumberPayment::run_number_order($branchs[0]->business_location_id_fk);
+              //    DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
+
+              // }
+
+              // dd($sRow->delivery_location);
+              if(@$sRow->delivery_location==0){
+                DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=".$sRow->id.") ");
               }
 
 
@@ -1614,6 +1655,17 @@ class FrontstoreController extends Controller
             //   }
 
                   // $sRow->approve_status = 2 ;
+            //   if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->code_order==""){
+
+            //    $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
+            //   DB::select(" UPDATE `db_orders` SET date_setting_code='".date('ym')."' WHERE (`id`=".$sRow->id.") ");
+               $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+               $sRow->code_order    = $code_order ;
+               $sRow->date_setting_code    = date('ym') ;
+
+            //   DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
+
+            // }
 
           $sRow->save();
 
@@ -1752,12 +1804,26 @@ class FrontstoreController extends Controller
           }
 
           if(isset($req->approve_status)){
-             $approve_status = " AND db_orders.approve_status = ".$req->approve_status." " ;
+             if($req->approve_status==7){
+                $approve_status = " AND db_orders.approve_status = 0 " ;
+                if(!empty($req->startDate)){
+
+                }else{
+                    $startDate = '';
+                    $endDate = '';
+                    $startDate2 = '';
+                    $endDate2 = '';
+                }
+
+             }else{
+                $approve_status = " AND db_orders.approve_status = ".$req->approve_status." " ;
+             }
              $approve_status_02 = " AND db_add_ai_cash.approve_status = ".$req->approve_status." " ;
           }else{
              $approve_status = "";
              $approve_status_02 = "";
           }
+
 
         if(isset($req->viewcondition)){
           if(isset($req->viewcondition) && $req->viewcondition=="ViewBuyNormal"){
@@ -1803,16 +1869,14 @@ class FrontstoreController extends Controller
                 ) as total_price,
 
                 SUM(
-                (CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) +
-                (CASE WHEN db_orders.shipping_special is null THEN 0 ELSE db_orders.shipping_special END)
+                 CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
                 FROM
                 db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id_fk<>0
-              --  AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+                WHERE db_orders.approve_status not in (5)
                 $action_user_011
                 $startDate1
                 $endDate1
@@ -1824,6 +1888,8 @@ class FrontstoreController extends Controller
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+
+
 
                 GROUP BY action_user
         ");
@@ -1900,16 +1966,12 @@ class FrontstoreController extends Controller
                 ) as total_price,
 
                 SUM(
-                (CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) +
-                (CASE WHEN db_orders.shipping_special is null THEN 0 ELSE db_orders.shipping_special END)
+                 CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
                 FROM
                 db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id_fk<>0
-              --  AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+                WHERE 1
                 $action_user_011
                 $startDate1
                 $endDate1
@@ -2096,6 +2158,18 @@ class FrontstoreController extends Controller
                         if(@$sDBSentMoneyDaily){
                          $tt = 1;
 
+                                 $sDBSentMoneyDaily02 = DB::select("
+                                    SELECT
+                                    db_sent_money_daily.*,
+                                    ck_users_admin.`name` as sender
+                                    FROM
+                                    db_sent_money_daily
+                                    Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
+                                    WHERE date(db_sent_money_daily.updated_at)=CURDATE() and sender_id=$user_login_id
+                                    AND status_cancel=0
+                                    order by db_sent_money_daily.time_sent
+                              ");
+
                         foreach(@$sDBSentMoneyDaily AS $r){
 
                         $sOrders = DB::select("
@@ -2103,7 +2177,7 @@ class FrontstoreController extends Controller
                           SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
                                       FROM
                                       db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-                                      where db_orders.id in (".$sDBSentMoneyDaily[0]->orders_ids.") AND code_order<>'' AND action_user='$user_login_id' ;
+                                      where db_orders.id in (".(@$sDBSentMoneyDaily02[0]->orders_ids?@$sDBSentMoneyDaily02[0]->orders_ids:0).") AND code_order<>'' AND action_user='$user_login_id' ;
 
                                       ");
                         // AND code_order<>'' AND action_user='$user_login_id'
@@ -2336,7 +2410,8 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (1)
 $action_user_011
 $startDate1
@@ -2361,7 +2436,8 @@ $d2 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.approve_status<>4 AND db_add_ai_cash.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (1)
 $action_user_012
 $startDate2
@@ -2395,7 +2471,8 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (2)
 $action_user_011
 $startDate1
@@ -2419,7 +2496,9 @@ $d4 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.approve_status<>4 AND db_add_ai_cash.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+WHERE 1
+AND db_add_ai_cash.approve_status<>4
+AND approve_status!='' AND approve_status!=0 AND approve_status!=5
 and approve_status in (2)
 $action_user_012
 $startDate2
@@ -2454,7 +2533,8 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0
+WHERE 1
+ AND approve_status!='' AND approve_status!=0
 and approve_status in (5)
 $action_user_011
 $startDate1
@@ -2478,7 +2558,8 @@ $d6 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.approve_status<>4 AND db_add_ai_cash.branch_id_fk=$branch_id_fk AND approve_status!='' AND approve_status!=0
+WHERE 1
+AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0
 and approve_status in (5)
 $action_user_012
 $startDate2
@@ -2512,7 +2593,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk
+WHERE 1
 and approve_status not in (1,2,5)
 $action_user_011
 $startDate1
@@ -2536,7 +2617,7 @@ $d8 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.branch_id_fk=$branch_id_fk
+WHERE 1
 and approve_status not in (1,2,5)
 $action_user_012
 $startDate2
@@ -2572,7 +2653,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.branch_id_fk=$branch_id_fk
+WHERE 1
 $action_user_011
 $startDate1
 $endDate1
@@ -2595,7 +2676,7 @@ $d10 = DB::select("
 
 SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
 FROM db_add_ai_cash
-WHERE db_add_ai_cash.branch_id_fk=$branch_id_fk
+WHERE 1
 $action_user_012
 $startDate2
 $endDate2
@@ -2698,7 +2779,8 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
 
         if($sPermission==1){
             $action_user_01 = "";
-            $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+            $action_user_011 = "";
+            // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
         }else{
             $action_user_01 = " AND action_user = $user_login_id ";
         }
@@ -2833,7 +2915,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 UNION ALL
 
                 SELECT
-                '' as code_order,
+                code_order,
                 db_add_ai_cash.id,
                 db_add_ai_cash.created_at as d2,
                 0 as purchase_type_id_fk,

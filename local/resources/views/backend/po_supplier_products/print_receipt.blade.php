@@ -249,7 +249,7 @@ $value = DB::select("
       <table style="border-collapse: collapse;" >
         <tr>
           <th style="text-align: left;">
-            <img src="<?=public_path('images/logo2.png')?>" >
+            <img src="http://krit.orangeworkshop.info/aiyara/backend/images/logo2.png" >
           </th>
           <th style="text-align: right;">
             (<?php echo sprintf("%04d",$data[0]); ?>)<br>

@@ -29,10 +29,6 @@ class LoginController extends Controller
        return view('backend.auth.login');
     }
 
-    public function showLoginFormADM() {
-       return view('backend.auth.login-adm');
-    }
-
     protected function attemptLogin(Request $request)
     {
         if (\Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'isActive' => 'Y'], $request->get('remember'))) {
@@ -41,16 +37,6 @@ class LoginController extends Controller
             setcookie('password', $request->password, time()+60*60*24*365);
             return redirect()->intended('backend/index');
         }
-
-        // $r = DB::select(" select * from ck_users_admin where email=".$request->email." ");
-
-        // if (\Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $r[0]->password, 'isActive' => 'Y'], $request->get('remember'))) {
-        //     \Cache::forget('Menu-'.\Auth::guard('admin')->user()->id);
-        //     setcookie('username', $request->email, time()+60*60*24*365);
-        //     setcookie('password', $request->password, time()+60*60*24*365);
-        //     return redirect()->intended('backend/index');
-        // }
-
     }
 
     public function logout(Request $request)

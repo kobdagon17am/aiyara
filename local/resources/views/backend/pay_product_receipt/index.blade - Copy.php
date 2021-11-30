@@ -134,8 +134,8 @@
             <span >
               <?php $role = DB::select("SELECT * FROM `role_group` where id=".(\Auth::user()->role_group_id_fk)." "); ?>
               <?php $branchs = DB::select("SELECT * FROM `branchs` where id=".(\Auth::user()->branch_id_fk)." "); ?>
-              <?php $warehouse = DB::select("SELECT * FROM `warehouse` where id=".(@$branchs[0]->warehouse_id_fk)."  "); ?>
-              {{ \Auth::user()->name }} / {{ "สาขา > ".@$branchs[0]->b_name }}  / {{ @$warehouse[0]->w_name }} </span>
+              <?php $warehouse = DB::select("SELECT * FROM `warehouse` where id=".($branchs[0]->warehouse_id_fk)."  "); ?>
+              {{ \Auth::user()->name }} / {{ "สาขา > ".$branchs[0]->b_name }}  / {{ $warehouse[0]->w_name }} </span>
             </div>
 
             <div class="col-2" style="margin-left: 2%;">
@@ -186,17 +186,16 @@
                   <div class="col-12">
                     <div class="form-group row ">
                       <div class="col-md-12 d-flex  ">
-                       <!--  <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label> -->
-                        <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>  <span class="b_label_search"></span> </label>
+                        <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label>
 
-                        <div class="col-md-4">
-                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus autocomplete="on" >  
+                        <div class="col-md-3">
+                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus value=""  >  
                         </div>
 
-                       <!--  <div class="col-md-2">
+                        <div class="col-md-2">
                          <span style="color:red;font-size: 18px;">*** อยู่ระหว่างปรับปรุง </span>
                         </div>
- -->
+
                         <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;padding: 0.7%;display: none;" >
                           <i class="bx bx-search align-middle "></i> SEARCH
                         </a>
@@ -271,14 +270,6 @@
                         </div>
                       </div>
 
-
-
-               <!--       <div class="form-group row div_btn_save_02_desc " style="text-align: center;display: none;">
-                        <div class="col-md-12">หมายเหตุ
-                          <span style="font-weight: bold;padding-right: 10px;color: red;"><i class="bx bx-play"></i> เนื่องจาก สินค้าบางรายการไม่มีในคลัง ระบบจะไม่ให้ บันทึกใบเบิกได้ กรุณาดำเนินการ นำสินค้าเข้าคลังให้ครบก่อน  </span>
-                        </div>
-                      </div>
- -->
                     </div>
                   </div>
                   </div>
@@ -307,16 +298,6 @@
            }
       });
 
-        $(document).on('keyup', '.in-tx', function(e) {
-
-          if (this.value.length >= 10) {
-
-                 var index = $('.in-tx').index(this) + 1;
-                 $('.in-tx').eq(index).focus();
-                  return false;
-                }
-
-        });
 
       $(document).on('change', '.qr_scan', function(e) {
 
@@ -395,8 +376,7 @@
            $('#data-table-0001').hide();
            $('#data-table-0002').hide();
             
-            // $(document).on('click change', '#txtSearch', function(event) {
-            $(document).on('change', '#txtSearch', function(event) {
+            $(document).on('click change', '#txtSearch', function(event) {
               $(".myloading").show();
               
               var txtSearch = $("input[name='txtSearch']").val();
@@ -410,7 +390,7 @@
 	                  },
 	                  success:function(data)
 	                  { 
-	                    console.log(data);
+	                    // console.log(data);
                       // return false;
                       
 	                    if(data==0){
@@ -465,7 +445,7 @@
 
                   $('#data-table-0001').hide();
                   $('#data-table-0002').hide();
-                  // $(".div_btn_save").hide();
+                  $(".div_btn_save").hide();
 
                   $(".div_customer").hide();
                   $(".div_customer").css('background-color','white');
@@ -473,7 +453,7 @@
                   $(".myloading").show();
 
                   var txtSearch = $("input[name='txtSearch']").val();
-                  // alert(txtSearch);
+                  alert(txtSearch);
                   if(txtSearch==""){
                     $("input[name='txtSearch']").focus();
                     $(".myloading").hide();
@@ -548,24 +528,8 @@
                                         $(".div_btn_save").hide();
                                       }else{
                                           $(".div_btn_save").show();
-
-                                             console.log(aData['check_product_instock']);
-
-                                            // if(aData['check_product_instock']=="N"){
-                                            //   $(".div_btn_save").hide();
-                                            //   $(".div_btn_save_02_desc").show();
-                                            // }else{
-                                            //   $(".div_btn_save").show();
-                                            //   $(".div_btn_save_02_desc").hide();
-
-                                            // }
-
-
                                       }
                                   }, 1500);
-
-
-                               
 
                             }
 				                });
@@ -732,16 +696,16 @@
                                                                          url: " {{ url('backend/ajaxSavePay_product_receipt') }} ",
                                                                          data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                                                                           success:function(d2){
-                                                                               console.log(d2);
+                                                                               // console.log(d2);
                                                                        
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
 
-                                                                             $(".myloading").hide();
-                                                                          },
-                                                                        error: function(jqXHR, textStatus, errorThrown) {
-                                                                            $(".myloading").hide();
-                                                                        }
-                                                                    });
+                                                                       $(".myloading").hide();
+                                                                    },
+                                                                  error: function(jqXHR, textStatus, errorThrown) {
+                                                                      $(".myloading").hide();
+                                                                  }
+                                                              });
 
                                                                 }
                                                           });
@@ -897,6 +861,7 @@
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare002 ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
 
+      // DB::select(" UPDATE db_stocks SET amt='100' ; ");
 
       ?>
           <script>
