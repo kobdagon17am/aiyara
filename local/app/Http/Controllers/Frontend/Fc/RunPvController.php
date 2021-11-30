@@ -58,7 +58,7 @@ class RunPvController extends Controller
                         ->where('user_name', '=', $customer_id)
                         ->first();
                         if(empty($data_user)){
-                          $resule = ['status' => 'fail', 'message' => 'Not Upline'];
+                          $resule = ['status' => 'success', 'message' => 'Not Upline'];
                           $update_use->save();
                            DB::commit();
                            //DB::rollback();
