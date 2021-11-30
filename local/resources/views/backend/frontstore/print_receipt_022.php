@@ -519,7 +519,7 @@ if(!empty($db_orders[0]->action_user)){
               @$cus_address = @$cus_address;
 
            }else{
-              @$cus_address = ': ที่อยู่ -';
+              @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';
            }
 
            
