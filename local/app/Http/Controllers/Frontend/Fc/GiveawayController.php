@@ -62,7 +62,7 @@ class GiveawayController extends Controller
                     } elseif ($value->giveaway_member_type_id_fk == 2 and $data_customer->pv == 0) {
                         $arr[$i]['message'] = 'เป็นสมาชิกใหม่ PV = 0 ไม่สามารถแถมสินค้าได้ ';
 
-                    } elseif ($pv_total < $value->pv_minimum_purchase) {
+                    } elseif ($pv_total < $value->pv_minimum_purchase and !empty($value->pv_minimum_purchase)) {
                         $arr[$i]['message'] = ' สินค้าสั่งซื้อมีค่า PV ไม่ถึง ' . $value->pv_minimum_purchase;
                     } elseif ($qualification_id < $value->reward_qualify_purchased and !empty($value->reward_qualify_purchased)) {
 
