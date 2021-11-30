@@ -51,8 +51,20 @@ class GiftVoucher extends Model
         // $price_total = 900;
         // $order_id = 99;
 
-        $id = Auth::guard('c_user')->user()->id;
-        $user_name = Auth::guard('c_user')->user()->user_name;
+        $id = $customer_id;
+
+        $data_user = DB::table('customers')
+            ->where('id', '=', $customer_id)
+            ->first();
+
+            if (empty($data_user)) {
+              $resule = ['status' => 'fail', 'message' => 'Empty UserName in system'];
+              return  $resule;
+            }
+
+
+
+        $user_name = $data_user->user_name;
         $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
         $gv_sum = $gv_customer->sum_gv;
 
