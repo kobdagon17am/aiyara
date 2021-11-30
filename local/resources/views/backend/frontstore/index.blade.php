@@ -82,7 +82,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18 test_clear_data "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
+            <h4 class="mb-0 font-size-18  "> {{ __('message.shop_selling') }}  ({{\Auth::user()->position_level==1?'Supervisor/Manager':'CS'}}) </h4>
             <!-- <input type="text" class="get_menu_id">   test_clear_data   -->
         </div>
     </div>
@@ -103,11 +103,11 @@
 
                 $sd = date('Y-m-d');
 
-                // $date=date_create("2021-09-27");
+                // $date=date_create("2021-11-26");
                 // date_sub($date,date_interval_create_from_date_string("3 days"));
                 // echo date_format($date,"Y-m-d");
-
                 // $sd = date_format($date,"Y-m-d");
+                $ed = date("Y-m-d");
 
                ?>
 
@@ -121,7 +121,7 @@
                 <label for="endDate" >{{ __('message.end_date') }} : </label>
               </div>
               <div class="divTableCell">
-                <input id="endDate" class="form-control" autocomplete="off" value="{{ @$sd }}" />
+                <input id="endDate" class="form-control" autocomplete="off" value="{{ @$ed }}" />
               </div>
               <div class="divTableCell">
                 <button type="button" class="btn btn-primary btnSearchSub btnSearchDate " data-attr="endDate" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
@@ -540,6 +540,9 @@ $(function() {
 
             if(aData['approve_status']==5){
 
+              $("td:eq(5)", nRow).html('');
+              $("td:eq(7)", nRow).html('');
+              $("td:eq(8)", nRow).html('');
               $('td:last-child', nRow).html('-');
 
             }else{
@@ -635,6 +638,9 @@ $(function() {
             }
 
               if(aData['approve_status']==0){
+                $("td:eq(5)", nRow).html('');
+                $("td:eq(7)", nRow).html('');
+                $("td:eq(8)", nRow).html('');
                 $("td:eq(11)", nRow).html('-');
               }
 
@@ -1018,6 +1024,9 @@ $(document).ready(function() {
 
                                                         if(aData['approve_status']==5){
 
+                                                          $("td:eq(5)", nRow).html('');
+                                                          $("td:eq(7)", nRow).html('');
+                                                          $("td:eq(8)", nRow).html('');
                                                           $('td:last-child', nRow).html('-');
 
                                                         }else{
@@ -1107,6 +1116,9 @@ $(document).ready(function() {
                                                         }
 
                                                           if(aData['approve_status']==0){
+                                                            $("td:eq(5)", nRow).html('');
+                                                            $("td:eq(7)", nRow).html('');
+                                                            $("td:eq(8)", nRow).html('');
                                                             $("td:eq(11)", nRow).html('-');
                                                           }
 
@@ -1193,6 +1205,7 @@ $(document).ready(function() {
  <script>
 
    $(document).ready(function() {
+
 
            $(document).on('click', '.btnSearchSub', function(event) {
                 var d = $(this).data('attr');
@@ -1343,7 +1356,7 @@ $(document).ready(function() {
                                                        // var info = $(this).DataTable().page.info();
                                                        // $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
-                                                       // console.log(aData['status']);
+                                                       // console.log(aData['status']+" : "+aData['approve_status']);
 
                                                         if(aData['total_price']){
                                                           $("td:eq(5)", nRow).html('<span class="tooltip_cost" style="font-size:14px;font-weight:bold;" >'+aData['total_price']+'</span> <span class="ttt" style="z-index: 99999 !important;position: absolute;background-color: beige;display:none;padding:5px;color:black;">'+aData['tooltip_price']+'</span>');
@@ -1362,9 +1375,12 @@ $(document).ready(function() {
                                                         $("td:eq(4)", nRow).html(aData['customer_name']);
 
 
-
+                                                        // บิลยกเลิก
                                                         if(aData['approve_status']==5){
 
+                                                          $("td:eq(5)", nRow).html('');
+                                                          $("td:eq(7)", nRow).html('');
+                                                          $("td:eq(8)", nRow).html('');
                                                           $('td:last-child', nRow).html('-');
 
                                                         }else{
@@ -1454,6 +1470,9 @@ $(document).ready(function() {
                                                         }
 
                                                           if(aData['approve_status']==0){
+                                                            $("td:eq(5)", nRow).html('');
+                                                            $("td:eq(7)", nRow).html('');
+                                                            $("td:eq(8)", nRow).html('');
                                                             $("td:eq(11)", nRow).html('-');
                                                           }
 
@@ -1848,6 +1867,8 @@ DB::select(" TRUNCATE db_consignments_import ; ");
 <script type="text/javascript">
 
    $(document).ready(function(){
+
+      // $('.btnSearchTotal').trigger('click');
 
       $("#customer_name").select2({
           minimumInputLength: 3,

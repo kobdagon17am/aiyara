@@ -823,16 +823,17 @@
         $('#sent_date').val(d+' '+t);
       });
 
-      // $(document).ready(function() {
-      //   $(".a_label_search").on('click',function(){
-      //       $("#txtSearch").focus();
-      //       $("#txtSearch").val("P1210500002");
-      //   });
-      //   $(".b_label_search").on('click',function(){
-      //       $("#txtSearch").focus();
-      //       $("#txtSearch").val("P1210500001");
-      //   });        
-      // });
+      $(document).ready(function() {
+        // $(".a_label_search").on('click',function(){
+        //     $("#txtSearch").focus();
+        //     $("#txtSearch").val("O121112600222");
+        //     $("#txtSearch").trigger("change");
+        // });
+        // $(".b_label_search").on('click',function(){
+        //     $("#txtSearch").focus();
+        //     $("#txtSearch").val("P1210500001");
+        // });        
+      });
 
 
 

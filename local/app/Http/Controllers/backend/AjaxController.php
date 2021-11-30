@@ -3450,18 +3450,17 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-            $value=DB::table('db_pick_pack_packing')
-            ->where('id', $request->id)
-            ->get();
-            if($value->count() == 0){
-            }else{
-                  DB::table('db_pick_pack_packing')
-                  ->where('id', $request->id)
+            // $value=DB::table('db_pick_pack_packing')
+            // ->where('id', $request->id)
+            // ->get();
+            // if($value->count() == 0){
+            // }else{
+                  DB::table('db_pick_pack_boxsize')
+                  ->where('id',$request->box_id)
                   ->update(array(
                     'p_size' => $request->p_size,
                   ));
-            }
-
+            // }
       }
 
     }
@@ -3471,37 +3470,37 @@ if($frontstore[0]->check_press_save==2){
     {
 
       if($request->ajax()){
-            $value=DB::table('db_pick_pack_packing')
-            ->where('id', $request->id)
-            ->get();
-            if($value->count() == 0){
-            }else{
-                  DB::table('db_pick_pack_packing')
-                  ->where('id', $request->id)
-                  ->update(array(
-                    'p_weight' => $request->p_weight,
-                  ));
-            }
+            // $value=DB::table('db_pick_pack_packing')
+            // ->where('id', $request->id)
+            // ->get();
+            // if($value->count() == 0){
+            // }else{
+                DB::table('db_pick_pack_boxsize')
+                ->where('id',$request->box_id)
+                ->update(array(
+                  'p_weight' => $request->p_weight,
+                ));
+            // }
 
       }
 
     }
 
-    public function ajaxProductPackingAmtBox(Request $request)
+   public function ajaxProductPackingAmtBox(Request $request)
     {
 
       if($request->ajax()){
-            $value=DB::table('db_pick_pack_packing')
-            ->where('id', $request->id)
-            ->get();
-            if($value->count() == 0){
-            }else{
-                  DB::table('db_pick_pack_packing')
-                  ->where('id', $request->id)
-                  ->update(array(
-                    'p_amt_box' => $request->p_amt_box,
-                  ));
-            }
+            // $value=DB::table('db_pick_pack_packing')
+            // ->where('id', $request->id)
+            // ->get();
+            // if($value->count() == 0){
+            // }else{
+                DB::table('db_pick_pack_boxsize')
+                ->where('id',$request->box_id)
+                ->update(array(
+                  'p_amt_box' => $request->p_amt_box,
+                ));
+            // }
 
       }
 
@@ -6584,6 +6583,36 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
     }
 
 
+    public function ajaxProductPackingAddBox(Request $request)
+    {
+        if($request->ajax()){
+            $value=DB::table('db_pick_pack_packing')
+            ->where('id', $request->id)
+            ->first();
+            if($value){
+               $box_id = DB::table('db_pick_pack_boxsize')->insertGetId([
+                    'pick_pack_packing_id_fk' => $request->id,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            return response()->json(['box_id'=>$box_id]);
+        }
+    }
 
+    public function ajaxProductPackingRemoveBox(Request $request)
+    {
+        if($request->ajax()){
+            $value=DB::table('db_pick_pack_packing')
+            ->where('id', $request->id)
+            ->first();
+            if($value){
+               $box_id = DB::table('db_pick_pack_boxsize')->where('id',$request->box_id)->update([
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'deleted_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            return response()->json();
+        }
+    }
 
 }

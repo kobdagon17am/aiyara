@@ -376,7 +376,7 @@ class Products_fifo_billController extends Controller
         ");
       }else{
          $sTable = DB::select("
-          SELECT * from $temp_ppr_001 WHERE invoice_code='99999999999999999999999'
+          SELECT * from $temp_ppr_001 WHERE invoice_code='O000'
         ");
       }
 
@@ -855,7 +855,7 @@ group by promotions_products.product_id_fk
 
                       $pn .=     
                             '<div class="divTableRow">
-                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง *** </div>
+                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง. *** </div>
                             <div class="divTableCell" style="width:200px;text-align:center;">  </div>
                             <div class="divTableCell" style="width:100px;text-align:center;">  </div>
                             </div>
@@ -1087,9 +1087,9 @@ group by promotions_products.product_id_fk
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppr_001; ");
         DB::select(" CREATE TABLE $temp_ppr_001 LIKE db_orders ");
-        DB::select(" INSERT $temp_ppr_001 SELECT * FROM db_orders WHERE invoice_code='$invoice_code' ");
-
-        // return $temp_ppr_001;
+        DB::select(" INSERT $temp_ppr_001 SELECT * FROM db_orders WHERE code_order='$invoice_code' ");
+        // $test =   DB::select(" SELECT * FROM db_orders WHERE code_order='$invoice_code' ");
+        // return $test;
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppr_002; ");
         DB::select(" CREATE TABLE $temp_ppr_002 LIKE db_order_products_list ");
@@ -1143,12 +1143,18 @@ group by promotions_products.product_id_fk
               // return "Not";
               DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
             }
+       
+          // return $branch_id_fk;
+          // return $arr_product_id_fk;
 
           if(!empty($arr_product_id_fk)){
             DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
-             WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+             WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
           }
  
+         // $Data = DB::select(" SELECT * FROM $temp_db_stocks; ");
+         // return $Data;
+
           if(in_array($temp_db_stocks_compare,$array_TABLES)){
             // return "IN";
           }else{
@@ -1663,7 +1669,7 @@ group by promotions_products.product_id_fk
 
                       $pn .=     
                             '<div class="divTableRow">
-                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง *** </div>
+                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง.. *** </div>
                             <div class="divTableCell" style="width:200px;text-align:center;">  </div>
                             <div class="divTableCell" style="width:80px;text-align:center;">  </div>
                             </div>
@@ -2340,7 +2346,7 @@ group by promotions_products.product_id_fk
 
                               $pn .=     
                                     '<div class="divTableRow">
-                                    <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง *** </div>
+                                    <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง... *** </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;">  </div>
                                     <div class="divTableCell" style="width:80px;text-align:center;">  </div>
                                     </div>

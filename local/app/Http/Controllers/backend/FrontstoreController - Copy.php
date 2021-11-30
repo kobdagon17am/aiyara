@@ -1119,7 +1119,7 @@ class FrontstoreController extends Controller
 
          }else if(isset($request->receipt_save_list)){
 
-          // dd($request->all());
+          dd($request->all());
           // dd($request->transfer_money_datetime." : BBBB");
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
@@ -1231,15 +1231,6 @@ class FrontstoreController extends Controller
               PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
               // dd("1233");
-              // dd(request('purchase_type_id_fk'));
-              if(request('purchase_type_id_fk')==5){
-
-                // $price_total = $rs->price + $rs->shipping;
-                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order);
-
-                dd($rs_log_gift);
-
-              }
 
 // dd(request('sentto_branch_id'));
 // dd(request('branch_id_fk'));

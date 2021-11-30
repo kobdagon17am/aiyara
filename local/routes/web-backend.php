@@ -387,6 +387,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxProductPackingSize', 'AjaxController@ajaxProductPackingSize');
     Route::post('ajaxProductPackingWeight', 'AjaxController@ajaxProductPackingWeight');
     Route::post('ajaxProductPackingAmtBox', 'AjaxController@ajaxProductPackingAmtBox');
+    Route::post('ajaxProductPackingAddBox', 'AjaxController@ajaxProductPackingAddBox');
+    Route::post('ajaxProductPackingRemoveBox', 'AjaxController@ajaxProductPackingRemoveBox');
 
     Route::post('ajaxGetAmtInStock', 'AjaxController@ajaxGetAmtInStock');
 
