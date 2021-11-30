@@ -147,9 +147,9 @@
 
 
                   <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label required_star_red ">แถมสมาชิกแบบ : </label>
+                    <label for="" class="col-md-3 col-form-label ">แถมสมาชิกแบบ : </label>
                     <div class="col-md-9">
-                      <select name="giveaway_member_type_id_fk" class="form-control select2-templating "  required >
+                      <select name="giveaway_member_type_id_fk" class="form-control select2-templating "  >
                         <option value="">Select</option>
                             @if(@$sGiveaway_type)
                               @foreach(@$sGiveaway_type AS $r)

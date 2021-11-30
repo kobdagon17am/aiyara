@@ -1531,7 +1531,7 @@ class FrontstoreController extends Controller
     {
               
               $sRow = \App\Models\Backend\Frontstore::find($id);
-              dd($sRow->delivery_location);
+              // dd($sRow->delivery_location);
               if(@$sRow->delivery_location==0){
                 DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=".$sRow->id.") ");
                 DB::select(" DELETE FROM `db_delivery` WHERE (`orders_id_fk`=".$sRow->id.") ");
@@ -1802,7 +1802,7 @@ class FrontstoreController extends Controller
                       }
                    }
 
-                   $this->fncUpdateDeliveryAddressDefault($id);
+                   // $this->fncUpdateDeliveryAddressDefault($id);
 
               }
 
