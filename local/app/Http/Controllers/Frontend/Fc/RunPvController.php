@@ -37,6 +37,7 @@ class RunPvController extends Controller
         $upline_type = $update_use->line_type;
         $upline_id = $update_use->upline_id;
         $customer_id = $upline_id;
+
         $last_upline_type = $upline_type;
 
         // dd($last_upline_type);
@@ -56,6 +57,13 @@ class RunPvController extends Controller
                     $data_user = DB::table('customers')
                         ->where('user_name', '=', $customer_id)
                         ->first();
+                        if(empty($data_user)){
+                          $resule = ['status' => 'fail', 'message' => 'Not Upline'];
+                          $update_use->save();
+                           DB::commit();
+                           //DB::rollback();
+                           return $resule;
+                        }
 
                     $upline_type = $data_user->line_type;
                     $upline_id = $data_user->upline_id;
