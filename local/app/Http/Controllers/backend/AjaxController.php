@@ -16,6 +16,8 @@ use App\Models\Backend\GiftvoucherCode_add;
 use App\Models\Frontend\CourseCheckRegis;
 use App\Models\Frontend\PvPayment;
 use App\Models\Frontend\LineModel;
+use App\Http\Controllers\Frontend\Fc\CancelOrderController;
+
 
 class AjaxController extends Controller
 {
@@ -4869,6 +4871,10 @@ if($frontstore[0]->check_press_save==2){
       // }
 
       DB::select(" DELETE FROM `db_delivery` where orders_id_fk=$request->id ");
+
+      // $resule = CancelOrderController::cancel_order($rs->cancel_order_id, $customer_id, 1, 'customer');
+      $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+      // dd($resule);
 
 
       // return response()->json(\App\Models\Alert::Msg('success'));

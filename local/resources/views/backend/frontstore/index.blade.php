@@ -1750,8 +1750,7 @@ DB::select(" TRUNCATE db_consignments_import ; ");
           $(document).on('click', '.cCancel', function(event) {
 
             var id = $(this).data('id');
-            var approve_status = "{{@$sRow->approve_status}}";
-            // alert(approve_status);
+            // alert(id);
             // return false;
 
               if (!confirm("ยืนยัน ? เพื่อยกเลิกรายการสั่งซื้อที่ระบุ ")){
