@@ -1696,7 +1696,7 @@ if(@$sRow->check_press_save==2){
 @else
                     <?php
                                 // ประเภทโอน
-                    if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12){
+                    if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12 || @$sRow->pay_type_id_fk==4){
 
                       // print_r($PaymentSlip); 
 
@@ -5135,7 +5135,6 @@ $(document).ready(function() {
 
 
                         if(purchase_type_id_fk==5){
-
                             if(gift_voucher_price==''){
                               alert("! กรุณา กรอกยอด Ai Voucher ");
                               $(this).val('').select2();
@@ -5143,7 +5142,6 @@ $(document).ready(function() {
                               $('.myloading').hide();
                               return false;
                             }
-
                         }
 
                         if(pay_type_id_fk==''){
@@ -5151,7 +5149,7 @@ $(document).ready(function() {
                           return false;
                         }
 
-
+                        var g_sum_price = 0;
                         $.ajax({
                          type:'POST',
                          dataType:'JSON',
@@ -5164,7 +5162,7 @@ $(document).ready(function() {
                                   $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
                                   $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
-
+                                  g_sum_price = parseFloat(value.sum_price).toFixed(2);
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   // $(".transfer_money_datetime").val(value.transfer_money_datetime);
 
@@ -5359,7 +5357,16 @@ $(document).ready(function() {
                                   // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
                                   $('.class_btnSave').prop('disabled',true);
 
+                              }else 
+                              // Gift Voucher
+                              if(pay_type_id_fk==4){
+                                $("#gift_voucher_price").val(g_sum_price);
+                                $('.class_btnSave').addClass(' btnSave ');
+                                    $('.class_btnSave').removeAttr( "disabled" );
+                                    $('.class_btnSave').show();
+
                               }else{
+
                                   $('#fee').removeAttr('required');
                                   $('input[name=account_bank_id]').removeAttr('required');
                                   // $('.transfer_money_datetime').removeAttr('required');
@@ -5547,6 +5554,7 @@ $(document).ready(function() {
                                         });
 
                                   }else{
+                                    // value.gift_voucher_price
                                     $("#gift_voucher_price").val(value.gift_voucher_price);
                                   }
 

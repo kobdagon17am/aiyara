@@ -1288,6 +1288,8 @@ if($frontstore[0]->check_press_save==2){
 
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
+
+        // dd($rs);
         return response()->json($rs);
 
     }

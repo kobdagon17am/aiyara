@@ -525,7 +525,13 @@ class FrontstoreController extends Controller
       }else{
         $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
       }
-      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
+
+      if($sRow->purchase_type_id_fk=='5'){
+        $sPay_type = DB::select(" select * from dataset_pay_type where id in (4,12,13,14) and status=1 ");
+      }else{
+        $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
+      }
+      // dd($sRow->pay_type_id_fk);
 
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
       $sDistribution_channel3 = DB::select(" select * from dataset_distribution_channel where id=3 AND status=1  ");
@@ -656,8 +662,6 @@ class FrontstoreController extends Controller
       // dd($gv);
       // $gitfvoucher = @$gv!=null?$gv:0;
       // $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
-
-
             $customer_pv = DB::table('customers')
             ->select('customers.business_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name', 'customers.user_name', 'customers.created_at', 'customers.date_mt_first', 'customers.pv_mt_active',
                 'customers.pv_mt', 'customers.pv_mt', 'customers.bl_a', 'customers.bl_b', 'customers.bl_c', 'customers.pv_a', 'customers.pv_b', 'customers.pv_c','customers.aistockist_status', 'customers.pv_tv',
@@ -668,7 +672,9 @@ class FrontstoreController extends Controller
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             ->where('customers.user_name', '=', @$ThisCustomer[0]->user_name)
             ->first();
-// dd($customer_pv);
+
+            // dd($sRow->purchase_type_id_fk);
+// dd($PaymentSlip);
       return View('backend.frontstore.form')->with(
         array(
             'customer_pv'=>$customer_pv,
@@ -1168,6 +1174,7 @@ class FrontstoreController extends Controller
 
               $sRow->pay_with_other_bill = request('pay_with_other_bill');
               $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
+              $sRow->gift_voucher_price = request('gift_voucher_price')?request('gift_voucher_price'):0;
 
 
               if(empty(request('shipping_price'))){
@@ -1249,8 +1256,14 @@ class FrontstoreController extends Controller
               if(request('purchase_type_id_fk')==5){
 
                 // $price_total = $rs->price + $rs->shipping;
-                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order);
-
+                $g_total = 0;
+                if(empty(request('shipping_price'))){
+                  $g_total = $sRow->total_price;
+                }else{
+                  $g_total = $sRow->sum_price;
+                }
+                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($g_total, $sRow->customers_id_fk, $sRow->code_order);
+                    
                 // dd($rs_log_gift);
 
               }
