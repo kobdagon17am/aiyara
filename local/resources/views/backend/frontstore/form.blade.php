@@ -359,15 +359,15 @@ if(@$sRow->check_press_save==2){
                                            <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
                                            <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
                                       @ELSE
-<?php //echo @$sRow->purchase_type_id_fk;
+                                                    <?php //echo @$sRow->purchase_type_id_fk;
 
-   if(@$sRow->purchase_type_id_fk==4 || @$sRow->purchase_type_id_fk==6){
-      $disAiStockist = " disabled ";
-   }else{
-      $disAiStockist = " ";
-   }
+                                                      if(@$sRow->purchase_type_id_fk==4 || @$sRow->purchase_type_id_fk==6){
+                                                          $disAiStockist = " disabled ";
+                                                      }else{
+                                                          $disAiStockist = " ";
+                                                      }
 
- ?>
+                                                    ?>
 
                                          <select {{@$disChannel3}} id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating ch_Disabled " <?=$disAiStockist?>  required >
                                           <option value="">Select</option>
@@ -431,6 +431,7 @@ if(@$sRow->check_press_save==2){
                                   </div>
                                 </div>
                               </div>
+
                             </div>
 
                           <div class="row">
@@ -464,17 +465,19 @@ if(@$sRow->check_press_save==2){
                                   </div>
                                 </div>
                               </div>
-
-                               <div class="col-md-6">
-                                <div class="col-md-12 form-group row" style="position: absolute;">
-                                   <label for="" class="col-form-label">หมายเหตุ :  </label>
-                                  <div class="col-md-10">
-                                       <textarea class="form-control ch_Disabled " id="note" name="note" rows="5" >{{ @$sRow->note }}</textarea>
+                              @if(isset($customer_pv))
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                  <label for="" class="col-md-4 col-form-label"> ทำคุณสมบัติ : </label>
+                                  <div class="col-md-6">
+                                    <input type="text" class="form-control" value="{{$customer_pv->pv}} PV" readonly>
                                   </div>
                                 </div>
                               </div>
+                              @endif
                             </div>
 
+                         
 
 
                         <div class="row">
@@ -511,12 +514,87 @@ if(@$sRow->check_press_save==2){
 
                                 </div>
                               </div>
+                              @if(isset($customer_pv))
                               <div class="col-md-6">
-                                  <div class="form-group row">
+                                <div class="form-group row">
+                                  <label for="" class="col-md-4 col-form-label"> คุณสมบัติ :  </label>
+                                  <div class="col-md-6">
+                                    <input type="text" class="form-control" value="{{$customer_pv->pv_mt}} PV" readonly>
+                                  </div>
+                                </div>
+                              </div>
+                              @endif
+                            </div>
 
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                  <label for="" class="col-md-4 col-form-label"> หมายเหตุ : </label>
+                                  <div class="col-md-6">
+                                    <textarea class="form-control ch_Disabled " id="note" name="note" rows="2" >{{ @$sRow->note }}</textarea>
+                                  </div>
+                                </div>
+                              </div>
+                              @if(isset($customer_pv))
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                  <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติท่องเที่ยว : </label>
+                                  <div class="col-md-6">
+                                    <input type="text" class="form-control" value="{{$customer_pv->pv_tv}} PV" readonly>
+                                  </div>
+                                </div>
+                              </div>
+                              @endif
+                            </div>
+
+                            @if(isset($customer_pv))
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                    &nbsp;
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                  <label for="" class="col-md-4 col-form-label"> Ai-Stockist :  </label>
+                                  <div class="col-md-6">
+                                    <input type="text" class="form-control" value="@if($customer_pv->aistockist_status=='0')ไม่เป็น @elseif($customer_pv->aistockist_status=='1')เป็น @endif" readonly>
+                                  </div>
                                 </div>
                               </div>
                             </div>
+
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                    &nbsp;
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                  <label for="" class="col-md-4 col-form-label"> ตำแหน่ง : </label>
+                                  <div class="col-md-6">
+                                    <input type="text" class="form-control" value="{{$customer_pv->q_name}}" readonly>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                    &nbsp;
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group row">
+                                  <label for="" class="col-md-4 col-form-label"> Package :  </label>
+                                  <div class="col-md-6">
+                                    <input type="text" class="form-control" value="{{$customer_pv->dt_package}}" readonly>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            @endif
 
                @if( empty(@$sRow) )
 
