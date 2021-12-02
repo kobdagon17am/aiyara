@@ -75,7 +75,7 @@ class GiftVoucher extends Model
               return  $resule;
             }
 
-            $price_total = $price_total - $gv_price;
+
 
 
         $data_gv = DB::table('db_giftvoucher_cus')
@@ -93,7 +93,7 @@ class GiftVoucher extends Model
 
             if ($price_total >= $gv_sum) {
 
-              $price_log = $price_total;
+              $price_log = $price_total-$gv_price;
 
                 foreach ($data_gv as $value) {
 
@@ -123,7 +123,7 @@ class GiftVoucher extends Model
 
                     $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                         ->where('id', $value->id)
-                        ->update(['giftvoucher_banlance' => 0, 'pro_status' => 2]);
+                        ->update(['giftvoucher_banlance' => $banlance, 'pro_status' => 2]);
 
 
                 }
@@ -134,20 +134,17 @@ class GiftVoucher extends Model
 
 
             } else {
-
+              $price_log = $price_total-$gv_price;
                 foreach ($data_gv as $value) {
 
                   $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
                   $gv_sum = $gv_customer->sum_gv;
 
-                  $banlance = $gv_customer->sum_gv - $price_total;
-                  $gv_rs = $price_total - $value->giftvoucher_banlance;
+                  $banlance = $gv_customer->sum_gv - $price_log;
+                  $gv_rs = $price_log - $value->giftvoucher_banlance;
                   if ($banlance < 0) {
                       $banlance = 0;
                   }
-
-
-
 
                     if ($gv_rs > 0) {
 
@@ -167,7 +164,7 @@ class GiftVoucher extends Model
 
                         $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                             ->where('id', $value->id)
-                            ->update(['giftvoucher_banlance' => 0, 'pro_status' => 2]);
+                            ->update(['giftvoucher_banlance' => $banlance, 'pro_status' => 2]);
 
                         $price_total = $gv_rs;
 
