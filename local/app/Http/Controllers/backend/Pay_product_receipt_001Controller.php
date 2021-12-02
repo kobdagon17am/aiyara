@@ -109,6 +109,10 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function destroy(Request $request)
     {
+
+      DB::beginTransaction();
+      try
+      {
       // return $request->id;
       // return $request->invoice_code;
       // สถานะกลับไปเป็นรอจ่าย 1 ถ้าเป็นกรณียกเลิกใบเสร็จ 4 ให้เกิดจากการยกเลิกจากคลัง
@@ -213,13 +217,49 @@ class Pay_product_receipt_001Controller extends Controller
 
                                           "created_at" =>@$value->dd?$value->dd:NULL
                                       );
-
+                                   
                                         $insertStockMovement->insertStockMovement($insertData);
 
                                     }
-
-                                    DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
-
+                                    $tmp = DB::table('db_stock_movement_tmp')->orderBy('doc_date','asc')->get();
+                                    foreach($tmp as $t){
+                                      DB::table('db_stock_movement')->insertOrignore(array(
+                                        // ไม่เหมือน tmp
+                                        "stock_type_id_fk" =>  0,
+                                        "stock_id_fk" =>  0,
+                                        "ref_table" =>  0,
+                                        "ref_table_id" =>  0,
+                                        "ref_doc" =>  NULL,
+                                        // 
+                                        'doc_no' => $t->doc_no,
+                                        "doc_date" =>  $t->doc_date,
+                                        "business_location_id_fk" =>  $t->business_location_id_fk,
+                                        "branch_id_fk" =>  $t->branch_id_fk,
+                                        "product_id_fk" =>  $t->product_id_fk,
+                                        "lot_number" =>  $t->lot_number,
+                                        "lot_expired_date" =>  $t->lot_expired_date,
+                                        "amt" => $t->amt,
+                                        "in_out" =>  $t->in_out,
+                                        "product_unit_id_fk" => $t->product_unit_id_fk,
+                                        "warehouse_id_fk" =>  $t->warehouse_id_fk,
+                                        "zone_id_fk" =>  $t->zone_id_fk,
+                                        "shelf_id_fk" => $t->shelf_id_fk,
+                                        "shelf_floor" =>  $t->shelf_floor,
+                                        "status" => $t->status,
+                                        "note" =>  $t->note,
+                                        "note2" => $t->note2,
+                                        "action_user" => $t->action_user,
+                                        "action_date" =>  $t->action_date,
+                                        "approver" =>  $t->approver,
+                                        "approve_date" =>  $t->approve_date,
+                                        "created_at" =>$t->created_at,
+                                        'sender' => $t->sender,
+                                        'sent_date' => $t->sent_date,
+                                        'sender' => $t->who_cancel,
+                                        'cancel_date' => $t->cancel_date,
+                                    ));
+                                    } 
+                                    // DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
                                }
 
 
@@ -269,6 +309,18 @@ class Pay_product_receipt_001Controller extends Controller
                AND db_stocks_return.shelf_floor = $temp_db_stocks_from_return.shelf_floor 
                AND $temp_db_stocks_from_return.invoice_code='".$request->invoice_code."'
                SET db_stocks_return.status_cancel=1 ");
+
+               DB::commit();
+              }
+              catch (\Exception $e) {
+                  DB::rollback();
+              return $e->getMessage();
+              }
+              catch(\FatalThrowableError $fe)
+              {
+                  DB::rollback();
+              return $e->getMessage();
+              }
 
     }
 

@@ -488,7 +488,8 @@
                               // console.log(can_cancel_bill);
                               // console.log(can_cancel_bill_across_day);
                               // console.log(aData['status_sent_2']);
-
+                              console.log('can_cancel_bill: '+can_cancel_bill);
+                           console.log('status_sent_2: '+aData['status_sent_2']);
                               if(can_cancel_bill=='1' && aData['status_sent_2']==3){
 
                                  $('td:last-child', nRow).html(''
