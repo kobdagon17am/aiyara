@@ -111,7 +111,7 @@ class GiftVoucher extends Model
                       'giftvoucher_cus_id_fk' => $value->id,
                       //'order_id_fk'=>$order_id,
                       'giftvoucher_value_old' => $gv_sum,
-                      'giftvoucher_value_use' => $price_log,
+                      'giftvoucher_value_use' => $gv_price,
                       'giftvoucher_value_banlance' => $banlance,
                       'code_order' => $code_order,
                       'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
@@ -119,11 +119,11 @@ class GiftVoucher extends Model
                       'type' => 'Remove',
                       'type_action_giftvoucher' => 0,
                   ]);
-                  $price_log =  $banlance;
+                  $gv_price =  $banlance;
 
                     $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                         ->where('id', $value->id)
-                        ->update(['giftvoucher_banlance' => $banlance, 'pro_status' => 2]);
+                        ->update(['giftvoucher_banlance' => $gv_price, 'pro_status' => 2]);
 
 
                 }
@@ -142,7 +142,7 @@ class GiftVoucher extends Model
 
                   $banlance = $gv_customer->sum_gv - $gv_price;
 
-                  $gv_rs = $price_log - $value->giftvoucher_banlance;
+                  $gv_rs = $gv_price - $value->giftvoucher_banlance;
                   if ($banlance < 0) {
                       $banlance = 0;
                   }
@@ -167,7 +167,7 @@ class GiftVoucher extends Model
                             ->where('id', $value->id)
                             ->update(['giftvoucher_banlance' => $banlance, 'pro_status' => 2]);
 
-                        $price_total = $gv_rs;
+                        $gv_price = $gv_rs;
 
                     } else {
 
@@ -176,7 +176,7 @@ class GiftVoucher extends Model
                         'giftvoucher_cus_id_fk' => $value->id,
                         //'order_id_fk'=>$order_id,
                         'giftvoucher_value_old' => $gv_sum,
-                        'giftvoucher_value_use' => $price_total,
+                        'giftvoucher_value_use' => $gv_price,
                         'giftvoucher_value_banlance' => $banlance,
                         'code_order' => $code_order,
                         'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
