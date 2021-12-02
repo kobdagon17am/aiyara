@@ -1221,8 +1221,72 @@ if(@$sRow->check_press_save==2){
           </div>
         </div>
 
+        @else
+
+        <input class="form-control f-ainumber-18 input-aireadonly ch_Disabled " type="hidden" id="gift_voucher_cost" name="gift_voucher_cost" value="{{@$gitfvoucher>0?number_format(@$gitfvoucher,2):'0.00'}}" readonly="" >
 
 @ENDIF
+
+<div class="divTableRow">
+  <div class="divTableCell">&nbsp; </div>
+  <div class="divTH">
+    @if(@$sRow->purchase_type_id_fk==5)
+    <label for="" > รูปแบบการชำระเงินอื่นๆ  : </label>
+    @ELSE
+    <label for="" > รูปแบบการชำระเงิน : </label>
+    @ENDIF
+  </div>
+  <div class="divTableCell">
+<!-- ===================================
+1 เงินโอน
+8 เครดิต + เงินโอน
+10  เงินโอน + เงินสด
+11  เงินโอน + Ai-Cash
+12  Gift Voucher + เงินโอน
+===================================
+3 Ai-Cash
+6 เงินสด + Ai-Cash
+9 เครดิต + Ai-Cash
+=================================== -->
+    @if(@$sRow->check_press_save==2  && ($sRow->pay_type_id_fk!="" || $sRow->pay_type_id_fk!=0) && ($sRow->pay_type_id_fk==1 || $sRow->pay_type_id_fk==8 || $sRow->pay_type_id_fk==10 || $sRow->pay_type_id_fk==11 || $sRow->pay_type_id_fk==12 || $sRow->pay_type_id_fk==3 || $sRow->pay_type_id_fk==6 || $sRow->pay_type_id_fk==9 ) )
+
+      @php
+      $disAfterSave = 'disabled'
+      @endphp
+
+    @ELSE
+
+      @php
+      $disAfterSave = ''
+      @endphp
+
+    @ENDIF
+<?php //echo @$disAfterSave."xxxxxxxxxxxxxxxxxxxxxxxxx".$sRow->pay_type_id_fk; ?>
+<?php //echo $sRow->pay_type_id_fk ;?>
+<?php //print_r($sPay_type); ?>
+<?php //echo $sRow->gift_voucher_price; ?>
+<?php //echo $sRow->cash_pay; ?>
+    <input type="hidden" name="<?=($disAfterSave=="disabled"?"pay_type_id_fk":"")?>" value="{{@$sRow->pay_type_id_fk}}">
+
+         <select {{@$disChannel3}} id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating ch_Disabled " {{@$disAfterSave}} required >
+          <option value="">Select</option>
+                @if(@$sPay_type)
+                  @foreach(@$sPay_type AS $r)
+                    <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
+                      {{$r->detail}}
+                    </option>
+                  @endforeach
+                @endif
+          </select>
+
+
+
+
+  </div>
+  <div class="divTableCell">
+  </div>
+</div>
+
 
 
 @if(@$sRow->purchase_type_id_fk==5)
@@ -1241,69 +1305,14 @@ if(@$sRow->check_press_save==2){
                     </div>
                   </div>
 
+@else
+
+<input class="form-control CalGiftVoucherPrice NumberOnly input-airight f-ainumber-18 input-aifill ch_Disabled " type="hidden" name="gift_voucher_price" id="gift_voucher_price" value="{{@$sRow->gift_voucher_price>0?number_format(@$sRow->gift_voucher_price,2):'0.00'}}">
+
 @ENDIF
 
 
-                    <div class="divTableRow">
-                      <div class="divTableCell">&nbsp; </div>
-                      <div class="divTH">
-                        @if(@$sRow->purchase_type_id_fk==5)
-                        <label for="" > รูปแบบการชำระเงินอื่นๆ  : </label>
-                        @ELSE
-                        <label for="" > รูปแบบการชำระเงิน : </label>
-                        @ENDIF
-                      </div>
-                      <div class="divTableCell">
-<!-- ===================================
-1 เงินโอน
-8 เครดิต + เงินโอน
-10  เงินโอน + เงินสด
-11  เงินโอน + Ai-Cash
-12  Gift Voucher + เงินโอน
-===================================
-3 Ai-Cash
-6 เงินสด + Ai-Cash
-9 เครดิต + Ai-Cash
-=================================== -->
-                        @if(@$sRow->check_press_save==2  && ($sRow->pay_type_id_fk!="" || $sRow->pay_type_id_fk!=0) && ($sRow->pay_type_id_fk==1 || $sRow->pay_type_id_fk==8 || $sRow->pay_type_id_fk==10 || $sRow->pay_type_id_fk==11 || $sRow->pay_type_id_fk==12 || $sRow->pay_type_id_fk==3 || $sRow->pay_type_id_fk==6 || $sRow->pay_type_id_fk==9 ) )
-
-                          @php
-                          $disAfterSave = 'disabled'
-                          @endphp
-
-                        @ELSE
-
-                          @php
-                          $disAfterSave = ''
-                          @endphp
-
-                        @ENDIF
-<?php //echo @$disAfterSave."xxxxxxxxxxxxxxxxxxxxxxxxx".$sRow->pay_type_id_fk; ?>
-<?php //echo $sRow->pay_type_id_fk ;?>
-<?php //print_r($sPay_type); ?>
-<?php //echo $sRow->gift_voucher_price; ?>
-<?php //echo $sRow->cash_pay; ?>
-                        <input type="hidden" name="<?=($disAfterSave=="disabled"?"pay_type_id_fk":"")?>" value="{{@$sRow->pay_type_id_fk}}">
-
-                             <select {{@$disChannel3}} id="pay_type_id_fk" name="pay_type_id_fk" class="form-control select2-templating ch_Disabled " {{@$disAfterSave}} required >
-                              <option value="">Select</option>
-                                    @if(@$sPay_type)
-                                      @foreach(@$sPay_type AS $r)
-                                        <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
-                                          {{$r->detail}}
-                                        </option>
-                                      @endforeach
-                                    @endif
-                              </select>
-
-
-
-
-                      </div>
-                      <div class="divTableCell">
-                      </div>
-                    </div>
-
+                  
 
 
                     <?php $div_fee = @$sRow->fee==0?"display: none;":''; ?>
@@ -1385,7 +1394,8 @@ if(@$sRow->check_press_save==2){
 
 
 
-                    <?php $div_account_bank_id = @$sRow->account_bank_id==0||@$sRow->account_bank_id==''?"display: none;":''; ?>
+                    <?php $div_account_bank_id = @$sRow->account_bank_id==0||@$sRow->account_bank_id==''?"display: none;":''; 
+                    ?>
                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
                       <div class="divTableCell">&nbsp; </div>
                       <div class="divTH">
@@ -1422,7 +1432,7 @@ if(@$sRow->check_press_save==2){
                       </div>
 
 
-                   <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11?"":'display: none;'; ?>
+                   <?php $show_div_transfer_price = @$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12  ?"":'display: none;'; ?>
                     <div class="divTableRow show_div_transfer_price " style="<?=$show_div_transfer_price?>" >
                         <div class="divTableCell" ></div>
                         <div class="divTH">
@@ -1557,7 +1567,7 @@ if(@$sRow->check_press_save==2){
                     </div>
 
 
-                    <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==''||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11)?"display: none;":''; ?>
+                    <?php $show_div_cash_pay = (@$sRow->pay_type_id_fk==''||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==11 ||@$sRow->pay_type_id_fk==4 ||@$sRow->pay_type_id_fk==12 ||@$sRow->pay_type_id_fk==13)?"display: none;":''; ?>
                       <div class="divTableRow show_div_cash_pay " style="<?=$show_div_cash_pay?>"  >
                         <div class="divTableCell" >
                         </div>
@@ -1713,8 +1723,9 @@ if(@$sRow->check_press_save==2){
                            </button>
 
                           @ELSE
-                      
-                           <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
+                      {{-- wut แก้ --}}
+                      <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave btnSave " style="float: right;"  >
+                           {{-- <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled > --}}
                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                            </button>
 
@@ -4425,11 +4436,10 @@ $(document).ready(function() {
 
             });
 
-
+// เริ่มต้น
             $(document).ready(function() {
-
-
                     var pay_type_id_fk =  $('#pay_type_id_fk').val();
+                    // alert(pay_type_id_fk);
                     var cnt_slip =  "{{@$cnt_slip}}";
                     // console.log(cnt_slip);
                    // กรณีเงินโอน ไปอีกช่องทางนึง
@@ -5149,7 +5159,31 @@ $(document).ready(function() {
                           return false;
                         }
 
-                        var g_sum_price = 0;
+                        var sum_price = $('#sum_price').val();
+            sum_price = sum_price.replace(',', '');
+            sum_price = parseFloat(sum_price);
+
+            var shipping_price = $('#shipping_price').val();
+            shipping_price = shipping_price.replace(',', '');
+            shipping_price = parseFloat(shipping_price);
+
+            var fee_amt = $('#fee_amt').val();
+            fee_amt = fee_amt.replace(',', '');
+            fee_amt = parseFloat(fee_amt);
+
+                      
+            var gift_voucher_price = $('#gift_voucher_price').val();
+            gift_voucher_price = gift_voucher_price.replace(',', '');
+            gift_voucher_price = parseFloat(gift_voucher_price);
+
+            var gift_voucher_cost = $('#gift_voucher_cost').val();
+            gift_voucher_cost = gift_voucher_cost.replace(',', '');
+            gift_voucher_cost = parseFloat(gift_voucher_cost);
+            var total_sum = 0;
+                                    if(pay_type_id_fk==4){
+                                      total_sum = sum_price+shipping_price;
+                                    }
+
                         $.ajax({
                          type:'POST',
                          dataType:'JSON',
@@ -5162,7 +5196,9 @@ $(document).ready(function() {
                                   $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price).toFixed(2)));
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
                                   $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
-                                  g_sum_price = parseFloat(value.sum_price).toFixed(2);
+
+                                    // wut 
+
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   // $(".transfer_money_datetime").val(value.transfer_money_datetime);
 
@@ -5360,12 +5396,60 @@ $(document).ready(function() {
                               }else 
                               // Gift Voucher
                               if(pay_type_id_fk==4){
-                                $("#gift_voucher_price").val(g_sum_price);
+                                $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
                                 $('.class_btnSave').addClass(' btnSave ');
                                     $('.class_btnSave').removeAttr( "disabled" );
                                     $('.class_btnSave').show();
 
+                              }else
+                              // Gift Voucher + โอน
+                                if(pay_type_id_fk==12){
+                                  // เงินโอน
+                                  $(".show_div_transfer_price").show();
+                                  // $('input[name=account_bank_id]').prop('checked',false);
+                                  $('input[name=account_bank_id]').attr('required', true);
+                                  $(".div_account_bank_id").show();
+                                  $(".div_pay_with_other_bill").show();
+                                  $("#transfer_price").val('');
+                                  // $(".transfer_money_datetime").attr('required', true);
+                                  $("#transfer_price").attr('required',true);
+                                  $("#transfer_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+
+                                  // $(".show_div_cash_pay").show();
+                                  $('#fee').removeAttr('required');
+                                  $('#aicash_price').removeAttr('required');
+                                  $("#cash_pay").val('');
+
+                                  // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
+                                  $('.class_btnSave').prop('disabled',true);
+
+                                  }else
+                        // 13 Gift Voucher + บัตรเครดิต
+                            if(pay_type_id_fk==13){
+                              // เครดิต
+                              $(".show_div_credit").show();
+                              // $("#credit_price").attr('disabled', false);
+                              $("#credit_price").val('');
+                              $(".div_fee").show();
+                              $("#fee_amt").val('');
+                              $('#fee').attr('required', true);
+                              $("#sum_credit_price").val('');
+                              // Gift Voucher
+                              // $(".show_div_cash_pay").show();
+                              // $("#cash_pay").val('');
+                              var fee = $("#fee").val();
+                              if(fee==''){
+                                $("#fee").select2('open');
                               }else{
+                                $("#credit_price").attr('disabled', false);
+                                $("#credit_price").focus();
+                              }
+
+                                 $('.class_btnSave').addClass(' btnSave ');
+                                    $('.class_btnSave').removeAttr( "disabled" );
+                                    $('.class_btnSave').show();
+
+                            }else{
 
                                   $('#fee').removeAttr('required');
                                   $('input[name=account_bank_id]').removeAttr('required');
@@ -5415,7 +5499,7 @@ $(document).ready(function() {
               var pay_type_id_fk = $("#pay_type_id_fk").val();
 
         //      if(pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11){
-              if(pay_type_id_fk==10 || pay_type_id_fk==11){
+              if(pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
                 console.log(pay_type_id_fk);
                 var transfer_price = $("#transfer_price").val();
                 if(transfer_price<=0){
@@ -5454,7 +5538,7 @@ $(document).ready(function() {
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
                                   $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
-
+                                  
                                   if(pay_type_id_fk==''){
                                      $("#cash_pay").val('');
                                   }else{
@@ -5527,12 +5611,34 @@ $(document).ready(function() {
                 var this_element = $(this).attr('id');
                 // alert(this_element);
 
-                $('#pay_type_id_fk').val("").select2();
+                // $('#pay_type_id_fk').val("").select2();
+                var pay_type_id_fk = $("#pay_type_id_fk").val();
                 $('#cash_price').val("");
                 $('#cash_pay').val("");
                 $(".show_div_cash_pay").hide();
 
                      $("input[name=_method]").val('');
+
+            var sum_price = $('#sum_price').val();
+            sum_price = sum_price.replace(',', '');
+            sum_price = parseFloat(sum_price);
+
+            var shipping_price = $('#shipping_price').val();
+            shipping_price = shipping_price.replace(',', '');
+            shipping_price = parseFloat(shipping_price);
+
+            var fee_amt = $('#fee_amt').val();
+            fee_amt = fee_amt.replace(',', '');
+            fee_amt = parseFloat(fee_amt);
+
+            var gift_voucher_price = $('#gift_voucher_price').val();
+            gift_voucher_price = gift_voucher_price.replace(',', '');
+            gift_voucher_price = parseFloat(gift_voucher_price);
+
+            var gift_voucher_cost = $('#gift_voucher_cost').val();
+            gift_voucher_cost = gift_voucher_cost.replace(',', '');
+            gift_voucher_cost = parseFloat(gift_voucher_cost);
+            var total_sum = 0;
 
                      $.ajax({
                        type:'POST',
@@ -5554,8 +5660,28 @@ $(document).ready(function() {
                                         });
 
                                   }else{
-                                    // value.gift_voucher_price
-                                    $("#gift_voucher_price").val(value.gift_voucher_price);
+                                    // ถ้า Gift Voucher
+                                    if(pay_type_id_fk==4){
+                                      total_sum = sum_price+shipping_price;
+                                      $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
+                                    }else 
+                                          // ถ้า Gift Voucher + เงินโอน
+                                    if(pay_type_id_fk==12){
+                                      total_sum = sum_price+shipping_price+fee_amt;
+                                      $("#gift_voucher_price").val(value.gift_voucher_price);
+                                      total_sum = total_sum-value.gift_voucher_price;
+                                      $('#transfer_price').val(parseFloat(total_sum).toFixed(2));
+                                    }else 
+                                       // ถ้า Gift Voucher + บัตรเครดิต
+                                    if(pay_type_id_fk==13){
+                                      $("#gift_voucher_price").val(value.gift_voucher_price);
+                                      $('#credit_price').val(parseFloat(value.credit_price).toFixed(2));
+                                      $('#sum_credit_price').val(parseFloat(value.sum_credit_price).toFixed(2));
+                                    } else{
+                                      $("#gift_voucher_price").val(value.gift_voucher_price);
+                                    }
+                                    console.log('gif '+total_sum);
+                                    // $("#transfer_price").val(value.gift_voucher_price-value.sum_price);
                                   }
 
                                 });
@@ -6098,6 +6224,26 @@ $(document).ready(function() {
 
 
            $(document).on('click', '.btnSave', function(event) {
+            var sum_price = $('#sum_price').val();
+            sum_price = sum_price.replace(',', '');
+            sum_price = parseFloat(sum_price);
+
+            var shipping_price = $('#shipping_price').val();
+            shipping_price = shipping_price.replace(',', '');
+            shipping_price = parseFloat(shipping_price);
+
+            var fee_amt = $('#fee_amt').val();
+            fee_amt = fee_amt.replace(',', '');
+            fee_amt = parseFloat(fee_amt);
+
+            var gift_voucher_price = $('#gift_voucher_price').val();
+            gift_voucher_price = gift_voucher_price.replace(',', '');
+            gift_voucher_price = parseFloat(gift_voucher_price);
+
+            var gift_voucher_cost = $('#gift_voucher_cost').val();
+            gift_voucher_cost = gift_voucher_cost.replace(',', '');
+            gift_voucher_cost = parseFloat(gift_voucher_cost);
+            var total_sum = 0;
 
             var pay_type_id_fk = $("#pay_type_id_fk").val();
             if(pay_type_id_fk==8||pay_type_id_fk==10||pay_type_id_fk==11){
@@ -6120,7 +6266,32 @@ $(document).ready(function() {
                  }
 
             }
-
+            // Gift Voucher
+            if(pay_type_id_fk==4){
+              total_sum = sum_price+shipping_price;
+              if(total_sum > gift_voucher_price){
+                  alert("!!! ยอด GIft Voucher ที่ชำระไม่ตรงกับจำนวนจริง ");
+                  return false;
+              }
+              if(gift_voucher_cost<gift_voucher_price){
+                alert("!!! ยอด GIft Voucher ของคุณไม่เพียงพอ");
+                  return false;
+              }
+            }
+            // Gift Voucher + บัตรเครดิต
+            if(pay_type_id_fk==13){
+              if(gift_voucher_cost<gift_voucher_price){
+                alert("!!! ยอด GIft Voucher ของคุณไม่เพียงพอ");
+                  return false;
+              }
+            }
+            // Gift Voucher + บัตรเครดิต
+            if(pay_type_id_fk==12){
+                          if(gift_voucher_cost<gift_voucher_price){
+                            alert("!!! ยอด GIft Voucher ของคุณไม่เพียงพอ");
+                              return false;
+                          }
+                        }
 
               var cnt_slip =  "{{@$cnt_slip}}";
               // console.log(cnt_slip);
@@ -6478,6 +6649,29 @@ $(document).ready(function() {
           }
 
           var cash_pay = $("#cash_pay").val();
+
+
+          var sum_price = $('#sum_price').val();
+            sum_price = sum_price.replace(',', '');
+            sum_price = parseFloat(sum_price);
+
+            var shipping_price = $('#shipping_price').val();
+            shipping_price = shipping_price.replace(',', '');
+            shipping_price = parseFloat(shipping_price);
+
+            var fee_amt = $('#fee_amt').val();
+            fee_amt = fee_amt.replace(',', '');
+            fee_amt = parseFloat(fee_amt);
+
+            var gift_voucher_price = $('#gift_voucher_price').val();
+            gift_voucher_price = gift_voucher_price.replace(',', '');
+            gift_voucher_price = parseFloat(gift_voucher_price);
+
+            var gift_voucher_cost = $('#gift_voucher_cost').val();
+            gift_voucher_cost = gift_voucher_cost.replace(',', '');
+            gift_voucher_cost = parseFloat(gift_voucher_cost);
+            var total_sum = 0;
+
           // / // console.log(cash_pay);
 /*
 1 เงินโอน
@@ -6545,7 +6739,7 @@ $(document).ready(function() {
           }
 
           // ประเภทที่มีเงินโอนพ่วงด้วย
-          if ((pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11)) {
+          if ((pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11) || (pay_type_id_fk == 12)) {
 
             $(".show_div_transfer_price").show();
             $(".div_account_bank_id").show();
@@ -6561,11 +6755,31 @@ $(document).ready(function() {
 
                 var gift_voucher_price = "{{@$sRow->gift_voucher_price}}";
                 // console.log(gift_voucher_price);
-                if(gift_voucher_price>0){}else{
-
+                if(gift_voucher_price>0){
+              
+                }else{
+               
                  $("#pay_type_id_fk").select2('destroy').val("").select2();
                  $(".show_div_cash_pay ").hide();
                }
+               }
+            }
+
+            if(pay_type_id_fk==4){
+              // ยอด gif ต้องไม่เป็น 0 ถ้าเป็น 0 ให้ pay_type_id reset
+               if(gift_voucher_price=="0.00"){
+
+                var gift_voucher_price = "{{@$sRow->gift_voucher_price}}";
+                // console.log(gift_voucher_price);
+                if(gift_voucher_price>0){
+
+                }else{
+                  
+                 $("#pay_type_id_fk").select2('destroy').val("").select2();
+                 $(".show_div_cash_pay ").hide();
+               }
+               }else{
+                $(".show_div_cash_pay ").hide();
                }
             }
 

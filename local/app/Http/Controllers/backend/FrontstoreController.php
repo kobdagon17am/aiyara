@@ -1120,7 +1120,7 @@ class FrontstoreController extends Controller
               $sRow->check_press_save = 2 ;
 
              // กรณีโอนชำระ
-              if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11){
+              if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11 || request('pay_type_id_fk')==12){
                    $sRow->approve_status = 1 ;
                    $sRow->order_status_id_fk = 2  ;
               }else{
@@ -1128,6 +1128,10 @@ class FrontstoreController extends Controller
                   $sRow->order_status_id_fk = 5  ;
               }
               $sRow->note    = request('note');
+
+              // if($sRow->purchase_type_id_fk==5){
+              //   $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order);
+              // }
 
               $sRow->save();
 
@@ -1184,6 +1188,13 @@ class FrontstoreController extends Controller
                 // dd(str_replace(',','',request('fee_amt')));
                 // dd($fee_amt);
                 $sRow->total_price    =  $sum_price  + $fee_amt ;
+
+              }else{
+                // wut เพิ่มมา
+                $sum_price = str_replace(',','',request('sum_price'));
+                $fee_amt = request('fee_amt')>0 ? str_replace(',','',request('fee_amt')) : 0 ;
+                $shipping_price = request('shipping_price')>0 ? str_replace(',','',request('shipping_price')) : 0 ;
+                $sRow->total_price    =  $sum_price  + $fee_amt +  $shipping_price;
 
               }
 
@@ -1253,19 +1264,8 @@ class FrontstoreController extends Controller
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
               // dd("1233");
               // dd(request('purchase_type_id_fk'));
-              if(request('purchase_type_id_fk')==5){
-
-                // $price_total = $rs->price + $rs->shipping;
-                $g_total = 0;
-                if(empty(request('shipping_price'))){
-                  $g_total = $sRow->total_price;
-                }else{
-                  $g_total = $sRow->sum_price;
-                }
-                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($g_total, $sRow->customers_id_fk, $sRow->code_order);
-                    
-                // dd($rs_log_gift);
-
+              if($sRow->purchase_type_id_fk==5){
+                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order);
               }
 
 // dd(request('sentto_branch_id'));
