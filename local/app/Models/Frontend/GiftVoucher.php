@@ -43,13 +43,16 @@ class GiftVoucher extends Model
 
     }
 
-    public static function log_gift($price_total, $customer_id, $code_order)
+
+    public static function log_gift($price_total, $customer_id, $code_order,$gv_price)
     {
         //type_action_giftvoucher = 0 เกิดจากการซื้อสินค้าหรือชำระสินค้า 1 เกิดจากหลังบ้าน Add ให้
         //$type = Add เพิ่มแต้ม หรือ ลดแต้ม Remove
         // $admin_id = 99;
         // $price_total = 900;
         // $order_id = 99;
+
+
 
         $id = $customer_id;
 
@@ -63,10 +66,17 @@ class GiftVoucher extends Model
             }
 
 
+            $user_name = $data_user->user_name;
+            $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
+            $gv_sum = $gv_customer->sum_gv;
 
-        $user_name = $data_user->user_name;
-        $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
-        $gv_sum = $gv_customer->sum_gv;
+            if($gv_price>$gv_sum){
+              $resule = ['status' => 'fail', 'message' => 'Giftvoucher ปัจจุบันมีไม่พอสำหรับการใช้งาน'];
+              return  $resule;
+            }
+
+            $price_total = $price_total - $gv_price;
+
 
         $data_gv = DB::table('db_giftvoucher_cus')
             ->select('db_giftvoucher_cus.*', 'db_giftvoucher_code.descriptions')
@@ -90,7 +100,7 @@ class GiftVoucher extends Model
                   $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
                   $gv_sum = $gv_customer->sum_gv;
 
-                  $banlance = $gv_customer->sum_gv - $price_log;
+                  $banlance = $price_log - $gv_customer->sum_gv;
 
                   if ($banlance < 0) {
                       $banlance = 0;
