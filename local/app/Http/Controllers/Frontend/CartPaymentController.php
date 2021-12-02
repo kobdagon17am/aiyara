@@ -317,19 +317,20 @@ class CartPaymentController extends Controller
 
                 $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
-                dd($gv_customer);
+                $gv =$gv_customer;
                 $gv_total = $gv_customer - ($rs->price + $rs->shipping);
 
                 if ($gv_total < 0) {
                     $price_remove_gv = abs($gv_customer - ($rs->price + $rs->shipping));
+                    $gv_price = $gv_customer;
                 } else {
                     $price_remove_gv = 0;
+                    $gv_price = $rs->price + $rs->shipping;
                 }
 
-                dd($price_remove_gv);
 
                 $price_total = $rs->price + $rs->shipping;
-                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($price_total, $customer_id, $code_order,$gv_customer);
+                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($price_total, $customer_id, $code_order,$gv_price);
 
                 if ($rs_log_gift['status'] == 'fail') {
                     DB::rollback();

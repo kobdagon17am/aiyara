@@ -94,12 +94,13 @@ class GiftVoucher extends Model
 
             if ($price_log >= $gv_sum) {
 
+
                 foreach ($data_gv as $value) {
 
                   $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
                   $gv_sum = $gv_customer->sum_gv;
 
-                  $banlance = $gv_customer->sum_gv - $price_log;
+                  $banlance = $gv_customer->sum_gv - $gv_price;
 
                   if ($banlance < 0) {
                       $banlance = 0;
@@ -139,7 +140,7 @@ class GiftVoucher extends Model
                   $gv_customer = \App\Helpers\Frontend::get_gitfvoucher($user_name);
                   $gv_sum = $gv_customer->sum_gv;
 
-                  $banlance = $gv_customer->sum_gv - $price_log;
+                  $banlance = $gv_customer->sum_gv - $gv_price;
 
                   $gv_rs = $price_log - $value->giftvoucher_banlance;
                   if ($banlance < 0) {
