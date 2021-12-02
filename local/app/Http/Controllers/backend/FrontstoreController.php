@@ -1048,6 +1048,11 @@ class FrontstoreController extends Controller
       // dd($request->transfer_money_datetime." : AAAA");
 
       // dd($request->all());
+
+      DB::beginTransaction();
+      try
+      {
+
          $this->fnManageGiveaway(@$request->frontstore_id);
 
          if(isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip=='1'){
@@ -1130,7 +1135,7 @@ class FrontstoreController extends Controller
               $sRow->note    = request('note');
 
               // if($sRow->purchase_type_id_fk==5){
-              //   $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order);
+              //   $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
               // }
 
               $sRow->save();
@@ -1265,7 +1270,8 @@ class FrontstoreController extends Controller
               // dd("1233");
               // dd(request('purchase_type_id_fk'));
               if($sRow->purchase_type_id_fk==5){
-                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order);
+                // dd($sRow->total_price);
+                $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
               }
 
 // dd(request('sentto_branch_id'));
@@ -1545,6 +1551,19 @@ class FrontstoreController extends Controller
           // dd($request->all());
           return $this->form($id);
         }
+
+        DB::commit();
+      }
+      catch (\Exception $e) {
+          DB::rollback();
+      return $e->getMessage();
+      }
+      catch(\FatalThrowableError $fe)
+      {
+          DB::rollback();
+      return $e->getMessage();
+      }
+
 
 
     }
