@@ -1247,7 +1247,6 @@ if($frontstore[0]->check_press_save==2){
 
         }
 
-
         // DB::select(" UPDATE db_orders SET
 
         //     aicash_price='0',
@@ -1276,6 +1275,9 @@ if($frontstore[0]->check_press_save==2){
             DB::select(" UPDATE db_orders SET cash_price=($sum_price-$shipping_price),cash_pay=($sum_price),total_price=($sum_price) WHERE id=$frontstore_id ");
         }
 
+        if($pay_type_id_fk==4){
+            DB::select(" UPDATE db_orders SET gift_voucher_price=($sum_price) WHERE id=$frontstore_id ");
+        }
         
          // กรณีส่งฟรี
         $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
@@ -1721,6 +1723,93 @@ if($frontstore[0]->check_press_save==2){
 
 
          }
+            // 12 Gift Voucher + เงินโอน
+         if($pay_type_id_fk==12){
+
+            if(empty($request->transfer_price)){
+                exit;
+            }
+
+            $transfer_price = str_replace(',','',$request->transfer_price);
+            $gift_voucher_price = str_replace(',','',$request->gift_voucher_price);
+            $transfer_price = $transfer_price>$sum_price?$sum_price:$transfer_price;
+            $transfer_money_datetime = $request->transfer_money_datetime;
+
+            $shipping_price = 0;
+            if($request->shipping_price!=null){
+                $shipping_price = str_replace(',','',$request->shipping_price);
+            }
+            $fee_amt = str_replace(',','',$request->fee_amt);
+            $sum_price = str_replace(',','',$request->sum_price);
+            $sum_total = $fee_amt+$sum_price+$shipping_price;
+            $transfer_price = $sum_total-$gift_voucher_price;
+
+            DB::select(" UPDATE db_orders SET transfer_price=$transfer_price,cash_price=($sum_price-$transfer_price),cash_pay=($sum_price-$transfer_price),transfer_money_datetime='$transfer_money_datetime' WHERE id=$frontstore_id ");
+
+
+ }
+// Gift Voucher + บัตรเครดิต
+ if($pay_type_id_fk==13){
+
+    if(empty($request->credit_price)){
+        exit;
+    }
+
+    $credit_price = str_replace(',','',$request->credit_price);
+    $gift_voucher_price = str_replace(',','',$request->gift_voucher_price);
+    $gift_voucher_cost = str_replace(',','',$request->gift_voucher_cost);
+    // $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
+    if($credit_price>$sum_price){
+        $credit_price = $credit_price;
+    }else{
+        $credit_price = $sum_price;
+    }
+    // gift_voucher_price
+    DB::select(" UPDATE db_orders SET credit_price=$credit_price WHERE id=$frontstore_id ");
+
+    if(!empty($request->fee)){
+        $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
+        $fee_type = $fee[0]->fee_type;
+        if($fee_type==1){
+            $fee = $fee[0]->txt_value;
+            $fee_amt    = $credit_price * (@$fee/100) ;
+            $sum_credit_price = $credit_price + $fee_amt ;
+        }else{
+            $fee = $fee[0]->txt_fixed_rate;
+            $fee_amt =  $fee ;
+            $sum_credit_price = $credit_price + $fee_amt ;
+        }
+   }else{
+      $fee_id = 0 ;
+      $fee_amt  = 0 ;
+      $sum_credit_price  = 0 ;
+   }
+
+  if(!empty($credit_price) && intval($credit_price) != 0){
+
+        $fee_id = $request->fee?$request->fee:0;
+        $charger_type = $request->charger_type;
+
+// dd($sum_price);
+        if($charger_type==1){
+            // dd('ok2');
+            if($credit_price==$sum_price){
+                DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,gift_voucher_cost=$gift_voucher_cost,gift_voucher_price=0 WHERE id=$frontstore_id ");
+            }else{
+                DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,gift_voucher_cost=($gift_voucher_cost),gift_voucher_price=($gift_voucher_price) WHERE id=$frontstore_id ");
+                // DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price) WHERE id=$frontstore_id ");
+            }
+
+        }else{
+            // dd('ok1');
+            DB::select(" UPDATE db_orders SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price+$fee_amt,gift_voucher_cost=($gift_voucher_cost),gift_voucher_price=($gift_voucher_price) WHERE id=$frontstore_id ");
+
+        }
+
+    }
+
+}
+
 
         if($pay_type_id_fk==11){
 
@@ -2909,7 +2998,7 @@ if($frontstore[0]->check_press_save==2){
             $gift_voucher_price = str_replace(',','',$request->gift_voucher_price); // ที่กรอก
             $gift_voucher_price = $gift_voucher_price>$gift_voucher_cost?$gift_voucher_cost:$gift_voucher_price;
             $gift_voucher_price = $gift_voucher_price>$sum_price?$sum_price:$gift_voucher_price;
-
+            $sum_price = $sum_price-$gift_voucher_price;
 
             // return ($sum_price);
             // return ($gift_voucher_cost);
@@ -2921,7 +3010,17 @@ if($frontstore[0]->check_press_save==2){
 
 
             if($gift_voucher_price>0){
-                DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
+                // Gift Voucher + เงินโอน
+                if($pay_type_id_fk==12){
+                    DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' ,transfer_price='$sum_price' WHERE id=$frontstore_id ");
+                }else 
+                // Gift Voucher + บัตรเครดิต
+                if($pay_type_id_fk==13){
+                    DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' ,credit_price='0',sum_credit_price='0' WHERE id=$frontstore_id ");
+                }
+                else{
+                    DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
+                }
             }else{
                 DB::select(" UPDATE db_orders SET gift_voucher_cost='0',gift_voucher_price='0' WHERE id=$frontstore_id ");
             }
