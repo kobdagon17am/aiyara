@@ -75,9 +75,6 @@ class GiftVoucher extends Model
               return  $resule;
             }
 
-
-
-
         $data_gv = DB::table('db_giftvoucher_cus')
             ->select('db_giftvoucher_cus.*', 'db_giftvoucher_code.descriptions')
             ->leftjoin('db_giftvoucher_code', 'db_giftvoucher_code.id', '=', 'db_giftvoucher_cus.giftvoucher_code_id_fk')
