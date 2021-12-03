@@ -99,6 +99,7 @@
 
 <?php
     require(app_path().'/Models/MyFunction.php');
+    
 
 $id = $data[0];
 $n = 22;
@@ -987,10 +988,15 @@ if(!empty($db_orders[0]->action_user)){
         $m++;
 
         $rPt = DB::select(" SELECT * FROM dataset_orders_type where id=".$sRow->purchase_type_id_fk." ");
-
+        
         $purchase_type = "ประเภทการซื้อ : ".$rPt[0]->orders_type;
+        $score_detail = number_format(@$pv_total,0).' pv';
+        if($sRow->purchase_type_id_fk==5){
+          @$pv_total = 0;
+          $score_detail = '-';
+        }
 
-        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ] $purchase_type ' WHERE id = (($n*$i)+16) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".$score_detail." ] $purchase_type ' WHERE id = (($n*$i)+16) ; ");
 
         DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
 

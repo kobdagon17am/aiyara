@@ -520,11 +520,14 @@ class FrontstoreController extends Controller
         5 แลก Gift Voucher
         */
 
-      if(!empty($sRow->purchase_type_id_fk) && $sRow->purchase_type_id_fk!=5) {
-        $sPurchase_type = DB::select(" select * from dataset_orders_type where id<>5 and status=1 and lang_id=1 order by id limit 6");
-      }else{
-        $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
-      }
+        // วุฒิถาม ไม่แน่ใจล็อคไว้ทำไม
+      // if(!empty($sRow->purchase_type_id_fk) && $sRow->purchase_type_id_fk!=5) {
+      //   $sPurchase_type = DB::select(" select * from dataset_orders_type where id<>5 and status=1 and lang_id=1 order by id limit 6");
+      // }else{
+      //   $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
+      // }
+      $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
+
 
       if($sRow->purchase_type_id_fk=='5'){
         $sPay_type = DB::select(" select * from dataset_pay_type where id in (4,12,13,14) and status=1 ");
@@ -3424,7 +3427,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
 
     $sTable = DB::select("
 
-                SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
+                SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
@@ -3443,6 +3446,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 UNION ALL
 
                 SELECT
+                gift_voucher_price,
                 code_order,
                 db_add_ai_cash.id,
                 db_add_ai_cash.created_at as d2,
@@ -3565,6 +3569,15 @@ ORDER BY created_at DESC
           if(@$row->aicash_price!=0){
              $total_price += $row->aicash_price;
           }
+          if(@$row->gift_voucher_price!=0){
+            $total_price += @$row->gift_voucher_price;
+         }
+
+        //  if(@$row->code_order=='O121120200061'){
+        //   dd(@$row->gift_voucher_price);
+        // dd($total_price);
+        //  }
+        
           // return $total_price;
           if(@$total_price>0){
            return @number_format(@$total_price,2);

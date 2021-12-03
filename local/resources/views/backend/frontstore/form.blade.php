@@ -375,7 +375,7 @@ if(@$sRow->check_press_save==2){
                                             @foreach(@$sPurchase_type AS $r)
 
                                              @if(empty(@$sRow->purchase_type_id_fk))
-
+                                            
                                                 <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
                                                   {{$r->orders_type}}
                                                 </option>
@@ -387,12 +387,12 @@ if(@$sRow->check_press_save==2){
                                                   {{$r->orders_type}}
                                                  </option>
                                                 @ELSE
-
-                                                  @if($r->id<=3)
+                                                  {{-- วุฒิถาม ไม่แน่ใจล็อคไว้ทำไม --}}
+                                                  {{-- @if($r->id<=3) --}}
                                                 <option value="{{$r->id}}" {{ (@$r->id==@$sRow->purchase_type_id_fk)?'selected':'' }} >
                                                   {{$r->orders_type}}
                                                 </option>
-                                                @endif
+                                                {{-- @endif --}}
 
                                                 @ENDIF
 
@@ -406,7 +406,7 @@ if(@$sRow->check_press_save==2){
 
                               @else
 
-                                @if(!empty(@$sRow->purchase_type_id_fk))
+                                {{-- @if(!empty(@$sRow->purchase_type_id_fk))
 
                                    <input type="hidden" class="purchase_type_id_fk" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
                                    <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
@@ -424,7 +424,7 @@ if(@$sRow->check_press_save==2){
                                       @endif
                                     </select>
 
-                                @endif
+                                @endif --}}
 
                               @endif
 
@@ -1585,7 +1585,8 @@ if(@$sRow->check_press_save==2){
                                   $cash_pay = @$gift_voucher-@$sRow->sum_price+@$sRow->shipping_price;
                                 }
                                 ?>
-                                <input class="form-control f-ainumber-18 input-aireadonly in-tx ch_Disabled " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
+                               {{-- วุฒิเอาออก readonly="" และ class input-aireadonly --}}
+                                <input class="form-control f-ainumber-18  in-tx ch_Disabled  text-right" name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}"  >
                                 <?php
                               }else{
 
@@ -1593,7 +1594,8 @@ if(@$sRow->check_press_save==2){
 
                                 $cash_pay = @$sRow->cash_pay ;
                                 ?>
-                                <input class="form-control f-ainumber-18-b input-aireadonly in-tx ch_Disabled " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
+                                {{-- วุฒิเอาออก readonly=""  และ class input-aireadonly --}}
+                                <input class="form-control f-ainumber-18-b  in-tx ch_Disabled text-right" name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}"  >
                                 <?php
                               }
 
