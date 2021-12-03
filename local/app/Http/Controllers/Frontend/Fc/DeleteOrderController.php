@@ -9,6 +9,8 @@ use App\Models\Backend\Giveaway;
 class DeleteOrderController extends Controller
 {
 
+
+
   public static function delete_order($delete_order_id){
     if($delete_order_id){
       DB::BeginTransaction();

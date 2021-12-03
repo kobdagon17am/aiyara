@@ -54,7 +54,7 @@ class GiftVoucherController extends Controller
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_giftvoucher_cus.pro_sdate) = '{$s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_giftvoucher_cus.pro_sdate) >= '{$s_date}' and date(db_giftvoucher_cus.pro_sdate) <= '{$e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$s_date}' = ''  and '{$e_date}' != ''  THEN  date(db_giftvoucher_cus.pro_edate) = '{$e_date}' else 1 END"))
-            ->orderby('db_giftvoucher_cus.created_at', 'DESC')
+            ->orderby('db_giftvoucher_cus.pro_edate', 'ASC')
             ->get();
 
 
