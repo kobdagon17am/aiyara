@@ -430,7 +430,7 @@ class FrontstoreController extends Controller
        //        return @$key;
        //      }
        // }
-       // dd();
+       // dd();sPay_type
 
       // dd($sRow->customers_id_fk);
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
@@ -530,7 +530,7 @@ class FrontstoreController extends Controller
 
 
       if($sRow->purchase_type_id_fk=='5'){
-        $sPay_type = DB::select(" select * from dataset_pay_type where id in (4,12,13,14) and status=1 ");
+        $sPay_type = DB::select(" select * from dataset_pay_type where id in (4,12,13,14,19) and status=1 ");
       }else{
         $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
       }
@@ -3560,21 +3560,24 @@ ORDER BY created_at DESC
           }elseif(@$row->cash_pay!=0){
              $total_price += $row->cash_pay;
           }
+      
           if(@$row->credit_price!=0){
              $total_price += $row->credit_price+$row->fee_amt;
           }
+          
           if(@$row->transfer_price!=0){
              $total_price += $row->transfer_price;
           }
           if(@$row->aicash_price!=0){
              $total_price += $row->aicash_price;
           }
+          
+        
           if(@$row->gift_voucher_price!=0){
             $total_price += @$row->gift_voucher_price;
          }
-
-        //  if(@$row->code_order=='O121120200061'){
-        //   dd(@$row->gift_voucher_price);
+        //  if(@$row->code_order=='O121120300072'){
+        //   // dd(@$row->cash_pay);
         // dd($total_price);
         //  }
         

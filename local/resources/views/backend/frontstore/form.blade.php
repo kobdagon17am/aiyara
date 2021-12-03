@@ -5451,7 +5451,17 @@ $(document).ready(function() {
                                     $('.class_btnSave').removeAttr( "disabled" );
                                     $('.class_btnSave').show();
 
-                            }else{
+                            }
+                            else 
+                            // 19 Gift Voucher + เงินสด
+                            if(pay_type_id_fk==19){
+                              $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
+                              $(".show_div_cash_pay").show();
+                              $('.class_btnSave').addClass(' btnSave ');
+                                    $('.class_btnSave').removeAttr( "disabled" );
+                                    $('.class_btnSave').show();
+                            }
+                            else{
 
                                   $('#fee').removeAttr('required');
                                   $('input[name=account_bank_id]').removeAttr('required');
@@ -5466,9 +5476,6 @@ $(document).ready(function() {
                                     $('.class_btnSave').show();
 
                               }
-
-
-                             
 
                                 $('.myloading').hide();
 
@@ -5615,10 +5622,11 @@ $(document).ready(function() {
 
                 // $('#pay_type_id_fk').val("").select2();
                 var pay_type_id_fk = $("#pay_type_id_fk").val();
-                $('#cash_price').val("");
-                $('#cash_pay').val("");
-                $(".show_div_cash_pay").hide();
-
+                if(pay_type_id_fk!=19){
+                  $('#cash_price').val("");
+                  $('#cash_pay').val("");
+                  $(".show_div_cash_pay").hide();
+                }
                      $("input[name=_method]").val('');
 
             var sum_price = $('#sum_price').val();
@@ -5679,6 +5687,11 @@ $(document).ready(function() {
                                       $("#gift_voucher_price").val(value.gift_voucher_price);
                                       $('#credit_price').val(parseFloat(value.credit_price).toFixed(2));
                                       $('#sum_credit_price').val(parseFloat(value.sum_credit_price).toFixed(2));
+                                    }else
+                                    // Gift Voucher + เงินสด
+                                    if(pay_type_id_fk==19){
+                                      $("#gift_voucher_price").val(parseFloat(value.gift_voucher_price).toFixed(2));
+                                      $("#cash_pay").val(parseFloat(value.cash_pay).toFixed(2));
                                     } else{
                                       $("#gift_voucher_price").val(value.gift_voucher_price);
                                     }
