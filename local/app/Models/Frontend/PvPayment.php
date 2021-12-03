@@ -164,7 +164,7 @@ class PvPayment extends Model
                 $order_update->approver = $admin_id;
                 $order_update->order_status_id_fk = $orderstatus_id;
                 $order_update->cancel_expiry_date = $cancel_expiry_date;
-                $order_update->approve_status = 1;
+                $order_update->approve_status = 2;
                 $order_update->approve_date = date('Y-m-d H:i:s');
 
                 $product_list = DB::table('db_order_products_list')
@@ -635,7 +635,7 @@ class PvPayment extends Model
             $order_update->pv_mt_old = $customer_update->pv_mt;
             $order_update->approver = $admin_id;
             $order_update->order_status_id_fk = $orderstatus_id;
-            $order_update->approve_status = 1;
+            $order_update->approve_status = 2;
             $order_update->approve_date = date('Y-m-d H:i:s');
             $customer_update->save();
 
