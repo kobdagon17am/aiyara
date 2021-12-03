@@ -65,7 +65,7 @@ class Transfer_warehousesController extends Controller
       // dd($sTransfer_chooseAll);
       $sTransfer_choose = \App\Models\Backend\Transfer_choose::where('warehouse_id_fk','=','0')->where('action_user','=',(\Auth::user()->id))->get();
       // dd($sTransfer_choose);
-
+  
         return View('backend.transfer_warehouses.index')->with(
         array(
            'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
@@ -743,7 +743,7 @@ class Transfer_warehousesController extends Controller
 
 
       // $sTable = \App\Models\Backend\Transfer_warehouses::where('remark','1')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
-
+ 
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery

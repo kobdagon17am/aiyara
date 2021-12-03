@@ -1074,7 +1074,13 @@ if(!empty($db_orders[0]->action_user)){
   $count_row = $count_row[0]->count_row ;
 
 
-
+  $db_orders_Data = DB::select("
+  SELECT db_orders.*,branchs.b_code as branch_code
+  FROM db_orders
+  LEFT Join branchs ON db_orders.branch_id_fk = branchs.id
+  WHERE
+  db_orders.id = '$id'
+");
 
 for ($j=0; $j < $amt_page ; $j++) { 
  
@@ -1111,6 +1117,8 @@ for ($j=0; $j < $amt_page ; $j++) {
         <br> 
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
         <?php echo @$DB[0]->a ; ?>
+        <!-- <br>  -->
+        <!-- <php echo @$db_orders->invoice_code_id_fk ; ?> -->
         <br>
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+5) ; "); ?>
         <?php echo @$DB[0]->a ; ?>

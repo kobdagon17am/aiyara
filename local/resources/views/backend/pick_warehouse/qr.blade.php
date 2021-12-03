@@ -577,6 +577,24 @@
                 
       });
 
+      $(document).on('click', '.print_slip', function(event) {
+
+event.preventDefault();
+
+$(".myloading").show();
+
+var id = $(this).data('id');
+
+// // console.log(id);
+
+setTimeout(function(){
+   window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
+   $(".myloading").hide();
+}, 500);
+
+
+});
+
     </script>
 
   <script type="text/javascript">
