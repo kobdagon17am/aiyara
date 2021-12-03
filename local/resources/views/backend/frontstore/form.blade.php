@@ -517,7 +517,7 @@ if(@$sRow->check_press_save==2){
                               @if(isset($customer_pv))
                               <div class="col-md-6">
                                 <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> คุณสมบัติ :  </label>
+                                  <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติ :  </label>
                                   <div class="col-md-6">
                                     <input type="text" class="form-control" value="{{$customer_pv->pv_mt}} PV" readonly>
                                   </div>
