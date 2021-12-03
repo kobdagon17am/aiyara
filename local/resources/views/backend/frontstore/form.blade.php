@@ -864,7 +864,10 @@ if(@$sRow->check_press_save==2){
 
                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="0" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_04" value="4" <?=(@$sRow->delivery_location==4?'checked':'')?> > <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น </label>
                           @ENDIF
-
+                          {{-- วุฒิเพิ่ม --}}
+                          <div class="col-md-6">
+                          <input name="bill_transfer_other" id="bill_transfer_other" class="form-control" placeholder="(ระบุ) หมายเหตุ * กรณีจัดส่งพร้อมบิลอื่น " value="{{@$sRow->bill_transfer_other}}">
+                          </div>
                         </th>
                       </tr>
 
@@ -1405,7 +1408,8 @@ if(@$sRow->check_press_save==2){
 
 
                    <?php $div_pay_with_other_bill = @$sRow->pay_with_other_bill==0||@$sRow->pay_with_other_bill==''?"display: none;":''; ?>
-                    <div class="divTableRow div_pay_with_other_bill " style="<?=$div_pay_with_other_bill?>">
+                   {{-- วุฒิเอาออกจาก style  $div_pay_with_other_bill --}}
+                    <div class="divTableRow div_pay_with_other_bill " style="">
                       <div class="divTableCell">&nbsp; </div>
                       <div class="divTH">
                         <label for="" > </label>
@@ -2978,6 +2982,7 @@ if(@$sRow->check_press_save==2){
 // จัดส่งพร้อมบิลอื่น
        $(document).on('click', '#addr_04', function(event) {
               var v = $(this).val();
+      
               // / // console.log(v);
               $("#addr_05").prop("disabled", true);
         });
@@ -5394,6 +5399,7 @@ $(document).ready(function() {
                               // Gift Voucher
                               if(pay_type_id_fk==4){
                                 $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
+                                $(".div_pay_with_other_bill").show();
                                 $('.class_btnSave').addClass(' btnSave ');
                                     $('.class_btnSave').removeAttr( "disabled" );
                                     $('.class_btnSave').show();
@@ -5424,6 +5430,7 @@ $(document).ready(function() {
                         // 13 Gift Voucher + บัตรเครดิต
                             if(pay_type_id_fk==13){
                               // เครดิต
+                              $(".div_pay_with_other_bill").show();
                               $(".show_div_credit").show();
                               // $("#credit_price").attr('disabled', false);
                               $("#credit_price").val('');
@@ -5450,6 +5457,7 @@ $(document).ready(function() {
                             else 
                             // 19 Gift Voucher + เงินสด
                             if(pay_type_id_fk==19){
+                              $(".div_pay_with_other_bill").show();
                               $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
                               $(".show_div_cash_pay").show();
                               $('.class_btnSave').addClass(' btnSave ');

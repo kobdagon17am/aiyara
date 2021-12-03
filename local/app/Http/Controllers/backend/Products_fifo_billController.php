@@ -351,6 +351,7 @@ class Products_fifo_billController extends Controller
       $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
       $TABLES = DB::select(" SHOW TABLES ");
+
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
@@ -508,13 +509,14 @@ group by promotions_products.product_id_fk
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                     // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk=2 ORDER BY lot_expired_date ASC  ");
+                    //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
                           // TEMPORARY
                           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
 
-
+// dd($temp_db_stocks_02);
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -692,6 +694,7 @@ group by promotions_products.product_id_fk
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
+                                  
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -779,6 +782,7 @@ group by promotions_products.product_id_fk
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
+                                 
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -940,6 +944,7 @@ group by promotions_products.product_id_fk
                 // ->where('amt_lot', $v->amt_lot)
                 // ->where('amt_remain', $v->amt_remain)
                 ->get();
+            
                 if($_choose->count() == 0){
                   DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (invoice_code,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain) 
                     VALUES (
@@ -1098,7 +1103,7 @@ group by promotions_products.product_id_fk
 
         // $Data = DB::select(" SELECT * FROM $temp_ppr_002; ");
         // return $Data;
-
+        // warehouse_id_fk
 // เอาไปแสดงชั่วคราวไว้ในตารางที่ค้นก่อน หน้า จ่ายสินค้าตามใบเสร็จ /backend/pay_product_receipt
 // ตารางส่วนบน
 // ดึงจาก $temp_ppr_001 & $temp_ppr_002 ลง temp ก่อน แค่แสดง แต่หลังจากกดปุ่ม save แล้ว ค่อยเก็บลงตารางจริง
@@ -1148,20 +1153,23 @@ group by promotions_products.product_id_fk
           // return $arr_product_id_fk;
 
           if(!empty($arr_product_id_fk)){
+           
             DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
              WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
-          }
+       
+        
+        }
  
          // $Data = DB::select(" SELECT * FROM $temp_db_stocks; ");
          // return $Data;
-
+    
           if(in_array($temp_db_stocks_compare,$array_TABLES)){
             // return "IN";
           }else{
             // return "Not";
             DB::select(" CREATE TABLE $temp_db_stocks_compare LIKE temp_db_stocks_compare_template ");
           }
-
+     
           // $lastInsertId = DB::getPdo()->lastInsertId();
 
             return 1;
