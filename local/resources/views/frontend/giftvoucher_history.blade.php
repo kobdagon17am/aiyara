@@ -169,7 +169,7 @@
                         title: '<center>คงเหลือ</center>',
                         className: 'text-right'
                     },
-          ],order:[[0,'DESC']],
+          ],
 
   });
 
