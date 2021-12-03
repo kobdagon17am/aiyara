@@ -6301,6 +6301,14 @@ var total_sum = 0;
                           }
                         }
 
+                          // Gift Voucher + เงินสด
+            if(pay_type_id_fk==19){
+              if(gift_voucher_cost<gift_voucher_price){
+                alert("!!! ยอด GIft Voucher ของคุณไม่เพียงพอ");
+                  return false;
+              }
+            }
+
               var cnt_slip =  "{{@$cnt_slip}}";
               // console.log(cnt_slip);
              // กรณีเงินโอน 

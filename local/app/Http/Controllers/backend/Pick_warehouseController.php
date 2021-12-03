@@ -637,7 +637,12 @@ class Pick_warehouseController extends Controller
   public function warehouse_qr_0001(Request $reg){
 
       // $sTable = DB::select(" SELECT * FROM `db_pick_pack_packing` WHERE packing_code_id_fk =".$reg->id." GROUP BY packing_code  ");
-      $sTable = DB::select(" SELECT * FROM db_pick_pack_packing_code where id=".$reg->id."  ");
+      // $sTable = DB::select(" SELECT * FROM db_pick_pack_packing_code where id=".$reg->id."  ");
+      $sTable = DB::table('db_pick_pack_packing_code')
+      // ->join('db_orders','db_pick_pack_packing_code.receipt','=','db_orders.code_order')
+      // ->select('db_pick_pack_packing_code.*','db_orders.id as order_id')
+      ->where('db_pick_pack_packing_code.id',$reg->id);
+    // dd($sTable);
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
@@ -701,11 +706,15 @@ class Pick_warehouseController extends Controller
           $pn = '<div class="divTable"><div class="divTableBody">';
           $arr = [];
           foreach ($DP as $key => $value) {
+      // dd($row);
               $pn .=     
-                '<center> <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$row->id.'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> 
-             ';
-
+                '<center> <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$row->id.'" title="พิมพ์ใบเบิก" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> 
+            
+          
+                ';
+                // <a href="javascript: void(0);" target=_blank data-id="'+$row->order_id+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a>
           }
+          // <a href="javascript: void(0);" target=_blank data-id="'.$row->order_id.'" title="พิมพ์ใบเสร็จ" class="print_slip" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a>
              $pn .= '</div>';  
            return $pn;
         }else{

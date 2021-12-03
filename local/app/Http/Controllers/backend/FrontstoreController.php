@@ -3305,128 +3305,128 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
 
 */
 // \Auth::user()->position_level==4 => Supervisor
-        // if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
-            $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
-        // }else{
-        //     $action_user_011 = " AND action_user = $user_login_id ";
-        // }
+if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
+  $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+}else{
+  $action_user_011 = " AND action_user = $user_login_id ";
+}
 
-        if($sPermission==1){
-            $action_user_01 = "";
-            $action_user_011 = "";
-            // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
-        }else{
-            // $action_user_01 = " AND action_user = $user_login_id ";
-            $action_user_01 = " AND branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
-        }
+if($sPermission==1){
+  $action_user_01 = "";
+  $action_user_011 = "";
+  // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+}else{
+  $action_user_01 = " AND action_user = $user_login_id ";
+}
 
-        if(!empty($req->startDate)){
-           $startDate = " AND DATE(db_orders.created_at) >= '".$req->startDate."' " ;
-           $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '".$req->startDate."' " ;
-        }else{
-           $startDate = " AND DATE(db_orders.created_at) >= CURDATE() " ;
-           $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= CURDATE() " ;
-        }
+if(!empty($req->startDate)){
+ $startDate = " AND DATE(db_orders.created_at) >= '".$req->startDate."' " ;
+ $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '".$req->startDate."' " ;
+}else{
+ $startDate = " AND DATE(db_orders.created_at) >= CURDATE() " ;
+ $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= CURDATE() " ;
+}
 
-        if(!empty($req->endDate)){
-           $endDate = " AND DATE(db_orders.created_at) <= '".$req->endDate."' " ;
-           $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '".$req->endDate."' " ;
-        }else{
-           $endDate = "";
-           $endDate2 = "";
-        }
+if(!empty($req->endDate)){
+ $endDate = " AND DATE(db_orders.created_at) <= '".$req->endDate."' " ;
+ $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '".$req->endDate."' " ;
+}else{
+ $endDate = "";
+ $endDate2 = "";
+}
 
-        // $startDate = "";
-        // $endDate = "";
+// $startDate = "";
+// $endDate = "";
 
-        if(!empty($req->purchase_type_id_fk)){
-           $purchase_type_id_fk = " AND db_orders.purchase_type_id_fk = '".$req->purchase_type_id_fk."' " ;
-           if($req->purchase_type_id_fk==4){
-             $purchase_type_id_fk_02 = "";
-           }else{
-             $purchase_type_id_fk_02 = " AND db_add_ai_cash.id=0 ";
-           }
-        }else{
-           $purchase_type_id_fk = "";
-           $purchase_type_id_fk_02 = "";
-        }
+if(!empty($req->purchase_type_id_fk)){
+ $purchase_type_id_fk = " AND db_orders.purchase_type_id_fk = '".$req->purchase_type_id_fk."' " ;
+ if($req->purchase_type_id_fk==4){
+   $purchase_type_id_fk_02 = "";
+ }else{
+   $purchase_type_id_fk_02 = " AND db_add_ai_cash.id=0 ";
+ }
+}else{
+ $purchase_type_id_fk = "";
+ $purchase_type_id_fk_02 = "";
+}
 
-          if(!empty($req->customer_username)){
-             $customer_username = " AND db_orders.customers_id_fk = '".$req->customer_username."' " ;
-             $customer_username_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_username."' " ;
-          }else{
-             $customer_username = "";
-             $customer_username_02 = "";
-          }
+if(!empty($req->customer_username)){
+   $customer_username = " AND db_orders.customers_id_fk = '".$req->customer_username."' " ;
+   $customer_username_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_username."' " ;
+}else{
+   $customer_username = "";
+   $customer_username_02 = "";
+}
 
-          if(!empty($req->customer_name)){
-             $customer_name = " AND db_orders.customers_id_fk = '".$req->customer_name."' " ;
-             $customer_name_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_name."' " ;
-          }else{
-             $customer_name = "";
-             $customer_name_02 = "";
-          }
+if(!empty($req->customer_name)){
+   $customer_name = " AND db_orders.customers_id_fk = '".$req->customer_name."' " ;
+   $customer_name_02 = " AND db_add_ai_cash.customer_id_fk = '".$req->customer_name."' " ;
+}else{
+   $customer_name = "";
+   $customer_name_02 = "";
+}
 
-        if(!empty($req->invoice_code)){
-           $invoice_code = " AND code_order = '".$req->invoice_code."' " ;
-        }else{
-           $invoice_code = "";
-        }
+if(!empty($req->invoice_code)){
+ $invoice_code = " AND code_order = '".$req->invoice_code."' " ;
+}else{
+ $invoice_code = "";
+}
 
-          if(!empty($req->action_user)){
-             $action_user_02 = " AND db_orders.action_user = '".$req->action_user."' " ;
-             $action_user_022 = " AND db_add_ai_cash.action_user = '".$req->action_user."' " ;
-          }else{
-             $action_user_02 = "";
-             $action_user_022 = "";
-          }
+if(!empty($req->action_user)){
+   $action_user_02 = " AND db_orders.action_user = '".$req->action_user."' " ;
+   $action_user_022 = " AND db_add_ai_cash.action_user = '".$req->action_user."' " ;
+}else{
+   $action_user_02 = "";
+   $action_user_022 = "";
+}
 
 
-          if(isset($req->status_sent_money)){
-             $status_sent_money = " AND db_orders.status_sent_money = ".$req->status_sent_money." " ;
-             $status_sent_money_02 = " AND db_add_ai_cash.status_sent_money = ".$req->status_sent_money." " ;
-          }else{
-             $status_sent_money = "";
-             $status_sent_money_02 = "";
-          }
+if(isset($req->status_sent_money)){
+   $status_sent_money = " AND db_orders.status_sent_money = ".$req->status_sent_money." " ;
+   $status_sent_money_02 = " AND db_add_ai_cash.status_sent_money = ".$req->status_sent_money." " ;
+}else{
+   $status_sent_money = "";
+   $status_sent_money_02 = "";
+}
 
-          if(isset($req->approve_status)){
-             if($req->approve_status==7){
-                $approve_status = " AND db_orders.approve_status = 0 " ;
-                if(!empty($req->startDate)){
+if(isset($req->approve_status)){
+   if($req->approve_status==7){
+      $approve_status = " AND db_orders.approve_status = 0 " ;
+      if(!empty($req->startDate)){
 
-                }else{
-                    $startDate = '';
-                    $endDate = '';
-                    $startDate2 = '';
-                    $endDate2 = '';
-                }
+      }else{
+          $startDate = '';
+          $endDate = '';
+          $startDate2 = '';
+          $endDate2 = '';
+      }
 
-             }else{
-                $approve_status = " AND db_orders.approve_status = ".$req->approve_status." " ;
-             }
-             $approve_status_02 = " AND db_add_ai_cash.approve_status = ".$req->approve_status." " ;
-          }else{
-             $approve_status = "";
-             $approve_status_02 = "";
-          }
+   }else{
+      $approve_status = " AND db_orders.approve_status = ".$req->approve_status." " ;
+   }
+   $approve_status_02 = " AND db_add_ai_cash.approve_status = ".$req->approve_status." " ;
+}else{
+   $approve_status = "";
+   $approve_status_02 = "";
+}
 
-        if(isset($req->viewcondition)){
-          if(isset($req->viewcondition) && $req->viewcondition=="ViewBuyNormal"){
-            $viewcondition_01 = ' and db_orders.purchase_type_id_fk not in (4,5) ';
-            $viewcondition_02 = ' and db_add_ai_cash.id=0 ';
-          }else if(isset($req->viewcondition) && $req->viewcondition=="ViewBuyVoucher"){
-            $viewcondition_01 = ' and db_orders.purchase_type_id_fk in (4,5) ';
-            $viewcondition_02 = '';
-          }else{
-            $viewcondition_01 = '';
-            $viewcondition_02 = '';
-          }
-        }else{
-          $viewcondition_01 = '';
-          $viewcondition_02 = '';
-        }
+if(isset($req->viewcondition)){
+if(isset($req->viewcondition) && $req->viewcondition=="ViewBuyNormal"){
+  $viewcondition_01 = ' and db_orders.purchase_type_id_fk not in (4,5) ';
+  $viewcondition_02 = ' and db_add_ai_cash.id=0 ';
+}else if(isset($req->viewcondition) && $req->viewcondition=="ViewBuyVoucher"){
+  $viewcondition_01 = ' and db_orders.purchase_type_id_fk in (4,5) ';
+  $viewcondition_02 = '';
+}else{
+  $viewcondition_01 = '';
+  $viewcondition_02 = '';
+}
+}else{
+$viewcondition_01 = '';
+$viewcondition_02 = '';
+}
 
+// dd($action_user_011);
    // dd($action_user_011);
       // $action_user_02 บรรทัด ต่อจากinvoice_code
     $sTable = DB::select("
@@ -3588,9 +3588,15 @@ ORDER BY created_at DESC
             $shipping_price  = 0 ;
           }
 
-          if(@$row->gift_voucher_price!=0){
-            $total_price += @$row->gift_voucher_price;
-         }
+          if(@$row->purchase_type_id_fk==5){
+            if(@$row->gift_voucher_price!=0){
+              if($total_price!=0){
+                $total_price -= @$row->gift_voucher_price;
+              }
+   
+           }
+          }
+       
 
 
            //  if(@$row->code_order=='O121120200061'){
@@ -3600,15 +3606,16 @@ ORDER BY created_at DESC
         //   if(@$row->gift_voucher_price!=0){
         //     $total_price += @$row->gift_voucher_price;
         //  }
-        //  if(@$row->code_order=='O121120300072'){
-        //   // dd(@$row->cash_pay);
+        //  if(@$row->code_order=='O121120300077'){
+        //   dd($row->gift_voucher_price);
         // dd($total_price);
         //  }
 
           // return $total_price;
           if(@$total_price>0){
-            // return @number_format(@$total_price,2);
            return @number_format((@$total_price+$shipping_price),2);
+          }else{
+            return @number_format((@$total_price),2);
           }
 
       })

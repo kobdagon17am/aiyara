@@ -266,7 +266,7 @@ class Transfer_warehouses_codeController extends Controller
     }
 
     public function Datatable(Request $req){
-
+   
       /*
 	    Super Admin   => see all 
 		1) ถ้าทำ เห็น  
@@ -335,8 +335,9 @@ class Transfer_warehouses_codeController extends Controller
             }else{
                 $branch_id_fk = "";
             }
-
-            $action_user = '1';
+            // เพื่ออะไร
+            // $action_user = '1';
+            $action_user = '';
 
         }else{
 
@@ -388,7 +389,7 @@ class Transfer_warehouses_codeController extends Controller
       //     (CASE WHEN ".(\Auth::user()->id)." IS NULL OR ".(\Auth::user()->branch_id_fk)." = '' THEN TRUE ELSE branch_id_fk = ".($branch_id)." END))
       //     ".$action_date." 
       //     ORDER BY updated_at DESC ");
-
+    // dd($action_user);
       $sTable = DB::select(" SELECT * FROM db_transfer_warehouses_code 
           WHERE 1 $action_user
           $id
