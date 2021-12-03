@@ -1226,7 +1226,6 @@ $(document).ready(function() {
            });
 
             $(document).on('click', '.btnSearchTotal', function(event) {
-
                   event.preventDefault();
                   $('#data-table').DataTable().clear();
                   $(".myloading").show();

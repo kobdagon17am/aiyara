@@ -750,6 +750,9 @@ ORDER BY db_pick_pack_packing.id
 
 ");
 
+
+
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
@@ -939,44 +942,44 @@ GROUP BY db_order_products_list.product_id_fk
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
 
+        $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
+          $pn = '<div class="divTable"><div class="divTableBody">';
+          $pn .=     
+          '<div class="divTableRow">
+          <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;"> ข้อมูลอื่นๆ </div>
+          </div>
+          ';
+          if($sBox->count()==0){
+              DB::table('db_pick_pack_boxsize')->insert([
+                  'pick_pack_packing_id_fk' => @$row->id,
+                  'created_at' => date('Y-m-d H:i:s'),
+              ]);
+          }
           $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
-            $pn = '<div class="divTable"><div class="divTableBody">';
+          foreach($sBox as $key1 => $box){
+            $pn .= '<div class="divTableRow row_0002" data-bill-type="warehouse_qr_0002">
+            <div class="divTableCell" style="text-align:left;"> 
+             <b>ขนาด <br> 
+             <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
+             น้ำหนัก <br>
+              <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
+             จำนวนกล่อง <br>
+              <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
+             <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
+             <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
+            </div> 
+            </div>';
+          }
             $pn .=     
             '<div class="divTableRow">
-            <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;"> ข้อมูลอื่นๆ </div>
+            <div class="divTableCell" style="text-align:center;"> </div>
+            <div class="divTableCell" style="text-align:center;"> </div>
             </div>
             ';
-            if($sBox->count()==0){
-                DB::table('db_pick_pack_boxsize')->insert([
-                    'pick_pack_packing_id_fk' => @$row->id,
-                    'created_at' => date('Y-m-d H:i:s'),
-                ]);
-            }
-            $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
-            foreach($sBox as $key1 => $box){
-              $pn .= '<div class="divTableRow row_0002" data-bill-type="warehouse_qr_0002">
-              <div class="divTableCell" style="text-align:left;"> 
-               <b>ขนาด <br> 
-               <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
-               น้ำหนัก <br>
-                <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
-               จำนวนกล่อง <br>
-                <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
-               <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
-               <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
-              </div> 
-              </div>';
-            }
-              $pn .=     
-              '<div class="divTableRow">
-              <div class="divTableCell" style="text-align:center;"> </div>
-              <div class="divTableCell" style="text-align:center;"> </div>
-              </div>
-              ';
 
-          $pn .= '</div>';  
-          return $pn;
-      })
+        $pn .= '</div>';  
+        return $pn;
+    })
       ->escapeColumns('column_003')  
 
       ->make(true);

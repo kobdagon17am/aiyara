@@ -520,7 +520,7 @@ class FrontstoreController extends Controller
         5 แลก Gift Voucher
         */
 
-        // วุฒิถาม ไม่แน่ใจล็อคไว้ทำไม
+     // วุฒิถาม ไม่แน่ใจล็อคไว้ทำไม
       // if(!empty($sRow->purchase_type_id_fk) && $sRow->purchase_type_id_fk!=5) {
       //   $sPurchase_type = DB::select(" select * from dataset_orders_type where id<>5 and status=1 and lang_id=1 order by id limit 6");
       // }else{
@@ -535,7 +535,6 @@ class FrontstoreController extends Controller
         $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
       }
       // dd($sRow->pay_type_id_fk);
-
       $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
       $sDistribution_channel3 = DB::select(" select * from dataset_distribution_channel where id=3 AND status=1  ");
       $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
@@ -665,22 +664,24 @@ class FrontstoreController extends Controller
       // dd($gv);
       // $gitfvoucher = @$gv!=null?$gv:0;
       // $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
-            $customer_pv = DB::table('customers')
-            ->select('customers.business_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name', 'customers.user_name', 'customers.created_at', 'customers.date_mt_first', 'customers.pv_mt_active',
-                'customers.pv_mt', 'customers.pv_mt', 'customers.bl_a', 'customers.bl_b', 'customers.bl_c', 'customers.pv_a', 'customers.pv_b', 'customers.pv_c','customers.aistockist_status', 'customers.pv_tv',
-                'customers.pv', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
-                'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name', 'customers.team_active_a', 'customers.team_active_b', 'customers.team_active_c')
-            ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
-            ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
-            ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
-            ->where('customers.user_name', '=', @$ThisCustomer[0]->user_name)
-            ->first();
+      $customer_pv = DB::table('customers')
+      ->select('customers.business_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name', 'customers.user_name', 'customers.created_at', 'customers.date_mt_first', 'customers.pv_mt_active',
+          'customers.pv_mt', 'customers.pv_mt', 'customers.bl_a', 'customers.bl_b', 'customers.bl_c', 'customers.pv_a', 'customers.pv_b', 'customers.pv_c','customers.aistockist_status', 'customers.pv_tv',
+          'customers.pv', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
+          'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name', 'customers.team_active_a', 'customers.team_active_b', 'customers.team_active_c')
+      ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
+      ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
+      ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
+      ->where('customers.user_name', '=', @$ThisCustomer[0]->user_name)
+      ->first();
 
-            // dd($sRow->purchase_type_id_fk);
+      // dd($sRow->purchase_type_id_fk);
 // dd($PaymentSlip);
+
+
       return View('backend.frontstore.form')->with(
         array(
-            'customer_pv'=>$customer_pv,
+          'customer_pv'=>$customer_pv,
            'sRow'=>$sRow,
            'sPurchase_type'=>$sPurchase_type,
            'sProductUnit'=>$sProductUnit,
@@ -1051,7 +1052,6 @@ class FrontstoreController extends Controller
       // dd($request->transfer_money_datetime." : AAAA");
 
       // dd($request->all());
-
       DB::beginTransaction();
       try
       {
@@ -1127,21 +1127,21 @@ class FrontstoreController extends Controller
 
               $sRow->check_press_save = 2 ;
 
-             // กรณีโอนชำระ
+              // กรณีโอนชำระ
               if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11 || request('pay_type_id_fk')==12){
-                   $sRow->approve_status = 1 ;
-                   $sRow->order_status_id_fk = 2  ;
-              }else{
-                  $sRow->approve_status = 2 ;
-                  $sRow->order_status_id_fk = 5  ;
-              }
-              $sRow->note    = request('note');
+                $sRow->approve_status = 1 ;
+                $sRow->order_status_id_fk = 2  ;
+           }else{
+               $sRow->approve_status = 2 ;
+               $sRow->order_status_id_fk = 5  ;
+           }
+           $sRow->note    = request('note');
 
-              // if($sRow->purchase_type_id_fk==5){
-              //   $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
-              // }
+           // if($sRow->purchase_type_id_fk==5){
+           //   $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
+           // }
 
-              $sRow->save();
+           $sRow->save();
 
               $this->fncUpdateDeliveryAddress($sRow->id);
 
@@ -1276,6 +1276,7 @@ class FrontstoreController extends Controller
                 // dd($sRow->total_price);
                 $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
               }
+
 
 // dd(request('sentto_branch_id'));
 // dd(request('branch_id_fk'));
@@ -1545,6 +1546,7 @@ class FrontstoreController extends Controller
               }
 
              $this->fncUpdateDeliveryAddress($sRow->id);
+             $this->fncUpdateDeliveryAddressDefault($sRow->id);
 
              return redirect()->to(url("backend/frontstore"));
 
@@ -1575,7 +1577,7 @@ class FrontstoreController extends Controller
 
    public function fncUpdateDeliveryAddress($id)
     {
-              
+              // dd($id);
               $sRow = \App\Models\Backend\Frontstore::find($id);
               // dd($sRow->delivery_location);
               if(@$sRow->delivery_location==0){
@@ -1848,7 +1850,7 @@ class FrontstoreController extends Controller
                       }
                    }
 
-                   // $this->fncUpdateDeliveryAddressDefault($id);
+                     // $this->fncUpdateDeliveryAddressDefault($id);
 
               }
 
@@ -1860,7 +1862,8 @@ class FrontstoreController extends Controller
 
     public function fncUpdateDeliveryAddressDefault($id)
     {
-              
+              // dd($id);
+
               $ch = DB::select(" 
               
                 SELECT  * FROM db_orders 
@@ -3302,18 +3305,19 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
 
 */
 // \Auth::user()->position_level==4 => Supervisor
-        if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
+        // if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
             $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
-        }else{
-            $action_user_011 = " AND action_user = $user_login_id ";
-        }
+        // }else{
+        //     $action_user_011 = " AND action_user = $user_login_id ";
+        // }
 
         if($sPermission==1){
             $action_user_01 = "";
             $action_user_011 = "";
             // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
         }else{
-            $action_user_01 = " AND action_user = $user_login_id ";
+            // $action_user_01 = " AND action_user = $user_login_id ";
+            $action_user_01 = " AND branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
         }
 
         if(!empty($req->startDate)){
@@ -3424,7 +3428,7 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
         }
 
    // dd($action_user_011);
-
+      // $action_user_02 บรรทัด ต่อจากinvoice_code
     $sTable = DB::select("
 
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
@@ -3438,7 +3442,6 @@ $sum_price_05 = $d10[0]->sum_price + $sum_price_05 ;
                 $customer_username
                 $customer_name
                 $invoice_code
-                $action_user_02
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
@@ -3533,6 +3536,7 @@ ORDER BY created_at DESC
       })
       ->addColumn('tooltip_price', function($row) {
           // cash_pay,credit_price,fee_amt,transfer_price,aicash_price
+
           $tootip_price = '';
           if(@$row->cash_price!=0){
              $tootip_price = ' เงินสด: '.$row->cash_price;
@@ -3548,6 +3552,11 @@ ORDER BY created_at DESC
           if(@$row->aicash_price!=0){
              $tootip_price .= ' Ai-Cash: '.$row->aicash_price;
           }
+          
+          if($row->shipping_price>0){
+            $tootip_price .= ' ค่าขนส่ง: '.$row->shipping_price;
+          }
+
           return $tootip_price;
 
       })
@@ -3569,18 +3578,28 @@ ORDER BY created_at DESC
           if(@$row->aicash_price!=0){
              $total_price += $row->aicash_price;
           }
+          // return $total_price;
+
+          if($row->shipping_price>0){
+            $shipping_price  =  $row->shipping_price;
+          }else{
+            $shipping_price  = 0 ;
+          }
+
           if(@$row->gift_voucher_price!=0){
             $total_price += @$row->gift_voucher_price;
          }
 
-        //  if(@$row->code_order=='O121120200061'){
+
+           //  if(@$row->code_order=='O121120200061'){
         //   dd(@$row->gift_voucher_price);
         // dd($total_price);
         //  }
         
           // return $total_price;
           if(@$total_price>0){
-           return @number_format(@$total_price,2);
+            // return @number_format(@$total_price,2);
+           return @number_format((@$total_price+$shipping_price),2);
           }
 
       })

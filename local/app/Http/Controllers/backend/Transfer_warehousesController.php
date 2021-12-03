@@ -729,17 +729,17 @@ class Transfer_warehousesController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
-        if(@\Auth::user()->permission==1){
+       if(@\Auth::user()->permission==1){
 
-            $sTable = \App\Models\Backend\Transfer_warehouses::where('remark','2')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
+        $sTable = \App\Models\Backend\Transfer_warehouses::where('remark','2')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
 
-        }else{
+    }else{
 
-           // $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
-            $sTable = \App\Models\Backend\Transfer_warehouses::where('branch_id_fk',$User_branch_id)->where('remark','2')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
+       // $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->orderBy('id', 'asc');
+        $sTable = \App\Models\Backend\Transfer_warehouses::where('branch_id_fk',$User_branch_id)->where('remark','2')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
 
 
-        }
+    }
 
 
       // $sTable = \App\Models\Backend\Transfer_warehouses::where('remark','1')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'

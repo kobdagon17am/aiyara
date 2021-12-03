@@ -184,7 +184,7 @@ class Check_stockController extends Controller
             ");
 
         }
-        // dd("product_id_fk=".@$Stock[0]->product_id_fk."".$w_business_location_id_fk. $w_branch_id_fk.$w_warehouse_id_fk.$w_zone_id_fk.$w_shelf_id_fk. $w_shelf_floor. $w_lot_number);
+        
         $sBalance = 0;
         if(@$Amt){
             foreach ($Amt as $key => $value) {

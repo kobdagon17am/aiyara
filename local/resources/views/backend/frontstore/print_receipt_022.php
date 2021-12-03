@@ -99,7 +99,6 @@
 
 <?php
     require(app_path().'/Models/MyFunction.php');
-    
 
 $id = $data[0];
 $n = 22;
@@ -479,7 +478,7 @@ if(!empty($db_orders[0]->action_user)){
        $cus_user_name = @$cus[0]->user_name;
        $cus_name = @$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name;
 
-       $cus_tax = @$cus[0]->id_card!=""?': '.@$cus[0]->id_card:': เลขผู้เสียภาษี -';
+       $cus_tax = @$cus[0]->id_card!=""?': '.@$cus[0]->id_card:': เลขผู้เสียภาษี (ไม่ได้ระบุไว้)';
 
        $address_in_order = DB::select(" 
             SELECT 
@@ -988,8 +987,9 @@ if(!empty($db_orders[0]->action_user)){
         $m++;
 
         $rPt = DB::select(" SELECT * FROM dataset_orders_type where id=".$sRow->purchase_type_id_fk." ");
-        
+
         $purchase_type = "ประเภทการซื้อ : ".$rPt[0]->orders_type;
+
         $score_detail = number_format(@$pv_total,0).' pv';
         if($sRow->purchase_type_id_fk==5){
           @$pv_total = 0;

@@ -586,7 +586,7 @@
           var p_size = $(this).val();
           var id = $(this).data('id');
           var box_id = $(this).attr('box-id');
-             $(".myloading").show();
+          $(".myloading").show();
              $.ajax({
                  type:'POST',
                  url: " {{ url('backend/ajaxProductPackingSize') }} ",
@@ -1076,69 +1076,68 @@
       }
     ?>
 
-  {{-- วุฒิเพิ่ม --}}
-      <script>
-          $(document).on('click','.btn_0002_add',function(){
-            var row = $(this).closest('.row_0002').clone();
-            var div = $(this).closest('.row_0002');
-            var id =  $(this).closest('.row_0002').find('.p_size').attr('data-id');
-            // insertAfter("div.row_0002:last");
-            // เพิ่มข้อมูลลงฐานข้อมูล
-              var p_size = $(this).val();
-             $.ajax({
-                 type:'POST',
-                 url: " {{ url('backend/ajaxProductPackingAddBox') }} ",
-                 data:{ _token: '{{csrf_token()}}',id:id },
-                  success:function(data){
-                       $(".myloading").hide();
-                      row.find('.p_size').removeAttr('data-id');
-                      row.find('.p_size').attr('data-id',id);
-                      row.find('.p_size').removeAttr('box-id');
-                      row.find('.p_size').attr('box-id',data.box_id);
-                      row.find('.p_size').val('');
-                      row.find('.p_weight').removeAttr('data-id');
-                      row.find('.p_weight').attr('data-id',id);
-                      row.find('.p_weight').removeAttr('box-id');
-                      row.find('.p_weight').attr('box-id',data.box_id);
-                      row.find('.p_weight').val('');
-                      row.find('.p_amt_box').removeAttr('data-id');
-                      row.find('.p_amt_box').attr('data-id',id);
-                      row.find('.p_amt_box').removeAttr('box-id');
-                      row.find('.p_amt_box').attr('box-id',data.box_id);
-                      row.find('.p_amt_box').val('');
-                      div.after(row);
-                    },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      $(".myloading").hide();
-                  }
-              });
+     {{-- วุฒิเพิ่ม --}}
+     <script>
+      $(document).on('click','.btn_0002_add',function(){
+        var row = $(this).closest('.row_0002').clone();
+        var div = $(this).closest('.row_0002');
+        var id =  $(this).closest('.row_0002').find('.p_size').attr('data-id');
+        // insertAfter("div.row_0002:last");
+        // เพิ่มข้อมูลลงฐานข้อมูล
+          var p_size = $(this).val();
+         $.ajax({
+             type:'POST',
+             url: " {{ url('backend/ajaxProductPackingAddBox') }} ",
+             data:{ _token: '{{csrf_token()}}',id:id },
+              success:function(data){
+                   $(".myloading").hide();
+                  row.find('.p_size').removeAttr('data-id');
+                  row.find('.p_size').attr('data-id',id);
+                  row.find('.p_size').removeAttr('box-id');
+                  row.find('.p_size').attr('box-id',data.box_id);
+                  row.find('.p_size').val('');
+                  row.find('.p_weight').removeAttr('data-id');
+                  row.find('.p_weight').attr('data-id',id);
+                  row.find('.p_weight').removeAttr('box-id');
+                  row.find('.p_weight').attr('box-id',data.box_id);
+                  row.find('.p_weight').val('');
+                  row.find('.p_amt_box').removeAttr('data-id');
+                  row.find('.p_amt_box').attr('data-id',id);
+                  row.find('.p_amt_box').removeAttr('box-id');
+                  row.find('.p_amt_box').attr('box-id',data.box_id);
+                  row.find('.p_amt_box').val('');
+                  div.after(row);
+                },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  $(".myloading").hide();
+              }
           });
+      });
 
-          $(document).on('click','.btn_0002_remove',function(){
-            var l = $('.row_0002').length;
-            var div = $(this).closest('.row_0002');
-            var box_id = div.find('.p_size').attr('box-id');
-            if(l>1){
-              $.ajax({
-                 type:'POST',
-                 url: " {{ url('backend/ajaxProductPackingRemoveBox') }} ",
-                 data:{ _token: '{{csrf_token()}}',id:id ,box_id:box_id},
-                  success:function(data){
-                       $(".myloading").hide();
-                       div.remove();
-                    },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                      $(".myloading").hide();
-                  }
-              });
-             
-            }else{
-              alert('ไม่สามารถลบรายการสุดท้ายได้');
-            }
-           
+      $(document).on('click','.btn_0002_remove',function(){
+        var l = $('.row_0002').length;
+        var div = $(this).closest('.row_0002');
+        var box_id = div.find('.p_size').attr('box-id');
+        if(l>1){
+          $.ajax({
+             type:'POST',
+             url: " {{ url('backend/ajaxProductPackingRemoveBox') }} ",
+             data:{ _token: '{{csrf_token()}}',id:id ,box_id:box_id},
+              success:function(data){
+                   $(".myloading").hide();
+                   div.remove();
+                },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  $(".myloading").hide();
+              }
           });
-      </script>
-
+         
+        }else{
+          alert('ไม่สามารถลบรายการสุดท้ายได้');
+        }
+       
+      });
+  </script>
 
 @endsection
 

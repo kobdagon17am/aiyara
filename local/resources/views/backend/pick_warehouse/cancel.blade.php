@@ -136,7 +136,6 @@
               <?php $role = DB::select("SELECT * FROM `role_group` where id=".(\Auth::user()->role_group_id_fk)." "); ?>
               <?php $branchs = DB::select("SELECT * FROM `branchs` where id=".(\Auth::user()->branch_id_fk)." "); ?>
               <?php $warehouse = DB::select("SELECT * FROM `warehouse` where id=".($branchs[0]->warehouse_id_fk)."  "); ?>
-              {{-- {{dd($warehouse)}} --}}
               {{ \Auth::user()->name }} / {{ "สาขา > ".$branchs[0]->b_name }}  / {{ $warehouse[0]->w_name }} </span>
             </div>
 

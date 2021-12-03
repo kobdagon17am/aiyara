@@ -74,7 +74,7 @@ class Pay_product_receipt_001Controller extends Controller
       // dd($request->all());
       return $this->form($id);
     }
-    // db_pick_pack_requisition_code
+
    public function form($id=NULL)
     {
 
@@ -126,7 +126,8 @@ class Pay_product_receipt_001Controller extends Controller
         action_date=now() ,
         status_sent=1
         WHERE invoice_code='".$request->invoice_code."' ");
-// dd($request->invoice_code);
+        // dd($request->invoice_code);
+
       DB::update(" UPDATE db_pay_product_receipt_002 SET status_cancel=1 WHERE invoice_code='".$request->invoice_code."' ");
       DB::update(" DELETE FROM db_pick_warehouse_qrcode WHERE invoice_code='".$request->invoice_code."' ");
 
@@ -158,6 +159,9 @@ class Pay_product_receipt_001Controller extends Controller
                     business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,invoice_code, created_at,now(),0
                     FROM db_pay_product_receipt_002 WHERE time_pay not in(select time_pay from db_stocks_return where time_pay=db_pay_product_receipt_002.time_pay and business_location_id_fk=db_pay_product_receipt_002.business_location_id_fk AND branch_id_fk=db_pay_product_receipt_002.branch_id_fk AND product_id_fk=db_pay_product_receipt_002.product_id_fk AND lot_number=db_pay_product_receipt_002.lot_number AND lot_expired_date=db_pay_product_receipt_002.lot_expired_date AND amt=db_pay_product_receipt_002.amt_get AND product_unit_id_fk=db_pay_product_receipt_002.product_unit_id_fk AND warehouse_id_fk=db_pay_product_receipt_002.warehouse_id_fk AND zone_id_fk=db_pay_product_receipt_002.zone_id_fk AND shelf_id_fk=db_pay_product_receipt_002.shelf_id_fk AND shelf_floor=db_pay_product_receipt_002.shelf_floor AND invoice_code=db_pay_product_receipt_002.invoice_code) ; ");
 
+
+
+
                             $insertStockMovement = new  AjaxController();
 
                               // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
@@ -184,7 +188,7 @@ class Pay_product_receipt_001Controller extends Controller
                                       db_stocks_return.status_cancel=1
 
                                 ");
-                              // wut แก้
+                                    // wut แก้
                               // $Data = DB::table('db_stocks_return')->select(
                               //   'db_stocks_return.business_location_id_fk',
                               //   'db_stocks_return.invoice_code as doc_no',
@@ -204,31 +208,32 @@ class Pay_product_receipt_001Controller extends Controller
                               //   )
                               //   ->where('status_cancel',1)
                               //   ->get();
-                                if(!$Data){
-                                  $Data = DB::select("
-                                  SELECT
-                                  db_stocks_return.business_location_id_fk,
-                                  db_stocks_return.invoice_code as doc_no,
-                                  db_stocks_return.updated_at as doc_date,
-                                  db_stocks_return.branch_id_fk,
-                                  product_id_fk,
-                                  lot_number,
-                                  lot_expired_date,
-                                  amt,
-                                  1 as 'in_out',
-                                  product_unit_id_fk,
-                                  warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
-                                  'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
-                                  db_stocks_return.updated_at as dd,
-                                  db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
+                              if(!$Data){
+                                $Data = DB::select("
+                                SELECT
+                                db_stocks_return.business_location_id_fk,
+                                db_stocks_return.invoice_code as doc_no,
+                                db_stocks_return.updated_at as doc_date,
+                                db_stocks_return.branch_id_fk,
+                                product_id_fk,
+                                lot_number,
+                                lot_expired_date,
+                                amt,
+                                1 as 'in_out',
+                                product_unit_id_fk,
+                                warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
+                                'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
+                                db_stocks_return.updated_at as dd,
+                                db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
 
-                                  FROM db_stocks_return
-                                  LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
-                           
+                                FROM db_stocks_return
+                                LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
+                         
 
-                            ");
-                                }
-                              // dd($Data);
+                          ");
+                              }
+                            // dd($Data);
+
                               if(@$Data){
                                 DB::table('db_stock_movement_tmp')->truncate();
                                   foreach ($Data as $key => $value) {
@@ -251,15 +256,15 @@ class Pay_product_receipt_001Controller extends Controller
                                           "shelf_floor" =>  @$value->shelf_floor?$value->shelf_floor:0,
                                           "status" =>  @$value->status?$value->status:0,
                                           "note" =>  @$value->note?$value->note:NULL,
-
                                           "action_user" =>  NULL,
+                                          // "action_user" =>  @$value->action_user?$value->action_user:NULL,
                                           "action_date" =>  @$value->action_date?$value->action_date:NULL,
                                           "approver" =>  @$value->approver?$value->approver:NULL,
                                           "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
 
                                           "created_at" =>@$value->dd?$value->dd:NULL
                                       );
-                                     
+
                                         $insertStockMovement->insertStockMovement($insertData);
 
                                     }
@@ -302,6 +307,7 @@ class Pay_product_receipt_001Controller extends Controller
                                     ));
                                     } 
                                     // DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+
                                }
 
 
@@ -351,7 +357,6 @@ class Pay_product_receipt_001Controller extends Controller
                AND db_stocks_return.shelf_floor = $temp_db_stocks_from_return.shelf_floor 
                AND $temp_db_stocks_from_return.invoice_code='".$request->invoice_code."'
                SET db_stocks_return.status_cancel=1 ");
-
                DB::commit();
               }
               catch (\Exception $e) {
@@ -363,7 +368,6 @@ class Pay_product_receipt_001Controller extends Controller
                   DB::rollback();
               return $e->getMessage();
               }
-
     }
 
     public function destroy_some(Request $request)
@@ -547,7 +551,7 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function ajaxSavePay_product_receipt(Request $request)
     {
-      // db_pick_pack_requisition_code
+          // db_pick_pack_requisition_code
       // return $request->txtSearch;
           $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 

@@ -32,6 +32,9 @@ class AdminController extends Controller
 
   public function edit($id)
   {
+
+    // dd(\Hash::make('@12345'));
+
     try {
       $sLocale  = \App\Models\Locale::all();
       $sRow = \App\Models\Backend\Permission\Admin::find($id);
@@ -52,7 +55,7 @@ class AdminController extends Controller
 
   public function update(Request $request, $id)
   {
-    // dd($request);
+    // dd($request->all());
     return $this->form($id);
   }
 
@@ -91,6 +94,8 @@ class AdminController extends Controller
         if( request('password') ){
           $sRow->password    = \Hash::make( request('password') );
         }
+
+        // dd(\Hash::make( request('password') ));
 
         $sRow->save();
         \DB::commit();
