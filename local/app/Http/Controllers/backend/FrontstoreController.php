@@ -353,7 +353,7 @@ class FrontstoreController extends Controller
     {
       // dd($id);
 
-      // กำลังเบิกสินค้า ไม่ให้แก้บิล 
+      // กำลังเบิกสินค้า ไม่ให้แก้บิล
           $ch_Disabled = 0;
           $r_ch_Disabled = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
           if(!empty($r_ch_Disabled))
@@ -617,7 +617,7 @@ class FrontstoreController extends Controller
       // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
       // dd($customer_pv);
       // dd($sRow->business_location_id_fk);
-      
+
       // dd($pv_total);
       // แถม
       $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$pv_total);
@@ -1266,15 +1266,15 @@ class FrontstoreController extends Controller
                    ('".request('customers_id_fk')."', '', '".$sRow->code_order."', '$image_path', '$name', now(), now()) ");
                   $lastInsertId_03 = DB::getPdo()->lastInsertId();
                 }
-                
+
 
               PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
               // dd("1233");
               // dd(request('purchase_type_id_fk'));
               if($sRow->purchase_type_id_fk==5){
-                // dd($sRow->total_price);
                 $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
+
               }
 
 
@@ -1289,7 +1289,7 @@ class FrontstoreController extends Controller
               // dd($sentto_branch_id);
               // dd(request('sentto_branch_id'));
               // dd($request->frontstore_id);
-                   
+
                    $sRow->sentto_branch_id    = request('sentto_branch_id');
                    // DB::select("UPDATE db_orders SET sentto_branch_id=".$sentto_branch_id.", address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
               // }
@@ -1439,7 +1439,7 @@ class FrontstoreController extends Controller
               //    }
               //  }
 
-  
+
                $r_addr = DB::select("select address_sent_id_fk from db_orders WHERE (id='".$request->frontstore_id."')");
 
            if( @$request->delivery_location!=3){
@@ -1551,17 +1551,17 @@ class FrontstoreController extends Controller
 
              $this->fncUpdateDeliveryAddress($sRow->id);
              $this->fncUpdateDeliveryAddressDefault($sRow->id);
-
+             DB::commit();
              return redirect()->to(url("backend/frontstore"));
 
 
         }else{
-
+          DB::commit();
           // dd($request->all());
           return $this->form($id);
         }
 
-        DB::commit();
+
       }
       catch (\Exception $e) {
           DB::rollback();
@@ -1692,10 +1692,10 @@ class FrontstoreController extends Controller
                                            ");
                                         }
 
-                        
+
                             DB::select("
 
-                              UPDATE db_orders SET 
+                              UPDATE db_orders SET
                               house_no='".@$v->card_house_no."',
                               house_name='".@$v->card_house_name."',
                               moo='".@$v->card_moo."',
@@ -1782,7 +1782,7 @@ class FrontstoreController extends Controller
 
                               DB::select("
 
-                              UPDATE db_orders SET 
+                              UPDATE db_orders SET
                               house_no='".@$v->house_no."',
                               house_name='".@$v->house_name."',
                               moo='".@$v->moo."',
@@ -1822,7 +1822,7 @@ class FrontstoreController extends Controller
                                   @$address .= ", อ.". @$v->ampname;
                                   @$address .= ", จ.". @$v->provname;
 
-        
+
                                   DB::select(" UPDATE db_delivery
                                   SET
                                   recipient_name = '".@$v->recipient_name."',
@@ -1840,7 +1840,7 @@ class FrontstoreController extends Controller
 
                              DB::select("
 
-                              UPDATE db_orders SET 
+                              UPDATE db_orders SET
                               house_no='".@$v->addr_no."',
                               amphures_id_fk='".(@$v->amphur_code?@$v->amphur_code:0)."',
                               district_id_fk='".(@$v->tambon_code?@$v->tambon_code:0)."',
@@ -1868,9 +1868,9 @@ class FrontstoreController extends Controller
     {
               // dd($id);
 
-              $ch = DB::select(" 
-              
-                SELECT  * FROM db_orders 
+              $ch = DB::select("
+
+                SELECT  * FROM db_orders
                 WHERE id=$id and amphures_id_fk is null and district_id_fk is null and province_id_fk is null
 
               ");
@@ -1944,10 +1944,10 @@ class FrontstoreController extends Controller
 
                                          ");
 
-                                      
+
                                           DB::select("
 
-                                            UPDATE db_orders SET 
+                                            UPDATE db_orders SET
                                             house_no='".@$v->card_house_no."',
                                             house_name='".@$v->card_house_name."',
                                             moo='".@$v->card_moo."',
@@ -2031,7 +2031,7 @@ class FrontstoreController extends Controller
 
                                   DB::select("
 
-                                  UPDATE db_orders SET 
+                                  UPDATE db_orders SET
                                   house_no='".@$v->house_no."',
                                   house_name='".@$v->house_name."',
                                   moo='".@$v->moo."',
@@ -2048,7 +2048,7 @@ class FrontstoreController extends Controller
 
 
                           }
-                      
+
                       }
 
 
@@ -2069,7 +2069,7 @@ class FrontstoreController extends Controller
                                   @$address .= ", อ.". @$v->ampname;
                                   @$address .= ", จ.". @$v->provname;
 
-        
+
                                   DB::select(" UPDATE db_delivery
                                   SET
                                   recipient_name = '".@$v->recipient_name."',
@@ -2086,7 +2086,7 @@ class FrontstoreController extends Controller
 
                                  DB::select("
 
-                                  UPDATE db_orders SET 
+                                  UPDATE db_orders SET
                                   house_no='".@$v->addr_no."',
                                   amphures_id_fk='".(@$v->amphur_code?@$v->amphur_code:0)."',
                                   district_id_fk='".(@$v->tambon_code?@$v->tambon_code:0)."',
@@ -2394,7 +2394,7 @@ class FrontstoreController extends Controller
                 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                 -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+                (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                 -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                 ) as total_price,
 
@@ -2934,7 +2934,7 @@ SUM(
 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
 (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
 -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
 ) as sum_price,
 sum(pv_total) as pv_total
@@ -2997,7 +2997,7 @@ SUM(
 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
 (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
 -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
 ) as sum_price,
 sum(pv_total) as pv_total
@@ -3060,7 +3060,7 @@ SUM(
 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
 (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
 -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
 ) as sum_price,
 sum(pv_total) as pv_total
@@ -3080,7 +3080,7 @@ $endDate1
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
-                
+
 ");
 
 $cnt_03 = $d5[0]->cnt;
@@ -3123,7 +3123,7 @@ SUM(
 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
 (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
 -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
 ) as sum_price,
 sum(pv_total) as pv_total
@@ -3142,7 +3142,7 @@ $endDate1
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
-              
+
 ");
 
 $cnt_04 = $d7[0]->cnt;
@@ -3185,7 +3185,7 @@ SUM(
 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
 (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
 -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
 ) as sum_price,
 sum(pv_total) as pv_total
@@ -3203,7 +3203,7 @@ $endDate1
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
-                 
+
 ");
 
 $cnt_05 = $d9[0]->cnt;
@@ -3565,7 +3565,7 @@ ORDER BY created_at DESC
           if(@$row->aicash_price!=0){
              $tootip_price .= ' Ai-Cash: '.$row->aicash_price;
           }
-          
+
           if($row->shipping_price>0){
             $tootip_price .= ' ค่าขนส่ง: '.$row->shipping_price;
           }
@@ -3582,7 +3582,7 @@ ORDER BY created_at DESC
           }elseif(@$row->cash_pay!=0){
              $total_price += $row->cash_pay;
           }
-      
+
           if(@$row->credit_price!=0){
              $total_price += $row->credit_price+$row->fee_amt;
           }
@@ -3655,7 +3655,7 @@ ORDER BY created_at DESC
       //       $total_price += $row->sum_price;
       //       return @number_format(@$total_price,2);
       //     }
-          
+
       //     // return sprintf("%0.3f", ciel(@$total_price));
       //     // return number_format(@$total_price,2,",",".");
       //     // return number_format((float)$total_price, 2, '.', '');
@@ -3740,7 +3740,7 @@ ORDER BY created_at DESC
                 return @$r3->txt_desc;
 
              }
-          
+
           }
 
 
