@@ -871,8 +871,7 @@ class AjaxController extends Controller
         // return $frontstore;
         // return $frontstore[0]->check_press_save;
 
-
-if($frontstore[0]->check_press_save==2){
+        if($frontstore[0]->check_press_save==2){
 
      /*
             1   ส่งฟรี / Shipping Free
@@ -885,8 +884,6 @@ if($frontstore[0]->check_press_save==2){
         }else{
             $province_id = 0 ;
         }
-
-
 
         if(!empty($request->shipping_special)){
 
@@ -964,7 +961,7 @@ if($frontstore[0]->check_press_save==2){
           return   @$frontstore[0]->shipping_price;
 
 }else{
-
+  
         /*
             1   ส่งฟรี / Shipping Free
             2   กรุงเทพฯ และปริมณฑล / Metropolitan area
@@ -1024,8 +1021,9 @@ if($frontstore[0]->check_press_save==2){
 
             // กรณีส่งฟรี
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
-
+       
             if($sum_price>=$shipping[0]->purchase_amt){
+                // dd($sum_price);
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
                 return 0 ;
             }else{

@@ -439,7 +439,6 @@
 						                       if(data>0){
 						                       	  location.replace('{{ url("backend/pay_product_receipt") }}/'+data+'/edit');
 						                       }else{
-						                       	  
 												              $(".btnSearch").trigger('click');
 
 						                       }

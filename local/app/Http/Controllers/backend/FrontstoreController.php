@@ -1055,12 +1055,12 @@ class FrontstoreController extends Controller
       DB::beginTransaction();
       try
       {
-
+        // dd($request->all());
          $this->fnManageGiveaway(@$request->frontstore_id);
 
          if(isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip=='1'){
 
-          // dd($request->all());
+       
 
            // dd($request->transfer_money_datetime." : CCCC ");
 
@@ -1187,7 +1187,7 @@ class FrontstoreController extends Controller
               $sRow->pay_with_other_bill = request('pay_with_other_bill');
               $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
               $sRow->gift_voucher_price = request('gift_voucher_price')?request('gift_voucher_price'):0;
-
+              $sRow->bill_transfer_other = request('bill_transfer_other');
 
               if(empty(request('shipping_price'))){
 
@@ -1544,6 +1544,10 @@ class FrontstoreController extends Controller
               }else{
                    DB::select(" UPDATE `db_orders` SET `approve_status`=2 WHERE (`id`=".$sRow->id.") ");
               }
+              if($request->shipping_free==1){
+                DB::select(" UPDATE `db_orders` SET `shipping_price`=0 WHERE (`id`=".$sRow->id.") ");
+              }
+            
 
              $this->fncUpdateDeliveryAddress($sRow->id);
              $this->fncUpdateDeliveryAddressDefault($sRow->id);
@@ -2225,8 +2229,10 @@ class FrontstoreController extends Controller
           }else{
 
                 if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
-                    $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
-                    $action_user_012 = " AND db_add_ai_cash.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+                    // $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+                    // $action_user_012 = " AND db_add_ai_cash.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+                    $action_user_011 = "" ;
+                    $action_user_012 = "" ;
                 }else{
                     $action_user_011 = " AND db_orders.action_user = $user_login_id ";
                     $action_user_012 = " AND db_add_ai_cash.action_user = $user_login_id ";
@@ -2801,8 +2807,10 @@ class FrontstoreController extends Controller
           }else{
 
                 if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
-                    $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
-                    $action_user_012 = " AND db_add_ai_cash.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+                    // $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+                    // $action_user_012 = " AND db_add_ai_cash.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+                    $action_user_011 = "" ;
+                    $action_user_012 = "" ;
                 }else{
                     $action_user_011 = " AND db_orders.action_user = $user_login_id ";
                     $action_user_012 = " AND db_add_ai_cash.action_user = $user_login_id ";
@@ -3319,6 +3327,12 @@ if($sPermission==1){
   $action_user_01 = " AND action_user = $user_login_id ";
 }
 
+// วุฒิเพิ่มมา
+if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
+  $action_user_01 = "";
+  $action_user_011 = "";
+}
+
 if(!empty($req->startDate)){
  $startDate = " AND DATE(db_orders.created_at) >= '".$req->startDate."' " ;
  $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '".$req->startDate."' " ;
@@ -3426,8 +3440,6 @@ $viewcondition_01 = '';
 $viewcondition_02 = '';
 }
 
-// dd($action_user_011);
-   // dd($action_user_011);
       // $action_user_02 บรรทัด ต่อจากinvoice_code
     $sTable = DB::select("
 
@@ -3493,6 +3505,7 @@ ORDER BY created_at DESC
 */
 
       $sQuery = \DataTables::of($sTable);
+      // dd($sTable);
       return $sQuery
       ->addColumn('created_at', function($row) {
         $d = strtotime(@$row->created_at);
@@ -3573,47 +3586,47 @@ ORDER BY created_at DESC
           if(@$row->credit_price!=0){
              $total_price += $row->credit_price+$row->fee_amt;
           }
+       
 
           if(@$row->transfer_price!=0){
              $total_price += $row->transfer_price;
           }
+
+       
+
           if(@$row->aicash_price!=0){
              $total_price += $row->aicash_price;
           }
           // return $total_price;
 
+     
           if($row->shipping_price>0){
             $shipping_price  =  $row->shipping_price;
           }else{
             $shipping_price  = 0 ;
           }
 
-          if(@$row->purchase_type_id_fk==5){
-            if(@$row->gift_voucher_price!=0){
-              if($total_price!=0){
-                $total_price -= @$row->gift_voucher_price;
-              }
-   
-           }
-          }
+          // if(@$row->code_order=='O121120400087'){
+          //   dd(@$total_price);
+          // }
        
 
+          // if(@$row->purchase_type_id_fk==5){
+          //   if(@$row->gift_voucher_price!=0){
+          //     if($total_price!=0){
+          //       $total_price -= @$row->gift_voucher_price;
+          //     }
+          //  }
+          // }
 
-           //  if(@$row->code_order=='O121120200061'){
-        //   dd(@$row->gift_voucher_price);
-
-
-        //   if(@$row->gift_voucher_price!=0){
-        //     $total_price += @$row->gift_voucher_price;
-        //  }
-        //  if(@$row->code_order=='O121120300077'){
-        //   dd($row->gift_voucher_price);
-        // dd($total_price);
-        //  }
-
+     
           // return $total_price;
           if(@$total_price>0){
-           return @number_format((@$total_price+$shipping_price),2);
+            if(@$row->sum_price+$shipping_price==$row->transfer_price || @$row->sum_price+$shipping_price==$row->credit_price){
+              return @number_format((@$total_price),2);
+            }else{
+              return @number_format((@$total_price+$shipping_price),2);
+            }
           }else{
             return @number_format((@$total_price),2);
           }

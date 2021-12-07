@@ -551,6 +551,7 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function ajaxSavePay_product_receipt(Request $request)
     {
+ 
           // db_pick_pack_requisition_code
       // return $request->txtSearch;
           $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
@@ -560,6 +561,10 @@ class Pay_product_receipt_001Controller extends Controller
           // $temp_ppr_005 = "temp_ppr_005".\Auth::user()->id; 
 
           $invoice_code = $request->txtSearch;
+
+          DB::beginTransaction();
+          try
+          {
 
           // return $invoice_code;
           // dd();
@@ -607,6 +612,7 @@ class Pay_product_receipt_001Controller extends Controller
 
                // เก็บรายการสินค้าที่จ่าย 
                 $db_temp_ppr_004 = DB::select(" select * from $temp_ppr_004 ;");
+               
                 $data_db_pay_product_receipt_002 = [];
                 foreach ($db_temp_ppr_004 as $key => $value) {
                       $data_db_pay_product_receipt_002 = array(
@@ -673,6 +679,8 @@ class Pay_product_receipt_001Controller extends Controller
               $db_select = DB::select(" 
                 SELECT * FROM  `db_pay_product_receipt_002`  WHERE invoice_code='$invoice_code' AND time_pay=$time_pay
                  ");
+
+          
               foreach ($db_select as $key => $sRow) {
 
                 // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
@@ -705,6 +713,7 @@ class Pay_product_receipt_001Controller extends Controller
                       ->where('shelf_id_fk', $sRow->shelf_id_fk)
                       ->where('shelf_floor', $sRow->shelf_floor)
                       ->get();
+                   
                       if($_choose->count() > 0){
 
                         DB::table('db_stocks')
@@ -821,6 +830,19 @@ class Pay_product_receipt_001Controller extends Controller
 
 
           }
+
+          DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollback();
+        return $e->getMessage();
+        }
+        catch(\FatalThrowableError $fe)
+        {
+            DB::rollback();
+        return $e->getMessage();
+        }
+      
 
           return $lastInsertId ;
 

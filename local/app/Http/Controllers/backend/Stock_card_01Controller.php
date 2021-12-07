@@ -17,10 +17,10 @@ class Stock_card_01Controller extends Controller
       // return View('backend.stock_card_01.index');
            $id = $request->stock_id;
            $Stock = \App\Models\Backend\Check_stock::where('id',$id)->get();
-        // dd($Stock);
+        // dd($id);
         // dd($Stock[0]->product_id_fk);
            $sBalance = @$Stock[0]->amt;
-        
+          //  dd($sBalance);
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
@@ -125,7 +125,7 @@ class Stock_card_01Controller extends Controller
                $txt = "ยอดคงเหลือ";
                DB::select(" UPDATE $temp_db_stock_card SET details='$txt',amt_in='$amt_balance_stock' WHERE id=1 ") ;
             
-
+         
             }else{
 
                 // รายการก่อน start_date เพื่อหายอดยกมา
