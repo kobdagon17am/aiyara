@@ -141,7 +141,12 @@ class GiftVoucherController extends Controller
           })
 
           ->addColumn('code_order', function ($row) {
-            $code_order = '<label class="label label-inverse-info-border"><a href="'.route('cart-payment-history', ['code_order' => $row->code_order]) .'">'.$row->code_order.'</a></label>';
+            if( $row->code_order){
+              $code_order = '<label class="label label-inverse-info-border"><a href="'.route('cart-payment-history', ['code_order' => $row->code_order]) .'">'.$row->code_order.'</a></label>';
+            }else{
+              $code_order = '';
+            }
+
             return $code_order;
         })
 

@@ -961,7 +961,7 @@ class AjaxController extends Controller
           return   @$frontstore[0]->shipping_price;
 
 }else{
-  
+
         /*
             1   ส่งฟรี / Shipping Free
             2   กรุงเทพฯ และปริมณฑล / Metropolitan area
@@ -1021,7 +1021,7 @@ class AjaxController extends Controller
 
             // กรณีส่งฟรี
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
-       
+
             if($sum_price>=$shipping[0]->purchase_amt){
                 // dd($sum_price);
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
@@ -2559,10 +2559,49 @@ class AjaxController extends Controller
 
     public function ajaxApproveGiftvoucherCode(Request $request)
     {
-        DB::select("
-            UPDATE db_giftvoucher_cus  SET pro_status=1
-            WHERE giftvoucher_code_id_fk = '".$request->giftvoucher_code_id_fk."' AND pro_status = 4 ;
-          ");
+
+      $data = DB::table('db_giftvoucher_cus')
+              ->where('giftvoucher_code_id_fk', '=', $request->giftvoucher_code_id_fk)
+              ->where('pro_status', '=',4)
+              ->get();
+
+      // DB::select("
+      //         UPDATE db_giftvoucher_cus  SET pro_status=1
+      //         WHERE giftvoucher_code_id_fk = '".$request->giftvoucher_code_id_fk."' AND pro_status = 4 ;
+      //       ");
+
+
+        foreach($data as $value){
+          $gv = \App\Helpers\Frontend::get_gitfvoucher($value->customer_username);
+          $gv_banlance = $gv->sum_gv + $value->giftvoucher_value;
+
+          $customer = DB::table('customers')
+          ->select('id')
+          ->where('user_name','=',$value->customer_username)
+          ->first();
+
+          $giftvoucher_cus_update = DB::table('db_giftvoucher_cus')
+          ->where('id', $value->id)
+          ->update(['pro_status' => 1]);
+
+          $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+              'customer_id_fk' =>  $customer->id,
+              'order_id_fk' => '',
+              // 'code_order' => $value->code_order,
+              'giftvoucher_cus_code_order' =>$value->code_order,
+              'giftvoucher_cus_id_fk' => $value->id,
+              'type_action_giftvoucher'=>1,
+              'giftvoucher_value_old' => $gv->sum_gv,
+              'giftvoucher_value_use' => $value->giftvoucher_value,
+              'giftvoucher_value_banlance' => $gv_banlance,
+              'detail' => 'ได้รับจากกิจกรรม',
+              'status' => 'success',
+              'type' => 'Add',
+          ]);
+
+
+
+      }
 
     }
 
@@ -2934,7 +2973,12 @@ class AjaxController extends Controller
                 ->select('id')
                 ->orderby('id','DESC')
                 ->first();
-                $code_1 = $data_gv->id +1;
+                if($data_gv){
+                  $code_1 = $data_gv->id + 1;
+                }else{
+                  $code_1 = 1;
+                }
+
                 $insertData = array(
                  "giftvoucher_code_id_fk"=>$sRow->id,
                  "code_order"=>$sRow->code.''.$code_1,

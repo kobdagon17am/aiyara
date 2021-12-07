@@ -215,7 +215,7 @@
                     },
 
                     {
-                        data: '',
+                        data: 'giftvoucher_cus_code_order',
                         title: 'Voucher Code',
                         className: 'text-center'
                     },
