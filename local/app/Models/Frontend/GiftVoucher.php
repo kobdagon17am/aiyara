@@ -111,6 +111,7 @@ class GiftVoucher extends Model
                       'giftvoucher_value_use' => $gv_price,
                       'giftvoucher_value_banlance' => $banlance,
                       'code_order' => $code_order,
+                      'giftvoucher_cus_code_order' =>$value->code_order,
                       'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
                       'status' => 'success',
                       'type' => 'Remove',
@@ -121,8 +122,6 @@ class GiftVoucher extends Model
                     $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                         ->where('id', $value->id)
                         ->update(['giftvoucher_banlance' => $gv_price, 'pro_status' => 2]);
-
-
                 }
 
                 DB::commit();
@@ -154,6 +153,7 @@ class GiftVoucher extends Model
                         'giftvoucher_value_use' => $value->giftvoucher_banlance,
                         'giftvoucher_value_banlance' => $banlance,
                         'code_order' => $code_order,
+                        'giftvoucher_cus_code_order' =>$value->code_order,
                         'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
                         'status' => 'success',
                         'type' => 'Remove',
@@ -163,7 +163,6 @@ class GiftVoucher extends Model
                         $update_giftvoucher = DB::table('db_giftvoucher_cus') //update บิล
                             ->where('id', $value->id)
                             ->update(['giftvoucher_banlance' => $banlance, 'pro_status' => 2]);
-
                         $gv_price = $gv_rs;
 
                     } else {
@@ -176,6 +175,7 @@ class GiftVoucher extends Model
                         'giftvoucher_value_use' => $gv_price,
                         'giftvoucher_value_banlance' => $banlance,
                         'code_order' => $code_order,
+                        'giftvoucher_cus_code_order' =>$value->code_order,
                         'detail' => 'ซื้อสินค้าด้วย Ai Voucher',
                         'status' => 'success',
                         'type' => 'Remove',

@@ -152,10 +152,18 @@
                         className: 'text-center'
                     },
 
+
+
                     {
                         data: 'detail',
                         title: '<center>รายละเอียด</center>',
-                        className: 'text-right'
+                        className: 'text-center'
+                    },
+
+                    {
+                        data: 'code_order',
+                        title: 'Voucher Code',
+                        className: 'text-center'
                     },
 
                     {
@@ -203,6 +211,12 @@
                     {
                         data: 'code_order',
                         title: 'OrderCode',
+                        className: 'text-center'
+                    },
+
+                    {
+                        data: '',
+                        title: 'Voucher Code',
                         className: 'text-center'
                     },
 

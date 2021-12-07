@@ -2630,6 +2630,7 @@ if($frontstore[0]->check_press_save==2){
 
     public function ajaxSaveGiftvoucherCode(Request $request)
     {
+
         if($request->ajax()){
             // return $request;
             // dd();

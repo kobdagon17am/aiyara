@@ -32,7 +32,7 @@ class GiftvoucherCodeController extends Controller
 
     public function edit($id)
     {
-      // dd($id);
+
       $sRow = \App\Models\Backend\GiftvoucherCode::find($id);
       // $Customer = DB::select(" SELECT *  FROM customers limit 100 ");
       // dd($sRow);
@@ -47,7 +47,7 @@ class GiftvoucherCodeController extends Controller
            'sRow'=>$sRow,
            // 'Customer'=>$Customer,
            'sRowGiftvoucherCus'=>$sRowGiftvoucherCus,
-        ) );       
+        ) );
     }
 
     public function update(Request $request, $id)
@@ -67,7 +67,7 @@ class GiftvoucherCodeController extends Controller
           // dd();
 
           if(isset($request->product_plus)){
-            for ($i=0; $i < count($request->product_id_fk) ; $i++) { 
+            for ($i=0; $i < count($request->product_id_fk) ; $i++) {
                 // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
                 // echo $Check_stock->product_id_fk;
                   $sProducts = DB::select("
@@ -78,7 +78,7 @@ class GiftvoucherCodeController extends Controller
                       FROM
                       dataset_product_unit
                       WHERE id = products.id AND lang_id=1 LIMIT 1
-                    ) as product_unit,                
+                    ) as product_unit,
                     products.category_id ,categories.category_name,
                     (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
                     (
@@ -94,10 +94,10 @@ class GiftvoucherCodeController extends Controller
                     products
                     LEFT JOIN categories on products.category_id=categories.id
                     LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1 
+                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1
                 ");
                   // echo ($sProducts[0]->product_unit);
-               
+
                $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
                $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
@@ -118,7 +118,7 @@ class GiftvoucherCodeController extends Controller
                               // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                               'product_unit_id_fk' => @$sProducts[0]->product_unit,
                             ]
-                        ); 
+                        );
 
                   }
 
@@ -143,7 +143,7 @@ class GiftvoucherCodeController extends Controller
 
               }
 
-       
+
               }
 
 
@@ -157,7 +157,7 @@ class GiftvoucherCodeController extends Controller
           }
 
         }
-        
+
     public function destroy($id)
     {
       DB::delete(" UPDATE db_giftvoucher_code SET status='2' WHERE (id='$id') ;");
@@ -173,7 +173,7 @@ class GiftvoucherCodeController extends Controller
           @$d = DB::select(" SELECT giftvoucher_code_id_fk,count(*) as cnt FROM db_giftvoucher_cus where giftvoucher_code_id_fk='".$row->id."' GROUP BY giftvoucher_code_id_fk ;");
           return @$d[0]->cnt;
 
-      })       
+      })
       ->make(true);
     }
 

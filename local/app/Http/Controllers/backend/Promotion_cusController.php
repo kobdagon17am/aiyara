@@ -46,7 +46,7 @@ class Promotion_cusController extends Controller
     }
     public function store(Request $request)
     {
-      // dd($request->all());
+      //dd($request->all());
       // return(count($request->promotion_code));
         for ($i=0; $i < count($request->promotion_code) ; $i++) {
             if(@$request->customer_id[$i]!=""){
