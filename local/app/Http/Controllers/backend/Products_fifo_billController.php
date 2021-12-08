@@ -343,7 +343,6 @@ class Products_fifo_billController extends Controller
 // %%%%%%%%%%%%%%%%%%%%%%%
    public function DatatablePayReceiptFIFO(Request $req){
 
-
       $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
       $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -382,6 +381,7 @@ class Products_fifo_billController extends Controller
       }
 
       $sQuery = \DataTables::of($sTable);
+     
       return $sQuery
        ->addColumn('column_001', function($row) { 
             $pn = '<div class="divTable"><div class="divTableBody">';
@@ -437,6 +437,23 @@ SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.p
 group by $temp_ppr_002.product_id_fk
 ");
 // สินค้าโปรโมชั่น
+// วุฒิเพิ่ม
+// $temp_ppr_0021_data = DB::table('temp_ppr_0021')->get();
+// foreach($temp_ppr_0021_data as $tmp){
+//   $pro = DB::table('promotions')->where('id',$tmp->promotion_id_fk)->first();
+//   if($pro){
+//     $pro_p = DB::table('promotions_products')->where('id',)
+//     $p = DB::table('products')->where('id',)
+//   }
+ 
+//   $id = DB::table('temp_product_fifo1')->insert([
+//     'product_id_fk' => ,
+//     'amt' => ,
+//     'product_name' => ,
+//     'product_unit' => ,
+//   ]);
+// }
+
 DB::select(" INSERT IGNORE INTO $temp_product_fifo 
 SELECT 
 promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
@@ -483,7 +500,7 @@ group by promotions_products.product_id_fk
           DB::select(" DROP TABLE IF EXISTS temp_001; ");
           // TEMPORARY
           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-
+  
 
           foreach ($Products as $key => $value) {
 
