@@ -1060,7 +1060,7 @@ class FrontstoreController extends Controller
 
          if(isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip=='1'){
 
-       
+
 
            // dd($request->transfer_money_datetime." : CCCC ");
 
@@ -1273,9 +1273,12 @@ class FrontstoreController extends Controller
               // dd("1233");
               // dd(request('purchase_type_id_fk'));
               if($sRow->purchase_type_id_fk==5){
+                //dd($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
                 $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
-
+              }else{
+                dd('dddddddddd');
               }
+
 
 
 // dd(request('sentto_branch_id'));
@@ -1547,7 +1550,7 @@ class FrontstoreController extends Controller
               if($request->shipping_free==1){
                 DB::select(" UPDATE `db_orders` SET `shipping_price`=0 WHERE (`id`=".$sRow->id.") ");
               }
-            
+
 
              $this->fncUpdateDeliveryAddress($sRow->id);
              $this->fncUpdateDeliveryAddressDefault($sRow->id);
@@ -3586,20 +3589,20 @@ ORDER BY created_at DESC
           if(@$row->credit_price!=0){
              $total_price += $row->credit_price+$row->fee_amt;
           }
-       
+
 
           if(@$row->transfer_price!=0){
              $total_price += $row->transfer_price;
           }
 
-       
+
 
           if(@$row->aicash_price!=0){
              $total_price += $row->aicash_price;
           }
           // return $total_price;
 
-     
+
           if($row->shipping_price>0){
             $shipping_price  =  $row->shipping_price;
           }else{
@@ -3609,7 +3612,7 @@ ORDER BY created_at DESC
           // if(@$row->code_order=='O121120400087'){
           //   dd(@$total_price);
           // }
-       
+
 
           // if(@$row->purchase_type_id_fk==5){
           //   if(@$row->gift_voucher_price!=0){
@@ -3619,7 +3622,7 @@ ORDER BY created_at DESC
           //  }
           // }
 
-     
+
           // return $total_price;
           if(@$total_price>0){
             if(@$row->sum_price+$shipping_price==$row->transfer_price || @$row->sum_price+$shipping_price==$row->credit_price){

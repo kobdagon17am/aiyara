@@ -252,7 +252,7 @@ class PvPayment extends Model
                                     'detail' => 'ได้จากการซื้อสินค้า',
                                     'status' => 'success',
                                     'type' => 'Add',
-                                    'type_action_giftvoucher' => 0,
+
                                 ]);
 
                             }
