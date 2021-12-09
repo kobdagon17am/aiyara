@@ -317,6 +317,7 @@ class FrontstoreController extends Controller
     }
     public function store(Request $request)
     {
+
       // dd($request->all());
       if(!empty($request->upload_file)){
 
@@ -351,7 +352,7 @@ class FrontstoreController extends Controller
 
     public function edit($id)
     {
-      // dd($id);
+      //dd($id);
 
       // กำลังเบิกสินค้า ไม่ให้แก้บิล
           $ch_Disabled = 0;
@@ -436,6 +437,11 @@ class FrontstoreController extends Controller
       $sCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
       @$CusName = (@$sCustomer[0]->user_name." : ".@$sCustomer[0]->prefix_name.$sCustomer[0]->first_name." ".@$sCustomer[0]->last_name);
       @$user_name = @$sCustomer[0]->user_name;
+
+      if(@$user_name){
+        $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($sCustomer[0]->user_name);
+      }
+
       // dd($CusName);
       // dd($user_name);
         if(@$sRow->aistockist){
@@ -3563,7 +3569,7 @@ ORDER BY created_at DESC
             }else{
               $tootip_price .= ' เครดิต: '.$row->credit_price;
             }
-         
+
           }
           if(@$row->transfer_price!=0){
              $tootip_price .= ' เงินโอน: '.$row->transfer_price;
@@ -3595,7 +3601,7 @@ ORDER BY created_at DESC
             }else{
               $total_price += $row->credit_price;
             }
-            
+
           }
 
 
