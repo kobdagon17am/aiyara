@@ -350,7 +350,7 @@ class Products_fifo_billController extends Controller
       $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
       $TABLES = DB::select(" SHOW TABLES ");
-
+      // ch_amt_lot_wh
       // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
@@ -438,41 +438,90 @@ group by $temp_ppr_002.product_id_fk
 ");
 // สินค้าโปรโมชั่น
 // วุฒิเพิ่ม
-// $temp_ppr_0021_data = DB::table('temp_ppr_0021')->get();
-// foreach($temp_ppr_0021_data as $tmp){
-//   $pro = DB::table('promotions')->where('id',$tmp->promotion_id_fk)->first();
-//   if($pro){
-//     $pro_p = DB::table('promotions_products')->where('id',)
-//     $p = DB::table('products')->where('id',)
-//   }
- 
-//   $id = DB::table('temp_product_fifo1')->insert([
-//     'product_id_fk' => ,
-//     'amt' => ,
-//     'product_name' => ,
-//     'product_unit' => ,
-//   ]);
+$temp_ppr_0021_data = DB::table($temp_ppr_002)->get();
+
+foreach($temp_ppr_0021_data as $tmp){
+  $p_unit = 'ชิ้น';
+  $p_code = '0000:';
+  $p_name = '';
+  $p_id = 0;
+  $p_amt = 0;
+  if($tmp->type_product=='promotion'){
+  $data_promo = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->first();
+  if($data_promo){
+    $p_id = $data_promo->product_id_fk;
+    $data_unit  = DB::table('dataset_product_unit')->where('id',$data_promo->product_unit)->first();
+    if($data_unit ){
+      $p_unit = $data_unit->product_unit;
+    }
+    $data_code = DB::table('products')->where('id',$data_promo->product_id_fk)->first();
+    if($data_code){
+      $p_code = $data_code->product_code.' : ';
+    }
+    $data_product = DB::table('products_details')->where('product_id_fk',$data_promo->product_id_fk)->where('lang_id',1)->first();
+    if($data_product){
+      $p_name = $data_product->product_name;
+    }
+    $p_amt = $tmp->amt*$data_promo->product_amt;
+    // dd($tmp->amt.' / ww'.$p_name);
+    
+      $id = DB::table($temp_product_fifo)->insertOrIgnore([
+        'product_id_fk' =>$p_id,
+        'amt' => $p_amt,
+        'product_name' => $p_code.$p_name,
+        'product_unit' => $p_unit,
+      ]);
+  } 
+  }else{
+    // $p_id = $tmp->product_id_fk;
+    // $data_unit  = DB::table('dataset_product_unit')->where('id',$tmp->product_unit_id_fk)->first();
+    // if($data_unit ){
+    //   $p_unit = $data_unit->product_unit;
+    // }
+    // $data_code = DB::table('products')->where('id',$tmp->product_id_fk)->first();
+    // if($data_code){
+    //   $p_code = $data_code->product_code.' : ';
+    // }
+    // $data_product = DB::table('products_details')->where('product_id_fk',$tmp->product_id_fk)->where('lang_id',1)->first();
+    // if($data_product){
+    //   $p_name = $data_product->product_name;
+    // }
+    // $p_amt = $tmp->amt;
+    // dd($tmp->amt.' / aa'.$p_name);
+  }
+
+  // $id = DB::table($temp_product_fifo)->insert([
+  //   'product_id_fk' =>$p_id,
+  //   'amt' => $p_amt,
+  //   'product_name' => $p_code.$p_name,
+  //   'product_unit' => $p_unit,
+  // ]);
+
+}
+ $p = DB::table($temp_product_fifo)->get();
+//  dd($temp_ppr_0021_data);
+// dd($p);
 // }
 
-DB::select(" INSERT IGNORE INTO $temp_product_fifo 
-SELECT 
-promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
-CONCAT(
-(SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
-(SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
-dataset_product_unit.product_unit
-FROM `promotions_products` 
-LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
-where promotion_id_fk in (
-SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
-$temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
-group by promotions_products.product_id_fk
-");
+  //   DB::select(" INSERT IGNORE INTO $temp_product_fifo 
+  // SELECT 
+  // promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
+  // CONCAT(
+  // (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
+  // (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
+  // dataset_product_unit.product_unit
+  // FROM `promotions_products` 
+  // LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
+  // where promotion_id_fk in (
+  // SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
+  // $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
+  // group by promotions_products.product_id_fk
+  // ");
 
         $Products = DB::select("
                SELECT product_id_fk,sum(amt) as amt,product_name,product_unit from $temp_product_fifo GROUP BY product_id_fk ORDER BY product_name
            ");
-
+     
 
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=     
@@ -514,7 +563,7 @@ group by promotions_products.product_id_fk
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
-
+              
                   $pay_this = $value->amt ;
                   $amt_pay_remain = 0;
                   
@@ -526,13 +575,14 @@ group by promotions_products.product_id_fk
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                     // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
-                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk=2 ORDER BY lot_expired_date ASC  ");
+                    // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk=2 ORDER BY lot_expired_date ASC  ");
+                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
                           // TEMPORARY
                           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-
+                          // dd($temp_db_stocks_02);
 // dd($temp_db_stocks_02);
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
@@ -666,7 +716,7 @@ group by promotions_products.product_id_fk
 
                      // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-      
+                 
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
                           $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
@@ -711,7 +761,7 @@ group by promotions_products.product_id_fk
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
-                                  
+                                    
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -799,7 +849,7 @@ group by promotions_products.product_id_fk
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
-                                 
+                                   
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -854,6 +904,7 @@ group by promotions_products.product_id_fk
                                      if($r_temp_001[0]->amt_remain==0) break;
                                 }
 
+                       
 
                           $i++;
 
@@ -1029,6 +1080,7 @@ group by promotions_products.product_id_fk
                 array_push($arr,$value->product_id_fk);
               }
               $arr_im = implode(',',$arr);
+         
               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
               $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
               return @$r[0]->sum?@$r[0]->sum:0; 

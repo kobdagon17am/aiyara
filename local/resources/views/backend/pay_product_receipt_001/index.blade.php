@@ -361,6 +361,12 @@
 
                 </div>
 
+                <div class="row">
+                  <div class="col-md-12">
+                      <label>รายการบิลบันทึกการจ่ายแล้ว</label>
+                  </div>
+                </div>
+
                 <table id="data-table-001" class="table table-bordered dt-responsive" style="width: 100%;">
                 </table>
                 </p>
@@ -406,6 +412,15 @@
                 </p>
               </div>
 
+              <div class="row">
+                <div class="col-md-12">
+                    <label>รายการบิลรอบันทึกการจ่ายสินค้า</label>
+                </div>
+              </div>
+
+              <table id="data-table-wait_orders" class="table table-bordered dt-responsive" style="width: 100%;">
+              </table>
+
             </div>
           </div>
         </div>
@@ -416,6 +431,41 @@
 @endsection
 
 @section('script')
+
+
+<script>
+      $(function() {
+          	// $.fn.dataTable.ext.errMode = 'throw';
+              oTable_wait_orders = $('#data-table-wait_orders').DataTable({
+              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                  processing: true,
+                  serverSide: true,
+                  scroller: true,
+                  destroy: true,
+                  ordering: false,
+                  iDisplayLength: 50,
+                  ajax: {
+                            url: '{{ url("backend/pay_product_receipt_tb1/wait_orders") }}',
+                              method: 'POST',
+                            },
+                  columns: [
+                      {data: 'id', title :'ID', className: 'text-center w50'},
+                      {data: 'invoice_code', title :'<center>ใบเสร็จ</center>', className: 'text-center'},
+                      {data: 'bill_date', title :'<center>วันที่ออกใบเสร็จ</center>', className: 'text-center'},
+                      {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-center w180 '},
+                      {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
+                      {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
+                      {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
+
+                      // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
+                      {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
+                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
+                  }
+              });
+          });
+</script>
 
 
 

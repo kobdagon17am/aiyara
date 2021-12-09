@@ -870,8 +870,6 @@ if(@$sRow->check_press_save==2){
                           </div>
                         </th>
                       </tr>
-
-
                      
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
@@ -6339,6 +6337,9 @@ var total_sum = 0;
                 }
 
               }
+
+              // alert($('#sentto_branch_id').val());
+              // return false;
 
             // alert("xx");
             event.preventDefault();
