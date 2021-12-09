@@ -446,8 +446,8 @@ foreach($temp_ppr_0021_data as $tmp){
   $p_id = 0;
   $p_amt = 0;
   if($tmp->type_product=='promotion'){
-  $data_promo = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->first();
-  if($data_promo){
+  $data_promos = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->get();
+    foreach($data_promos as $data_promo){
     $p_id = $data_promo->product_id_fk;
     $data_unit  = DB::table('dataset_product_unit')->where('id',$data_promo->product_unit)->first();
     if($data_unit ){
@@ -462,8 +462,6 @@ foreach($temp_ppr_0021_data as $tmp){
       $p_name = $data_product->product_name;
     }
     $p_amt = $tmp->amt*$data_promo->product_amt;
-    // dd($tmp->amt.' / ww'.$p_name);
-    
       $id = DB::table($temp_product_fifo)->insertOrIgnore([
         'product_id_fk' =>$p_id,
         'amt' => $p_amt,

@@ -1665,6 +1665,7 @@ group by $temp_ppr_002.product_id_fk
 // สินค้าโปรโมชั่น
 // วุฒิเพิ่ม
 $temp_ppr_0021_data = DB::table($temp_ppr_002)->get();
+// dd($temp_ppr_0021_data);
 foreach($temp_ppr_0021_data as $tmp){
   $p_unit = 'ชิ้น';
   $p_code = '0000:';
@@ -1672,32 +1673,31 @@ foreach($temp_ppr_0021_data as $tmp){
   $p_id = 0;
   $p_amt = 0;
   if($tmp->type_product=='promotion'){
-  $data_promo = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->first();
-  if($data_promo){
-    $p_id = $data_promo->product_id_fk;
-    $data_unit  = DB::table('dataset_product_unit')->where('id',$data_promo->product_unit)->first();
-    if($data_unit ){
-      $p_unit = $data_unit->product_unit;
+  $data_promos = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->get();
+    foreach($data_promos as $data_promo){
+      $p_id = $data_promo->product_id_fk;
+      $data_unit  = DB::table('dataset_product_unit')->where('id',$data_promo->product_unit)->first();
+      if($data_unit ){
+        $p_unit = $data_unit->product_unit;
+      }
+      $data_code = DB::table('products')->where('id',$data_promo->product_id_fk)->first();
+      if($data_code){
+        $p_code = $data_code->product_code.' : ';
+      }
+      $data_product = DB::table('products_details')->where('product_id_fk',$data_promo->product_id_fk)->where('lang_id',1)->first();
+      if($data_product){
+        $p_name = $data_product->product_name;
+      }
+      $p_amt = $tmp->amt*$data_promo->product_amt;
+        $id = DB::table('temp_product_fifo')->insertOrIgnore([
+          'product_id_fk' =>$p_id,
+          'amt' => $p_amt,
+          'product_name' => $p_code.$p_name,
+          'product_unit' => $p_unit,
+        ]);
     }
-    $data_code = DB::table('products')->where('id',$data_promo->product_id_fk)->first();
-    if($data_code){
-      $p_code = $data_code->product_code.' : ';
-    }
-    $data_product = DB::table('products_details')->where('product_id_fk',$data_promo->product_id_fk)->where('lang_id',1)->first();
-    if($data_product){
-      $p_name = $data_product->product_name;
-    }
-    $p_amt = $tmp->amt*$data_promo->product_amt;
-    // dd($tmp->amt.' / ww'.$p_name);
-    
-      $id = DB::table('temp_product_fifo')->insertOrIgnore([
-        'product_id_fk' =>$p_id,
-        'amt' => $p_amt,
-        'product_name' => $p_code.$p_name,
-        'product_unit' => $p_unit,
-      ]);
-  } 
 }
+
 }
 
 // สินค้าโปรโมชั่น
@@ -1719,7 +1719,6 @@ foreach($temp_ppr_0021_data as $tmp){
         $Products = DB::select("
                SELECT product_id_fk,sum(amt) as amt,product_name,product_unit from temp_product_fifo GROUP BY product_id_fk ORDER BY product_name
            ");
-
 
       			$pn = '<div class="divTable"><div class="divTableBody">';
       			$pn .=     
