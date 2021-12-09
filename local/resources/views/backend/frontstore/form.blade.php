@@ -870,13 +870,7 @@ if(@$sRow->check_press_save==2){
                           </div>
                         </th>
                       </tr>
-<<<<<<< HEAD
 
-
-
-=======
-                     
->>>>>>> e190221e4de3ac366d91404372ad5829e320fbc1
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
                           @IF(@$sRow->shipping_special == 1)
