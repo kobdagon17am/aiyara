@@ -310,7 +310,7 @@ if(@$sRow->check_press_save==2){
                                     <select id="distribution_channel_id_fk"  class="form-control select2-templating ch_Disabled " disabled=""  >
                                           @if(@$sDistribution_channel3)
                                             @foreach(@$sDistribution_channel3 AS $r)
-                                         
+
                                                     <option value="{{$r->id}}"
                                                       {{ (@$r->id==@$sRow->distribution_channel_id_fk)?'selected':'' }}  >{{$r->txt_desc}}
                                                     </option>
@@ -593,7 +593,7 @@ if(@$sRow->check_press_save==2){
                             </div>
                             @endif
 
-                      
+
                @if( empty(@$sRow) )
 
                       <div class="row">
@@ -872,7 +872,7 @@ if(@$sRow->check_press_save==2){
                       </tr>
 
 
-                     
+
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
                           @IF(@$sRow->shipping_special == 1)
@@ -1210,7 +1210,7 @@ if(@$sRow->check_press_save==2){
         </div>
 
 
-    
+
         <div class="divTableRow" >
           <div class="divTableCell" >
           </div>
@@ -1389,7 +1389,7 @@ if(@$sRow->check_press_save==2){
 
 
 
-                    <?php $div_account_bank_id = @$sRow->account_bank_id==0||@$sRow->account_bank_id==''?"display: none;":''; 
+                    <?php $div_account_bank_id = @$sRow->account_bank_id==0||@$sRow->account_bank_id==''?"display: none;":'';
                     ?>
                     <div class="divTableRow div_account_bank_id " style="<?=$div_account_bank_id?>">
                       <div class="divTableCell">&nbsp; </div>
@@ -1541,7 +1541,7 @@ if(@$sRow->check_press_save==2){
                       </div>
                       <div class="divTableCell">
 <!-- CalPriceAicash -->
-      
+
                       <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly ch_Disabled " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
 
                       </div>
@@ -1706,7 +1706,7 @@ if(@$sRow->check_press_save==2){
                                 // ประเภทโอน
                                 if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12 || @$sRow->pay_type_id_fk==4){
 
-                      // print_r($PaymentSlip); 
+                      // print_r($PaymentSlip);
 
                     ?>
 
@@ -1729,7 +1729,7 @@ if(@$sRow->check_press_save==2){
 
                           @ENDIF
 
-                          
+
 
                     <?php }else{ ?>
 
@@ -1948,7 +1948,7 @@ if(@$sRow->check_press_save==2){
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> 
+        </button>
       </div>
 
       <div class="modal-body">
@@ -2282,7 +2282,7 @@ if(@$sRow->check_press_save==2){
                                                     </center>
                                                     <br>
 
-                                                     
+
 
                                                       <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
                                                         <div class="divTH" >
@@ -2323,7 +2323,7 @@ if(@$sRow->check_press_save==2){
 
 
 
-                            
+
 <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
 
@@ -2982,7 +2982,7 @@ if(@$sRow->check_press_save==2){
 // จัดส่งพร้อมบิลอื่น
        $(document).on('click', '#addr_04', function(event) {
               var v = $(this).val();
-      
+
               // / // console.log(v);
               $("#addr_05").prop("disabled", true);
         });
@@ -3782,7 +3782,7 @@ if(@$sRow->check_press_save==2){
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-           
+
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);
@@ -4452,7 +4452,7 @@ $(document).ready(function() {
                       }else{
                         $('.class_btnSave').prop('disabled',true);
                       }
-                      
+
                       // $('.class_btnSaveTransferType').removeAttr( "disabled" );
                       // $('.class_btnSaveTransferType').show();
 
@@ -5161,7 +5161,7 @@ $(document).ready(function() {
                           return false;
                         }
 
-                        
+
                         var sum_price = $('#sum_price').val();
             sum_price = sum_price.replace(',', '');
             sum_price = parseFloat(sum_price);
@@ -5174,7 +5174,7 @@ $(document).ready(function() {
             fee_amt = fee_amt.replace(',', '');
             fee_amt = parseFloat(fee_amt);
 
-                      
+
             var gift_voucher_price = $('#gift_voucher_price').val();
             gift_voucher_price = gift_voucher_price.replace(',', '');
             gift_voucher_price = parseFloat(gift_voucher_price);
@@ -5200,7 +5200,7 @@ $(document).ready(function() {
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
                                   $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
 
-                                           // wut 
+                                           // wut
 
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   // $(".transfer_money_datetime").val(value.transfer_money_datetime);
@@ -5395,7 +5395,7 @@ $(document).ready(function() {
 
                                   // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
                                   $('.class_btnSave').prop('disabled',true);
-                                }else 
+                                }else
                               // Gift Voucher
                               if(pay_type_id_fk==4){
                                 $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
@@ -5454,7 +5454,7 @@ $(document).ready(function() {
                                     $('.class_btnSave').show();
 
                             }
-                            else 
+                            else
                             // 19 Gift Voucher + เงินสด
                             if(pay_type_id_fk==19){
                               $(".div_pay_with_other_bill").show();
@@ -5675,14 +5675,14 @@ var total_sum = 0;
                                     if(pay_type_id_fk==4){
                                       total_sum = sum_price+shipping_price;
                                       $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
-                                    }else 
+                                    }else
                                           // ถ้า Gift Voucher + เงินโอน
                                     if(pay_type_id_fk==12){
                                       total_sum = sum_price+shipping_price+fee_amt;
                                       $("#gift_voucher_price").val(value.gift_voucher_price);
                                       total_sum = total_sum-value.gift_voucher_price;
                                       $('#transfer_price').val(parseFloat(total_sum).toFixed(2));
-                                    }else 
+                                    }else
                                        // ถ้า Gift Voucher + บัตรเครดิต
                                     if(pay_type_id_fk==13){
                                       $("#gift_voucher_price").val(value.gift_voucher_price);
@@ -6319,12 +6319,12 @@ var total_sum = 0;
 
               var cnt_slip =  "{{@$cnt_slip}}";
               // console.log(cnt_slip);
-             // กรณีเงินโอน 
+             // กรณีเงินโอน
               if(pay_type_id_fk==1 || pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
                 if(cnt_slip>0){
                   $('.class_btnSave').removeAttr( "disabled" );
                 }else{
-                 
+
 
                    if($('#pay_with_other_bill').is(':checked')==true){
                      // alert("test");
@@ -6674,7 +6674,7 @@ var total_sum = 0;
 
           var cash_pay = $("#cash_pay").val();
 
-          
+
 
           var sum_price = $('#sum_price').val();
             sum_price = sum_price.replace(',', '');
@@ -6780,9 +6780,9 @@ var total_sum = 0;
                 var gift_voucher_price = "{{@$sRow->gift_voucher_price}}";
                 // console.log(gift_voucher_price);
                 if(gift_voucher_price>0){
-              
+
                 }else{
-               
+
                  $("#pay_type_id_fk").select2('destroy').val("").select2();
                  $(".show_div_cash_pay ").hide();
                }
@@ -6798,7 +6798,7 @@ var total_sum = 0;
                 if(gift_voucher_price>0){
 
                 }else{
-                  
+
                  $("#pay_type_id_fk").select2('destroy').val("").select2();
                  $(".show_div_cash_pay ").hide();
                }
@@ -6849,7 +6849,7 @@ var total_sum = 0;
           $('.btnAddFromPromotion').remove();
           $('.btnAddFromProdutcsList').remove();
           $('.btnAddList').remove();
-          $(".ch_Disabled").prop('disabled', true); 
+          $(".ch_Disabled").prop('disabled', true);
         }
 
         $('.myloading').show();

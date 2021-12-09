@@ -21,11 +21,13 @@ class HistoryController extends Controller
 
     public function __construct()
     {
+
         $this->middleware('customer');
     }
 
     public function index()
     {
+
         $orders_type = DB::table('dataset_orders_type')
             ->where('status', '=', '1')
             ->where('lang_id', '=', '1')

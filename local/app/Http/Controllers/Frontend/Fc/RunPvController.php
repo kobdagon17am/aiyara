@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 class RunPvController extends Controller
 {
 
+
+
     public static function Runpv($username,$pv,$type) // RunPv ทำคุณสมบัติ
 
     {
@@ -341,6 +343,39 @@ class RunPvController extends Controller
 
         }
 
+    }
+
+    public static function update_package($username){
+      $user = DB::table('customers') //อัพ Pv ของตัวเอง
+          ->select('id','pv','qualification_id','package_id')
+          ->where('user_name', '=', $username)
+          ->first();
+
+      if($user){
+
+        $package = DB::table('dataset_package') //อัพ Pv ของตัวเอง
+          ->where('dt_pv', '<=', $user->pv)
+          ->orderBy('dt_pv','DESC')
+          ->first();
+
+          if($user->package_id == $package->id){
+            $resule = ['status' => 'success', 'message' => 'Not Update Package'];
+            return $resule;
+          }else{
+            $update_package = DB::table('customers')
+            ->where('user_name', $username)
+            ->update(['package_id' => $package->id]);
+
+            $resule = ['status' => 'success', 'message' => 'Update Package Success'];
+            return $resule;
+
+          }
+
+
+      }else{
+        $resule = ['status' => 'fail', 'message' => 'ไม่มี User นี้ในระบบ'];
+        return $resule;
+      }
     }
 
 }
