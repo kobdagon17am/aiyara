@@ -560,7 +560,6 @@ foreach($temp_ppr_0021_data as $tmp){
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
-
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
               
@@ -575,10 +574,24 @@ foreach($temp_ppr_0021_data as $tmp){
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                     // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                    $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                    $w_str = '';
+                    foreach($w_arr as $key => $w){
+                      if($key+1==count($w_arr)){
+                        $w_str.=$w;
+                      }else{
+                        $w_str.=$w.',';
+                      }
+                      
+                    }
+                    // อันนี้แก้ จ่ายผิดคลัง 
+                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
                     // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk=2 ORDER BY lot_expired_date ASC  ");
-                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    // อันนี้แก้เรื่องเรื่องโปรมั้ง หรือไม่ก็ไม่มีปุ่ม
+                    // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    // อันนี้ไรไม่รู้
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-
+                    // dd($temp_db_stocks_02);
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
                           // TEMPORARY
                           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
