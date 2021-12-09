@@ -438,7 +438,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     // หน้าแรก
     Route::resource('pay_product_receipt_001', 'Pay_product_receipt_001Controller');
     Route::post('pay_product_receipt_tb1/datatable', 'Pay_product_receipt_001Controller@Datatable001')->name('pay_product_receipt_tb1.datatable');
-    Route::post('pay_product_receipt_tb1/wait_orders', 'Pay_product_receipt_001Controller@Datatable001')->name('pay_product_receipt_tb1.wait_orders');
+    Route::post('pay_product_receipt_tb1/wait_orders', 'Pay_product_receipt_001Controller@wait_orders')->name('pay_product_receipt_tb1.wait_orders');
 
     Route::post('pay_product_receipt_tb2/datatable', 'Pay_product_receipt_001Controller@Datatable002')->name('pay_product_receipt_tb2.datatable');    
     Route::get('pay_product_receipt_tb2/datatable', 'Pay_product_receipt_001Controller@Datatable002')->name('pay_product_receipt_tb2.datatable');    

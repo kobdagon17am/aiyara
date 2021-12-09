@@ -451,15 +451,17 @@
                   columns: [
                       {data: 'id', title :'ID', className: 'text-center w50'},
                       {data: 'invoice_code', title :'<center>ใบเสร็จ</center>', className: 'text-center'},
-                      {data: 'bill_date', title :'<center>วันที่ออกใบเสร็จ</center>', className: 'text-center'},
-                      {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-center w180 '},
-                      {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
-                      {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
-                      {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
+                      {data: 'created_at', title :'<center>วันที่ออกใบเสร็จ</center>', className: 'text-left'},
+                      {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-left'},
+                      // {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
+                      // {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
+                      // {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
 
                       // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
-                      {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
-                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                      // {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
+                      {data: 'action_user', title :'<center>ผู้สร้าง</center>', className: 'text-left'},
+                      {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
+                      // {data: 'id', title :'Tools', className: 'text-center w60'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
                   }
