@@ -578,6 +578,7 @@ class AjaxController extends Controller
     {
         if($request->ajax()){
           $query = \App\Models\Backend\Shelf::where('zone_id_fk',$request->zone_id_fk)->get()->toArray();
+           dd($request->zone_id_fk);
           return response()->json($query);
         }
     }

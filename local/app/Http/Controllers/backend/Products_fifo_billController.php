@@ -381,7 +381,7 @@ class Products_fifo_billController extends Controller
       }
 
       $sQuery = \DataTables::of($sTable);
-     
+
       return $sQuery
        ->addColumn('column_001', function($row) { 
             $pn = '<div class="divTable"><div class="divTableBody">';
@@ -439,7 +439,6 @@ group by $temp_ppr_002.product_id_fk
 // สินค้าโปรโมชั่น
 // วุฒิเพิ่ม
 $temp_ppr_0021_data = DB::table($temp_ppr_002)->get();
-
 foreach($temp_ppr_0021_data as $tmp){
   $p_unit = 'ชิ้น';
   $p_code = '0000:';
@@ -472,37 +471,8 @@ foreach($temp_ppr_0021_data as $tmp){
         'product_unit' => $p_unit,
       ]);
   } 
-  }else{
-    // $p_id = $tmp->product_id_fk;
-    // $data_unit  = DB::table('dataset_product_unit')->where('id',$tmp->product_unit_id_fk)->first();
-    // if($data_unit ){
-    //   $p_unit = $data_unit->product_unit;
-    // }
-    // $data_code = DB::table('products')->where('id',$tmp->product_id_fk)->first();
-    // if($data_code){
-    //   $p_code = $data_code->product_code.' : ';
-    // }
-    // $data_product = DB::table('products_details')->where('product_id_fk',$tmp->product_id_fk)->where('lang_id',1)->first();
-    // if($data_product){
-    //   $p_name = $data_product->product_name;
-    // }
-    // $p_amt = $tmp->amt;
-    // dd($tmp->amt.' / aa'.$p_name);
-  }
-
-  // $id = DB::table($temp_product_fifo)->insert([
-  //   'product_id_fk' =>$p_id,
-  //   'amt' => $p_amt,
-  //   'product_name' => $p_code.$p_name,
-  //   'product_unit' => $p_unit,
-  // ]);
-
 }
- $p = DB::table($temp_product_fifo)->get();
-//  dd($temp_ppr_0021_data);
-// dd($p);
-// }
-
+}
   //   DB::select(" INSERT IGNORE INTO $temp_product_fifo 
   // SELECT 
   // promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
