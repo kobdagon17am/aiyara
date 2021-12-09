@@ -536,9 +536,9 @@ class PvPayment extends Model
                 if ($resule['status'] == 'success') {
                     $movement_ai_cash->save();
                     $customer_update->save();
-
                     $order_update->save();
 
+                    $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($customer_update->user_name);
                     DB::commit();
                     //DB::rollback();
                     return $resule;
@@ -640,6 +640,9 @@ class PvPayment extends Model
             $customer_update->save();
 
             $order_update->save();
+
+
+
             DB::commit();
 
             $resule = ['status' => 'success', 'message' => 'Success'];
