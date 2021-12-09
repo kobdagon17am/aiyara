@@ -57,7 +57,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> รายการสร้างใบเบิก  </h4>    
+            <h4 class="mb-0 font-size-18  "> รายการสร้างใบเบิก <span style="color:red;">(! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง )</span> </h4>    
             <!-- <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล + packing list) </span> -->
             <!-- test_clear_data -->
         </div>
@@ -626,7 +626,7 @@ $(function() {
                 }else{
 
                       if(aData['status_pack'] != "1" && aData['delivery_location']==4){
-                         // alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
+                        //  alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
                          $("td:eq(0)", nRow).prop('disabled',true); 
                          $("td:eq(1)", nRow).prop('disabled',true); 
                          $("td:eq(2)", nRow).prop('disabled',true); 
@@ -955,7 +955,7 @@ $(function() {
                 }); 
 
                 $(document).on('click', '.dt-checkboxes', function(event) {
-
+                  
                    setTimeout(function(){
                       if($('.select-info').text()!=''){
                         // var str = $('.select-info').text();

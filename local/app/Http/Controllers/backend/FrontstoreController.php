@@ -1060,7 +1060,7 @@ class FrontstoreController extends Controller
 
          if(isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip=='1'){
 
-
+            // dd($request->sentto_branch_id);
 
            // dd($request->transfer_money_datetime." : CCCC ");
 
@@ -1124,7 +1124,7 @@ class FrontstoreController extends Controller
               $sRow->note_fullpayonetime_03 = request('note_fullpayonetime_03');
               $sRow->pay_with_other_bill = request('pay_with_other_bill');
               $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
-
+              $sRow->sentto_branch_id = request('sentto_branch_id');
               $sRow->check_press_save = 2 ;
 
               // กรณีโอนชำระ
@@ -1276,10 +1276,8 @@ class FrontstoreController extends Controller
                 //dd($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
                 $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
               }else{
-                dd('dddddddddd');
+                // dd('dddddddddd');
               }
-
-
 
 // dd(request('sentto_branch_id'));
 // dd(request('branch_id_fk'));
@@ -3560,7 +3558,12 @@ ORDER BY created_at DESC
              $tootip_price = ' เงินสด: '.$row->cash_pay;
           }
           if(@$row->credit_price!=0){
-             $tootip_price .= ' เครดิต: '.$row->credit_price.' ค่าธรรมเนียม :'.$row->fee_amt;
+            if(@$row->charger_type==1){
+              $tootip_price .= ' เครดิต: '.$row->credit_price.' ค่าธรรมเนียม :'.$row->fee_amt;
+            }else{
+              $tootip_price .= ' เครดิต: '.$row->credit_price;
+            }
+         
           }
           if(@$row->transfer_price!=0){
              $tootip_price .= ' เงินโอน: '.$row->transfer_price;
@@ -3587,7 +3590,12 @@ ORDER BY created_at DESC
           }
 
           if(@$row->credit_price!=0){
-             $total_price += $row->credit_price+$row->fee_amt;
+            if(@$row->charger_type==1){
+              $total_price += $row->credit_price+$row->fee_amt;
+            }else{
+              $total_price += $row->credit_price;
+            }
+            
           }
 
 

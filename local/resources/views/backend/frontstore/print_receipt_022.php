@@ -157,7 +157,7 @@ $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
 
-
+// dd($id);
 
 $shipping = DB::select(" 
     SELECT

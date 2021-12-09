@@ -1015,7 +1015,6 @@ class Pay_product_receipt_001Controller extends Controller
                      ");
 
         }
-
       $sQuery = \DataTables::of($sTable);
       return $sQuery  
       ->addColumn('invoice_code_2', function($row) {
@@ -1097,6 +1096,146 @@ class Pay_product_receipt_001Controller extends Controller
       })        
       ->make(true);
     }
+
+    public function wait_orders(Request $req){
+
+       $User_branch_id = \Auth::user()->branch_id_fk;
+       $sPermission = \Auth::user()->permission ;
+       $menu_id = Session::get('session_menu_id');
+       $role_group_id = \Auth::user()->role_group_id_fk;
+       $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+       $can_approve = @$menu_permit->can_approve==1?'1':'0';
+
+       if($sPermission==1){
+                   $sTable = DB::select("  
+                   SELECT
+                   db_pay_product_receipt_001.id,
+                   db_pay_product_receipt_001.status_sent,
+                   db_pay_product_receipt_001.action_user,
+                   db_pay_product_receipt_001.pay_user,
+                   db_pay_product_receipt_001.action_date,
+                   db_pay_product_receipt_001.pay_date,
+                   db_pay_product_receipt_001.invoice_code,
+                   db_pay_product_receipt_001.bill_date,
+                   db_pay_product_receipt_001.customer_id_fk,
+                   db_pay_product_receipt_001.branch_id_fk,
+                   db_pay_product_receipt_001.branch_id_fk_tosent,
+                   db_pay_product_receipt_001.business_location_id_fk,
+                   db_pay_product_receipt_001.address_send_type
+                   FROM
+                   db_pay_product_receipt_001
+                   WHERE db_pay_product_receipt_001.address_send_type in (1,2) 
+                  GROUP BY invoice_code
+                  ORDER BY db_pay_product_receipt_001.pay_date DESC
+                ");
+       }else{
+
+             $sTable = DB::select("  
+                       SELECT
+                       db_pay_product_receipt_001.id,
+                       db_pay_product_receipt_001.status_sent,
+                       db_pay_product_receipt_001.action_user,
+                       db_pay_product_receipt_001.pay_user,
+                       db_pay_product_receipt_001.action_date,
+                       db_pay_product_receipt_001.pay_date,
+                       db_pay_product_receipt_001.invoice_code,
+                       db_pay_product_receipt_001.bill_date,
+                       db_pay_product_receipt_001.customer_id_fk,
+                       db_pay_product_receipt_001.branch_id_fk,
+                       db_pay_product_receipt_001.branch_id_fk_tosent,
+                       db_pay_product_receipt_001.business_location_id_fk,
+                       db_pay_product_receipt_001.address_send_type
+                       FROM
+                       db_pay_product_receipt_001
+                       WHERE db_pay_product_receipt_001.address_send_type in (1,2)
+                      AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)."
+                      GROUP BY invoice_code
+                      ORDER BY db_pay_product_receipt_001.pay_date DESC
+                    ");
+
+       }
+     $sQuery = \DataTables::of($sTable);
+     return $sQuery  
+     ->addColumn('invoice_code_2', function($row) {
+           return $row->invoice_code;
+     })  
+     ->addColumn('invoice_code', function($row) {
+           // return "<span style='cursor:pointer;' class='invoice_code' data-toggle='tooltip' data-placement='top' title='คลิ้กเพื่อดูรายละเอียด' data-invoice_code='".$row->invoice_code."' >".$row->invoice_code."</span>";
+       return @$row->invoice_code;
+     })  
+     ->escapeColumns('invoice_code')       
+     ->addColumn('customer', function($row) {
+           $rs = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
+           return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
+     }) 
+     ->addColumn('status_sent', function($row) {
+           $rs = DB::select(" select * from dataset_pay_product_status where id=".@$row->status_sent." ");
+           if(@$row->status_sent==3){
+             return '<span class="badge badge-pill badge-success font-size-16">'.@$rs[0]->txt_desc.'</span>';
+           }elseif(@$row->status_sent==1||@$row->status_sent==2||@$row->status_sent==4){
+             return '<span class="badge badge-pill badge-warning font-size-16" style="color:black;">'.@$rs[0]->txt_desc.'</span>';
+           }else{
+             return '<span class="badge badge-pill badge-info font-size-16">'.@$rs[0]->txt_desc.'</span>';
+           }
+           
+     }) 
+     ->addColumn('status_sent_2', function($row) {
+           return $row->status_sent;
+     }) 
+     ->addColumn('status_cancel_all', function($row) {
+           $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=0 ");
+           if(count($P)>0){
+             return 1;
+           }else{
+             return 0;
+           }
+     })  
+     ->addColumn('status_cancel_some', function($row) {
+           $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=1 ");
+           if(count($P)>0){
+             return 1;
+           }else{
+             return 0;
+           }
+     })      
+     ->addColumn('action_user', function($row) {
+       if(@$row->action_user){
+         $P = DB::select(" select * from ck_users_admin where id=".@$row->action_user." ");
+           return @$P[0]->name." <br> ".@$row->action_date;
+       }else{
+         return '-';
+       }        
+     }) 
+     ->escapeColumns('action_user') 
+     ->addColumn('pay_user', function($row) {
+       if(@$row->pay_user){
+          $P = DB::select(" select * from ck_users_admin where id=".@$row->pay_user." ");
+         return @$P[0]->name." <br> ".@$row->pay_date;
+       }else{
+         return '-';
+       }
+     })   
+     ->escapeColumns('pay_user')              
+      ->addColumn('branch', function($row) {
+            $P = DB::select(" select * from branchs where id=".@$row->branch_id_fk." ");
+            return @$P[0]->b_name;
+     }) 
+      ->addColumn('address_send_type', function($row) {
+           if(@$row->address_send_type==1){
+                return 'รับสินค้าด้วยตนเอง';
+           }else if(@$row->address_send_type==2){
+             if(@$row->branch_id_fk_tosent==(\Auth::user()->branch_id_fk)){
+               return 'รับที่สาขานี้';
+             }else{
+               return 'รับที่สาขาอื่น';
+             }
+           }else if(@$row->address_send_type==3){
+               return 'จัดส่งพัสดุ';
+           }
+     })        
+     ->make(true);
+   }
+
 
 
     public function Datatable002(Request $req){

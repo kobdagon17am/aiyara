@@ -870,9 +870,13 @@ if(@$sRow->check_press_save==2){
                           </div>
                         </th>
                       </tr>
+<<<<<<< HEAD
 
 
 
+=======
+                     
+>>>>>>> e190221e4de3ac366d91404372ad5829e320fbc1
                       <tr>
                         <th scope="row" class="bg_addr d-flex" style="<?=$bg_00?>">
                           @IF(@$sRow->shipping_special == 1)
@@ -6339,6 +6343,9 @@ var total_sum = 0;
                 }
 
               }
+
+              // alert($('#sentto_branch_id').val());
+              // return false;
 
             // alert("xx");
             event.preventDefault();

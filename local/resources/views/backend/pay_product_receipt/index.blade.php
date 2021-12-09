@@ -545,6 +545,7 @@
                                   setTimeout(function(){
                                       if(aData['ch_amt_lot_wh']==0){
                                         $(".div_btn_save").hide();
+                                        // alert('ok');
                                       }else{
                                           $(".div_btn_save").show();
 
