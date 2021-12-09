@@ -1179,7 +1179,7 @@ class FrontstoreController extends Controller
               // dd($sentto_branch_id);
               // dd(request('sentto_branch_id'));
               // dd($request->frontstore_id);
-                   
+
                    $sRow->sentto_branch_id    = request('sentto_branch_id');
                    DB::select("UPDATE db_orders SET sentto_branch_id=".$sentto_branch_id.", address_sent_id_fk='0' WHERE (id='".$request->frontstore_id."')");
               }
@@ -1331,7 +1331,7 @@ class FrontstoreController extends Controller
               //    }
               //  }
 
-  
+
                $r_addr = DB::select("select address_sent_id_fk from db_orders WHERE (id='".$request->frontstore_id."')");
 
            if( @$request->delivery_location!=3){
@@ -2010,7 +2010,7 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  '.trans('message.all_payment_list').' ('.$sD3.')  (ไม่รวมบิล <font color=red>* รอดำเนินการต่อ และ ไม่รวมบิลที่ ยกเลิก </font>)
+                  '.trans('message.all_payment_list').' ('.$sD3.')  (ไม่รวมบิล <font color=red>* และ ไม่รวมบิลที่ ยกเลิก </font>)
                 </th></tr>
                 <tr>
                   <th width="10%">'.trans('message.seller').'</th>
@@ -3183,7 +3183,7 @@ ORDER BY created_at DESC
                 return @$r3->txt_desc;
 
              }
-          
+
           }
 
 

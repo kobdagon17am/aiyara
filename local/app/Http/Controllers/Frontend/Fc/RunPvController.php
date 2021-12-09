@@ -353,10 +353,20 @@ class RunPvController extends Controller
 
       if($user){
 
+        if($user->pv == 0){
+            $update_package = DB::table('customers')
+            ->where('user_name', $username)
+            ->update(['package_id' => 1]);
+
+            $resule = ['status' => 'success', 'message' => 'Update Package Success'];
+            return $resule;
+        }
+
         $package = DB::table('dataset_package') //อัพ Pv ของตัวเอง
           ->where('dt_pv', '<=', $user->pv)
           ->orderBy('dt_pv','DESC')
           ->first();
+
 
           if($user->package_id == $package->id){
             $resule = ['status' => 'success', 'message' => 'Not Update Package'];

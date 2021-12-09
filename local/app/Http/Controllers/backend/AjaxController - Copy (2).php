@@ -4498,6 +4498,8 @@ if($frontstore[0]->check_press_save==2){
   // `order_status_id_fk` int(11) DEFAULT NULL COMMENT '(ยึดตาม* dataset_order_status )',
 
       $Orders = \App\Models\Backend\Frontstore::where('id',$request->id)->get();
+
+      //dd($Orders);
       // return $Orders[0]->approve_status;
       // dd();
       // if($Orders[0]->approve_status==0){

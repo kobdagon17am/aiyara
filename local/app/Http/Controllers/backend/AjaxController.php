@@ -5032,8 +5032,7 @@ class AjaxController extends Controller
 
     public function ajaxCancelOrderBackend(Request $request)
     {
-      // return ($request);
-      // dd();
+      $Orders = \App\Models\Backend\Frontstore::where('id',$request->id)->get();
       if($request->ajax()){
 
           // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1
@@ -5051,19 +5050,22 @@ class AjaxController extends Controller
   // `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
   // `order_status_id_fk` int(11) DEFAULT NULL COMMENT '(ยึดตาม* dataset_order_status )',
 
-      $Orders = \App\Models\Backend\Frontstore::where('id',$request->id)->get();
+
       // return $Orders[0]->approve_status;
       // dd();
-      // if($Orders[0]->approve_status==0){
-      //     DB::select(" DELETE FROM db_orders where id=$request->id ");
-      // }else{
-          DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
-      // }
+      if($Orders[0]->approve_status==0){
+        $resule = \App\Http\Controllers\Frontend\Fc\DeleteOrderController::delete_order($request->id);
+
+       }else{
+          //DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
+          $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+      }
 
       DB::select(" DELETE FROM `db_delivery` where orders_id_fk=$request->id ");
 
+
       // $resule = CancelOrderController::cancel_order($rs->cancel_order_id, $customer_id, 1, 'customer');
-      $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+
       // dd($resule);
 
 
