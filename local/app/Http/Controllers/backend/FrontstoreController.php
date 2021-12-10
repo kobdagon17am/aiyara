@@ -1274,7 +1274,9 @@ class FrontstoreController extends Controller
                 }
 
 
-              PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
+
+              $rs = PvPayment::PvPayment_type_confirme($sRow->id,\Auth::user()->id,'1','admin');
+
               //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
               // dd("1233");
               // dd(request('purchase_type_id_fk'));
