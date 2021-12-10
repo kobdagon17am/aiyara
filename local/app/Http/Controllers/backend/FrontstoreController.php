@@ -1056,7 +1056,7 @@ class FrontstoreController extends Controller
     {
       // dd($request->all());
       // dd($request->transfer_money_datetime." : AAAA");
-
+      // db_delivery
       // dd($request->all());
       DB::beginTransaction();
       try
@@ -1413,15 +1413,15 @@ class FrontstoreController extends Controller
 
              }
 
-                DB::select("UPDATE
-                  db_delivery_packing_code
-                  Inner Join db_delivery_packing ON db_delivery_packing_code.id = db_delivery_packing.packing_code
-                  Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
-                  Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
-                  SET
-                  db_delivery_packing_code.address_sent_id_fk=db_orders.address_sent_id_fk
-                  WHERE
-                  db_orders.invoice_code='".@$request->invoice_code."' ");
+              DB::select("UPDATE
+              db_delivery_packing_code
+              Inner Join db_delivery_packing ON db_delivery_packing_code.id = db_delivery_packing.packing_code
+              Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
+              Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
+              SET
+              db_delivery_packing_code.address_sent_id_fk=db_orders.address_sent_id_fk
+              WHERE
+              db_orders.invoice_code='".@$request->invoice_code."' ");
 
                 // dd($request);
                 if($request->frontstore_id){
@@ -1555,9 +1555,12 @@ class FrontstoreController extends Controller
                 DB::select(" UPDATE `db_orders` SET `shipping_price`=0 WHERE (`id`=".$sRow->id.") ");
               }
 
-
+              // วุฒิปรับให้อนุมัติก่อนค่อยอัพเดทไปโชวรอส่ง
+            // if(@$request->pay_type_id_fk != 1 && @$request->pay_type_id_fk != 8 && @$request->pay_type_id_fk != 10 && @$request->pay_type_id_fk != 11 && @$request->pay_type_id_fk != 12){
              $this->fncUpdateDeliveryAddress($sRow->id);
              $this->fncUpdateDeliveryAddressDefault($sRow->id);
+            // }
+
              DB::commit();
              return redirect()->to(url("backend/frontstore"));
 
@@ -1590,14 +1593,16 @@ class FrontstoreController extends Controller
     {
               // dd($id);
               $sRow = \App\Models\Backend\Frontstore::find($id);
+              // dd($sRow);
               // dd($sRow->delivery_location);
               if(@$sRow->delivery_location==0){
                 DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=".$sRow->id.") ");
                 DB::select(" DELETE FROM `db_delivery` WHERE (`orders_id_fk`=".$sRow->id.") ");
               }
 
-
-              if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->id!='' && @$sRow->delivery_location>0 ){
+                // วุฒิปรับ approve_status > 1
+              // if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->id!='' && @$sRow->delivery_location>0 ){
+                if($sRow->check_press_save==2 && $sRow->approve_status>1 && $sRow->id!='' && @$sRow->delivery_location>0 ){
 
                        DB::select("
                         INSERT IGNORE INTO db_delivery
@@ -3615,13 +3620,16 @@ ORDER BY created_at DESC
              $total_price += $row->aicash_price;
           }
           // return $total_price;
-
-
-          if($row->shipping_price>0){
-            $shipping_price  =  $row->shipping_price;
+          if(@$row->pay_type_id_fk!=10){
+            if($row->shipping_price>0){
+              $shipping_price  =  $row->shipping_price;
+            }else{
+              $shipping_price  = 0 ;
+            }
           }else{
             $shipping_price  = 0 ;
           }
+       
 
           // if(@$row->code_order=='O121120400087'){
           //   dd(@$total_price);

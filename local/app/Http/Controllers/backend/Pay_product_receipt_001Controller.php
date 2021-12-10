@@ -1106,7 +1106,8 @@ class Pay_product_receipt_001Controller extends Controller
           if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
           $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
           }else{
-          $action_user_011 = " AND action_user = $user_login_id ";
+          // $action_user_011 = " AND action_user = $user_login_id ";
+          $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
           }
 
           if($sPermission==1){
@@ -1122,16 +1123,6 @@ class Pay_product_receipt_001Controller extends Controller
           $action_user_01 = "";
           $action_user_011 = "";
           }       
-
-          if(!empty($req->action_user)){
-            $action_user_02 = " AND db_orders.action_user = '".$req->action_user."' " ;
-            $action_user_022 = " AND db_add_ai_cash.action_user = '".$req->action_user."' " ;
-         }else{
-            $action_user_02 = "";
-            $action_user_022 = "";
-         }
-         
-         
 
           // รับแล้ว
           $sTable_re = DB::table('db_pay_product_receipt_001')->whereIn('address_send_type',[1,2])->select('invoice_code')->pluck('invoice_code')->toArray();
@@ -1183,7 +1174,6 @@ $sTable = DB::select("
             FROM db_add_ai_cash
             WHERE 1 AND db_add_ai_cash.approve_status<>4
             $action_user_01
-            $action_user_022
             ORDER BY created_at DESC
 
           ");
