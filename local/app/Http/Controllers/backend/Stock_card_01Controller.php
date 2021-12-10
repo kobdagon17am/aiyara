@@ -127,7 +127,7 @@ class Stock_card_01Controller extends Controller
             
          
             }else{
-
+              // doc_date แปลงเป็น updated_at
                 // รายการก่อน start_date เพื่อหายอดยกมา
                   $Stock_movement_in = \App\Models\Backend\Stock_movement::
                   where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
@@ -140,7 +140,7 @@ class Stock_card_01Controller extends Controller
                   ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
                   ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
                   ->where('in_out','1')
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), "<", $request->start_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
                   ->selectRaw('sum(amt) as sum')
                   ->get();
 
@@ -158,7 +158,7 @@ class Stock_card_01Controller extends Controller
                   ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
                   ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
                   ->where('in_out','2')
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), "<", $request->start_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
                   ->selectRaw('sum(amt) as sum')
                   ->get();
 
@@ -180,16 +180,16 @@ class Stock_card_01Controller extends Controller
                   ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
                   ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
                   ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), ">=", $request->start_date)
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), "<=", $request->end_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->start_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->end_date)
                   ->get();
 
                   if($Stock_movement->count() > 0){
-
+                            // doc_date แปลงเป็น updated_at
                           foreach ($Stock_movement as $key => $value) {
                                $insertData = array(
                                   "ref_inv" =>  @$value->ref_doc?$value->ref_doc:NULL,
-                                  "action_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                  "action_date" =>  @$value->updated_at?$value->updated_at:NULL,
                                   "action_user" =>  @$value->action_user?$value->action_user:NULL,
                                   "approver" =>  @$value->approver?$value->approver:NULL,
                                   "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
