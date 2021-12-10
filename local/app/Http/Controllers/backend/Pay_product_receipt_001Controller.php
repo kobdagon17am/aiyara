@@ -1106,7 +1106,8 @@ class Pay_product_receipt_001Controller extends Controller
           if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
           $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
           }else{
-          $action_user_011 = " AND action_user = $user_login_id ";
+          // $action_user_011 = " AND action_user = $user_login_id ";
+          $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
           }
 
           if($sPermission==1){
@@ -1122,16 +1123,6 @@ class Pay_product_receipt_001Controller extends Controller
           $action_user_01 = "";
           $action_user_011 = "";
           }       
-
-          if(!empty($req->action_user)){
-            $action_user_02 = " AND db_orders.action_user = '".$req->action_user."' " ;
-            $action_user_022 = " AND db_add_ai_cash.action_user = '".$req->action_user."' " ;
-         }else{
-            $action_user_02 = "";
-            $action_user_022 = "";
-         }
-         
-         
 
           // รับแล้ว
           $sTable_re = DB::table('db_pay_product_receipt_001')->whereIn('address_send_type',[1,2])->select('invoice_code')->pluck('invoice_code')->toArray();
@@ -1183,7 +1174,6 @@ $sTable = DB::select("
             FROM db_add_ai_cash
             WHERE 1 AND db_add_ai_cash.approve_status<>4
             $action_user_01
-            $action_user_022
             ORDER BY created_at DESC
 
           ");
@@ -1639,6 +1629,7 @@ ORDER BY created_at DESC
          $w001 = "";
       }
       $sTable = DB::select(" SELECT * FROM $temp_ppr_001  WHERE 1 ".$w001."  ");
+   
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
@@ -1659,26 +1650,65 @@ DB::select(" CREATE TEMPORARY TABLE temp_product_fifo
 SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product' 
 group by $temp_ppr_002.product_id_fk
 ");
+
+
 // สินค้าโปรโมชั่น
-DB::select(" INSERT IGNORE INTO temp_product_fifo 
-SELECT 
-promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
-CONCAT(
-(SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
-(SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
-dataset_product_unit.product_unit
-FROM `promotions_products` 
-LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
-where promotion_id_fk in (
-SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
-$temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
-group by promotions_products.product_id_fk
-");
+// วุฒิเพิ่ม
+$temp_ppr_0021_data = DB::table($temp_ppr_002)->get();
+// dd($temp_ppr_0021_data);
+foreach($temp_ppr_0021_data as $tmp){
+  $p_unit = 'ชิ้น';
+  $p_code = '0000:';
+  $p_name = '';
+  $p_id = 0;
+  $p_amt = 0;
+  if($tmp->type_product=='promotion'){
+  $data_promos = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->get();
+    foreach($data_promos as $data_promo){
+      $p_id = $data_promo->product_id_fk;
+      $data_unit  = DB::table('dataset_product_unit')->where('id',$data_promo->product_unit)->first();
+      if($data_unit ){
+        $p_unit = $data_unit->product_unit;
+      }
+      $data_code = DB::table('products')->where('id',$data_promo->product_id_fk)->first();
+      if($data_code){
+        $p_code = $data_code->product_code.' : ';
+      }
+      $data_product = DB::table('products_details')->where('product_id_fk',$data_promo->product_id_fk)->where('lang_id',1)->first();
+      if($data_product){
+        $p_name = $data_product->product_name;
+      }
+      $p_amt = $tmp->amt*$data_promo->product_amt;
+        $id = DB::table('temp_product_fifo')->insertOrIgnore([
+          'product_id_fk' =>$p_id,
+          'amt' => $p_amt,
+          'product_name' => $p_code.$p_name,
+          'product_unit' => $p_unit,
+        ]);
+    }
+}
+
+}
+
+// สินค้าโปรโมชั่น
+// DB::select(" INSERT IGNORE INTO temp_product_fifo 
+// SELECT 
+// promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
+// CONCAT(
+// (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
+// (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
+// dataset_product_unit.product_unit
+// FROM `promotions_products` 
+// LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
+// where promotion_id_fk in (
+// SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
+// $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
+// group by promotions_products.product_id_fk
+// ");
 
         $Products = DB::select("
                SELECT product_id_fk,sum(amt) as amt,product_name,product_unit from temp_product_fifo GROUP BY product_id_fk ORDER BY product_name
            ");
-
 
       			$pn = '<div class="divTable"><div class="divTableBody">';
       			$pn .=     

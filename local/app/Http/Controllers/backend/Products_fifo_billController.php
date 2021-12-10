@@ -381,7 +381,7 @@ class Products_fifo_billController extends Controller
       }
 
       $sQuery = \DataTables::of($sTable);
-     
+
       return $sQuery
        ->addColumn('column_001', function($row) { 
             $pn = '<div class="divTable"><div class="divTableBody">';
@@ -439,7 +439,6 @@ group by $temp_ppr_002.product_id_fk
 // สินค้าโปรโมชั่น
 // วุฒิเพิ่ม
 $temp_ppr_0021_data = DB::table($temp_ppr_002)->get();
-
 foreach($temp_ppr_0021_data as $tmp){
   $p_unit = 'ชิ้น';
   $p_code = '0000:';
@@ -447,8 +446,8 @@ foreach($temp_ppr_0021_data as $tmp){
   $p_id = 0;
   $p_amt = 0;
   if($tmp->type_product=='promotion'){
-  $data_promo = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->first();
-  if($data_promo){
+  $data_promos = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->get();
+    foreach($data_promos as $data_promo){
     $p_id = $data_promo->product_id_fk;
     $data_unit  = DB::table('dataset_product_unit')->where('id',$data_promo->product_unit)->first();
     if($data_unit ){
@@ -463,8 +462,6 @@ foreach($temp_ppr_0021_data as $tmp){
       $p_name = $data_product->product_name;
     }
     $p_amt = $tmp->amt*$data_promo->product_amt;
-    // dd($tmp->amt.' / ww'.$p_name);
-    
       $id = DB::table($temp_product_fifo)->insertOrIgnore([
         'product_id_fk' =>$p_id,
         'amt' => $p_amt,
@@ -472,37 +469,8 @@ foreach($temp_ppr_0021_data as $tmp){
         'product_unit' => $p_unit,
       ]);
   } 
-  }else{
-    // $p_id = $tmp->product_id_fk;
-    // $data_unit  = DB::table('dataset_product_unit')->where('id',$tmp->product_unit_id_fk)->first();
-    // if($data_unit ){
-    //   $p_unit = $data_unit->product_unit;
-    // }
-    // $data_code = DB::table('products')->where('id',$tmp->product_id_fk)->first();
-    // if($data_code){
-    //   $p_code = $data_code->product_code.' : ';
-    // }
-    // $data_product = DB::table('products_details')->where('product_id_fk',$tmp->product_id_fk)->where('lang_id',1)->first();
-    // if($data_product){
-    //   $p_name = $data_product->product_name;
-    // }
-    // $p_amt = $tmp->amt;
-    // dd($tmp->amt.' / aa'.$p_name);
-  }
-
-  // $id = DB::table($temp_product_fifo)->insert([
-  //   'product_id_fk' =>$p_id,
-  //   'amt' => $p_amt,
-  //   'product_name' => $p_code.$p_name,
-  //   'product_unit' => $p_unit,
-  // ]);
-
 }
- $p = DB::table($temp_product_fifo)->get();
-//  dd($temp_ppr_0021_data);
-// dd($p);
-// }
-
+}
   //   DB::select(" INSERT IGNORE INTO $temp_product_fifo 
   // SELECT 
   // promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
@@ -560,7 +528,6 @@ foreach($temp_ppr_0021_data as $tmp){
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
-
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
               
@@ -575,10 +542,24 @@ foreach($temp_ppr_0021_data as $tmp){
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                     // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                    $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                    $w_str = '';
+                    foreach($w_arr as $key => $w){
+                      if($key+1==count($w_arr)){
+                        $w_str.=$w;
+                      }else{
+                        $w_str.=$w.',';
+                      }
+                      
+                    }
+                    // อันนี้แก้ จ่ายผิดคลัง 
+                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
                     // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk=2 ORDER BY lot_expired_date ASC  ");
-                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    // อันนี้แก้เรื่องเรื่องโปรมั้ง หรือไม่ก็ไม่มีปุ่ม
+                    // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    // อันนี้ไรไม่รู้
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-
+                    // dd($temp_db_stocks_02);
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
                           // TEMPORARY
                           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");

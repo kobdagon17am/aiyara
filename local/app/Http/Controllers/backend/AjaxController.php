@@ -4066,7 +4066,7 @@ class AjaxController extends Controller
           $r0 = DB::select(" SELECT * FROM `db_orders`
             WHERE date(updated_at)=CURDATE()
             $wh
-            AND approve_status in (2,4)
+            AND approve_status in (2,4,9)
             AND approve_status not in (5,6)
             AND status_sent_money <> 1
             AND code_order <> ''

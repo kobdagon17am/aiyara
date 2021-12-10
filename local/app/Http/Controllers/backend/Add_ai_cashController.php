@@ -681,7 +681,7 @@ class Add_ai_cashController extends Controller
             ".$w07."
             ORDER BY db_add_ai_cash.updated_at DESC
          ");
-
+     
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {
