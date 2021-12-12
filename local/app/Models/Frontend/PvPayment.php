@@ -303,7 +303,7 @@ class PvPayment extends Model
                     // dd($customer_update->user_name);
                     // dd($pv);
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id);
+                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                     // dd($resule);
 
@@ -374,7 +374,7 @@ class PvPayment extends Model
                             $order_update->active_mt_date = date('Y-m-t', strtotime($start_month));
                         }
 
-                        $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id);
+                        $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                     } else {
                         $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
@@ -425,7 +425,7 @@ class PvPayment extends Model
 
                         }
 
-                        $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id);
+                        $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                     }
 
@@ -482,7 +482,7 @@ class PvPayment extends Model
 
                     }
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id);
+                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                 } elseif ($type_id == 4) { //เติม Aipocket
 
@@ -493,7 +493,7 @@ class PvPayment extends Model
                         ->where('order_id_fk', $order_id)
                         ->update(['status' => 'success', 'pv_aistockist' => $add_pv_aipocket]);
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id);
+                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                 } elseif ($type_id == 5) { // Ai Voucher
 
@@ -504,7 +504,7 @@ class PvPayment extends Model
 
                     $order_update->pv_banlance = $pv_banlance->pv;
                     //ไม่เข้าสถานะต้อง Approve
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id);
+                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
                 } elseif ($type_id == 6) { //couse อบรม
 
                     $update_couse = DB::table('course_event_regis')
@@ -517,7 +517,7 @@ class PvPayment extends Model
                     $order_update->pv_banlance = $add_pv;
                     $order_update->action_date = date('Y-m-d H:i:s');
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id);
+                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                 } else { //ไม่เข้าเงื่อนไขได้เลย
                     $resule = ['status' => 'fail', 'message' => 'ไม่มีเงื่อนไขที่ตรงตามความต้องการ'];

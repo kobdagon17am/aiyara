@@ -27,6 +27,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
+
         $data = DB::table('customers')
             ->select('customers.business_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name', 'customers.user_name', 'customers.created_at', 'customers.date_mt_first', 'customers.pv_mt_active',
                 'customers.pv_mt', 'customers.pv_mt', 'customers.bl_a', 'customers.bl_b', 'customers.bl_c', 'customers.pv_a', 'customers.pv_b', 'customers.pv_c',

@@ -59,7 +59,7 @@ class Runpv_AiStockis extends Model
 
                         if ($type == 1) { //ทำคุณสมบติ
 
-                          $resule =  RunPvController::Runpv($to_customer_user,$pv,$type);
+                          $resule =  RunPvController::Runpv($to_customer_user,$pv,$type,$transection_code);
 
                         } elseif ($type == 2) { //รักษาคุณสมบัติรายเดือน
 
@@ -105,7 +105,7 @@ class Runpv_AiStockis extends Model
                                     $update_to_customer->date_mt_first = date('Y-m-d h:i:s');
                                 }
 
-                                $resule = RunPvController::Runpv($to_customer_user,$pv,$type);
+                                $resule = RunPvController::Runpv($to_customer_user,$pv,$type,$transection_code);
 
 
                             } else {
@@ -152,7 +152,7 @@ class Runpv_AiStockis extends Model
 
                                 }
 
-                                $resule =  RunPvController::Runpv($to_customer_user,$pv,$type);
+                                $resule =  RunPvController::Runpv($to_customer_user,$pv,$type,$transection_code);
                             }
 
                         } elseif ($type == 3) { //รักษาคุณสมบัติท่องเที่ยง
@@ -200,7 +200,7 @@ class Runpv_AiStockis extends Model
                                     ->update(['pv_tv' => $pv_tv_all]);
                             }
 
-                            $resule =  RunPvController::Runpv($to_customer_user,$pv,$type);
+                            $resule =  RunPvController::Runpv($to_customer_user,$pv,$type,$transection_code);
                         } else {
                             $resule = ['status' => 'fail', 'message' => 'ไม่มี Type ที่เลือก'];
                             return  $resule;
