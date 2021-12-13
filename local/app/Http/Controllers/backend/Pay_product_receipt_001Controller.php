@@ -188,6 +188,7 @@ class Pay_product_receipt_001Controller extends Controller
                               //         db_stocks_return.status_cancel=1
 
                               //   ");
+                        
                                     // wut แก้
                               $Data = DB::table('db_stocks_return')->select(
                                 'db_stocks_return.business_location_id_fk',
@@ -1113,7 +1114,7 @@ class Pay_product_receipt_001Controller extends Controller
 
       $user_login_id = \Auth::user()->id;
       $sPermission = \Auth::user()->permission ;
-
+   
           // \Auth::user()->position_level==4 => Supervisor
           if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
           $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
@@ -1158,12 +1159,24 @@ class Pay_product_receipt_001Controller extends Controller
     // $sw.=$sr.',';
   }
 
+  $startDate = '';
+  if(isset($req->startDate)){
+    $startDate = " AND DATE(db_orders.approve_date) >= '".$req->startDate."' " ;
+  }
+
+  $endDate = '';
+  if(isset($req->endDate)){
+    $endDate = " AND DATE(db_orders.approve_date) <= '".$req->endDate."' " ;
+  }
+
 $sTable = DB::select("
             SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
             FROM db_orders
             Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
             WHERE 1
             $action_user_011
+            $startDate
+            $endDate
             AND db_orders.approve_status = 2
             AND delivery_location = 0
             AND db_orders.code_order not in ($sw)
