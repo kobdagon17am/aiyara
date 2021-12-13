@@ -3,13 +3,7 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-<?php
-use App\Http\Controllers\Frontend\Fc\CancelOrderController;
- $resule = CancelOrderController::cancel_order('1593', @\Auth::user()->id , 0, 'admin');
 
-dd($resule);
-
-?>
 <style type="text/css">
   /* DivTable.com */
   .divTable{
