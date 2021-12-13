@@ -16,16 +16,23 @@ class CancelOrderController extends Controller
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
+
+        $customer = DB::table('customers')
+            ->select('user_name')
+            ->where('id',$order_data->customers_id_fk)
+            ->first();
+
+            //dd($order_data->approve_status);
         if (empty($order_data)) {
           $log = [
-            'customer_user_name' => '',
+            'customer_user_name' => $customer->user_name,
             'admin_user_name' => '',
             'code_order' =>  '',
             'error_detail' => 'ไม่มีบิลนี้อยู่ในระบบ Order ID :'.$order_id,
             'function' =>
                 'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
-            'type' => $type_user_cancel, //'admin','customer'
-            'order_type' => '',
+            'type' => $action_type, //'admin','customer'
+            'order_type' => '5',
         ];
         $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
             $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
@@ -34,22 +41,73 @@ class CancelOrderController extends Controller
         }
 
         try {
-            $update_order = DB::table('db_orders') //update บิล
-                ->where('id', $order_id)
-                ->update([
-                    'cancel_by_user_id_fk' => $customer_or_admin,
-                    'order_status_id_fk' => 8, //Status  8 = Cancel
-                    'approve_status' => 5, //status = Cancel
-                    'transfer_bill_status'=>3,
-                    'type_user_cancel' => $type_user_cancel, //Customer
-                    'cancel_action_date' => date('Y-m-d H:i:s'),
-                ]);
+            // $update_order = DB::table('db_orders') //update บิล
+            //     ->where('id', $order_id)
+            //     ->update([
+            //         'cancel_by_user_id_fk' => $customer_or_admin,
+            //         'order_status_id_fk' => 8, //Status  8 = Cancel
+            //         'approve_status' => 5, //status = Cancel
+            //         'transfer_bill_status'=>3,
+            //         'type_user_cancel' => $type_user_cancel, //Customer
+            //         'cancel_action_date' => date('Y-m-d H:i:s'),
+            //     ]);
 
             $type_id = $order_data->purchase_type_id_fk;
 //1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id
             if ($order_data->approve_status == 0 || $order_data->approve_status == 1 || $order_data->approve_status == 3) { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ  0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
 
                 if ($type_id == 1 || $type_id == 2 || $type_id == 3 || $type_id == 4 || $type_id == 5) { //1 ทำคุณสมบัติ , 2 รักษาคุณสมบัติ ,3 รักษาคุณสมบัตรท่องเที่ยว ,4 เติม Aistockist
+
+                  if ($type_id == 5) { //GivtVoucher
+                    $giv_log = DB::table('log_gift_voucher')
+                        ->where('code_order', '=', $order_data->code_order)
+                        ->get();
+
+                    foreach ($giv_log as $value) {
+
+
+                            $gv = \App\Helpers\Frontend::get_gitfvoucher($customer->user_name);
+                            $gv_banlance = $gv->sum_gv + $value->giftvoucher_value_use;
+
+                            $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                              'customer_id_fk' =>  $order_data->customers_id_fk,
+                              'order_id_fk' => $order_id,
+                              'code_order' =>$order_data->code_order,
+                              'giftvoucher_cus_code_order' =>$order_data->code_order,
+                              'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
+                              'type_action_giftvoucher'=>1,//เกิดจากกาสั่งซื้อ
+                              'giftvoucher_value_old' => $gv->sum_gv,
+                              'giftvoucher_value_use' => $value->giftvoucher_value_use,
+                              'giftvoucher_value_banlance' => $gv_banlance,
+                              // 'detail' => 'ได้รับจากกิจกรรม',
+                              'status' => 'success',
+                              'type' => 'Add',
+                              'status' => 'cancel',
+                              'action_user_id_fk' => $customer_or_admin,
+                              'action_type' => $action_type,
+                              'cancel_date' => date('Y-m-d H:i:s'),
+                          ]);
+
+                          $update_giftvoucher = DB::table('db_giftvoucher_cus')
+                          ->where('id', $value->giftvoucher_cus_id_fk)
+                          ->update(['giftvoucher_banlance' => $value->giftvoucher_value_old]);
+
+                    }
+
+                    // $update_log_gift_voucher = DB::table('log_gift_voucher')
+                    //     ->where('code_order', $order_data->code_order)
+                    //     ->update([
+                    //         'status' => 'cancel',
+                    //         'action_user_id_fk' => $customer_or_admin,
+                    //         'action_type' => $action_type,
+                    //         'cancel_date' => date('Y-m-d H:i:s'),
+                    //     ]);
+
+                    $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
+                } else {
+                    $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
+                }
+
                     $update_order = DB::table('db_orders') //update บิล
                         ->where('id', $order_id)
                         ->update([
@@ -74,30 +132,7 @@ class CancelOrderController extends Controller
                             'approve_date' => date('Y-m-d H:i:s'),
                         ]);
 
-                    if ($type_id == 5) { //GivtVoucher
-                        $giv_log = DB::table('log_gift_voucher')
-                            ->where('code_order', '=', $order_data->code_order)
-                            ->get();
 
-                        foreach ($giv_log as $value) {
-                            $update_giftvoucher = DB::table('db_giftvoucher_cus')
-                                ->where('id', $value->giftvoucher_cus_id_fk)
-                                ->update(['giftvoucher_banlance' => $value->giftvoucher_value_old]);
-                        }
-
-                        $update_log_gift_voucher = DB::table('log_gift_voucher')
-                            ->where('code_order', $order_data->code_order)
-                            ->update([
-                                'status' => 'cancel',
-                                'action_user_id_fk' => $customer_or_admin,
-                                'action_type' => $action_type,
-                                'cancel_date' => date('Y-m-d H:i:s'),
-                            ]);
-
-                        $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
-                    } else {
-                        $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
-                    }
                 } elseif ($type_id == 6) { //Course
 
                 } else {
@@ -107,7 +142,57 @@ class CancelOrderController extends Controller
                 }
             } elseif ($order_data->approve_status == 2 || $order_data->approve_status == 4 || $order_data->approve_status == 9 ){ //กรณีบัตรเครดิตร หรือ Admin มีการอนุมัติเรียบร้อยเเล้ว
 
-                $update_order = DB::table('db_orders') //update บิล
+
+              if ($type_id == 5) { //GivtVoucher
+
+
+                $giv_log = DB::table('log_gift_voucher')
+                ->where('code_order', '=', $order_data->code_order)
+                    ->get();
+
+                foreach ($giv_log as $value) {
+
+                  $gv = \App\Helpers\Frontend::get_gitfvoucher($customer->user_name);
+                  $gv_banlance = $gv->sum_gv + $value->giftvoucher_value_use;
+
+                  $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                    'customer_id_fk' =>  $order_data->customers_id_fk,
+                    'order_id_fk' => $order_id,
+                    'code_order' =>$order_data->code_order,
+                    'giftvoucher_cus_code_order' =>$order_data->code_order,
+                    'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
+                    'type_action_giftvoucher'=>1,//เกิดจากกาสั่งซื้อ
+                    'giftvoucher_value_old' => $gv->sum_gv,
+                    'giftvoucher_value_use' => $value->giftvoucher_value_use,
+                    'giftvoucher_value_banlance' => $gv_banlance,
+                    // 'detail' => 'ได้รับจากกิจกรรม',
+                    'status' => 'success',
+                    'type' => 'Add',
+                    'status' => 'cancel',
+                    'action_user_id_fk' => $customer_or_admin,
+                    'action_type' => $action_type,
+                    'cancel_date' => date('Y-m-d H:i:s'),
+                ]);
+
+                    $update_giftvoucher = DB::table('db_giftvoucher_cus')
+                        ->where('id', $value->giftvoucher_cus_id_fk)
+                        ->update(['giftvoucher_banlance' => $value->giftvoucher_value_old]);
+
+
+                }
+
+                // $update_log_gift_voucher = DB::table('log_gift_voucher')
+                //     ->where('code_order', '=', $order_data->code_order)
+                //     ->update([
+                //         'status' => 'cancel',
+                //         'action_user_id_fk' => $customer_or_admin,
+                //         'action_type' => $action_type,
+                //         'cancel_date' => date('Y-m-d H:i:s'),
+                //     ]);
+            }
+
+
+              $update_order = DB::table('db_orders') //update บิล
                     ->where('id', $order_id)
                     ->update([
                         'cancel_by_user_id_fk' => $customer_or_admin,
@@ -130,30 +215,8 @@ class CancelOrderController extends Controller
                         'approve_status' => 2,
                         'approve_date' => date('Y-m-d H:i:s'),
                     ]);
-                DB::rollback();
-
-                if ($type_id == 5) { //GivtVoucher
 
 
-                    $giv_log = DB::table('log_gift_voucher')
-                    ->where('code_order', '=', $order_data->code_order)
-                        ->get();
-
-                    foreach ($giv_log as $value) {
-                        $update_giftvoucher = DB::table('db_giftvoucher_cus')
-                            ->where('id', $value->giftvoucher_cus_id_fk)
-                            ->update(['giftvoucher_banlance' => $value->giftvoucher_value_old]);
-                    }
-
-                    $update_log_gift_voucher = DB::table('log_gift_voucher')
-                        ->where('code_order', '=', $order_data->code_order)
-                        ->update([
-                            'status' => 'cancel',
-                            'action_user_id_fk' => $customer_or_admin,
-                            'action_type' => $action_type,
-                            'cancel_date' => date('Y-m-d H:i:s'),
-                        ]);
-                }
 
                 //เริ่มลบค่า pv
 
@@ -260,7 +323,7 @@ class CancelOrderController extends Controller
 
                     } else {
                       $log = [
-                        'customer_user_name' => '',
+                        'customer_user_name' => $customer->user_name,
                         'admin_user_name' => '',
                         'code_order' => $order_data->code_order,
                         'error_detail' =>'Type Id is null Type='.$type_id,
@@ -282,7 +345,7 @@ class CancelOrderController extends Controller
                 }
             } else {
               $log = [
-                'customer_user_name' => '',
+                'customer_user_name' => $customer->user_name,
                 'admin_user_name' => '',
                 'code_order' => $order_data->code_order,
                 'error_detail' =>'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง approve_status='.$order_data->approve_status,
@@ -295,6 +358,7 @@ class CancelOrderController extends Controller
                 DB::commit();
                 return $resule;
             }
+
 
             if ($resule['status'] == 'success') {
                 DB::commit();
