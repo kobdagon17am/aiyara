@@ -942,6 +942,7 @@ ORDER BY updated_at DESC
                     }else if($row->transfer_bill_status==2){
                         return "อนุมัติแล้ว<br>".@$row->transfer_bill_approvedate;
                     }else if($row->transfer_bill_status==3){
+
                         return "ไม่อนุมัติ";
                     }else{
                         return '-';
