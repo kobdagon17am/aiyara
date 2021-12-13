@@ -981,7 +981,6 @@ class Pay_product_receipt_001Controller extends Controller
                    ORDER BY db_pay_product_receipt_001.pay_date DESC
                  ");
         }else{
-
               $sTable = DB::select("  
                         SELECT
                         db_pay_product_receipt_001.id,
@@ -1001,6 +1000,17 @@ class Pay_product_receipt_001Controller extends Controller
                         db_pay_product_receipt_001
                         WHERE db_pay_product_receipt_001.address_send_type in (1,2)
                        AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)."
+                       ".$w01." 
+                       ".$w02." 
+                       ".$w03." 
+                       ".$w04." 
+                       ".$w05." 
+                       ".$w06." 
+                       ".$w07." 
+                       ".$w08." 
+                       ".$w09." 
+                       OR db_pay_product_receipt_001.address_send_type in (1,2)
+                       AND db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)."
                        ".$w01." 
                        ".$w02." 
                        ".$w03." 
