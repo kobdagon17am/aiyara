@@ -356,7 +356,7 @@ class Check_stockController extends Controller
                array_push($f,$v->lot_expired_date);
             }
             $f = implode('<br>',$f);
-            return $f;
+            return $f.'';
       })
        ->addColumn('amt_desc', function($row) {
         // $d = strtotime($row->lot_expired_date);

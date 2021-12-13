@@ -8,14 +8,16 @@ use Illuminate\Support\Facades\DB;
 
 class RunPvController extends Controller
 {
-    public static function Runpv($username, $pv, $type, $order_code)
+
+    public static function Runpv($username, $pv, $type, $order_code = null)
     {
+        
         // RunPv ทำคุณสมบัติ
 
         // dd($type);
-        // dd($username);
+        // dd(' username '.$username.'/ '.' pv '.$pv.'/ '.' type '.$type.'/ '.' order_code '.$order_code);
         // dd($pv);
-
+        // dd($order_code);
         $user = DB::table('customers') //อัพ Pv ของตัวเอง
             ->select('id', 'pv')
             ->where('user_name', '=', $username)
