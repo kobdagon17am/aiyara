@@ -132,27 +132,27 @@ class Pay_product_receipt_001Controller extends Controller
       DB::update(" DELETE FROM db_pick_warehouse_qrcode WHERE invoice_code='".$request->invoice_code."' ");
 
       // คืนสินค้ากลับ คลัง เพราะไม่ได้จ่ายแล้ว
-      // DB::select(" TRUNCATE db_stocks_return; ");
-      // $r = DB::select(" SELECT * FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."'; ");
+      DB::select(" TRUNCATE db_stocks_return; ");
+      $r = DB::select(" SELECT * FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."'; ");
 
-      // foreach ($r as $key => $v) {
-             // $_choose=DB::table("db_stocks_return")
-                // ->where('time_pay', $v->time_pay)
-                // ->where('business_location_id_fk', $v->business_location_id_fk)
-                // ->where('branch_id_fk', $v->branch_id_fk)
-                // ->where('product_id_fk', $v->product_id_fk)
-                // ->where('lot_number', $v->lot_number)
-                // ->where('lot_expired_date', $v->lot_expired_date)
-                // ->where('amt', $v->amt_get)
-                // ->where('product_unit_id_fk', $v->product_unit_id_fk)                
-                // ->where('warehouse_id_fk', $v->warehouse_id_fk)
-                // ->where('zone_id_fk', $v->zone_id_fk)
-                // ->where('shelf_id_fk', $v->shelf_id_fk)
-                // ->where('shelf_floor', $v->shelf_floor)
-                // ->where('invoice_code', $request->invoice_code)
-                // ->get();
+      foreach ($r as $key => $v) {
+             $_choose=DB::table("db_stocks_return")
+                ->where('time_pay', $v->time_pay)
+                ->where('business_location_id_fk', $v->business_location_id_fk)
+                ->where('branch_id_fk', $v->branch_id_fk)
+                ->where('product_id_fk', $v->product_id_fk)
+                ->where('lot_number', $v->lot_number)
+                ->where('lot_expired_date', $v->lot_expired_date)
+                ->where('amt', $v->amt_get)
+                ->where('product_unit_id_fk', $v->product_unit_id_fk)                
+                ->where('warehouse_id_fk', $v->warehouse_id_fk)
+                ->where('zone_id_fk', $v->zone_id_fk)
+                ->where('shelf_id_fk', $v->shelf_id_fk)
+                ->where('shelf_floor', $v->shelf_floor)
+                ->where('invoice_code', $request->invoice_code)
+                ->get();
                 
-                // if($_choose->count() == 0){
+                if($_choose->count() == 0){
 
                     DB::select(" INSERT INTO db_stocks_return (time_pay, business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, invoice_code, created_at, updated_at,status_cancel) 
                     SELECT time_pay,
@@ -165,50 +165,52 @@ class Pay_product_receipt_001Controller extends Controller
                             $insertStockMovement = new  AjaxController();
 
                               // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
-                              // $Data = DB::select("
-                              //         SELECT
-                              //         db_stocks_return.business_location_id_fk,
-                              //         db_stocks_return.invoice_code as doc_no,
-                              //         db_stocks_return.updated_at as doc_date,
-                              //         db_stocks_return.branch_id_fk,
-                              //         product_id_fk,
-                              //         lot_number,
-                              //         lot_expired_date,
-                              //         amt,
-                              //         1 as 'in_out',
-                              //         product_unit_id_fk,
-                              //         warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
-                              //         'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
-                              //         db_stocks_return.updated_at as dd,
-                              //         db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
+                              $Data = DB::select("
+                                      SELECT
+                                      db_stocks_return.business_location_id_fk,
+                                      db_stocks_return.invoice_code as doc_no,
+                                      db_stocks_return.updated_at as doc_date,
+                                      db_stocks_return.branch_id_fk,
+                                      product_id_fk,
+                                      lot_number,
+                                      lot_expired_date,
+                                      amt,
+                                      1 as 'in_out',
+                                      product_unit_id_fk,
+                                      warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,db_stocks_return.status_cancel as status,
+                                      'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
+                                      db_stocks_return.updated_at as dd,
+                                      db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
 
-                              //         FROM db_stocks_return
-                              //         LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
-                              //         WHERE
-                              //         db_stocks_return.status_cancel=1
+                                      FROM db_stocks_return
+                                      LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
+                                      WHERE
+                                      db_stocks_return.status_cancel=1
 
-                              //   ");
+                                ");
                         
                                     // wut แก้
-                              $Data = DB::table('db_stocks_return')->select(
-                                'db_stocks_return.business_location_id_fk',
-                                'db_stocks_return.invoice_code as doc_no',
-                                'db_stocks_return.updated_at as doc_date',
-                                'db_stocks_return.branch_id_fk',
-                                'product_id_fk',
-                                'lot_number',
-                                'lot_expired_date',
-                                'amt',
-                                'product_unit_id_fk',
-                                'warehouse_id_fk',
-                                'zone_id_fk',
-                                'shelf_id_fk',
-                                'shelf_floor',
-                                'warehouse_id_fk',
-                                'db_stocks_return.status_cancel as status',
-                                )
-                                ->where('status_cancel',1)
-                                ->get();
+                              // $Data = DB::table('db_stocks_return')->select(
+                              //   'db_stocks_return.business_location_id_fk',
+                              //   'db_stocks_return.invoice_code as doc_no',
+                              //   'db_stocks_return.updated_at as doc_date',
+                              //   'db_stocks_return.branch_id_fk',
+                              //   'product_id_fk',
+                              //   'lot_number',
+                              //   'lot_expired_date',
+                              //   'amt',
+                              //   'product_unit_id_fk',
+                              //   'warehouse_id_fk',
+                              //   'zone_id_fk',
+                              //   'shelf_id_fk',
+                              //   'shelf_floor',
+                              //   'warehouse_id_fk',
+                              //   'db_stocks_return.status_cancel as status',
+                              //   )
+                              //   ->where('invoice_code',$request->invoice_code)
+                              //   ->where('status_cancel',1)
+                              //   ->get();
+                                // dd($Data);
                               if(!$Data){
                                 $Data = DB::select("
                                 SELECT
@@ -234,7 +236,7 @@ class Pay_product_receipt_001Controller extends Controller
                           ");
                               }
                             // dd($Data);
-
+              
                               if(@$Data){
                                 DB::table('db_stock_movement_tmp')->truncate();
                                   foreach ($Data as $key => $value) {
@@ -270,6 +272,7 @@ class Pay_product_receipt_001Controller extends Controller
 
                                     }
                                     $tmp = DB::table('db_stock_movement_tmp')->orderBy('doc_date','asc')->get();
+                                    // dd($tmp);
                                     foreach($tmp as $t){
                                       DB::table('db_stock_movement')->insertOrignore(array(
                                         // ไม่เหมือน tmp
@@ -312,9 +315,9 @@ class Pay_product_receipt_001Controller extends Controller
                                }
 
 
-                // }
+                }
 
-       // }
+       }
 
       // สร้างตาราง temp group ตามรายการข้างล่าง
       $temp_db_stocks_from_return = "temp_db_stocks_from_return".\Auth::user()->id;
