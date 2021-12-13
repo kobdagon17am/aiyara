@@ -746,7 +746,7 @@ class Po_approveController extends Controller
               if ($row->purchase_type_id_fk == 7) {
                 return number_format($row->sum_price, 2);
             } else if ($row->purchase_type_id_fk == 5) {
-                $total_price = $row->total_price - $row->gift_voucher_price;
+                $total_price =  $row->transfer_price;
                 return number_format($total_price, 2);
             } else {
                 return number_format($row->sum_price + $row->shipping_price, 2);
@@ -876,7 +876,7 @@ ORDER BY updated_at DESC
                 if (@$row->purchase_type_id_fk == 7) {
                     return number_format($row->sum_price, 2);
                 } else if (@$row->purchase_type_id_fk == 5) {
-                    $total_price = $row->total_price - $row->gift_voucher_price;
+                    $total_price = $row->transfer_price;
                     return number_format($total_price, 2);
                 } else {
                     return number_format(@$row->sum_price + $row->shipping_price, 2);
@@ -992,7 +992,7 @@ ORDER BY updated_at DESC
                 if (@$row->purchase_type_id_fk == 7) {
                     return number_format($row->sum_price, 2);
                 } else if (@$row->purchase_type_id_fk == 5) {
-                    $total_price = $row->total_price - $row->gift_voucher_price;
+                    $total_price =  $total_price = $row->transfer_price;
                     return number_format($total_price, 2);
                 } else {
                     return number_format(@$row->sum_price + $row->shipping_price, 2);
