@@ -517,9 +517,16 @@ class RunPvController extends Controller
                 ];
                 return $resule;
             } else {
+
+              if(@$package->id){
                 $update_package = DB::table('customers')
                     ->where('user_name', $username)
                     ->update(['package_id' => $package->id]);
+              }else{
+                $update_package = DB::table('customers')
+                    ->where('user_name', $username)
+                    ->update(['package_id' => 1]);
+              }
 
                 $resule = [
                     'status' => 'success',
