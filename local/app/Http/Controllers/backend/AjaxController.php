@@ -5059,6 +5059,8 @@ class AjaxController extends Controller
        }else{
           //DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
           $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+
+
       }
 
       DB::select(" DELETE FROM `db_delivery` where orders_id_fk=$request->id ");

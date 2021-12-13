@@ -11,12 +11,25 @@ class CancelOrderController extends Controller
 
     public static function cancel_order($order_id, $customer_or_admin, $type_user_cancel, $action_type)
     {
+
         DB::BeginTransaction();
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
         if (empty($order_data)) {
+          $log = [
+            'customer_user_name' => '',
+            'admin_user_name' => '',
+            'code_order' =>  '',
+            'error_detail' => 'ไม่มีบิลนี้อยู่ในระบบ Order ID :'.$order_id,
+            'function' =>
+                'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
+            'type' => $type_user_cancel, //'admin','customer'
+            'order_type' => '',
+        ];
+        $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
             $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
+            DB::commit();
             return $resule;
         }
 
@@ -120,8 +133,9 @@ class CancelOrderController extends Controller
 
                 if ($type_id == 5) { //GivtVoucher
 
+
                     $giv_log = DB::table('log_gift_voucher')
-                        ->where('order_id_fk', '=', $order_id)
+                    ->where('code_order', '=', $order_data->code_order)
                         ->get();
 
                     foreach ($giv_log as $value) {
@@ -131,7 +145,7 @@ class CancelOrderController extends Controller
                     }
 
                     $update_log_gift_voucher = DB::table('log_gift_voucher')
-                        ->where('order_id_fk', $order_id)
+                        ->where('code_order', '=', $order_data->code_order)
                         ->update([
                             'status' => 'cancel',
                             'action_user_id_fk' => $customer_or_admin,
@@ -207,14 +221,14 @@ class CancelOrderController extends Controller
 
                     if ($type_id == 1) {
 
-                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id);
+                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id,$order_data->code_order);
 
                     } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
                         $update_tv = DB::table('customers')
                             ->where('id', $customer_user->id)
                             ->update(['pv_mt' => $order_data->pv_mt_old, 'pv_mt_active' => $order_data->active_mt_old_date, 'status_pv_mt' => $order_data->status_pv_mt_old]);
 
-                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id);
+                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id,$order_data->code_order);
 
                     } elseif ($type_id == 3) { //รักษาคุณสมบัตรการท่องเที่ยว
 
@@ -222,7 +236,7 @@ class CancelOrderController extends Controller
                             ->where('id', $customer_user->id)
                             ->update(['pv_tv' => $order_data->pv_tv_old, 'pv_tv_active' => $order_data->active_tv_old_date]);
 
-                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id);
+                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id,$order_data->code_order);
 
                     } elseif ($type_id == 4) { //เติม Aistockis
                         $add_pv_aistockist = $customer_user->pv_aistockist - $pv_total;
@@ -235,17 +249,29 @@ class CancelOrderController extends Controller
                             ->where('order_id_fk', $order_id)
                             ->update(['status' => 'cancel']);
 
-                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id);
+                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id,$order_data->code_order);
                     } elseif ($type_id == 6) { // Course
                         $update_couse = DB::table('course_event_regis')
                             ->where('order_id_fk', $order_id)
                             ->update(['status_register' => '3']);
 
-                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id);
+                        $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id,$order_data->code_order);
 
                     } else {
+                      $log = [
+                        'customer_user_name' => '',
+                        'admin_user_name' => '',
+                        'code_order' => $order_data->code_order,
+                        'error_detail' =>'Type Id is null Type='.$type_id,
+                        'function' =>'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
+                        'type' => '', //'admin','customer'
+                        'order_type' => $type_id,];
+
+                        $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
+
+
                         $resule = ['status' => 'fail', 'message' => 'Type Id is null'];
-                        DB::rollback();
+                        DB::commit();
                         return $resule;
 
                     }
@@ -254,7 +280,19 @@ class CancelOrderController extends Controller
                     $resule = ['status' => 'success', 'message' => 'pv ของบิลนี้มีค่าเป็น 0 ปรับสถานะบิลเป็น Cancel อย่างเดียว'];
                 }
             } else {
+              $log = [
+                'customer_user_name' => '',
+                'admin_user_name' => '',
+                'code_order' => $order_data->code_order,
+                'error_detail' =>'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง approve_status='.$order_data->approve_status,
+                'function' =>'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
+                'type' => '', //'admin','customer'
+                'order_type' => $type_id,];
+
+                $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
                 $resule = ['status' => 'fail', 'message' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง'];
+                DB::commit();
+                return $resule;
             }
 
             if ($resule['status'] == 'success') {

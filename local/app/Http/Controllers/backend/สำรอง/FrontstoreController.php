@@ -23,6 +23,7 @@ class FrontstoreController extends Controller
     public function index(Request $request)
     {
 
+
       // $r = RunNumberPayment::run_number_order(1);
       // dd($r);
 
@@ -322,7 +323,7 @@ class FrontstoreController extends Controller
 
     public function edit($id)
     {
-      // dd($id);
+      //dd($id);
 
 
               // $data =  CancelOrderController::cancel_order('204',\Auth::user()->id,'1','admin');
@@ -629,7 +630,7 @@ class FrontstoreController extends Controller
 
     public function viewdata($id)
     {
-      // dd($id);
+      //dd($id);
 
       $sRow = \App\Models\Backend\Frontstore::find($id);
       if(!$sRow){

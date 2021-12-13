@@ -537,6 +537,7 @@ class FrontstoreController extends Controller
 
       if($sRow->purchase_type_id_fk=='5'){
         $sPay_type = DB::select(" select * from dataset_pay_type where id in (4,12,13,14,19) and status=1 ");
+
       }else{
         $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
       }
@@ -3631,7 +3632,7 @@ ORDER BY created_at DESC
           }else{
             $shipping_price  = 0 ;
           }
-       
+
 
           // if(@$row->code_order=='O121120400087'){
           //   dd(@$total_price);
