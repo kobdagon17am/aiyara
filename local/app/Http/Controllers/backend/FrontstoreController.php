@@ -318,7 +318,6 @@ class FrontstoreController extends Controller
     public function store(Request $request)
     {
 
-      // dd($request->all());
       if(!empty($request->upload_file)){
 
             $sRow = \App\Models\Backend\Frontstore::find($request->id);
@@ -352,7 +351,7 @@ class FrontstoreController extends Controller
 
     public function edit($id)
     {
-      //dd($id);
+
 
       // กำลังเบิกสินค้า ไม่ให้แก้บิล
           $ch_Disabled = 0;
@@ -1055,7 +1054,7 @@ class FrontstoreController extends Controller
 
     public function update(Request $request, $id)
     {
-      // dd($request->all());
+
       // dd($request->transfer_money_datetime." : AAAA");
       // db_delivery
       // dd($request->all());
@@ -1066,6 +1065,7 @@ class FrontstoreController extends Controller
          $this->fnManageGiveaway(@$request->frontstore_id);
 
          if(isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip=='1'){
+
 
             // dd($request->sentto_branch_id);
 
@@ -1133,6 +1133,25 @@ class FrontstoreController extends Controller
               $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
               $sRow->sentto_branch_id = request('sentto_branch_id');
               $sRow->check_press_save = 2 ;
+
+              if(empty(request('shipping_price'))){
+
+                $sum_price = str_replace(',','',request('sum_price'));
+                $fee_amt = request('fee_amt')>0 ? str_replace(',','',request('fee_amt')) : 0 ;
+                // dd(str_replace(',','',request('fee_amt')));
+                // dd($fee_amt);
+                $sRow->total_price    =  $sum_price  + $fee_amt ;
+
+              }else{
+
+                // wut เพิ่มมา
+                $sum_price = str_replace(',','',request('sum_price'));
+                $fee_amt = request('fee_amt')>0 ? str_replace(',','',request('fee_amt')) : 0 ;
+                $shipping_price = request('shipping_price')>0 ? str_replace(',','',request('shipping_price')) : 0 ;
+                $sRow->total_price    =  $sum_price  + $fee_amt +  $shipping_price;
+
+              }
+
 
               // กรณีโอนชำระ
               if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11 || request('pay_type_id_fk')==12){
@@ -1205,6 +1224,7 @@ class FrontstoreController extends Controller
                 $sRow->total_price    =  $sum_price  + $fee_amt ;
 
               }else{
+
                 // wut เพิ่มมา
                 $sum_price = str_replace(',','',request('sum_price'));
                 $fee_amt = request('fee_amt')>0 ? str_replace(',','',request('fee_amt')) : 0 ;
@@ -1569,6 +1589,7 @@ class FrontstoreController extends Controller
 
 
         }else{
+          dd('4');
           DB::commit();
           // dd($request->all());
           return $this->form($id);

@@ -122,7 +122,7 @@
                             data-toggle="modal" data-target="#cancel">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
                         </button>
-                        
+
                     </div>
                         @endif
 
@@ -168,7 +168,16 @@
 
                                                         </div>
                                                         <div class="col-md-6 text-left">
-                                                            <input class="form-control" type="text" value="{{@$price}}" readonly >
+                                                        @if (@$sRow->purchase_type_id_fk == 5)
+                                                         <?php  $transfer_price = $sRow->transfer_price;
+                                                          $transfer_price = number_format($transfer_price, 2);
+                                                         ?>
+                                                          <input class="form-control" type="text" value="{{$transfer_price}}" readonly >
+                                                        @else
+                                                        <input class="form-control" type="text" value="{{@$price}}" readonly >
+                                                        @endif
+
+
                                                         </div>
                                                     </div>
                                                 </div>
