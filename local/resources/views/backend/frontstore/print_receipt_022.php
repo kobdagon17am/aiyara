@@ -249,7 +249,7 @@ foreach ($sTable as $key => $row) {
                  if(strlen($product_name)>100){
                   $product_name = iconv_substr($product_name,0,100, "UTF-8")."...";
                  }
-                 DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".@$row->total_price."'); ");
+                 DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."', '".@$row->amt."', '".@$row->total_price."'); ");
 
             }else{
 
@@ -1181,7 +1181,16 @@ for ($j=0; $j < $amt_page ; $j++) {
                 <?php
 
                 if(@$DB[0]->c==""){
-                  echo @$DB[0]->e ;
+
+                  if(@$DB[0]->e and @$DB[0]->f and @$DB[0]->e > 0 ){
+                    $pv_per_product = $DB[0]->e / $DB[0]->f ;
+                  echo $pv_per_product.'Pv';
+                  }
+
+                  if(@$DB[0]->f and @$DB[0]->e == 0){
+                    echo '0Pv';
+                  }
+
                 }
                 ?>
                 </td>
