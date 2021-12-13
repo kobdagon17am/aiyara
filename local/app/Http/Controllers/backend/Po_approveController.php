@@ -832,8 +832,9 @@ class Po_approveController extends Controller
 
        $sTable =     DB::select("
 
-select `db_orders`.*, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
+select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
 left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
+left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
 where
 pay_type_id_fk in (1,8,10,11,12) and
 `dataset_order_status`.`lang_id` = 1 and
@@ -935,20 +936,20 @@ ORDER BY updated_at DESC
              ->escapeColumns('transfer_amount_approver')
 
             ->addColumn('transfer_bill_status', function ($row) {
-                if(!empty($row->transfer_bill_status)){
+                // if(!empty($row->transfer_bill_status)){
 
-                    if($row->transfer_bill_status==1){
-                        return "รออนุมัติ";
-                    }else if($row->transfer_bill_status==2){
-                        return "อนุมัติแล้ว<br>".@$row->transfer_bill_approvedate;
-                    }else if($row->transfer_bill_status==3){
+                    // if($row->transfer_bill_status==1){
+                    //     return "รออนุมัติ";
+                    // }else if($row->transfer_bill_status==2){
+                    //     return "อนุมัติแล้ว<br>".@$row->transfer_bill_approvedate;
+                    // }else if($row->transfer_bill_status==3){
+                    //     return "ไม่อนุมัติ";
+                    // }else{
+                    //     return '-';
+                    // }
+                    return $row->txt_desc;
 
-                        return "ไม่อนุมัติ";
-                    }else{
-                        return '-';
-                    }
-
-                }
+                // }
             })
             ->escapeColumns('transfer_bill_status')
 
