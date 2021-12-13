@@ -1152,7 +1152,6 @@ class FrontstoreController extends Controller
 
               }
 
-
               // กรณีโอนชำระ
               if(request('pay_type_id_fk')==8 || request('pay_type_id_fk')==10 || request('pay_type_id_fk')==11 || request('pay_type_id_fk')==12){
                 $sRow->approve_status = 1 ;
@@ -1163,9 +1162,13 @@ class FrontstoreController extends Controller
            }
            $sRow->note    = request('note');
 
-           // if($sRow->purchase_type_id_fk==5){
-           //   $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
-           // }
+           if($sRow->purchase_type_id_fk==5){
+
+             $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
+             DB::commit();
+
+           }
+
 
            $sRow->save();
 
@@ -1304,6 +1307,7 @@ class FrontstoreController extends Controller
               if($sRow->purchase_type_id_fk==5){
                 //dd($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
                 $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
+                DB::commit();
               }else{
                 // dd('dddddddddd');
               }
@@ -1589,7 +1593,7 @@ class FrontstoreController extends Controller
 
 
         }else{
-          dd('4');
+
           DB::commit();
           // dd($request->all());
           return $this->form($id);

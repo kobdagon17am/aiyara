@@ -5070,9 +5070,8 @@ class AjaxController extends Controller
 
       // dd($resule);
 
-
-      // return response()->json(\App\Models\Alert::Msg('success'));
-       // return redirect()->to(url("backend/frontstore"));
+      return response()->json(\App\Models\Alert::Msg('success'));
+      //return redirect()->to(url("backend/frontstore"));
        }
     }
 
