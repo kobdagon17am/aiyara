@@ -182,7 +182,7 @@ class Stock_cardController extends Controller
                  ->where(DB::raw($w_shelf_floor_01), "=", $w_shelf_floor_02)
                  ->where(DB::raw($w_lot_number_01), "=", $w_lot_number_02)
                   ->where('in_out','1')
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), "<", $request->start_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
                   ->selectRaw('sum(amt) as sum')
                   ->get();
 
@@ -199,7 +199,7 @@ class Stock_cardController extends Controller
                  ->where(DB::raw($w_shelf_floor_01), "=", $w_shelf_floor_02)
                  ->where(DB::raw($w_lot_number_01), "=", $w_lot_number_02)
                   ->where('in_out','2')
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), "<", $request->start_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
                   ->selectRaw('sum(amt) as sum')
                   ->get();
 
@@ -220,8 +220,8 @@ class Stock_cardController extends Controller
                  ->where(DB::raw($w_shelf_id_fk_01), "=", $w_shelf_id_fk_02)
                  ->where(DB::raw($w_shelf_floor_01), "=", $w_shelf_floor_02)
                  ->where(DB::raw($w_lot_number_01), "=", $w_lot_number_02)
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), ">=", $request->start_date)
-                  ->where(DB::raw("(DATE_FORMAT(doc_date,'%Y-%m-%d'))"), "<=", $request->end_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->start_date)
+                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->end_date)
                   ->get();
 
                   if($Stock_movement->count() > 0){
@@ -229,7 +229,7 @@ class Stock_cardController extends Controller
                           foreach ($Stock_movement as $key => $value) {
                                $insertData = array(
                                   "ref_inv" =>  @$value->ref_doc?$value->ref_doc:NULL,
-                                  "action_date" =>  @$value->doc_date?$value->doc_date:NULL,
+                                  "action_date" =>  @$value->updated_at?$value->updated_at:NULL,
                                   "action_user" =>  @$value->action_user?$value->action_user:NULL,
                                   "approver" =>  @$value->approver?$value->approver:NULL,
                                   "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,

@@ -291,7 +291,7 @@ class PvPayment extends Model
                 $order_update->invoice_code_id_fk = $code_order;
                 $order_update->invoice_code = $order_data->code_order;
                 //check รายการสินค้าแถม
-
+           
                 if ($type_id == 1) { //ทำคุณสมบติ
 
                     $add_pv = $customer_update->pv + $pv;
@@ -302,7 +302,7 @@ class PvPayment extends Model
 
                     // dd($customer_update->user_name);
                     // dd($pv);
-
+                      
                     $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                     // dd($resule);

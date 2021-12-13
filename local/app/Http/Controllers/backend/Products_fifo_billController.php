@@ -623,6 +623,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
+                                      // dd($_choose);
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -1186,6 +1187,7 @@ foreach($temp_ppr_0021_data as $tmp){
             foreach ($product as $key => $value) {
                array_push($product_id_fk,$value->product_id_fk);
             }
+            // dd('$business_location_id_fk : '.$business_location_id_fk.' $branch_id_fk : '.$branch_id_fk.' $arr_product_id_fk'.' : ');
             // return $product_id_fk;
             $product_id_fk = array_filter($product_id_fk);
             $arr_product_id_fk = implode(',',$product_id_fk);
@@ -1201,14 +1203,16 @@ foreach($temp_ppr_0021_data as $tmp){
        
           // return $branch_id_fk;
           // return $arr_product_id_fk;
-
+      
           if(!empty($arr_product_id_fk)){
-           
+        
             DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
              WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
        
         
         }
+
+
  
          // $Data = DB::select(" SELECT * FROM $temp_db_stocks; ");
          // return $Data;
@@ -1235,7 +1239,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
     public function ajaxSearch_bill_db_orders002(Request $request)
     {
-
+      // temp_ppr_004
             $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
             $r_compare_1 =  DB::select(" 
