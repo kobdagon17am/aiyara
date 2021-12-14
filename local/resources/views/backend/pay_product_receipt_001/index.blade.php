@@ -1156,6 +1156,55 @@ $(function() {
 
                   // $('#data-table-001').DataTable().clear().draw();
 
+                  // wut add 
+                          $(function() {
+                    $.fn.dataTable.ext.errMode = 'throw';
+                      oTable_wait_orders = $('#data-table-wait_orders').DataTable({
+                      "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                          processing: true,
+                          serverSide: true,
+                          scroller: true,
+                          destroy: true,
+                          ordering: false,
+                          iDisplayLength: 50,
+                          ajax: {
+                                    url: '{{ url("backend/pay_product_receipt_tb1/wait_orders") }}',
+                                    data :{
+	                              		_token: '{{csrf_token()}}',
+	                                    business_location_id_fk:business_location_id_fk,
+	                                    branch_id_fk:branch_id_fk,
+	                                    customer_id_fk:customer_id_fk,
+	                                    startDate:startDate,
+                                      startPayDate:startPayDate,
+	                                    endDate:endDate,
+                                      endPayDate:endPayDate,
+	                                    status_sent:status_sent,                                 
+	                                    txtSearch_001:txtSearch_001,                                  
+                                      btnSearch03:btnSearch03,                                  
+                                      action_user:action_user,                                  
+	                                  },
+                                      method: 'POST',
+                                    },
+                          columns: [
+                              {data: 'id', title :'ID', className: 'text-center w50'},
+                              {data: 'invoice_code', title :'<center>ใบเสร็จ</center>', className: 'text-center'},
+                              {data: 'created_at', title :'<center>วันที่ออกใบเสร็จ</center>', className: 'text-left'},
+                              {data: 'customer', title :'<center>รหัส:ชื่อสมาชิก</center>', className: 'text-left'},
+                              // {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
+                              // {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
+                              // {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
+
+                              // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
+                              // {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
+                              {data: 'action_user', title :'<center>ผู้สร้าง</center>', className: 'text-left'},
+                              {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
+                              // {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                          ],
+                          rowCallback: function(nRow, aData, dataIndex){
+                          }
+                      });
+                  });
+
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                     var txtSearch_001 = $("input[name=txtSearch_001]").val();
