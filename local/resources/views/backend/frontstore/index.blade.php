@@ -506,7 +506,7 @@ $(function() {
                 + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
 
-            {data: 'id', title :'Tools', className: 'text-center w80'},
+            {data: 'id',title :'Tools', className: 'text-center w80'},
         ],
            "columnDefs": [ {
               // "targets": [0,2,6,7,8,9] ,

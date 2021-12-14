@@ -231,7 +231,7 @@ foreach ($sTable as $key => $row) {
 
         if($row->type_product=="course"){
                $product_name = $row->product_name;
-               DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".@$row->total_price."'); ");
+               DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."', '".@$row->amt."', '".@$row->total_price."'); ");
         }else{
 
 
@@ -275,7 +275,7 @@ foreach ($sTable as $key => $row) {
                      if(strlen($product_name)>100){
                       $product_name = iconv_substr($product_name,0,100, "UTF-8")."...";
                      }
-                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".number_format(@$row->total_price,2)."'); ");
+                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."', '".@$row->amt."', '".number_format(@$row->total_price,2)."'); ");
 
 
 

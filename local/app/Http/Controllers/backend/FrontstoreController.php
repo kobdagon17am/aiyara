@@ -34,7 +34,7 @@ class FrontstoreController extends Controller
       // $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (3) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
       $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (3) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
 
-      // $resule = CancelOrderController::cancel_order('1378', @\Auth::user()->id , 1, 'admin');
+      // $resule = CancelOrderController::cancel_order('1618', @\Auth::user()->id,1,'admin');//goftest
       // dd($resule);
 
       $sPermission = \Auth::user()->permission ;

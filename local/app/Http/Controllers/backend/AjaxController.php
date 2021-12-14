@@ -2594,12 +2594,10 @@ class AjaxController extends Controller
               'giftvoucher_value_old' => $gv->sum_gv,
               'giftvoucher_value_use' => $value->giftvoucher_value,
               'giftvoucher_value_banlance' => $gv_banlance,
-              'detail' => 'ได้รับจากกิจกรรม',
+              'detail' => 'รับจากกิจกรรม',
               'status' => 'success',
               'type' => 'Add',
           ]);
-
-
 
       }
 
