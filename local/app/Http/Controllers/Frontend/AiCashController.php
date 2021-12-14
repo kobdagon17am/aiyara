@@ -268,6 +268,7 @@ class AiCashController extends Controller
 
             $resule = CancelAicashController::cancel_aicash($cancel_aicash_id, $customer_id, 'customer');
 
+            dd($resule);
             if ($resule['status'] == 'success') {
                 return redirect('ai-cash')->withSuccess($resule['message']);
             } else {

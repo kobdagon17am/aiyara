@@ -394,7 +394,7 @@
                     },
                     {
                         data: 'code_order',
-                        title: 'CODE',
+                        title: 'OrderCode',
                         className: 'text-center'
                     },
                     // {
@@ -405,7 +405,7 @@
 
                     {
                         data: 'aicash_price',
-                        title: 'ชำระด้วย Ai-Cash',
+                        title: 'Movement',
                         className: 'text-right'
                     },
                     // {
@@ -420,7 +420,8 @@
                     },
                     {
                         data: 'pay_type',
-                        title: 'ชำระโดย'
+                        title: 'ชำระโดย',
+                        className: 'text-center'
                     },
 
                     {
