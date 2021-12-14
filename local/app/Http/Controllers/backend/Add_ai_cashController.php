@@ -351,7 +351,7 @@ class Add_ai_cashController extends Controller
 
           DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
 
-          
+
 
           \DB::commit();
 
@@ -400,7 +400,7 @@ class Add_ai_cashController extends Controller
                           DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
                           DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=$id ");
                      }
-            
+
                }
 
 
@@ -610,7 +610,7 @@ class Add_ai_cashController extends Controller
             $w02 = " and db_add_ai_cash.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
 
         }
-        
+
         if(!empty($req->doc_id)){
            $w03 = " AND db_add_ai_cash.id ='".$req->doc_id."'  " ;
         }else{
@@ -681,7 +681,7 @@ class Add_ai_cashController extends Controller
             ".$w07."
             ORDER BY db_add_ai_cash.updated_at DESC
          ");
-     
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {

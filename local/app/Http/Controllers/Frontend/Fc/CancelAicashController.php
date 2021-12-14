@@ -57,7 +57,7 @@ class CancelAicashController extends Controller
           ->where('id', $cancel_aicash_id)
           ->update([
               'cancel_by_user_id_fk' => $customer_or_admin,
-              'approve_status' => 4,
+              'approve_status' => 5,
               'order_status_id_fk' => 8,
               'type_user' => $type_user_cancel, //customer || Admin
           ]);
@@ -76,7 +76,7 @@ class CancelAicashController extends Controller
                 'aicash_banlance' => $update_aicash,
                 'order_code' => $aicash->code_order,
                 'order_type_id_fk' => $aicash->order_type_id_fk,
-                'pay_type_id_fk' =>$aicash->pay_type_id,
+                'pay_type_id_fk' =>$aicash->pay_type_id_fk,
                 'type' => 'cancel',
                 'detail'=>'Cancel Oder',
             ]);
@@ -91,8 +91,8 @@ class CancelAicashController extends Controller
                 return $resule;
             }
         } catch (\Exception $e) {
-            DB::rollback();
-            return $e;
+          $resule = ['status' => 'fail', 'message' => $e['message']];
+          return $resule;
         }
     }
 
@@ -130,7 +130,8 @@ class CancelAicashController extends Controller
             }
         } catch (Exception $e) {
             DB::rollback();
-            return $e;
+            $resule = ['status' => 'fail', 'message' => $e['message']];
+            return $resule;
         }
     }
 
