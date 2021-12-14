@@ -797,16 +797,16 @@ class DeliveryController extends Controller
       
     $sTable = DB::select(" 
 
-        SELECT * from db_delivery  
-        WHERE status_pack=0 AND approver=0 AND status_delivery<>1 AND status_pick_pack<>1
-
+        SELECT db_delivery.* , db_orders.shipping_special from db_delivery  
+        Left Join db_orders ON db_orders.code_order = db_delivery.receipt
+        WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1
         $business_location_id
         $branch_id_fk
         $receipt
         $customer_id_fk
         $delivery_date
 
-        order by updated_at desc
+        order by db_delivery.updated_at desc
 
 
         ");
@@ -816,8 +816,12 @@ class DeliveryController extends Controller
       return $sQuery
       ->addColumn('customer_name', function($row) {
       	if(@$row->customer_id!=''){
+          $shipping_special = "";
+          if(@$row->shipping_special==1){
+            $shipping_special = "ส่งแบบพิเศษ/พรีเมี่ยม";
+          }
          	$Customer = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=".@$row->customer_id." ");
-        	return @$Customer[0]->user_name.' : '.@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+        	return @$Customer[0]->user_name.' : '.@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name.'<br><span style="color:red;">'.$shipping_special.'</span>';
       	}else{
       		return '';
       	}
@@ -848,6 +852,7 @@ class DeliveryController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+      ->rawColumns(['customer_name'])
       ->make(true);
     }
 
