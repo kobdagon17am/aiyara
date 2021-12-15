@@ -96,17 +96,19 @@ class GiveawayController extends Controller
                     } elseif ($value->maintain_travel_feature == 2 and !empty($value->maintain_travel_feature) and $tv_active['type'] == 'Y') {
                         $arr[$i]['message'] = 'ต้องไม่มีการรักษาคุณสมบัติท่องเที่ยว';
 
-                    } elseif ($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 1) { //เป็น aistockist
+                    } elseif ($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 0) { //เป็น aistockist
+
+                        //dd($aistockist_status);
                         $arr[$i]['message'] = 'ต้องเป็น Ai-Stockist ';
 
-                    } elseif ($value->aistockist == 2 and !empty($value->aistockist) and $aistockist_status == 0) { //ต้องไม่เป็น aistockist
+                    } elseif ($value->aistockist == 2 and !empty($value->aistockist) and $aistockist_status == 1) { //ต้องไม่เป็น aistockist
 
                         $arr[$i]['message'] = 'ต้องไม่เป็น Ai-Stockist';
 
-                    } elseif ($value->agency == 1 and !empty($value->agency) and $agency_status == 1) { //เป็น aistockist
+                    } elseif ($value->agency == 1 and !empty($value->agency) and $agency_status == 0) { //เป็น aistockist
                         $arr[$i]['message'] = 'ต้องเป็น Agency';
 
-                    } elseif ($value->agency == 2 and !empty($value->agency) and $agency_status == 0) { //ต้องไม่เป็น aistockist
+                    } elseif ($value->agency == 2 and !empty($value->agency) and $agency_status == 1) { //ต้องไม่เป็น aistockist
                         $arr[$i]['message'] = 'ต้องไม่เป็น Agency';
 
                     } else {
@@ -160,7 +162,7 @@ class GiveawayController extends Controller
             $resule = ['status' => 'fail', 'message' => 'ไม่มีรายการของแถม'];
             return $resule;
         }
-        //dd($resule);
+        //dd($rs);
 
         return $rs;
     }
@@ -277,23 +279,23 @@ class GiveawayController extends Controller
 
                     }
 
-                    if ($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 1) { //เป็น aistockist
+                    if ($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 0) { //เป็น aistockist
                         $arr[$i][] = 'ต้องเป็น Ai-Stockist ';
 
                     }
 
-                    if ($value->aistockist == 2 and !empty($value->aistockist) and $aistockist_status == 0) { //ต้องไม่เป็น aistockist
+                    if ($value->aistockist == 2 and !empty($value->aistockist) and $aistockist_status == 1) { //ต้องไม่เป็น aistockist
 
                         $arr[$i][] = 'ต้องไม่เป็น Ai-Stockist';
 
                     }
 
-                    if ($value->agency == 1 and !empty($value->agency) and $agency_status == 1) { //เป็น aistockist
+                    if ($value->agency == 1 and !empty($value->agency) and $agency_status == 0) { //เป็น Agency
                         $arr[$i][] = 'ต้องเป็น Agency';
 
                     }
 
-                    if ($value->agency == 2 and !empty($value->agency) and $agency_status == 0) { //ต้องไม่เป็น aistockist
+                    if ($value->agency == 2 and !empty($value->agency) and $agency_status == 1) { //ต้องไม่เป็น Agency
                         $arr[$i][] = 'ต้องไม่เป็น Agency';
 
                     }

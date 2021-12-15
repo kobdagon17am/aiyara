@@ -133,11 +133,12 @@ class AiCashController extends Controller
             })
 
             ->addColumn('total_amt', function ($row) {
-                if ($row->order_status_id_fk == 8) {
-                    return '<b class="text-danger"> -' . number_format($row->total_amt, 2) . '</b>';
-                } else {
-                    return '<b class="text-success"> ' . number_format($row->total_amt, 2) . '</b>';
-                }
+                // if ($row->order_status_id_fk == 8) {
+                //     return '<b class="text-danger"> -' . number_format($row->total_amt, 2) . '</b>';
+                // } else {
+                //     return '<b class="text-success"> ' . number_format($row->total_amt, 2) . '</b>';
+                // }
+                return '<b>' . number_format($row->total_amt, 2) . '</b>';
             })
 
             ->addColumn('aicash_banlance', function ($row) {
@@ -236,10 +237,10 @@ class AiCashController extends Controller
             })
 
             ->addColumn('aicash_price', function ($row) {
-                if ($row->type == 'buy_product' || $row->type == 'buy_course') {
+                if ($row->type == 'buy_product' || $row->type == 'buy_course' || $row->type == 'cancel') {
                     return '<b class="text-danger"> -' . number_format($row->aicash_price, 2) . '</b>';
                 } else {
-                    return '<b class="text-success"> ' . number_format($row->aicash_price, 2) . '</b>';
+                    return '<b class="text-success"> +' . number_format($row->aicash_price, 2) . '</b>';
                 }
             })
             ->addColumn('aicash_banlance', function ($row) {
@@ -268,7 +269,6 @@ class AiCashController extends Controller
 
             $resule = CancelAicashController::cancel_aicash($cancel_aicash_id, $customer_id, 'customer');
 
-            dd($resule);
             if ($resule['status'] == 'success') {
                 return redirect('ai-cash')->withSuccess($resule['message']);
             } else {
