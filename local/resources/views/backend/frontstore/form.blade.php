@@ -1889,13 +1889,14 @@ if(@$sRow->check_press_save==2){
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-body" >
-<!-- xxxxxxxxxxxx -->
+              <div class="card-body" > 
+
                 <div class=" d-flex " >
                   <button class="btn btn-success btnProductAll1 " data-value="1" style="margin-right: 1%;" >ทั้งหมด</button>
                   <button class="btn btn-success btnAihealth2 " data-value="2" style="margin-right: 1%;" >AiHealth</button>
                   <button class="btn btn-success btnAilada3 " data-value="3" style="margin-right: 1%;" >AiLADA</button>
                   <button class="btn btn-success btnAibody4 " data-value="4" style="margin-right: 1%;" >AiBODY</button>
+                  <button class="btn btn-success btnAihouse " data-value="5" style="margin-right: 1%;" >AIhouse</button>
                   <button class="btn btn-success btnPromotion8 " data-value="8" style="margin-right: 1%;" >Promotion</button>
                 </div>
 
@@ -3582,7 +3583,7 @@ if(@$sRow->check_press_save==2){
 
 
     $(document).ready(function() {
-        $(document).on('click', '.btnProductAll1,.btnAihealth2,.btnAilada3,.btnAibody4,.btnPromotion8', function(event) {
+        $(document).on('click', '.btnProductAll1,.btnAihealth2,.btnAilada3,.btnAibody4,.btnPromotion8,.btnAihouse', function(event) {
 
 
           event.preventDefault();

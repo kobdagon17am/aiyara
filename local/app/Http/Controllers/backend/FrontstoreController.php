@@ -351,8 +351,7 @@ class FrontstoreController extends Controller
 
     public function edit($id)
     {
-
-
+      
       // กำลังเบิกสินค้า ไม่ให้แก้บิล
           $ch_Disabled = 0;
           $r_ch_Disabled = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
@@ -3403,6 +3402,12 @@ if($sPermission==1){
 
 // วุฒิเพิ่มมา
 if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
+  $action_user_01 = "";
+  $action_user_011 = "";
+}
+
+// wut เพิ่ม 
+if(\Auth::user()->position_level=='5'){
   $action_user_01 = "";
   $action_user_011 = "";
 }

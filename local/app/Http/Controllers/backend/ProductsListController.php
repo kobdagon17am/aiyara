@@ -59,6 +59,9 @@ class ProductsListController extends Controller
          case '8':
           $category_id = ' AND products.category_id = 8 ';
           break;
+          case '5':
+            $category_id = ' AND products.category_id = 5 ';
+            break;
         default:
           # code...
           $category_id = '';

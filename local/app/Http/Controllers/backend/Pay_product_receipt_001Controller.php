@@ -117,7 +117,7 @@ class Pay_product_receipt_001Controller extends Controller
       // return $request->invoice_code;
       // สถานะกลับไปเป็นรอจ่าย 1 ถ้าเป็นกรณียกเลิกใบเสร็จ 4 ให้เกิดจากการยกเลิกจากคลัง
       $r01 = DB::select(" SELECT * FROM db_pay_product_receipt_001 WHERE invoice_code='".$request->invoice_code."'; ");
-      DB::update(" UPDATE `db_orders` SET `approve_status`='5' WHERE (`id`='".$r01[0]->orders_id_fk."') ");
+      // DB::update(" UPDATE `db_orders` SET `approve_status`='5' WHERE (`id`='".$r01[0]->orders_id_fk."') ");
 
       DB::select("
         UPDATE db_pay_product_receipt_001 
@@ -132,27 +132,27 @@ class Pay_product_receipt_001Controller extends Controller
       DB::update(" DELETE FROM db_pick_warehouse_qrcode WHERE invoice_code='".$request->invoice_code."' ");
 
       // คืนสินค้ากลับ คลัง เพราะไม่ได้จ่ายแล้ว
-      DB::select(" TRUNCATE db_stocks_return; ");
-      $r = DB::select(" SELECT * FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."'; ");
-
-      foreach ($r as $key => $v) {
-             $_choose=DB::table("db_stocks_return")
-                ->where('time_pay', $v->time_pay)
-                ->where('business_location_id_fk', $v->business_location_id_fk)
-                ->where('branch_id_fk', $v->branch_id_fk)
-                ->where('product_id_fk', $v->product_id_fk)
-                ->where('lot_number', $v->lot_number)
-                ->where('lot_expired_date', $v->lot_expired_date)
-                ->where('amt', $v->amt_get)
-                ->where('product_unit_id_fk', $v->product_unit_id_fk)                
-                ->where('warehouse_id_fk', $v->warehouse_id_fk)
-                ->where('zone_id_fk', $v->zone_id_fk)
-                ->where('shelf_id_fk', $v->shelf_id_fk)
-                ->where('shelf_floor', $v->shelf_floor)
-                ->where('invoice_code', $request->invoice_code)
-                ->get();
-                
-                if($_choose->count() == 0){
+      // DB::select(" TRUNCATE db_stocks_return; ");
+      // $r = DB::table('db_pay_product_receipt_002')->where('invoice_code',$request->invoice_code)->orderBy('time_pay','desc')->limit(1)->get();
+// dd($r);
+      // foreach ($r as $key => $v) {
+            //  $_choose=DB::table("db_stocks_return")
+            //     ->where('time_pay', $v->time_pay)
+            //     ->where('business_location_id_fk', $v->business_location_id_fk)
+            //     ->where('branch_id_fk', $v->branch_id_fk)
+            //     ->where('product_id_fk', $v->product_id_fk)
+            //     ->where('lot_number', $v->lot_number)
+            //     ->where('lot_expired_date', $v->lot_expired_date)
+            //     ->where('amt', $v->amt_get)
+            //     ->where('product_unit_id_fk', $v->product_unit_id_fk)                
+            //     ->where('warehouse_id_fk', $v->warehouse_id_fk)
+            //     ->where('zone_id_fk', $v->zone_id_fk)
+            //     ->where('shelf_id_fk', $v->shelf_id_fk)
+            //     ->where('shelf_floor', $v->shelf_floor)
+            //     ->where('invoice_code', $request->invoice_code)
+            //     ->get();
+               
+                // if($_choose->count() == 0){
 
                     DB::select(" INSERT INTO db_stocks_return (time_pay, business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, invoice_code, created_at, updated_at,status_cancel) 
                     SELECT time_pay,
@@ -165,6 +165,7 @@ class Pay_product_receipt_001Controller extends Controller
                             $insertStockMovement = new  AjaxController();
 
                               // รับคืนจากการยกเลิกใบสั่งซื้อ db_stocks_return
+                              // วุฒิเพิ่ม  AND db_stocks_return.invoice_code
                               $Data = DB::select("
                                       SELECT
                                       db_stocks_return.business_location_id_fk,
@@ -186,9 +187,9 @@ class Pay_product_receipt_001Controller extends Controller
                                       LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
                                       WHERE
                                       db_stocks_return.status_cancel=1
+                                      AND db_stocks_return.invoice_code = '".$request->invoice_code."'
 
                                 ");
-                        
                                     // wut แก้
                               // $Data = DB::table('db_stocks_return')->select(
                               //   'db_stocks_return.business_location_id_fk',
@@ -210,7 +211,7 @@ class Pay_product_receipt_001Controller extends Controller
                               //   ->where('invoice_code',$request->invoice_code)
                               //   ->where('status_cancel',1)
                               //   ->get();
-                                // dd($Data);
+
                               if(!$Data){
                                 $Data = DB::select("
                                 SELECT
@@ -228,13 +229,12 @@ class Pay_product_receipt_001Controller extends Controller
                                 'รับคืนจากการยกเลิกใบสั่งซื้อ' as note,
                                 db_stocks_return.updated_at as dd,
                                 db_pick_pack_requisition_code.action_user as action_user,'' as approver,'' as approve_date
-
                                 FROM db_stocks_return
                                 LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
-                         
-
+                                WHERE db_stocks_return.invoice_code = '".$request->invoice_code."'
                           ");
-                              }
+                              // dd($Data);
+                         }
                             // dd($Data);
               
                               if(@$Data){
@@ -271,8 +271,7 @@ class Pay_product_receipt_001Controller extends Controller
                                         $insertStockMovement->insertStockMovement($insertData);
 
                                     }
-                                    $tmp = DB::table('db_stock_movement_tmp')->orderBy('doc_date','asc')->get();
-                                    // dd($tmp);
+                                    $tmp = DB::table('db_stock_movement_tmp')->where('doc_no',$request->invoice_code)->orderBy('updated_at','desc')->groupBy('product_id_fk')->get();
                                     foreach($tmp as $t){
                                       DB::table('db_stock_movement')->insertOrignore(array(
                                         // ไม่เหมือน tmp
@@ -280,7 +279,7 @@ class Pay_product_receipt_001Controller extends Controller
                                         "stock_id_fk" =>  0,
                                         "ref_table" =>  0,
                                         "ref_table_id" =>  0,
-                                        "ref_doc" =>  NULL,
+                                        "ref_doc" =>  $t->doc_no,
                                         // 
                                         'doc_no' => $t->doc_no,
                                         "doc_date" =>  $t->doc_date,
@@ -299,10 +298,10 @@ class Pay_product_receipt_001Controller extends Controller
                                         "status" => $t->status,
                                         "note" =>  $t->note,
                                         "note2" => $t->note2,
-                                        "action_user" => $t->action_user,
-                                        "action_date" =>  $t->action_date,
-                                        "approver" =>  $t->approver,
-                                        "approve_date" =>  $t->approve_date,
+                                        "action_user" => \Auth::user()->id,
+                                        "action_date" =>  $t->updated_at,
+                                        "approver" =>  \Auth::user()->id,
+                                        "approve_date" =>  $t->updated_at,
                                         "created_at" =>$t->created_at,
                                         'sender' => $t->sender,
                                         'sent_date' => $t->sent_date,
@@ -315,25 +314,39 @@ class Pay_product_receipt_001Controller extends Controller
                                }
 
 
-                }
+                // }
 
-       }
+      //  }
 
       // สร้างตาราง temp group ตามรายการข้างล่าง
       $temp_db_stocks_from_return = "temp_db_stocks_from_return".\Auth::user()->id;
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_from_return ; ");
       DB::select(" CREATE TABLE $temp_db_stocks_from_return Like db_stocks_return ; ");
+      // DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code) 
+
+      //     select 
+      //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,sum(amt) as amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code 
+      //     FROM db_stocks_return 
+      //     WHERE 
+      //     status_cancel=0
+
+      //     GROUP BY 
+      //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor 
+
+      //    ; ");
+      // วุฒิแก้ ไม่ sum(amt) as amt
       DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code) 
 
-          select 
-          business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,sum(amt) as amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code 
-          FROM db_stocks_return 
-          WHERE 
-          status_cancel=0
-          GROUP BY 
-          business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor 
+      select 
+      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code 
+      FROM db_stocks_return 
+      WHERE 
+      status_cancel=0
+      
+      GROUP BY 
+      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor 
 
-         ; ");
+     ; ");
 
 
       DB::select(" UPDATE db_stocks
@@ -362,6 +375,7 @@ class Pay_product_receipt_001Controller extends Controller
                AND $temp_db_stocks_from_return.invoice_code='".$request->invoice_code."'
                SET db_stocks_return.status_cancel=1 ");
                DB::commit();
+              // DB::rollback();
               }
               catch (\Exception $e) {
                   DB::rollback();
@@ -1117,19 +1131,25 @@ class Pay_product_receipt_001Controller extends Controller
 
       $user_login_id = \Auth::user()->id;
       $sPermission = \Auth::user()->permission ;
-   
+      $action_user_011_1 = "";
+      $action_user_011_2 = "";
           // \Auth::user()->position_level==4 => Supervisor
           if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
           $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+          $action_user_011_1 = " AND db_orders.sentto_branch_id = '".(\Auth::user()->branch_id_fk)."' " ;
+          $action_user_011_2 = " AND db_orders.sentto_branch_id = 0"; 
           }else{
           // $action_user_011 = " AND action_user = $user_login_id ";
           $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+          $action_user_011_1 = " AND db_orders.sentto_branch_id = '".(\Auth::user()->branch_id_fk)."' " ;
+          $action_user_011_2 = " AND db_orders.sentto_branch_id = 0";
           }
 
           if($sPermission==1){
-          $action_user_01 = "";
-          $action_user_011 = "";
-          // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
+              $action_user_01 = "";
+              $action_user_011 = "";
+              $action_user_011_1 = "";
+              $action_user_011_2 = "";
           }else{
           $action_user_01 = " AND action_user = $user_login_id ";
           }
@@ -1138,6 +1158,8 @@ class Pay_product_receipt_001Controller extends Controller
           if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
           $action_user_01 = "";
           $action_user_011 = "";
+          $action_user_011_1 = "";
+          $action_user_011_2 = "";
           }       
 
           // รับแล้ว
@@ -1179,30 +1201,21 @@ if(count($sTable_re)!=0){
             Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
             WHERE 1
             $action_user_011
+            $action_user_011_2
             $startDate
             $endDate
             AND db_orders.approve_status = 2
             AND delivery_location = 0
             AND db_orders.code_order not in ($sw)
-            UNION ALL
-            SELECT
-            gift_voucher_price,
-            code_order,
-            db_add_ai_cash.id,
-            db_add_ai_cash.created_at as d2,
-            0 as purchase_type_id_fk,
-            'เติม Ai-Cash' AS type,
-            db_add_ai_cash.customer_id_fk as c2,
-            db_add_ai_cash.aicash_amt,
-            db_add_ai_cash.id as inv_no,approve_status
-            ,'',
-            db_add_ai_cash.updated_at as ud2,
-            'ai_cash' as pay_type,cash_price,
-            credit_price,fee_amt,transfer_price,
-            0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user,''
-            FROM db_add_ai_cash
-            WHERE 1 AND db_add_ai_cash.approve_status<>4
-            $action_user_01
+
+            OR 1
+            $action_user_011_1
+            $startDate
+            $endDate
+            AND db_orders.approve_status = 2
+            AND delivery_location = 0
+            AND db_orders.code_order not in ($sw)
+
             ORDER BY created_at DESC
 
           ");

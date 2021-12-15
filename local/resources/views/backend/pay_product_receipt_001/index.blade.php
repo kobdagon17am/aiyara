@@ -1282,12 +1282,8 @@ $(function() {
 
                                    }
                             
-                    
-                                      // console.log(can_cancel_bill);
-                                      // console.log(can_cancel_bill_across_day);
-                                      // console.log(aData['status_sent_2']);
-
-                                      if(can_cancel_bill=='1' && aData['status_sent_2']==3){
+                                  //  น้องวุฒิแอบเปิดไว้งับ
+                                      // if(can_cancel_bill=='1' && aData['status_sent_2']==3){
 
                                          $('td:last-child', nRow).html(''
                                               + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -1296,12 +1292,12 @@ $(function() {
 
                                          
 
-                                      }else{
-                                              $('td:last-child', nRow).html(''
-                                              + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                      // }else{
+                                      //         $('td:last-child', nRow).html(''
+                                      //         + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                                               
-                                                ).addClass('input');
-                                      }
+                                      //           ).addClass('input');
+                                      // }
 
                                       if(aData['status_sent_2']==3){
                                         $('td:eq(6)', nRow).html('');

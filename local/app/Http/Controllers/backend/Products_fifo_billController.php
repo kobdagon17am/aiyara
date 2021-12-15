@@ -1132,8 +1132,9 @@ foreach($temp_ppr_0021_data as $tmp){
          $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  ");
 
     }else{
-        $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  AND branch_id_fk=".@\Auth::user()->branch_id_fk." ");
-
+      // วุฒิปลดให้ค้นเจอทั้งหมด
+        // $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  AND branch_id_fk=".@\Auth::user()->branch_id_fk." ");
+        $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  ");
     }
   
     // return $r01;
