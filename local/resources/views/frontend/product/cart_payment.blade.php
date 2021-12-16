@@ -330,7 +330,7 @@
 
                                  @endif
 
-                                 @if($address_card)
+                                 @if($address_card && $address_card->card_province_id_fk)
                                  <div id="sent_address_card" style="display: none;">
                                      <div class="row m-t-5">
                                          <div class="col-md-6 col-sm-6 col-6">

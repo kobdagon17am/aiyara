@@ -136,9 +136,9 @@ class PaymentSentAddressOrder extends Model
                 $insert_db_orders->house_name = $rs->card_house_name;
                 $insert_db_orders->moo = $rs->card_moo;
                 $insert_db_orders->soi = $rs->card_soi;
-                $insert_db_orders->amphures_id_fk = $rs->card_amphures_id_fk;
-                $insert_db_orders->district_id_fk = $rs->card_district_id_fk;
-                $insert_db_orders->province_id_fk = $rs->card_province_id_fk;
+                $insert_db_orders->amphures_id_fk = $rs->card_amphures;
+                $insert_db_orders->district_id_fk = $rs->card_district;
+                $insert_db_orders->province_id_fk = $rs->card_province;
                 $insert_db_orders->road = $rs->card_road;
                 $insert_db_orders->zipcode = $rs->card_zipcode;
                 $insert_db_orders->email = $rs->card_email;
@@ -163,9 +163,9 @@ class PaymentSentAddressOrder extends Model
                 $insert_db_orders->house_name = $rs->other_house_name;
                 $insert_db_orders->moo = $rs->other_moo;
                 $insert_db_orders->soi = $rs->other_soi;
-                $insert_db_orders->amphures_id_fk = $rs->other_amphures_id_fk;
-                $insert_db_orders->district_id_fk = $rs->other_district_id_fk;
-                $insert_db_orders->province_id_fk = $rs->other_province_id_fk;
+                $insert_db_orders->amphures_id_fk = $rs->other_amphures;
+                $insert_db_orders->district_id_fk = $rs->other_district;
+                $insert_db_orders->province_id_fk = $rs->other_province;
                 $insert_db_orders->road = $rs->other_road;
                 $insert_db_orders->zipcode = $rs->other_zipcode;
                 $insert_db_orders->email = $rs->other_email;
@@ -175,7 +175,7 @@ class PaymentSentAddressOrder extends Model
             } elseif ($rs->receive == 'sent_office') {
                 $insert_db_orders->shipping_price = 0;
                 $insert_db_orders->shipping_free = 1;
-                $insert_db_orders->tel = $rs->tel_mobile;
+                $insert_db_orders->tel = $rs->receive_tel_mobile;
                 $insert_db_orders->name = $rs->office_name;
                 $insert_db_orders->email = $rs->office_email;
                 $insert_db_orders->branch_id_fk = $rs->receive_location;

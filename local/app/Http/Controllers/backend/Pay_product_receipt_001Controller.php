@@ -120,8 +120,8 @@ class Pay_product_receipt_001Controller extends Controller
       DB::update(" UPDATE `db_orders` SET `approve_status`='2' WHERE (`id`='".$r01[0]->orders_id_fk."') ");
 
       DB::select("
-        UPDATE db_pay_product_receipt_001 
-        SET 
+        UPDATE db_pay_product_receipt_001
+        SET
         action_user=".(\Auth::user()->id)." ,
         action_date=now() ,
         status_sent=1
@@ -144,17 +144,17 @@ class Pay_product_receipt_001Controller extends Controller
             //     ->where('lot_number', $v->lot_number)
             //     ->where('lot_expired_date', $v->lot_expired_date)
             //     ->where('amt', $v->amt_get)
-            //     ->where('product_unit_id_fk', $v->product_unit_id_fk)                
+            //     ->where('product_unit_id_fk', $v->product_unit_id_fk)
             //     ->where('warehouse_id_fk', $v->warehouse_id_fk)
             //     ->where('zone_id_fk', $v->zone_id_fk)
             //     ->where('shelf_id_fk', $v->shelf_id_fk)
             //     ->where('shelf_floor', $v->shelf_floor)
             //     ->where('invoice_code', $request->invoice_code)
             //     ->get();
-               
+
                 // if($_choose->count() == 0){
 
-                    DB::select(" INSERT INTO db_stocks_return (time_pay, business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, invoice_code, created_at, updated_at,status_cancel) 
+                    DB::select(" INSERT INTO db_stocks_return (time_pay, business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, invoice_code, created_at, updated_at,status_cancel)
                     SELECT time_pay,
                     business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,invoice_code, created_at,now(),0
                     FROM db_pay_product_receipt_002 WHERE time_pay not in(select time_pay from db_stocks_return where time_pay=db_pay_product_receipt_002.time_pay and business_location_id_fk=db_pay_product_receipt_002.business_location_id_fk AND branch_id_fk=db_pay_product_receipt_002.branch_id_fk AND product_id_fk=db_pay_product_receipt_002.product_id_fk AND lot_number=db_pay_product_receipt_002.lot_number AND lot_expired_date=db_pay_product_receipt_002.lot_expired_date AND amt=db_pay_product_receipt_002.amt_get AND product_unit_id_fk=db_pay_product_receipt_002.product_unit_id_fk AND warehouse_id_fk=db_pay_product_receipt_002.warehouse_id_fk AND zone_id_fk=db_pay_product_receipt_002.zone_id_fk AND shelf_id_fk=db_pay_product_receipt_002.shelf_id_fk AND shelf_floor=db_pay_product_receipt_002.shelf_floor AND invoice_code=db_pay_product_receipt_002.invoice_code) ; ");
@@ -236,7 +236,7 @@ class Pay_product_receipt_001Controller extends Controller
                               // dd($Data);
                          }
                             // dd($Data);
-              
+
                               if(@$Data){
                                 DB::table('db_stock_movement_tmp')->truncate();
                                   foreach ($Data as $key => $value) {
@@ -280,7 +280,7 @@ class Pay_product_receipt_001Controller extends Controller
                                         "ref_table" =>  0,
                                         "ref_table_id" =>  0,
                                         "ref_doc" =>  $t->doc_no,
-                                        // 
+                                        //
                                         'doc_no' => $t->doc_no,
                                         "doc_date" =>  $t->doc_date,
                                         "business_location_id_fk" =>  $t->business_location_id_fk,
@@ -308,7 +308,7 @@ class Pay_product_receipt_001Controller extends Controller
                                         'sender' => $t->who_cancel,
                                         'cancel_date' => $t->cancel_date,
                                     ));
-                                    } 
+                                    }
                                     // DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
 
                                }
@@ -322,56 +322,56 @@ class Pay_product_receipt_001Controller extends Controller
       $temp_db_stocks_from_return = "temp_db_stocks_from_return".\Auth::user()->id;
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_from_return ; ");
       DB::select(" CREATE TABLE $temp_db_stocks_from_return Like db_stocks_return ; ");
-      // DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code) 
+      // DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code)
 
-      //     select 
-      //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,sum(amt) as amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code 
-      //     FROM db_stocks_return 
-      //     WHERE 
+      //     select
+      //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,sum(amt) as amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code
+      //     FROM db_stocks_return
+      //     WHERE
       //     status_cancel=0
 
-      //     GROUP BY 
-      //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor 
+      //     GROUP BY
+      //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
 
       //    ; ");
       // วุฒิแก้ ไม่ sum(amt) as amt
-      DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code) 
+      DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code)
 
-      select 
-      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code 
-      FROM db_stocks_return 
-      WHERE 
+      select
+      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code
+      FROM db_stocks_return
+      WHERE
       status_cancel=0
-      
-      GROUP BY 
-      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor 
+
+      GROUP BY
+      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
 
      ; ");
 
 
       DB::select(" UPDATE db_stocks
-               Join $temp_db_stocks_from_return ON db_stocks.business_location_id_fk = $temp_db_stocks_from_return.business_location_id_fk 
-               AND db_stocks.branch_id_fk = $temp_db_stocks_from_return.branch_id_fk 
-               AND db_stocks.product_id_fk = $temp_db_stocks_from_return.product_id_fk 
-               AND db_stocks.lot_number = $temp_db_stocks_from_return.lot_number 
-               AND db_stocks.lot_expired_date = $temp_db_stocks_from_return.lot_expired_date 
-               AND db_stocks.warehouse_id_fk = $temp_db_stocks_from_return.warehouse_id_fk 
-               AND db_stocks.zone_id_fk = $temp_db_stocks_from_return.zone_id_fk 
-               AND db_stocks.shelf_id_fk = $temp_db_stocks_from_return.shelf_id_fk 
-               AND db_stocks.shelf_floor = $temp_db_stocks_from_return.shelf_floor 
+               Join $temp_db_stocks_from_return ON db_stocks.business_location_id_fk = $temp_db_stocks_from_return.business_location_id_fk
+               AND db_stocks.branch_id_fk = $temp_db_stocks_from_return.branch_id_fk
+               AND db_stocks.product_id_fk = $temp_db_stocks_from_return.product_id_fk
+               AND db_stocks.lot_number = $temp_db_stocks_from_return.lot_number
+               AND db_stocks.lot_expired_date = $temp_db_stocks_from_return.lot_expired_date
+               AND db_stocks.warehouse_id_fk = $temp_db_stocks_from_return.warehouse_id_fk
+               AND db_stocks.zone_id_fk = $temp_db_stocks_from_return.zone_id_fk
+               AND db_stocks.shelf_id_fk = $temp_db_stocks_from_return.shelf_id_fk
+               AND db_stocks.shelf_floor = $temp_db_stocks_from_return.shelf_floor
                AND $temp_db_stocks_from_return.invoice_code='".$request->invoice_code."'
                SET db_stocks.amt=db_stocks.amt+($temp_db_stocks_from_return.amt) ");
-      
+
       DB::select(" UPDATE db_stocks_return
-               Join $temp_db_stocks_from_return ON db_stocks_return.business_location_id_fk = $temp_db_stocks_from_return.business_location_id_fk 
-               AND db_stocks_return.branch_id_fk = $temp_db_stocks_from_return.branch_id_fk 
-               AND db_stocks_return.product_id_fk = $temp_db_stocks_from_return.product_id_fk 
-               AND db_stocks_return.lot_number = $temp_db_stocks_from_return.lot_number 
-               AND db_stocks_return.lot_expired_date = $temp_db_stocks_from_return.lot_expired_date 
-               AND db_stocks_return.warehouse_id_fk = $temp_db_stocks_from_return.warehouse_id_fk 
-               AND db_stocks_return.zone_id_fk = $temp_db_stocks_from_return.zone_id_fk 
-               AND db_stocks_return.shelf_id_fk = $temp_db_stocks_from_return.shelf_id_fk 
-               AND db_stocks_return.shelf_floor = $temp_db_stocks_from_return.shelf_floor 
+               Join $temp_db_stocks_from_return ON db_stocks_return.business_location_id_fk = $temp_db_stocks_from_return.business_location_id_fk
+               AND db_stocks_return.branch_id_fk = $temp_db_stocks_from_return.branch_id_fk
+               AND db_stocks_return.product_id_fk = $temp_db_stocks_from_return.product_id_fk
+               AND db_stocks_return.lot_number = $temp_db_stocks_from_return.lot_number
+               AND db_stocks_return.lot_expired_date = $temp_db_stocks_from_return.lot_expired_date
+               AND db_stocks_return.warehouse_id_fk = $temp_db_stocks_from_return.warehouse_id_fk
+               AND db_stocks_return.zone_id_fk = $temp_db_stocks_from_return.zone_id_fk
+               AND db_stocks_return.shelf_id_fk = $temp_db_stocks_from_return.shelf_id_fk
+               AND db_stocks_return.shelf_floor = $temp_db_stocks_from_return.shelf_floor
                AND $temp_db_stocks_from_return.invoice_code='".$request->invoice_code."'
                SET db_stocks_return.status_cancel=1 ");
                DB::commit();
@@ -395,8 +395,8 @@ class Pay_product_receipt_001Controller extends Controller
       DB::update(" UPDATE `db_orders` SET `approve_status`='2' , `order_status_id_fk`='6' WHERE (`code_order`='".$request->invoice_code."') ");
       // เอาสินค้าคืนคลัง
 
-      $r = DB::select(" 
-        SELECT 
+      $r = DB::select("
+        SELECT
         time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,invoice_code, created_at,now()
          FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."' AND time_pay='".$request->time_pay."' ; ");
 
@@ -418,8 +418,8 @@ class Pay_product_receipt_001Controller extends Controller
                   ->get();
                   if($_choose->count() == 0){
 
-                         DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, invoice_code, created_at, updated_at,status_cancel) 
-                        SELECT 
+                         DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, invoice_code, created_at, updated_at,status_cancel)
+                        SELECT
                         time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,invoice_code, created_at,now(),1
                          FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."' AND time_pay='".$v->time_pay."' ; ");
 
@@ -427,9 +427,9 @@ class Pay_product_receipt_001Controller extends Controller
 
                      DB::select(" UPDATE db_pay_product_receipt_001 SET status_sent=2 WHERE invoice_code='".$request->invoice_code."' ; ");
 
-                     DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")  
-                              WHERE 
-                              business_location_id_fk= ".$v->business_location_id_fk." AND 
+                     DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")
+                              WHERE
+                              business_location_id_fk= ".$v->business_location_id_fk." AND
                               branch_id_fk= ".$v->branch_id_fk." AND
                               product_id_fk= ".$v->product_id_fk." AND
                               lot_number= '".$v->lot_number."' AND
@@ -437,9 +437,9 @@ class Pay_product_receipt_001Controller extends Controller
                               warehouse_id_fk= ".$v->warehouse_id_fk." AND
                               zone_id_fk= ".$v->zone_id_fk." AND
                               shelf_id_fk= ".$v->shelf_id_fk." AND
-                              shelf_floor= ".$v->shelf_floor." 
+                              shelf_floor= ".$v->shelf_floor."
                           ");
-   
+
 
            }
 
@@ -509,9 +509,9 @@ class Pay_product_receipt_001Controller extends Controller
                                     DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
 
                                }
-                               
 
-      $r2 = DB::select(" 
+
+      $r2 = DB::select("
         SELECT * FROM db_pay_product_receipt_002 WHERE invoice_code='".$request->invoice_code."' AND time_pay='".$request->time_pay."' AND status_cancel=1 ; ");
 
          foreach ($r2 as $key => $v) {
@@ -537,7 +537,7 @@ class Pay_product_receipt_001Controller extends Controller
                   ->get();
                   if($_choose->count() == 0){
 
-                          DB::select(" INSERT IGNORE INTO `db_pay_product_receipt_002_cancel_log` (`time_pay`, `business_location_id_fk`, `branch_id_fk`, `orders_id_fk`, `customers_id_fk`, `invoice_code`, `product_id_fk`, `product_name`, `amt_need`, `amt_get`, `amt_lot`, `amt_remain`, `product_unit_id_fk`, `product_unit`, `lot_number`, `lot_expired_date`, `warehouse_id_fk`, `zone_id_fk`, `shelf_id_fk`, `shelf_floor`, `status_cancel`, `created_at`)  
+                          DB::select(" INSERT IGNORE INTO `db_pay_product_receipt_002_cancel_log` (`time_pay`, `business_location_id_fk`, `branch_id_fk`, `orders_id_fk`, `customers_id_fk`, `invoice_code`, `product_id_fk`, `product_name`, `amt_need`, `amt_get`, `amt_lot`, `amt_remain`, `product_unit_id_fk`, `product_unit`, `lot_number`, `lot_expired_date`, `warehouse_id_fk`, `zone_id_fk`, `shelf_id_fk`, `shelf_floor`, `status_cancel`, `created_at`)
                             VALUES
                            (".$v->time_pay.", ".$v->business_location_id_fk.", ".$v->branch_id_fk.", ".$v->orders_id_fk.", ".$v->customers_id_fk.", '".$v->invoice_code."', ".$v->product_id_fk.", '".$v->product_name."', ".$v->amt_get.", 0 , 0, ".$v->amt_get.", ".$v->product_unit_id_fk.", '".$v->product_unit."', '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->warehouse_id_fk.", ".$v->zone_id_fk.", ".$v->shelf_id_fk.", ".$v->shelf_floor.", ".$v->status_cancel.", '".$v->created_at."') ");
 
@@ -573,11 +573,11 @@ class Pay_product_receipt_001Controller extends Controller
       // db_pay_product_receipt_002
           // db_pick_pack_requisition_code
       // return $request->txtSearch;
-          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-          // $temp_ppr_005 = "temp_ppr_005".\Auth::user()->id; 
+          $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
+          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+          // $temp_ppr_005 = "temp_ppr_005".\Auth::user()->id;
 
           $invoice_code = $request->txtSearch;
 
@@ -600,7 +600,7 @@ class Pay_product_receipt_001Controller extends Controller
 
 // เก็บลงตารางจริง
           $db_temp_ppr_003 = DB::select(" select * from $temp_ppr_003 ;");
-   
+
           $data_db_pay_product_receipt_001 = [];
           foreach ($db_temp_ppr_003 as $key => $value) {
                 $data_db_pay_product_receipt_001 = array(
@@ -630,7 +630,7 @@ class Pay_product_receipt_001Controller extends Controller
 
           if($lastInsertId){
 
-               // เก็บรายการสินค้าที่จ่าย 
+               // เก็บรายการสินค้าที่จ่าย
                 $db_temp_ppr_004 = DB::select(" select * from $temp_ppr_004 ;");
                 // dd($db_temp_ppr_004);
                 $data_db_pay_product_receipt_002 = [];
@@ -659,14 +659,14 @@ class Pay_product_receipt_001Controller extends Controller
                             "created_at" =>  @$value->created_at,
                             "updated_at" =>  @$value->updated_at,
                           );
-              
+
                     if(@$data_db_pay_product_receipt_002){
                         DB::table('db_pay_product_receipt_002')->insertOrIgnore($data_db_pay_product_receipt_002);
-                    }  
+                    }
 
                 }
-                       
-   
+
+
                 DB::select(" INSERT IGNORE INTO  db_pay_product_receipt_002_pay_history (time_pay,invoice_code,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,invoice_code,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppr_004 ");
 
 
@@ -694,13 +694,13 @@ class Pay_product_receipt_001Controller extends Controller
 
               DB::select(" UPDATE `db_pay_product_receipt_001` SET pay_date=now(),pay_user=".\Auth::user()->id." WHERE (`id`='$lastInsertId') ");
 
-        
-              // ตัด Stock 
-              $db_select = DB::select(" 
+
+              // ตัด Stock
+              $db_select = DB::select("
                 SELECT * FROM  `db_pay_product_receipt_002`  WHERE invoice_code='$invoice_code' AND time_pay=$time_pay
                  ");
 
-          
+
               foreach ($db_select as $key => $sRow) {
 
                 // Check Stock อีกครั้งก่อน เพื่อดูว่าสินค้ายังมีพอให้ตัดหรือไม่
@@ -719,10 +719,10 @@ class Pay_product_receipt_001Controller extends Controller
                       // if($r_check_stcok==0){
                       //   return redirect()->to(url("backend/pay_product_receipt_001"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
                       // }
-                    
+
 
                         $lastID = 0;
-              
+
                        $_choose=DB::table('db_stocks')
                       ->where('branch_id_fk', $sRow->branch_id_fk)
                       ->where('product_id_fk', $sRow->product_id_fk)
@@ -733,7 +733,7 @@ class Pay_product_receipt_001Controller extends Controller
                       ->where('shelf_id_fk', $sRow->shelf_id_fk)
                       ->where('shelf_floor', $sRow->shelf_floor)
                       ->get();
-                   
+
                       if($_choose->count() > 0){
 
                         DB::table('db_stocks')
@@ -826,7 +826,7 @@ class Pay_product_receipt_001Controller extends Controller
                         }
                         // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-       
+
               }
 
              // อัพเดต สถานะ ด้วย ว่าจ่ายครบแล้ว หรือ ยังค้างอยู่  db_pay_product_receipt_001
@@ -862,28 +862,28 @@ class Pay_product_receipt_001Controller extends Controller
             DB::rollback();
         return $e->getMessage();
         }
-      
+
 
           return $lastInsertId ;
 
-      
+
     }
 
 
     public function ajaxApproveProductSent(Request $request)
     {
       // return $request->id;
-      DB::select("UPDATE db_pay_product_receipt_001 
-        SET 
+      DB::select("UPDATE db_pay_product_receipt_001
+        SET
         pay_user=".(\Auth::user()->id)." ,
         pay_date=now() ,
         action_user=0 ,
         action_date=NULL ,
-        status_sent=3 
+        status_sent=3
         WHERE id=$request->id ");
-      
+
     }
- 
+
     public function Datatable001(Request $req){
 
        $w01 = "";
@@ -902,9 +902,9 @@ class Pay_product_receipt_001Controller extends Controller
         }
 
         if(!empty($req->branch_id_fk)){
-           // $w02 = "  AND 
+           // $w02 = "  AND
            //              (
-           //              db_pay_product_receipt_001.branch_id_fk=".(\Auth::user()->branch_id_fk)." OR  
+           //              db_pay_product_receipt_001.branch_id_fk=".(\Auth::user()->branch_id_fk)." OR
            //              db_pay_product_receipt_001.branch_id_fk_tosent=".(\Auth::user()->branch_id_fk)."
            //              ) " ;
            $w02 = " AND db_pay_product_receipt_001.branch_id_fk = ".$req->branch_id_fk." " ;
@@ -970,7 +970,7 @@ class Pay_product_receipt_001Controller extends Controller
         $can_approve = @$menu_permit->can_approve==1?'1':'0';
 
         if($sPermission==1){
-                    $sTable = DB::select("  
+                    $sTable = DB::select("
                     SELECT
                     db_pay_product_receipt_001.id,
                     db_pay_product_receipt_001.status_sent,
@@ -987,21 +987,21 @@ class Pay_product_receipt_001Controller extends Controller
                     db_pay_product_receipt_001.address_send_type
                     FROM
                     db_pay_product_receipt_001
-                    WHERE db_pay_product_receipt_001.address_send_type in (1,2) 
-                   ".$w01." 
-                   ".$w02." 
-                   ".$w03." 
-                   ".$w04." 
-                   ".$w05." 
-                   ".$w06." 
-                   ".$w07." 
-                   ".$w08." 
-                   ".$w09." 
+                    WHERE db_pay_product_receipt_001.address_send_type in (1,2)
+                   ".$w01."
+                   ".$w02."
+                   ".$w03."
+                   ".$w04."
+                   ".$w05."
+                   ".$w06."
+                   ".$w07."
+                   ".$w08."
+                   ".$w09."
                    GROUP BY invoice_code
                    ORDER BY db_pay_product_receipt_001.pay_date DESC
                  ");
         }else{
-              $sTable = DB::select("  
+              $sTable = DB::select("
                         SELECT
                         db_pay_product_receipt_001.id,
                         db_pay_product_receipt_001.status_sent,
@@ -1019,6 +1019,7 @@ class Pay_product_receipt_001Controller extends Controller
                         FROM
                         db_pay_product_receipt_001
                         WHERE db_pay_product_receipt_001.address_send_type in (1,2)
+<<<<<<< HEAD
                        AND (db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." OR db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk).")
                        ".$w01." 
                        ".$w02." 
@@ -1029,6 +1030,29 @@ class Pay_product_receipt_001Controller extends Controller
                        ".$w07." 
                        ".$w08." 
                        ".$w09." 
+=======
+                       AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)."
+                       ".$w01."
+                       ".$w02."
+                       ".$w03."
+                       ".$w04."
+                       ".$w05."
+                       ".$w06."
+                       ".$w07."
+                       ".$w08."
+                       ".$w09."
+                       OR db_pay_product_receipt_001.address_send_type in (1,2)
+                       AND db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)."
+                       ".$w01."
+                       ".$w02."
+                       ".$w03."
+                       ".$w04."
+                       ".$w05."
+                       ".$w06."
+                       ".$w07."
+                       ".$w08."
+                       ".$w09."
+>>>>>>> 414bb1576444d3ba4f618c97d4564e7939809961
                        GROUP BY invoice_code
                        ORDER BY db_pay_product_receipt_001.pay_date DESC
                      ");
@@ -1079,19 +1103,19 @@ class Pay_product_receipt_001Controller extends Controller
         }
         // dd($sTable22);
       $sQuery = \DataTables::of($sTable);
-      return $sQuery  
+      return $sQuery
       ->addColumn('invoice_code_2', function($row) {
             return $row->invoice_code;
-      })  
+      })
       ->addColumn('invoice_code', function($row) {
             // return "<span style='cursor:pointer;' class='invoice_code' data-toggle='tooltip' data-placement='top' title='คลิ้กเพื่อดูรายละเอียด' data-invoice_code='".$row->invoice_code."' >".$row->invoice_code."</span>";
         return @$row->invoice_code;
-      })  
-      ->escapeColumns('invoice_code')       
+      })
+      ->escapeColumns('invoice_code')
       ->addColumn('customer', function($row) {
             $rs = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
             return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
-      }) 
+      })
       ->addColumn('status_sent', function($row) {
             $rs = DB::select(" select * from dataset_pay_product_status where id=".@$row->status_sent." ");
             if(@$row->status_sent==3){
@@ -1101,11 +1125,11 @@ class Pay_product_receipt_001Controller extends Controller
             }else{
               return '<span class="badge badge-pill badge-info font-size-16">'.@$rs[0]->txt_desc.'</span>';
             }
-            
-      }) 
+
+      })
       ->addColumn('status_sent_2', function($row) {
             return $row->status_sent;
-      }) 
+      })
       ->addColumn('status_cancel_all', function($row) {
             $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=0 ");
             if(count($P)>0){
@@ -1113,7 +1137,7 @@ class Pay_product_receipt_001Controller extends Controller
             }else{
               return 0;
             }
-      })  
+      })
       ->addColumn('status_cancel_some', function($row) {
             $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=1 ");
             if(count($P)>0){
@@ -1121,16 +1145,16 @@ class Pay_product_receipt_001Controller extends Controller
             }else{
               return 0;
             }
-      })      
+      })
       ->addColumn('action_user', function($row) {
         if(@$row->action_user){
           $P = DB::select(" select * from ck_users_admin where id=".@$row->action_user." ");
             return @$P[0]->name." <br> ".@$row->action_date;
         }else{
           return '-';
-        }        
-      }) 
-      ->escapeColumns('action_user') 
+        }
+      })
+      ->escapeColumns('action_user')
       ->addColumn('pay_user', function($row) {
         if(@$row->pay_user){
            $P = DB::select(" select * from ck_users_admin where id=".@$row->pay_user." ");
@@ -1138,12 +1162,12 @@ class Pay_product_receipt_001Controller extends Controller
         }else{
           return '-';
         }
-      })   
-      ->escapeColumns('pay_user')              
+      })
+      ->escapeColumns('pay_user')
        ->addColumn('branch', function($row) {
              $P = DB::select(" select * from branchs where id=".@$row->branch_id_fk." ");
              return @$P[0]->b_name;
-      }) 
+      })
        ->addColumn('address_send_type', function($row) {
             if(@$row->address_send_type==1){
                  return 'รับสินค้าด้วยตนเอง';
@@ -1156,7 +1180,7 @@ class Pay_product_receipt_001Controller extends Controller
             }else if(@$row->address_send_type==3){
                 return 'จัดส่งพัสดุ';
             }
-      })        
+      })
       ->make(true);
     }
 
@@ -1170,7 +1194,7 @@ class Pay_product_receipt_001Controller extends Controller
           if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
           $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
           $action_user_011_1 = " AND db_orders.sentto_branch_id = '".(\Auth::user()->branch_id_fk)."' " ;
-          $action_user_011_2 = " AND db_orders.sentto_branch_id = 0"; 
+          $action_user_011_2 = " AND db_orders.sentto_branch_id = 0";
           }else{
           // $action_user_011 = " AND action_user = $user_login_id ";
           $action_user_011 = " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
@@ -1193,16 +1217,16 @@ class Pay_product_receipt_001Controller extends Controller
           $action_user_011 = "";
           $action_user_011_1 = "";
           $action_user_011_2 = "";
-          }       
+          }
 
           // รับแล้ว
           $sTable_re = DB::table('db_pay_product_receipt_001')->whereIn('address_send_type',[1,2])->select('invoice_code')->pluck('invoice_code')->toArray();
-      //     $sTable_re = DB::select("  
+      //     $sTable_re = DB::select("
       //     SELECT
       //     db_pay_product_receipt_001.invoice_code,
       //     FROM
       //     db_pay_product_receipt_001
-      //     WHERE db_pay_product_receipt_001.address_send_type in (1,2) 
+      //     WHERE db_pay_product_receipt_001.address_send_type in (1,2)
       //    GROUP BY invoice_code
       //    ORDER BY db_pay_product_receipt_001.pay_date DESC
       //  ");
@@ -1299,15 +1323,16 @@ ORDER BY created_at DESC
 */
       //  dd($sTable);
      $sQuery = \DataTables::of($sTable);
-     return $sQuery  
+     return $sQuery
      ->addColumn('invoice_code_2', function($row) {
            return $row->code_order;
-     })  
+     })
      ->addColumn('invoice_code', function($row) {
            // return "<span style='cursor:pointer;' class='invoice_code' data-toggle='tooltip' data-placement='top' title='คลิ้กเพื่อดูรายละเอียด' data-invoice_code='".$row->invoice_code."' >".$row->invoice_code."</span>";
-       return @$row->code_order;
-     })  
-     ->escapeColumns('invoice_code') 
+      $url = url('backend/pay_product_receipt') . '?invoice_code=' . $row->code_order;
+       return "<a href='$url'>$row->code_order</a>";
+     })
+     ->escapeColumns('invoice_code')
      ->addColumn('action_user', function($row) {
       if(@$row->action_user!=''){
         $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
@@ -1323,7 +1348,7 @@ ORDER BY created_at DESC
       // `approve_status` int(11) DEFAULT '0' COMMENT '0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ',
       // แก้ใหม่
       // `approve_status` int(11) DEFAULT '0' COMMENT ' 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย',
-      
+
               if(@$row->approve_status!=""){
                 @$approve_status = DB::select(" select * from `dataset_approve_status` where id=".@$row->approve_status." ");
                 // return $purchase_type[0]->orders_type;
@@ -1332,17 +1357,17 @@ ORDER BY created_at DESC
                 // return "No completed";
                 return "<font color=red>* รอดำเนินการต่อ</font>";
               }
-      
-            })    
+
+            })
      ->addColumn('created_at', function($row) {
       $d = strtotime(@$row->created_at);
       return date("Y-m-d",$d)."<br/>".date("H:i:s",$d);
     })
-    ->escapeColumns('created_at')  
+    ->escapeColumns('created_at')
      ->addColumn('customer', function($row) {
            $rs = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
            return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
-     }) 
+     })
     //  ->addColumn('status_sent', function($row) {
     //        $rs = DB::select(" select * from dataset_pay_product_status where id=".@$row->approve_status." ");
     //        if(@$row->status_sent==3){
@@ -1352,11 +1377,11 @@ ORDER BY created_at DESC
     //        }else{
     //          return '<span class="badge badge-pill badge-info font-size-16">'.@$rs[0]->txt_desc.'</span>';
     //        }
-           
-    //  }) 
+
+    //  })
     //  ->addColumn('status_sent_2', function($row) {
     //        return $row->status_sent;
-    //  }) 
+    //  })
     //  ->addColumn('status_cancel_all', function($row) {
     //        $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=0 ");
     //        if(count($P)>0){
@@ -1364,7 +1389,7 @@ ORDER BY created_at DESC
     //        }else{
     //          return 0;
     //        }
-    //  })  
+    //  })
     //  ->addColumn('status_cancel_some', function($row) {
     //        $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=1 ");
     //        if(count($P)>0){
@@ -1372,16 +1397,16 @@ ORDER BY created_at DESC
     //        }else{
     //          return 0;
     //        }
-    //  })      
+    //  })
     //  ->addColumn('action_user', function($row) {
     //    if(@$row->action_user){
     //      $P = DB::select(" select * from ck_users_admin where id=".@$row->action_user." ");
     //        return @$P[0]->name." <br> ".@$row->action_date;
     //    }else{
     //      return '-';
-    //    }        
-    //  }) 
-    //  ->escapeColumns('action_user') 
+    //    }
+    //  })
+    //  ->escapeColumns('action_user')
     //  ->addColumn('pay_user', function($row) {
     //    if(@$row->pay_user){
     //       $P = DB::select(" select * from ck_users_admin where id=".@$row->pay_user." ");
@@ -1389,12 +1414,12 @@ ORDER BY created_at DESC
     //    }else{
     //      return '-';
     //    }
-    //  })   
-    //  ->escapeColumns('pay_user')              
+    //  })
+    //  ->escapeColumns('pay_user')
     //   ->addColumn('branch', function($row) {
     //         $P = DB::select(" select * from branchs where id=".@$row->branch_id_fk." ");
     //         return @$P[0]->b_name;
-    //  }) 
+    //  })
     //   ->addColumn('address_send_type', function($row) {
     //        if(@$row->address_send_type==1){
     //             return 'รับสินค้าด้วยตนเอง';
@@ -1407,7 +1432,7 @@ ORDER BY created_at DESC
     //        }else if(@$row->address_send_type==3){
     //            return 'จัดส่งพัสดุ';
     //        }
-    //  })        
+    //  })
      ->make(true);
    }
 
@@ -1473,14 +1498,14 @@ ORDER BY created_at DESC
               FROM
               db_pay_product_receipt_002
               Join db_pay_product_receipt_001 ON db_pay_product_receipt_002.invoice_code = db_pay_product_receipt_001.invoice_code
-              WHERE 1 
-             ".$w01." 
-             ".$w02." 
-             ".$w03." 
-             ".$w04." 
-             ".$w05." 
-             ".$w06." 
-              group by db_pay_product_receipt_002.product_id_fk 
+              WHERE 1
+             ".$w01."
+             ".$w02."
+             ".$w03."
+             ".$w04."
+             ".$w05."
+             ".$w06."
+              group by db_pay_product_receipt_002.product_id_fk
               ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -1496,7 +1521,7 @@ ORDER BY created_at DESC
 
             $pn = '<div class="divTable"><div class="divTableBody">';
             // if($Products[0]->id==1){
-            $pn .=     
+            $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell" style="width:100px;font-weight:bold;">Lot number</div>
                   <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> จำนวน </div>
@@ -1507,7 +1532,7 @@ ORDER BY created_at DESC
             $sum_amt = 0 ;
             foreach ($Products as $key => $value) {
               $sum_amt += $value->amt_lot;
-              $pn .=     
+              $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell" style="width:100px;">'.$value->lot_number.'</div>
                   <div class="divTableCell" style="width:50px;text-align:center;">'.$value->amt_lot.'</div>
@@ -1515,7 +1540,7 @@ ORDER BY created_at DESC
                   </div>
                   ';
              }
-              $pn .=     
+              $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell" style="width:100px;font-weight:bold;"> รวม </div>
                   <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;">'.$sum_amt.'</div>
@@ -1523,12 +1548,12 @@ ORDER BY created_at DESC
                   </div>
                   ';
 
-              $pn .= '</div></div>';  
+              $pn .= '</div></div>';
 
               return $pn;
 
       })
-      ->escapeColumns('column_002')     
+      ->escapeColumns('column_002')
       ->addColumn('column_003', function($row) {
            $Products = DB::select("
               SELECT db_pay_product_test_002.* ,
@@ -1547,21 +1572,21 @@ ORDER BY created_at DESC
            $invoice_code = implode(",",$arr);
            return "<br/>".str_replace(",","<br/>",$invoice_code);
       })
-      ->escapeColumns('column_003')    
+      ->escapeColumns('column_003')
       ->addColumn('column_004', function($row) {
            $Branch = DB::select("
-              SELECT * 
+              SELECT *
               FROM
               branchs
               WHERE id = ".$row->branch_id_fk."
               ");
            return "<br/>".$Branch[0]->b_name;
       })
-      ->escapeColumns('column_004')  
+      ->escapeColumns('column_004')
       ->addColumn('column_005', function($row) {
               return "<br/>".$row->action_date;
       })
-      ->escapeColumns('column_005')        
+      ->escapeColumns('column_005')
       ->make(true);
     }
 
@@ -1627,15 +1652,15 @@ ORDER BY created_at DESC
               db_pay_product_receipt_002
               Join db_pay_product_receipt_001 ON db_pay_product_receipt_002.invoice_code = db_pay_product_receipt_001.invoice_code
 
-              WHERE 1 
-              ".$w01." 
-              ".$w02." 
-              ".$w03." 
-              ".$w04." 
-              ".$w05." 
-              ".$w06."               
-              group by db_pay_product_receipt_002.invoice_code 
-            
+              WHERE 1
+              ".$w01."
+              ".$w02."
+              ".$w03."
+              ".$w04."
+              ".$w05."
+              ".$w06."
+              group by db_pay_product_receipt_002.invoice_code
+
               ");
 
       $sQuery = \DataTables::of($sTable);
@@ -1643,8 +1668,8 @@ ORDER BY created_at DESC
       ->addColumn('column_001', function($row) {
           return "<b>".@$row->invoice_code."</b>";
       })
-      ->escapeColumns('column_001')  
-      
+      ->escapeColumns('column_001')
+
       ->addColumn('column_002', function($row) {
              $Products = DB::select("
                 SELECT x.*,
@@ -1663,7 +1688,7 @@ ORDER BY created_at DESC
 
             $pn = '<div class="divTable"><div class="divTableBody">';
             // if($Products[0]->id==1){
-            $pn .=     
+            $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell" style="width:200px;font-weight:bold;">Product</div>
                   <div class="divTableCell" style="width:100px;font-weight:bold;">Lot number</div>
@@ -1681,7 +1706,7 @@ ORDER BY created_at DESC
               }else{
                 $p_name = "<span style='opacity: 0;'>".sprintf("%04d",@$value->product_id_fk)." <br> ".@$value->product_name."</span>";
               }
-              $pn .=     
+              $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell" style="width:200px;font-weight:bold;padding-bottom:15px;">'.$p_name.'</div>
                   <div class="divTableCell" style="">'.$value->lot_number.'</div>
@@ -1691,7 +1716,7 @@ ORDER BY created_at DESC
                   </div>
                   ';
              }
-              $pn .=     
+              $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell">  </div>
                   <div class="divTableCell" style="font-weight:bold;"> รวม </div>
@@ -1701,28 +1726,28 @@ ORDER BY created_at DESC
                   </div>
                   ';
 
-              $pn .= '</div></div>';  
+              $pn .= '</div></div>';
 
               return $pn;
 
       })
-      ->escapeColumns('column_002')  
+      ->escapeColumns('column_002')
 
       ->addColumn('column_003', function($row) {
             $rs = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
             return "<br/>".@$rs[0]->user_name." <br/> ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
-      }) 
-      ->escapeColumns('column_003') 
+      })
+      ->escapeColumns('column_003')
       ->addColumn('column_004', function($row) {
            $Branch = DB::select("
-              SELECT * 
+              SELECT *
               FROM
               branchs
               WHERE id = ".$row->branch_id_fk."
               ");
            return "<br/>".$Branch[0]->b_name;
       })
-      ->escapeColumns('column_004')        
+      ->escapeColumns('column_004')
       ->make(true);
     }
 
@@ -1737,13 +1762,13 @@ ORDER BY created_at DESC
          $w001 = "";
       }
       $sTable = DB::select(" SELECT * FROM $temp_ppr_001  WHERE 1 ".$w001."  ");
-   
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
           return "<b>".@$row->invoice_code."</b>";
       })
-      ->escapeColumns('column_001')  
+      ->escapeColumns('column_001')
       ->addColumn('column_002', function($row) {
 
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
@@ -1754,8 +1779,8 @@ ORDER BY created_at DESC
 
 DB::select(" DROP TABLE IF EXISTS temp_product_fifo; ");
 // สินค้าปกติ
-DB::select(" CREATE TEMPORARY TABLE temp_product_fifo 
-SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product' 
+DB::select(" CREATE TEMPORARY TABLE temp_product_fifo
+SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product'
 group by $temp_ppr_002.product_id_fk
 ");
 
@@ -1799,18 +1824,18 @@ foreach($temp_ppr_0021_data as $tmp){
 }
 
 // สินค้าโปรโมชั่น
-// DB::select(" INSERT IGNORE INTO temp_product_fifo 
-// SELECT 
+// DB::select(" INSERT IGNORE INTO temp_product_fifo
+// SELECT
 // promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
 // CONCAT(
 // (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
 // (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
 // dataset_product_unit.product_unit
-// FROM `promotions_products` 
+// FROM `promotions_products`
 // LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
 // where promotion_id_fk in (
 // SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
-// $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
+// $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion')
 // group by promotions_products.product_id_fk
 // ");
 
@@ -1819,7 +1844,7 @@ foreach($temp_ppr_0021_data as $tmp){
            ");
 
       			$pn = '<div class="divTable"><div class="divTableBody">';
-      			$pn .=     
+      			$pn .=
       			'<div class="divTableRow">
               <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
               <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
@@ -1829,50 +1854,50 @@ foreach($temp_ppr_0021_data as $tmp){
       			';
 
       			$sum_amt = 0 ;
-              
+
       	    	foreach ($Products as $key => $value) {
       				$sum_amt += $value->amt;
-      				$pn .=     
+      				$pn .=
       				'<div class="divTableRow">
       				<div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-      				<div class="divTableCell" style="text-align:center;">'.$value->amt.'</div> 
-      				<div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div> 
+      				<div class="divTableCell" style="text-align:center;">'.$value->amt.'</div>
+      				<div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div>
       				<div class="divTableCell" style="text-align:left;"> ';
 
       				$item_id = 1;
       				$amt_scan = $value->amt;
 
-      				 for ($i=0; $i < $amt_scan ; $i++) { 
+      				 for ($i=0; $i < $amt_scan ; $i++) {
 
       					$qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".$item_id."' and invoice_code='".$row->invoice_code."' AND product_id_fk='".$value->product_id_fk."' ");
-      				  
+
                             if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
 
-                              $pn .= 
+                              $pn .=
                                '
-                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
-                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly >
+                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i>
                                ';
 
                             }else{
 
-                               $pn .= 
+                               $pn .=
                                '
-                                <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i> 
+                                <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" >
+                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i>
                                ';
                             }
 
                               $item_id++;
-                              
-                          }  
 
-      				$pn .= '</div>';  
-      				$pn .= '</div>';  
-      			
+                          }
+
+      				$pn .= '</div>';
+      				$pn .= '</div>';
+
       			}
 
-      				$pn .=     
+      				$pn .=
       				'<div class="divTableRow">
       				<div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
       				<div class="divTableCell" style="text-align:center;font-weight:bold;">'.$sum_amt.'</div>
@@ -1881,11 +1906,11 @@ foreach($temp_ppr_0021_data as $tmp){
       				</div>
       				';
 
-      				$pn .= '</div>';  
+      				$pn .= '</div>';
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
+      ->escapeColumns('column_002')
       ->make(true);
     }
 
@@ -1898,11 +1923,11 @@ foreach($temp_ppr_0021_data as $tmp){
       ->addColumn('column_001', function($row) {
           return "<b>".@$row->invoice_code."</b>";
       })
-      ->escapeColumns('column_001')  
+      ->escapeColumns('column_001')
       ->addColumn('column_002', function($row) {
 
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
               <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
               <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
@@ -1911,20 +1936,20 @@ foreach($temp_ppr_0021_data as $tmp){
             </div>
             ';
 
-           
-              $pn .=     
+
+              $pn .=
               '<div class="divTableRow">
               <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;"></div>
-              <div class="divTableCell" style="text-align:center;"></div> 
-              <div class="divTableCell" style="text-align:center;"></div> 
+              <div class="divTableCell" style="text-align:center;"></div>
+              <div class="divTableCell" style="text-align:center;"></div>
               <div class="divTableCell" style="text-align:left;"> ';
 
 
-              $pn .= '</div>';  
-              $pn .= '</div>';  
-            
+              $pn .= '</div>';
+              $pn .= '</div>';
 
-              $pn .=     
+
+              $pn .=
               '<div class="divTableRow">
               <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
               <div class="divTableCell" style="text-align:center;font-weight:bold;"></div>
@@ -1933,11 +1958,11 @@ foreach($temp_ppr_0021_data as $tmp){
               </div>
               ';
 
-              $pn .= '</div>';  
+              $pn .= '</div>';
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
+      ->escapeColumns('column_002')
       ->make(true);
     }
 
@@ -1955,13 +1980,13 @@ foreach($temp_ppr_0021_data as $tmp){
       ->addColumn('column_001', function($row) {
           return "<b>".@$row->invoice_code."</b>";
       })
-      ->escapeColumns('column_001')  
+      ->escapeColumns('column_001')
       ->addColumn('column_002', function($row) {
 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
 
           $Products = DB::select("
-            SELECT          
+            SELECT
               db_pay_product_receipt_002.invoice_code,
               db_pay_product_receipt_002.product_id_fk,
               db_pay_product_receipt_002.product_name,
@@ -1973,7 +1998,7 @@ foreach($temp_ppr_0021_data as $tmp){
             ");
 
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
               <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
               <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
@@ -1983,14 +2008,14 @@ foreach($temp_ppr_0021_data as $tmp){
             ';
 
             $sum_amt = 0 ;
-              
+
               foreach ($Products as $key => $value) {
               $sum_amt += $value->amt_need;
-              $pn .=     
+              $pn .=
               '<div class="divTableRow">
               <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-              <div class="divTableCell" style="text-align:center;">'.$value->amt_need.'</div> 
-              <div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div> 
+              <div class="divTableCell" style="text-align:center;">'.$value->amt_need.'</div>
+              <div class="divTableCell" style="text-align:center;">'.$value->product_unit.'</div>
               <div class="divTableCell" style="text-align:left;"> ';
 
               $item_id = 1;
@@ -1998,41 +2023,41 @@ foreach($temp_ppr_0021_data as $tmp){
 
               if($row->status_sent!=4){
 
-               for ($i=0; $i < $amt_scan ; $i++) { 
+               for ($i=0; $i < $amt_scan ; $i++) {
 
                 $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".$item_id."' and invoice_code='".$row->invoice_code."' AND product_id_fk='".$value->product_id_fk."' ");
-                
+
                             if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
 
-                              $pn .= 
+                              $pn .=
                                '
-                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
-                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly >
+                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i>
                                ';
 
                             }else{
 
-                               $pn .= 
+                               $pn .=
                                '
-                                <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i> 
+                                <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" >
+                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-invoice_code="'.$row->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i>
                                ';
                             }
 
                               $item_id++;
-                              
-                          }  
+
+                          }
 
               }else{
-                 $pn .= '<center> - '; 
+                 $pn .= '<center> - ';
               }
 
-              $pn .= '</div>';  
-              $pn .= '</div>';  
-            
+              $pn .= '</div>';
+              $pn .= '</div>';
+
             }
 
-              $pn .=     
+              $pn .=
               '<div class="divTableRow">
               <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
               <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$sum_amt.'</div>
@@ -2041,16 +2066,16 @@ foreach($temp_ppr_0021_data as $tmp){
               </div>
               ';
 
-              $pn .= '</div>';  
+              $pn .= '</div>';
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
+      ->escapeColumns('column_002')
       ->addColumn('column_003', function($row) {
           // return "<b>".@$row->invoice_code."</b>";
           return '<a href="javascript: void(0);" target=_blank data-id="'.$row->orders_id_fk.'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a>';
       })
-      ->escapeColumns('column_003')  
+      ->escapeColumns('column_003')
       ->make(true);
     }
 
@@ -2061,7 +2086,7 @@ foreach($temp_ppr_0021_data as $tmp){
       $sTable = DB::select(" SELECT * FROM db_pay_product_receipt_001  WHERE  db_pay_product_receipt_001.invoice_code='".$req->txtSearch."' group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-      ->addColumn('column_001', function($row) { 
+      ->addColumn('column_001', function($row) {
 
             $rs = DB::select(" SELECT
                   db_pay_product_receipt_002_pay_history.id,
@@ -2075,15 +2100,15 @@ foreach($temp_ppr_0021_data as $tmp){
                   Left Join ck_users_admin ON db_pay_product_receipt_002_pay_history.pay_user = ck_users_admin.id  WHERE invoice_code='".$row->invoice_code."' and time_pay=".$row->time_pay." group by time_pay order By time_pay ");
 
                         $pn = '<div class="divTable"><div class="divTableBody">';
-                        $pn .=     
+                        $pn .=
                         '<div class="divTableRow">
                         <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
                         <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
                         <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
                         </div>
                         ';
-                  foreach ($rs as $v) {                        
-                        $pn .=     
+                  foreach ($rs as $v) {
+                        $pn .=
                         '<div class="divTableRow">
                         <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$v->time_pay.'</div>
                         <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$v->pay_date.'</div>
@@ -2101,11 +2126,11 @@ foreach($temp_ppr_0021_data as $tmp){
           $Products = DB::select(" SELECT
             db_pay_product_receipt_002.*,sum(amt_get) as sum_amt_get
             FROM
-            db_pay_product_receipt_002 
+            db_pay_product_receipt_002
             WHERE invoice_code='".$row->invoice_code."' and time_pay=".$row->time_pay." group by time_pay,product_id_fk ");
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
             <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
@@ -2128,12 +2153,12 @@ foreach($temp_ppr_0021_data as $tmp){
 
                    $css_font = $v->amt_remain>0?"color:red;font-weight:bold;":"";
 
-                     $pn .=     
+                     $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;"> '.$v->product_name.'</div>
                     <div class="divTableCell" style="text-align:center;color:blue;font-weight:bold;"> '.$v->sum_amt_get.'</div>
                     <div class="divTableCell" style="text-align:center;'.$css_font.'"> '.$v->amt_remain.'</div>
-                    <div class="divTableCell" style="text-align:center;width:400px;padding-bottom:15px !important;"> 
+                    <div class="divTableCell" style="text-align:center;width:400px;padding-bottom:15px !important;">
                     ';
 
                       $WH = DB::select("
@@ -2153,7 +2178,7 @@ foreach($temp_ppr_0021_data as $tmp){
                             $lot_number = '';
                           }
 
-                          $pn .=     
+                          $pn .=
                               '<div class="divTableRow">
                               <div class="divTableCell" style="width:200px;text-align:center;">'.$sWarehouse.'</div>
                               <div class="divTableCell" style="width:200px;text-align:center;">'.$lot_number.'</div>
@@ -2164,17 +2189,17 @@ foreach($temp_ppr_0021_data as $tmp){
                      }
 
 
-            $pn .= '</div>';  
-            $pn .= '</div>';  
+            $pn .= '</div>';
+            $pn .= '</div>';
           }
 
-          $pn .= '</div>';  
+          $pn .= '</div>';
           return $pn;
       })
-      ->escapeColumns('column_002')  
-      ->addColumn('ch_amt_remain', function($row) { 
+      ->escapeColumns('column_002')
+      ->addColumn('ch_amt_remain', function($row) {
 
-          // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
+          // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่
           // Case ที่มีการบันทึกข้อมูลแล้ว
           // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย'
            $rs_pay_history = DB::select(" SELECT id FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' AND status in (2) ");
@@ -2186,11 +2211,11 @@ foreach($temp_ppr_0021_data as $tmp){
            }
 
        })
-      ->addColumn('ch_amt_lot_wh', function($row) { 
+      ->addColumn('ch_amt_lot_wh', function($row) {
           // ดูว่าไม่มีสินค้าคลังเลย
-          // ดูในใบซื้อว่ามีรยการสินค้าใดบ้างที่ยังค้างส่งอยู่ 
+          // ดูในใบซื้อว่ามีรยการสินค้าใดบ้างที่ยังค้างส่งอยู่
           $Products = DB::select("
-            SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' 
+            SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."'
             AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
           ");
           // Case ที่มีการบันทึกข้อมูลแล้ว
@@ -2204,7 +2229,7 @@ foreach($temp_ppr_0021_data as $tmp){
                         $arr_im = implode(',',$arr);
                         $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
                         $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
-                        return @$r[0]->sum?@$r[0]->sum:0; 
+                        return @$r[0]->sum?@$r[0]->sum:0;
                     }else{
                         // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน
                         return 1;
@@ -2215,19 +2240,19 @@ foreach($temp_ppr_0021_data as $tmp){
                   return 1;
               }
 
-       })      
-       ->addColumn('column_003', function($row) { 
+       })
+       ->addColumn('column_003', function($row) {
 
                 $pn = '<div class="divTable">';
                 $pn .= '<div class="divTableBody">';
 
-                $pn .=     
+                $pn .=
                 '<div class="divTableRow">
                  <div class="divTableCell" style="background-color:white !important;color:white !important;">ยกเลิก</div>
                  </div>
                ';
 
-                $pn .=     
+                $pn .=
                 '<div class="divTableRow">
                  <div class="divTableCell" >
 
@@ -2243,20 +2268,20 @@ foreach($temp_ppr_0021_data as $tmp){
              return $pn;
 
         })
-        ->escapeColumns('column_003') 
-        ->addColumn('column_004', function($row) { 
+        ->escapeColumns('column_003')
+        ->addColumn('column_004', function($row) {
              $r = DB::select("SELECT time_pay from db_pay_product_receipt_002 where status_cancel<>1 ORDER BY id DESC LIMIT 1");
              return @$r[0]->time_pay;
         })
-        ->addColumn('status_cancel', function($row) { 
+        ->addColumn('status_cancel', function($row) {
             $Products = DB::select(" SELECT status_cancel
             FROM
-            db_pay_product_receipt_002 
+            db_pay_product_receipt_002
             WHERE invoice_code='".$row->invoice_code."' and time_pay=".$row->time_pay."  group by time_pay ");
-            
+
             return @$Products[0]->status_cancel;
 
-        })        
+        })
       ->make(true);
     }
 
