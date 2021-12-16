@@ -805,55 +805,55 @@
     </script>
 
     <script type="text/javascript">
-        $('#card_province').change(function() {
-            var id_province = $(this).val();
-            $.ajax({
-                type: "get",
-                url: "{{ route('location') }}",
-                data: {
-                    id: id_province,
-                    function: 'provinces'
-                },
-                success: function(data) {
-                    $('#card_amphures').html(data);
-                    $('#card_district').val('');
-                    $('#card_zipcode').val('');
-                }
-            });
-        });
+        // $('#card_province').change(function() {
+        //     var id_province = $(this).val();
+        //     $.ajax({
+        //         type: "get",
+        //         url: "{{ route('location') }}",
+        //         data: {
+        //             id: id_province,
+        //             function: 'provinces'
+        //         },
+        //         success: function(data) {
+        //             $('#card_amphures').html(data);
+        //             $('#card_district').val('');
+        //             $('#card_zipcode').val('');
+        //         }
+        //     });
+        // });
 
-        $('#card_amphures').change(function() {
-            var amphures = $(this).val();
-            $.ajax({
-                type: "get",
-                url: "{{ route('location') }}",
-                data: {
-                    id: amphures,
-                    function: 'amphures'
-                },
-                success: function(data) {
-                    $('#card_district').html(data);
+        // $('#card_amphures').change(function() {
+        //     var amphures = $(this).val();
+        //     $.ajax({
+        //         type: "get",
+        //         url: "{{ route('location') }}",
+        //         data: {
+        //             id: amphures,
+        //             function: 'amphures'
+        //         },
+        //         success: function(data) {
+        //             $('#card_district').html(data);
 
-                }
-            });
-        });
+        //         }
+        //     });
+        // });
 
 
-        $('#card_district').change(function() {
-            var district = $(this).val();
-            $.ajax({
-                type: "get",
-                url: "{{ route('location') }}",
-                data: {
-                    id: district,
-                    function: 'district'
-                },
-                success: function(data) {
-                    $('#card_zipcode').val(data);
-                }
-            });
+        // $('#card_district').change(function() {
+        //     var district = $(this).val();
+        //     $.ajax({
+        //         type: "get",
+        //         url: "{{ route('location') }}",
+        //         data: {
+        //             id: district,
+        //             function: 'district'
+        //         },
+        //         success: function(data) {
+        //             $('#card_zipcode').val(data);
+        //         }
+        //     });
 
-        });
+        // });
 
         $('#province').change(function() {
             var id_province = $(this).val();
@@ -972,6 +972,100 @@
             if (copyAddress) {
                 $('#copy_card_address').attr('checked', true)
             }
+        }
+
+        $('select[name="business_location"]').on('change', getProvinces)
+        $('#card_province').on('change', getAmphures)
+        $('#card_amphures').on('change', getDistricts)
+        $('#card_district').on('change', getZipcode)
+
+        function getProvinces() {
+          const businessLocation = $(this).val();
+
+          if (businessLocation == 3) {
+            $('#card_zipcode').parent().hide();
+          } else {
+            $('#card_zipcode').parent().show();
+          }
+
+          $.ajax({
+            url: '{{ route("test.location") }}',
+            method: 'POST',
+            data: {
+              _token: '{{ csrf_token() }}',
+              business_location: businessLocation,
+              query: 'provinces',
+            },
+            success: function (response) {
+              $('#card_province').html(response);
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          })
+        }
+
+        function getAmphures() {
+          const provinceId = $(this).val();
+
+          $.ajax({
+            url: '{{ route("test.location") }}',
+            method: 'POST',
+            data: {
+              _token: '{{ csrf_token() }}',
+              business_location: $('select[name="business_location"]').val(),
+              query: 'amphures',
+              id: provinceId
+            },
+            success: function (response) {
+              $('#card_amphures').html(response);
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          })
+        }
+
+        function getDistricts() {
+          const amphureId = $(this).val();
+
+          $.ajax({
+            url: '{{ route("test.location") }}',
+            method: 'POST',
+            data: {
+              _token: '{{ csrf_token() }}',
+              business_location: $('select[name="business_location"]').val(),
+              query: 'districts',
+              id: amphureId
+            },
+            success: function (response) {
+              $('#card_district').html(response);
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          })
+        }
+
+        function getZipcode() {
+          const districtId = $(this).val();
+
+          $.ajax({
+            url: '{{ route("test.location") }}',
+            method: 'POST',
+            data: {
+              _token: '{{ csrf_token() }}',
+              business_location: $('select[name="business_location"]').val(),
+              query: 'zip_code',
+              id: districtId
+            },
+            success: function (response) {
+              $('#card_zipcode').val(response);
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          })
         }
     </script>
 

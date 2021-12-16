@@ -1,15 +1,20 @@
 <?php
 namespace App\Http\Controllers\Frontend;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Frontend\Register;
 use DB;
+use Illuminate\Http\Request;
+use App\Services\AddressService;
+use App\Models\Frontend\Register;
 use App\Models\Frontend\LineModel;
+use App\Http\Controllers\Controller;
+
 class RegisterSalepageController extends Controller
 {
 
   public function index($user_name){
 
+    $addressService = new AddressService(1);
+
+      // dd($addressService->getProvinces());
 
        $customer = DB::table('customers')
        ->select('*')
@@ -88,7 +93,12 @@ class RegisterSalepageController extends Controller
       }
    }
 
+   public function getLocation(Request $request)
+   {
+      $addressService = new AddressService($request->business_location);
 
+      return $addressService->query($request->input('query'), $request->input('id'))->renderOptions();
+   }
 
 
 
