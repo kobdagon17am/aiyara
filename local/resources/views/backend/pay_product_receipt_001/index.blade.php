@@ -8,7 +8,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -20,7 +20,7 @@
     .divTable{
         display: table;
         width: 100%;
-        
+
       }
       .divTableRow {
         display: table-row;
@@ -48,7 +48,7 @@
       }
       table tbody tr.even:hover {
         background-color: #e6e6e6;
-      } 
+      }
 
 /*
       table#data-table-001.dataTable tbody tr.even {
@@ -63,10 +63,10 @@
       }
       table#data-table-001.dataTable tbody tr.even:hover {
         background-color: #e6e6e6;
-      } 
- 
+      }
+
 */
-   
+
       .divTableHeading {
         background-color: #EEE;
         display: table-header-group;
@@ -92,7 +92,7 @@
       }
       div.divTableBody>div:nth-of-type(even) {
         background: white;
-      } 
+      }
             div.divTableBody>div:nth-of-type(odd):hover {
         background-color: #e6e6e6;
         cursor: pointer;
@@ -100,7 +100,7 @@
       div.divTableBody>div:nth-of-type(even):hover {
         background-color: #e6e6e6;
         cursor: pointer;
-      } 
+      }
 */
       div.divTableBody>div:hover {
         background: white;
@@ -121,8 +121,8 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
-    
+  <?php
+
     // print_r(\Auth::user()->business_location_id_fk);
     // print_r(\Auth::user()->branch_id_fk);
     $can_cancel_bill = 0;
@@ -151,8 +151,8 @@
       $sU = @$menu_permit->u==1?'':'display:none;';
       $sD = @$menu_permit->d==1?'':'display:none;';
 
-      $can_cancel_bill = @$menu_permit->can_cancel_bill; 
-      $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day; 
+      $can_cancel_bill = @$menu_permit->can_cancel_bill;
+      $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
 
     }
 
@@ -194,11 +194,11 @@
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
                                    @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
                                     @endif
@@ -271,7 +271,7 @@
                   </div>
                 </div>
               </div>
-              
+
 
             <div class="row" >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
@@ -292,7 +292,7 @@
                   </div>
                 </div>
 
-    
+
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
@@ -311,7 +311,7 @@
                   </div>
                 </div>
               </div>
-              
+
 
         </div>
       </div>
@@ -461,7 +461,7 @@
                       // {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
                       {data: 'action_user', title :'<center>ผู้สร้าง</center>', className: 'text-left'},
                       {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
-                      // {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                      // {data: 'id', title :'Tools', className: 'text-center w60'},
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
                   }
@@ -473,7 +473,7 @@
 
 <script>
     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-          var sU = "{{@$sU}}"; 
+          var sU = "{{@$sU}}";
           var sD = "{{@$sD}}";
           var can_cancel_bill = "{{@$can_cancel_bill}}"; //alert(can_cancel_bill);
           var can_cancel_bill_across_day = "{{@$can_cancel_bill_across_day}}"; //alert(can_cancel_bill);
@@ -504,39 +504,38 @@
 
                       // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
                       {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
-                      {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                      {data: 'id', title :'Tools', className: 'text-center w60'},
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
-
                             var info = $(this).DataTable().page.info();
                             $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
                             if(sU!=''&&sD!=''){
                                 $('td:last-child', nRow).html('-');
-                            }else{ 
+                            }else{
 
                                   // console.log(aData['status_sent_2']);
                                   // console.log(aData['status_cancel_all']);
                                   // console.log(aData['status_cancel_some']);
-                                  // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป 
-                                  if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){ 
+                                  // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป
+                                  if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){
 
                                       $('td:last-child', nRow).html(''
                                         + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                        
+
                                       ).addClass('input');
 
                                       // $('td:eq(4)', nRow).html('-');
 
                                   }else{
 
-               
-                                      
+
+
                                   }
 
                            }
-                    
-            
+
+
                               // console.log(can_cancel_bill);
                               // console.log(can_cancel_bill_across_day);
                               // console.log(aData['status_sent_2']);
@@ -550,12 +549,12 @@
                                        + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'"  data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                  ).addClass('input');
 
-                                 
+
 
                               }else{
                                       $('td:last-child', nRow).html(''
                                       + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                      
+
                                         ).addClass('input');
                               }
 
@@ -567,19 +566,19 @@
                                 $('td:eq(6)', nRow).html('');
                               }
 
-                   
+
                   }
               });
 
               oTable_001.on( 'draw', function () {
                 $('[data-toggle="tooltip"]').tooltip();
               });
-            
+
           });
           // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 </script>
 <script>
-var sU = "{{@$sU}}"; 
+var sU = "{{@$sU}}";
 var sD = "{{@$sD}}";
 var oTable_002;
 $(function() {
@@ -604,17 +603,17 @@ $(function() {
 
         ],
         rowCallback: function(nRow, aData, dataIndex){
-    
+
         }
     });
 
 });
 </script>
-<!-- 
+<!--
 
   <script>
         $(document).ready(function() {
-          
+
             $(document).on('change', '.myLike1', function(event) {
                 event.preventDefault();
                 $('#data-table-001').DataTable().clear().draw();
@@ -630,7 +629,7 @@ $(function() {
 
                 var txtSearch_001 = $("input[name=txtSearch_001]").val();
       					// @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-      			    var sU = "{{@$sU}}"; 
+      			    var sU = "{{@$sU}}";
                 var sD = "{{@$sD}}";
                 var oTable_001;
                 $(function() {
@@ -652,8 +651,8 @@ $(function() {
                                         customer_id_fk:customer_id_fk,
                                         startDate:startDate,
                                         endDate:endDate,
-                                        status_sent:status_sent,                                 
-                                        txtSearch_001:txtSearch_001,                                  
+                                        status_sent:status_sent,
+                                        txtSearch_001:txtSearch_001,
       		                            },
       		                          method: 'POST',
       		                        },
@@ -668,7 +667,7 @@ $(function() {
 
                             // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
                             {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
-                            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                            {data: 'id', title :'Tools', className: 'text-center w60'},
                         ],
                         rowCallback: function(nRow, aData, dataIndex){
 
@@ -677,7 +676,7 @@ $(function() {
 
                           if(sU!=''&&sD!=''){
                               $('td:last-child', nRow).html('-');
-                          }else{ 
+                          }else{
 
                             // console.log(aData['status_sent_2']);
 
@@ -685,7 +684,7 @@ $(function() {
 
                                 $('td:last-child', nRow).html(''
                                   + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                  
+
                                 ).addClass('input');
 
                             }else{
@@ -701,9 +700,9 @@ $(function() {
                                 ).addClass('input');
                               }
 
-                               
-         
-                                
+
+
+
                             }
 
 
@@ -722,17 +721,17 @@ $(function() {
       				 $(".myloading").hide();
       			}, 1500);
 
-               
+
             });
 
-        }); 
+        });
     </script>
  -->
 
 
   <script>
         $(document).ready(function() {
-          
+
             $(document).on('change', '.myLike2', function(event) {
                   event.preventDefault();
 
@@ -756,7 +755,7 @@ $(function() {
                   // console.log(txtSearch_002);
 
           // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                      var sU = "{{@$sU}}"; 
+                      var sU = "{{@$sU}}";
                       var sD = "{{@$sD}}";
                       var oTable_002;
                       $(function() {
@@ -778,7 +777,7 @@ $(function() {
                                             customer_id_fk:customer_id_fk,
                                             startDate:startDate,
                                             endDate:endDate,
-                                            status_sent:status_sent, 
+                                            status_sent:status_sent,
                                             txtSearch:txtSearch_002,
                                           },
                                       method: 'POST',
@@ -791,7 +790,7 @@ $(function() {
                                   {data: 'column_005', title :'<center>วันเวลาที่ดำเนินการ</center>', className: 'text-center '},
                               ],
                               rowCallback: function(nRow, aData, dataIndex){
-                          
+
                               }
                           });
 
@@ -802,16 +801,16 @@ $(function() {
              $(".myloading").hide();
           }, 1500);
 
-               
+
             });
 
-        }); 
+        });
     </script>
 
 
 
     <script>
-    var sU = "{{@$sU}}"; 
+    var sU = "{{@$sU}}";
     var sD = "{{@$sD}}";
     var oTable_003;
     $(function() {
@@ -848,7 +847,7 @@ $(function() {
 
   <script>
         $(document).ready(function() {
-          
+
             $(document).on('change', '.myLike3', function(event) {
                   event.preventDefault();
 
@@ -864,7 +863,7 @@ $(function() {
 
 
 					// @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-				    	 var sU = "{{@$sU}}"; 
+				    	 var sU = "{{@$sU}}";
 					    var sD = "{{@$sD}}";
 					    var oTable_003;
 					    $(function() {
@@ -885,8 +884,8 @@ $(function() {
 	                                    customer_id_fk:customer_id_fk,
 	                                    startDate:startDate,
 	                                    endDate:endDate,
-	                                    status_sent:status_sent,                                 
-	                                    txtSearch_003:txtSearch_003,                                  
+	                                    status_sent:status_sent,
+	                                    txtSearch_003:txtSearch_003,
 	                                  },
 	                                method: 'POST',
 	                              },
@@ -900,17 +899,17 @@ $(function() {
 					                }
 					        });
 
-					    });  
+					    });
 					// @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
           			setTimeout(function(){
           				 $(".myloading").hide();
           			}, 1500);
 
-               
+
             });
 
-        }); 
+        });
     </script>
 
 
@@ -923,14 +922,14 @@ $(function() {
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                     $(".myloading").hide();
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
@@ -946,7 +945,7 @@ $(function() {
            }else{
             $(".myloading").hide();
            }
- 
+
       });
 
    $(document).ready(function() {
@@ -958,7 +957,7 @@ $(function() {
               var txtSearch_003 = $(this).data('invoice_code');
               // alert(invoice_code);
               $("input[name='txtSearch_003']").val(txtSearch_003);
-              $('.tab_c').trigger('click'); 
+              $('.tab_c').trigger('click');
               // $("input[name='invoice_code']").focus();
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
@@ -967,7 +966,7 @@ $(function() {
                   var endDate = $('#endDate').val();
                   var status_sent = $('#status_sent').val();
                 // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
- 						var sU = "{{@$sU}}"; 
+ 						var sU = "{{@$sU}}";
 					    var sD = "{{@$sD}}";
 					    var oTable_003;
 					    $(function() {
@@ -988,8 +987,8 @@ $(function() {
 	                                    customer_id_fk:customer_id_fk,
 	                                    startDate:startDate,
 	                                    endDate:endDate,
-	                                    status_sent:status_sent,                                 
-	                                    txtSearch_003:txtSearch_003,                                  
+	                                    status_sent:status_sent,
+	                                    txtSearch_003:txtSearch_003,
 	                                  },
 	                                method: 'POST',
 	                              },
@@ -1003,13 +1002,13 @@ $(function() {
 					                }
 					        });
 
-					    });  
+					    });
                   // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                 setTimeout(function(){
                    $(".myloading").hide();
                 }, 1500);
-          
-          });   
+
+          });
 
     });
 
@@ -1038,18 +1037,18 @@ $(function() {
                           if (result.value) {
 
                              $.ajax({
-                                url: " {{ url('backend/cancel-pay_product_receipt_001') }} ", 
+                                url: " {{ url('backend/cancel-pay_product_receipt_001') }} ",
                                 method: "post",
                                 data: {
                                   id:id,
                                   invoice_code:invoice_code,
-                                  "_token": "{{ csrf_token() }}", 
+                                  "_token": "{{ csrf_token() }}",
                                 },
                                 success:function(data)
-                                { 
+                                {
                                   // console.log(data);
                                   // return false;
-                                  
+
                                       Swal.fire({
                                         type: 'success',
                                         title: 'ทำการยกเลิกการจ่ายเรียบร้อยแล้ว',
@@ -1062,14 +1061,14 @@ $(function() {
                                       }, 2000);
                                 }
                               })
-                            
+
 
 
 
                           }
                     });
 
-             });   
+             });
 
     });
 
@@ -1156,7 +1155,7 @@ $(function() {
 
                   // $('#data-table-001').DataTable().clear().draw();
 
-                  // wut add 
+                  // wut add
                           $(function() {
                     $.fn.dataTable.ext.errMode = 'throw';
                       oTable_wait_orders = $('#data-table-wait_orders').DataTable({
@@ -1178,10 +1177,10 @@ $(function() {
                                       startPayDate:startPayDate,
 	                                    endDate:endDate,
                                       endPayDate:endPayDate,
-	                                    status_sent:status_sent,                                 
-	                                    txtSearch_001:txtSearch_001,                                  
-                                      btnSearch03:btnSearch03,                                  
-                                      action_user:action_user,                                  
+	                                    status_sent:status_sent,
+	                                    txtSearch_001:txtSearch_001,
+                                      btnSearch03:btnSearch03,
+                                      action_user:action_user,
 	                                  },
                                       method: 'POST',
                                     },
@@ -1198,7 +1197,7 @@ $(function() {
                               // {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
                               {data: 'action_user', title :'<center>ผู้สร้าง</center>', className: 'text-left'},
                               {data: 'status', title :'<center>สถานะ</center>', className: 'text-center'},
-                              // {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                              // {data: 'id', title :'Tools', className: 'text-center w60'},
                           ],
                           rowCallback: function(nRow, aData, dataIndex){
                           }
@@ -1208,7 +1207,7 @@ $(function() {
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                     var txtSearch_001 = $("input[name=txtSearch_001]").val();
-                    var sU = "{{@$sU}}"; 
+                    var sU = "{{@$sU}}";
                     var sD = "{{@$sD}}";
                     var oTable_001;
                     $(function() {
@@ -1232,10 +1231,10 @@ $(function() {
                                       startPayDate:startPayDate,
 	                                    endDate:endDate,
                                       endPayDate:endPayDate,
-	                                    status_sent:status_sent,                                 
-	                                    txtSearch_001:txtSearch_001,                                  
-                                      btnSearch03:btnSearch03,                                  
-                                      action_user:action_user,                                  
+	                                    status_sent:status_sent,
+	                                    txtSearch_001:txtSearch_001,
+                                      btnSearch03:btnSearch03,
+                                      action_user:action_user,
 	                                  },
 	                                method: 'POST',
 	                              },
@@ -1250,7 +1249,7 @@ $(function() {
 
                                 // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
                                 {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
-                                {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                                {data: 'id', title :'Tools', className: 'text-center w60'},
                             ],
                             rowCallback: function(nRow, aData, dataIndex){
 
@@ -1259,30 +1258,30 @@ $(function() {
 
                                     if(sU!=''&&sD!=''){
                                         $('td:last-child', nRow).html('-');
-                                    }else{ 
+                                    }else{
 
                                           // console.log(aData['status_sent_2']);
                                           // console.log(aData['status_cancel_all']);
                                           // console.log(aData['status_cancel_some']);
-                                          // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป 
-                                          if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){ 
+                                          // เปลี่ยนใหม่ ขอเพียงแค่มีการยกเลิกบางรายการ จะปิดปุ่มยกเลิกทั้งหมด เพราะมันซับซ้อนเกินไป
+                                          if(aData['status_sent_2']==4 || aData['status_cancel_some']==1 ){
 
                                               $('td:last-child', nRow).html(''
                                                 + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                                
+
                                               ).addClass('input');
 
                                               // $('td:eq(4)', nRow).html('-');
 
                                           }else{
 
-                       
-                                              
+
+
                                           }
 
                                    }
-                            
-                    
+
+
                                       // console.log(can_cancel_bill);
                                       // console.log(can_cancel_bill_across_day);
                                       // console.log(aData['status_sent_2']);
@@ -1294,12 +1293,12 @@ $(function() {
                                                + '<a href="javascript: void(0);" data-url="{{ route('backend.pay_product_receipt_001.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete2 " data-invoice_code="'+aData['invoice_code_2']+'"  data-id="'+aData['id']+'"  data-toggle="tooltip" data-placement="top" title="ยกเลิกรายการจ่ายสินค้าบิลนี้" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                          ).addClass('input');
 
-                                         
+
 
                                       }else{
                                               $('td:last-child', nRow).html(''
                                               + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                              
+
                                                 ).addClass('input');
                                       }
 
@@ -1311,17 +1310,17 @@ $(function() {
                                         $('td:eq(6)', nRow).html('');
                                       }
 
-                           
+
                                   }
                               });
 
                               oTable_001.on( 'draw', function () {
                                 $('[data-toggle="tooltip"]').tooltip();
-                              });         
+                              });
                       });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                     	var txtSearch_002 = $("input[name=txtSearch_002]").val();
-                        var sU = "{{@$sU}}"; 
+                        var sU = "{{@$sU}}";
             						var sD = "{{@$sD}}";
             						var oTable_002;
             						$(function() {
@@ -1343,8 +1342,8 @@ $(function() {
             	                                    customer_id_fk:customer_id_fk,
             	                                    startDate:startDate,
             	                                    endDate:endDate,
-            	                                    status_sent:status_sent,                                 
-            	                                    txtSearch_002:txtSearch_002,                                  
+            	                                    status_sent:status_sent,
+            	                                    txtSearch_002:txtSearch_002,
             	                                  },
             	                                method: 'POST',
             	                              },
@@ -1357,14 +1356,14 @@ $(function() {
 
             						        ],
             						        rowCallback: function(nRow, aData, dataIndex){
-            						    
+
             						        }
             						    });
 
             						});
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                     	var txtSearch_003 = $("input[name=txtSearch_003]").val();
-          	 				  	var sU = "{{@$sU}}"; 
+          	 				  	var sU = "{{@$sU}}";
           					    var sD = "{{@$sD}}";
           					    var oTable_003;
           					    $(function() {
@@ -1385,8 +1384,8 @@ $(function() {
           	                                    customer_id_fk:customer_id_fk,
           	                                    startDate:startDate,
           	                                    endDate:endDate,
-          	                                    status_sent:status_sent,                                 
-          	                                    txtSearch_003:txtSearch_003,                                  
+          	                                    status_sent:status_sent,
+          	                                    txtSearch_003:txtSearch_003,
           	                                  },
           	                                method: 'POST',
           	                              },
@@ -1400,18 +1399,18 @@ $(function() {
           					                }
           					        });
 
-          					    });                    
+          					    });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-               
+
 
                 setTimeout(function(){
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
 
-        }); 
+        });
 
 
 </script>
@@ -1450,12 +1449,12 @@ $(function() {
         $('#endPayDate').val('');
         $('#btnSearch03').val('0');
 
-      });        
+      });
 
 
       $('#endDate').change(function(event) {
         $('#btnSearch03').val('0');
-      });  
+      });
 
 
     </script>
@@ -1483,7 +1482,7 @@ $(function() {
           $('#endPayDate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -1491,24 +1490,24 @@ $(function() {
 
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
-              
+
+
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
                       return false;
                   }else{
-                  
+
                       location.replace( window.location.href+"?test_clear_data=test_clear_data ");
                   }
-       
+
             });
-                
+
       });
 
     </script>
-   
-    
-    <?php 
-    
+
+
+    <?php
+
     if(isset($_REQUEST['test_clear_data'])){
 
       DB::select("TRUNCATE db_pay_product_receipt_001;");
@@ -1523,19 +1522,19 @@ $(function() {
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");

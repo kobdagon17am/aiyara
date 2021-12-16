@@ -61,14 +61,14 @@
     color: black ;
     background-color: #cfc ;
     z-index: 9999 ;
-  } 
+  }
 
 
 
     .divTable{
         display: table;
         width: 100%;
-        
+
       }
       .divTableRow {
         display: table-row;
@@ -88,7 +88,7 @@
       }
       div.divTableBody>div:nth-of-type(even) {
         background: white;
-      }      
+      }
       .divTableHeading {
         background-color: #EEE;
         display: table-header-group;
@@ -112,7 +112,7 @@
       div.divTableBody>div:nth-of-type(even):hover {
         background-color: #e6e6e6;
         /*cursor: pointer;*/
-      } 
+      }
 
 
 </style>
@@ -129,7 +129,7 @@
             <h4 class="font-size-18  "> จ่ายสินค้าตามใบเสร็จ  </h4>
             <!-- test_clear_data -->
           </div>
-          
+
            <div class="col-4" style="padding: 5px;text-align: center;font-weight: bold;margin-left: 5%;">
             <span >
               <?php $role = DB::select("SELECT * FROM `role_group` where id=".(\Auth::user()->role_group_id_fk)." "); ?>
@@ -146,11 +146,11 @@
 
         </div>
     </div>
-    
+
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -164,7 +164,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -189,8 +189,12 @@
                        <!--  <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>/ <span class="b_label_search">Scan QR-code :</span> </label> -->
                         <label class="col-4  " ><span class="a_label_search">ค้น : เลขที่ใบเสร็จ </span>  <span class="b_label_search"></span> </label>
 
+                        @php
+                          $invoiceCode = request()->exists('invoice_code') ? request()->query('invoice_code') : '';
+                        @endphp
+
                         <div class="col-md-4">
-                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus autocomplete="on" >  
+                          <input type="text" class="form-control" id="txtSearch" name="txtSearch" style="font-size: 18px !important;color: blue;" autofocus autocomplete="on" value="{{ $invoiceCode }}">
                         </div>
 
                        <!--  <div class="col-md-2">
@@ -205,10 +209,10 @@
                     </div>
                   </div>
 
-      
+
                     <div class="form-group row ">
                       <div class="col-md-12">
-                        
+
                         <div class=" div_customer " style="display: none;" >
                           <div class=" div_customer " style="padding-top: 10px;">
                             <div class="row">
@@ -225,7 +229,7 @@
                                     <li class="list-inline-item ">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="รับสินค้าที่"><i class="bx bx-home mr-1 text-primary" ></i>รับสินค้าที่ : <b><span class="user_address"></span></b></h5>
                                     </li>
-                                    
+
                                   <span id="operate">
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="วันที่ดำเนินการ"><i class="bx bx-calendar mr-1 text-primary"></i>วันที่ดำเนินการ : <b><span class="action_date"></span></b></h5>
@@ -234,8 +238,8 @@
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14 " data-toggle="tooltip" data-placement="top" title="ผู้ดำเนินการ"><i class="bx bx-user-check font-size-18 mr-1 text-primary"></i>ผู้ดำเนินการ : <b><span class="user_action"></span></b></h5>
                                     </li>
-                                  </span> 
-                                                                
+                                  </span>
+
                                     <li class="list-inline-item ">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="สถานะ"><i class="bx bx-task mr-1 text-primary" ></i> STATUS : <span style="color:red;font-weight: bold;font-size: 16px;" class="bill_status" >  </span></h5>
                                     </li>
@@ -248,7 +252,7 @@
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14 " data-toggle="tooltip" data-placement="top" title="ผู้จ่าย"><i class="bx bx-user-check font-size-18 mr-1 text-primary"></i>ผู้จ่าย : <b><span class="pay_user"></span></b></h5>
                                     </li>
-                                  </span>  
+                                  </span>
 
                                   </ul>
                               </div>
@@ -346,7 +350,7 @@
                   }
               });
 
-        
+
       });
 
 
@@ -378,7 +382,7 @@
           $(this).prev().css({ 'background-color' : 'blanchedalmond'});
           $(this).prev().val('');
 
-        
+
       });
 
 
@@ -394,70 +398,76 @@
 
            $('#data-table-0001').hide();
            $('#data-table-0002').hide();
-            
+
+           const invoiceCode = "{{ $invoiceCode }}"
+
+           if (invoiceCode) {
+            searchInvoice()
+           }
+
             // $(document).on('click change', '#txtSearch', function(event) {
-            $(document).on('change', '#txtSearch', function(event) {
+            $(document).on('change', '#txtSearch', searchInvoice);
+
+            function searchInvoice() {
               $(".myloading").show();
-              
+
               var txtSearch = $("input[name='txtSearch']").val();
 
-               $.ajax({
-	                  url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
-	                  method: "post",
-	                  data: {
-	                    txtSearch:txtSearch,
-	                    "_token": "{{ csrf_token() }}", 
-	                  },
-	                  success:function(data)
-	                  { 
-	                    console.log(data);
+              $.ajax({
+                    url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
+                    method: "post",
+                    data: {
+                      txtSearch:txtSearch,
+                      "_token": "{{ csrf_token() }}",
+                    },
+                    success:function(data)
+                    {
+                      console.log(data);
                       // return false;
-                      
-	                    if(data==0){
+
+                      if(data==0){
                         Swal.fire({
                           position: 'top-end',
                           title: '! ค้นไม่พบใบเสร็จ',
                           showConfirmButton: false,
                           timer: 2500
                         })
-	                    	// $(".myloading").hide();
-	                    	// return false;
-                           setTimeout(function(){
+                        // $(".myloading").hide();
+                        // return false;
+                          setTimeout(function(){
                                 location.reload();
-                           }, 1500);
+                          }, 1500);
 
-	                    }else{
-
-
-	                    	// check ดูก่อนว่า บิลนี้ ถูกเลือกไปแล้ว
-						              $.ajax({
-						                 type:'POST',
-						                 url: " {{ url('backend/ajaxCHECKPay_product_receipt') }} ",
-						                 data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
-						                  success:function(data){
-						                       // console.log(data);
-						                       if(data>0){
-						                       	  location.replace('{{ url("backend/pay_product_receipt") }}/'+data+'/edit');
-						                       }else{
-												              $(".btnSearch").trigger('click');
-
-						                       }
-						                    },
-						                  error: function(jqXHR, textStatus, errorThrown) {
-						                      $(".myloading").hide();
-						                  }
-						              });
-
-	                          // $('#data-table-0001').hide();
-	                          // $('#data-table-0002').hide();
-	                     }
-
-	                  }
-	                });
+                      }else{
 
 
-            });
-          
+                        // check ดูก่อนว่า บิลนี้ ถูกเลือกไปแล้ว
+                          $.ajax({
+                            type:'POST',
+                            url: " {{ url('backend/ajaxCHECKPay_product_receipt') }} ",
+                            data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
+                              success:function(data){
+                                  // console.log(data);
+                                  if(data>0){
+                                      location.replace('{{ url("backend/pay_product_receipt") }}/'+data+'/edit');
+                                  }else{
+                                      $(".btnSearch").trigger('click');
+
+                                  }
+                                },
+                              error: function(jqXHR, textStatus, errorThrown) {
+                                  $(".myloading").hide();
+                              }
+                          });
+
+                            // $('#data-table-0001').hide();
+                            // $('#data-table-0002').hide();
+                      }
+
+                    }
+                  });
+            }
+
             $(document).on('click', '.btnSearch', function(event) {
 
                   event.preventDefault();
@@ -480,7 +490,7 @@
                   }
 
                   $(".div_datatables").show();
-     
+
                   // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
                             var txtSearch = $("input[name='txtSearch']").val();
                             $.fn.dataTable.ext.errMode = 'throw';
@@ -509,10 +519,10 @@
                                     rowCallback: function(nRow, aData, dataIndex){
                                     }
                                 });
-                           
+
                             });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-				            
+
 				            $.fn.dataTable.ext.errMode = 'throw';
 				            var oTable0002;
 				            $(function() {
@@ -536,7 +546,7 @@
 
 				                        {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center w60'},
 				                        {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
-				                                             
+
 				                    ],
 				                    rowCallback: function(nRow, aData, dataIndex){
 
@@ -565,20 +575,20 @@
                                   }, 1500);
 
 
-                               
+
 
                             }
 				                });
-				           
+
 				            });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
                      setTimeout(function(){
-                       
+
                         var count = $('#data-table-0001').dataTable().fnSettings().aoData.length;
                         // alert(count);
                         if (count == 0)
                         {
-                 
+
                            $(".div_customer").hide();
                            // $(".myloading").hide();
                            setTimeout(function(){
@@ -609,7 +619,7 @@
                                             $(".user_address").html(value.user_address);
                                           }
                                         }
-                                        
+
                                         $(".user_action").html(value.user_action);
                                         $(".action_date").html(value.bill_date);
                                         // $(".bill_status").html(value.bill_status+value.sum_amt_lot);
@@ -624,7 +634,7 @@
                                           $("#operate").show();
                                           $("#pay").hide();
                                         }
-                                    
+
                                         if(value.bill_status!=3){
                                            $(".div_customer").css('background-color','#ffeecc');
                                          }else{
@@ -647,7 +657,7 @@
                             // }, 1500);
 
                         }
-                      
+
                      }, 1000);
 
 
@@ -663,7 +673,7 @@
             });
 
 
-        }); 
+        });
     </script>
 
     <script>
@@ -671,20 +681,20 @@
        $(document).on('click', '.btnSave', function(e) {
 
                 $(".myloading").show();
-                var id = $("#id").val();  
+                var id = $("#id").val();
                 var txtSearch = $("input[name='txtSearch']").val();
                 // alert(id);
-                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                  $.ajax({
 
-                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                       method: "post",
                       data: {
                         txtSearch:txtSearch,
-                        "_token": "{{ csrf_token() }}", 
+                        "_token": "{{ csrf_token() }}",
                       },
                       success:function(data)
-                      { 
+                      {
                           // console.log(data);
                           if(data==0){
                             Swal.fire({
@@ -703,7 +713,7 @@
                             $('#data-table-0002').DataTable().clear().draw();
 
                              setTimeout(function(){
-                                    
+
                                       $.ajax({
                                            type:'POST',
                                            url: " {{ url('backend/ajaxSearch_bill_db_orders002') }} ",
@@ -722,7 +732,7 @@
                                                             cancelButtonColor: "#f46a6a"
                                                             }).then(function (result) {
                                                                 if (result.value) {
-                                                                      
+
                                                                     $(".myloading").show();
 
                                                                      var txtSearch = $("input[name='txtSearch']").val();
@@ -733,7 +743,7 @@
                                                                          data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                                                                           success:function(d2){
                                                                                console.log(d2);
-                                                                       
+
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
 
                                                                              $(".myloading").hide();
@@ -757,16 +767,16 @@
                                                       })
 
                                                       var txtSearch = $("input[name='txtSearch']").val();
-                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                                                        $.ajax({
-                                                              url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                                                              url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                                                               method: "post",
                                                               data: {
                                                                 txtSearch:txtSearch,
-                                                                "_token": "{{ csrf_token() }}", 
+                                                                "_token": "{{ csrf_token() }}",
                                                               },
                                                               success:function(data)
-                                                              { 
+                                                              {
                                                                 // console.log(data);
                                                                 $(".myloading").hide();
                                                               }
@@ -775,22 +785,22 @@
                                                  } // ปิด if(data=="No_changed"){
 
                                               }, // ปิด success:function(data){
-                                        
+
                                         }); // ปิด $.ajax({
 
                                   }, 500); // ปิด setTimeout(function(){
-                                          
+
 
                           } // ปิด if(data==0){
 
                       } // ปิด success:function(data)
-                
+
                 }); // ปิด $.ajax({
 
          }); // ปิด $(document).on('click', '.btnSave'
 
     </script>
-   
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous"></script>
 
@@ -832,7 +842,7 @@
         // $(".b_label_search").on('click',function(){
         //     $("#txtSearch").focus();
         //     $("#txtSearch").val("P1210500001");
-        // });        
+        // });
       });
 
 
@@ -845,24 +855,24 @@
 
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
+
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
                       return false;
                   }else{
-                  
+
                       location.replace( window.location.href+"?test_clear_data=test_clear_data ");
                   }
-   
-       
+
+
             });
-                
+
       });
 
     </script>
-   
-  
-    <?php 
-    
+
+
+    <?php
+
     if(isset($_REQUEST['test_clear_data'])){
 
       DB::select("TRUNCATE db_pay_product_receipt_001;");
@@ -877,19 +887,19 @@
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
