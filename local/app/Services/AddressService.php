@@ -76,7 +76,7 @@ class AddressService {
     } else if ($this->query_table == static::DISTRICTS) {
       $this->options = $this->getDistricts();
     } else {
-      return $this->business_location == static::THAI ? $this->getZipcode()->zip_code : null;
+      return ($this->business_location == static::THAI && $this->query_id) ? $this->getZipcode()->zip_code : null;
     }
 
     $options = "<option value=''>- Select -</option>";

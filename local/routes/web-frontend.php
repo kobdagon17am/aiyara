@@ -258,7 +258,7 @@ Route::get('{user_name?}/6','Frontend\SalepageController@trimmax')->name('6');
 
 Route::get('registermember/{user_name?}','Frontend\RegisterSalepageController@index')->name('registermember');
 
-Route::post('test-location', 'Frontend\RegisterSalepageController@getLocation')->name('test.location');
+Route::post('get-location', 'Frontend\RegisterSalepageController@getLocation')->name('get-location');
 
 Route::post('register_member_salepage','Frontend\RegisterSalepageController@register_member_salepage')->name('register_member_salepage');
 

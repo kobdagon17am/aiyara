@@ -978,7 +978,7 @@
     </script>
 
     <script>
-        const routeGetLocation = "{{ route('test.location') }}";
+        const routeGetLocation = "{{ route('get-location') }}";
         const token = "{{ csrf_token() }}";
     </script>
     <script src="{{ asset('frontend/address.js') }}"></script>

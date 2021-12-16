@@ -174,6 +174,7 @@ function copyCardAddress() {
 }
 
 function clearValue() {
+    $('#copy_card_address').prop('checked', false)
     $(`${card_amphures}, ${amphures}`).val('').trigger('change')
     $(`${card_district}, ${district}`).val('').trigger('change')
 }
