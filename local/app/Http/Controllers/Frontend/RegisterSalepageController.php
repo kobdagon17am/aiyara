@@ -12,10 +12,6 @@ class RegisterSalepageController extends Controller
 
   public function index($user_name){
 
-    $addressService = new AddressService(1);
-
-      // dd($addressService->getProvinces());
-
        $customer = DB::table('customers')
        ->select('*')
        ->where('user_name','=',$user_name)

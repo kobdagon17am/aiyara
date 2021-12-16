@@ -351,8 +351,7 @@
                                                 <div class="col-sm-12 col-xl-6 m-b-30">
                                                     <div class="checkbox-fade fade-in-primary">
                                                         <label>
-                                                            <input type="checkbox" id="copy_card_address"
-                                                                onchange="copy_address()" name="copy_card_address">
+                                                            <input type="checkbox" id="copy_card_address" name="copy_card_address">
                                                             <span class="cr">
                                                                 <i
                                                                     class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -669,49 +668,50 @@
     <!-- Custom js -->
     <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
+    
     <script type="text/javascript">
-        function copy_address() {
-            var ckeck_address = document.getElementById("copy_card_address");
+        // function copy_address() {
+        //     var ckeck_address = document.getElementById("copy_card_address");
 
-            if (ckeck_address.checked == true) {
+        //     if (ckeck_address.checked == true) {
 
-                card_house_no = $('#card_house_no').val();
-                card_house_name = $('#card_house_name').val();
-                card_moo = $('#card_moo').val();
-                card_soi = $('#card_soi').val();
-                card_amphures = $('#card_amphures').val();
-                card_district = $('#card_district').val();
-                card_province = $('#card_province').val();
-                card_road = $('#card_road').val();
-                card_zipcode = $('#card_zipcode').val();
+        //         card_house_no = $('#card_house_no').val();
+        //         card_house_name = $('#card_house_name').val();
+        //         card_moo = $('#card_moo').val();
+        //         card_soi = $('#card_soi').val();
+        //         card_amphures = $('#card_amphures').val();
+        //         card_district = $('#card_district').val();
+        //         card_province = $('#card_province').val();
+        //         card_road = $('#card_road').val();
+        //         card_zipcode = $('#card_zipcode').val();
 
-                house_no = $('#house_no').val(card_house_no);
-                house_name = $('#house_name').val(card_house_name);
-                moo = $('#moo').val(card_moo);
-                soi = $('#soi').val(card_soi);
-                road = $('#road').val(card_road);
-                zipcode = $('#zipcode').val(card_zipcode);
+        //         house_no = $('#house_no').val(card_house_no);
+        //         house_name = $('#house_name').val(card_house_name);
+        //         moo = $('#moo').val(card_moo);
+        //         soi = $('#soi').val(card_soi);
+        //         road = $('#road').val(card_road);
+        //         zipcode = $('#zipcode').val(card_zipcode);
 
-                // amphures = $('#amphures').val(amphures);
-                // district = $('#district').val(card_district);
-                // province = $('#province').val(card_province);
+        //         // amphures = $('#amphures').val(amphures);
+        //         // district = $('#district').val(card_district);
+        //         // province = $('#province').val(card_province);
 
 
-                var card_province = $('#card_province').val();
-                $('#province').val(card_province).change();
+        //         var card_province = $('#card_province').val();
+        //         $('#province').val(card_province).change();
 
-            } else {
-                house_no = $('#house_no').val('');
-                house_name = $('#house_name').val('');
-                moo = $('#moo').val('');
-                soi = $('#soi').val('');
-                amphures = $('#amphures').val('');
-                district = $('#district').val('');
-                province = $('#province').val('');
-                road = $('#road').val('');
-                zipcode = $('#zipcode').val('');
-            }
-        }
+        //     } else {
+        //         house_no = $('#house_no').val('');
+        //         house_name = $('#house_name').val('');
+        //         moo = $('#moo').val('');
+        //         soi = $('#soi').val('');
+        //         amphures = $('#amphures').val('');
+        //         district = $('#district').val('');
+        //         province = $('#province').val('');
+        //         road = $('#road').val('');
+        //         zipcode = $('#zipcode').val('');
+        //     }
+        // }
 
 
         function check_user() {
@@ -855,220 +855,133 @@
 
         // });
 
-        $('#province').change(function() {
-            var id_province = $(this).val();
-            var ckeck_address = document.getElementById("copy_card_address");
-            $.ajax({
-                async: false,
-                type: "get",
-                url: "{{ route('location') }}",
-                data: {
-                    id: id_province,
-                    function: 'provinces'
-                },
-                success: function(data) {
-                    $('#amphures').html(data);
-                    $('#district').val('');
-                    // $('#zipcode').val('');
-                }
-            });
-            if (ckeck_address.checked == true) {
-                var card_amphures = $('#card_amphures').val();
-                $('#amphures').val(card_amphures).change();
-            }
-        });
+        // $('#province').change(function() {
+        //     var id_province = $(this).val();
+        //     var ckeck_address = document.getElementById("copy_card_address");
+        //     $.ajax({
+        //         async: false,
+        //         type: "get",
+        //         url: "{{ route('location') }}",
+        //         data: {
+        //             id: id_province,
+        //             function: 'provinces'
+        //         },
+        //         success: function(data) {
+        //             $('#amphures').html(data);
+        //             $('#district').val('');
+        //             // $('#zipcode').val('');
+        //         }
+        //     });
+        //     if (ckeck_address.checked == true) {
+        //         var card_amphures = $('#card_amphures').val();
+        //         $('#amphures').val(card_amphures).change();
+        //     }
+        // });
 
-        $('#amphures').change(function() {
-            var amphures = $(this).val();
-            var ckeck_address = document.getElementById("copy_card_address");
-            $.ajax({
-                async: false,
-                type: "get",
-                url: "{{ route('location') }}",
-                data: {
-                    id: amphures,
-                    function: 'amphures'
-                },
-                success: function(data) {
-                    $('#district').html(data);
-                }
-            });
+        // $('#amphures').change(function() {
+        //     var amphures = $(this).val();
+        //     var ckeck_address = document.getElementById("copy_card_address");
+        //     $.ajax({
+        //         async: false,
+        //         type: "get",
+        //         url: "{{ route('location') }}",
+        //         data: {
+        //             id: amphures,
+        //             function: 'amphures'
+        //         },
+        //         success: function(data) {
+        //             $('#district').html(data);
+        //         }
+        //     });
 
-            if (ckeck_address.checked == true) {
-                var card_district = $('#card_district').val();
-                $('#district').val(card_district).change();
-            }
-        });
+        //     if (ckeck_address.checked == true) {
+        //         var card_district = $('#card_district').val();
+        //         $('#district').val(card_district).change();
+        //     }
+        // });
 
 
-        $('#district').change(function() {
-            var district = $(this).val();
-            $.ajax({
-                type: "get",
-                url: "{{ route('location') }}",
-                data: {
-                    id: district,
-                    function: 'district'
-                },
-                success: function(data) {
-                    $('#zipcode').val(data);
-                }
-            });
+        // $('#district').change(function() {
+        //     var district = $(this).val();
+        //     $.ajax({
+        //         type: "get",
+        //         url: "{{ route('location') }}",
+        //         data: {
+        //             id: district,
+        //             function: 'district'
+        //         },
+        //         success: function(data) {
+        //             $('#zipcode').val(data);
+        //         }
+        //     });
 
-        });
+        // });
 
-        getOldAddress()
+        // getOldAddress()
 
-        function getOldAddress() {
-            const province = "{{ old('card_province') }}"
-            const amphures = "{{ old('card_amphures') }}"
-            const district = "{{ old('card_district') }}"
-            const copyAddress = "{{ old('copy_card_address') }}"
+        // function getOldAddress() {
+        //     const province = "{{ old('card_province') }}"
+        //     const amphures = "{{ old('card_amphures') }}"
+        //     const district = "{{ old('card_district') }}"
+        //     const copyAddress = "{{ old('copy_card_address') }}"
 
-            if (province) {
-                $.ajax({
-                    type: "get",
-                    url: "{{ route('location') }}",
-                    data: {
-                        id: province,
-                        function: 'provinces',
-                        amphuresId: amphures
-                    },
-                    success: function(data) {
-                        $('#card_amphures').html(data)
-                    }
-                })
-            }
+        //     if (province) {
+        //         $.ajax({
+        //             type: "get",
+        //             url: "{{ route('location') }}",
+        //             data: {
+        //                 id: province,
+        //                 function: 'provinces',
+        //                 amphuresId: amphures
+        //             },
+        //             success: function(data) {
+        //                 $('#card_amphures').html(data)
+        //             }
+        //         })
+        //     }
 
-            if (amphures) {
-                $.ajax({
-                    type: "get",
-                    url: "{{ route('location') }}",
-                    data: {
-                        id: amphures,
-                        function: 'amphures',
-                        districtId: district
-                    },
-                    success: function(data) {
-                        $('#card_district').html(data)
-                    }
-                })
-            }
+        //     if (amphures) {
+        //         $.ajax({
+        //             type: "get",
+        //             url: "{{ route('location') }}",
+        //             data: {
+        //                 id: amphures,
+        //                 function: 'amphures',
+        //                 districtId: district
+        //             },
+        //             success: function(data) {
+        //                 $('#card_district').html(data)
+        //             }
+        //         })
+        //     }
 
-            if (district) {
-                $.ajax({
-                    type: "get",
-                    url: "{{ route('location') }}",
-                    data: {
-                        id: district,
-                        function: 'district'
-                    },
-                    success: function(data) {
-                        $('#card_zipcode').val(data);
-                    }
-                });
-            }
+        //     if (district) {
+        //         $.ajax({
+        //             type: "get",
+        //             url: "{{ route('location') }}",
+        //             data: {
+        //                 id: district,
+        //                 function: 'district'
+        //             },
+        //             success: function(data) {
+        //                 $('#card_zipcode').val(data);
+        //             }
+        //         });
+        //     }
 
-            if (copyAddress) {
-                $('#copy_card_address').attr('checked', true)
-            }
-        }
+        //     if (copyAddress) {
+        //         $('#copy_card_address').attr('checked', true)
+        //     }
+        // }
 
-        $('select[name="business_location"]').on('change', getProvinces)
-        $('#card_province').on('change', getAmphures)
-        $('#card_amphures').on('change', getDistricts)
-        $('#card_district').on('change', getZipcode)
-
-        function getProvinces() {
-          const businessLocation = $(this).val();
-
-          if (businessLocation == 3) {
-            $('#card_zipcode').parent().hide();
-          } else {
-            $('#card_zipcode').parent().show();
-          }
-
-          $.ajax({
-            url: '{{ route("test.location") }}',
-            method: 'POST',
-            data: {
-              _token: '{{ csrf_token() }}',
-              business_location: businessLocation,
-              query: 'provinces',
-            },
-            success: function (response) {
-              $('#card_province').html(response);
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          })
-        }
-
-        function getAmphures() {
-          const provinceId = $(this).val();
-
-          $.ajax({
-            url: '{{ route("test.location") }}',
-            method: 'POST',
-            data: {
-              _token: '{{ csrf_token() }}',
-              business_location: $('select[name="business_location"]').val(),
-              query: 'amphures',
-              id: provinceId
-            },
-            success: function (response) {
-              $('#card_amphures').html(response);
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          })
-        }
-
-        function getDistricts() {
-          const amphureId = $(this).val();
-
-          $.ajax({
-            url: '{{ route("test.location") }}',
-            method: 'POST',
-            data: {
-              _token: '{{ csrf_token() }}',
-              business_location: $('select[name="business_location"]').val(),
-              query: 'districts',
-              id: amphureId
-            },
-            success: function (response) {
-              $('#card_district').html(response);
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          })
-        }
-
-        function getZipcode() {
-          const districtId = $(this).val();
-
-          $.ajax({
-            url: '{{ route("test.location") }}',
-            method: 'POST',
-            data: {
-              _token: '{{ csrf_token() }}',
-              business_location: $('select[name="business_location"]').val(),
-              query: 'zip_code',
-              id: districtId
-            },
-            success: function (response) {
-              $('#card_zipcode').val(response);
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          })
-        }
+        
     </script>
 
+    <script>
+        const routeGetLocation = "{{ route('test.location') }}";
+        const token = "{{ csrf_token() }}";
+    </script>
+    <script src="{{ asset('frontend/address.js') }}"></script>
 </body>
 
 </html>
