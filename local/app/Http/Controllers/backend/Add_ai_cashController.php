@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 use App\Models\Frontend\RunNumberPayment;
-
+use Auth;
 class Add_ai_cashController extends Controller
 {
 
@@ -302,7 +302,7 @@ class Add_ai_cashController extends Controller
             // เป็นการโอนจะยังไม่ทำต่อจนกว่าจะผ่านการอนุมัติก่อน
           } else {
 
-            $rs = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($sRow->id, Auth::user()->id, 'admin', $comment = '', request('pay_type_id_fk'));
+            $rs =  \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($sRow->id, Auth::user()->id,'admin',$comment = '', request('pay_type_id_fk'));
             if ($rs['status'] == 'fail') {
               return redirect()->to(url("backend/add_ai_cash/" . $sRow->id . "/edit"));
             }

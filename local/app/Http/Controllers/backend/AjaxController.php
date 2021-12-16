@@ -2866,10 +2866,10 @@ class AjaxController extends Controller
             ->first();
 
           if( ($aicash->approve_status == null || $aicash->approve_status == 1) and $aicash->upto_customer_status == 0){
-            $rs = \App\Http\Controllers\Frontend\Fc\DeleteAicashController::delete_aicash($request->id,Auth::user()->id,'admin');
+            $rs =  \App\Http\Controllers\Frontend\Fc\DeleteAicashController::delete_aicash($request->id,Auth::user()->id,'admin');
             return $rs;
           }else{
-            $rs = \App\Http\Controllers\Frontend\Fc\CancelAicashController::cancel_aicash($request->id,Auth::user()->id,'admin');
+            $rs =  \App\Http\Controllers\Frontend\Fc\CancelAicashController::cancel_aicash($request->id,Auth::user()->id,'admin');
             return $rs;
           }
 
