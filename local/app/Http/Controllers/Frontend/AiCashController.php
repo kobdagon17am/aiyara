@@ -112,6 +112,7 @@ class AiCashController extends Controller
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_add_ai_cash.pay_type_id_fk')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_add_ai_cash.order_status_id_fk')
             ->where('db_add_ai_cash.deleted_status', '!=', 1)
+            ->where('db_add_ai_cash.code_order', '!=', null)
             ->where('db_add_ai_cash.customer_id_fk', '=', $customer_id)
             ->orderby('db_add_ai_cash.created_at', 'desc')
             ->get();

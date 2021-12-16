@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class CancelAicashController extends Controller
 {
-
+  //\App\Http\Controllers\Frontend\Fc\CancelAicashController::cancel_aicash($cancel_aicash_id,$customer_or_admin,$type_user_cancel);
     public static function cancel_aicash($cancel_aicash_id,$customer_or_admin,$type_user_cancel){
       DB::BeginTransaction();
 
@@ -29,6 +29,7 @@ class CancelAicashController extends Controller
         }
 
         if($aicash->upto_customer_status == 0){
+
           $resule = ['status' => 'fail', 'message' => 'Oder Aicash นี้ยังไม่ถูก Add Ai-Cash ให้ User ไม่สามารถยกเลิกบิลได้'];
           return $resule;
         }
@@ -41,13 +42,11 @@ class CancelAicashController extends Controller
 
         if($customer_user->ai_cash < $aicash->aicash_amt){
             $resule = ['status' => 'fail', 'message' => 'ยอด Ai-Cash ไม่พอสำหรับการยกเลิก'];
+
           return $resule;
         }
 
-
-
         try {
-
           $update_aicash = $customer_user->ai_cash - $aicash->aicash_amt;
           $update_ai_cash = DB::table('customers')
               ->where('id',$customer_user->id)

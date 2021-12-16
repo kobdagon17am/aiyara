@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class AicashConfirmeController extends Controller
 {
-
+  // \App\Http\Controllers\Frontend\Fc\AicashConfirmeController\aicash_confirme($aicash_id,$customer_or_admin_id,$type_user_confirme,$comment='',$pay_type_id);
     public static function aicash_confirme($aicash_id,$customer_or_admin_id,$type_user_confirme,$comment='',$pay_type_id)//$type_user_confirme = "'customer','admin'"
     {
       DB::BeginTransaction();

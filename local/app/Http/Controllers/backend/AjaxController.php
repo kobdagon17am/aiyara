@@ -2857,59 +2857,21 @@ class AjaxController extends Controller
 
     public function ajaxCheckAddAiCash(Request $request)
     {
-        // return $request;
-        // dd();
+
         if($request->ajax()){
 
-               $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
+          $aicash = DB::table('db_add_ai_cash')
+            ->select('*')
+            ->where('id','=',$request->id)
+            ->first();
 
-              // เช็คเรื่องการตัดยอด Ai-Cash
-               $ch_aicash_01 = DB::select(" select * from customers where id=".$request->customer_id_fk." ");
-               // return($ch_aicash_01[0]->ai_cash);
-               $ch_aicash_02 = DB::select(" select * from db_add_ai_cash where id=".$request->id." ");
-               // return($ch_aicash_02[0]->aicash_amt);
-
-                // return($ch_aicash_02[0]->aicash_amt ." : ". $ch_aicash_01[0]->ai_cash);
-
-
-               // เช็คสถานะก่อนว่า รออนุมัติ หรือไม่ ถ้า ใช่ ให้ลบได้ ถ้าเป็น สถานะอื่นๆ จะไม่ให้ลบ
-               // ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id
-               // if($ch_aicash_02[0]->approve_status==1){
-               //    return true;
-               // }else{
-               //   if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
-               //       return 'no';
-               //     }
-               // }
-
-          if(@$ch_aicash_01[0]->ai_cash>0){
-
-                 if($ch_aicash_02[0]->aicash_amt>$ch_aicash_01[0]->ai_cash){
-                     return 'no';
-                 }else{
-                    // if($ch_aicash_02[0]->approve_status==1){
-                    //     DB::select(" delete from db_add_ai_cash where id=".$request->id." ");
-                    //     return true;
-                    // }else{
-                        DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
-                        DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=".$request->id." ");
-                        return true;
-                    // }
-                 }
-
-           }else{
-                    // if($ch_aicash_02[0]->approve_status==1){
-                    //     DB::select(" delete from db_add_ai_cash where id=".$request->id." ");
-                    //     return true;
-                    // }else{
-                        DB::select(" UPDATE customers SET ai_cash=(ai_cash-".$sRow->aicash_amt.") where id=".$sRow->customer_id_fk." ");
-                        DB::select(" UPDATE db_add_ai_cash SET approve_status=5 where id=".$request->id." ");
-                        return true;
-                    // }
-           }
-
-
-
+          if( ($aicash->approve_status == null || $aicash->approve_status == 1) and $aicash->upto_customer_status == 0){
+            $rs =  \App\Http\Controllers\Frontend\Fc\DeleteAicashController::delete_aicash($request->id,Auth::user()->id,'admin');
+            return $rs;
+          }else{
+            $rs =  \App\Http\Controllers\Frontend\Fc\CancelAicashController::cancel_aicash($request->id,Auth::user()->id,'admin');
+            return $rs;
+          }
 
         }
     }

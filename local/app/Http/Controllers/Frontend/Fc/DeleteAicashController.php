@@ -15,15 +15,15 @@ class DeleteAicashController extends Controller
       DB::BeginTransaction();
       try{
 
-        $delete = DB::table('db_add_ai_cash') //update บิล
-        ->where('id', $delete_aicash_id)
-        ->update([
-            'delete_by_user_id_fk' => $customer_or_admin,
-            'deleted_status' => 1,
-            'type_user' => $type_user_cancel, //customer || Admin
-            'deleted_at' => date('Y-m-d H:i:s'),
-        ]);
-
+        // $delete = DB::table('db_add_ai_cash') //update บิล
+        // ->where('id', $delete_aicash_id)
+        // ->update([
+        //     'delete_by_user_id_fk' => $customer_or_admin,
+        //     'deleted_status' => 1,
+        //     'type_user' => $type_user_cancel, //customer || Admin
+        //     'deleted_at' => date('Y-m-d H:i:s'),
+        // ]);
+        DB::table('db_add_ai_cash')->where('id', '=', $delete_aicash_id)->delete();
         DB::commit();
         $resule = ['status' => 'success', 'message' => 'Delete Ai-Cash Success'];
         return  $resule;
