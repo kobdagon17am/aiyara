@@ -81,7 +81,7 @@ function getAmphures() {
             id: provinceId
         },
         success: function (response) {
-            if (card_ids.includes(inputId)) {
+            if (card_ids.hasOwnProperty(inputId)) {
                 $(`${card_amphures}`).html(response);
             } else {
                 $(`${amphures}`).html(response);
@@ -111,7 +111,7 @@ function getDistricts() {
             id: amphureId
         },
         success: function (response) {
-            if (card_ids.includes(inputId)) {
+            if (card_ids.hasOwnProperty(inputId)) {
                 $(`${card_district}`).html(response);
             } else {
                 $(`${district}`).html(response);
@@ -141,7 +141,7 @@ function getZipcode() {
             id: districtId
         },
         success: function (response) {
-            if (card_ids.includes(inputId)) {
+            if (card_ids.hasOwnProperty(inputId)) {
                 $(`${card_zipcode}`).val(response);
             } else {
                 $(`${zipcode}`).val(response);
