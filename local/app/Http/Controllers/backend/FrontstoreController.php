@@ -3406,12 +3406,6 @@ if(\Auth::user()->position_level=='3' || \Auth::user()->position_level=='4'){
   $action_user_011 = "";
 }
 
-// wut เพิ่ม 
-if(\Auth::user()->position_level=='5'){
-  $action_user_01 = "";
-  $action_user_011 = "";
-}
-
 if(!empty($req->startDate)){
  $startDate = " AND DATE(db_orders.created_at) >= '".$req->startDate."' " ;
  $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '".$req->startDate."' " ;
@@ -3461,9 +3455,14 @@ if(!empty($req->customer_name)){
 
 if(!empty($req->invoice_code)){
  $invoice_code = " AND code_order = '".$req->invoice_code."' " ;
+ // wut เพิ่ม 
+  $action_user_01 = "";
+  $action_user_011 = "";
+
 }else{
  $invoice_code = "";
 }
+
 
 if(!empty($req->action_user)){
    $action_user_02 = " AND db_orders.action_user = '".$req->action_user."' " ;
