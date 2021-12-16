@@ -403,13 +403,28 @@ $(function() {
                        data: { id:id,customer_id_fk:customer_id_fk },
                         success:function(data){
                                console.log(data);
-                               if(data=="no"){
-                                 alert("! ไม่สามารถยกเลิกได้หรือลบได้ เนื่องจากยอด Ai-Cash ถูกใช้ไปแล้ว ");
-                                 return false;
+
+                               if(data['status']=="fail"){
+                                Swal.fire({
+                                          type: 'warning',
+                                          title: data['message'],
+                                          showConfirmButton: false,
+                                          timer: 3000
+                                        });
+
                                }else{
-                                  location.reload();
+                                   Swal.fire({
+                                          type: 'success',
+                                          title: data['message'],
+                                          showConfirmButton: false,
+                                          timer: 3000
+                                        });
+
+                                 //location.reload();
                                }
-                             
+
+                              $('#data-table').DataTable().clear();
+                              $('#data-table').DataTable().ajax.reload();
                               $(".myloading").hide();
                           },
 
