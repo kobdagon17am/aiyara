@@ -258,9 +258,6 @@
 
             </div>
 
-
-
-
             <div class="divTableRow">
 
               <div class="divTH">
@@ -343,7 +340,6 @@
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                 <div class="div_PV_Amount"></div>
 <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
               </div>
             </div>
           </div>
@@ -352,7 +348,6 @@
             <div class="col-lg-7">
               <div class="card">
                 <div class="card-body">
-
                   <div class="div_SumCostActionUser"></div>
 
                 </div>
@@ -1181,6 +1176,7 @@ $(document).ready(function() {
                                           },
                                           success:function(data)
                                           {
+                                          
                                             // // console.log(data);
                                             $(".div_PV_Amount").html(data);
 
@@ -1533,6 +1529,7 @@ $(document).ready(function() {
                             },
                             success:function(data)
                             {
+                              
                             //   // console.log(data);
                               $(".div_PV_Amount").html(data);
 

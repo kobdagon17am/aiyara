@@ -279,7 +279,6 @@ class CartPaymentController extends Controller
     public function payment_address(Request $rs)
     {
 
-
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
@@ -401,6 +400,11 @@ class CartPaymentController extends Controller
                 ->where('db_orders.code_order', '=', $code_order)
                 ->first();
 
+                $branch = DB::table('branchs')
+                  ->select('b_name')
+                  ->where('id', $data->branch_id_fk)
+                  ->first();
+
                 if ($data->purchase_type_id_fk == 6) {
 
                   $order_items = DB::table('db_order_products_list')
@@ -416,8 +420,6 @@ class CartPaymentController extends Controller
                       ->get();
               }
 
-
-
             if (empty($data)) {
                 return redirect('product-history')->withError('ไม่พบบิลเลขที่ ' . $code_order . ' อยู่ในระบบรอชำระเงิน');
             }
@@ -430,7 +432,7 @@ class CartPaymentController extends Controller
                 $address = HistoryController::address($data->name, $data->tel, $data->email, $data->house_no, $data->moo, $data->house_name, $data->soi, $data->road, $data->district_name, $data->amphures_name, $data->provinces_name, $data->zipcode);
 
             } elseif ($data->delivery_location_frontend == 'sent_office') {
-                $address = HistoryController::address($data->name, $data->tel, $data->email, $data->office_house_no, $data->office_moo, $data->office_name, $data->office_soi, $data->office_road, $data->office_province, $data->office_amphures, $data->office_district, $data->office_zipcode);
+                $address = HistoryController::address($data->name, $data->tel, $data->email, $branch->b_name, '', '', '', '', '', '', '', '');
 
             } elseif ($data->delivery_location_frontend == 'sent_address_other') {
                 $address = HistoryController::address($data->name, $data->tel, $data->email, $data->house_no, $data->moo, $data->house_name, $data->soi, $data->road, $data->district_name, $data->amphures_name, $data->provinces_name, $data->zipcode);

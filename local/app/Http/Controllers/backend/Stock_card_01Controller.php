@@ -187,6 +187,23 @@ class Stock_card_01Controller extends Controller
                   if($Stock_movement->count() > 0){
                             // doc_date แปลงเป็น updated_at
                           foreach ($Stock_movement as $key => $value) {
+                            $full_detail = "";
+                            if($value->stock_type_id_fk==8){
+                              $ref_data = DB::table('db_transfer_branch_code')->select('db_transfer_branch_code.*','branchs.b_name')->where('tr_number',$value->ref_doc)
+                              ->join('branchs','branchs.id','db_transfer_branch_code.to_branch_id_fk')->first();
+                              if($ref_data){
+                                $full_detail = "( ไปยัง ".$ref_data->b_name." )";
+                              }
+                            }
+
+                            if($value->stock_type_id_fk==9){
+                              $ref_data = DB::table('db_transfer_branch_code')->select('db_transfer_branch_code.*','branchs.b_name')->where('tr_number',$value->ref_doc)
+                              ->join('branchs','branchs.id','db_transfer_branch_code.branch_id_fk')->first();
+                              if($ref_data){
+                                $full_detail = "( รับจาก ".$ref_data->b_name." )";
+                              }
+                            }
+
                                $insertData = array(
                                   "ref_inv" =>  @$value->ref_doc?$value->ref_doc:NULL,
                                   "action_date" =>  @$value->updated_at?$value->updated_at:NULL,
@@ -201,7 +218,7 @@ class Stock_card_01Controller extends Controller
                                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
                                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
                                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                                  "details" =>  (@$value->note?$value->note:NULL).' '.(@$value->note2?$value->note2:NULL),
+                                  "details" =>  (@$value->note?$value->note:NULL).' '.(@$value->note2?$value->note2:NULL).' '.$full_detail,
                                   "amt_in" =>  @$value->in_out==1?$value->amt:0,
                                   "amt_out" =>  @$value->in_out==2?$value->amt:0,
                                   "warehouse_id_fk" =>  @$value->warehouse_id_fk>0?$value->warehouse_id_fk:0,
@@ -222,11 +239,7 @@ class Stock_card_01Controller extends Controller
             $sTable = DB::select(" 
                 SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain 
                 FROM $temp_db_stock_card 
-            "); 
-             
-
-
-// 11111111111111111111111111111          
+            ");       
       }else{
 
         DB::select(" SET @csum := 0; ");
@@ -236,7 +249,6 @@ class Stock_card_01Controller extends Controller
         "); 
 
       }
-// 11111111111111111111111111111
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery

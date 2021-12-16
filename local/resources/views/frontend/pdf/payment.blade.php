@@ -220,7 +220,7 @@
          </tr>
          <tr>
              <th style="text-align: right;font-size: 16px"> VAT({{ $order->vat }}%) : </th>
-             <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format($price_vat,2) }}</th>
+             <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format(@$price_vat,2) }}</th>
          </tr>
          <tr>
              <th style="text-align: right;font-size: 16px">รวม : </th>

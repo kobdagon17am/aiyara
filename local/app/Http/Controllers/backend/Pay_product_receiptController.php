@@ -18,7 +18,7 @@ class Pay_product_receiptController extends Controller
       return View('backend.pay_product_receipt.index');
 
       // $sApprove = DB::select("
-      //   SELECT db_pick_warehouse_tmp.*,db_consignments.id as consignments_id,db_consignments.recipient_name,db_consignments.address,db_consignments.sent_date,db_consignments.approver,db_consignments.mobile,db_consignments.status_sent from db_pick_warehouse_tmp 
+      //   SELECT db_pick_warehouse_tmp.*,db_consignments.id as consignments_id,db_consignments.recipient_name,db_consignments.address,db_consignments.sent_date,db_consignments.approver,db_consignments.mobile,db_consignments.status_sent from db_pick_warehouse_tmp
       //   Left Join db_consignments ON db_consignments.recipient_code = db_pick_warehouse_tmp.invoice_code
       //   group by invoice_code ORDER BY db_pick_warehouse_tmp.updated_at DESC LIMIT 1
       //   ");
@@ -35,7 +35,7 @@ class Pay_product_receiptController extends Controller
       //     customers.user_name
       //     FROM
       //     db_delivery
-      //     Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id 
+      //     Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id
       //      ");
 
       // return View('backend.pay_product_receipt.index')->with(
@@ -47,7 +47,7 @@ class Pay_product_receiptController extends Controller
       //      'sApprove'=>$sApprove,
       //   ) );
 
-      
+
     }
 
 
@@ -60,7 +60,7 @@ class Pay_product_receiptController extends Controller
     public function store(Request $request)
     {
       // dd($request->all());
-      
+
       if(isset($request->save_to_set)){
 
       	$arr = implode(',', $request->row_id);
@@ -73,7 +73,7 @@ class Pay_product_receiptController extends Controller
         	DB::update(" UPDATE db_pick_warehouse_packing_code SET status_pick_warehouse='1',updated_at=now() WHERE id = ".$value->packing_code."  ");
         }
 
-        DB::update(" 
+        DB::update("
 	        UPDATE
     			db_pick_warehouse_packing_code
     			Inner Join db_pick_warehouse ON db_pick_warehouse_packing_code.id = db_pick_warehouse.packing_code
@@ -89,7 +89,7 @@ class Pay_product_receiptController extends Controller
       }else if(isset($request->save_to_qrscan)){
 
         // dd($request->all());
-        for ($i=0; $i < count($request->warehouse_qrcode_id) ; $i++) { 
+        for ($i=0; $i < count($request->warehouse_qrcode_id) ; $i++) {
 
                 $value=DB::table('db_pick_warehouse_qrcode')
                 // ->where('invoice_code', $request->invoice_code)
@@ -124,9 +124,9 @@ class Pay_product_receiptController extends Controller
                 }
 
 
-                   DB::update(" 
+                   DB::update("
                         UPDATE db_pick_warehouse_tmp SET db_pick_warehouse_tmp.cnt_this=(
-                        SELECT 
+                        SELECT
                         count(*) as cnt
                         FROM
                         db_pick_warehouse_qrcode
@@ -138,35 +138,35 @@ class Pay_product_receiptController extends Controller
                    ");
 
 
-                   DB::update(" 
+                   DB::update("
                         UPDATE db_pick_warehouse_tmp SET cnt_qr_code=(
-                        SELECT 
+                        SELECT
                         count(*) as cnt
                         FROM
                         db_pick_warehouse_qrcode
-                        WHERE invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' AND qr_code is not NULL ) 
+                        WHERE invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' AND qr_code is not NULL )
                         WHERE invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."'
 
 
                    ");
 
- 
-                  DB::update(" 
+
+                  DB::update("
                         UPDATE db_pick_warehouse_tmp SET status_scan_qrcode=0 WHERE cnt_qr_code=0
-                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' 
+                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."'
                   ");
 
-                  DB::update(" 
+                  DB::update("
                         UPDATE db_pick_warehouse_tmp SET status_scan_qrcode=1 WHERE cnt_qr_code>0 AND cnt_qr_code<cnt_this
-                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' 
+                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."'
                   ");
 
-                  DB::update(" 
+                  DB::update("
                         UPDATE db_pick_warehouse_tmp SET status_scan_qrcode=2 WHERE cnt_qr_code>0 AND cnt_qr_code=cnt_this
-                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."' 
+                        AND invoice_code='".$request->invoice_code."' AND product_id_fk='".$request->product_id_fk[$i]."'
                   ");
 
-                  //  DB::update(" 
+                  //  DB::update("
                   //       UPDATE
                   //       db_order_products_list
                   //       Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
@@ -183,7 +183,7 @@ class Pay_product_receiptController extends Controller
                }
                $imp_arr = implode(',',$arr);
                // dd($imp_arr);
-                DB::update(" 
+                DB::update("
                         UPDATE
                         db_order_products_list
                         Left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
@@ -204,7 +204,7 @@ class Pay_product_receiptController extends Controller
         // dd($request->all());
         return $this->form();
       }
-      
+
     }
 
     public function edit($id)
@@ -219,7 +219,7 @@ class Pay_product_receiptController extends Controller
               return redirect()->to(url("backend/pay_product_receipt"));
             }
 
-            $sUser =  DB::select(" 
+            $sUser =  DB::select("
             SELECT
             db_pay_product_receipt_001.id,
             db_pay_product_receipt_001.business_location_id_fk,
@@ -284,7 +284,7 @@ class Pay_product_receiptController extends Controller
           return redirect()->to(url("backend/pay_product_receipt"));
 
            // return redirect()->to(url("backend/pick_warehouse/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -304,7 +304,7 @@ class Pay_product_receiptController extends Controller
         	DB::update(" UPDATE db_pick_warehouse_packing_code SET status_pick_warehouse='0',updated_at=now() WHERE id = ".$value->packing_code."  ");
         }
 
-        DB::update(" 
+        DB::update("
 	        UPDATE
 			db_pick_warehouse_packing_code
 			Inner Join db_pick_warehouse ON db_pick_warehouse_packing_code.id = db_pick_warehouse.packing_code
@@ -313,15 +313,15 @@ class Pay_product_receiptController extends Controller
 			WHERE
 			db_pick_warehouse_packing_code.status_pick_warehouse=0
 		 ");
-      
+
       return response()->json(\App\Models\Alert::Msg('success'));
 
     }
 
     public function Datatable(){
       // $sTable = \App\Models\Backend\Pay_product_receipt::search()->where('status_pick_warehouse','0')->orderBy('id', 'asc');
-      $sTable = DB::select(" 
-      	select * from db_delivery WHERE status_pack=0 and status_delivery=0 
+      $sTable = DB::select("
+      	select * from db_delivery WHERE status_pack=0 and status_delivery=0
     		UNION
     		select * from db_delivery WHERE status_pack=1 and status_delivery=0 GROUP BY packing_code
     		ORDER BY delivery_date DESC
