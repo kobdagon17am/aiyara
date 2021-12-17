@@ -324,6 +324,7 @@ $(function() {
         columns: [
             {data: 'id', title :'ID', className: 'text-center w50'},
             {data: 'customer_name', title :'<center>{{ __("message.customer") }}</center>', className: 'text-left w100 '},
+            {data: 'code_order', title :'<center> Order </center>', className: 'text-left w100 '},
             {data: 'aicash_remain', title :'<center>{{ __("message.ai_cash_total") }} <br> {{ __("message.balance") }}</center>', className: 'text-center'},
             {data: 'aicash_amt', title :'<center>{{ __("message.ai_cash_total") }} <br>{{ __("message.cash_latest") }}</center>', className: 'text-center'},
             {data: 'action_user', title :'<center>{{ __("message.staff") }} </center>', className: 'text-center'},
@@ -403,13 +404,28 @@ $(function() {
                        data: { id:id,customer_id_fk:customer_id_fk },
                         success:function(data){
                                console.log(data);
-                               if(data=="no"){
-                                 alert("! ไม่สามารถยกเลิกได้หรือลบได้ เนื่องจากยอด Ai-Cash ถูกใช้ไปแล้ว ");
-                                 return false;
+
+                               if(data['status']=="fail"){
+                                Swal.fire({
+                                          type: 'warning',
+                                          title: data['message'],
+                                          showConfirmButton: false,
+                                          timer: 3000
+                                        });
+
                                }else{
-                                  location.reload();
+                                   Swal.fire({
+                                          type: 'success',
+                                          title: data['message'],
+                                          showConfirmButton: false,
+                                          timer: 3000
+                                        });
+
+                                 //location.reload();
                                }
-                             
+
+                              $('#data-table').DataTable().clear();
+                              $('#data-table').DataTable().ajax.reload();
                               $(".myloading").hide();
                           },
 
@@ -558,6 +574,7 @@ $(function() {
                                    columns: [
                                       {data: 'id', title :'ID', className: 'text-center w50'},
                                       {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left w100 '},
+                                      {data: 'code_order', title :'<center> Order </center>', className: 'text-left w100 '},
                                       {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
                                       {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
                                       {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},

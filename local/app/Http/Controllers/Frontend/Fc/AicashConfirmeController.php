@@ -6,13 +6,16 @@ use Illuminate\Support\Facades\DB;
 
 class AicashConfirmeController extends Controller
 {
-
+  // \App\Http\Controllers\Frontend\Fc\AicashConfirmeController\aicash_confirme($aicash_id,$customer_or_admin_id,$type_user_confirme,$comment='',$pay_type_id);
     public static function aicash_confirme($aicash_id,$customer_or_admin_id,$type_user_confirme,$comment='',$pay_type_id)//$type_user_confirme = "'customer','admin'"
     {
+
       DB::BeginTransaction();
       $db_add_ai_cash = DB::table('db_add_ai_cash')
               ->where('id', '=', $aicash_id)
               ->first();
+
+
       if(empty($db_add_ai_cash)){
         $resule = ['status' => 'fail', 'message' => 'ไม่พบบิลการเติม Ai-Cash นี้'];
         return $resule;
