@@ -336,7 +336,8 @@ class AiCashController extends Controller
                     $update = DB::table('db_add_ai_cash') //update บิล
                         ->where('id', $request->aicash_id)
                         ->update([
-                            'order_status_id_fk' => 2, //customer || Admin
+                            'order_status_id_fk' => 2,
+                            'file_slip' => $url.$f_name,
                         ]);
 
                     DB::commit();
@@ -426,20 +427,23 @@ class AiCashController extends Controller
 
                       $update_aicash = DB::table('db_add_ai_cash')
                       ->where('id',$ai_cash->id)
-                      ->update(['pay_type_id_fk' => 1, 'transfer_price' =>$ai_cash->total_amt,'order_status_id_fk' => 2]);
+                      ->update(['pay_type_id_fk' => 1,
+                       'transfer_price' =>$ai_cash->total_amt,
+                       'order_status_id_fk' => 2,
+                       'file_slip' => $url.'/'.$f_name,]);
                       $resule = ['status' => 'success', 'message' => 'Add Ai-Cash Success'];
               }
           }
           if($resule['status'] == 'success'){
             DB::commit();
-            return redirect('product-history')->withSuccess($resule['message']);
+            return redirect('ai-cash')->withSuccess($resule['message']);
           }else{
             DB::rollback();
-            return redirect('product-history')->withErrors('การโอนชำระไม่สำเร็จ กรุณาลองใหม่อีกครั้งคะ');
+            return redirect('ai-cash')->withErrors('การโอนชำระไม่สำเร็จ กรุณาลองใหม่อีกครั้งคะ');
           }
 
         } elseif ($request->submit == 'not_upload') {
-            return redirect('product-history');
+            return redirect('ai-cash');
 
         } elseif ($request->submit == 'PromptPay') {
             $request['pay_type'] = 15;
@@ -465,7 +469,7 @@ class AiCashController extends Controller
 
                 return redirect($data['url']);
             } else {
-                return redirect('product-history')->withError('Payment Fail');
+                return redirect('ai-cash')->withError('Payment Fail');
             }
 
         } elseif ($request->submit == 'TrueMoney') {
@@ -490,7 +494,7 @@ class AiCashController extends Controller
 
                 return redirect($data['url']);
             } else {
-                return redirect('product-history')->withError('Payment Fail');
+                return redirect('ai-cash')->withError('Payment Fail');
             }
 
         } elseif ($request->submit == 'Credit') {
@@ -514,11 +518,11 @@ class AiCashController extends Controller
 
               return redirect($data['url']);
           } else {
-              return redirect('product-history')->withError('Payment Fail');
+              return redirect('ai-cash')->withError('Payment Fail');
           }
 
         }else {
-            return redirect('product-history')->withError('Payment submit Fail');
+            return redirect('ai-cash')->withError('Payment submit Fail');
         }
     }
 }

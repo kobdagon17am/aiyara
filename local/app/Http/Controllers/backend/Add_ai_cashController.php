@@ -169,25 +169,7 @@ class Add_ai_cashController extends Controller
     // dd($request->id);
     // dd($id);
     if (isset($request->approved)) {
-      // dd($request->all());
-      // $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
-      // $sRow->approver = \Auth::user()->id;
-      // $sRow->approve_status = $request->approve_status ;
-      // $sRow->approve_date = date('Y-m-d');
-      // $sRow->note = $request->note;
-      // $sRow->save();
 
-      // $sRow = \App\Models\Backend\Add_ai_cash::find($request->id);
-
-      // DB::select("
-      //     UPDATE
-      //     customers
-      //     Inner Join db_add_ai_cash ON customers.id = db_add_ai_cash.customer_id_fk
-      //     SET customers.ai_cash=(customers.ai_cash + db_add_ai_cash.aicash_amt)
-      //     WHERE customers.id='".$sRow->customer_id_fk."' AND db_add_ai_cash.upto_customer_status=0 ;
-      //  ");
-
-      // DB::select(" UPDATE db_add_ai_cash SET upto_customer_status=1 WHERE db_add_ai_cash.customer_id_fk='".$sRow->customer_id_fk."' ");
       $admin_id = \Auth::user()->id;
       $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id, $admin_id, 'admin', $request->note, $pay_type_id = '1');
 
@@ -209,6 +191,7 @@ class Add_ai_cashController extends Controller
 
       $sRow = \App\Models\Backend\Add_ai_cash::find($id);
       $sRow->approve_status = 2;
+      $sRow->order_type_id_fk = 7;
       $sRow->approver = \Auth::user()->id;
       $sRow->approve_date = now();
 
@@ -237,45 +220,15 @@ class Add_ai_cashController extends Controller
         $sRow = new \App\Models\Backend\Add_ai_cash;
       }
 
-      // dd($id);
-      // dd(request('approve_status'));
-      /*
-1 เงินโอน
-2 บัตรเครดิต
-3 Ai-Cash
-4 Gift Voucher
-/////////////////////////
-5 เงินสด
-7 เครดิต + เงินสด
-8 เครดิต + เงินโอน
-10  เงินโอน + เงินสด
-//////////////////////////
-6 เงินสด + Ai-Cash
-9 เครดิต + Ai-Cash
-11  เงินโอน + Ai-Cash
-
-12  Gift Voucher + เงินโอน
-13  Gift Voucher + บัตรเครดิต
-14  Gift Voucher + Ai-Cash
-15  PromptPay
-16  TrueMoney
-17  Gift Voucher + PromptPay
-18  Gift Voucher + TrueMoney
-
-
-  `approve_status` int(11) DEFAULT '0' COMMENT 'ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id',
-
-
-*/
-      // dd(request('pay_type_id_fk'));
       // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
       if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11) {
         $sRow->approve_status = 1;
         $sRow->order_status_id_fk = 1;
         $sRow->approver = 0;
+
       } else if (request('pay_type_id_fk') == 5 || request('pay_type_id_fk') == 6 || request('pay_type_id_fk') == 7 || request('pay_type_id_fk') == 9) {
         $sRow->approve_status = 2;
-        $sRow->order_status_id_fk = 2;
+        $sRow->order_status_id_fk = 7;
         $sRow->approver = \Auth::user()->id;
 
         if ($sRow->code_order == "") {
@@ -293,7 +246,9 @@ class Add_ai_cashController extends Controller
         $sRow->approve_status = 1;
         $sRow->order_status_id_fk = 1;
         $sRow->approver = \Auth::user()->id;
+
       }
+
 
       if (request('pay_type_id_fk') != '') {
         if (request('save_update') == 1) {
@@ -304,7 +259,7 @@ class Add_ai_cashController extends Controller
 
             $rs =  \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($sRow->id, Auth::user()->id,'admin',$comment = '', request('pay_type_id_fk'));
             if ($rs['status'] == 'fail') {
-              return redirect()->to(url("backend/add_ai_cash/" . $sRow->id . "/edit"));
+              return redirect()->to(url("backend/add_ai_cash/" . $sRow->id . "/edit"))->with(['alert' => \App\Models\Alert::Msg($rs['message'])]);;
             }
             // DB::select(" UPDATE db_add_ai_cash SET upto_customer_status=1 WHERE db_add_ai_cash.customer_id_fk='".request('customer_id_fk')."' ");
           }
@@ -332,7 +287,7 @@ class Add_ai_cashController extends Controller
 
 
       $request = app('request');
-      if ($request->hasFile('image01')) {
+      if ($request->hasFile('image01') == true) {
         @UNLINK(@$sRow->file_slip);
         $this->validate($request, [
           'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -344,16 +299,11 @@ class Add_ai_cashController extends Controller
         $sRow->file_slip = $image_path . $name;
       }
 
-
       $sRow->created_at = date('Y-m-d H:i:s');
       $sRow->save();
 
       DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
-
-
-
       \DB::commit();
-
 
       if (request('fromAddAiCash') == 1) {
         return redirect()->to(url("backend/add_ai_cash/" . $sRow->id . "/edit?customer_id=" . request('customer_id_fk') . "&frontstore_id_fk=" . request('frontstore_id_fk') . "&fromAddAiCash=1"));
