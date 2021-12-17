@@ -43,11 +43,11 @@ checkIdIsMatch()
 function getProvinces() {
     const businessLocation = $(this).val();
 
-    if (businessLocation == 3) {
-        $(`${card_zipcode}, ${zipcode}`).parent().hide();
-    } else {
-        $(`${card_zipcode}, ${zipcode}`).parent().show();
-    }
+    // if (businessLocation == 3) {
+    //     $(`${card_zipcode}, ${zipcode}`).parent().hide();
+    // } else {
+    //     $(`${card_zipcode}, ${zipcode}`).parent().show();
+    // }
 
     $.ajax({
         url: routeGetLocation,
@@ -116,7 +116,7 @@ function getDistricts() {
             } else {
                 $(`${district}`).html(response);
 
-                if ($('#copy_card_address').is(':checked')) {
+                if ($('#copy_card_address').is(':checked') && $('select[name="business_location"]').val() == 1) {
                     $(`${district}`).val($(`${card_district}`).val()).trigger('change')
                 }
             }
@@ -161,7 +161,9 @@ function copyCardAddress() {
         moo.val(card_moo.val())
         soi.val(card_soi.val())
         road.val(card_road.val())
+
         $(`${province}`).val($(`${card_province}`).val()).trigger('change')
+        $(`${zipcode}`).val($(`${card_zipcode}`).val())
     } else {
         house_no.val('')
         house_name.val('')
