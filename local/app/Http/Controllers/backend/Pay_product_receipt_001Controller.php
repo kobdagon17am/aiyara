@@ -570,23 +570,18 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function ajaxSavePay_product_receipt(Request $request)
     {
-      // db_pay_product_receipt_002
-          // db_pick_pack_requisition_code
-      // return $request->txtSearch;
+
           $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
           $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
           // $temp_ppr_005 = "temp_ppr_005".\Auth::user()->id;
-
           $invoice_code = $request->txtSearch;
 
           DB::beginTransaction();
           try
           {
 
-          // return $invoice_code;
-          // dd();
         // หา time+pay ครั้งที่จ่าย
           $rs_time_pay = DB::select(" SELECT * FROM `db_pay_product_receipt_001` WHERE invoice_code='$invoice_code' order by time_pay DESC limit 1 ");
           if(count($rs_time_pay)>0){
@@ -595,10 +590,7 @@ class Pay_product_receipt_001Controller extends Controller
             $time_pay = 1;
           }
 
-          // return $time_pay;
-          // dd();
-
-// เก็บลงตารางจริง
+        // เก็บลงตารางจริง
           $db_temp_ppr_003 = DB::select(" select * from $temp_ppr_003 ;");
 
           $data_db_pay_product_receipt_001 = [];
@@ -622,6 +614,7 @@ class Pay_product_receipt_001Controller extends Controller
                     "created_at" =>  @$value->created_at,
                     );
           }
+
           if(@$data_db_pay_product_receipt_001){
               DB::table('db_pay_product_receipt_001')->insertOrIgnore($data_db_pay_product_receipt_001);
           }
@@ -1019,7 +1012,6 @@ class Pay_product_receipt_001Controller extends Controller
                         FROM
                         db_pay_product_receipt_001
                         WHERE db_pay_product_receipt_001.address_send_type in (1,2)
-<<<<<<< HEAD
                        AND (db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." OR db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk).")
                        ".$w01." 
                        ".$w02." 
@@ -1030,29 +1022,6 @@ class Pay_product_receipt_001Controller extends Controller
                        ".$w07." 
                        ".$w08." 
                        ".$w09." 
-=======
-                       AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)."
-                       ".$w01."
-                       ".$w02."
-                       ".$w03."
-                       ".$w04."
-                       ".$w05."
-                       ".$w06."
-                       ".$w07."
-                       ".$w08."
-                       ".$w09."
-                       OR db_pay_product_receipt_001.address_send_type in (1,2)
-                       AND db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)."
-                       ".$w01."
-                       ".$w02."
-                       ".$w03."
-                       ".$w04."
-                       ".$w05."
-                       ".$w06."
-                       ".$w07."
-                       ".$w08."
-                       ".$w09."
->>>>>>> 414bb1576444d3ba4f618c97d4564e7939809961
                        GROUP BY invoice_code
                        ORDER BY db_pay_product_receipt_001.pay_date DESC
                      ");
@@ -1772,7 +1741,6 @@ ORDER BY created_at DESC
       ->addColumn('column_002', function($row) {
 
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-
     			// $Products = DB::select("
       	// 	    	SELECT $temp_ppr_002.product_id_fk,$temp_ppr_002.amt,$temp_ppr_002.product_name,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id."
       	// 		");
@@ -2008,7 +1976,7 @@ foreach($temp_ppr_0021_data as $tmp){
             ';
 
             $sum_amt = 0 ;
-
+// dd($Products);
               foreach ($Products as $key => $value) {
               $sum_amt += $value->amt_need;
               $pn .=
@@ -2214,10 +2182,16 @@ foreach($temp_ppr_0021_data as $tmp){
       ->addColumn('ch_amt_lot_wh', function($row) {
           // ดูว่าไม่มีสินค้าคลังเลย
           // ดูในใบซื้อว่ามีรยการสินค้าใดบ้างที่ยังค้างส่งอยู่
+       
           $Products = DB::select("
             SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."'
-            AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
+            AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay,amt_get DESC limit 1 ;
           ");
+             // วุฒิแก้ ปรับเอา AND amt_remain > 0 ออก เพื่อให้มันบันทึกได้ เอา limit 1 ออก
+        //   $Products = DB::select("
+        //   SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."'
+        //   GROUP BY product_id_fk ORDER BY time_pay,amt_get DESC;
+        // ");
           // Case ที่มีการบันทึกข้อมูลแล้ว
               if(@$Products){
 
@@ -2228,7 +2202,8 @@ foreach($temp_ppr_0021_data as $tmp){
                         }
                         $arr_im = implode(',',$arr);
                         $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
-                        $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
+                        $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) 	ORDER BY amt DESC");
+                        // dd($r[0]->sum);
                         return @$r[0]->sum?@$r[0]->sum:0;
                     }else{
                         // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน

@@ -367,7 +367,6 @@ class Products_fifo_billController extends Controller
         DB::select(" CREATE TABLE $temp_ppr_004 LIKE temp_ppr_004_template ");
       }
 
-
       $invoice_code = $req->invoice_code;
 
       if(!empty($req->invoice_code)){
@@ -552,7 +551,7 @@ foreach($temp_ppr_0021_data as $tmp){
                       }
                       
                     }
-                    // อันนี้แก้ จ่ายผิดคลัง 
+                    // wut อันนี้แก้ จ่ายผิดคลัง 
                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
                     // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk=2 ORDER BY lot_expired_date ASC  ");
                     // อันนี้แก้เรื่องเรื่องโปรมั้ง หรือไม่ก็ไม่มีปุ่ม
@@ -697,7 +696,22 @@ foreach($temp_ppr_0021_data as $tmp){
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                      // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+
+
+                     $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                     $w_str = '';
+                     foreach($w_arr as $key => $w){
+                       if($key+1==count($w_arr)){
+                         $w_str.=$w;
+                       }else{
+                         $w_str.=$w.',';
+                       }
+                       
+                     }
+                     // wut อันนี้แก้ จ่ายผิดคลัง 
+                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
+                    //  temp_ppr_004
+                    //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
                  
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
@@ -920,6 +934,10 @@ foreach($temp_ppr_0021_data as $tmp){
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                     
                      $i = 1;
+
+                  //  dd($temp_db_stocks_01[0]->amt);
+                  //  return 'false'; 
+
                      foreach ($temp_db_stocks_02 as $v_02) {
 
                              // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
@@ -934,6 +952,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       ->where('product_id_fk', $v_02->product_id_fk)
                                       ->where('branch_id_fk', $v_02->branch_id_fk)
                                       ->get();
+                             
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -1096,7 +1115,7 @@ foreach($temp_ppr_0021_data as $tmp){
       }
 
       // return $request->txtSearch;
-      // dd();
+      // temp_db_stocks
 
       $business_location_id_fk = \Auth::user()->business_location_id_fk;
       $branch_id_fk = \Auth::user()->branch_id_fk;
@@ -1201,17 +1220,50 @@ foreach($temp_ppr_0021_data as $tmp){
               // return "Not";
               DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
             }
-       
-          // return $branch_id_fk;
-          // return $arr_product_id_fk;
-      
+
           if(!empty($arr_product_id_fk)){
-        
             DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
              WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
-       
-        
         }
+
+        foreach($product_id_fk as $p){
+          $data_p = DB::table($temp_db_stocks)->where('product_id_fk',$p)->first();
+          if(!$data_p){
+            $warehouse_arr = DB::table('warehouse')->select('id')->where('w_code','WH02')->where('status',1)->pluck('id')->toArray();
+            $data_p_clone = DB::table($temp_db_stocks)->whereIn('warehouse_id_fk',$warehouse_arr)->first();
+            if($data_p_clone){
+              $insert = DB::table('db_stocks')->insert([
+                'business_location_id_fk' => $data_p_clone->business_location_id_fk,
+                'branch_id_fk' => $data_p_clone->branch_id_fk,
+                'product_id_fk' => $p,
+                'lot_number' => '00',
+                'lot_expired_date' => $data_p_clone->lot_expired_date,
+                'amt' => 0,
+                'product_unit_id_fk' => $data_p_clone->product_unit_id_fk,
+                'date_in_stock' => date('Y-m-d'),
+                'warehouse_id_fk' => $data_p_clone->warehouse_id_fk,
+                'zone_id_fk' => $data_p_clone->zone_id_fk,
+                'shelf_id_fk' => $data_p_clone->shelf_id_fk,
+                'shelf_floor' => $data_p_clone->shelf_floor,
+                'created_at' => date('Y-m-d H:i:s'),
+              ]);
+            }
+          }
+        }
+
+        if(in_array($temp_db_stocks,$array_TABLES)){
+          // return "IN";
+          DB::select(" TRUNCATE TABLE $temp_db_stocks  ");
+        }else{
+          // return "Not";
+          DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
+        }
+
+      if(!empty($arr_product_id_fk)){
+        DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+         WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+    }
+
 
 
  
@@ -2558,10 +2610,16 @@ foreach($temp_ppr_0021_data as $tmp){
            })
           ->addColumn('ch_amt_lot_wh', function($row) { 
          // ดูว่าไม่มีสินค้าคลังเลย
-
+            
             $Products = DB::select("
               SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
             ");
+                   // วุฒิแก้ ปรับเอา AND amt_remain > 0 ออก เพื่อให้มันบันทึกได้ เอา limit 1 ออก
+        //   $Products = DB::select("
+        //   SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."'
+        //   GROUP BY product_id_fk ORDER BY time_pay,amt_get DESC;
+        // ");
+
             // Case ที่มีการบันทึกข้อมูลแล้ว
             if(count($Products)>0){
                 $arr = [];

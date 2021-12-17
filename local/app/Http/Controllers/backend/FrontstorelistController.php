@@ -484,6 +484,7 @@ class FrontstorelistController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+  
         if(isset($request->add_course)){
 
             $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
@@ -541,7 +542,6 @@ class FrontstorelistController extends Controller
 
       }
 
-
        if(isset($request->add_delivery_custom)){
 
             DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
@@ -598,6 +598,7 @@ class FrontstorelistController extends Controller
 
         }
 
+       
        if(isset($request->update_delivery_custom)){
 
             DB::select(" UPDATE db_orders SET
@@ -756,15 +757,15 @@ class FrontstorelistController extends Controller
 
         }
 
-
+ 
         if(isset($request->product_plus_pro)){
 
-          // dd($request->all());
+     
 
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
 
-                // dd($Promotions_cost);
+               
 
                 if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
@@ -774,60 +775,61 @@ class FrontstorelistController extends Controller
         //     return @$Promotions_cost[0]->pv;
                 // dd($pv);
                 $sPromotions = \App\Models\Backend\Promotions::find(@$request->promotion_id_fk);
-                // dd($sPromotions->limited_amt_person);
                 if(@$request->quantity>$sPromotions->limited_amt_person){
                   $amt = @$sPromotions->limited_amt_person;
                 }else{
                   $amt = @$request->quantity;
                 }
+                // วุฒิเพิ่มมาว่าโปรซ้ำไหม
+                $check_promotion_same = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',@$request->frontstore_id)->where('promotion_id_fk',@$request->promotion_id_fk)->first();
+                if(!$check_promotion_same){
 
-                // dd($amt);
+                  $sRow = new \App\Models\Backend\Frontstorelist;
+                  $sRow->frontstore_id_fk    = @$request->frontstore_id ;
+                  $sRow->amt    = @$amt;
+                  $sRow->add_from    = '2';
+                  $sRow->promotion_id_fk    = @$request->promotion_id_fk;
+                  $sRow->promotion_code    = @$request->txtSearchPro;
+  
+                  $sRow->selling_price    = @$Promotions_cost[0]->member_price;
+                  $sRow->pv    = $pv;
+                  $sRow->total_pv    =  $pv * @$request->quantity;
+                  $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity;
+                  $sRow->type_product    =  "promotion";
+  
+                  $sRow->action_date    =  date('Y-m-d H:i:s');
+                  $sRow->created_at = date('Y-m-d H:i:s');
+                  $sRow->save();
+  
+                  $dbOrder = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+                  $Customers = \App\Models\Backend\Customers::find($dbOrder->customers_id_fk);
+  
+                  DB::select(" UPDATE `db_orders` SET `pv_total`='".$sRow->total_pv."' WHERE (`id`='".$request->frontstore_id."') ");
+                  DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') ");
+  
+             $id =   @$request->frontstore_id;
+  
+             $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id)  GROUP BY frontstore_id_fk ");
+             // dd($sFrontstoreDataTotal);
+             if($sFrontstoreDataTotal){
+                $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+                $vat = $vat > 0  ? $vat : 0 ;
+                $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+                $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
+                $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
+                DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+              }else{
+                DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+              }
 
-                $sRow = new \App\Models\Backend\Frontstorelist;
-                $sRow->frontstore_id_fk    = @$request->frontstore_id ;
-                $sRow->amt    = @$amt;
-                $sRow->add_from    = '2';
-                $sRow->promotion_id_fk    = @$request->promotion_id_fk;
-                $sRow->promotion_code    = @$request->txtSearchPro;
+                  // UPDATE `db_order_products_list` SET `type_product`='promotion' WHERE (`id`='1')
+                  // UPDATE `db_order_products_list` SET `total_pv`='1000' WHERE (`id`='1')
+                  // UPDATE `db_order_products_list` SET `pv`='1000' WHERE (`id`='1')
+                  // UPDATE `db_orders` SET `pv_total`='1000' WHERE (`id`='1')
+                  // UPDATE `db_promotion_cus` SET `pro_status`='2' WHERE (`id`='1')
 
-                $sRow->selling_price    = @$Promotions_cost[0]->member_price;
-                $sRow->pv    = $pv;
-                $sRow->total_pv    =  $pv * @$request->quantity;
-                $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity;
-                $sRow->type_product    =  "promotion";
-
-                $sRow->action_date    =  date('Y-m-d H:i:s');
-                $sRow->created_at = date('Y-m-d H:i:s');
-                $sRow->save();
-
-                $dbOrder = \App\Models\Backend\Frontstore::find($request->frontstore_id);
-                $Customers = \App\Models\Backend\Customers::find($dbOrder->customers_id_fk);
-
-                DB::select(" UPDATE `db_orders` SET `pv_total`='".$sRow->total_pv."' WHERE (`id`='".$request->frontstore_id."') ");
-                DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') ");
-
-           $id =   @$request->frontstore_id;
-
-           $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id)  GROUP BY frontstore_id_fk ");
-           // dd($sFrontstoreDataTotal);
-           if($sFrontstoreDataTotal){
-              $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-              $vat = $vat > 0  ? $vat : 0 ;
-              $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
-              $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
-              $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
-              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
-            }else{
-              DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
-            }
-
-
-// UPDATE `db_order_products_list` SET `type_product`='promotion' WHERE (`id`='1')
-// UPDATE `db_order_products_list` SET `total_pv`='1000' WHERE (`id`='1')
-// UPDATE `db_order_products_list` SET `pv`='1000' WHERE (`id`='1')
-// UPDATE `db_orders` SET `pv_total`='1000' WHERE (`id`='1')
-// UPDATE `db_promotion_cus` SET `pro_status`='2' WHERE (`id`='1')
-
+                }
+              
 
         }
 

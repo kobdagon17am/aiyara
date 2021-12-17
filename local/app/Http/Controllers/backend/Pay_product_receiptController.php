@@ -242,9 +242,6 @@ class Pay_product_receiptController extends Controller
             Left Join dataset_pay_product_status ON db_pay_product_receipt_001.status_sent = dataset_pay_product_status.id
             where db_pay_product_receipt_001.id = '$id'
              ");
-
-            // dd($sUser);
-
           return View('backend.pay_product_receipt.form')->with(array('sRow'=>$sRow,'sUser'=>$sUser) );
 
     }

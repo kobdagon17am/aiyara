@@ -287,6 +287,14 @@
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้า
                           </button>
                         </div>
+
+                        <div class="col-md-12 text-center div_btn_save_cancel " style="display: none;" >
+                          <br>
+                          <a type="button" href="javascript:;"  data-invoice_code="{{@$sUser[0]->invoice_code}}"  data-id="{{@$sUser[0]->id}}" class="btn btn-primary btn-sm waves-effect font-size-16 btnCancel " >
+                          <i class="bx bx-lock font-size-16 align-middle mr-1"></i> ปลดล็อคเพื่อจ่ายสินค้าอีกครั้ง
+                          </a>
+                        </div>
+                        
                         
 
                   </div>
@@ -305,6 +313,53 @@
 @endsection
 
 @section('script')
+
+<script>
+    $(document).ready(function() {
+
+$(document).on('click', '.btnCancel', function(){
+
+ // var url = $(this).data('url');
+ // var url = " {{ url('backend/cancel-pay_product_receipt') }} ";
+ // console.log(url);
+ var id = $(this).data("id");
+ var invoice_code = $(this).data("invoice_code");
+ // alert(id);
+
+         Swal.fire({
+           title: 'ยืนยันการปลดล็อค',
+           // text: 'You clicked the button!',
+           type: 'question',
+           showCancelButton: true,
+           confirmButtonColor: '#556ee6',
+           cancelButtonColor: "#f46a6a"
+           }).then(function (result) {
+               if (result.value) {
+
+                  $.ajax({
+                     url: " {{ url('backend/cancel-pay_product_receipt_001') }} ",
+                     method: "post",
+                     data: {
+                       id:id,
+                       invoice_code:invoice_code,
+                       "_token": "{{ csrf_token() }}",
+                     },
+                     success:function(data)
+                     {
+                       location.replace('{{ url("backend/pay_product_receipt") }}/'+id+'/edit');
+                     }
+                   })
+
+
+
+
+               }
+         });
+
+  });
+
+});
+</script>
 
 <script type="text/javascript">
 
@@ -641,14 +696,26 @@
 
                                                       if(aData['status_cancel_some']==0 ){ //ไม่มีการยกเลิก
 
-                                                            $(".div_btn_save_004").hide();
-
+                                                              // น้องวุฒิคนหล่อเพิ่มมาเองงับ เช็คว่าจ่ายสินค้าครบยัง
+                                                              if(aData['status_sent']==2){
+                                                                // $(".div_btn_save_cancel").show();
+                                                                $(".div_btn_save_004").hide();
+                                                              }else{
+                                                                $(".div_btn_save_004").hide();
+                                                                $(".div_btn_save_cancel").hide();
+                                                              }
+                                                          
                                                       }else{  //มีการยกเลิก
                                                             // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
                                                             // ถ้าไม่มีสินค้าในคลังเลย
+                                                            console.log('ch_amt_lot_wh : '+aData['ch_amt_lot_wh']);
+                                                            console.log('status_sent : '+aData['status_sent']);
+                                                            console.log('status_cancel_some : '+aData['status_cancel_some']);
                                                             if(aData['ch_amt_lot_wh']==0){
                                                                 $(".div_btn_save_004").hide();
+                                                                $(".div_btn_save_cancel").hide();
                                                             }else{
+                                                              $(".div_btn_save_cancel").hide();
                                                                 $(".div_btn_save_004").show();
                                                             }
 
