@@ -1,3 +1,8 @@
+const THAI = 1;
+const LAOS = 2;
+const CAMBODIA = 3;
+const MYANMAR = 4;
+
 const card_ids = {
     card_province: 'card_province',
     card_amphures: 'card_amphures',
@@ -116,7 +121,7 @@ function getDistricts() {
             } else {
                 $(`${district}`).html(response);
 
-                if ($('#copy_card_address').is(':checked') && $('select[name="business_location"]').val() == 1) {
+                if ($('#copy_card_address').is(':checked')) {
                     $(`${district}`).val($(`${card_district}`).val()).trigger('change')
                 }
             }
@@ -128,9 +133,14 @@ function getDistricts() {
 }
 
 function getZipcode() {
+
+    if ($('select[name="business_location"]').val() == CAMBODIA) {
+        return;
+    }
+
     const inputId = $(this).attr('id');
     const districtId = $(this).val();
-
+    
     $.ajax({
         url: routeGetLocation,
         method: 'POST',
