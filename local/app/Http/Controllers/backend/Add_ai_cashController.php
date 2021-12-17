@@ -173,21 +173,7 @@ class Add_ai_cashController extends Controller
       $admin_id = \Auth::user()->id;
       $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id, $admin_id, 'admin', $request->note, $pay_type_id = '1');
 
-      // dd($add_aicash);
-      // if(isset($request->from_approve_aicash)){
-      //     return redirect()->to(url("backend/po_approve"));
-      // }
 
-      // if($add_aicash['status'] == 'success'){
-      // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
-      // return $this->form($request->id);
-
-      // }else{
-      // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg($add_aicash['message'])]);
-      // }
-      // return redirect()->to(url("backend/add_ai_cash/".$request->id."/edit"));
-
-      // return redirect()->to(url("backend/add_ai_cash"));
 
       $sRow = \App\Models\Backend\Add_ai_cash::find($id);
       $sRow->approve_status = 2;
@@ -422,8 +408,7 @@ class Add_ai_cashController extends Controller
     $sTable = DB::select("
          SELECT db_add_ai_cash.*
          FROM
-         db_add_ai_cash
-
+         db_add_ai_cash where 1
          " . $w01 . "
          " . $w02 . "
          " . $w03 . "
@@ -475,6 +460,11 @@ class Add_ai_cashController extends Controller
         } else {
           return '';
         }
+      })
+
+      ->addColumn('code_order', function ($row) {
+        return $row->code_order;
+
       })
       ->addColumn('status', function ($row) {
         // if(!empty($row->bill_status)){
@@ -584,39 +574,11 @@ class Add_ai_cashController extends Controller
       $w07 = "";
     }
 
-    /*
-1 เงินโอน
-2 บัตรเครดิต
-3 Ai-Cash
-4 Gift Voucher
-/////////////////////////
-5 เงินสด
-7 เครดิต + เงินสด
-8 เครดิต + เงินโอน
-10  เงินโอน + เงินสด
-//////////////////////////
-6 เงินสด + Ai-Cash
-9 เครดิต + Ai-Cash
-11  เงินโอน + Ai-Cash
-
-12  Gift Voucher + เงินโอน
-13  Gift Voucher + บัตรเครดิต
-14  Gift Voucher + Ai-Cash
-15  PromptPay
-16  TrueMoney
-17  Gift Voucher + PromptPay
-18  Gift Voucher + TrueMoney
-
-*/
-
-    // $sTable = \App\Models\Backend\Add_ai_cash::search()->orderBy('updated_at', 'desc');
     $sTable = DB::select("
             SELECT db_add_ai_cash.*
             FROM
             db_add_ai_cash
             WHERE pay_type_id_fk in (1,8,10,11,12)
-
-
             " . $w01 . "
             " . $w02 . "
             " . $w03 . "
@@ -646,6 +608,12 @@ class Add_ai_cashController extends Controller
           return '';
         }
       })
+
+      ->addColumn('code_order', function ($row) {
+        return $row->code_order;
+
+      })
+
       ->addColumn('approver', function ($row) {
         if (@$row->approver != '') {
           $sD = DB::select(" select * from ck_users_admin where id=" . $row->approver . " ");
