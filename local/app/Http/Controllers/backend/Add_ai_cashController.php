@@ -166,7 +166,6 @@ class Add_ai_cashController extends Controller
   public function update(Request $request, $id)
   {
 
-    dd($request->all());
     // dd($id);
     if (isset($request->approved)) {
 
