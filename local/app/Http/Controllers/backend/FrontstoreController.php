@@ -351,7 +351,7 @@ class FrontstoreController extends Controller
 
     public function edit($id)
     {
-      
+
       // กำลังเบิกสินค้า ไม่ให้แก้บิล
           $ch_Disabled = 0;
           $r_ch_Disabled = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
@@ -2580,8 +2580,8 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                '.trans('message.payment_ai_cash_list').' ('.$sD3.')
-                </th></tr>
+                '.trans('message.payment_ai_cash_list').' ('.$sD3.') <a href="'.url('backend/add_ai_cash').'" class="btn btn-success btn-sm"><i class="bx bx-search align-middle"></i> ดูรายละเอียดเติม Ai-Cash</a>
+                </th> </tr>
                 <tr>
                   <th width="10%">'.trans('message.seller').'</th>
                   <th width="5%" class="text-right"> </th>
@@ -3049,7 +3049,7 @@ $sum_price_01 = $d2[0]->sum_price + $sum_price_01 ;
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-// wut edit 
+// wut edit
 // SUM(
 // (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
 // (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
@@ -3455,7 +3455,7 @@ if(!empty($req->customer_name)){
 
 if(!empty($req->invoice_code)){
  $invoice_code = " AND code_order = '".$req->invoice_code."' " ;
- // wut เพิ่ม 
+ // wut เพิ่ม
   $action_user_01 = "";
   $action_user_011 = "";
 
@@ -3535,41 +3535,11 @@ $viewcondition_02 = '';
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
-
-                UNION ALL
-
-                SELECT
-                gift_voucher_price,
-                code_order,
-                db_add_ai_cash.id,
-                db_add_ai_cash.created_at as d2,
-                0 as purchase_type_id_fk,
-                'เติม Ai-Cash' AS type,
-                db_add_ai_cash.customer_id_fk as c2,
-                db_add_ai_cash.aicash_amt,
-                db_add_ai_cash.id as inv_no,approve_status
-                ,'',
-                db_add_ai_cash.updated_at as ud2,
-                'ai_cash' as pay_type,cash_price,
-                credit_price,fee_amt,transfer_price,
-                0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user,''
-                FROM db_add_ai_cash
-                WHERE 1 AND db_add_ai_cash.approve_status<>4
-                $action_user_01
-                $startDate2
-                $endDate2
-                $purchase_type_id_fk_02
-                $customer_username_02
-                $customer_name_02
-                $action_user_022
-                $status_sent_money_02
-                $approve_status_02
-                $viewcondition_02
-                $invoice_code
-
                 ORDER BY created_at DESC
 
               ");
+
+
 /*
 SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user  FROM db_orders  Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id  WHERE 1
 AND db_orders.branch_id_fk = '1'
@@ -3680,7 +3650,7 @@ ORDER BY created_at DESC
           if(@$row->aicash_price!=0){
              $total_price += $row->aicash_price;
           }
-          
+
           if(@$row->pay_type_id_fk!=10){
             if($row->shipping_price>0){
               $shipping_price  =  $row->shipping_price;

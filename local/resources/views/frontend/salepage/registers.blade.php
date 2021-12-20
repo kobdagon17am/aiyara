@@ -981,7 +981,7 @@
         const routeGetLocation = "{{ route('get-location') }}";
         const token = "{{ csrf_token() }}";
     </script>
-    <script src="{{ asset('frontend/address.js') }}"></script>
+    <script src="{{ asset('frontend/address.js?v=1000') }}"></script>
 </body>
 
 </html>

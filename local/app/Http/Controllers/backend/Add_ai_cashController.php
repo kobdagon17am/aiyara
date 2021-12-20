@@ -69,7 +69,7 @@ class Add_ai_cashController extends Controller
 
   public function store(Request $request)
   {
-    // dd($request->all());
+
     return $this->form();
   }
 
@@ -123,7 +123,7 @@ class Add_ai_cashController extends Controller
     // dd($id);
     // dd($request->all());
     $sRow = \App\Models\Backend\Add_ai_cash::find($id);
-    // dd($sRow);
+    //dd($sRow);
 
     $sPay_type = DB::select(" select * from dataset_pay_type where id in(1,5,7,8,10); ");
 
@@ -165,8 +165,7 @@ class Add_ai_cashController extends Controller
 
   public function update(Request $request, $id)
   {
-    // dd($request->all());
-    // dd($request->id);
+
     // dd($id);
     if (isset($request->approved)) {
 
@@ -180,17 +179,26 @@ class Add_ai_cashController extends Controller
       $sRow->order_type_id_fk = 7;
       $sRow->approver = \Auth::user()->id;
       $sRow->approve_date = now();
+      $sRow->note = $request->note;
 
-      $sRow->save();
+
 
       if ($sRow->code_order == "") {
         $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
         DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $id . "') ");
       }
 
-
+      $sRow->save();
       return redirect()->to(url("backend/po_approve"));
     } else {
+      $sRow = \App\Models\Backend\Add_ai_cash::find($id);
+      if ($sRow->code_order == "") {
+        $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+        DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $id . "') ");
+      }
+      $sRow->note = $request->note;
+
+      $sRow->save();
       return $this->form($id);
     }
   }

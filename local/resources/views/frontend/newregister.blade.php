@@ -259,7 +259,7 @@
                  <div class="col-sm-12 col-xl-6 m-b-30">
                      <div class="checkbox-fade fade-in-primary">
                          <label>
-                             <input type="checkbox" id="copy_card_address" onchange="copy_address()"
+                             <input type="checkbox" id="copy_card_address"
                                  name="copy_card_address">
                              <span class="cr">
                                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -511,48 +511,48 @@
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
      <script type="text/javascript">
-         function copy_address() {
-             var ckeck_address = document.getElementById("copy_card_address");
+        //  function copy_address() {
+        //      var ckeck_address = document.getElementById("copy_card_address");
 
-             if (ckeck_address.checked == true) {
+        //      if (ckeck_address.checked == true) {
 
-                 card_house_no = $('#card_house_no').val();
-                 card_house_name = $('#card_house_name').val();
-                 card_moo = $('#card_moo').val();
-                 card_soi = $('#card_soi').val();
-                 card_amphures = $('#card_amphures').val();
-                 card_district = $('#card_district').val();
-                 card_province = $('#card_province').val();
-                 card_road = $('#card_road').val();
-                 card_zipcode = $('#card_zipcode').val();
+        //          card_house_no = $('#card_house_no').val();
+        //          card_house_name = $('#card_house_name').val();
+        //          card_moo = $('#card_moo').val();
+        //          card_soi = $('#card_soi').val();
+        //          card_amphures = $('#card_amphures').val();
+        //          card_district = $('#card_district').val();
+        //          card_province = $('#card_province').val();
+        //          card_road = $('#card_road').val();
+        //          card_zipcode = $('#card_zipcode').val();
 
-                 house_no = $('#house_no').val(card_house_no);
-                 house_name = $('#house_name').val(card_house_name);
-                 moo = $('#moo').val(card_moo);
-                 soi = $('#soi').val(card_soi);
-                 road = $('#road').val(card_road);
-                 zipcode = $('#zipcode').val(card_zipcode);
+        //          house_no = $('#house_no').val(card_house_no);
+        //          house_name = $('#house_name').val(card_house_name);
+        //          moo = $('#moo').val(card_moo);
+        //          soi = $('#soi').val(card_soi);
+        //          road = $('#road').val(card_road);
+        //          zipcode = $('#zipcode').val(card_zipcode);
 
-                 // amphures = $('#amphures').val(amphures);
-                 // district = $('#district').val(card_district);
-                 // province = $('#province').val(card_province);
+        //          // amphures = $('#amphures').val(amphures);
+        //          // district = $('#district').val(card_district);
+        //          // province = $('#province').val(card_province);
 
 
-                 var card_province = $('#card_province').val();
-                 $('#province').val(card_province).change();
+        //          var card_province = $('#card_province').val();
+        //          $('#province').val(card_province).change();
 
-             } else {
-                 house_no = $('#house_no').val('');
-                 house_name = $('#house_name').val('');
-                 moo = $('#moo').val('');
-                 soi = $('#soi').val('');
-                 amphures = $('#amphures').val('');
-                 district = $('#district').val('');
-                 province = $('#province').val('');
-                 road = $('#road').val('');
-                 zipcode = $('#zipcode').val('');
-             }
-         }
+        //      } else {
+        //          house_no = $('#house_no').val('');
+        //          house_name = $('#house_name').val('');
+        //          moo = $('#moo').val('');
+        //          soi = $('#soi').val('');
+        //          amphures = $('#amphures').val('');
+        //          district = $('#district').val('');
+        //          province = $('#province').val('');
+        //          road = $('#road').val('');
+        //          zipcode = $('#zipcode').val('');
+        //      }
+        //  }
 
 
          function check_user() {
@@ -644,8 +644,12 @@
 
          });
      </script>
-
-     <script type="text/javascript">
+    <script>
+        const routeGetLocation = "{{ route('get-location') }}";
+        const token = "{{ csrf_token() }}";
+    </script>
+    <script src="{{ asset('frontend/address.js') }}"></script>
+     {{-- <script type="text/javascript">
          $('#card_province').change(function() {
              var id_province = $(this).val();
              $.ajax({
@@ -814,5 +818,5 @@
                  $('#copy_card_address').attr('checked', true)
              }
          }
-     </script>
+     </script> --}}
  @endsection

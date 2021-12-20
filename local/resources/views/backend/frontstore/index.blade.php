@@ -1176,7 +1176,7 @@ $(document).ready(function() {
                                           },
                                           success:function(data)
                                           {
-                                          
+
                                             // // console.log(data);
                                             $(".div_PV_Amount").html(data);
 
@@ -1529,7 +1529,7 @@ $(document).ready(function() {
                             },
                             success:function(data)
                             {
-                              
+
                             //   // console.log(data);
                               $(".div_PV_Amount").html(data);
 

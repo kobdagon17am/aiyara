@@ -1,3 +1,8 @@
+const THAI = 1;
+const LAOS = 2;
+const CAMBODIA = 3;
+const MYANMAR = 4;
+
 const card_ids = {
     card_province: 'card_province',
     card_amphures: 'card_amphures',
@@ -43,11 +48,11 @@ checkIdIsMatch()
 function getProvinces() {
     const businessLocation = $(this).val();
 
-    if (businessLocation == 3) {
-        $(`${card_zipcode}, ${zipcode}`).parent().hide();
-    } else {
-        $(`${card_zipcode}, ${zipcode}`).parent().show();
-    }
+    // if (businessLocation == 3) {
+    //     $(`${card_zipcode}, ${zipcode}`).parent().hide();
+    // } else {
+    //     $(`${card_zipcode}, ${zipcode}`).parent().show();
+    // }
 
     $.ajax({
         url: routeGetLocation,
@@ -128,9 +133,14 @@ function getDistricts() {
 }
 
 function getZipcode() {
+
+    if ($('select[name="business_location"]').val() == CAMBODIA) {
+        return;
+    }
+
     const inputId = $(this).attr('id');
     const districtId = $(this).val();
-
+    
     $.ajax({
         url: routeGetLocation,
         method: 'POST',
@@ -161,7 +171,9 @@ function copyCardAddress() {
         moo.val(card_moo.val())
         soi.val(card_soi.val())
         road.val(card_road.val())
+
         $(`${province}`).val($(`${card_province}`).val()).trigger('change')
+        $(`${zipcode}`).val($(`${card_zipcode}`).val())
     } else {
         house_no.val('')
         house_name.val('')
