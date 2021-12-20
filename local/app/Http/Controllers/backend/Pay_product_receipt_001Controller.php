@@ -1012,7 +1012,7 @@ class Pay_product_receipt_001Controller extends Controller
                         FROM
                         db_pay_product_receipt_001
                         WHERE db_pay_product_receipt_001.address_send_type in (1,2)
-                       AND (db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." OR db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk).")
+                       AND (db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." OR db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)." AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." )
                        ".$w01." 
                        ".$w02." 
                        ".$w03." 
@@ -1026,51 +1026,7 @@ class Pay_product_receipt_001Controller extends Controller
                        ORDER BY db_pay_product_receipt_001.pay_date DESC
                      ");
 
-                  //    $sTable22 = "  
-                  //    SELECT
-                  //    db_pay_product_receipt_001.id,
-                  //    db_pay_product_receipt_001.status_sent,
-                  //    db_pay_product_receipt_001.action_user,
-                  //    db_pay_product_receipt_001.pay_user,
-                  //    db_pay_product_receipt_001.action_date,
-                  //    db_pay_product_receipt_001.pay_date,
-                  //    db_pay_product_receipt_001.invoice_code,
-                  //    db_pay_product_receipt_001.bill_date,
-                  //    db_pay_product_receipt_001.customer_id_fk,
-                  //    db_pay_product_receipt_001.branch_id_fk,
-                  //    db_pay_product_receipt_001.branch_id_fk_tosent,
-                  //    db_pay_product_receipt_001.business_location_id_fk,
-                  //    db_pay_product_receipt_001.address_send_type
-                  //    FROM
-                  //    db_pay_product_receipt_001
-                  //    WHERE db_pay_product_receipt_001.address_send_type in (1,2)
-                  //   AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)."
-                  //   ".$w01." 
-                  //   ".$w02." 
-                  //   ".$w03." 
-                  //   ".$w04." 
-                  //   ".$w05." 
-                  //   ".$w06." 
-                  //   ".$w07." 
-                  //   ".$w08." 
-                  //   ".$w09." 
-                  //   OR db_pay_product_receipt_001.address_send_type in (1,2)
-                  //   AND db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)."
-                  //   ".$w01." 
-                  //   ".$w02." 
-                  //   ".$w03." 
-                  //   ".$w04." 
-                  //   ".$w05." 
-                  //   ".$w06." 
-                  //   ".$w07." 
-                  //   ".$w08." 
-                  //   ".$w09." 
-                  //   GROUP BY invoice_code
-                  //   ORDER BY db_pay_product_receipt_001.pay_date DESC
-                  // ";
-
         }
-        // dd($sTable22);
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('invoice_code_2', function($row) {

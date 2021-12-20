@@ -59,9 +59,10 @@ class DeliveryPackingCodeController extends Controller
 
        $sTable = DB::select(" 
 
-          SELECT db_delivery_packing_code.*,db_delivery.id as db_delivery_id from db_delivery_packing_code  
+          SELECT db_delivery_packing_code.*,db_orders.shipping_special,db_delivery.id as db_delivery_id from db_delivery_packing_code  
           LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
           LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
+          LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
           WHERE db_delivery.status_pick_pack<>1 AND db_delivery.status_delivery<>1
           group by db_delivery_packing_code.id
           order by db_delivery_packing_code.updated_at desc
@@ -114,6 +115,13 @@ class DeliveryPackingCodeController extends Controller
             return $arr;
           }
       })
+      ->addColumn('shipping_special_detail', function($row) {
+        $data = "";
+        if($row->shipping_special == 1){
+          $data = "<span style='color:red;'>ส่งแบบพิเศษ/พรีเมี่ยม</span>";
+        }
+        return $data;
+      })     
       ->addColumn('addr_to_send', function($row) { 
 
            if($row->id!==""){

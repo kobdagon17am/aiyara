@@ -556,7 +556,8 @@ $(function() {
                       return '<center>'
                       + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
                   }},
-                  {data: 'total_price', title :'<center>รวมเงิน</center>', className: 'text-center'},
+                  // {data: 'total_price', title :'<center>รวมเงิน</center>', className: 'text-center'},
+                  {data: 'total_price_not_gv', title :'<center>รวมเงิน</center>', className: 'text-center'},
                   {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
                         return d>0?d:'';
                   }},
@@ -798,6 +799,9 @@ $(function() {
                           // }else{
                           //   return '-';
                           // }
+                          return d ;
+                      }},
+                      {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
                       {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-center ',render: function(d) {

@@ -797,7 +797,7 @@ class DeliveryController extends Controller
       
     $sTable = DB::select(" 
 
-        SELECT db_delivery.* , db_orders.shipping_special from db_delivery  
+        SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price from db_delivery  
         Left Join db_orders ON db_orders.code_order = db_delivery.receipt
         WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1
         $business_location_id
@@ -852,6 +852,10 @@ class DeliveryController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+      ->addColumn('total_price_not_gv', function($row) {
+          return $row->total_price - $row->gift_voucher_price;
+      })
+
       ->rawColumns(['customer_name'])
       ->make(true);
     }

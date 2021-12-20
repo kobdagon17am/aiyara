@@ -332,7 +332,7 @@ class Check_stockController extends Controller
             foreach ($d as $key => $v) {
                array_push($f,$v->lot_number);
             }
-            $f = implode('<br>',$f);
+            $f = implode('<br><br>',$f);
             return $f;
 
       })
@@ -355,7 +355,7 @@ class Check_stockController extends Controller
             foreach ($d as $key => $v) {
                array_push($f,$v->lot_expired_date);
             }
-            $f = implode('<br>',$f);
+            $f = implode('<br><br>',$f);
             return $f.'';
       })
        ->addColumn('amt_desc', function($row) {
@@ -377,7 +377,7 @@ class Check_stockController extends Controller
             foreach ($d as $key => $v) {
                array_push($f,$v->amt);
             }
-            $f = implode('<br>',$f);
+            $f = implode('<br><br>',$f);
             return $f;
       })
       ->addColumn('amt', function($row) {
@@ -433,7 +433,7 @@ class Check_stockController extends Controller
 
                array_push($f,$t);
             }
-            $f = implode('<br>',$f);
+            $f = implode('<br><br>',$f);
             return $f;
 
 
@@ -458,7 +458,7 @@ class Check_stockController extends Controller
             foreach ($d as $key => $v) {
                array_push($f,'<a class="btn btn-outline-success waves-effect waves-light" href="backend/stock_card_01?stock_id='.$v->id.'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>');
             }
-            $f = implode('<br>',$f);
+            $f = implode('<br><br>',$f);
 
            return $f;
            // return '* อยู่ระหว่างปรับปรุง';
