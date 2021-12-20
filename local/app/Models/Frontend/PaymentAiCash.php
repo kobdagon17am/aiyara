@@ -55,7 +55,7 @@ class PaymentAiCash extends Model
                 'order_status_id_fk' => 2,
                 'upto_customer_status' => 0,
                 'file_slip' =>$url,
-                'note' => 'Add Ai-Cash',
+                // 'note' => 'Add Ai-Cash',
             ]
         );
 
