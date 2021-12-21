@@ -65,12 +65,12 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
     </div>
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h5>ประวัติการสั่งซื้อที่สำเร็จ</h5>
-                    {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
+
                 </div>
                 <div class="card-block">
                   <div class="dt-responsive table-responsive">
@@ -84,13 +84,13 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="row">
       <div class="col-md-12">
           <div class="card">
               <div class="card-header">
-                  <h5>ประวัติการสั่งซื้อที่รอดำเนินการ</h5>
+                  <h5>ประวัติ Ai-Stockist ทั้งหมด</h5>
                   {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
               </div>
               <div class="card-block">
@@ -286,7 +286,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                         {
                             "data": "pv",
                             "name": "pv",
-                            "title": '<center>PV</center>',
+                            "title": '<center>Ai-Stockist</center>',
                         },
                         {
                             "data": "banlance",
@@ -357,7 +357,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                       {
                           "data": "pv",
                           "name": "pv",
-                          "title": '<center>PV</center>',
+                          "title": '<center>Ai-Stockist</center>',
                       },
                       {
                           "data": "banlance",
@@ -401,7 +401,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                         document.getElementById("text_username").innerHTML = data['data']['data']['business_name'] +
                             ' (' + data['data']['data']['user_name'] + ')';
 
-                        document.getElementById("name").innerHTML = data['data']['data']['prefix_name'] + ' ' + data[
+                        document.getElementById("name").innerHTML = data[
                             'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
 
                         document.getElementById("text_pv").innerHTML = data['data']['data']['pv'] + ' PV';

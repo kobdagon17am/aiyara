@@ -269,7 +269,6 @@ class AipocketController extends Controller
 
       $user_name = Auth::guard('c_user')->user()->user_name;
         $resule = LineModel::check_line_backend($user_name,$request->user_name);
-
         if ($resule['status'] == 'success') {
 
             if (empty($resule['data']->pv_mt_active) || (strtotime($resule['data']->pv_mt_active) < strtotime(date('Ymd')))) {
