@@ -720,7 +720,9 @@ $(function() {
             	            		if($('.select-info').text()!=''){
             	            			var str = $('.select-info').text();
                   							var str = str.split(" ");
-                  							if(parseInt(str[0])>1){
+                                // วุฒิปรับให้อันเดียวก็ส่งได้
+                                if(parseInt(str[0])>0){
+                              	// if(parseInt(str[0])>1){
 
                                       if(shipping_price>0){
                                              $('.divBtnSave').show();
@@ -886,7 +888,9 @@ $(function() {
                     if($('.select-info').text()!=''){
                       var str = $('.select-info').text();
                       var str = str.split(" ");
-                      if(parseInt(str[0])>1){
+                       // วุฒิแก้ให้อันเดียวก็ทำได้
+                      // if(parseInt(str[0])>1){
+                        if(parseInt(str[0])>0){
                         $('.divBtnSave').show();
                       }else{
                         $('.divBtnSave').hide();
@@ -904,7 +908,9 @@ $(function() {
                       if($('.select-info').text()!=''){
                         var str = $('.select-info').text();
                         var str = str.split(" ");
-                        if(parseInt(str[0])>1){
+                        // if(parseInt(str[0])>1){
+                                // วุฒิแก้ให้อันเดียวก็ทำได้
+                                if(parseInt(str[0])>0){
                           $('.divBtnSave').show();
                         }else{
                           $('.divBtnSave').hide();
