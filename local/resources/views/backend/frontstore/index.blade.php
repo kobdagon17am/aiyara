@@ -387,7 +387,30 @@
   </div>
 </div>
 
-
+<div class="modal fade modal-order-history" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title mt-0" id="myLargeModalLabel">Large modal</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <table class="table table-bordered table-sm">
+                <thead>
+                  <tr>
+                    <th>สถานะ</th>
+                    <th>ผู้อนุมัติ</th>
+                    <th>วันที่</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-order-history"></tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
 
 @endsection
 
@@ -468,9 +491,9 @@ $(function() {
                 return '';
                }
             }},
-            {data: 'code_order',   title :'<center>{{ __("message.receipt_code_no") }}</center>', className: 'text-center ',render: function(d) {
+            {data: 'code_order',   title :'<center>{{ __("message.receipt_code_no") }}</center>', className: 'text-center ',render: function(d, aa, data) {
                if(d){
-                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                return '<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+data.id+'" data-code_order="'+d+'" style="cursor: pointer;"><span class="badge badge-pill badge-soft-primary font-size-16"  data-toggle="tooltip" data-placement="auto" title="ดูประวัติสถานะ">'+d+'</span></a>';
                }else{
                 return '';
                }
@@ -654,6 +677,29 @@ $(function() {
       $('[data-toggle="tooltip"]').tooltip();
     });
 
+    $('.modal-order-history').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var order_id = button.data('order_id')
+      var code_order = button.data('code_order')
+      var modal = $(this)
+      modal.find('.modal-title').text('ประวัติออเดอร์ ' + code_order)
+
+      $.ajax({
+        url: '{{ route("backend.frontstore.get_order_history_status") }}',
+        data: { order_id: order_id },
+        beforeSend: function() {
+          modal.find('#tbody-order-history').html('<tr class="text-muted text-center"><td colspan="3">กำลังโหลดข้อมูล...</td></tr>')
+        },
+        success: function (response) {
+          if (response) {
+            modal.find('#tbody-order-history').html(response)
+          } else {
+            modal.find('#tbody-order-history').html('<tr class="text-muted text-center"><td colspan="3">ไม่พบข้อมูล..</td></tr>')
+          }
+        }
+      })
+
+    })
 
 });
 </script>
@@ -949,9 +995,9 @@ $(document).ready(function() {
                                                         return '';
                                                        }
                                                     }},
-                                                    {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                                                    {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d, aa, data) {
                                                        if(d){
-                                                        return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                                        return '<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+data.id+'" data-code_order="'+d+'" style="cursor: pointer;"><span class="badge badge-pill badge-soft-primary font-size-16"  data-toggle="tooltip" data-placement="auto" title="ดูประวัติสถานะ">'+d+'</span></a>';
                                                        }else{
                                                         return '';
                                                        }
@@ -1304,9 +1350,9 @@ $(document).ready(function() {
                                           return '';
                                          }
                                       }},
-                                      {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                                      {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d, aa, data) {
                                          if(d){
-                                          return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                          return '<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+data.id+'" data-code_order="'+d+'" style="cursor: pointer;"><span class="badge badge-pill badge-soft-primary font-size-16"  data-toggle="tooltip" data-placement="auto" title="ดูประวัติสถานะ">'+d+'</span></a>';
                                          }else{
                                           return '';
                                          }

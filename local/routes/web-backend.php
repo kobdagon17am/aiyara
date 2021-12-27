@@ -577,6 +577,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
 
+    Route::get('frontstore/get_order_history_status', 'FrontstoreController@getOrderHistoryStatus')->name('frontstore.get_order_history_status');
     Route::resource('frontstore', 'FrontstoreController');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
