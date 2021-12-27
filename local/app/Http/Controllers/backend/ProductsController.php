@@ -54,7 +54,7 @@ class ProductsController extends Controller
           // dd($dsProducts_cost->selling_price);
           // dd($dsProducts_cost->member_price);
           // dd($dsProducts_cost->pv);
- 
+
        return view('backend.products.form')->with([
           'sRow'=>$sRow, 'id'=>$id ,
           'dsOrders_type'=>$dsOrders_type,
@@ -75,6 +75,7 @@ class ProductsController extends Controller
     public function form($id=NULL)
     {
       \DB::beginTransaction();
+
       try {
 
           if( $id ){
@@ -90,7 +91,7 @@ class ProductsController extends Controller
           }else{
             $Orders_type = '';
           }
-         
+
           $sRow->product_code    = request('product_code');
           $sRow->category_id    = request('category_id');
           $sRow->orders_type_id    = $Orders_type ;
@@ -98,9 +99,10 @@ class ProductsController extends Controller
           $sRow->product_voucher    = request('product_voucher');
           $sRow->order_by_member    = request('order_by_member')?request('order_by_member'):0;
           $sRow->order_by_staff    = request('order_by_staff')?request('order_by_staff'):0;
+          $sRow->is_qrcode = request('is_qrcode') ?? 0;
 
           $sRow->created_at = date('Y-m-d H:i:s');
-          
+
           $sRow->save();
 
            if( $id ){
@@ -125,7 +127,7 @@ class ProductsController extends Controller
           }else{
             return redirect()->to(url("backend/products/".$sRow->id."/edit"));
           }
-          
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -187,7 +189,7 @@ class ProductsController extends Controller
       ->addColumn('Categories', function($row) {
         $Categories = \App\Models\Backend\Categories::where('category_id', $row->category_id)->get();
         return @$Categories[0]->category_name;
-      })      
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

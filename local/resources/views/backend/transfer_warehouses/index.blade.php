@@ -26,7 +26,7 @@
 
           <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>
               <button type="button" class="btn btn-primary btn-sm btnAddTransferItem class_btn_add " style="font-size: 14px !important;" >
-               + เพิ่มรายการโอนสินค้า 
+               + เพิ่มรายการโอนสินค้า
               </button>
           <?php } ?>
 
@@ -83,7 +83,7 @@
 
 
                             <?php //echo $User_branch_id; ?>
-                           
+
                             @if(@$User_branch_id==0)
                              <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
                               <option value="">Select</option>}
@@ -179,7 +179,7 @@
                   <div class="row">
 
                     <div class="col-12 d-flex ">
-                      <!--  
+                      <!--
                       <div class="col-md-3 ">
                         <div class="form-group row">
                           <select id="branch_id_search" name="branch_id_search" class="form-control select2-templating " >
@@ -201,7 +201,7 @@
                           </select>
                         </div>
                       </div>
-    -->                  
+    -->
                       <div class="col-md-1">
                         <div class="form-group row">
                           <select id="status_search" name="status_search" class="form-control select2-templating " >
@@ -308,9 +308,9 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
                 <div class="row" >
-          
+
                   <div class="col-md-12" >
                       <div class="form-group row">
                         <label for="" class="col-md-2 col-form-label">  </label>
@@ -324,7 +324,7 @@
                 </div>
 
                 <div class="row" >
-          
+
                   <div class="col-md-12 " >
                       <div class="form-group row">
                         <label for="" class="col-md-2 col-form-label">  </label>
@@ -333,7 +333,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="row" >
@@ -392,7 +392,7 @@
                             </div>
 
                              <div class="col-md-4">
-                                <input type="text" class="form-control NumberOnly check_dub_warehouse " id="shelf_floor_c" name="shelf_floor_c" placeholder="ชั้นของ Shelf" required >
+                                <input type="text" class="form-control NumberOnly check_dub_warehouse " id="shelf_floor_c" name="shelf_floor_c" placeholder="ชั้นของ Shelf" required>
                             </div>
 
                           </div>
@@ -449,11 +449,11 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
 
 
                 <div class="row" >
-          
+
                   <div class="col-md-12" >
                       <div class="form-group row">
                         <label for="" class="col-md-2 col-form-label">  </label>
@@ -467,7 +467,7 @@
                 </div>
 
                 <div class="row" >
-          
+
                   <div class="col-md-12 " >
                       <div class="form-group row">
                         <label for="" class="col-md-2 col-form-label">  </label>
@@ -476,7 +476,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
                 </div>
 
 
@@ -554,7 +554,7 @@
                               </select>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control NumberOnly check_dub_warehouse_e" id="shelf_floor_c_e" name="shelf_floor_c_e" placeholder="ชั้นของ Shelf"  required >
+                                <input type="text" class="form-control NumberOnly check_dub_warehouse_e" id="shelf_floor_c_e" name="shelf_floor_c_e" placeholder="ชั้นของ Shelf"  required>
                             </div>
                           </div>
                     </div>
@@ -620,7 +620,7 @@
   </div>
 </div>
 
-
+<?php dump(session()->all()); ?>
 @endsection
 
 @section('script')
@@ -639,22 +639,26 @@
           // $(".btnSearch").trigger('click');
         }
 */
+      $('#setToWarehouseModal').on('shown.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        $('#warehouse_id_fk_c').val("{{ session('session_warehouse_id_fk_c') }}").trigger('change');
+      })
 
        $('#branch_id_fk_c').change(function(){
-
           var branch_id_fk = this.value;
-          // alert(warehouse_id_fk);
+          // alert(branch_id_fk);
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -669,82 +673,90 @@
                   }
                 })
            }
- 
+
       });
 
 
        $('#warehouse_id_fk_c').change(function(){
-
           $(".myloading").show();
 
           var warehouse_id_fk = this.value;
+          const session_zone_id_fk_c = "{{ session('session_zone_id_fk_c') }}"
           // alert(warehouse_id_fk);
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือก Zone -</option>';
                        $.each(data,function(key,value){
-                        layout += '<option value='+value.id+'>'+value.z_name+'</option>';
+                          layout += '<option value='+value.id+'>'+value.z_name+'</option>';
                        });
                        $('#zone_id_fk_c').html(layout);
+                       if (session_zone_id_fk_c) {
+                         $('#zone_id_fk_c').val(session_zone_id_fk_c).trigger('change')
+                       }
                        $('#shelf_id_fk_c').html('กรุณาเลือกโซนก่อน');
                    }
                    $(".myloading").hide();
                   }
                 })
            }
- 
+
       });
 
 
        $('#zone_id_fk_c').change(function(){
-
            $(".myloading").show();
-
           var zone_id_fk = this.value;
-          // alert(zone_id_fk);
+          const session_shelf_id_fk_c = "{{ session('session_shelf_id_fk_c') }}"
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
                        var layout = '<option value="" selected>- เลือก Shelf -</option>';
                        $.each(data,function(key,value){
-                        layout += '<option value='+value.id+'>'+value.s_name+'</option>';
+                          layout += '<option value='+value.id+'>'+value.s_name+'</option>';
                        });
                        $('#shelf_id_fk_c').html(layout);
+                       if (session_shelf_id_fk_c) {
+                         $('#shelf_id_fk_c').val(session_shelf_id_fk_c).trigger('change')
+                       }
                    }
                    $(".myloading").hide();
                   }
                 })
            }
- 
+
       });
 
 
 
        $('#shelf_id_fk_c').change(function(){
+         const session_shelf_floor_c = "{{ session('session_shelf_floor_c') }}"
 	       	 setTimeout(function(){
+              if (session_shelf_floor_c) {
+                $('#shelf_floor_c').val(session_shelf_floor_c)
+              }
 	       	 	$('#shelf_floor_c').focus();
 	       	 })
        });
@@ -757,14 +769,14 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -779,7 +791,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -790,14 +802,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -811,7 +823,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -822,14 +834,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -842,7 +854,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -856,7 +868,7 @@
 
 
 $(document).ready(function() {
-  
+
       var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
       var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
       var sU = "{{@$sU}}"; //alert(sU);
@@ -915,13 +927,13 @@ $(document).ready(function() {
                   {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
                       return d ;
                   }},
-                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  {data: 'id', title :'Tools', className: 'text-center w80'},
               ],
               rowCallback: function(nRow, aData, dataIndex){
 
                 // if(sU!=''&&sD!=''){
                 //     $('td:last-child', nRow).html('-');
-                // }else{ 
+                // }else{
 
                   if(aData['approve_status']!=0){
 
@@ -948,7 +960,7 @@ $(document).ready(function() {
           });
       });
     });
-  	
+
 
     $(document).ready(function() {
         $(document).on('click', '.btnSearch', function(event) {
@@ -959,7 +971,7 @@ $(document).ready(function() {
           var product_id = product_id?product_id:0;
 
           $("#branch_id_select_to_transfer").val(branch_id_fk);
-          
+
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
             return false;
@@ -1008,14 +1020,14 @@ $(document).ready(function() {
 
   					        ],
                       rowCallback: function(nRow, aData, dataIndex){
-                                                
+
                       var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
                     }
 
   					    });
-  					  
+
   					});
 
                 $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -1024,7 +1036,7 @@ $(document).ready(function() {
 
             		$('#exampleModalCenter').modal('show');
           }
-          
+
         });
     });
 
@@ -1089,16 +1101,16 @@ $(document).ready(function() {
                           return  "<span style='color:red;'>* รอเลือกคลังปลายทาง </span>";
                        }
                   }},
-    	          	{data: 'id', title :'Tools', className: 'text-center w150'}, 
+    	          	{data: 'id', title :'Tools', className: 'text-center w150'},
     		        ],
     		        rowCallback: function(nRow, aData, dataIndex){
 
                   var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
-                      
+
     		          // if(sU!=''&&sD!=''){
     		          //     $('td:last-child', nRow).html('-');
-    		          // }else{ 
+    		          // }else{
 
                     if(aData['warehouse_id_fk']>0){
 
@@ -1118,13 +1130,13 @@ $(document).ready(function() {
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="db_transfer_choose" data-file="" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
-    		              
+
 
     		          }
     		        // }
 
     	    });
-    	  
+
     	});
 
 
@@ -1164,7 +1176,7 @@ $(document).ready(function() {
            var shelf_floor_c = $('#shelf_floor_c').val();
 
            $.ajax({
-                     url: " {{ url('backend/ajaxCheckDubWarehouse') }} ", 
+                     url: " {{ url('backend/ajaxCheckDubWarehouse') }} ",
                     method: "post",
                     data: {
                       stocks_id_fk:stocks_id_fk,
@@ -1173,10 +1185,10 @@ $(document).ready(function() {
                       zone_id_fk_c:zone_id_fk_c,
                       shelf_id_fk_c:shelf_id_fk_c,
                       shelf_floor_c:shelf_floor_c,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                       console.log(data);
                       if(data == '1'){
                          alert('!. ข้อมูลไม่ถูกต้อง ต้นทาง กับ ปลายทาง ไม่ควรเป็นค่าเดียวกันทั้งหมด');
@@ -1188,7 +1200,7 @@ $(document).ready(function() {
                   })
 
         });
-      
+
      $('.check_dub_warehouse_e').change(function() {
 
            $(".myloading").show();
@@ -1201,7 +1213,7 @@ $(document).ready(function() {
            var shelf_floor_c = $('#shelf_floor_c_e').val();
 
            $.ajax({
-                     url: " {{ url('backend/ajaxCheckDubWarehouse') }} ", 
+                     url: " {{ url('backend/ajaxCheckDubWarehouse') }} ",
                     method: "post",
                     data: {
                       stocks_id_fk:stocks_id_fk,
@@ -1210,10 +1222,10 @@ $(document).ready(function() {
                       zone_id_fk_c:zone_id_fk_c,
                       shelf_id_fk_c:shelf_id_fk_c,
                       shelf_floor_c:shelf_floor_c,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                       console.log(data);
                       if(data == '1'){
                          alert('!!! ข้อมูลไม่ถูกต้อง ต้นทาง กับ ปลายทาง ไม่ควรเป็นค่าเดียวกันทั้งหมด');
@@ -1225,7 +1237,7 @@ $(document).ready(function() {
                   })
 
         });
-      
+
        $(window).keydown(function(event){
           if(event.keyCode == 13) {
             event.preventDefault();
@@ -1284,41 +1296,42 @@ $(document).ready(function() {
              var branch_id_fk = $("#branch_id_fk").val();
              $('#branch_id_set_to_warehouse').val(branch_id_fk);
              $('#branch_id_fk_c').val(branch_id_fk).select2();
-
-             // alert(branch_id_fk);
+            //  alert(branch_id_fk);
 
              if(branch_id_fk != ''){
                // แสดงข้อมูลคลังต้นทาง
                $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouseFrom') }} ", 
+                     url: " {{ url('backend/ajaxGetWarehouseFrom') }} ",
                     method: "post",
                     data: {
                       stocks_id_fk:stocks_id_fk,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                       // console.log(data);
                       $("#from_wh").html("<b> คลังต้นทาง : "+data);
                     }
                   });
 
                $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                     url: " {{ url('backend/ajaxGetWarehouse') }} ",
                     method: "post",
                     data: {
                       branch_id_fk:branch_id_fk,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                      if(data == ''){
                          alert('ไม่พบข้อมูลคลัง !!.');
                      }else{
+
                          var layout = '<option value="" selected>- เลือกคลัง -</option>';
                          $.each(data,function(key,value){
-                          layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+                            layout += '<option value='+value.id+'>'+value.w_name+'</option>';
                          });
+
                          $('#warehouse_id_fk_c').html(layout);
                          $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                          $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
@@ -1331,7 +1344,9 @@ $(document).ready(function() {
                 $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                 $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
              }
-  
+
+
+
              $("#id_set_to_warehouse").val(id);
              // $('#branch_id_fk_c').attr("disabled", true);
              $('#setToWarehouseModal').modal('show');
@@ -1381,14 +1396,14 @@ $(document).ready(function() {
 
             // แสดงข้อมูลคลังต้นทาง
                $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouseFrom') }} ", 
+                     url: " {{ url('backend/ajaxGetWarehouseFrom') }} ",
                     method: "post",
                     data: {
                       stocks_id_fk:stocks_id_fk,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                       // console.log(data);
                       $("#from_wh_e").html("<b> คลังต้นทาง : "+data);
                     }
@@ -1398,11 +1413,11 @@ $(document).ready(function() {
                  $.ajax({
 
                        type:'POST',
-                       url: " {{ url('backend/ajaxGetSetToWarehouse') }} ", 
+                       url: " {{ url('backend/ajaxGetSetToWarehouse') }} ",
                        data:{ _token: '{{csrf_token()}}',id:id },
                         success:function(data){
-                             
-                             // console.log(data); 
+
+                             // console.log(data);
 
                                 var obj = JSON.parse(data);
                                 $.each(obj, function( index, value ) {
@@ -1438,7 +1453,7 @@ $(document).ready(function() {
                                 $('#zone_id_fk_c_e').val(zone_id_fk).select2();
                                 $('#shelf_id_fk_c_e').val(shelf_id_fk).select2();
                                 $('#shelf_floor_c_e').val(shelf_floor);
-                               
+
 
                              });
 
@@ -1447,13 +1462,13 @@ $(document).ready(function() {
                                 $('#setToWarehouseModalEdit').modal('show');
 
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             console.log(JSON.stringify(jqXHR));
                             console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         }
                   });
 
-       
+
            }
 
 
@@ -1464,7 +1479,7 @@ $(document).ready(function() {
         $(document).on('click', '.cDelete', function(event) {
               setTimeout(function(){
                 location.reload();
-              }, 3000);  
+              }, 3000);
         });
 
         $(document).on('click', '.cCancel', function(event) {
@@ -1472,7 +1487,7 @@ $(document).ready(function() {
               var id = $(this).data('id');
               $('#id_to_cancel').val(id);
               $('#modalNote').modal('show');
-           
+
         });
 
 
@@ -1485,17 +1500,17 @@ $(document).ready(function() {
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
-                       alert('ไม่พบข้อมูลคลัง !!.'); 
-                       $("#warehouse_id_search").val('').trigger('change'); 
+                       alert('ไม่พบข้อมูลคลัง !!.');
+                       $("#warehouse_id_search").val('').trigger('change');
                        $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
                    }else{
                        var layout = '<option value="" selected>- เลือกคลัง -</option>';
@@ -1507,7 +1522,7 @@ $(document).ready(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -1545,7 +1560,7 @@ $(document).ready(function() {
          });
 
         $(document).ready(function() {
-          
+
             $(document).on('click', '.btnSearchInList', function(event) {
                   // event.preventDefault();
 
@@ -1561,7 +1576,7 @@ $(document).ready(function() {
                   var startDated = s_date.split("/").reverse().join("-");
                   var e_date = $('#endDate').val();
                   var endDate = e_date.split("/").reverse().join("-");
-                  
+
                   console.log(branch_id_search);
                   console.log(warehouse_id_search);
                   console.log(status_search);
@@ -1633,13 +1648,13 @@ $(document).ready(function() {
                                   {data: 'note',   title :'หมายเหตุ', className: 'text-center ',render: function(d) {
                                       return d ;
                                   }},
-                                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                  {data: 'id', title :'Tools', className: 'text-center w80'},
                               ],
                               rowCallback: function(nRow, aData, dataIndex){
 
                                 // if(sU!=''&&sD!=''){
                                 //     $('td:last-child', nRow).html('-');
-                                // }else{ 
+                                // }else{
 
                                   if(aData['approve_status']==2){
 
@@ -1670,17 +1685,17 @@ $(document).ready(function() {
 
                           });
 
-                         
-              
+
+
                       });
-               
-               
+
+
             });
 
-        }); 
+        });
     </script>
     <script>
-      
+
       $(document).on('click', '.remove_01', function(event) {
 
             var id = $(this).data('id');
@@ -1697,13 +1712,13 @@ $(document).ready(function() {
             $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               url: " {{ url('backend/ajaxDelFunction') }} ",
                data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      location.reload();
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 }

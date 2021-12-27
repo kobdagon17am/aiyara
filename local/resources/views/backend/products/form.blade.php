@@ -25,8 +25,8 @@
         <div class="card">
             <div class="card-body">
 
-        
-        <div class="myBorder">        
+
+        <div class="myBorder">
 
               @if( empty($sRow) )
               <form id="frm" action="{{ route('backend.products.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -160,6 +160,16 @@
                       </div>
                 </div>
 
+                <div class="form-group row">
+                  <label class="col-md-2 col-form-label"> </label>
+                  <div class="col-md-10 mt-2">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch4" name="is_qrcode" value="1" {{ ( @$sRow->is_qrcode)?'checked':'' }}>
+                        <label class="custom-control-label" for="customSwitch4">มี Qrcode</label>
+                    </div>
+                  </div>
+            </div>
+
 
 
                 <div class="form-group mb-0 row">
@@ -167,7 +177,7 @@
                       @if( empty($sRow) )
                          <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/products") }}">
                           <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
-                        </a> 
+                        </a>
                          @endif
                     </div>
                     <div class="col-md-6 text-right">
@@ -186,7 +196,7 @@
                     <div style="">
                       <div class="form-group row">
                         <div class="col-md-12">
-                          
+
                           @if( count($sProducts_details)==0 )
                           <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_details.create') }}/{{@$sRow->id}}" style="float: right;" >
                             <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
@@ -208,7 +218,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12">
-                            
+
                             <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.products_images.create') }}/{{@$sRow->id}}" style="float: right;" >
                               <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
                             </a>
@@ -323,17 +333,17 @@
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         // {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'ชื่อสินค้า', className: 'text-center'},
                         {data: 'descriptions_txt', title :'รายละเอียด', className: 'text-center'},
-                        {data: 'id', title :'แก้ไข', className: 'text-center w60'}, 
+                        {data: 'id', title :'แก้ไข', className: 'text-center w60'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.products_details.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                       
+
                       ).addClass('input');
                     }
                 });
@@ -341,7 +351,7 @@
                   oTable.draw();
                 });
             });
-     
+
 
 
             var product_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
@@ -367,7 +377,7 @@
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'img_path',   title :'<center>IMAGE</center>', className: 'text-center',render: function(d) {
@@ -381,7 +391,7 @@
                              return d==1?'Yes':'';
                         }},
 
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
@@ -433,7 +443,7 @@
                         {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                            return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
                         }},
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
@@ -446,7 +456,7 @@
                   oTable.draw();
                 });
             });
-              
+
 
 
 
@@ -480,7 +490,7 @@
                         {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                            return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
                         }},
-                        {data: 'id', title :'Tools', className: 'text-center w150'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w150'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
@@ -502,7 +512,7 @@
                   oTable.draw();
                 });
             });
-              
+
 
 
             </script>

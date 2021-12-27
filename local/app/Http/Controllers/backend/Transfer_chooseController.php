@@ -44,15 +44,15 @@ class Transfer_chooseController extends Controller
     }
 
     public function Datatable(){
-      // ข้อมูลตาม user login ไม่งั้นจะทำพร้อมกันไม่ได้ 
+      // ข้อมูลตาม user login ไม่งั้นจะทำพร้อมกันไม่ได้
       $sTable = \App\Models\Backend\Transfer_choose::where('action_user',\Auth::user()->id)->search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -75,8 +75,8 @@ class Transfer_chooseController extends Controller
           $Check_stock = DB::select(" select * from db_stocks where id=".$row->stocks_id_fk." ");
           return @$Check_stock[0]->amt;
         }
-        
-      })      
+
+      })
       ->addColumn('warehouses_from', function($row) {
         $d = DB::select("SELECT * from db_stocks where id=".$row->stocks_id_fk." ");
         $sBranchs = DB::select(" select * from branchs where id=".(@$d[0]->branch_id_fk?$d[0]->branch_id_fk:0)." ");
@@ -88,7 +88,7 @@ class Transfer_chooseController extends Controller
         }else{
           return 0;
         }
-      }) 
+      })
       ->addColumn('warehouses_to', function($row) {
         $sBranchs = DB::select(" select * from branchs where id=".(@$row->branch_id_fk?$row->branch_id_fk:0)." ");
         $warehouse = DB::select(" select * from warehouse where id=".(@$row->warehouse_id_fk?$row->warehouse_id_fk:0)." ");
@@ -99,7 +99,7 @@ class Transfer_chooseController extends Controller
         }else{
           return 0;
         }
-      })        
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
