@@ -164,7 +164,7 @@
                   <label class="col-md-2 col-form-label"> </label>
                   <div class="col-md-10 mt-2">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="customSwitch4" name="is_qrcode" value="1" {{ ( @$sRow->is_qrcode)?'checked':'' }}>
+                        <input type="checkbox" class="custom-control-input" id="customSwitch4" name="has_qrcode" value="1" {{ ( @$sRow->has_qrcode)?'checked':'' }}>
                         <label class="custom-control-label" for="customSwitch4">มี Qrcode</label>
                     </div>
                   </div>

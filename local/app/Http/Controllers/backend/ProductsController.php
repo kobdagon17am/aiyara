@@ -99,7 +99,7 @@ class ProductsController extends Controller
           $sRow->product_voucher    = request('product_voucher');
           $sRow->order_by_member    = request('order_by_member')?request('order_by_member'):0;
           $sRow->order_by_staff    = request('order_by_staff')?request('order_by_staff'):0;
-          $sRow->is_qrcode = request('is_qrcode') ?? 0;
+          $sRow->has_qrcode = request('has_qrcode') ?? 0;
 
           $sRow->created_at = date('Y-m-d H:i:s');
 
