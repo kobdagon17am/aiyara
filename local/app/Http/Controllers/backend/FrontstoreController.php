@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers\backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use DB;
-use File;
 use PDO;
+use Auth;
+use File;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use App\Http\Controllers\Frontend\Fc\GiveawayController;
-use Auth;
-use App\Models\Frontend\RunNumberPayment;
-use App\Models\Frontend\PvPayment;
-use App\Models\Frontend\CourseCheckRegis;
-use App\Http\Controllers\Frontend\Fc\CancelOrderController;
-use App\Models\DbOrderProductsList;
+use Illuminate\Http\Request;
 use App\Models\Frontend\LineModel;
+use App\Models\Frontend\PvPayment;
+use App\Models\DbOrderProductsList;
+use App\Http\Controllers\Controller;
+use App\Models\Backend\DbOrderHistoryLog;
+use App\Models\Frontend\CourseCheckRegis;
+use App\Models\Frontend\RunNumberPayment;
+use App\Models\Backend\DatasetOrderHistoryStatus;
+use App\Http\Controllers\Frontend\Fc\GiveawayController;
+use App\Http\Controllers\Frontend\Fc\CancelOrderController;
 
 class FrontstoreController extends Controller
 {
 
     public function index(Request $request)
     {
-
-      // dd($request);
+      // dump($request->all());
       // dd(\Auth::user()->position_level);
       // dd(\Auth::user()->branch_id_fk);
       $branch_id_fk = \Auth::user()->branch_id_fk;
@@ -1053,7 +1054,7 @@ class FrontstoreController extends Controller
 
     public function update(Request $request, $id)
     {
-
+      // dd($request->all());
       // dd($request->transfer_money_datetime." : AAAA");
       // db_delivery
       // dd($request->all());
@@ -1061,6 +1062,8 @@ class FrontstoreController extends Controller
       try
       {
         // dd($request->all());
+        $orderHistoryLog = new DbOrderHistoryLog;
+
          $this->fnManageGiveaway(@$request->frontstore_id);
 
          if(isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip=='1'){
@@ -1172,14 +1175,13 @@ class FrontstoreController extends Controller
            $sRow->save();
 
               $this->fncUpdateDeliveryAddress($sRow->id);
-
+              $orderHistoryLog->store($sRow->id, DatasetOrderHistoryStatus::CREATE_ORDER, \Auth::user()->id);
                 // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
              return redirect()->to(url("backend/frontstore"));
 
 
          }else if(isset($request->receipt_save_list)){
 
-          // dd($request->all());
           // dd($request->transfer_money_datetime." : BBBB");
 
               $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
@@ -1585,6 +1587,9 @@ class FrontstoreController extends Controller
             // if(@$request->pay_type_id_fk != 1 && @$request->pay_type_id_fk != 8 && @$request->pay_type_id_fk != 10 && @$request->pay_type_id_fk != 11 && @$request->pay_type_id_fk != 12){
              $this->fncUpdateDeliveryAddress($sRow->id);
              $this->fncUpdateDeliveryAddressDefault($sRow->id);
+
+             $orderHistoryLog->store($sRow->id, DatasetOrderHistoryStatus::CREATE_ORDER, \Auth::user()->id);
+             $orderHistoryLog->store($sRow->id, DatasetOrderHistoryStatus::APPROVE_ORDER, \Auth::user()->id);
             // }
 
              DB::commit();
@@ -3579,7 +3584,6 @@ ORDER BY created_at DESC
 // `approve_status` int(11) DEFAULT '0' COMMENT '0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ',
 // แก้ใหม่
 // `approve_status` int(11) DEFAULT '0' COMMENT ' 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย',
-
         if(@$row->approve_status!=""){
           @$approve_status = DB::select(" select * from `dataset_approve_status` where id=".@$row->approve_status." ");
           // return $purchase_type[0]->orders_type;
@@ -3822,5 +3826,24 @@ ORDER BY created_at DESC
       ->make(true);
     }
 
+    public function getOrderHistoryStatus(Request $request)
+    {
+      $orderHistoryLogs = (new DbOrderHistoryLog())->queryLogs($request->order_id);
+      $rows = '';
 
+      foreach ($orderHistoryLogs as $orderHistoryLog) {
+
+        $formatDate = $orderHistoryLog->created_at->format('d/m/Y H:i:s');
+
+        $rows .= "
+          <tr>
+            <td>$orderHistoryLog->status_name</td>
+            <td>$orderHistoryLog->approve_name</td>
+            <td>$formatDate</td>
+          </tr>
+        ";
+      }
+
+      return $rows;
+    }
 }
