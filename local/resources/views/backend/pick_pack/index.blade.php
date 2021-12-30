@@ -101,6 +101,25 @@
         <div class="card">
             <div class="card-body">
 
+                    
+              <div class="row">
+                <div class="col-12 d-flex ">
+
+                  <div class="col-md-3 d-flex  ">
+                     <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม" value="" />
+                     &nbsp;
+                     <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด" value="" />
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group row"> &nbsp; &nbsp;
+                      <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
+                      <i class="bx bx-search font-size-18 align-middle mr-1"></i> &nbsp; ค้น&nbsp; &nbsp;&nbsp; &nbsp;
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
         <div class="myBorder">
 
@@ -214,7 +233,6 @@
                       </div>
                     </div>
                   </div> -->
-
 
               <?php //if($can_packing_list=='1'){ ?>
 
@@ -449,6 +467,21 @@
   </div>
 </div>
 
+<div class="modal fade" id="modal_order_list" tabindex="-1" role="dialog" aria-labelledby="modal_order_list_title" aria-hidden="true" data-backdrop="static" >
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_order_list_title"><b><i class="bx bx-play"></i>รายการสินค้า/บริการ</b></h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> 
+      </div>
+      <div class="modal-body">
+        <p>ไม่พบรายการ.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 @endsection
@@ -456,6 +489,235 @@
 @section('script')
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+
+
+<script>
+
+$(document).on('click','.btnSearchInList',function(){
+  get_data();
+});
+
+// $(document).on('click','.order_list',function(event) {
+//   event.preventDefault();
+//   var order = $(this).attr('data-id');
+//   $('#modal_order_list_title').html('<b><i class="bx bx-play"></i>รายการสินค้า/บริการ '+order+'</b>');
+
+//   $('#modal_order_list').modal('show');
+// });
+
+
+$(document).on('click','.select-checkbox',function(){
+  $('#data-table').DataTable().column(0).checkboxes.selected()
+  // $('#data-table').rows().select();
+  // $(".odd").addClass("selected");
+});
+
+
+function get_data() {
+  var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
+var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
+var sU = "{{@$sU}}"; //alert(sU);
+var sD = "{{@$sD}}"; //alert(sD);
+var oTable ;
+// $(".myloading").show();
+var startDate = $('#startDate').val();
+var endDate = $('#endDate').val();
+   $.fn.dataTable.ext.errMode = 'throw';
+  oTable = $('#data-table').DataTable({
+  "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+  destroy: true,
+      processing: true,
+      serverSide: true,
+      scroller: true,
+      scrollCollapse: true,
+      scrollX: true,
+      ordering: false,
+      // scrollY: ''+($(window).height()-370)+'px',
+      iDisplayLength: 20,
+      // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
+      ajax: {
+        url: '{{ route('backend.pick_pack.datatable') }}',
+        data: function ( d ) {
+          d.Where={};
+          $('.myWhere').each(function() {
+            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              d.Where[$(this).attr('name')] = $.trim($(this).val());
+            }
+          });
+          d.Like={};
+          $('.myLike').each(function() {
+            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              d.Like[$(this).attr('name')] = $.trim($(this).val());
+            }
+          });
+          d.Custom={};
+          $('.myCustom').each(function() {
+            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              d.Custom[$(this).attr('name')] = $.trim($(this).val());
+            }
+          });
+          oData = d;
+        },
+        method: 'POST',
+       data: {
+         startDate:startDate,
+         endDate:endDate,
+        "_token": "{{ csrf_token() }}", 
+         },
+      },
+            columns: [
+                {data: 'id', title :'ID', className: 'text-center'},
+                // {data: 'id', title :'<a href="javascript:;" class="select-checkbox"><u>เลือกทั้งหมด</u></a>', className: 'text-center'},
+                {data: 'id', title :'เลือก', className: 'text-center '},
+                {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
+                {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
+                {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
+                {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
+                {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                        return d ;
+                    }},
+                {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
+                {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
+                {data: 'status_delivery',   title :'<center>สถานะการเบิก </center>', className: 'text-center ',render: function(d) {
+                  // if(d=='1'){
+                  //     return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+                  // }else{
+                  //     return '-รอจัดเบิก-';
+                  // }
+                  return '-รอจัดเบิก-';
+                }},
+            ],
+            'columnDefs': [
+             {
+                'targets': 0,
+                'checkboxes': {
+                   'selectRow': true
+                }
+             }
+            ],
+            'select': {
+               'style': 'multi',
+               // 'selector': 'td:not(:eq(5))',
+
+            },
+
+            rowCallback: function(nRow, aData, dataIndex){
+
+               
+
+               if(aData['status_pack'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+                    $('td:eq(2)', nRow).html(
+
+                      '<span data-toggle="tooltip" data-placement="right" title="Packing (รวมบิลจากขั้นตอนที่ 1)" class=" badge badge-danger font-size-14">P</span>');
+
+                    // if(aData['packing_code']){
+                    //       $x= aData['packing_code'].replace(/ *, */g, '<br>');
+                    //   }else{
+                    //     $x='';
+                    //   }
+                    // $('td:eq(4)', nRow).html($x).addClass('input');
+
+               }else{
+                    $("td:eq(2)", nRow).html('');
+               }
+
+ 
+               $("td:eq(1)", nRow).hide();
+               // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
+
+               // if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+               //      $('td:eq(8)', nRow).html(''
+               //        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+               //      ).addClass('input');
+               // }
+               // else{ //2=db_orders จากการขายหลังบ้าน
+
+               //      if(aData['status_pack']==1){
+               //          $('td:eq(8)', nRow).html(''
+               //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt_packing') }}/'+aData['packing_id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+               //      ).addClass('input');
+               //      }else{
+               //          $('td:eq(8)', nRow).html(''
+               //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
+               //      ).addClass('input');
+               //      }
+                    
+               // }
+
+              //  if (aData['status_delivery'] == "1") {
+              //         $('td', nRow).css('background-color', '#ffd9b3');
+              //         $("td:eq(0)", nRow).html('');
+              //         $("td:eq(7)", nRow).html('');
+              //         $("td:eq(6)", nRow).html('');
+              //         $("td:eq(10)", nRow).html('');
+              //         var i;
+              //         for (i = 0; i < 10 ; i++) {
+              //            $("td:eq("+i+")", nRow).prop('disabled',true); 
+              //         } 
+
+              // }else{
+              //     $("td:eq(7)", nRow).prop('disabled',true); 
+              //     $("td:eq(8)", nRow).prop('disabled',true); 
+              //     $("td:eq(10)", nRow).prop('disabled',true); 
+              // } 
+
+              // if(sU!=''&&sD!=''){
+              //     $('td:last-child', nRow).html('-');
+              // }else{ 
+
+                if (aData['status_delivery'] != "1") {
+
+                    // $('td:last-child', nRow).html(''
+                    //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                      
+                    // ).addClass('input');
+
+                  }
+
+                  // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+              // }
+
+              console.log(aData['check_case_sent_free']);
+              console.log(aData['delivery_location']);
+
+              // ยกเว้นกรณีส่งฟรี 
+              if(aData['check_case_sent_free']=="sent_free"){
+              }else{
+
+                    if(aData['status_pack'] != "1" && aData['delivery_location']==4){
+                      //  alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
+                       $("td:eq(0)", nRow).prop('disabled',true); 
+                       $("td:eq(1)", nRow).prop('disabled',true); 
+                       $("td:eq(2)", nRow).prop('disabled',true); 
+                       $("td:eq(3)", nRow).prop('disabled',true); 
+                       $("td:eq(4)", nRow).prop('disabled',true); 
+                       $("td:eq(5)", nRow).prop('disabled',true); 
+                       $("td:eq(6)", nRow).prop('disabled',true); 
+                       $("td:eq(7)", nRow).prop('disabled',true); 
+                       $("td:eq(8)", nRow).prop('disabled',true); 
+                       $("td:eq(9)", nRow).prop('disabled',true); 
+                    }
+              }
+              
+
+              $("td:eq(6)", nRow).prop('disabled',true); 
+              
+
+              $(".myloading").hide();
+
+            }
+        });
+         oTable.on( 'draw', function () {
+              $('[data-toggle="tooltip"]').tooltip();
+            });
+         
+        }
+  
+</script>
+
+
+
 <script>
 
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
@@ -1194,7 +1456,7 @@ $(function() {
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
         $('#startDate').datepicker({
              format: 'dd/mm/yyyy',
@@ -1218,6 +1480,46 @@ $(function() {
            $('#endDate').val($(this).val());
          });
          
+</script> --}}
+
+<script>
+
+  var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  $('#startDate').datepicker({
+      // format: 'dd/mm/yyyy',
+      format: 'yyyy-mm-dd',
+      uiLibrary: 'bootstrap4',
+      iconsLibrary: 'fontawesome',
+  });
+
+  $('#endDate').datepicker({
+      // format: 'dd/mm/yyyy',
+      format: 'yyyy-mm-dd',
+      uiLibrary: 'bootstrap4',
+      iconsLibrary: 'fontawesome',
+      minDate: function () {
+          return $('#startDate').val();
+      }
+  });
+
+  $('#startDate').change(function(event) {
+
+    if($('#endDate').val()>$(this).val()){
+    }else{
+      $('#endDate').val($(this).val());
+    }
+    $('#startPayDate').val('');
+    $('#endPayDate').val('');
+    $('#btnSearch03').val('0');
+
+  });        
+
+
+  $('#endDate').change(function(event) {
+    $('#btnSearch03').val('0');
+  });  
+
+
 </script>
 
 
