@@ -103,6 +103,47 @@
 
 @section('content')
 
+<div class="modal" tabindex="-1" id="scan_modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Scan Products</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table id="data-table-scan" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+      </div>
+      <div class="modal-footer">
+        {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="scan_modal_single" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Scan Products</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table id="data-table-scan-single" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+      </div>
+      <div class="modal-footer">
+        {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="myloading"></div>
 
 
@@ -383,7 +424,6 @@
          });
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
-
 
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
@@ -1188,6 +1228,106 @@ setTimeout(function(){
        
       });
   </script>
+
+  <script>
+    $(document).on('click','.pack_modal',function(){
+      var id = "{{$id}}";  //alert(id);
+           var packing_id = "{{$packing_id}}"; //alert(packing_id);
+           var oTable0002;
+           $(function() {
+             $.fn.dataTable.ext.errMode = 'throw';
+               oTable0002 = $('#data-table-scan').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                 processing: true,
+                   serverSide: true,
+                   deferRender: true,
+                   scroller: false,
+                   scrollCollapse: false,
+                   scrollX: false,
+                   ordering: false,
+                   ordering: false,
+                   info:     false,
+                   paging:   false,
+                   destroy:true,
+                         ajax: {
+                             url: '{{ url('backend/warehouse_qr_0002/warehouse_qr_0002_pack_scan') }}',
+                             method: "POST",
+                             data:{ _token: '{{csrf_token()}}',picking_id:packing_id,id:id},
+                         },
+                   columns: [
+                       // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},
+                       {data: 'column_001', title :'<span style="vertical-align: middle;"> รายการจัดส่งรวมแพ็ค </span> ', className: 'text-left '},
+                       {data: 'column_002', title :'<span style="vertical-align: middle;"><center> รายการสินค้า  </span> ', className: 'text-left '},
+                    
+                   ],
+                   rowCallback: function(nRow, aData, dataIndex){
+                      // $(".myloading").hide();
+                      // var info = $(this).DataTable().page.info();
+                      //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
+                   },
+                   fnDrawCallback : function() {
+                       if ($(this).find('.dataTables_empty').length == 1) {
+                          $(this).parent().hide();
+                       }
+                   }
+               });
+          
+          });
+ 
+        $('#scan_modal').modal('show');
+    });
+  </script>
+
+<script>
+  $(document).on('click','.single_modal',function(){
+    var id = "{{$id}}";  //alert(id);
+          var packing_id = "{{$packing_id}}"; //alert(packing_id);
+          var oTable0002;
+          $(function() {
+            $.fn.dataTable.ext.errMode = 'throw';
+              oTable0002 = $('#data-table-scan-single').DataTable({
+               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                  serverSide: true,
+                  deferRender: true,
+                  scroller: false,
+                  scrollCollapse: false,
+                  scrollX: false,
+                  ordering: false,
+                  ordering: false,
+                  info:     false,
+                  paging:   false,
+                  destroy:true,
+                        ajax: {
+                          url: '{{ url('backend/warehouse_qr_00022/warehouse_qr_00022_single_scan') }}',
+                            method: "POST",
+                            data:{ _token: '{{csrf_token()}}',picking_id:packing_id,id:id},
+                        },
+                  columns: [
+                      // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},
+                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รายการจัดส่งแยกแพ็ค (กรณีแยกบิล) </span> ', className: 'text-left '},
+                      {data: 'column_002', title :'<span style="vertical-align: middle;"><center> รายการสินค้า  </span> ', className: 'text-left '},
+                      // {data: 'column_003', title :'<span style="vertical-align: middle;"><center>   </span> ', className: 'text-left '},
+                   
+                  ],
+                  rowCallback: function(nRow, aData, dataIndex){
+                     // $(".myloading").hide();
+                     // var info = $(this).DataTable().page.info();
+                     //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
+
+                  },
+                  fnDrawCallback : function() {
+                      if ($(this).find('.dataTables_empty').length == 1) {
+                         $(this).parent().hide();
+                      }
+                  }
+              });
+         
+         });
+
+      $('#scan_modal_single').modal('show');
+  });
+</script>
 
 @endsection
 

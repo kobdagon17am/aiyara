@@ -512,7 +512,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('warehouse_qr_0001/datatable', 'Pick_warehouseController@warehouse_qr_0001')->name('warehouse_qr_0001.datatable');
     Route::post('warehouse_qr_0002/datatable', 'Pick_warehouseController@warehouse_qr_0002')->name('warehouse_qr_0002.datatable');
+    Route::post('warehouse_qr_0002/warehouse_qr_0002_pack_scan', 'Pick_warehouseController@warehouse_qr_0002_pack_scan');
     Route::post('warehouse_qr_00022/datatable', 'Pick_warehouseController@warehouse_qr_00022')->name('warehouse_qr_00022.datatable');
+    Route::post('warehouse_qr_00022/warehouse_qr_00022_single_scan', 'Pick_warehouseController@warehouse_qr_00022_single_scan');
 
     Route::post('warehouse_tb_000/datatable', 'Pick_warehouseController@warehouse_tb_000')->name('warehouse_tb_000.datatable');
     Route::post('warehouse_tb_001/datatable', 'Pick_warehouseController@warehouse_tb_001')->name('warehouse_tb_001.datatable');

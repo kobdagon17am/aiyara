@@ -651,15 +651,16 @@ class Pick_warehouseController extends Controller
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
-
+// dd($row);
         $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
         if(!empty($DP)){
-
+        
           $pn = '<div class="divTable"><div class="divTableBody">';
           $arr = [];
+       
           foreach ($DP as $key => $value) {
              $delivery = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-
+        
              if($delivery[0]->status_pack==1){
               $d1 = DB::select(" SELECT * FROM `db_delivery_packing` where packing_code_id_fk in (".$delivery[0]->packing_code.")  ");
               $arr1 = [];
@@ -675,14 +676,14 @@ class Pick_warehouseController extends Controller
               $rs2 = implode(',',$arr2);
               $pn .=     
                 '<div class="divTableRow">
-                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - '.@$delivery[0]->packing_code_desc.' (Packing list) : '.$rs2.' </div> 
+                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - <a href="javaScript:;" class="pack_modal" data_id="'.$value->id.'">'.@$delivery[0]->packing_code_desc.' (Packing list) : '.$rs2.' </a> </div> 
                  </div>
               ';
              }else{
 
                 $pn .=     
                 '<div class="divTableRow">
-                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - '.@$delivery[0]->receipt.' </div> 
+                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - <a href="javaScript:;" class="single_modal" data_id="'.$value->id.'">'.@$delivery[0]->receipt.' </a> </div> 
                  </div>
               ';
 
@@ -732,7 +733,7 @@ class Pick_warehouseController extends Controller
   public function warehouse_qr_0002(Request $reg){
 
 
-
+    // Scan Qr-code
 $sTable = DB::select(" 
 
 SELECT 
@@ -772,12 +773,19 @@ ORDER BY db_pick_pack_packing.id
       ->addColumn('column_002', function($row) {
 
             $pn = '<div class="divTable"><div class="divTableBody">';
+            // $pn .=     
+            // '<div class="divTableRow">
+            // <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า (เลขที่ใบเสร็จ)</div>
+            // <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+            // <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+            // <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+            // </div>
+            // ';
             $pn .=     
             '<div class="divTableRow">
             <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า (เลขที่ใบเสร็จ)</div>
             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
             <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-            <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
             </div>
             ';
 
@@ -840,7 +848,6 @@ GROUP BY db_order_products_list.product_id_fk
               $r_ch_t = '';
 
          if(@$Products){
-            
               foreach ($Products as $key => $value) {
   
                 // หา max time_pay ก่อน 
@@ -899,31 +906,31 @@ GROUP BY db_order_products_list.product_id_fk
                 $item_id = 1;
                 $amt_scan = @$value->amt;
 
-                for ($i=0; $i < $amt_scan ; $i++) { 
+                // for ($i=0; $i < $amt_scan ; $i++) { 
 
-                $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
+                // $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
                 
-                            if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
+                //             if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
 
-                              $pn .= 
-                               '
-                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
-                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
-                               ';
+                //               $pn .= 
+                //                '
+                //                 <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
+                //                 <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                //                ';
 
-                            }else{
+                //             }else{
 
-                               $pn .= 
-                               '
-                                <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
-                               ';
+                //                $pn .= 
+                //                '
+                //                 <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                //                 <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
+                //                ';
 
-                            }
+                //             }
 
-                              @$item_id++;
+                //               @$item_id++;
                               
-                          }  
+                //           }  
 
                 $pn .= '</div>';  
                 $pn .= '</div>';  
@@ -990,6 +997,265 @@ GROUP BY db_order_products_list.product_id_fk
     }
 
 
+    // วุฒิเพิ่มมา สำหรับสแกนราย order
+    public function warehouse_qr_0002_pack_scan(Request $reg){
+
+      // Scan Qr-code
+  $sTable = DB::select(" 
+  
+  SELECT 
+  db_pick_pack_packing.id,
+  db_pick_pack_packing.p_size,
+  db_pick_pack_packing.p_weight,
+  db_pick_pack_packing.p_amt_box,
+  db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+  db_pick_pack_packing.packing_code as packing_code,
+  CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
+  CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
+  db_delivery.id as db_delivery_id,
+  db_delivery.packing_code as db_delivery_packing_code
+  FROM `db_pick_pack_packing` 
+  LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+  LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+  WHERE 
+  
+  db_pick_pack_packing.packing_code_id_fk =".$reg->id." 
+  
+  AND db_delivery_packing.packing_code is not null
+  
+  ORDER BY db_pick_pack_packing.id
+  
+  ");
+  
+        $sQuery = \DataTables::of($sTable);
+        return $sQuery
+        ->addColumn('column_001', function($row) {
+          if(@$row->lists){
+            return '<b>'.$row->lists.'</b>' ;
+          }else{
+            return "-";
+          }
+        })
+        ->escapeColumns('column_001')  
+        ->addColumn('column_002', function($row) {
+  
+              $pn = '<div class="divTable"><div class="divTableBody">';
+              $pn .=     
+              '<div class="divTableRow">
+              <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า (เลขที่ใบเสร็จ)</div>
+              <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+              <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+              <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+              </div>
+              ';
+  
+  
+                // ต้องรวมสินค้า โปรโมชั่น ด้วย 
+  
+            $Products = DB::select("
+  
+  (SELECT 
+  
+  db_delivery.orders_id_fk,
+  db_order_products_list.product_id_fk,
+  db_order_products_list.product_name,
+  db_order_products_list.product_unit_id_fk,
+  SUM(db_order_products_list.amt) AS amt ,
+  dataset_product_unit.product_unit,
+  db_orders.code_order,
+  db_orders.id as orders_id_fk
+  
+  FROM `db_order_products_list` 
+  left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+  LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+  
+  WHERE type_product='product' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
+  
+  GROUP BY db_order_products_list.product_id_fk
+  )
+  
+  UNION
+  
+  (
+  SELECT 
+  
+  db_delivery.orders_id_fk,
+  db_order_products_list.product_id_fk,
+  db_order_products_list.product_name,
+  db_order_products_list.product_unit_id_fk,
+  SUM(db_order_products_list.amt) AS amt ,
+  dataset_product_unit.product_unit,
+  db_orders.code_order,
+  db_orders.id as orders_id_fk
+  
+  FROM `db_order_products_list` 
+  left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+  LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+  
+  WHERE type_product='promotion' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
+  
+  GROUP BY db_order_products_list.product_id_fk
+  )
+  
+  
+                   ");
+  
+                $sum_amt = 0 ;
+                $r_ch_t = '';
+  
+           if(@$Products){
+                foreach ($Products as $key => $value) {
+    
+                  // หา max time_pay ก่อน 
+                   $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+                // Check ว่ามี status=2 ? (ค้างจ่าย)
+                   $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                   if(count($r_ch02)>0){
+                      $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                   }else{
+                     $r_ch_t = '';
+                   }
+  
+                    // บิลปกติ
+                  $arr_inv = [];
+                  $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
+                  LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
+                  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+                  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+                  WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='product'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
+                  if(@$p1){
+                    foreach (@$p1 as $inv) {
+                        array_push($arr_inv,@$inv->code_order);
+                    }
+                  }
+  
+                  // บิลโปร
+                  $p2 = DB::select(" 
+                  select db_orders.code_order 
+                  FROM `promotions_products` 
+                  LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
+                  LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+                  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+                  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+                  WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='promotion'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
+                  if(@$p2){
+                    foreach (@$p2 as $inv) {
+                        array_push($arr_inv,@$inv->code_order);
+                    }
+                  }
+  
+                  $invoice_code = implode(",",$arr_inv);
+  
+  
+                  $sum_amt += $value->amt;
+                  $pn .=     
+                  '<div class="divTableRow">
+                  <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                  '.@$value->product_name.'</b><br>
+                  ('.@$invoice_code.')<br>
+                  <font color=red>'.$r_ch_t.'</font>
+                  </div>
+                  <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
+                  <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
+                  <div class="divTableCell" style="text-align:left;"> ';
+  
+                  $item_id = 1;
+                  $amt_scan = @$value->amt;
+  
+                  for ($i=0; $i < $amt_scan ; $i++) { 
+  
+                  $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
+                  
+                              if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
+  
+                                $pn .= 
+                                 '
+                                  <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
+                                  <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                                 ';
+  
+                              }else{
+  
+                                 $pn .= 
+                                 '
+                                  <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                                  <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
+                                 ';
+  
+                              }
+  
+                                @$item_id++;
+                                
+                            }  
+  
+                  $pn .= '</div>';  
+                  $pn .= '</div>';  
+                
+                }
+                }
+  
+                $pn .=     
+                '<div class="divTableRow">
+                <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+                <div class="divTableCell" style="text-align:center;font-weight:bold;">'.@$sum_amt.'</div>
+                <div class="divTableCell" style="text-align:center;"> </div>
+                <div class="divTableCell" style="text-align:center;"> </div>
+                </div>
+                ';
+  
+            $pn .= '</div>';  
+            return $pn;
+        })
+        ->escapeColumns('column_002')  
+        ->addColumn('column_003', function($row) {
+  
+          $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
+            $pn = '<div class="divTable"><div class="divTableBody">';
+            $pn .=     
+            '<div class="divTableRow">
+            <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;"> ข้อมูลอื่นๆ </div>
+            </div>
+            ';
+            if($sBox->count()==0){
+                DB::table('db_pick_pack_boxsize')->insert([
+                    'pick_pack_packing_id_fk' => @$row->id,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
+            foreach($sBox as $key1 => $box){
+              $pn .= '<div class="divTableRow row_0002" data-bill-type="warehouse_qr_0002">
+              <div class="divTableCell" style="text-align:left;"> 
+               <b>ขนาด <br> 
+               <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
+               น้ำหนัก <br>
+                <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
+               จำนวนกล่อง <br>
+                <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
+               <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
+               <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
+              </div> 
+              </div>';
+            }
+              $pn .=     
+              '<div class="divTableRow">
+              <div class="divTableCell" style="text-align:center;"> </div>
+              <div class="divTableCell" style="text-align:center;"> </div>
+              </div>
+              ';
+  
+          $pn .= '</div>';  
+          return $pn;
+      })
+        ->escapeColumns('column_003')  
+  
+        ->make(true);
+      }
+
 
 
   public function warehouse_qr_00022(Request $reg){
@@ -1040,12 +1306,19 @@ ORDER BY db_pick_pack_packing.id
            
 
             $pn = '<div class="divTable"><div class="divTableBody">';
+            // $pn .=     
+            // '<div class="divTableRow">
+            // <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
+            // <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+            // <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+            // <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+            // </div>
+            // ';
             $pn .=     
             '<div class="divTableRow">
             <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
             <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-            <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
             </div>
             ';
 
@@ -1120,31 +1393,31 @@ ORDER BY db_pick_pack_packing.id
                 $item_id = 1;
                 $amt_scan = @$value->amt;
 
-                for ($i=0; $i < $amt_scan ; $i++) { 
+                // for ($i=0; $i < $amt_scan ; $i++) { 
 
-                $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
+                // $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
                 
-                            if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
+                //             if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
 
-                              $pn .= 
-                               '
-                                <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
-                                <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
-                               ';
+                //               $pn .= 
+                //                '
+                //                 <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
+                //                 <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                //                ';
 
-                            }else{
+                //             }else{
 
-                               $pn .= 
-                               '
-                                <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                                <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
-                               ';
+                //                $pn .= 
+                //                '
+                //                 <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                //                 <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
+                //                ';
 
-                            }
+                //             }
 
-                              @$item_id++;
+                //               @$item_id++;
                               
-                          }  
+                //           }  
 
                 $pn .= '</div>';  
                 $pn .= '</div>';  
@@ -1211,6 +1484,233 @@ ORDER BY db_pick_pack_packing.id
 
       ->make(true);
     }
+
+    public function warehouse_qr_00022_single_scan(Request $reg){
+      // Scan Qr-code
+      $sTable = DB::select(" 
+      
+      SELECT 
+      db_pick_pack_packing.id,
+      db_pick_pack_packing.p_size,
+      db_pick_pack_packing.p_weight,
+      db_pick_pack_packing.p_amt_box,
+      db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+      db_pick_pack_packing.packing_code as packing_code,
+      CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
+      CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
+      db_delivery.id as db_delivery_id,
+      db_delivery.packing_code as db_delivery_packing_code
+      FROM `db_pick_pack_packing` 
+      LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+      LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+      WHERE 
+      
+      db_pick_pack_packing.packing_code_id_fk =".$reg->id." 
+      
+      AND db_delivery_packing.packing_code is null
+      
+      ORDER BY db_pick_pack_packing.id
+      
+      ");
+      
+      
+      
+      
+            $sQuery = \DataTables::of($sTable);
+            return $sQuery
+            ->addColumn('column_001', function($row) {
+              if(@$row->lists){
+                return '<b>'.$row->lists.'</b>' ;
+              }else{
+                return "-";
+              }
+            })
+            ->escapeColumns('column_001')  
+            ->addColumn('column_002', function($row) {
+      
+                 
+      
+                  $pn = '<div class="divTable"><div class="divTableBody">';
+                  // $pn .=     
+                  // '<div class="divTableRow">
+                  // <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
+                  // <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+                  // <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+                  // <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+                  // </div>
+                  // ';
+                  $pn .=     
+                  '<div class="divTableRow">
+                  <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
+                  <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+                  <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+                  <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+                  </div>
+                  ';
+      
+      
+                    // ต้องรวมสินค้า โปรโมชั่น ด้วย 
+      
+                 $Products = DB::select("
+      
+                      SELECT
+                      db_pay_requisition_002.id,
+                      db_pay_requisition_002.time_pay,
+                      db_pay_requisition_002.business_location_id_fk,
+                      db_pay_requisition_002.branch_id_fk,
+                      db_pay_requisition_002.pick_pack_requisition_code_id_fk,
+                      db_pay_requisition_002.customers_id_fk,
+                      db_pay_requisition_002.product_id_fk,
+                      db_pay_requisition_002.product_name,
+                      db_pay_requisition_002.amt_need,
+                      db_pay_requisition_002.amt_get as amt,
+                      db_pay_requisition_002.amt_lot,
+                      db_pay_requisition_002.amt_remain,
+                      db_pay_requisition_002.product_unit_id_fk,
+                      db_pay_requisition_002.product_unit,
+                      db_pay_requisition_002.lot_number,
+                      db_pay_requisition_002.lot_expired_date,
+                      db_pay_requisition_002.warehouse_id_fk,
+                      db_pay_requisition_002.zone_id_fk,
+                      db_pay_requisition_002.shelf_id_fk,
+                      db_pay_requisition_002.shelf_floor,
+                      db_pay_requisition_002.status_cancel,
+                      db_pay_requisition_002.created_at,
+                      db_pay_requisition_002.updated_at,
+                      db_pay_requisition_002.deleted_at
+                      FROM `db_pay_requisition_002`
+                      WHERE pick_pack_requisition_code_id_fk='".@$row->packing_code_id_fk."' 
+      
+      
+      
+                       ");
+      
+                    $sum_amt = 0 ;
+                    $r_ch_t = '';
+      
+               if(@$Products){
+                  
+                    foreach ($Products as $key => $value) {
+      
+                      if(!empty($value->product_id_fk)){
+      
+                      // หา max time_pay ก่อน 
+                       $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+                    // Check ว่ามี status=2 ? (ค้างจ่าย)
+                       $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                       if(count($r_ch02)>0){
+                          $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                       }else{
+                         $r_ch_t = '';
+                       }
+      
+      
+                      $sum_amt += $value->amt;
+                      $pn .=     
+                      '<div class="divTableRow">
+                      <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                      '.@$value->product_name.'</b><br>
+                      <font color=red>'.$r_ch_t.'</font>
+                      </div>
+                      <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
+                      <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
+                      <div class="divTableCell" style="text-align:left;"> ';
+      
+                      $item_id = 1;
+                      $amt_scan = @$value->amt;
+      
+                      for ($i=0; $i < $amt_scan ; $i++) { 
+      
+                      $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
+                      
+                                  if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
+      
+                                    $pn .= 
+                                     '
+                                      <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
+                                      <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                                     ';
+      
+                                  }else{
+      
+                                     $pn .= 
+                                     '
+                                      <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                                      <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
+                                     ';
+      
+                                  }
+      
+                                    @$item_id++;
+                                    
+                                }  
+      
+                      $pn .= '</div>';  
+                      $pn .= '</div>';  
+                    
+                    }
+                    }
+      
+                    $pn .=     
+                    '<div class="divTableRow">
+                    <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'.@$sum_amt.'</div>
+                    <div class="divTableCell" style="text-align:center;"> </div>
+                    <div class="divTableCell" style="text-align:center;"> </div>
+                    </div>
+                    ';
+      
+                $pn .= '</div>';  
+                return $pn;
+              }
+            })
+            ->escapeColumns('column_002')  
+            ->addColumn('column_003', function($row) {
+      
+              $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
+              $pn = '<div class="divTable"><div class="divTableBody">';
+              $pn .=     
+              '<div class="divTableRow">
+              <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;"> ข้อมูลอื่นๆ </div>
+              </div>
+              ';
+              if($sBox->count()==0){
+                  DB::table('db_pick_pack_boxsize')->insert([
+                      'pick_pack_packing_id_fk' => @$row->id,
+                      'created_at' => date('Y-m-d H:i:s'),
+                  ]);
+              }
+              $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
+              foreach($sBox as $key1 => $box){
+                $pn .= '<div class="divTableRow row_0002" data-bill-type="warehouse_qr_0002">
+                <div class="divTableCell" style="text-align:left;"> 
+                 <b>ขนาด <br> 
+                 <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
+                 น้ำหนัก <br>
+                  <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
+                 จำนวนกล่อง <br>
+                  <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
+                 <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
+                 <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
+                </div> 
+                </div>';
+              }
+                    
+                    $pn .=     
+                    '<div class="divTableRow">
+                    <div class="divTableCell" style="text-align:center;"> </div>
+                    <div class="divTableCell" style="text-align:center;"> </div>
+                    </div>
+                    ';
+      
+                $pn .= '</div>';  
+                return $pn;
+            })
+            ->escapeColumns('column_003')  
+      
+            ->make(true);
+          }
+
   public function warehouse_tb_000(Request $reg){
 
       $sTable = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `pick_pack_requisition_code_id_fk` in (".$reg->id.") group by pick_pack_requisition_code_id_fk ");
