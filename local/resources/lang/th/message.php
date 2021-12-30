@@ -92,6 +92,7 @@ return [
     'get_money_back_type' => 'ประเภทของการรับเงินคืน',
     'ce_regis_gift' => 'ประเภทของให้ตอนเข้าร่วมงาน',
     'transfer_branch_get' => 'รับสินค้าจากการโอนระหว่างสาขา',
+    'requisition_between_branch' => 'ขอเบิกระหว่างสาขา',
 ],
 
 // /backend/index

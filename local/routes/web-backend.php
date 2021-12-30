@@ -953,6 +953,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('scan_qrcode', 'Scan_qrcodeController');
     Route::post('scan_qrcode/datatable', 'Scan_qrcodeController@Datatable')->name('scan_qrcode.datatable');
 
+    // ขอเบิกระหว่างสาขา
+    Route::get('requisition_between_branch', 'RequisitionBetweenBranchController@index')->name('requisition_between_branch.index');
+    Route::post('requisition_between_branch', 'RequisitionBetweenBranchController@store')->name('requisition_between_branch.store');
+    Route::patch('requisition_between_branch/{requisition_between_branch}', 'RequisitionBetweenBranchController@update')->name('requisition_between_branch.update');
+
 
 	#===========================================================================================
 
