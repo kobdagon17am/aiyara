@@ -278,7 +278,7 @@ class Pick_packController extends Controller
       // return response()->json(\App\Models\Alert::Msg('success'));
     }
 
-     public function Datatable(){
+     public function Datatable(Request $request){
 
 
        $sPermission = \Auth::user()->permission ;
@@ -307,15 +307,35 @@ class Pick_packController extends Controller
             // $branch_id_fk = " and db_delivery.branch_id_fk in (1,6) ";
             $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
 
+            // วุฒิแก้ใหม่ ให้ WH เห็นทุกสาขา 
+            // $branch_id_fk = "";
+
         }
 
+      if(isset($request->startDate)){
+        $startDate = " AND DATE(delivery_date) >= '".$request->startDate."' " ;
+        $endDate = " AND DATE(delivery_date) <= '".$request->endDate."' " ;
 
-      $sTable = DB::select(" 
+        $sTable = DB::select(" 
+        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk 
+        $startDate
+        $endDate
+        UNION
+        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk 
+        $startDate
+        $endDate
+        GROUP BY packing_code
+        ORDER BY updated_at DESC
+     ");
+      }else{
+        $sTable = DB::select(" 
         select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk
         UNION
         select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk GROUP BY packing_code
-        ORDER BY updated_at DESC
+        ORDER BY updated_at asc
      ");
+      }
+      
       $sQuery = \DataTables::of($sTable);
       return $sQuery     
       ->addColumn('customer_name', function($row) {
@@ -359,7 +379,14 @@ class Pick_packController extends Controller
                 return "<b>(".@$row->packing_code_desc.")</b><br>".$arr;
 
         }else{
-            return @$row->receipt;
+          // return "<span class='order_list' data-id=".@$row->receipt." style='cursor:pointer;color:blue;'> ".@$row->receipt." </span> ";
+          $data = DB::table('db_orders')->where('code_order',$row->receipt)->first();
+          if($data){
+            return "<a href='".url('backend/frontstore/print_receipt_022/'.$data->id)."' target='blank' class='order_list'>".@$row->receipt."</a>";
+          }else{
+            return $row->receipt;
+          }
+           
         }
 
       })

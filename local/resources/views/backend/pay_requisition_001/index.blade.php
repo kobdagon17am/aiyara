@@ -175,7 +175,7 @@
                       </div>
                     </div>
 
-                    <div class="col-md-6 " >
+                    {{-- <div class="col-md-6 " >
                       <div class="form-group row">
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
                             <div class="col-md-9">
@@ -199,7 +199,7 @@
 
                             </div>
                           </div>
-                    </div>
+                    </div> --}}
 
                </div>
 

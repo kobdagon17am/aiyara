@@ -140,7 +140,6 @@ class Pick_packPackingCodeController extends Controller
             }else{
                 $business_location_id = "";
             }
-
             if(!empty( $req->branch_id_fk) ){
                 $branch_id_fk = " and branch_id_fk = ".$req->branch_id_fk." " ;
             }else{
@@ -179,6 +178,9 @@ class Pick_packPackingCodeController extends Controller
         }else{
            $w05 = "";
         }
+
+        // วุฒิปรับให้ WH ดูได้ทุกสาขา
+        $branch_id_fk = "";
 
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
       $sTable = DB::select(" 

@@ -171,6 +171,56 @@
     <div class="card">
       <div class="card-body">
 
+        <div class="col-12">
+          <div class="form-group row  " >
+
+            <div class="col-md-12 ">
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> นำเข้าเลขพัสดุจาก Kerry </span>
+              <form class="form-horizontal" method="POST" action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <div class="form-group row">
+
+                  <input type="hidden" name="requisition_code" value="{{@$requisition_code}}">
+                  <input type="hidden" name="id" value="{{@$id}}">
+                  
+                  <div class="col-md-2">
+                    <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
+                  </div>
+                  <div class="col-md-2" style="" >
+                    <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='IMPORT'>
+                   &nbsp;
+                    &nbsp;
+                    &nbsp; 
+                    <!-- <input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code'  > -->
+
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                     <input type='button' data-id="{{@$id}}" class="btn btn-danger btnClearImport " value='Clear เพื่อนำเข้าใหม่' > 
+
+                  </div>
+
+                  <div class="col-md-3">
+                    <a href="backend/pick_warehouse/print_requisition/{{@$id}}" class="btn btn-primary" target=_blank title="พิมพ์ใบเบิกสินค้า"><i class="bx bx-printer"></i> พิมพ์ใบเบิกสินค้า</a>
+                  </div>
+                  
+                </div>
+                
+                @if(Session::has('message'))
+                <div class="form-group row ">
+                  <label for="receipt" class="col-md-2 col-form-label"></label>
+                  <div class="col-md-6 ">
+                    <p style="color:green;font-weight:bold;font-size: 16px;" >{{ Session::get('message') }}</p>
+                  </div>
+                </div>
+                @endif
+                
+              </form>
+      
+          </div>
+        </div>
+      </div>
+
         <div class="myBorder" style="" >
           <div class="col-12">
             <div class="form-group row  " >
@@ -190,52 +240,7 @@
 
                 <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
 
-                      <div class="col-12">
-            <div class="form-group row  " >
-
-              <div class="col-md-12 ">
-                <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> นำเข้าเลขพัสดุจาก Kerry </span>
- <center>
-                <form class="form-horizontal" method="POST" action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
-                  {{ csrf_field() }}
-                  <div class="form-group row">
-
-                    <input type="hidden" name="requisition_code" value="{{@$requisition_code}}">
-                    <input type="hidden" name="id" value="{{@$id}}">
-                    
-                    <div class="col-md-3">
-                      <input type="file" accept=".xlsx" class="form-control" name="fileXLS" required>
-                    </div>
-                    <div class="col-md-6" style="" >
-                      <input type='submit' name="submit" class="btn btn-primary btnImXlsx " value='IMPORT'>
-                     &nbsp;
-                      &nbsp;
-                      &nbsp; 
-                      <!-- <input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code'  > -->
-
-                      &nbsp;
-                      &nbsp;
-                      &nbsp;
-                       <input type='button' data-id="{{@$id}}" class="btn btn-danger btnClearImport " value='Clear เพื่อนำเข้าใหม่' > 
-
-                    </div>
-                    
-                  </div>
-                  
-                  @if(Session::has('message'))
-                  <div class="form-group row ">
-                    <label for="receipt" class="col-md-2 col-form-label"></label>
-                    <div class="col-md-6 ">
-                      <p style="color:green;font-weight:bold;font-size: 16px;" >{{ Session::get('message') }}</p>
-                    </div>
-                  </div>
-                  @endif
-                  
-                </form>
-        
-            </div>
-          </div>
-        </div>
+                   
                 
             </div>
           </div>
@@ -494,7 +499,7 @@
                      {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง | ใบเสร็จ  </span> ', className: 'text-center w180 ',render: function(d) {
                         return d ;
                       }},
-                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> พิมพ์ใบเบิก  </span> ', className: 'text-center w80 ',render: function(d) {
+                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> พิมพ์เสร็จ  </span> ', className: 'text-center w80 ',render: function(d) {
                         return d ;
                       }},
              

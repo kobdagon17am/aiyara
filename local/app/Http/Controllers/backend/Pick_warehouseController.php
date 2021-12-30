@@ -759,9 +759,6 @@ ORDER BY db_pick_pack_packing.id
 
 ");
 
-
-
-
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
@@ -773,8 +770,6 @@ ORDER BY db_pick_pack_packing.id
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
-
-           
 
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=     

@@ -548,7 +548,7 @@ $(function() {
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
-                  {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+                  {data: 'receipt_new', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-left'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
