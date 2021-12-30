@@ -8,6 +8,7 @@ class RequisitionBetweenBranchDetail extends Model
 {
     protected $fillable = [
         'requisition_between_branch_id',
+        'product_id',
         'product_name',
         'amount',
     ];
