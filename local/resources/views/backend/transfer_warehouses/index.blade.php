@@ -620,7 +620,6 @@
   </div>
 </div>
 
-<?php dump(session()->all()); ?>
 @endsection
 
 @section('script')
