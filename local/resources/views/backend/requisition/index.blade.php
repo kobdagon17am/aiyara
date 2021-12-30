@@ -71,10 +71,11 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select name="details[1][product_name]" class="form-control" required>
+                                            <input type="hidden" name="details[1][product_name]">
+                                            <select name="details[1][product_id]" class="form-control select" required>
                                                 <option value="">- เลือกสินค้า -</option>
                                                 @foreach(@$products AS $product)
-                                                    <option value="{{ @$product->product_code." : ".@$product->product_name }}" >{{ @$product->product_code." : ".@$product->product_name }}</option>
+                                                    <option value="{{ $product->product_id }}">{{ @$product->product_code." : ".@$product->product_name }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -111,6 +112,7 @@
                 <table class="table table-sm table-bordered my-3">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>สาขาที่ยื่นคำขอ</th>
                             <th>สินค้า</th>
                             <th>วันที่ยื่นคำขอ</th>
@@ -120,14 +122,33 @@
                     <tbody>
                         @forelse ($approve_requisitons as $requisiton)
                             <tr>
+                                <td>{{ $requisiton->id }}</td>
                                 <td>{{ $requisiton->to_branch->b_name }}</td>
                                 <td>
-                                    @foreach ($requisiton->requisition_details as $requisition_detail)
-                                        <div>
-                                            {{ $requisition_detail->product_name }}
-                                            ( จำนวน : {{ $requisition_detail->amount }} )
+                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light" data-toggle="modal" data-target="#see-details{{ $requisiton->id }}">ดูรายการสินค้า</button>
+                                    <div class="modal fade" id="see-details{{ $requisiton->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">รายการสินค้า</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @foreach ($requisiton->requisition_details as $requisition_detail)
+                                                        <div>
+                                                            {{ $requisition_detail->product_name }}
+                                                            ( จำนวน : {{ $requisition_detail->amount }} )
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    @endforeach
+                                    </div>
                                 </td>
                                 <td>
                                     {{ $requisiton->created_at->format('d/m/Y H:i:s') }}
@@ -156,6 +177,7 @@
                 <table class="table table-sm table-bordered my-3">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>สาขาที่ยื่นคำขอ</th>
                             <th>สินค้า</th>
                             <th>ผู้ยื่นคำขอ</th>
@@ -166,14 +188,33 @@
                     <tbody>
                         @forelse ($requisitons as $requisiton)
                             <tr>
+                                <td>{{ $requisiton->id }}</td>
                                 <td>{{ $requisiton->from_branch->b_name }}</td>
                                 <td>
-                                    @foreach ($requisiton->requisition_details as $requisition_detail)
-                                        <div>
-                                            {{ $requisition_detail->product_name }}
-                                            ( จำนวน : {{ $requisition_detail->amount }} )
+                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light" data-toggle="modal" data-target="#see-details{{ $requisiton->id }}">ดูรายการสินค้า</button>
+                                    <div class="modal fade" id="see-details{{ $requisiton->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">รายการสินค้า</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @foreach ($requisiton->requisition_details as $requisition_detail)
+                                                        <div>
+                                                            {{ $requisition_detail->product_name }}
+                                                            ( จำนวน : {{ $requisition_detail->amount }} )
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    @endforeach
+                                    </div>
                                 </td>
                                 <td>{{ $requisiton->requisition_by->name }}</td>
                                 <td>
@@ -229,10 +270,11 @@
             $trLast.after(`
                 <tr>  
                     <td>
-                        <select name="details[${idx}][product_name]" class="form-control" required>
+                        <input type="hidden" name="details[${idx}][product_name]">
+                        <select name="details[${idx}][product_id]" class="form-control select" required>
                             <option value="">- เลือกสินค้า -</option>
                             @foreach(@$products AS $product)
-                                <option value="{{ @$product->product_code." : ".@$product->product_name }}" >{{ @$product->product_code." : ".@$product->product_name }}</option>
+                                <option value="{{ @$product->product_id }}">{{ @$product->product_code." : ".@$product->product_name }}</option>
                             @endforeach
                         </select>
                     </td>
@@ -248,6 +290,10 @@
             `);
 
             idx++;
+        })
+
+        $(document).on('change', '.select', function () {
+            $(this).prev().val($(this).find(':selected').text())
         })
 
         $(document).on('click', '.remove-row', function () {
