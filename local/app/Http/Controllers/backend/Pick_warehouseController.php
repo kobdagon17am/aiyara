@@ -1343,10 +1343,12 @@ ORDER BY db_pick_pack_packing.id
     // return $reg->id;
     if(!empty($reg->packing_id)){
         $d1 = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `pick_pack_requisition_code_id_fk`=".$reg->packing_id." "); 
-         // return $d1;
+        
+        // return $d1;
         if($d1){
             $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             // return $d2[0]->receipts;
+      
             $arr1 = []; 
             if($d2){
               foreach ($d2 as $key => $v) {

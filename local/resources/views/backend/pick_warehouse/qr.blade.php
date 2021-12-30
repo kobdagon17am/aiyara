@@ -173,6 +173,19 @@
 
         <div class="col-12">
           <div class="form-group row  " >
+            <div class="col-md-12 ">
+              <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอเบิก </span>
+
+               <!-- <span style="font-weight: bold;color: red;">*** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>   -->
+
+              <table id="order_wait_table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+            <input type='button' class="btn btn-primary btnExportElsx " data-id="{{$id}}" value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
+          </div>
+        </div>
+      </div>
+
+        <div class="col-12">
+          <div class="form-group row  " >
 
             <div class="col-md-12 ">
               <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> นำเข้าเลขพัสดุจาก Kerry </span>
@@ -200,10 +213,10 @@
 
                   </div>
 
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <a href="backend/pick_warehouse/print_requisition/{{@$id}}" class="btn btn-primary" target=_blank title="พิมพ์ใบเบิกสินค้า"><i class="bx bx-printer"></i> พิมพ์ใบเบิกสินค้า</a>
                   </div>
-                  
+
                 </div>
                 
                 @if(Session::has('message'))
@@ -231,6 +244,20 @@
               </div>
             </div>
           </div>
+
+          {{-- <div class="col-12">
+            <div class="form-group row  " >
+              <div class="col-md-12 ">
+                <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการบิลรอเบิก </span>
+
+                 <!-- <span style="font-weight: bold;color: red;">*** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>   -->
+
+                <table id="order_wait_table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+              <input type='button' class="btn btn-primary btnExportElsx " data-id="{{$id}}" value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
+            </div>
+          </div>
+        </div> --}}
+
 
           <div class="col-12">
             <div class="form-group row  " > 
