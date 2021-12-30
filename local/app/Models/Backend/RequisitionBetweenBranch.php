@@ -23,17 +23,20 @@ class RequisitionBetweenBranch extends Model
     public function scopeWaitApproveByBranch($query)
     {
         // auth()->user()->branch_id_fk
-        return $query
-            ->where('to_branch_id', auth()->user()->branch_id_fk)
-            ->where('is_approve', static::WAIT_APPROVE)
+        return $query->when(auth()->user()->permission !== 1, function ($query) {
+                return $query->where('to_branch_id', auth()->user()->branch_id_fk)
+                    ->where('is_approve', static::WAIT_APPROVE);
+            })
             ->get();
     }
 
     public function scopeisApprove($query)
     {
         // auth()->user()->branch_id_fk
-        return $query->where('from_branch_id', auth()->user()->branch_id_fk)
-            ->where('is_approve', static::APPROVED)
+        return $query->when(auth()->user()->permission !== 1, function ($query) {
+                return $query->where('from_branch_id', auth()->user()->branch_id_fk)
+                    ->where('is_approve', static::APPROVED);
+            })
             ->get();
     }
 
