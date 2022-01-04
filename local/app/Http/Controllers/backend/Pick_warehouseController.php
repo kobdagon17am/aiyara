@@ -231,6 +231,62 @@ class Pick_warehouseController extends Controller
 
     }
 
+    public function qr1($id)
+    {
+          // return $id;
+
+      // $r1 = DB::select(" SELECT * FROM db_pick_pack_packing_code where id=$id ");
+      // dd($r1);
+
+
+      $r = DB::select("SELECT db_pay_requisition_001.*,db_pick_pack_requisition_code.requisition_code FROM db_pay_requisition_001 LEFT Join db_pick_pack_requisition_code ON db_pay_requisition_001.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
+      where db_pay_requisition_001.pick_pack_requisition_code_id_fk =$id ");
+      $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
+      // dd($sRow);
+      $requisition_code = $r[0]->requisition_code;
+      
+        $sUser =  DB::select(" 
+            SELECT
+            db_pay_requisition_001.id,
+            db_pay_requisition_001.business_location_id_fk,
+            db_pay_requisition_001.branch_id_fk,
+            db_pay_requisition_001.pick_pack_requisition_code_id_fk,
+            (select name from ck_users_admin where id=db_pay_requisition_001.action_user)  AS user_action,
+            db_pay_requisition_001.action_date,
+            (select name from ck_users_admin where id=db_pay_requisition_001.pay_user)  AS pay_user,
+            db_pay_requisition_001.pay_date,
+            db_pay_requisition_001.status_sent,
+            db_pay_requisition_001.customer_id_fk,
+            db_pay_requisition_001.address_send AS user_address,
+            db_pay_requisition_001.address_send_type,
+            -- customers.user_name AS user_code,
+            -- CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+            dataset_pay_product_status.txt_desc as bill_status
+            FROM
+            db_pay_requisition_001
+            Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
+            where db_pay_requisition_001.pick_pack_requisition_code_id_fk = '$id'
+        ");
+        // dd($sUser);
+
+      $user_amdin = DB::select(" select * from ck_users_admin where id=".(\Auth::user()->id)."");
+      $role_group = DB::select(" SELECT can_cancel_packing_sent FROM `role_permit` where can_cancel_packing_sent=1 and role_group_id_fk=".$user_amdin[0]->role_group_id_fk."");
+      // dd($user_amdin[0]->role_group_id_fk);
+      // dd($role_group[0]->can_cancel_packing_sent);
+      if(@$role_group[0]->can_cancel_packing_sent==1){
+          $can_cancel_packing_sent = 1;
+      }else{
+          $can_cancel_packing_sent = 0;
+      }
+
+      return View('backend.pick_warehouse.qr1')->with(
+        array(
+           'packing_id'=>@$sRow->id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>@$id,'requisition_code'=>@$requisition_code,
+           'can_cancel_packing_sent'=>@$can_cancel_packing_sent,
+        ) );
+      // return View('backend.pick_warehouse.qr');
+
+    }
 
 
     public function cancel($id)
@@ -731,7 +787,7 @@ class Pick_warehouseController extends Controller
 
 
   public function warehouse_qr_0002(Request $reg){
-
+// pick_pack_packing_code_id_fk
 
     // Scan Qr-code
 $sTable = DB::select(" 
@@ -759,7 +815,7 @@ AND db_delivery_packing.packing_code is not null
 ORDER BY db_pick_pack_packing.id
 
 ");
-
+// dd($sTable);
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
@@ -849,11 +905,16 @@ GROUP BY db_order_products_list.product_id_fk
 
          if(@$Products){
               foreach ($Products as $key => $value) {
-  
+            // วุฒิเพิ่ม if มาเช็ค
+                if($value->product_id_fk!=null){
+
                 // หา max time_pay ก่อน 
                  $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
-              // Check ว่ามี status=2 ? (ค้างจ่าย)
+           
+                 // Check ว่ามี status=2 ? (ค้างจ่าย)
+              // .$value->product_id_fk.
                  $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+    
                  if(count($r_ch02)>0){
                     $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
                  }else{
@@ -934,6 +995,8 @@ GROUP BY db_order_products_list.product_id_fk
 
                 $pn .= '</div>';  
                 $pn .= '</div>';  
+
+              }
               
               }
               }
@@ -1843,12 +1906,14 @@ ORDER BY db_pick_pack_packing.id
     // return $reg->id;
     if(!empty($reg->packing_id)){
         $d1 = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `pick_pack_requisition_code_id_fk`=".$reg->packing_id." "); 
-        
         // return $d1;
         if($d1){
-            $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
+          // วุฒิลองแก้เป็นฐานตัวเอง 
+          $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+          $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
+            // $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             // return $d2[0]->receipts;
-      
+            // dd($db_pick_pack_requisition_code);
             $arr1 = []; 
             if($d2){
               foreach ($d2 as $key => $v) {

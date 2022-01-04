@@ -805,6 +805,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
     Route::get('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
 
+    Route::post('pick_warehouse/{id}/qr1', 'Pick_warehouseController@qr1');
+    Route::get('pick_warehouse/{id}/qr1', 'Pick_warehouseController@qr1');
+
     Route::post('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
     Route::get('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
 
