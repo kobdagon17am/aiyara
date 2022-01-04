@@ -512,7 +512,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('warehouse_qr_0001/datatable', 'Pick_warehouseController@warehouse_qr_0001')->name('warehouse_qr_0001.datatable');
     Route::post('warehouse_qr_0002/datatable', 'Pick_warehouseController@warehouse_qr_0002')->name('warehouse_qr_0002.datatable');
+    Route::post('warehouse_qr_0002/warehouse_qr_0002_pack_scan', 'Pick_warehouseController@warehouse_qr_0002_pack_scan');
     Route::post('warehouse_qr_00022/datatable', 'Pick_warehouseController@warehouse_qr_00022')->name('warehouse_qr_00022.datatable');
+    Route::post('warehouse_qr_00022/warehouse_qr_00022_single_scan', 'Pick_warehouseController@warehouse_qr_00022_single_scan');
 
     Route::post('warehouse_tb_000/datatable', 'Pick_warehouseController@warehouse_tb_000')->name('warehouse_tb_000.datatable');
     Route::post('warehouse_tb_001/datatable', 'Pick_warehouseController@warehouse_tb_001')->name('warehouse_tb_001.datatable');
@@ -577,6 +579,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('ce_regis', 'Ce_regisController');
     Route::post('ce_regis/datatable', 'Ce_regisController@Datatable')->name('ce_regis.datatable');
 
+    Route::get('frontstore/get_order_history_status', 'FrontstoreController@getOrderHistoryStatus')->name('frontstore.get_order_history_status');
     Route::resource('frontstore', 'FrontstoreController');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
@@ -802,6 +805,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
     Route::get('pick_warehouse/{id}/qr', 'Pick_warehouseController@qr');
 
+    Route::post('pick_warehouse/{id}/qr1', 'Pick_warehouseController@qr1');
+    Route::get('pick_warehouse/{id}/qr1', 'Pick_warehouseController@qr1');
+
     Route::post('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
     Route::get('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
 
@@ -951,6 +957,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('scan_qrcode', 'Scan_qrcodeController');
     Route::post('scan_qrcode/datatable', 'Scan_qrcodeController@Datatable')->name('scan_qrcode.datatable');
+
+    // ขอเบิกระหว่างสาขา
+    Route::get('requisition_between_branch', 'RequisitionBetweenBranchController@index')->name('requisition_between_branch.index');
+    Route::post('requisition_between_branch', 'RequisitionBetweenBranchController@store')->name('requisition_between_branch.store');
+    Route::patch('requisition_between_branch/{requisition_between_branch}', 'RequisitionBetweenBranchController@update')->name('requisition_between_branch.update');
 
 
 	#===========================================================================================

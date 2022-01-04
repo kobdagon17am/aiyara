@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\backend\AjaxController;
 
 class Transfer_warehousesController extends Controller
@@ -65,7 +66,7 @@ class Transfer_warehousesController extends Controller
       // dd($sTransfer_chooseAll);
       $sTransfer_choose = \App\Models\Backend\Transfer_choose::where('warehouse_id_fk','=','0')->where('action_user','=',(\Auth::user()->id))->get();
       // dd($sTransfer_choose);
-  
+
         return View('backend.transfer_warehouses.index')->with(
         array(
            'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sTransfer_choose'=>$sTransfer_choose,'sTransfer_chooseAll'=>$sTransfer_chooseAll,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id,
@@ -89,7 +90,11 @@ class Transfer_warehousesController extends Controller
     }
     public function store(Request $request)
     {
-
+      // branch_id_fk_c
+      // warehouse_id_fk_c
+      // zone_id_fk_c
+      // shelf_id_fk_c
+      // shelf_floor_c
       // dd($request->all());
 
       if(isset($request->save_select_to_transfer)){
@@ -125,7 +130,6 @@ class Transfer_warehousesController extends Controller
           return redirect()->to(url("backend/transfer_warehouses"));
 
       }else if(isset($request->save_set_to_warehouse)){
-
         // dd($request->all());
               if($request->save_set_to_warehouse==1){
                 DB::update("
@@ -137,12 +141,13 @@ class Transfer_warehousesController extends Controller
                      shelf_floor = ".$request->shelf_floor_c."
                     where id=".$request->id_set_to_warehouse."
                 ");
+
+                $this->saveSessionDropDown($request);
               }
 
               return redirect()->to(url("backend/transfer_warehouses"));
 
       }else if(isset($request->save_set_to_warehouse_e)){
-
         // dd($request->all());
               if($request->save_set_to_warehouse_e==1){
                 DB::update("
@@ -154,6 +159,7 @@ class Transfer_warehousesController extends Controller
                      shelf_floor = ".$request->shelf_floor_c_e."
                     where id=".$request->id_set_to_warehouse_e."
                 ");
+
               }
 
               return redirect()->to(url("backend/transfer_warehouses"));
@@ -210,7 +216,7 @@ class Transfer_warehousesController extends Controller
               // dd($rsStock);
         foreach ($rsStock as $key => $value) {
 
-             DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."' 
+             DB::update(" UPDATE db_transfer_warehouses_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'
             ,approver=".\Auth::user()->id." where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id." AND remark=1  ");
 
              DB::update(" UPDATE db_transfer_warehouses_details SET approver=".\Auth::user()->id." where transfer_warehouses_code_id = ".$request->id." and stocks_id_fk = ".$value->id." AND remark=2 ");
@@ -219,7 +225,7 @@ class Transfer_warehousesController extends Controller
 
 
 /*
-        
+
          $insertStockMovement = new  AjaxController();
 
          $rsWarehouses_details = DB::select("
@@ -249,7 +255,7 @@ class Transfer_warehousesController extends Controller
 
          foreach ($rsWarehouses_details as $key => $value) {
 
-        
+
            $v=DB::table('db_stocks')
                 // ->where('business_location_id_fk', request('business_location_id_fk'))
                 ->where('branch_id_fk', $value->branch_id_fk)
@@ -290,7 +296,7 @@ class Transfer_warehousesController extends Controller
 
          }
 
- 
+
 
 // มี 2 ฝั่ง ๆ นึง รับเข้า อีกฝั่ง จ่ายออก
 
@@ -315,7 +321,7 @@ class Transfer_warehousesController extends Controller
                           FROM
                           db_transfer_warehouses_details
                           Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
-                          where db_transfer_warehouses_details.remark = 1 
+                          where db_transfer_warehouses_details.remark = 1
 
                     ");
 
@@ -373,7 +379,7 @@ class Transfer_warehousesController extends Controller
                           FROM
                           db_transfer_warehouses_details
                           Left Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id = db_transfer_warehouses_code.id
-                          where db_transfer_warehouses_details.remark = 2 
+                          where db_transfer_warehouses_details.remark = 2
 
                     ");
 
@@ -415,7 +421,7 @@ class Transfer_warehousesController extends Controller
  */
       }
 
-     
+
 
       // dd();
 
@@ -451,12 +457,12 @@ class Transfer_warehousesController extends Controller
           if(request('approve_status')=='1'){
 
                 $rsWarehouses_details = DB::select("
-                 select 
+                 select
                   db_transfer_warehouses_details.*,db_transfer_warehouses_code.tr_number,db_transfer_warehouses_code.business_location_id_fk,db_transfer_warehouses_code.note
-                  from db_transfer_warehouses_details 
-                  LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id 
+                  from db_transfer_warehouses_details
+                  LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id
                   where db_transfer_warehouses_details.transfer_warehouses_code_id = ".$id." AND remark=1 ");
-           
+
                if(!empty($rsWarehouses_details)){
 
                  foreach ($rsWarehouses_details as $key => $sRow) {
@@ -553,18 +559,18 @@ class Transfer_warehousesController extends Controller
 
 
                 $rsWarehouses_details = DB::select("
-                 select 
+                 select
                   db_transfer_warehouses_details.*,db_transfer_warehouses_code.tr_number,db_transfer_warehouses_code.business_location_id_fk,db_transfer_warehouses_code.note
-                  from db_transfer_warehouses_details 
-                  LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id 
+                  from db_transfer_warehouses_details
+                  LEFT JOIN db_transfer_warehouses_code ON db_transfer_warehouses_details.transfer_warehouses_code_id=db_transfer_warehouses_code.id
                   where db_transfer_warehouses_details.transfer_warehouses_code_id = ".$id." AND remark=2 ");
-           
+
                if(!empty($rsWarehouses_details)){
 
 
                      foreach ($rsWarehouses_details as $key => $sRow) {
 
-      // ฝั่นรับโอน ถ้ามี บวกยอดคลังเข้า ถ้ายังไม่มี สร้างรายการคลังเพิ่ม 
+      // ฝั่นรับโอน ถ้ามี บวกยอดคลังเข้า ถ้ายังไม่มี สร้างรายการคลังเพิ่ม
                       $value=DB::table('db_stocks')
                       ->where('business_location_id_fk', $sRow->business_location_id_fk )
                       ->where('branch_id_fk', $sRow->branch_id_fk )
@@ -697,7 +703,7 @@ class Transfer_warehousesController extends Controller
                }
 
 
-        
+
           }
                 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -743,7 +749,7 @@ class Transfer_warehousesController extends Controller
 
 
       // $sTable = \App\Models\Backend\Transfer_warehouses::where('remark','1')->search()->orderBy('id', 'asc'); // remark '1=ฝั่งโอนให้ , 2=ฝั่งรับโอน'
- 
+
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -782,5 +788,30 @@ class Transfer_warehousesController extends Controller
       ->make(true);
     }
 
+    public function saveSessionDropDown($request)
+    {
+      $keys = ['branch_id_fk_c', 'warehouse_id_fk_c', 'zone_id_fk_c', 'shelf_id_fk_c', 'shelf_floor_c'];
 
+      foreach ($request->all() as $name => $value) {
+
+        if (in_array($name, $keys)) {
+          Session::put('session_' . $name, $value);
+        }
+
+          // $is_contain = false;
+          // $keySession = '';
+
+          // foreach ($keys as $key) {
+          //   if (strpos($name, $key) !== false) {
+          //     $keySession = 'session_' . $key;
+          //     $is_contain = true;
+          //     break;
+          //   }
+          // }
+
+          // if ($is_contain) {
+          //   Session::put($keySession, $value);
+          // }
+      }
+    }
 }

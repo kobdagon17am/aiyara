@@ -797,7 +797,7 @@ class DeliveryController extends Controller
       
     $sTable = DB::select(" 
 
-        SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price from db_delivery  
+        SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price, db_orders.delivery_location from db_delivery  
         Left Join db_orders ON db_orders.code_order = db_delivery.receipt
         WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1
         $business_location_id
@@ -806,11 +806,10 @@ class DeliveryController extends Controller
         $customer_id_fk
         $delivery_date
 
-        order by db_delivery.updated_at desc
+        order by db_delivery.updated_at asc
 
 
         ");
-
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -855,8 +854,14 @@ class DeliveryController extends Controller
       ->addColumn('total_price_not_gv', function($row) {
           return $row->total_price - $row->gift_voucher_price;
       })
-
-      ->rawColumns(['customer_name'])
+    ->addColumn('receipt_new', function($row) {
+      $data = $row->receipt;
+      if($row->delivery_location!=4){
+        $data = "<label style='color:orange;' title='จัดส่งบิลเดียว'>".$row->receipt."</label>";
+      }
+          return  $data;
+      })
+      ->rawColumns(['customer_name','receipt_new'])
       ->make(true);
     }
 

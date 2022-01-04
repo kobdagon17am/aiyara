@@ -32,7 +32,8 @@ return [
     'giveaway' => 'ตั้งค่าการแถมสินค้า',
     'warehouse' => 'คลังสินค้า',
     'delivery' => 'สินค้ารอจัดส่ง',
-    'pick_pack' => 'Packing ใบเบิก',
+    // 'pick_pack' => 'Packing ใบเบิก',
+    'pick_pack' => 'สร้างใบเบิก',
     'pick_warehouse' => 'เบิกสินค้าจากคลัง',
     'pay_requisition_001' => 'จ่ายสินค้าตามใบเบิก',
     'pay_product_receipt_001' => 'จ่ายสินค้าตามใบเสร็จ',
@@ -91,6 +92,7 @@ return [
     'get_money_back_type' => 'ประเภทของการรับเงินคืน',
     'ce_regis_gift' => 'ประเภทของให้ตอนเข้าร่วมงาน',
     'transfer_branch_get' => 'รับสินค้าจากการโอนระหว่างสาขา',
+    'requisition_between_branch' => 'ขอเบิกระหว่างสาขา',
 ],
 
 // /backend/index

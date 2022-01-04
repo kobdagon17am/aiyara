@@ -548,7 +548,7 @@ $(function() {
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
-                  {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
+                  {data: 'receipt_new', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-left'},
                   {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
                   {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
@@ -720,7 +720,9 @@ $(function() {
             	            		if($('.select-info').text()!=''){
             	            			var str = $('.select-info').text();
                   							var str = str.split(" ");
-                  							if(parseInt(str[0])>1){
+                                // วุฒิปรับให้อันเดียวก็ส่งได้
+                                if(parseInt(str[0])>0){
+                              	// if(parseInt(str[0])>1){
 
                                       if(shipping_price>0){
                                              $('.divBtnSave').show();
@@ -886,7 +888,9 @@ $(function() {
                     if($('.select-info').text()!=''){
                       var str = $('.select-info').text();
                       var str = str.split(" ");
-                      if(parseInt(str[0])>1){
+                       // วุฒิแก้ให้อันเดียวก็ทำได้
+                      // if(parseInt(str[0])>1){
+                        if(parseInt(str[0])>0){
                         $('.divBtnSave').show();
                       }else{
                         $('.divBtnSave').hide();
@@ -904,7 +908,9 @@ $(function() {
                       if($('.select-info').text()!=''){
                         var str = $('.select-info').text();
                         var str = str.split(" ");
-                        if(parseInt(str[0])>1){
+                        // if(parseInt(str[0])>1){
+                                // วุฒิแก้ให้อันเดียวก็ทำได้
+                                if(parseInt(str[0])>0){
                           $('.divBtnSave').show();
                         }else{
                           $('.divBtnSave').hide();

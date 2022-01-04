@@ -70,8 +70,6 @@
 			        'name'  => 'Verdana'
 			    ));
 
-
-
 			for ($j=0; $j < $amt_sheet ; $j++) {
 
 				if($j>0){
@@ -139,9 +137,6 @@
 			foreach ($sheet->getColumnIterator() as $column) {
 			    $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
 			}
-
-
-
 
 			$file = 'consignments.xlsx';
 			header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

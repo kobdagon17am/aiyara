@@ -387,7 +387,30 @@
   </div>
 </div>
 
-
+<div class="modal fade modal-order-history" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title mt-0" id="myLargeModalLabel">Large modal</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <table class="table table-bordered table-sm">
+                <thead>
+                  <tr>
+                    <th>สถานะ</th>
+                    <th>ผู้อนุมัติ</th>
+                    <th>วันที่</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-order-history"></tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
 
 @endsection
 
@@ -483,8 +506,8 @@ $(function() {
                 return '';
               }
             }},
-            {data: 'status',   title :'<center>{{ __("message.status") }}</center>', className: 'text-center w80 ',render: function(d) {
-                  return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+            {data: 'status',   title :'<center>{{ __("message.status") }}</center>', className: 'text-center w80 ',render: function(d, aa, data) {
+                  return '<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+data.id+'" data-code_order="'+data.code_order+'" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">'+d+'</span></a>';
             }},
             {data: 'status_sent_money',   title :'<center>{{ __("message.money_send_status") }}</center>', className: 'text-center w80 ',render: function(d) {
               if(d==2){
@@ -640,7 +663,7 @@ $(function() {
               }
 
               if(aData['approve_status']==5){
-                $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
+                $("td:eq(9)", nRow).html('<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+aData['id']+'" data-code_order="'+aData['code_order']+'" style="cursor: pointer;"><span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span></a>');
                 $("td:eq(10)", nRow).html('-');
               }
               if(aData['type']=="เติม Ai-Cash"){
@@ -654,6 +677,29 @@ $(function() {
       $('[data-toggle="tooltip"]').tooltip();
     });
 
+    $('.modal-order-history').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var order_id = button.data('order_id')
+      var code_order = button.data('code_order')
+      var modal = $(this)
+      modal.find('.modal-title').text('ประวัติออเดอร์ ' + code_order)
+
+      $.ajax({
+        url: '{{ route("backend.frontstore.get_order_history_status") }}',
+        data: { order_id: order_id },
+        beforeSend: function() {
+          modal.find('#tbody-order-history').html('<tr class="text-muted text-center"><td colspan="3">กำลังโหลดข้อมูล...</td></tr>')
+        },
+        success: function (response) {
+          if (response) {
+            modal.find('#tbody-order-history').html(response)
+          } else {
+            modal.find('#tbody-order-history').html('<tr class="text-muted text-center"><td colspan="3">ไม่พบข้อมูล..</td></tr>')
+          }
+        }
+      })
+
+    })
 
 });
 </script>
@@ -967,8 +1013,8 @@ $(document).ready(function() {
 
                                                     }},
 
-                                                    {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
-                                                          return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+                                                    {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d, aa, data) {
+                                                          return '<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+data.id+'" data-code_order="'+data.code_order+'" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">'+d+'</span></a>';
                                                     }},
                                                     {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w80 ',render: function(d) {
                                                       if(d==2){
@@ -1118,7 +1164,7 @@ $(document).ready(function() {
                                                           }
 
                                                           if(aData['approve_status']==5){
-                                                            $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
+                                                            $("td:eq(9)", nRow).html('<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+aData['id']+'" data-code_order="'+aData['code_order']+'" style="cursor: pointer;"><span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span></a>');
                                                             $("td:eq(10)", nRow).html('-');
                                                           }
                                                           if(aData['type']=="เติม Ai-Cash"){
@@ -1322,8 +1368,8 @@ $(document).ready(function() {
 
                                       }},
 
-                                      {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d) {
-                                            return '<span class=" font-size-14 " style="color:darkred">'+d+'</span>';
+                                      {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center w80 ',render: function(d, aa, data) {
+                                            return '<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+data.id+'" data-code_order="'+data.code_order+'" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">'+d+'</span></a>';
                                       }},
                                       {data: 'status_sent_money',   title :'<center>สถานะ<br>การส่งเงิน</center>', className: 'text-center w80 ',render: function(d) {
                                         if(d==2){
@@ -1473,7 +1519,7 @@ $(document).ready(function() {
                                                           }
 
                                                           if(aData['approve_status']==5){
-                                                            $("td:eq(9)", nRow).html('<span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span>');
+                                                            $("td:eq(9)", nRow).html('<a data-toggle="modal" data-target=".modal-order-history" data-order_id="'+aData['id']+'" data-code_order="'+aData['code_order']+'" style="cursor: pointer;"><span class=" font-size-14 " style="color:red;font-weight:bold;">บิลยกเลิก</span></a>');
                                                             $("td:eq(10)", nRow).html('-');
                                                           }
                                                           if(aData['type']=="เติม Ai-Cash"){

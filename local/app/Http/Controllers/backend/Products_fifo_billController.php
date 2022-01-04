@@ -109,7 +109,7 @@ class Products_fifo_billController extends Controller
             $pn = '<div class="divTable"><div class="divTableBody">';
 
             foreach ($Products as $key => $value) {
-              $pn .=     
+              $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell" style="width:400px;">'.$value->product_code.' : '.$value->product_name.'</div>
                   <div class="divTableCell" style="width:50px;text-align:center;">'.($value->amt).'</div>
@@ -118,7 +118,7 @@ class Products_fifo_billController extends Controller
                   ';
              }
 
-            $pn .= '</div></div>';  
+            $pn .= '</div></div>';
 
             return $pn;
 
@@ -148,20 +148,20 @@ class Products_fifo_billController extends Controller
             $pn = '<div class="divTable"><div class="divTableBody">';
 
             foreach ($Products as $key => $value) {
-              $pn .=     
+              $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell">'.($value->amt_get>0?$value->amt_get:'* รอแจงเบิกจากคลัง ').'</div>
                   </div>
                   ';
              }
 
-            $pn .= '</div></div>';  
+            $pn .= '</div></div>';
 
             return $pn;
 
         }
 
-      })      
+      })
       ->escapeColumns('get_product')
       ->make(true);
     }
@@ -197,7 +197,7 @@ class Products_fifo_billController extends Controller
             $pn = '<div class="divTable"><div class="divTableBody">';
 
             foreach ($Products as $key => $value) {
-              $pn .=     
+              $pn .=
                   '<div class="divTableRow">
                   <div class="divTableCell" style="width:400px;">'.$value->product_code.' : '.$value->product_name.'</div>
                   <div class="divTableCell" style="width:50px;text-align:center;">'.($value->amt).'</div>
@@ -206,7 +206,7 @@ class Products_fifo_billController extends Controller
                   ';
              }
 
-            $pn .= '</div></div>';  
+            $pn .= '</div></div>';
 
             return $pn;
 
@@ -228,9 +228,9 @@ class Products_fifo_billController extends Controller
       }
 
       $sTable = DB::select("
-              SELECT db_pick_warehouse_tmp.*,db_consignments.recipient_name,db_consignments.address,db_consignments.sent_date,db_consignments.approver from db_pick_warehouse_tmp 
+              SELECT db_pick_warehouse_tmp.*,db_consignments.recipient_name,db_consignments.address,db_consignments.sent_date,db_consignments.approver from db_pick_warehouse_tmp
               Left Join db_consignments ON db_consignments.recipient_code = db_pick_warehouse_tmp.invoice_code
-              where 1 
+              where 1
               ".$w001."
               group by invoice_code ORDER BY db_pick_warehouse_tmp.updated_at DESC LIMIT 1
               ");
@@ -257,41 +257,41 @@ class Products_fifo_billController extends Controller
 
 
               foreach ($Products as $key => $value) {
-               
-                $pn .=     
+
+                $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="width:250px;">'.$value->product_code.' <br/> '.$value->product_name.'</div>
                     <div class="divTableCell" style="width:50px;text-align:center;">'.($value->amt).'</div>
                     <div class="divTableCell" style="width:70px;">'.$value->product_unit.'</div>
-                    <div class="divTableCell" style="padding-bottom:15px !important;"> 
+                    <div class="divTableCell" style="padding-bottom:15px !important;">
                     ';
                     $item_id = 1;
-                    for ($i=0; $i < $value->amt ; $i++) { 
+                    for ($i=0; $i < $value->amt ; $i++) {
 
                       $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".$item_id."' and invoice_code='".$value->invoice_code."' AND product_id_fk='".$value->product_id_fk."' ");
 
                       if(@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code) ){
 
-                        $pn .= 
+                        $pn .=
                          '
-                          <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
-                          <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i> 
+                          <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly >
+                          <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i>
                          ';
 
                       }else{
 
-                         $pn .= 
+                         $pn .=
                          '
-                          <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-invoice_code="'.$value->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
-                          <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-invoice_code="'.$value->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i> 
+                          <input type="text" class="in-tx qr_scan " data-item_id="'.$item_id.'" data-invoice_code="'.$value->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" >
+                          <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.$item_id.'" data-invoice_code="'.$value->invoice_code.'" data-product_id_fk="'.$value->product_id_fk.'" ></i>
                          ';
                       }
 
                          $item_id++;
-                    }    
-                
+                    }
+
                 $pn .= ' </div>';
-                $pn .= ' 
+                $pn .= '
                 <div class="divTableCell" style="width:250px;">
                   คลัง 1/Zone-1/Shelf-1/ชั้น>1 <br>
                   คลัง 1/Zone-1/Shelf-1/ชั้น>2 <br>
@@ -300,7 +300,7 @@ class Products_fifo_billController extends Controller
 
                }
 
-            $pn .= '</div></div>';  
+            $pn .= '</div></div>';
 
             return @$pn;
 
@@ -309,7 +309,7 @@ class Products_fifo_billController extends Controller
       ->escapeColumns('product_name')
       ->addColumn('address', function($row) {
           // $print = '<br/><br/> <center><a href="backend/delivery/pdf01/1" target=_blank title="พิมพ์ใบจ่าหน้ากล่อง" ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
-          // ถ้าเป็น จ่ายสินค้าตามใบเสร็จ ไม่ตรงพิมพ์ใบจ่าหน้ากล่องส่ง 
+          // ถ้าเป็น จ่ายสินค้าตามใบเสร็จ ไม่ตรงพิมพ์ใบจ่าหน้ากล่องส่ง
           // return @$row->recipient_name.",<br/> ".@$row->address.$print;
           return @$row->recipient_name.",<br/> ".@$row->address;
       })
@@ -357,7 +357,7 @@ class Products_fifo_billController extends Controller
         // print_r($t->Tables_in_aiyaraco_v3);
         array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
-      // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
+      // เก็บรายการสินค้าที่จ่าย ตอน FIFO
 
       if(in_array($temp_ppr_004,$array_TABLES)){
         // return "IN";
@@ -382,16 +382,16 @@ class Products_fifo_billController extends Controller
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
-       ->addColumn('column_001', function($row) { 
+       ->addColumn('column_001', function($row) {
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
             </div>
             ';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
@@ -404,25 +404,25 @@ class Products_fifo_billController extends Controller
       ->addColumn('column_002', function($row) {
 
         if(!empty($row)){
-          
+
           $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-          $temp_product_fifo = "temp_product_fifo".\Auth::user()->id; 
+          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+          $temp_product_fifo = "temp_product_fifo".\Auth::user()->id;
 
 // สินค้าปกติ  + สินค้าโปร ด้วย
           //  $Products = DB::select("
-          //   SELECT $temp_ppr_002.*,dataset_product_unit.product_unit,$temp_ppr_001.customers_id_fk as cus_id from $temp_ppr_002 
-          //   LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id 
+          //   SELECT $temp_ppr_002.*,dataset_product_unit.product_unit,$temp_ppr_001.customers_id_fk as cus_id from $temp_ppr_002
+          //   LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id
           //   LEFT JOIN $temp_ppr_001 on $temp_ppr_002.frontstore_id_fk=$temp_ppr_001.id
           //   where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product'
           // ");
 /*
-           SELECT temp_ppr_0021.*,dataset_product_unit.product_unit,temp_ppr_0011.customers_id_fk as cus_id from temp_ppr_0021 
-            LEFT Join dataset_product_unit ON temp_ppr_0021.product_unit_id_fk = dataset_product_unit.id 
+           SELECT temp_ppr_0021.*,dataset_product_unit.product_unit,temp_ppr_0011.customers_id_fk as cus_id from temp_ppr_0021
+            LEFT Join dataset_product_unit ON temp_ppr_0021.product_unit_id_fk = dataset_product_unit.id
             LEFT JOIN temp_ppr_0011 on temp_ppr_0021.frontstore_id_fk=temp_ppr_0011.id
             where temp_ppr_0021.frontstore_id_fk=895 and temp_ppr_0021.type_product='product'
 */
@@ -431,8 +431,8 @@ class Products_fifo_billController extends Controller
 DB::select(" DROP TABLE IF EXISTS $temp_product_fifo; ");
 // สินค้าปกติ
 // TEMPORARY
-DB::select(" CREATE TABLE $temp_product_fifo 
-SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product' 
+DB::select(" CREATE TABLE $temp_product_fifo
+SELECT $temp_ppr_002.product_id_fk,sum($temp_ppr_002.amt) as amt,$temp_ppr_002.product_name,dataset_product_unit.product_unit from $temp_ppr_002 LEFT Join dataset_product_unit ON $temp_ppr_002.product_unit_id_fk = dataset_product_unit.id where $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='product'
 group by $temp_ppr_002.product_id_fk
 ");
 // สินค้าโปรโมชั่น
@@ -467,37 +467,37 @@ foreach($temp_ppr_0021_data as $tmp){
         'product_name' => $p_code.$p_name,
         'product_unit' => $p_unit,
       ]);
-  } 
+  }
 }
 }
-  //   DB::select(" INSERT IGNORE INTO $temp_product_fifo 
-  // SELECT 
+  //   DB::select(" INSERT IGNORE INTO $temp_product_fifo
+  // SELECT
   // promotions_products.product_id_fk,sum(promotions_products.product_amt) as amt,
   // CONCAT(
   // (SELECT product_code FROM products WHERE id=promotions_products.product_id_fk limit 1),':',
   // (SELECT product_name FROM products_details WHERE product_id_fk=promotions_products.product_id_fk and lang_id=1 limit 1)) as product_name,
   // dataset_product_unit.product_unit
-  // FROM `promotions_products` 
+  // FROM `promotions_products`
   // LEFT Join dataset_product_unit ON promotions_products.product_unit = dataset_product_unit.id
   // where promotion_id_fk in (
   // SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002 WHERE
-  // $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion') 
+  // $temp_ppr_002.frontstore_id_fk=".$row->id." and $temp_ppr_002.type_product='promotion')
   // group by promotions_products.product_id_fk
   // ");
 
         $Products = DB::select("
                SELECT product_id_fk,sum(amt) as amt,product_name,product_unit from $temp_product_fifo GROUP BY product_id_fk ORDER BY product_name
            ");
-     
+
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
-                     
+
                       <div class="divTableRow">
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
@@ -516,31 +516,31 @@ foreach($temp_ppr_0021_data as $tmp){
           DB::select(" DROP TABLE IF EXISTS temp_001; ");
           // TEMPORARY
           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-  
+
 
           foreach ($Products as $key => $value) {
 
-               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-               $amt_pay_this = $value->amt; 
+               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+               $amt_pay_this = $value->amt;
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
-                // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+                // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
-                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
-              
+                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
+
                   $pay_this = $value->amt ;
                   $amt_pay_remain = 0;
-                  
-                    $pn .=     
+
+                    $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="text-align:center;"> '.$amt_pay_remain.' </div>  
+                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="text-align:center;"> '.$amt_pay_remain.' </div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                     $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
                     $w_str = '';
                     foreach($w_arr as $key => $w){
@@ -549,9 +549,9 @@ foreach($temp_ppr_0021_data as $tmp){
                       }else{
                         $w_str.=$w.',';
                       }
-                      
+
                     }
-                    // wut อันนี้แก้ จ่ายผิดคลัง 
+                    // wut อันนี้แก้ จ่ายผิดคลัง
                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
                     // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk=2 ORDER BY lot_expired_date ASC  ");
                     // อันนี้แก้เรื่องเรื่องโปรมั้ง หรือไม่ก็ไม่มีปุ่ม
@@ -575,7 +575,7 @@ foreach($temp_ppr_0021_data as $tmp){
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                             $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
                             $amt_to_take = $pay_this;
@@ -586,7 +586,7 @@ foreach($temp_ppr_0021_data as $tmp){
                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
                               $amt_to_take = $rs_[0]->amt_get;
                             }else{
-                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                               // $amt_remain = $r_before[0]->amt_remain;
                               DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_to_take,0) ");
                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
@@ -594,7 +594,7 @@ foreach($temp_ppr_0021_data as $tmp){
                             }
 
 
-                                $pn .=     
+                                $pn .=
                                 '<div class="divTableRow">
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -661,9 +661,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -688,14 +688,14 @@ foreach($temp_ppr_0021_data as $tmp){
                      $amt_pay_remain = $value->amt - $temp_db_stocks_01[0]->amt ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
 
 
                      $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
@@ -706,20 +706,20 @@ foreach($temp_ppr_0021_data as $tmp){
                        }else{
                          $w_str.=$w.',';
                        }
-                       
+
                      }
-                     // wut อันนี้แก้ จ่ายผิดคลัง 
+                     // wut อันนี้แก้ จ่ายผิดคลัง
                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
                     //  temp_ppr_004
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-                 
+
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
                           $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                           $amt_to_take = $pay_this;
                           $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
@@ -731,7 +731,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                     $rs_ = DB::select(" SELECT amt_get FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $rs_[0]->amt_get;
 
-                                   $pn .=     
+                                   $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -757,7 +757,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
-                                    
+
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -796,9 +796,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -808,19 +808,19 @@ foreach($temp_ppr_0021_data as $tmp){
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
                                       $r_temp_001 = DB::select(" SELECT amt_remain FROM temp_001 order by id desc limit 1 ; ");
                                      // return $r_temp_001[0]->amt_remain;
-                                     if($r_temp_001[0]->amt_remain==0) break;                           
+                                     if($r_temp_001[0]->amt_remain==0) break;
 
                                 }else{
 
-                          
-                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+
+                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                     $amt_remain = @$r_before[0]->amt_remain?@$r_before[0]->amt_remain:0;
 
                                     DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_remain,".($r_before[0]->amt_remain-$amt_in_wh).") ");
                                     $rs_ = DB::select(" SELECT * FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $amt_in_wh;
 
-                                    $pn .=     
+                                    $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -845,7 +845,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
-                                   
+
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -884,9 +884,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -894,13 +894,13 @@ foreach($temp_ppr_0021_data as $tmp){
                                             ");
                                         }
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                        
+
                                  $r_temp_001 = DB::select(" SELECT amt_remain FROM temp_001 order by id desc limit 1 ; ");
                                      // return $r_temp_001[0]->amt_remain;
                                      if($r_temp_001[0]->amt_remain==0) break;
                                 }
 
-                       
+
 
                           $i++;
 
@@ -908,20 +908,20 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
 
-                }else{ // กรณีไม่มีสินค้าในคลังเลย 
+                }else{ // กรณีไม่มีสินค้าในคลังเลย
 
                      $amt_pay_remain = $value->amt ;
                      $pay_this = 0 ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                      $pn .=     
+                      $pn .=
                             '<div class="divTableRow">
                             <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง. *** </div>
                             <div class="divTableCell" style="width:200px;text-align:center;">  </div>
@@ -932,11 +932,11 @@ foreach($temp_ppr_0021_data as $tmp){
                       @$_SESSION['check_product_instock'] = 0;
 
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
-                    
+
                      $i = 1;
 
                   //  dd($temp_db_stocks_01[0]->amt);
-                  //  return 'false'; 
+                  //  return 'false';
 
                      foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -952,7 +952,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       ->where('product_id_fk', $v_02->product_id_fk)
                                       ->where('branch_id_fk', $v_02->branch_id_fk)
                                       ->get();
-                             
+
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -994,11 +994,11 @@ foreach($temp_ppr_0021_data as $tmp){
 
                 }
 
-            $pn .= '</div>';  
-            $pn .= '</div>';  
+            $pn .= '</div>';
+            $pn .= '</div>';
           }
 
-          $pn .= '</div>';  
+          $pn .= '</div>';
 
             $rs_temp_ppr_004 = DB::select(" select product_id_fk,lot_number,lot_expired_date,sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, amt_remain  from $temp_ppr_004 group by invoice_code,product_id_fk,lot_number  ");
 
@@ -1013,9 +1013,9 @@ foreach($temp_ppr_0021_data as $tmp){
                 // ->where('amt_lot', $v->amt_lot)
                 // ->where('amt_remain', $v->amt_remain)
                 ->get();
-            
+
                 if($_choose->count() == 0){
-                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (invoice_code,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain) 
+                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (invoice_code,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain)
                     VALUES (
                     '".$row->invoice_code."', ".$v->product_id_fk.", '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->amt_lot.", '".$v->amt_lot."', '".$v->amt_remain."'
                     )
@@ -1024,7 +1024,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
           }
 
-        
+
           $rs_temp_db_stocks_check = DB::select(" select invoice_code, sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, sum(amt_remain) as amt_remain from $temp_db_stocks_check group by invoice_code ");
 
           foreach ($rs_temp_db_stocks_check as $key => $v) {
@@ -1050,29 +1050,29 @@ foreach($temp_ppr_0021_data as $tmp){
           return '<font color=red>*** อยู่ระหว่างปรับปรุง</font>';
         }
       })
-      ->escapeColumns('column_002')  
-      ->addColumn('column_003', function($row) { 
+      ->escapeColumns('column_002')
+      ->addColumn('column_003', function($row) {
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
           <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
           <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวน</div>
           </div>
           ';
-          $pn .= '</div>';  
+          $pn .= '</div>';
           return $pn;
 
        })
-      ->escapeColumns('column_003')      
-      ->addColumn('ch_amt_lot_wh', function($row) { 
+      ->escapeColumns('column_003')
+      ->addColumn('ch_amt_lot_wh', function($row) {
 // ดูว่าไม่มีสินค้าคลังเลย
 
           $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id;
 
           $Products = DB::select("
-            SELECT * from $temp_ppr_004 WHERE invoice_code='".$row->invoice_code."' 
+            SELECT * from $temp_ppr_004 WHERE invoice_code='".$row->invoice_code."'
           ");
 
           if(count($Products)>0){
@@ -1081,25 +1081,25 @@ foreach($temp_ppr_0021_data as $tmp){
                 array_push($arr,$value->product_id_fk);
               }
               $arr_im = implode(',',$arr);
-         
+
               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
               $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
-              return @$r[0]->sum?@$r[0]->sum:0; 
+              return @$r[0]->sum?@$r[0]->sum:0;
           }else{
               return 0;
           }
 
-       })    
+       })
 
-      ->addColumn('check_product_instock', function($row) { 
+      ->addColumn('check_product_instock', function($row) {
       // ดูว่าไม่มีสินค้าในคลังบางรายการ
           if(@$_SESSION['check_product_instock']=="0"){
-            return "N"; 
+            return "N";
           }else{
-            return "Y"; 
+            return "Y";
           }
 
-       })  
+       })
 
       ->make(true);
     }
@@ -1121,11 +1121,11 @@ foreach($temp_ppr_0021_data as $tmp){
       $branch_id_fk = \Auth::user()->branch_id_fk;
       $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-      $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-      $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+      $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
 
 
       $TABLES = DB::select(" SHOW TABLES ");
@@ -1143,7 +1143,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
     // return $request;
     // หาในตาราง db_orders ว่ามีมั๊ย
-    // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0 
+    // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
     $invoice_code = $request->txtSearch;
 
@@ -1155,7 +1155,7 @@ foreach($temp_ppr_0021_data as $tmp){
         // $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  AND branch_id_fk=".@\Auth::user()->branch_id_fk." ");
         $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  ");
     }
-  
+
     // return $r01;
     // return $r01[0]->invoice_code;
 
@@ -1169,7 +1169,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppr_002; ");
         DB::select(" CREATE TABLE $temp_ppr_002 LIKE db_order_products_list ");
-        DB::select(" INSERT $temp_ppr_002 
+        DB::select(" INSERT $temp_ppr_002
         SELECT db_order_products_list.* FROM db_order_products_list INNER Join $temp_ppr_001 ON db_order_products_list.frontstore_id_fk = $temp_ppr_001.id ");
 
         // $Data = DB::select(" SELECT * FROM $temp_ppr_002; ");
@@ -1182,21 +1182,21 @@ foreach($temp_ppr_0021_data as $tmp){
        // ต้องมีอีกตารางนึง เก็บ สถานะการอนุมัติ และ ที่อยู่การจัดส่งสินค้า > $temp_ppr_003
           DB::select(" DROP TABLE IF EXISTS $temp_ppr_003; ");
           DB::select(" CREATE TABLE $temp_ppr_003 LIKE temp_ppr_003_template ");
-          DB::select(" 
-            INSERT IGNORE INTO $temp_ppr_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at) 
+          DB::select("
+            INSERT IGNORE INTO $temp_ppr_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at)
             SELECT id,business_location_id_fk,branch_id_fk,sentto_branch_id,invoice_code,action_date,action_user , customers_id_fk ,'1', now() FROM db_orders where invoice_code='".$request->txtSearch."' ;
           ");
 
         // $Data = DB::select(" SELECT * FROM $temp_ppr_003; ");
         // $Data = DB::select(" SELECT * FROM $temp_ppr_002; ");
         // return $Data;
-// FIFO 
+// FIFO
         // Qry > product_id_fk from $temp_ppr_002
 
            // สินค้าปกติ + สินค้าโปรโมชั่น
-            $product = DB::select(" 
+            $product = DB::select("
                 select product_id_fk from $temp_ppr_002 where $temp_ppr_002.type_product='product'
-                UNION 
+                UNION
                 SELECT product_id_fk FROM `promotions_products` where promotion_id_fk in (
                 SELECT $temp_ppr_002.promotion_id_fk from $temp_ppr_002
                 where $temp_ppr_002.type_product='promotion' )
@@ -1222,7 +1222,7 @@ foreach($temp_ppr_0021_data as $tmp){
             }
 
           if(!empty($arr_product_id_fk)){
-            DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+            DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
              WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
         }
 
@@ -1260,33 +1260,33 @@ foreach($temp_ppr_0021_data as $tmp){
         }
 
       if(!empty($arr_product_id_fk)){
-        DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+        DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
     }
 
 
 
- 
+
          // $Data = DB::select(" SELECT * FROM $temp_db_stocks; ");
          // return $Data;
-    
+
           if(in_array($temp_db_stocks_compare,$array_TABLES)){
             // return "IN";
           }else{
             // return "Not";
             DB::select(" CREATE TABLE $temp_db_stocks_compare LIKE temp_db_stocks_compare_template ");
           }
-     
+
           // $lastInsertId = DB::getPdo()->lastInsertId();
 
             return 1;
 // Close > if($r01)
-            // กรณีหาแล้วไม่เจอ 
+            // กรณีหาแล้วไม่เจอ
           }else{
             return 0;
-          } 
+          }
 
-      
+
     }// Close > function
 
 
@@ -1295,13 +1295,13 @@ foreach($temp_ppr_0021_data as $tmp){
       // temp_ppr_004
             $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
-            $r_compare_1 =  DB::select(" 
+            $r_compare_1 =  DB::select("
               SELECT amt_get+amt_lot+amt_remain as sum from $temp_db_stocks_compare ORDER BY id DESC LIMIT 1,1;
             ");
 
             $x = @$r_compare_1[0]->sum?@$r_compare_1[0]->sum:0;
 
-            $r_compare_2 =  DB::select(" 
+            $r_compare_2 =  DB::select("
               SELECT amt_get+amt_lot+amt_remain as sum from $temp_db_stocks_compare ORDER BY id DESC LIMIT 0,1;
             ");
             $y = @$r_compare_2[0]->sum?@$r_compare_2[0]->sum:0;
@@ -1311,15 +1311,15 @@ foreach($temp_ppr_0021_data as $tmp){
             }else{
                   return "changed";
             }
-       
-      
+
+
     }// Close > function
 
 
 // /backend/pay_product_receipt/1/edit (กรณีที่ยังไม่มีการยกเลิกการจ่าย status_cancel==0)
 // %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable009FIFO(Request $req){
-     
+
       $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
       $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -1333,7 +1333,7 @@ foreach($temp_ppr_0021_data as $tmp){
         // print_r($t->Tables_in_aiyaraco_v3);
         array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
-      // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
+      // เก็บรายการสินค้าที่จ่าย ตอน FIFO
 
       if(in_array($temp_ppr_004,$array_TABLES)){
         // return "IN";
@@ -1352,16 +1352,16 @@ foreach($temp_ppr_0021_data as $tmp){
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-       ->addColumn('column_001', function($row) { 
+       ->addColumn('column_001', function($row) {
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
             </div>
             ';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
@@ -1372,27 +1372,27 @@ foreach($temp_ppr_0021_data as $tmp){
         })
        ->escapeColumns('column_001')
       ->addColumn('column_002', function($row) {
-          
+
           $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
           $Products = DB::select("
-            SELECT db_pay_product_receipt_002.* from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' and amt_remain <> 0 AND time_pay=(SELECT max(time_pay) from db_pay_product_receipt_002 WHERE status_cancel=0 LIMIT 1) and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay 
+            SELECT db_pay_product_receipt_002.* from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' and amt_remain <> 0 AND time_pay=(SELECT max(time_pay) from db_pay_product_receipt_002 WHERE status_cancel=0 LIMIT 1) and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay
           ");
 
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
-                     
+
                       <div class="divTableRow">
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
@@ -1411,38 +1411,38 @@ foreach($temp_ppr_0021_data as $tmp){
          DB::select(" DROP TABLE IF EXISTS temp_001; ");
          // TEMPORARY
          DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-                         
-        
+
+
           foreach ($Products as $key => $value) {
 
-               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-               $amt_pay_this = $value->amt_remain; 
+               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+               $amt_pay_this = $value->amt_remain;
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
-                // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+                // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
 
                if(!empty($value->product_id_fk)){
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                }
-                
+
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
-                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
+                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
 
                   $pay_this = $value->amt_remain ;
                   $amt_pay_remain = 0;
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-                     
+
                       DB::select(" DROP TABLE IF EXISTS temp_001; ");
                       // TEMPORARY
                       DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
@@ -1459,7 +1459,7 @@ foreach($temp_ppr_0021_data as $tmp){
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                             $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
                             $amt_to_take = $pay_this;
@@ -1470,7 +1470,7 @@ foreach($temp_ppr_0021_data as $tmp){
                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
                               $amt_to_take = $rs_[0]->amt_get;
                             }else{
-                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                               // $amt_remain = $r_before[0]->amt_remain;
                                      DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_to_take,0) ");
                                       $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
@@ -1478,7 +1478,7 @@ foreach($temp_ppr_0021_data as $tmp){
                             }
 
 
-                                $pn .=     
+                                $pn .=
                                 '<div class="divTableRow">
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -1544,9 +1544,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -1571,23 +1571,23 @@ foreach($temp_ppr_0021_data as $tmp){
                      $amt_pay_remain = $value->amt_remain - $temp_db_stocks_01[0]->amt ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-                    
+
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
                           $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                           $amt_to_take = $pay_this;
                           $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
@@ -1600,7 +1600,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                     $rs_ = DB::select(" SELECT amt_get FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $rs_[0]->amt_get;
 
-                                   $pn .=     
+                                   $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -1664,9 +1664,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -1674,18 +1674,18 @@ foreach($temp_ppr_0021_data as $tmp){
                                             ");
                                         }
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                                                         
+
 
                                 }else{
 
-                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                     $amt_remain = @$r_before[0]->amt_remain?@$r_before[0]->amt_remain:0;
 
                                     DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_remain,".($r_before[0]->amt_remain-$amt_in_wh).") ");
                                     $rs_ = DB::select(" SELECT * FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $amt_in_wh;
 
-                                    $pn .=     
+                                    $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -1748,9 +1748,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -1758,8 +1758,8 @@ foreach($temp_ppr_0021_data as $tmp){
                                             ");
                                         }
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                        
-                                 
+
+
                                 }
 
 
@@ -1769,20 +1769,20 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
 
-                }else{ // กรณีไม่มีสินค้าในคลังเลย 
+                }else{ // กรณีไม่มีสินค้าในคลังเลย
 
                      $amt_pay_remain = $value->amt_remain ;
                      $pay_this = 0 ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .' </div>  
+                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .' </div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                      $pn .=     
+                      $pn .=
                             '<div class="divTableRow">
                             <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง.. *** </div>
                             <div class="divTableCell" style="width:200px;text-align:center;">  </div>
@@ -1791,9 +1791,9 @@ foreach($temp_ppr_0021_data as $tmp){
                             ';
 
                       @$_SESSION['check_product_instock'] = 0;
-                    
+
                       $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
-                    
+
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -1850,11 +1850,11 @@ foreach($temp_ppr_0021_data as $tmp){
 
                 }
 
-            $pn .= '</div>';  
-            $pn .= '</div>';  
+            $pn .= '</div>';
+            $pn .= '</div>';
           }
 
-          $pn .= '</div>';  
+          $pn .= '</div>';
 
             $rs_temp_ppr_004 = DB::select(" select product_id_fk,lot_number,lot_expired_date,sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, amt_remain  from $temp_ppr_004 group by invoice_code,product_id_fk  ");
 
@@ -1870,7 +1870,7 @@ foreach($temp_ppr_0021_data as $tmp){
                 // ->where('amt_remain', $v->amt_remain)
                 ->get();
                 if($_choose->count() == 0){
-                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (invoice_code,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain) 
+                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (invoice_code,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain)
                     VALUES (
                     '".$row->invoice_code."', ".$v->product_id_fk.", '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->amt_lot.", '".$v->amt_lot."', '".$v->amt_remain."'
                     )
@@ -1879,7 +1879,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
           }
 
-        
+
           $rs_temp_db_stocks_check = DB::select(" select invoice_code, sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, sum(amt_remain) as amt_remain from $temp_db_stocks_check group by invoice_code ");
 
           foreach ($rs_temp_db_stocks_check as $key => $v) {
@@ -1902,11 +1902,11 @@ foreach($temp_ppr_0021_data as $tmp){
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
-       ->addColumn('column_003', function($row) { 
+      ->escapeColumns('column_002')
+       ->addColumn('column_003', function($row) {
 
                 $pn = '<div class="divTable" ><div class="divTableBody" style="background-color:white !important;">';
-                $pn .=     
+                $pn .=
                 '<div class="divTableRow" style="background-color:white !important;">
                 <div class="divTableCell" style="text-align:center;font-weight:bold;">
 
@@ -1920,9 +1920,9 @@ foreach($temp_ppr_0021_data as $tmp){
             return $pn;
 
         })
-        ->escapeColumns('column_003')      
-       ->addColumn('ch_amt_remain', function($row) { 
-        // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
+        ->escapeColumns('column_003')
+       ->addColumn('ch_amt_remain', function($row) {
+        // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
            $rs_pay_history = DB::select(" SELECT id FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' AND status in (2) ");
@@ -1934,7 +1934,7 @@ foreach($temp_ppr_0021_data as $tmp){
            }
 
        })
-      ->addColumn('ch_amt_lot_wh', function($row) { 
+      ->addColumn('ch_amt_lot_wh', function($row) {
 // ดูว่าไม่มีสินค้าคลังเลย
 
           $Products = DB::select("
@@ -1949,23 +1949,23 @@ foreach($temp_ppr_0021_data as $tmp){
               $arr_im = implode(',',$arr);
               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
               $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
-              return @$r[0]->sum?@$r[0]->sum:0; 
+              return @$r[0]->sum?@$r[0]->sum:0;
           }else{
               // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน
               return 1;
           }
 
-       })    
-     ->addColumn('status_sent', function($row) { 
+       })
+     ->addColumn('status_sent', function($row) {
 
           $status_sent = DB::select(" SELECT status_sent FROM `db_pay_product_receipt_001` WHERE invoice_code='".$row->invoice_code."'  ");
           if($status_sent){
-              return $status_sent[0]->status_sent; 
+              return $status_sent[0]->status_sent;
           }else{
               return 0;
           }
 
-       })     
+       })
       ->addColumn('status_cancel_all', function($row) {
             $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=1 ");
             if(count($P)>0){
@@ -1973,7 +1973,7 @@ foreach($temp_ppr_0021_data as $tmp){
             }else{
               return 0; // ไม่มีการยกเลิก
             }
-      })             
+      })
       ->make(true);
     }
 
@@ -1982,7 +1982,7 @@ foreach($temp_ppr_0021_data as $tmp){
 // /backend/pay_product_receipt/1/edit (กรณีที่มีการยกเลิกการจ่าย status_cancel==1 บ้างบางรายการหรือทั้งหมด)
 // %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable010FIFO(Request $req){
-     
+
       $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
       $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -1996,7 +1996,7 @@ foreach($temp_ppr_0021_data as $tmp){
         // print_r($t->Tables_in_aiyaraco_v3);
         array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
-      // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
+      // เก็บรายการสินค้าที่จ่าย ตอน FIFO
 
       if(in_array($temp_ppr_004,$array_TABLES)){
         // return "IN";
@@ -2015,16 +2015,16 @@ foreach($temp_ppr_0021_data as $tmp){
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-       ->addColumn('column_001', function($row) { 
+       ->addColumn('column_001', function($row) {
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
             </div>
             ';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
@@ -2035,13 +2035,13 @@ foreach($temp_ppr_0021_data as $tmp){
         })
        ->escapeColumns('column_001')
        ->addColumn('column_002', function($row) {
-          
+
           $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppr_002 = "temp_ppr_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+          $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
 
            $ch_status_cancel = DB::select(" SELECT * FROM `db_pay_product_receipt_002` WHERE invoice_code='".$row->invoice_code."' AND status_cancel in (0) ");
@@ -2061,13 +2061,13 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
-                     
+
                       <div class="divTableRow">
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
@@ -2086,36 +2086,36 @@ foreach($temp_ppr_0021_data as $tmp){
           DB::select(" DROP TABLE IF EXISTS temp_001; ");
            // TEMPORARY
           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-                           
+
           if($Products){
 
                   foreach ($Products as $key => $value) {
 
-                       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-                       $amt_pay_this = $value->amt_remain; 
+                       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+                       $amt_pay_this = $value->amt_remain;
                         // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
-                        // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+                        // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                         $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                         $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                         // return $amt_pay_this ;
 
                         // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
-                        if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
+                        if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
 
                           $pay_this = $value->amt_remain ;
                           $amt_pay_remain = 0;
 
-                            $pn .=     
+                            $pn .=
                             '<div class="divTableRow">
                             <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                            <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>  
+                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                            <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                            // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                            // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-                             
+
                               DB::select(" DROP TABLE IF EXISTS temp_001; ");
                               // TEMPORARY
                               DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
@@ -2132,7 +2132,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                   $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                                   $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                                   // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                                     $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
                                     $amt_to_take = $pay_this;
@@ -2143,7 +2143,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
                                       $amt_to_take = $rs_[0]->amt_get;
                                     }else{
-                                      // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                                      // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                       // $amt_remain = $r_before[0]->amt_remain;
                                              DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_to_take,0) ");
                                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
@@ -2151,7 +2151,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                     }
 
 
-                                        $pn .=     
+                                        $pn .=
                                         '<div class="divTableRow">
                                         <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                         <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2217,9 +2217,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                         '".$v_02->product_unit_id_fk."',
                                                         '".$p_unit_name."',
                                                         '".$v_02->lot_number."',
-                                                        '".$v_02->lot_expired_date."', 
+                                                        '".$v_02->lot_expired_date."',
                                                         '".$v_02->warehouse_id_fk."',
-                                                        '".$v_02->zone_id_fk."', 
+                                                        '".$v_02->zone_id_fk."',
                                                         '".$v_02->shelf_id_fk."',
                                                         '".$v_02->shelf_floor."',
                                                         '".$v_02->created_at."'
@@ -2244,23 +2244,23 @@ foreach($temp_ppr_0021_data as $tmp){
                              $amt_pay_remain = $value->amt_remain - $temp_db_stocks_01[0]->amt ;
                              $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                            $pn .=     
+                            $pn .=
                             '<div class="divTableRow">
                             <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                             // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                             // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-                            
+
                              $i = 1;
                              foreach ($temp_db_stocks_02 as $v_02) {
                                   $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                                   $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                                   $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                                   // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                                   $amt_to_take = $amt_pay_this;
                                   $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
@@ -2273,7 +2273,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                             $rs_ = DB::select(" SELECT amt_get FROM temp_001 WHERE id='$i' ");
                                             $amt_to_take = $rs_[0]->amt_get;
 
-                                           $pn .=     
+                                           $pn .=
                                             '<div class="divTableRow">
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2339,9 +2339,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                         '".$v_02->product_unit_id_fk."',
                                                         '".$p_unit_name."',
                                                         '".$v_02->lot_number."',
-                                                        '".$v_02->lot_expired_date."', 
+                                                        '".$v_02->lot_expired_date."',
                                                         '".$v_02->warehouse_id_fk."',
-                                                        '".$v_02->zone_id_fk."', 
+                                                        '".$v_02->zone_id_fk."',
                                                         '".$v_02->shelf_id_fk."',
                                                         '".$v_02->shelf_floor."',
                                                         '".$v_02->created_at."'
@@ -2349,18 +2349,18 @@ foreach($temp_ppr_0021_data as $tmp){
                                                     ");
                                                 }
                                         // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                                                                 
+
 
                                         }else{
 
-                                            $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                                            $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                             $amt_remain = @$r_before[0]->amt_remain?@$r_before[0]->amt_remain:0;
 
                                             DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_remain,".($r_before[0]->amt_remain-$amt_in_wh).") ");
                                             $rs_ = DB::select(" SELECT * FROM temp_001 WHERE id='$i' ");
                                             $amt_to_take = $amt_in_wh;
 
-                                            $pn .=     
+                                            $pn .=
                                             '<div class="divTableRow">
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2425,9 +2425,9 @@ foreach($temp_ppr_0021_data as $tmp){
                                                         '".$v_02->product_unit_id_fk."',
                                                         '".$p_unit_name."',
                                                         '".$v_02->lot_number."',
-                                                        '".$v_02->lot_expired_date."', 
+                                                        '".$v_02->lot_expired_date."',
                                                         '".$v_02->warehouse_id_fk."',
-                                                        '".$v_02->zone_id_fk."', 
+                                                        '".$v_02->zone_id_fk."',
                                                         '".$v_02->shelf_id_fk."',
                                                         '".$v_02->shelf_floor."',
                                                         '".$v_02->created_at."'
@@ -2435,8 +2435,8 @@ foreach($temp_ppr_0021_data as $tmp){
                                                     ");
                                                 }
                                         // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                                
-                                         
+
+
                                         }
 
 
@@ -2446,31 +2446,31 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
 
-                        }else{ // กรณีไม่มีสินค้าในคลังเลย 
+                        }else{ // กรณีไม่มีสินค้าในคลังเลย
 
                              $amt_pay_remain = $value->amt_remain ;
                              $pay_this = 0 ;
                              $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                            $pn .=     
+                            $pn .=
                             '<div class="divTableRow">
                             <div class="divTableCell" style="width:240px;font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
-                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                              $pn .=     
+                              $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง... *** </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;">  </div>
                                     <div class="divTableCell" style="width:80px;text-align:center;">  </div>
                                     </div>
                                     ';
-                            
+
                             @$_SESSION['check_product_instock'] = 0;
 
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
-                            
+
                              $i = 1;
                              foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -2528,11 +2528,11 @@ foreach($temp_ppr_0021_data as $tmp){
 
                         }
 
-                    $pn .= '</div>';  
-                    $pn .= '</div>';  
+                    $pn .= '</div>';
+                    $pn .= '</div>';
                   }
 
-                  $pn .= '</div>';  
+                  $pn .= '</div>';
 
           }
 
@@ -2550,7 +2550,7 @@ foreach($temp_ppr_0021_data as $tmp){
                   // ->where('amt_remain', $v->amt_remain)
                   ->get();
                   if($_choose->count() == 0){
-                    DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (invoice_code,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain) 
+                    DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (invoice_code,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain)
                       VALUES (
                       '".$row->invoice_code."', ".$v->product_id_fk.", '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->amt_lot.", '".$v->amt_lot."', '".$v->amt_remain."'
                       )
@@ -2559,7 +2559,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
             }
 
-        
+
           $rs_temp_db_stocks_check = DB::select(" select invoice_code, sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, sum(amt_remain) as amt_remain from $temp_db_stocks_check group by invoice_code ");
 
           foreach ($rs_temp_db_stocks_check as $key => $v) {
@@ -2575,11 +2575,11 @@ foreach($temp_ppr_0021_data as $tmp){
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
-       ->addColumn('column_003', function($row) { 
+      ->escapeColumns('column_002')
+       ->addColumn('column_003', function($row) {
 
                 $pn = '<div class="divTable" ><div class="divTableBody" style="background-color:white !important;">';
-                $pn .=     
+                $pn .=
                 '<div class="divTableRow" style="background-color:white !important;">
                 <div class="divTableCell" style="text-align:center;font-weight:bold;">
 
@@ -2593,9 +2593,9 @@ foreach($temp_ppr_0021_data as $tmp){
             return $pn;
 
         })
-         ->escapeColumns('column_003')      
-         ->addColumn('ch_amt_remain', function($row) { 
-            // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
+         ->escapeColumns('column_003')
+         ->addColumn('ch_amt_remain', function($row) {
+            // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่
             // Case ที่มีการบันทึกข้อมูลแล้ว
             // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
              $rs_pay_history = DB::select(" SELECT id FROM `db_pay_product_receipt_002_pay_history` WHERE invoice_code='".$row->invoice_code."' AND status in (2) ");
@@ -2608,9 +2608,9 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
            })
-          ->addColumn('ch_amt_lot_wh', function($row) { 
+          ->addColumn('ch_amt_lot_wh', function($row) {
          // ดูว่าไม่มีสินค้าคลังเลย
-            
+
             $Products = DB::select("
               SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
             ");
@@ -2630,13 +2630,13 @@ foreach($temp_ppr_0021_data as $tmp){
                 // return $arr_im;
                 $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
                 $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
-                return @$r[0]->sum?@$r[0]->sum:0; 
+                return @$r[0]->sum?@$r[0]->sum:0;
             }else{
                 // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน
                 return 1;
             }
 
-       })    
+       })
       ->addColumn('status_cancel_some', function($row) {
             $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=1 ");
             if(count($P)>0){
@@ -2644,17 +2644,17 @@ foreach($temp_ppr_0021_data as $tmp){
             }else{
               return 0;
             }
-      })  
-       ->addColumn('status_sent', function($row) { 
+      })
+       ->addColumn('status_sent', function($row) {
 
             $status_sent = DB::select(" SELECT status_sent FROM `db_pay_product_receipt_001` WHERE invoice_code='".$row->invoice_code."'  ");
             if($status_sent){
-                return $status_sent[0]->status_sent; 
+                return $status_sent[0]->status_sent;
             }else{
                 return 0;
             }
 
-         })          
+         })
         ->make(true);
       }
 
