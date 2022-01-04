@@ -98,8 +98,6 @@ class AipocketController extends Controller
                 return $row->orders_type;
             })
 
-
-
             ->addColumn('pv', function ($row) {
 
                 if ($row->type_id == 4 || $row->type_id == 8) {

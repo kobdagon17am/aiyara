@@ -3,20 +3,20 @@
  $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
  ?>
  @extends('frontend.layouts.customer.customer_app')
- <!-- Select 2 css -->
- <style>
-     .icons-alert:before {
-         top: 11px;
-     }
 
- </style>
  @section('css')
-     <link rel="stylesheet" href="{{ asset('frontend/bower_components/select2/css/select2.min.css') }}" />
-     <!-- Multi Select css -->
-     <link rel="stylesheet" type="text/css"
-         href="{{ asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css') }}">
-     <link rel="stylesheet" type="text/css"
-         href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
+<style>
+  .icons-alert:before {
+      top: 11px;
+  }
+
+</style>
+  <link rel="stylesheet" href="{{ asset('frontend/bower_components/select2/css/select2.min.css') }}" />
+  <!-- Multi Select css -->
+  <link rel="stylesheet" type="text/css"
+      href="{{ asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css') }}">
+  <link rel="stylesheet" type="text/css"
+      href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
  @endsection
 
  @section('conten')

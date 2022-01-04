@@ -9,6 +9,7 @@ use DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Frontend\Register;
 use App\Models\Frontend\LineModel;
+use Auth;
 
 class RegisterController extends Controller
 {
