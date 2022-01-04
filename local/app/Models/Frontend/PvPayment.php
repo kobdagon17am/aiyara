@@ -9,6 +9,7 @@ use App\Models\Frontend\RunNumberPayment;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Backend\GiftvoucherCus;
+use App\Models\Frontend\Runpv_AiStockis;
 class PvPayment extends Model
 {
 
@@ -291,7 +292,7 @@ class PvPayment extends Model
                 $order_update->invoice_code_id_fk = $code_order;
                 $order_update->invoice_code = $order_data->code_order;
                 //check รายการสินค้าแถม
-           
+
                 if ($type_id == 1) { //ทำคุณสมบติ
 
                     $add_pv = $customer_update->pv + $pv;
@@ -302,7 +303,7 @@ class PvPayment extends Model
 
                     // dd($customer_update->user_name);
                     // dd($pv);
-                      
+
                     $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                     // dd($resule);
@@ -484,7 +485,21 @@ class PvPayment extends Model
 
                     $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
-                } elseif ($type_id == 4) { //เติม Aipocket
+                } elseif ($type_id == 4) { //เติม Ai Stockist
+
+                  $resule = Runpv_AiStockis::add_pv_aistockist($type_id, $pv,$customer_update->user_name,$customer_update->user_name,$order_data->code_order,$order_data->id);
+
+                  if ($resule['status'] == 'fail') {
+
+                    $log =  ['customer_user_name' => $customer_update->user_name,
+                    'admin_user_name' => '',
+                    'code_order' => $order_data->code_order,
+                    'error_detail' => 'เติม Ai Stockist',
+                    'function' => 'App\Http\Controllers\Frontend\Fc\RunPvController',
+                    'type' =>'',//'admin','customer'
+                    ];
+                    $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
+                  }
 
                     $add_pv_aipocket = $customer_update->pv_aistockist + $pv;
                     $customer_update->pv_aistockist = $add_pv_aipocket;

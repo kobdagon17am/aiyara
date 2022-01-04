@@ -669,15 +669,12 @@
                      </table>
                      <hr m-t-2>
 
-                     @if ($check_giveaway)
+
                      <?php
 
                      $i = 1; ?>
                           @foreach ($check_giveaway as $check_giveaway_value)
-
-
-                          @if($check_giveaway_value['status'] == 'success')
-
+                          @if(@$check_giveaway_value['status'] == 'success')
                           <h5 class="text-danger">Promotion Free {{ $i++ }}</h4>
                             <div class="table-responsive p-3">
                          <table class="table">
@@ -713,7 +710,7 @@
                                  @endif
                             @endforeach
 
-                     @endif
+
                      @if($bill['type'] != 6)
 
                       {{-- <div class="form-control bootstrap-tagsinput" id="html_shipping_premium" style=" border: 1px solid #ffc107;line-height: 29px; border-radius: 16px;">

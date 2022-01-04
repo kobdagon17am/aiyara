@@ -83,7 +83,7 @@ class PaymentAddProduct extends Model
                 $check_giveaway = GiveawayController::check_giveaway($type, $customer_username, $pv_total);
 
                 foreach ($check_giveaway as $value) {
-                    if ($value['status'] == 'success') {
+                    if (@$value['status'] == 'success') {
 
                         if ($value['rs']) {
 

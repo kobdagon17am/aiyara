@@ -11,7 +11,7 @@ use App\Http\Controllers\Frontend\Fc\RunPvController;
 
 class Runpv_AiStockis extends Model
 {
-    public static function run_pv($type,$pv,$to_customer_user,$username)
+    public static function run_pv($type,$pv,$to_customer_user,$username,$code_order='',$order_id_fk='')
     {
             try {
                 DB::BeginTransaction();
@@ -32,10 +32,7 @@ class Runpv_AiStockis extends Model
                     return $resule;
                 } else {
 
-
                   $update_use = Customer::find($user->id);
-
-
                   $update_to_customer = Customer::find($to_customer->id);
 
                   $pv_total = $user->pv_aistockist - $pv;
@@ -55,7 +52,8 @@ class Runpv_AiStockis extends Model
                       $update_ai_stockist->status = 'success';
                       $update_ai_stockist->type_id =$type;
                       $update_ai_stockist->banlance = $pv_total;
-
+                      $update_ai_stockist->code_order = $code_order;
+                      $update_ai_stockist->order_id_fk = $order_id_fk;
 
                         if ($type == 1) { //ทำคุณสมบติ
 
@@ -201,7 +199,9 @@ class Runpv_AiStockis extends Model
                             }
 
                             $resule =  RunPvController::Runpv($to_customer_user,$pv,$type,$transection_code);
-                        } else {
+                        }elseif ($type == 4) {//ซื้อเพื่อเติม เก็บ log เฉยๆ
+                          $resule = ['status' => 'success', 'message' => 'ซื้อเพื่อเติม เก็บ log เฉยๆ '];
+                        }else {
                             $resule = ['status' => 'fail', 'message' => 'ไม่มี Type ที่เลือก'];
                             return  $resule;
                         }
@@ -210,6 +210,69 @@ class Runpv_AiStockis extends Model
                     }
 
                 }
+                if ($resule['status'] == 'success') {
+                  $update_ai_stockist->save();
+                    DB::commit();
+                    //DB::rollback();
+                    return $resule;
+                } else {
+                    DB::rollback();
+                    return $resule;
+                }
+
+            } catch (Exception $e) {
+                DB::rollback();
+                $resule = ['status' => 'fail', 'message' => 'Update PvPayment Fail'];
+                return $resule;
+            }
+            $resule = ['status' => 'success', 'message' => 'Yess'];
+        return $resule;
+
+    }
+
+
+    public static function add_pv_aistockist($type,$pv,$to_customer_user,$username,$code_order='',$order_id_fk='')
+    {
+            try {
+                DB::BeginTransaction();
+
+                $user = DB::table('customers')
+                ->select('id','pv_aistockist','user_name')
+                ->where('user_name', '=', $username)
+                ->first();
+
+                $to_customer= DB::table('customers')
+                ->select('id','pv_aistockist','user_name','pv_mt_active','status_pv_mt','pv_mt','pv_tv','pv')
+                ->where('user_name', '=', $to_customer_user)
+                ->first();
+
+                if (empty($user) || empty($to_customer)) {
+                    $resule = ['status' => 'fail', 'message' => 'ไม่มี User นี้ในระบบ'];
+                    return $resule;
+                } else {
+
+                  $update_use = Customer::find($user->id);
+                  $update_to_customer = Customer::find($to_customer->id);
+
+                  $pv_total = $user->pv_aistockist + $pv;
+
+                      $update_use->pv_aistockist = $pv_total;
+                      $transection_code = RunNumberPayment::run_number_aistockis();
+                      $update_ai_stockist = new Db_Ai_stockist();
+                      $update_ai_stockist->customer_id = $user->id;
+                      $update_ai_stockist->to_customer_id =$to_customer->id;
+                      $update_ai_stockist->transection_code = $transection_code;
+                      $update_ai_stockist->set_transection_code = date('ym');
+                      $update_ai_stockist->pv = $pv;
+                      $update_ai_stockist->status = 'success';
+                      $update_ai_stockist->type_id =$type;
+                      $update_ai_stockist->banlance = $pv_total;
+                      $update_ai_stockist->code_order = $code_order;
+                      $update_ai_stockist->order_id_fk = $order_id_fk;
+                      $resule = ['status' => 'success', 'message' => 'ซื้อเพื่อเติม เก็บ log + PV AiStockist '];
+
+                }
+
                 if ($resule['status'] == 'success') {
                   $update_ai_stockist->save();
                     DB::commit();

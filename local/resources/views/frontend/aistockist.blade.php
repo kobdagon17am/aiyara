@@ -4,7 +4,6 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 ?>
 @extends('frontend.layouts.customer.customer_app')
 @section('conten')
-
     <div class="row">
         <div class="col-md-3 col-xl-3">
             <div class="card bg-c-blue order-card">
@@ -16,8 +15,6 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     <p class="m-b-0">จำนวนคะแนนคงเหลือ{{-- <span class="f-right">$542</span> --}}</p>
                 </div>
             </div>
-
-
         </div>
 
         <div class="col-md-9 col-xl-9">
@@ -95,7 +92,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
               </div>
               <div class="card-block">
                 <div class="dt-responsive table-responsive">
-                    <table id="simpletable" class="table table-striped table-bordered nowrap">
+                    <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
 
                     </table>
                 </div>
@@ -264,8 +261,14 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                             "name": "created_at",
                             "title": '<center>Date</center>',
                         },
-                        {"data": "order_code",
-                        "name": "order_code",
+
+                        {"data": "transection_code",
+                        "name": "transection_code",
+                        "title": '<center>Code</center>',
+                        },
+
+                        {"data": "code_order",
+                        "name": "code_order",
                         "title": '<center>OrderCode</center>',
                         },
                         {
