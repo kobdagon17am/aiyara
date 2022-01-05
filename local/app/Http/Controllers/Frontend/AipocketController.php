@@ -60,8 +60,8 @@ class AipocketController extends Controller
 
             })
 
-            ->addColumn('order_code', function ($row) {
-                return $row->transection_code;
+            ->addColumn('code_order', function ($row) {
+                return $row->code_order;
             })
 
             ->addColumn('customer_id', function ($row) {
@@ -97,8 +97,6 @@ class AipocketController extends Controller
             ->addColumn('type', function ($row) {
                 return $row->orders_type;
             })
-
-
 
             ->addColumn('pv', function ($row) {
 
