@@ -176,11 +176,9 @@ class Pick_warehouseController extends Controller
 
     public function qr($id)
     {
-          // return $id;
-
+      // return $id;
       // $r1 = DB::select(" SELECT * FROM db_pick_pack_packing_code where id=$id ");
       // dd($r1);
-
 
       $r = DB::select("SELECT db_pay_requisition_001.*,db_pick_pack_requisition_code.requisition_code FROM db_pay_requisition_001 LEFT Join db_pick_pack_requisition_code ON db_pay_requisition_001.pick_pack_requisition_code_id_fk = db_pick_pack_requisition_code.id
       where db_pay_requisition_001.pick_pack_requisition_code_id_fk =$id ");
@@ -802,7 +800,6 @@ class Pick_warehouseController extends Controller
 
   public function warehouse_qr_0002(Request $reg){
 // pick_pack_packing_code_id_fk
-
     // Scan Qr-code
 $sTable = DB::select(" 
 
@@ -916,10 +913,16 @@ GROUP BY db_order_products_list.product_id_fk
 
               $sum_amt = 0 ;
               $r_ch_t = '';
-
+        
          if(@$Products){
               foreach ($Products as $key => $value) {
-            // วุฒิเพิ่ม if มาเช็ค
+                // วุฒิเพิ่มมาเช็คยอดที่โดนตัดแล้ว
+                $pro_check = DB::table('db_pay_requisition_002')->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)->where('product_id_fk',$value->product_id_fk)->first();
+                $c_amt_get = 0;
+                if($pro_check){
+                  $c_amt_get = $pro_check->amt_get;
+                }
+              // วุฒิเพิ่ม if มาเช็ค
                 if($value->product_id_fk!=null){
 
                 // หา max time_pay ก่อน 
@@ -965,8 +968,9 @@ GROUP BY db_order_products_list.product_id_fk
 
                 $invoice_code = implode(",",$arr_inv);
 
-
-                $sum_amt += $value->amt;
+                // วุฒิแก้
+                // $sum_amt += $value->amt;
+                $sum_amt += $c_amt_get;
                 $pn .=     
                 '<div class="divTableRow">
                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
@@ -974,12 +978,13 @@ GROUP BY db_order_products_list.product_id_fk
                 ('.@$invoice_code.')<br>
                 <font color=red>'.$r_ch_t.'</font>
                 </div>
-                <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
+                <div class="divTableCell" style="text-align:center;">'.@$c_amt_get.'</div> 
                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
                 <div class="divTableCell" style="text-align:left;"> ';
 
                 $item_id = 1;
-                $amt_scan = @$value->amt;
+                //  $amt_scan = @$value->amt;
+                $amt_scan = @$c_amt_get;
 
                 // for ($i=0; $i < $amt_scan ; $i++) { 
 
@@ -1185,6 +1190,12 @@ GROUP BY db_order_products_list.product_id_fk
   
            if(@$Products){
                 foreach ($Products as $key => $value) {
+                           // วุฒิเพิ่มมาเช็คยอดที่โดนตัดแล้ว
+                $pro_check = DB::table('db_pay_requisition_002')->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)->where('product_id_fk',$value->product_id_fk)->first();
+                $c_amt_get = 0;
+                if($pro_check){
+                  $c_amt_get = $pro_check->amt_get;
+                }
                   // วุฒิเพิ่มมาเช็ค if
                   if($value->product_id_fk!=null){
                     
@@ -1228,8 +1239,9 @@ GROUP BY db_order_products_list.product_id_fk
   
                   $invoice_code = implode(",",$arr_inv);
   
-  
-                  $sum_amt += $value->amt;
+                  
+                  // $sum_amt += $value->amt;
+                  $sum_amt += $c_amt_get;
                   $pn .=     
                   '<div class="divTableRow">
                   <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
@@ -1237,12 +1249,12 @@ GROUP BY db_order_products_list.product_id_fk
                   ('.@$invoice_code.')<br>
                   <font color=red>'.$r_ch_t.'</font>
                   </div>
-                  <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
+                  <div class="divTableCell" style="text-align:center;">'.@$c_amt_get.'</div> 
                   <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
                   <div class="divTableCell" style="text-align:left;"> ';
   
                   $item_id = 1;
-                  $amt_scan = @$value->amt;
+                  $amt_scan = @$c_amt_get;
   
                   for ($i=0; $i < $amt_scan ; $i++) { 
   
