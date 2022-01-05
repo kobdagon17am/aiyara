@@ -778,9 +778,23 @@ class Pick_warehouseController extends Controller
           return '-';
         }
 
-
-  
         })
+
+        ->addColumn('p_weight',function($row){
+          $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+          $pn = '';
+          if(!empty($DP)){
+            foreach ($DP as $key => $value) {
+              $pn .= '<input type="number" class="p_amt_box" data-id="'.@$value->id.'" box-id="0"  type="text" value="'.@$value->p_amt_box.'"><br>';
+            }
+ 
+            return $pn;
+          }else{
+            return '-';
+          }
+        })
+    
+
       ->escapeColumns('column_003')        
       ->make(true);
     }
@@ -1036,9 +1050,8 @@ GROUP BY db_order_products_list.product_id_fk
              <b>ขนาด <br> 
              <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
              น้ำหนัก <br>
-              <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
-             จำนวนกล่อง <br>
-              <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
+             <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
+      
              <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
              <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
             </div> 
@@ -1299,8 +1312,7 @@ GROUP BY db_order_products_list.product_id_fk
                <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
                น้ำหนัก <br>
                 <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
-               จำนวนกล่อง <br>
-                <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
+            
                <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
                <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
               </div> 
@@ -1527,8 +1539,7 @@ ORDER BY db_pick_pack_packing.id
            <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
            น้ำหนัก <br>
             <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
-           จำนวนกล่อง <br>
-            <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
+       
            <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
            <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
           </div> 
@@ -1545,6 +1556,8 @@ ORDER BY db_pick_pack_packing.id
           $pn .= '</div>';  
           return $pn;
       })
+
+      
       ->escapeColumns('column_003')  
 
       ->make(true);
@@ -1753,8 +1766,7 @@ ORDER BY db_pick_pack_packing.id
                  <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
                  น้ำหนัก <br>
                   <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
-                 จำนวนกล่อง <br>
-                  <input type="number" class="p_amt_box" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_amt_box.'">
+           
                  <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
                  <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
                 </div> 

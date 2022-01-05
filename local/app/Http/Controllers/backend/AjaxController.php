@@ -3642,16 +3642,20 @@ class AjaxController extends Controller
     {
 
       if($request->ajax()){
-            // $value=DB::table('db_pick_pack_packing')
-            // ->where('id', $request->id)
-            // ->get();
+            $value=DB::table('db_pick_pack_packing')
+            ->where('id', $request->id)
+            ->update([
+                'p_amt_box' => $request->p_amt_box
+            ]);
             // if($value->count() == 0){
             // }else{
-                DB::table('db_pick_pack_boxsize')
-                ->where('id',$request->box_id)
-                ->update(array(
-                  'p_amt_box' => $request->p_amt_box,
-                ));
+
+                // DB::table('db_pick_pack_boxsize')
+                // ->where('id',$request->box_id)
+                // ->update(array(
+                //   'p_amt_box' => $request->p_amt_box,
+                // ));
+
             // }
 
       }

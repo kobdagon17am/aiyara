@@ -396,6 +396,7 @@
                   columns: [
                       {data: 'column_001', title :'รหัสใบเบิก', className: 'text-center w231'},
                       {data: 'column_002', title :'รายการบิลในใบเบิก', className: 'text-center '},
+                      {data: 'p_weight', title :'จำนวนกล่อง', className: 'text-center '},
                       {data: 'column_003', title :'รายละเอียดลูกค้า', className: 'text-center '},
                       // {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการ Packing List </span> ', className: 'text-left',render: function(d) {
                       //   return d;
@@ -1171,11 +1172,11 @@ setTimeout(function(){
                   row.find('.p_size').removeAttr('box-id');
                   row.find('.p_size').attr('box-id',data.box_id);
                   row.find('.p_size').val('');
-                  row.find('.p_weight').removeAttr('data-id');
-                  row.find('.p_weight').attr('data-id',id);
-                  row.find('.p_weight').removeAttr('box-id');
-                  row.find('.p_weight').attr('box-id',data.box_id);
-                  row.find('.p_weight').val('');
+                  // row.find('.p_weight').removeAttr('data-id');
+                  // row.find('.p_weight').attr('data-id',id);
+                  // row.find('.p_weight').removeAttr('box-id');
+                  // row.find('.p_weight').attr('box-id',data.box_id);
+                  // row.find('.p_weight').val('');
                   row.find('.p_amt_box').removeAttr('data-id');
                   row.find('.p_amt_box').attr('data-id',id);
                   row.find('.p_amt_box').removeAttr('box-id');

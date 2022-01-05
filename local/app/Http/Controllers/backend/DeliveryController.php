@@ -372,9 +372,7 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
-
         // dd($request->all());
-
         if(isset($request->update_delivery_custom)){
 
             $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)." ");
