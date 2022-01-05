@@ -1603,7 +1603,6 @@ class Pick_warehouse_fifoController extends Controller
       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
 
-
       $TABLES = DB::select(" SHOW TABLES ");
       // return $TABLES;
       $array_TABLES = [];
@@ -1621,13 +1620,13 @@ class Pick_warehouse_fifoController extends Controller
     // หาในตาราง db_orders ว่ามีมั๊ย
     // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0 
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
-    $tb0 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `pick_pack_packing_code_id_fk` in(".$request->packing_id.") ");
+    $tb0 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code".\Auth::user()->id."` WHERE `pick_pack_packing_code_id_fk` in(".$request->packing_id.") ");
 
     if(@$tb0){
 
     $packing_id = $tb0[0]->id;
 
-          $tb1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id` in(".$packing_id.") ");
+          $tb1 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code".\Auth::user()->id."` WHERE `id` in(".$packing_id.") ");
           // return $tb1;
           // dd();
 
@@ -1643,7 +1642,6 @@ class Pick_warehouse_fifoController extends Controller
     }
 
     // return $r01[0]->invoice_code;
-
     if(@$r01){
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppp_001; ");

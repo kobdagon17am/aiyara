@@ -346,9 +346,9 @@ class Pick_warehouseController extends Controller
             dataset_pay_product_status.txt_desc as bill_status
             FROM
             db_pay_requisition_001
-            Left Join customers ON $customer_id = customers.id
+            Left Join customers ON 8 = customers.id
             Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
-            where db_pay_requisition_001.id in ($id)
+            where db_pay_requisition_001.pick_pack_requisition_code_id_fk in ($id)
         ");
       return View('backend.pick_warehouse.cancel')->with(
         array(
