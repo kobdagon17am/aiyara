@@ -716,8 +716,9 @@ class DeliveryController extends Controller
 
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
-
-        if(@\Auth::user()->permission==1){
+      //  วุฒิเพิ่มมาเช็คว่าใช่ WH ไหม
+       $role_group = DB::table('role_group')->select('wh_status')->where('id',@\Auth::user()->role_group_id_fk)->first();
+        if(@\Auth::user()->permission==1 || @$role_group->wh_status==1){
 
             if(!empty( $req->business_location_id_fk) ){
                 $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
