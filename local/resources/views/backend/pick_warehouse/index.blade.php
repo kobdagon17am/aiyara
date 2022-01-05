@@ -635,7 +635,6 @@
                   var picking_id = "<?=$_REQUEST['id']?>";
                   var packing_code = $("#packing_code").val();
 
-                  // alert(packing_code);
                   // return false;
       
                 // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 

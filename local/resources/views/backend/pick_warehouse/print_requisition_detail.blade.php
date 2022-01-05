@@ -329,132 +329,157 @@ E-MAIL : info@aiyara.co.th
 
 
 // วุฒิเพิ่มมา เช็คว่ารวมบิลไหม
-$count_arr = explode(',',$receipt); 
-if(count($count_arr)==1){
-  $sTable = DB::select(" 
+// $count_arr = explode(',',$receipt); 
+// if(count($count_arr)==1){
+//   $sTable = DB::select(" 
 
-SELECT 
-db_pick_pack_packing.id,
-db_pick_pack_packing.p_size,
-db_pick_pack_packing.p_weight,
-db_pick_pack_packing.p_amt_box,
-db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-db_pick_pack_packing.packing_code as packing_code,
-CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
-CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
-db_delivery.id as db_delivery_id,
-db_delivery.packing_code as db_delivery_packing_code
-FROM `db_pick_pack_packing` 
-LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
-WHERE 
+// SELECT 
+// db_pick_pack_packing.id,
+// db_pick_pack_packing.p_size,
+// db_pick_pack_packing.p_weight,
+// db_pick_pack_packing.p_amt_box,
+// db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+// db_pick_pack_packing.packing_code as packing_code,
+// CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
+// CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
+// db_delivery.id as db_delivery_id,
+// db_delivery.packing_code as db_delivery_packing_code
+// FROM `db_pick_pack_packing` 
+// LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+// LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+// WHERE 
 
-db_pick_pack_packing.packing_code_id_fk =".$data[1]." 
+// db_pick_pack_packing.packing_code_id_fk =".$data[1]." 
 
-AND db_delivery_packing.packing_code is null
+// AND db_delivery_packing.packing_code is null
 
-ORDER BY db_pick_pack_packing.id
+// ORDER BY db_pick_pack_packing.id
 
-");
+// ");
 
-foreach ($sTable as $key => $row) {
+// foreach ($sTable as $key => $row) {
 
-            $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
-            '<div class="divTableRow">
-            <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
-            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
-            <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-            </div>
-            ';
-
-
-              // ต้องรวมสินค้า โปรโมชั่น ด้วย 
-
-           $Products = DB::select("
-
-                SELECT
-                db_pay_requisition_002.id,
-                db_pay_requisition_002.time_pay,
-                db_pay_requisition_002.business_location_id_fk,
-                db_pay_requisition_002.branch_id_fk,
-                db_pay_requisition_002.pick_pack_requisition_code_id_fk,
-                db_pay_requisition_002.customers_id_fk,
-                db_pay_requisition_002.product_id_fk,
-                db_pay_requisition_002.product_name,
-                db_pay_requisition_002.amt_need,
-                db_pay_requisition_002.amt_get as amt,
-                db_pay_requisition_002.amt_lot,
-                db_pay_requisition_002.amt_remain,
-                db_pay_requisition_002.product_unit_id_fk,
-                db_pay_requisition_002.product_unit,
-                db_pay_requisition_002.lot_number,
-                db_pay_requisition_002.lot_expired_date,
-                db_pay_requisition_002.warehouse_id_fk,
-                db_pay_requisition_002.zone_id_fk,
-                db_pay_requisition_002.shelf_id_fk,
-                db_pay_requisition_002.shelf_floor,
-                db_pay_requisition_002.status_cancel,
-                db_pay_requisition_002.created_at,
-                db_pay_requisition_002.updated_at,
-                db_pay_requisition_002.deleted_at
-                FROM `db_pay_requisition_002`
-                WHERE pick_pack_requisition_code_id_fk='".@$row->packing_code_id_fk."' 
+//             $pn = '<div class="divTable"><div class="divTableBody">';
+//             $pn .=     
+//             '<div class="divTableRow">
+//             <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
+//             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+//             <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+//             </div>
+//             ';
 
 
+//               // ต้องรวมสินค้า โปรโมชั่น ด้วย 
 
-                 ");
+//            $Products = DB::select("
 
-              $sum_amt = 0 ;
-              $r_ch_t = '';
+//                 SELECT
+//                 db_pay_requisition_002.id,
+//                 db_pay_requisition_002.time_pay,
+//                 db_pay_requisition_002.business_location_id_fk,
+//                 db_pay_requisition_002.branch_id_fk,
+//                 db_pay_requisition_002.pick_pack_requisition_code_id_fk,
+//                 db_pay_requisition_002.customers_id_fk,
+//                 db_pay_requisition_002.product_id_fk,
+//                 db_pay_requisition_002.product_name,
+//                 db_pay_requisition_002.amt_need,
+//                 db_pay_requisition_002.amt_get as amt,
+//                 db_pay_requisition_002.amt_lot,
+//                 db_pay_requisition_002.amt_remain,
+//                 db_pay_requisition_002.product_unit_id_fk,
+//                 db_pay_requisition_002.product_unit,
+//                 db_pay_requisition_002.lot_number,
+//                 db_pay_requisition_002.lot_expired_date,
+//                 db_pay_requisition_002.warehouse_id_fk,
+//                 db_pay_requisition_002.zone_id_fk,
+//                 db_pay_requisition_002.shelf_id_fk,
+//                 db_pay_requisition_002.shelf_floor,
+//                 db_pay_requisition_002.status_cancel,
+//                 db_pay_requisition_002.created_at,
+//                 db_pay_requisition_002.updated_at,
+//                 db_pay_requisition_002.deleted_at
+//                 FROM `db_pay_requisition_002`
+//                 WHERE pick_pack_requisition_code_id_fk='".@$row->packing_code_id_fk."' 
 
-         if(@$Products){
+
+
+//                  ");
+
+//               $sum_amt = 0 ;
+//               $r_ch_t = '';
+
+//          if(@$Products){
             
-              foreach ($Products as $key => $value) {
+//               foreach ($Products as $key => $value) {
 
-                if(!empty($value->product_id_fk)){
+//                 if(!empty($value->product_id_fk)){
 
-                // หา max time_pay ก่อน 
-                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
-              // Check ว่ามี status=2 ? (ค้างจ่าย)
-                 $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
-                 if(count($r_ch02)>0){
-                    $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
-                 }else{
-                   $r_ch_t = '';
-                 }
+//                 // หา max time_pay ก่อน 
+//                  $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+//               // Check ว่ามี status=2 ? (ค้างจ่าย)
+//                  $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+//                  if(count($r_ch02)>0){
+//                     $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+//                  }else{
+//                    $r_ch_t = '';
+//                  }
 
 
-                $sum_amt += $value->amt;
-                $pn .=     
-                '<div class="divTableRow">
-                <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-                '.@$value->product_name.'</b><br>
-                <font color=red>'.$r_ch_t.'</font>
-                </div>
-                <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
-                <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
-                ';
-                $pn .= '</div>';  
+//                 $sum_amt += $value->amt;
+//                 $pn .=     
+//                 '<div class="divTableRow">
+//                 <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+//                 '.@$value->product_name.'</b><br>
+//                 <font color=red>'.$r_ch_t.'</font>
+//                 </div>
+//                 <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
+//                 <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
+//                 ';
+//                 $pn .= '</div>';  
               
-              }
-              }
+//               }
+//               }
 
-              $pn .=     
-              '<div class="divTableRow">
-              <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
-              <div class="divTableCell" style="text-align:center;font-weight:bold;">'.@$sum_amt.'</div>
-              <div class="divTableCell" style="text-align:center;"> </div>
-              </div>
-              ';
+//               $pn .=     
+//               '<div class="divTableRow">
+//               <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+//               <div class="divTableCell" style="text-align:center;font-weight:bold;">'.@$sum_amt.'</div>
+//               <div class="divTableCell" style="text-align:center;"> </div>
+//               </div>
+//               ';
 
-          $pn .= '</div>';  
-          echo $pn;
-        }
+//           $pn .= '</div>';  
+//           echo $pn;
+//         }
    
-      }
-}else{
-  $sTable = DB::select(" 
+//       }
+// }else{
+//   $sTable = DB::select(" 
+
+// SELECT 
+// db_pick_pack_packing.id,
+// db_pick_pack_packing.p_size,
+// db_pick_pack_packing.p_weight,
+// db_pick_pack_packing.p_amt_box,
+// db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+// db_pick_pack_packing.packing_code as packing_code,
+// CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
+// CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
+// db_delivery.id as db_delivery_id,
+// db_delivery.packing_code as db_delivery_packing_code
+// FROM `db_pick_pack_packing` 
+// LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+// LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+// WHERE 
+
+// db_pick_pack_packing.packing_code_id_fk =".$data[1]." 
+
+// AND db_delivery_packing.packing_code is not null
+
+// ORDER BY db_pick_pack_packing.id
+
+// ");
+$sTable = DB::select(" 
 
 SELECT 
 db_pick_pack_packing.id,
@@ -463,25 +488,17 @@ db_pick_pack_packing.p_weight,
 db_pick_pack_packing.p_amt_box,
 db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
 db_pick_pack_packing.packing_code as packing_code,
-CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
-CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
 db_delivery.id as db_delivery_id,
 db_delivery.packing_code as db_delivery_packing_code
 FROM `db_pick_pack_packing` 
 LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
 WHERE 
-
 db_pick_pack_packing.packing_code_id_fk =".$data[1]." 
-
-AND db_delivery_packing.packing_code is not null
-
+AND db_pick_pack_packing.delivery_id_fk = ".$data[0]."
 ORDER BY db_pick_pack_packing.id
-
 ");
-  
-foreach ($sTable as $key => $row) {
 
+foreach ($sTable as $key => $row) {
 $pn = '<div class="divTable"><div class="divTableBody">';
 $pn .=     
 '<div class="divTableRow">
@@ -493,7 +510,7 @@ $pn .=
 
 
   // ต้องรวมสินค้า โปรโมชั่น ด้วย 
-
+if($row->db_delivery_packing_code!=0){
   $Products = DB::select("
 
 (SELECT 
@@ -543,7 +560,66 @@ WHERE type_product='promotion' AND db_delivery_packing.packing_code_id_fk = '".$
 GROUP BY db_order_products_list.product_id_fk
 )
                  ");
+}else{
 
+   // วุฒิเพิ่มมา 
+   $order_data = DB::table('db_delivery')->where('id',$row->db_delivery_id)->first();
+   $order_num = "";
+   if($order_data){
+    $order_num = $order_data->receipt;
+   }
+
+  $Products = DB::select("
+
+(SELECT 
+
+db_delivery.orders_id_fk,
+db_order_products_list.product_id_fk,
+db_order_products_list.product_name,
+db_order_products_list.product_unit_id_fk,
+SUM(db_order_products_list.amt) AS amt ,
+dataset_product_unit.product_unit,
+db_orders.code_order,
+db_orders.id as orders_id_fk
+
+FROM `db_order_products_list` 
+left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+
+WHERE type_product='product' AND db_orders.invoice_code = '".$order_num."'
+
+GROUP BY db_order_products_list.product_id_fk
+)
+
+UNION
+
+(
+SELECT 
+
+db_delivery.orders_id_fk,
+db_order_products_list.product_id_fk,
+db_order_products_list.product_name,
+db_order_products_list.product_unit_id_fk,
+SUM(db_order_products_list.amt) AS amt ,
+dataset_product_unit.product_unit,
+db_orders.code_order,
+db_orders.id as orders_id_fk
+
+FROM `db_order_products_list` 
+left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+
+WHERE type_product='promotion' AND db_orders.invoice_code = '".$order_num."'
+
+GROUP BY db_order_products_list.product_id_fk
+)
+");
+}
+  
   $sum_amt = 0 ;
   $r_ch_t = '';
 
@@ -569,7 +645,6 @@ if(@$Products){
     '<div class="divTableRow">
     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
     '.@$value->product_name.'</b><br>
-    '.@$value->code_order.'<br>
     <font color=red>'.$r_ch_t.'</font>
     </div>
     <div class="divTableCell" style="text-align:center;">'.@$value->amt.'</div> 
@@ -590,7 +665,7 @@ if(@$Products){
 
 $pn .= '</div>';  
 echo $pn;
-}
+// }
 
 }
 

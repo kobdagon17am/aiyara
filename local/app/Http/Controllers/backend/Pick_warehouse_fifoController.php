@@ -869,8 +869,13 @@ class Pick_warehouse_fifoController extends Controller
       $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
       $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
       $temp_db_pick_pack_packing_code = "db_pick_pack_packing_code".\Auth::user()->id; 
-
-
+       // วุฒิเพิ่มมา
+      $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->where('id',$request->picking_id)->first();
+      if($db_pick_pack_packing_code_data){
+        $arr_order = explode(',',$db_pick_pack_packing_code_data->receipt);
+        $all_orders = DB::table('db_orders')->whereIn('invoice_code',$arr_order)->pluck('id')->toArray();
+        $all_orders_lists = DB::table('db_order_products_list')->whereIn('frontstore_id_fk',$all_orders)->get();
+      }
       $TABLES = DB::select(" SHOW TABLES ");
       // return $TABLES;
       $array_TABLES = [];
@@ -1015,7 +1020,7 @@ class Pick_warehouse_fifoController extends Controller
 
           $z = 1;
           foreach ($Products as $key => $value) {
-
+            // dd($value);
                // บิลปกติ
                 $arr_inv = [];
                 $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
@@ -1048,6 +1053,13 @@ class Pick_warehouse_fifoController extends Controller
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
+
+                // วุฒิเพิ่มมา
+                // dd($invoice_code);
+                // if($db_pick_pack_packing_code_data){
+                // $all_orders_lists = DB::table('db_order_products_list')->whereIn('frontstore_id_fk',$all_orders)->where('')->get();
+                // $data_remark = '';
+                // }
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 

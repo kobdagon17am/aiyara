@@ -1496,7 +1496,8 @@ class Pay_requisition_001Controller extends Controller
  public function ajaxSavePay_requisition(Request $request)
     {
       // return $request;
-      
+      // db_pay_requisition_001
+      // db_pay_requisition_002
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
