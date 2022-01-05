@@ -12,10 +12,12 @@ class RequisitionBetweenBranchController extends Controller
 {
     public function index()
     {
-        $sBranchs = Branchs::when(auth()->user()->permission !== 1, function ($query) {
+        $fromBranchs = Branchs::when(auth()->user()->permission !== 1, function ($query) {
             return $query->where('id', auth()->user()->branch_id_fk);
         })->get();
 
+        $toBranchs = Branchs::get();
+     
         $products = DB::table('products')
             ->selectRaw('products.id as product_id, products.product_code, CASE WHEN products_details.product_name IS NULL THEN "* ไม่ได้กรอกชื่อสินค้า" ELSE products_details.product_name END as product_name')
             ->leftJoin('products_details', 'products_details.product_id_fk', '=', 'products.id')
@@ -26,7 +28,8 @@ class RequisitionBetweenBranchController extends Controller
         $approve_requisitons = RequisitionBetweenBranch::with('requisition_details')->isApprove();
       
         return view('backend.requisition.index')->with([
-            'sBranchs' => $sBranchs,
+            'fromBranchs' => $fromBranchs,
+            'toBranchs' => $toBranchs,
             'products' => $products,
             'requisitons' => $requisitons,
             'approve_requisitons' => $approve_requisitons,

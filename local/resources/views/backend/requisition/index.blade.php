@@ -32,7 +32,7 @@
                                 <div class="col-md-9">
                                     <select id="from_branch_id" name="from_branch_id" class="form-control select2-templating">
                                         <option value="">เลือกสาขาที่ดำเนินการ</option>
-                                        @foreach ($sBranchs as $branch)
+                                        @foreach ($fromBranchs as $branch)
                                             <option value="{{ $branch->id }}" @if($branch->id == auth()->user()->branch_id_fk) selected @endif>{{ $branch->b_name }}</option>
                                         @endforeach
                                     </select>
@@ -45,7 +45,7 @@
                                 <div class="col-md-9">
                                     <select id="to_branch_id" name="to_branch_id" class="form-control select2-templating" required>
                                         <option value="">สาขาที่ต้องการยื่นคำขอ</option>
-                                        @foreach ($sBranchs as $branch)
+                                        @foreach ($toBranchs as $branch)
                                             <option value="{{ $branch->id }}">{{ $branch->b_name }}</option>
                                         @endforeach
                                     </select>
