@@ -631,7 +631,7 @@ class Pay_product_receipt_001Controller extends Controller
                     "created_at" =>  @$value->created_at,
                     );
           }
-
+          // บันทึกการรับข้อมูลแต่ละครั้ง
           if(@$data_db_pay_product_receipt_001){
               DB::table('db_pay_product_receipt_001')->insertOrIgnore($data_db_pay_product_receipt_001);
           }
@@ -2026,6 +2026,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
       $sTable = DB::select(" SELECT * FROM db_pay_product_receipt_001  WHERE  db_pay_product_receipt_001.invoice_code='".$req->txtSearch."' group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);
+  
       return $sQuery
       ->addColumn('column_001', function($row) {
 
@@ -2089,7 +2090,6 @@ foreach($temp_ppr_0021_data as $tmp){
           ';
 
           $amt_get = 0;
-        //  dd($Products);
           foreach ($Products as $key => $v) {
 
                    $css_font = $v->amt_remain>0?"color:red;font-weight:bold;":"";

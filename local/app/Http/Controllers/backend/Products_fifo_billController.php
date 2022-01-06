@@ -1380,10 +1380,12 @@ foreach($temp_ppr_0021_data as $tmp){
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
-          $Products = DB::select("
-            SELECT db_pay_product_receipt_002.* from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' and amt_remain <> 0 AND time_pay=(SELECT max(time_pay) from db_pay_product_receipt_002 WHERE status_cancel=0 LIMIT 1) and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay
-          ");
-
+          // วุฒิแก้เพราะมันคิวรี่ไม่เจอ
+          $max_time_pay =  DB::table('db_pay_product_receipt_002')->select('time_pay')->where('invoice_code',$row->invoice_code)->where('status_cancel',0)->orderby('time_pay','desc')->first();
+          $Products = DB::table('db_pay_product_receipt_002')->where('invoice_code',$row->invoice_code)->where('status_cancel',0)->where('time_pay',$max_time_pay->time_pay)->groupBy('product_id_fk')->orderby('time_pay','desc')->get();
+          // $Products = DB::select("
+          //   SELECT db_pay_product_receipt_002.* from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' and amt_remain <> 0 AND time_pay=(SELECT max(time_pay) from db_pay_product_receipt_002 WHERE status_cancel=0 LIMIT 1) and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay
+          // ");
 
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=
@@ -1411,7 +1413,6 @@ foreach($temp_ppr_0021_data as $tmp){
          DB::select(" DROP TABLE IF EXISTS temp_001; ");
          // TEMPORARY
          DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-
 
           foreach ($Products as $key => $value) {
 
