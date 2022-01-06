@@ -139,6 +139,7 @@
       $sC = '';
       $sU = '';
       $sD = '';
+      $can_cancel_bill = 1;
     }else{
       $role_group_id = \Auth::user()->role_group_id_fk;
       $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
@@ -150,7 +151,6 @@
       $sC = @$menu_permit->c==1?'':'display:none;';
       $sU = @$menu_permit->u==1?'':'display:none;';
       $sD = @$menu_permit->d==1?'':'display:none;';
-
       $can_cancel_bill = @$menu_permit->can_cancel_bill;
       $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
 
@@ -538,7 +538,7 @@
                               // console.log(can_cancel_bill);
                               // console.log(can_cancel_bill_across_day);
                               // console.log(aData['status_sent_2']);
-                              console.log('can_cancel_bill: '+can_cancel_bill);
+                              console.log('can_cancel_bill: '+can_cancel_bill+' / '+aData['invoice_code']);
                            console.log('status_sent_2: '+aData['status_sent_2']);
 
                               if(can_cancel_bill=='1' && aData['status_sent_2']==3){
@@ -550,7 +550,11 @@
 
 
 
-                              }else{
+                              }else if(aData['status_sent_2']==4){
+                                        $('td:last-child', nRow).html(''
+                                              + ''
+                                                ).addClass('input');
+                                        }else{
                                       $('td:last-child', nRow).html(''
                                       + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
@@ -1297,7 +1301,11 @@ $(function() {
 
 
 
-                                      }else{
+                                      }else if(aData['status_sent_2']==4){
+                                        $('td:last-child', nRow).html(''
+                                              + ''
+                                                ).addClass('input');
+                                        }else{
                                               $('td:last-child', nRow).html(''
                                               + '<a href="{{ url('backend/pay_product_receipt') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
 
@@ -1307,6 +1315,9 @@ $(function() {
                                       if(aData['status_sent_2']==3){
                                         $('td:eq(6)', nRow).html('');
                                       }
+                                      if(aData['status_sent_2']==2){
+                                          $('td:eq(6)', nRow).html('');
+                                        }
                                       if(aData['status_sent_2']==1){
                                         $('td:eq(5)', nRow).html('');
                                         $('td:eq(6)', nRow).html('');

@@ -5029,6 +5029,9 @@ class AjaxController extends Controller
 
       DB::select(" DELETE FROM `db_delivery` where orders_id_fk=$request->id ");
 
+      DB::table('db_pay_product_receipt_001')->where('orders_id_fk',$request->id)->update([
+          'status_sent'=>4
+      ]);
 
       // $resule = CancelOrderController::cancel_order($rs->cancel_order_id, $customer_id, 1, 'customer');
 

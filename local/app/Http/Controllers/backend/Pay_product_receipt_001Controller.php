@@ -334,20 +334,37 @@ class Pay_product_receipt_001Controller extends Controller
       //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
 
       //    ; ");
+
       // วุฒิแก้ ไม่ sum(amt) as amt
-      DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code)
+    //   DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code)
 
-      select
-      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code
-      FROM db_stocks_return
-      WHERE
-      status_cancel=0
+    //   select
+    //   business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code
+    //   FROM db_stocks_return
+    //   WHERE
+    //   status_cancel=0
 
-      GROUP BY
-      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
+    //   GROUP BY
+    //   business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
 
-     ; ");
-
+    //  ; ");
+    //  วุฒิแก้เปลี่่ยนเป็น lareavel จากเพรียว
+         $db_stocks_return_data = DB::table('db_stocks_return')->where('status_cancel',0)->get();
+         foreach($db_stocks_return_data as $sr){
+            DB::table($temp_db_stocks_from_return)->insert([
+              'business_location_id_fk'  => $sr->business_location_id_fk,
+              'branch_id_fk' => $sr->branch_id_fk,
+              'product_id_fk' => $sr->product_id_fk,
+              'lot_number' => $sr->lot_number,
+              'lot_expired_date' => $sr->lot_expired_date,
+              'amt' => $sr->amt,
+              'warehouse_id_fk' => $sr->warehouse_id_fk,
+              'zone_id_fk' => $sr->zone_id_fk,
+              'shelf_id_fk' => $sr->shelf_id_fk,
+              'shelf_floor' => $sr->shelf_floor,
+              'invoice_code' => $sr->invoice_code,
+            ]);
+         }
 
       DB::select(" UPDATE db_stocks
                Join $temp_db_stocks_from_return ON db_stocks.business_location_id_fk = $temp_db_stocks_from_return.business_location_id_fk
