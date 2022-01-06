@@ -570,7 +570,7 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function ajaxSavePay_product_receipt(Request $request)
     {
-
+      // action_user
           $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
           $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;

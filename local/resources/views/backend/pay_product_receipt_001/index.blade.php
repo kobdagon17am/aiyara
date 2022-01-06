@@ -501,7 +501,6 @@
                       {data: 'status_sent', title :'<center>สถานะ</center>', className: 'text-center'},
                       {data: 'pay_user', title :'<center>ผู้จ่ายสินค้า <br> วันที่จ่ายสินค้า</center>', className: 'text-center'},
                       {data: 'action_user', title :'<center>ผู้ยกเลิกการจ่าย<br>วันที่ดำเนินการ</center>', className: 'text-center'},
-
                       // {data: 'branch', title :'<center>สาขาที่ดำเนินการ</center>', className: 'text-center'},
                       {data: 'address_send_type', title :'<center>รับที่</center>', className: 'text-center w150'},
                       {data: 'id', title :'Tools', className: 'text-center w60'},
@@ -559,6 +558,9 @@
                               }
 
                               if(aData['status_sent_2']==3){
+                                $('td:eq(6)', nRow).html('');
+                              }
+                              if(aData['status_sent_2']==2){
                                 $('td:eq(6)', nRow).html('');
                               }
                               if(aData['status_sent_2']==1){
