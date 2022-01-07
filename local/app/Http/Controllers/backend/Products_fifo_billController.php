@@ -1442,7 +1442,20 @@ foreach($temp_ppr_0021_data as $tmp){
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                     // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+
+                    $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                    $w_str = '';
+                    foreach($w_arr as $key => $w){
+                      if($key+1==count($w_arr)){
+                        $w_str.=$w;
+                      }else{
+                        $w_str.=$w.',';
+                      }
+
+                    }
+        // wut อันนี้แก้ จ่ายผิดคลัง
+                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
+                    //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                       DB::select(" DROP TABLE IF EXISTS temp_001; ");
                       // TEMPORARY
@@ -1580,7 +1593,19 @@ foreach($temp_ppr_0021_data as $tmp){
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                      // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                     $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                     $w_str = '';
+                     foreach($w_arr as $key => $w){
+                       if($key+1==count($w_arr)){
+                         $w_str.=$w;
+                       }else{
+                         $w_str.=$w.',';
+                       }
+ 
+                     }
+         // wut อันนี้แก้ จ่ายผิดคลัง
+                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
+                    //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
@@ -2115,7 +2140,19 @@ foreach($temp_ppr_0021_data as $tmp){
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                             // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
-                             $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                            $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                            $w_str = '';
+                            foreach($w_arr as $key => $w){
+                              if($key+1==count($w_arr)){
+                                $w_str.=$w;
+                              }else{
+                                $w_str.=$w.',';
+                              }
+        
+                            }
+                // wut อันนี้แก้ จ่ายผิดคลัง
+                            $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
+                            //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                               DB::select(" DROP TABLE IF EXISTS temp_001; ");
                               // TEMPORARY
@@ -2253,7 +2290,19 @@ foreach($temp_ppr_0021_data as $tmp){
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                              // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
-                             $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                             $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                             $w_str = '';
+                             foreach($w_arr as $key => $w){
+                               if($key+1==count($w_arr)){
+                                 $w_str.=$w;
+                               }else{
+                                 $w_str.=$w.',';
+                               }
+         
+                             }
+                 // wut อันนี้แก้ จ่ายผิดคลัง
+                             $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
+                            //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                              $i = 1;
                              foreach ($temp_db_stocks_02 as $v_02) {
