@@ -586,7 +586,7 @@ class Add_ai_cashController extends Controller
             SELECT db_add_ai_cash.*
             FROM
             db_add_ai_cash
-            WHERE pay_type_id_fk in (1,8,10,11,12)
+            WHERE pay_type_id_fk in (1,8,10,11,12) and action_user = ".Auth::user()->id."
             " . $w01 . "
             " . $w02 . "
             " . $w03 . "
