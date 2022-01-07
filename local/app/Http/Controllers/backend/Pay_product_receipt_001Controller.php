@@ -334,20 +334,37 @@ class Pay_product_receipt_001Controller extends Controller
       //     business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
 
       //    ; ");
+
       // วุฒิแก้ ไม่ sum(amt) as amt
-      DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code)
+    //   DB::select(" INSERT INTO $temp_db_stocks_from_return (business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code)
 
-      select
-      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code
-      FROM db_stocks_return
-      WHERE
-      status_cancel=0
+    //   select
+    //   business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,amt,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor,invoice_code
+    //   FROM db_stocks_return
+    //   WHERE
+    //   status_cancel=0
 
-      GROUP BY
-      business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
+    //   GROUP BY
+    //   business_location_id_fk,branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor
 
-     ; ");
-
+    //  ; ");
+    //  วุฒิแก้เปลี่่ยนเป็น lareavel จากเพรียว
+         $db_stocks_return_data = DB::table('db_stocks_return')->where('status_cancel',0)->get();
+         foreach($db_stocks_return_data as $sr){
+            DB::table($temp_db_stocks_from_return)->insert([
+              'business_location_id_fk'  => $sr->business_location_id_fk,
+              'branch_id_fk' => $sr->branch_id_fk,
+              'product_id_fk' => $sr->product_id_fk,
+              'lot_number' => $sr->lot_number,
+              'lot_expired_date' => $sr->lot_expired_date,
+              'amt' => $sr->amt,
+              'warehouse_id_fk' => $sr->warehouse_id_fk,
+              'zone_id_fk' => $sr->zone_id_fk,
+              'shelf_id_fk' => $sr->shelf_id_fk,
+              'shelf_floor' => $sr->shelf_floor,
+              'invoice_code' => $sr->invoice_code,
+            ]);
+         }
 
       DB::select(" UPDATE db_stocks
                Join $temp_db_stocks_from_return ON db_stocks.business_location_id_fk = $temp_db_stocks_from_return.business_location_id_fk
@@ -570,7 +587,7 @@ class Pay_product_receipt_001Controller extends Controller
 
     public function ajaxSavePay_product_receipt(Request $request)
     {
-
+      // action_user
           $temp_ppr_003 = "temp_ppr_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
           $temp_ppr_004 = "temp_ppr_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
@@ -614,7 +631,7 @@ class Pay_product_receipt_001Controller extends Controller
                     "created_at" =>  @$value->created_at,
                     );
           }
-
+          // บันทึกการรับข้อมูลแต่ละครั้ง
           if(@$data_db_pay_product_receipt_001){
               DB::table('db_pay_product_receipt_001')->insertOrIgnore($data_db_pay_product_receipt_001);
           }
@@ -2009,6 +2026,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
       $sTable = DB::select(" SELECT * FROM db_pay_product_receipt_001  WHERE  db_pay_product_receipt_001.invoice_code='".$req->txtSearch."' group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);
+  
       return $sQuery
       ->addColumn('column_001', function($row) {
 
@@ -2072,7 +2090,6 @@ foreach($temp_ppr_0021_data as $tmp){
           ';
 
           $amt_get = 0;
-        //  dd($Products);
           foreach ($Products as $key => $v) {
 
                    $css_font = $v->amt_remain>0?"color:red;font-weight:bold;":"";

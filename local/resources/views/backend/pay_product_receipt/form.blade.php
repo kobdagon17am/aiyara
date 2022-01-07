@@ -276,7 +276,7 @@
                         <div class="col-md-12 text-center div_btn_save " style="display: none;" >
                           <br>
                           <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave " >
-                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้า
+                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้าอีกครั้ง
                           </button>
                         </div>
 
@@ -788,7 +788,7 @@ $(document).on('click', '.btnCancel', function(){
                                                  if(data=="No_changed"){
                                                       $(".myloading").hide();
                                                       Swal.fire({
-                                                            title: 'ยืนยัน ! บันทึกการจ่ายสินค้า ',
+                                                            title: 'ยืนยัน ! บันทึกการจ่ายสินค้าอีกครั้ง ',
                                                             type: 'question',
                                                             showCancelButton: true,
                                                             confirmButtonColor: '#556ee6',

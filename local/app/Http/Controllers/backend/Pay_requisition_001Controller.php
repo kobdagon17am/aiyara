@@ -1496,7 +1496,8 @@ class Pay_requisition_001Controller extends Controller
  public function ajaxSavePay_requisition(Request $request)
     {
       // return $request;
-      
+      // db_pay_requisition_001
+      // db_pay_requisition_002
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
@@ -1584,8 +1585,7 @@ class Pay_requisition_001Controller extends Controller
 
           $lastInsertId = DB::getPdo()->lastInsertId();
           // return $lastInsertId;
-          // dd();
-
+          
           if($lastInsertId){
 
                DB::select(" 
@@ -1643,7 +1643,7 @@ class Pay_requisition_001Controller extends Controller
               DB::select(" UPDATE db_pay_requisition_001 SET pay_date=now(),pay_user=".\Auth::user()->id." WHERE (id='$lastInsertId') ");
 
               // เช็คว่ามีสินค้าค้างจ่ายหรือไม่
-                  $ch01 =  DB::select(" SELECT * FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ORDER BY time_pay DESC LIMIT 1 ");
+                  $ch01 =  DB::select(" SELECT * FROM db_pay_requisition_002_pay_history WHERE pick_pack_packing_code_id_fk='".$pick_pack_requisition_code_id_fk."' ORDER BY time_pay DESC LIMIT 1 ");
 
                   // return $ch01;
 
@@ -1652,25 +1652,25 @@ class Pay_requisition_001Controller extends Controller
                 // return count($ch);
                 if(@$ch01[0]->amt_remain>0){
                   // 2=สินค้าไม่พอ มีบางรายการค้างจ่าย,3=สินค้าพอต่อการจ่ายครั้งนี้ 
-                  DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
+                  DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_packing_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
                   // 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
                   DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
                 }else{
 
                   if(!empty($ch01[0]->time_pay)){
 
-                    $ch03 =  DB::select(" SELECT * FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk= ".$pick_pack_requisition_code_id_fk."  AND time_pay in (".$ch01[0]->time_pay.") AND amt_remain > 0 ");
+                    $ch03 =  DB::select(" SELECT * FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_packing_code_id_fk= ".$pick_pack_requisition_code_id_fk."  AND time_pay in (".$ch01[0]->time_pay.") AND amt_remain > 0 ");
 
                     if(count($ch03)>0){
-                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
+                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_packing_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
                        DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
                     }else{
-                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
+                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_packing_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
                        DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
                     }
 
                   }else{
-                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
+                       DB::select(" UPDATE db_pay_requisition_001 SET status_sent=3 WHERE pick_pack_packing_code_id_fk='".$pick_pack_requisition_code_id_fk."' ");
                        DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=3 WHERE (`id` in (".$pick_pack_requisition_code_id_fk.")  ) ");
                   }
 

@@ -618,14 +618,23 @@ $(function() {
                                  $('td:last-child', nRow).html( str_U + str_V2).addClass('input');
 
                             }else{
-
+// วุฒิแก้
+                              // if(aData['status_delivery_packing']==1){
+                              //   $('td:last-child', nRow).html( str_U + str_V3).addClass('input');
+                              // }else if(aData['status_pay_product_receipt']==1){
+                              //   $('td:last-child', nRow).html( str_U + str_V4).addClass('input');
+                              // }else{
+                              //   $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                              // }
                               if(aData['status_delivery_packing']==1){
-                                $('td:last-child', nRow).html( str_U + str_V3).addClass('input');
-                              }else if(aData['status_pay_product_receipt']==1){
-                                $('td:last-child', nRow).html( str_U + str_V4).addClass('input');
-                              }else{
-                                $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                              }
+                                                                            $('td:last-child', nRow).html( str_U + str_V3).addClass('input');
+                                                                          }else{
+                                                                            $('td:last-child', nRow).html( str_U + str_D).addClass('input');
+                                                                          }
+
+                                                                          if(aData['approve_status']==9){
+                                                                            $('td:last-child', nRow).html( str_U + str_V4).addClass('input');
+                                                                          }
 
                                     // var st2 = '<a href="javascript: void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อยู่ระหว่างการเบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
 
