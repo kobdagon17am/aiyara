@@ -57,6 +57,35 @@ class DeliveryPackingCodeController extends Controller
     public function Datatable(){      
       // $sTable = \App\Models\Backend\DeliveryPackingCode::search()->orderBy('id', 'asc');
 
+      $sPermission = \Auth::user()->permission ;
+       $User_branch_id = \Auth::user()->branch_id_fk;
+      //  วุฒิเพิ่มมาเช็คว่าใช่ WH ไหม
+       $role_group = DB::table('role_group')->select('wh_status')->where('id',@\Auth::user()->role_group_id_fk)->first();
+        if(@\Auth::user()->permission==1 || @$role_group->wh_status==1){
+
+            if(!empty( $req->business_location_id_fk) ){
+                $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
+            }else{
+                $business_location_id = "";
+            }
+
+            if(!empty( $req->branch_id_fk) ){
+                $branch_id_fk = " and db_delivery.branch_id_fk = ".$req->branch_id_fk." " ;
+            }else{
+                $branch_id_fk = "";
+            }
+
+            $billing_employee = '';
+
+        }else{
+
+            $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
+            $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
+            $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
+
+        }
+
+
        $sTable = DB::select(" 
 
           SELECT db_delivery_packing_code.*,db_orders.shipping_special,db_delivery.id as db_delivery_id from db_delivery_packing_code  
@@ -64,6 +93,8 @@ class DeliveryPackingCodeController extends Controller
           LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
           LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
           WHERE db_delivery.status_pick_pack<>1 AND db_delivery.status_delivery<>1
+          $business_location_id
+          $branch_id_fk
           group by db_delivery_packing_code.id
           order by db_delivery_packing_code.updated_at desc
 
