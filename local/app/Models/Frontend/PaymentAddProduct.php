@@ -13,7 +13,6 @@ class PaymentAddProduct extends Model
 {
     public static function payment_add_product($order_id, $customer_id, $type, $business_location_id = '', $pv_total = '', $code_order, $customer_username)
     {
-
         DB::BeginTransaction();
         try {
 
