@@ -30,7 +30,7 @@ class Po_approveController extends Controller
         }
 // dd($code_order);
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
-
+     
         return View('backend.po_approve.index')->with(
         array(
            'sBusiness_location'=>$sBusiness_location,
@@ -771,7 +771,7 @@ class Po_approveController extends Controller
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
 
-
+    
 
         if(@\Auth::user()->permission==1){
 
@@ -952,7 +952,9 @@ ORDER BY updated_at DESC
                 // }
             })
             ->escapeColumns('transfer_bill_status')
-
+            ->addColumn('transfer_bill_date', function ($row) {
+                return DB::table('payment_slip')->where('code_order', '=', $row->code_order)->where('status', 2)->orderby('id', 'desc')->value('transfer_bill_date');
+            })
             ->make(true);
     }
 

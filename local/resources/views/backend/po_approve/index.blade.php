@@ -345,7 +345,7 @@ $(function() {
                   return '-';
               }
             }},
-            {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+            {data: 'transfer_bill_date', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
             {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
               if(d){
                   return d;
