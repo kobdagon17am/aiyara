@@ -258,7 +258,7 @@ tr.border_bottom td {
         SELECT *
         FROM db_transfer_warehouses_details 
         WHERE
-        transfer_warehouses_code_id = ".$data[0]." AND remark=1
+        transfer_warehouses_code_id = ".$data[0]." AND remark=2
      ");
 
      $j=1;
@@ -283,7 +283,7 @@ tr.border_bottom td {
             $warehouse = DB::select(" select * from warehouse where id=".$v->warehouse_id_fk." ");
             $zone = DB::select(" select * from zone where id=".$v->zone_id_fk." ");
             $shelf = DB::select(" select * from shelf where id=".$v->shelf_id_fk." ");
-            $warehouses = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
+            $warehouses = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$v->shelf_floor;
 
              $d_lot_expired_date = strtotime($v->lot_expired_date); 
              $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
