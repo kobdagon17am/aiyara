@@ -549,7 +549,7 @@ class Add_ai_cashController extends Controller
     } else {
 
       $w01 = " and db_add_ai_cash.business_location_id_fk = " . @\Auth::user()->business_location_id_fk . " ";
-      $w02 = " and db_add_ai_cash.branch_id_fk = " . @\Auth::user()->branch_id_fk . " ";
+      $w02 = " and db_add_ai_cash.branch_id_fk = " . @\Auth::user()->branch_id_fk . " and action_user = ".Auth::user()->id."";
     }
 
     if (!empty($req->doc_id)) {
@@ -586,7 +586,7 @@ class Add_ai_cashController extends Controller
             SELECT db_add_ai_cash.*
             FROM
             db_add_ai_cash
-            WHERE pay_type_id_fk in (1,8,10,11,12) and action_user = ".Auth::user()->id."
+            WHERE pay_type_id_fk in (1,8,10,11,12)
             " . $w01 . "
             " . $w02 . "
             " . $w03 . "
