@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Backend\Products_borrow_code;
 use App\Http\Controllers\backend\AjaxController;
 
 class Products_borrowController extends Controller
@@ -203,12 +204,12 @@ class Products_borrowController extends Controller
         $rsStock = DB::select(" select * from  db_stocks  where id in (".$arr1.")  ");
               // dd($rsStock);
         foreach ($rsStock as $key => $value) {
-            DB::update(" UPDATE db_products_borrow_details 
-              SET stock_amt_before_up =".$value->amt." , 
+            DB::update(" UPDATE db_products_borrow_details
+              SET stock_amt_before_up =".$value->amt." ,
               stock_date_before_up = '".$value->date_in_stock."'  ,
               approve_status = '1'  ,
               approver = '".@\Auth::user()->id."'  ,
-              approve_date = curdate() 
+              approve_date = curdate()
               where products_borrow_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
         }
 
@@ -232,7 +233,7 @@ class Products_borrowController extends Controller
              //    if($r_check_stcok==0){
              //      return redirect()->to(url("backend/products_borrow"))->with(['alert'=>\App\Models\Alert::myTxt("สินค้าในคลังไม่เพียงพอ")]);
              //    }
-                // ตัด stock 
+                // ตัด stock
                 DB::update(" UPDATE db_stocks SET amt = (amt - ".$v->amt.") where id =".$v->stocks_id_fk."  ");
          }
 
@@ -290,7 +291,7 @@ class Products_borrowController extends Controller
             //     DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
 
 
-              
+
 
 
       }
@@ -327,13 +328,13 @@ class Products_borrowController extends Controller
       if(request('approve_status')==1){
         // ดึงจาก การเบิก/ยืม > db_products_borrow_code > db_products_borrow_details
          $rsWarehouses_details = DB::select("
-           select 
+           select
            db_products_borrow_details.*,db_products_borrow_code.borrow_number,db_products_borrow_code.business_location_id_fk,db_products_borrow_code.note,dataset_borrow_cause.txt_desc as borrow_cause
-           from db_products_borrow_details 
-           LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id 
+           from db_products_borrow_details
+           LEFT JOIN db_products_borrow_code ON db_products_borrow_details.products_borrow_code_id=db_products_borrow_code.id
            Left Join dataset_borrow_cause ON db_products_borrow_code.borrow_cause_id_fk = dataset_borrow_cause.id
            where db_products_borrow_details.products_borrow_code_id = ".$id." ");
-     
+
          if(!empty($rsWarehouses_details)){
 
             foreach ($rsWarehouses_details as $key => $sRow) {
@@ -442,6 +443,8 @@ class Products_borrowController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
+       $product_borrow_code = Products_borrow_code::find($request->products_borrow_code_id);
+
         if(@\Auth::user()->permission==1){
 
             $sTable = \App\Models\Backend\Products_borrow::where('products_borrow_code_id',$request->products_borrow_code_id)->orderBy('id', 'asc');
@@ -454,7 +457,7 @@ class Products_borrowController extends Controller
 
 
       // $sTable = \App\Models\Backend\Products_borrow::search()->orderBy('id', 'asc');
-      
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
      ->addColumn('product_name', function($row) {
@@ -488,8 +491,26 @@ class Products_borrowController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+      ->addColumn('action', function ($row) use($product_borrow_code) {
+        if ($product_borrow_code->approve_status == 3) {
+          return "-";
+        } else if ($row->is_returned) {
+          return "<span class='badge badge-success'>คืนสินค้าแล้ว</span>";
+        } else {
+          return "<button class='btn btn-primary btn-sm btn-returned' data-id='$row->id'>คืนสินค้า</button>";
+        }
+      })
+      ->rawColumns(['action'])
       ->make(true);
     }
 
-
+    public function updateReturned(Request $request)
+    {
+      $product_borrow_detail = \App\Models\Backend\Products_borrow::find($request->id);
+      $product_borrow_detail->is_returned = 1;
+      $product_borrow_detail->save();
+      return [
+        'success' => true
+      ];
+    }
 }

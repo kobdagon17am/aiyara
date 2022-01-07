@@ -908,6 +908,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('products_borrow', 'Products_borrowController');
     Route::post('products_borrow/datatable', 'Products_borrowController@Datatable')->name('products_borrow.datatable');
+    Route::post('product_borrow/returned', 'Products_borrowController@updateReturned')->name('products_borrow.returned');
 
     Route::resource('products_borrow_code', 'Products_borrow_codeController');
     Route::post('products_borrow_code/datatable', 'Products_borrow_codeController@Datatable')->name('products_borrow_code.datatable');
@@ -962,6 +963,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('requisition_between_branch', 'RequisitionBetweenBranchController@index')->name('requisition_between_branch.index');
     Route::post('requisition_between_branch', 'RequisitionBetweenBranchController@store')->name('requisition_between_branch.store');
     Route::patch('requisition_between_branch/{requisition_between_branch}', 'RequisitionBetweenBranchController@update')->name('requisition_between_branch.update');
+    Route::post('requisition_between_branch/datatable-list-approve', 'RequisitionBetweenBranchController@dtListApprove')->name('requisition_between_branch.dt-list-approve');
+    Route::post('requisition_between_branch/datatable-list-wait-approve', 'RequisitionBetweenBranchController@dtListWaitApprove')->name('requisition_between_branch.dt-list-wait-approve');
 
 
 	#===========================================================================================

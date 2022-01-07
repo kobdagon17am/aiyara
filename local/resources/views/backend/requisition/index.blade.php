@@ -109,7 +109,7 @@
         <div class="card card-body">
             <div class="myBorder">
                 <h4 class="mb-0 font-size-18"><i class="bx bxs-file"></i> รายการได้รับการอนุมัติ </h4>
-                <table class="table table-sm table-bordered my-3">
+                <table id="tableListApprove" class="table table-sm table-bordered my-3">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -119,50 +119,6 @@
                             <th>วันที่อนุมัติ</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse ($approve_requisitons as $requisiton)
-                            <tr>
-                                <td>{{ $requisiton->id }}</td>
-                                <td>{{ $requisiton->to_branch->b_name }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light" data-toggle="modal" data-target="#see-details{{ $requisiton->id }}">ดูรายการสินค้า</button>
-                                    <div class="modal fade" id="see-details{{ $requisiton->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">รายการสินค้า</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    @foreach ($requisiton->requisition_details as $requisition_detail)
-                                                        <div>
-                                                            {{ $requisition_detail->product_name }}
-                                                            ( จำนวน : {{ $requisition_detail->amount }} )
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    {{ $requisiton->created_at->format('d/m/Y H:i:s') }}
-                                </td>
-                                <td>
-                                    {{ $requisiton->updated_at->format('d/m/Y H:i:s') }}
-                                </td>
-                            </tr>
-                        @empty
-                            <tr class="text-center">
-                                <td colspan="6">ยังไม่มีรายการที่อนุมัติ...</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -174,7 +130,7 @@
         <div class="card card-body">
             <div class="myBorder">
                 <h4 class="mb-0 font-size-18"><i class="bx bxs-file-find"></i> รายการรอการอนุมัติ </h4>
-                <table class="table table-sm table-bordered my-3">
+                <table id="tableListWaitApprove" class="table table-sm table-bordered my-3">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -185,72 +141,33 @@
                             <th>อนุมัติ/ไม่อนุมัติ</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse ($requisitons as $requisiton)
-                            <tr>
-                                <td>{{ $requisiton->id }}</td>
-                                <td>{{ $requisiton->from_branch->b_name }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light" data-toggle="modal" data-target="#see-details{{ $requisiton->id }}">ดูรายการสินค้า</button>
-                                    <div class="modal fade" id="see-details{{ $requisiton->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">รายการสินค้า</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    @foreach ($requisiton->requisition_details as $requisition_detail)
-                                                        <div>
-                                                            {{ $requisition_detail->product_name }}
-                                                            ( จำนวน : {{ $requisition_detail->amount }} )
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ $requisiton->requisition_by->name }}</td>
-                                <td>
-                                    {{ $requisiton->created_at->format('d/m/Y H:i:s') }}
-                                </td>
-                                <td>
-                                    <form action="{{ route('backend.requisition_between_branch.update', $requisiton) }}" method="POST" class="d-inline form-approve">
-                                        {{ csrf_field() }}
-                                        {{ method_field('PATCH') }}
-                                        <input type="hidden" name="is_approve" value="1">
-                                        <input type="submit" class="btn btn-success btn-sm" value="อนุมัติ">
-                                    </form>
-
-                                    <form action="{{ route('backend.requisition_between_branch.update', $requisiton) }}" method="POST" class="d-inline form-approve">
-                                        {{ csrf_field() }}
-                                        {{ method_field('PATCH') }}
-                                        <input type="hidden" name="is_approve" value="2">
-                                        <input type="submit" class="btn btn-danger btn-sm" value="ไม่อนุมัติ">
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr class="text-center">
-                                <td colspan="6">ยังไม่มีรายการรออนุมัติ...</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalProducts" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title mt-0" id="exampleModalScrollableTitle">รายการสินค้า</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
 @endsection
 
 @section('script')
-<script>    
+<script>
 
     if ("{{ session('success') }}") {
         toastr["success"]("{{ session('success') }}")
@@ -268,7 +185,7 @@
             $trLast = $tableBody.find("tr:last")
 
             $trLast.after(`
-                <tr>  
+                <tr>
                     <td>
                         <input type="hidden" name="details[${idx}][product_name]">
                         <select name="details[${idx}][product_id]" class="form-control select" required>
@@ -301,7 +218,7 @@
             idx--;
         })
 
-        $('.form-approve').on('submit', function (e) {
+        $(document).on('submit', '.form-approve', function (e) {
             e.preventDefault();
             const is_approve = $(this).find('[name="is_approve"]').val()
             let title;
@@ -321,6 +238,58 @@
             });
         })
 
-})
+      const dtListApptove = $('#tableListApprove').DataTable({
+        sDom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{ route('backend.requisition_between_branch.dt-list-approve') }}",
+          method: "POST",
+          data: { _token: "{{ csrf_token() }}" }
+        },
+        columns: [
+          { data: "id", name: "id" },
+          { data: "from_branch_id", name: "from_branch_id" },
+          { data: "button_products", name: "button_products", sortable: false, orderable: false },
+          { data: "created_at", name: "created_at" },
+          { data: "updated_at", name: "updated_at" },
+        ]
+      })
+
+      const dtListWaitApptove = $('#tableListWaitApprove').DataTable({
+        sDom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{ route('backend.requisition_between_branch.dt-list-wait-approve') }}",
+          method: "POST",
+          data: { _token: "{{ csrf_token() }}" }
+        },
+        columns: [
+          { data: "id", name: "id" },
+          { data: "to_branch_id", name: "to_branch_id" },
+          { data: "button_products", name: "button_products", sortable: false, orderable: false },
+          { data: "requisition_by", name: "requisition_by" },
+          { data: "created_at", name: "created_at" },
+          { data: "actions", name: "actions", sortable: false, orderable: false },
+        ]
+      })
+
+      $('#modalProducts').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var products = button.data('products')
+        var modal = $(this)
+        let output = ''
+
+        products.forEach(product => {
+          output += `<div>
+                        ${product.product_name}
+                        ( จำนวน : ${product.amount} )
+                    </div>`
+        })
+
+        modal.find('.modal-body').html(output)
+      })
+  })
 </script>
 @endsection

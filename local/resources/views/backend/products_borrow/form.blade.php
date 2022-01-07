@@ -18,7 +18,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
     $sPermission = \Auth::user()->permission ;
     // $menu_id = @$_REQUEST['menu_id'];
     $menu_id = Session::get('session_menu_id');
@@ -38,7 +38,7 @@
 
       //   echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;  
+      // echo $menu_id;
 
    ?>
 <div class="row">
@@ -83,7 +83,7 @@
                               <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                             <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                          @endif
-                          
+
                       </div>
                   </div>
 
@@ -127,7 +127,7 @@
                     </a>
                   </div>
                   <div class="col-md-6 text-right">
-                    @if( @$sRow->approve_status=='0' )  
+                    @if( @$sRow->approve_status=='0' )
                     <button type="submit" class="btn btn-primary btn-sm waves-effect">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                     </button>
@@ -196,6 +196,9 @@
                   {data: 'lot_expired_date', title :'<center>วันหมดอายุ </center>', className: 'text-center'},
                   {data: 'amt_in_warehouse', title :'<center>จำนวนที่มีในคลัง </center>', className: 'text-center'},
                   {data: 'amt', title :'<center>จำนวนที่ต้องการเบิก/ยืม </center>', className: 'text-center'},
+                  {
+                    data: 'action', title: '<center>คืนสินค้า</center>', className: 'text-center'
+                  }
                   // {data: 'borrow_cause_id_fk', title :'<center>เหตุผลการเบิก </center>', className: 'text-center'},
                   // {data: 'warehouses',   title :'<center>เบิก/ยืมไปที่คลัง</center>', className: 'text-center',render: function(d) {
                   //     if(d!='0'){
@@ -211,7 +214,27 @@
                 },
 
           });
-        
+
+          $(document).on('click', '.btn-returned', function () {
+            Swal.fire({
+              title: 'ต้องการคืนสินค้าใช่หรือไม่?',
+              type: 'info',
+              showCancelButton: true,
+            }).then(result => {
+              if (result.value) {
+                $.ajax({
+                  url: "{{ route('backend.products_borrow.returned') }}",
+                  method: "POST",
+                  data: { _token: "{{ csrf_token() }}", id: $(this).data('id') },
+                  success: function (data) {
+                    if (data.success) {
+                      $('#data-table-to-transfer').DataTable().draw()
+                    }
+                  }
+                })
+              }
+            })
+          })
       });
 
       // alert(list_id);
@@ -272,7 +295,6 @@
             oTable.draw();
           });
       });
-
 
 
 </script>

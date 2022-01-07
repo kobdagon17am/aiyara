@@ -834,9 +834,15 @@ $(document).ready(function() {
                   // {data: 'amt', title :'<center>จำนวนรายการที่ยืม </center>', className: 'text-center'},
                   {data: 'action_user', title :'<center>พนักงานที่เบิก </center>', className: 'text-center'},
                   {data: 'borrow_cause', title :'<center>เหตุผลการเบิก </center>', className: 'text-center'},
-                  {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+                  {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d, type, row) {
                     if(d==1){
-                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
+                        let text;
+                        if (row.is_returned) {
+                          text = 'คืนสินค้าแล้ว'
+                        } else {
+                          text = 'อนุมัติแล้ว'
+                        }
+                        return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">'+text+'</span>';
                     }else if(d==2){
                         return '<span class="badge badge-pill badge-soft-danger font-size-16" style="color:grey">ยกเลิก</span>';
                     }else if(d==3){
@@ -944,7 +950,7 @@ $(document).ready(function() {
                             },
                           method: 'POST',
                         },
-                        
+
   					        columns: [
   					            {data: 'id', title :'No.', className: 'text-center w50'},
   					            {data: 'product_name', title :'<center>รหัสสินค้า : ชื่อสินค้า </center>', className: 'text-left'},
@@ -961,7 +967,7 @@ $(document).ready(function() {
   					        ],
 
                     rowCallback: function(nRow, aData, dataIndex){
-                                                
+
                       var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
@@ -1036,10 +1042,10 @@ $(document).ready(function() {
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
-                          
+
                       var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
-                      
+
                       $('td:last-child', nRow).html(''
                         + '<input type="hidden" name="business_location_id_fk[]" value="'+aData['business_location_id_fk']+'"> '
                         + '<input type="hidden" name="products_borrow_choose_id[]" value="'+aData['id']+'"> '
@@ -1391,7 +1397,6 @@ $(document).ready(function() {
 
             $(document).on('click', '.btnSearchInList', function(event) {
                   // event.preventDefault();
-
                   $("#spinner_frame").show();
 
                   var branch_id_search = $('#branch_id_search').val();
@@ -1458,6 +1463,7 @@ $(document).ready(function() {
                                   {data: 'action_user', title :'<center>พนักงานที่เบิก </center>', className: 'text-center'},
                                   {data: 'borrow_cause', title :'<center>เหตุผลการเบิก </center>', className: 'text-center'},
                                   {data: 'approve_status',   title :'<center>สถานะการอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
+
                                     if(d==1){
                                         return '<span class="badge badge-pill badge-soft-success font-size-16" style="color:darkgreen">อนุมัติแล้ว</span>';
                                     }else if(d==2){
@@ -1561,7 +1567,7 @@ $(document).ready(function() {
 
 
   <script>
-      
+
       $(document).on('click', '.remove_01', function(event) {
 
             var id = $(this).data('id');
@@ -1578,13 +1584,13 @@ $(document).ready(function() {
             $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               url: " {{ url('backend/ajaxDelFunction') }} ",
                data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      location.reload();
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 }

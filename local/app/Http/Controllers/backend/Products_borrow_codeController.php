@@ -25,7 +25,7 @@ class Products_borrow_codeController extends Controller
             Left Join products ON products_details.product_id_fk = products.id
             WHERE lang_id=1 AND products.id in (SELECT product_id_fk FROM db_stocks WHERE branch_id_fk='$User_branch_id')
             ORDER BY products.product_code");
-      
+
       $sBranchs = \App\Models\Backend\Branchs::get();
 
       $Warehouse = \App\Models\Backend\Warehouse::get();
@@ -36,7 +36,7 @@ class Products_borrow_codeController extends Controller
         array(
            'Products'=>$Products,'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id
         ) );
-      
+
     }
 
  public function create()
@@ -70,8 +70,8 @@ class Products_borrow_codeController extends Controller
         // echo $t;
         $d = substr($return_datetime,0,10);
         // echo $d;
-        $d = explode("/", $d); 
-        $dt = $d[2]."-".$d[1]."-".$d[0]." ".$t; 
+        $d = explode("/", $d);
+        $dt = $d[2]."-".$d[1]."-".$d[0]." ".$t;
         // echo $dt;
         // dd();
         }else{
@@ -97,25 +97,25 @@ class Products_borrow_codeController extends Controller
                   $Products_borrow_code->id
                 ]);
 
-                for ($i=0; $i < count($request->products_borrow_choose_id) ; $i++) { 
+                for ($i=0; $i < count($request->products_borrow_choose_id) ; $i++) {
                     $Products_borrow_choose = \App\Models\Backend\Products_borrow_choose::find($request->products_borrow_choose_id[$i]);
-                    DB::insert("  
-                       insert into db_products_borrow_details set  
-                       products_borrow_code_id=? 
-                       ,stocks_id_fk=? 
-                       ,product_id_fk=? 
-                       ,lot_number=? 
-                       ,lot_expired_date=? 
-                       ,amt=? 
-                       ,product_unit_id_fk=? 
-                       ,branch_id_fk=? 
-                       ,warehouse_id_fk=? 
-                       ,zone_id_fk=? 
-                       ,shelf_id_fk=? 
-                       ,shelf_floor=? 
-                       ,action_user=? 
-                       ,action_date=? 
-                       ,created_at=? 
+                    DB::insert("
+                       insert into db_products_borrow_details set
+                       products_borrow_code_id=?
+                       ,stocks_id_fk=?
+                       ,product_id_fk=?
+                       ,lot_number=?
+                       ,lot_expired_date=?
+                       ,amt=?
+                       ,product_unit_id_fk=?
+                       ,branch_id_fk=?
+                       ,warehouse_id_fk=?
+                       ,zone_id_fk=?
+                       ,shelf_id_fk=?
+                       ,shelf_floor=?
+                       ,action_user=?
+                       ,action_date=?
+                       ,created_at=?
                        ",
                       [
                          $Products_borrow_code->id
@@ -145,7 +145,7 @@ class Products_borrow_codeController extends Controller
         }
 
 
-      
+
     }
 
     public function edit($id)
@@ -198,7 +198,7 @@ class Products_borrow_codeController extends Controller
           \DB::commit();
 
            return redirect()->to(url("backend/.products_borrow_code./".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -214,7 +214,7 @@ class Products_borrow_codeController extends Controller
       // if( $sRow ){
       //   $sRow->forceDelete();
       // }
-      // ไม่ได้ลบจริง 
+      // ไม่ได้ลบจริง
       DB::update(" UPDATE db_products_borrow_code SET approve_status=2 WHERE id=$id ; ");
       // เอาไว้เปิดดูใบโอนได้
       // DB::update(" UPDATE db_products_borrow_details SET deleted_at=now() WHERE products_borrow_code_id=$id ; ");
@@ -223,8 +223,8 @@ class Products_borrow_codeController extends Controller
 
     public function Datatable(Request $req){
       /*
-	    Super Admin   => see all 
-		1) ถ้าทำ เห็น  
+	    Super Admin   => see all
+		1) ถ้าทำ เห็น
 		2) ระบุ สาขา จะเห็น ในสาขา นั้น    =>  1 Or 2
 		3) ถ้ามีสิทธิ์อนุมัติ แสดงปุ่มอนุมัติ  (0=รออนุมัติ,1=อนุมัติ,2=ยกเลิก,3=ไม่อนุมัติ)
       */
@@ -275,7 +275,7 @@ class Products_borrow_codeController extends Controller
             $branch_id_fk = " and db_products_borrow_code.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
 
             $action_user = '';
-            
+
           }else{
 
             $business_location_id = " and db_products_borrow_code.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
@@ -294,31 +294,31 @@ class Products_borrow_codeController extends Controller
           break;
         case '0':
           $approve_status = " approve_status = 0 AND ";
-          break;    
+          break;
         case '1' :
         case '2' :
         case '3' :
           $approve_status = " approve_status = ".$req->approve_status." AND ";
-          break;                 
+          break;
         default:
           $approve_status = "";
           break;
       }
-      
+
       if(!empty($req->startDated)){
           $action_date = "  AND action_date between '".($req->startDated)."' AND  '".($req->endDate)."' ";
       }else{
           $action_date = "";
       }
-      
-      $sTable = DB::select(" SELECT * FROM db_products_borrow_code 
-          where 1 
+
+      $sTable = DB::select(" SELECT * FROM db_products_borrow_code
+          where 1
           $id
           $business_location_id
           $branch_id_fk
           $action_user
           ORDER BY updated_at DESC ");
-          		
+
       $sQuery = \DataTables::of($sTable);
        return $sQuery
       ->addColumn('borrow_cause', function($row) {
@@ -328,7 +328,7 @@ class Products_borrow_codeController extends Controller
         }else{
           return '';
         }
-      })         
+      })
       ->addColumn('action_user', function($row) {
         if(@$row->action_user!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
@@ -336,7 +336,7 @@ class Products_borrow_codeController extends Controller
         }else{
           return '';
         }
-      })  
+      })
       ->addColumn('action_date', function($row) {
         if(!empty($row->action_date)){
           return $row->action_date;
@@ -351,16 +351,23 @@ class Products_borrow_codeController extends Controller
         }else{
           return '-';
         }
-      })  
+      })
       ->addColumn('approve_date', function($row) {
         if(!empty($row->approve_date)){
           return $row->approve_date;
         }else{
           return '-';
         }
-      })                         
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
+      })
+      ->addColumn('is_returned', function ($row) {
+        $borrow_details = DB::table('db_products_borrow_details')->where('products_borrow_code_id', $row->id);
+
+        if ($borrow_details->count() == $borrow_details->sum('is_returned')) {
+          return true;
+        }
       })
       ->make(true);
     }
