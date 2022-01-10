@@ -863,6 +863,35 @@ class AjaxController extends Controller
         $frontstore_id = $request->frontstore_id;
         $delivery_location = $request->delivery_location;
         $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
+        $shipping_special = 0;
+
+        // if($delivery_location == 0){//รับสินค้าด้วยตัวเอง
+        //   $delivery_location_frontend = 'sent_office';
+        // }elseif($delivery_location == 1){//ที่อยู่ตามบัตร ปชช.
+        //   $delivery_location_frontend = 'sent_address_card';
+
+        // }elseif($delivery_location == 2){//ที่อยู่จัดส่งไปรษณีย์
+        //   $delivery_location_frontend = 'sent_address';
+
+        // }elseif($delivery_location == 3){//ที่อยู่กำหนดเอง
+        //   $delivery_location_frontend = 'sent_address_other';
+
+        // }elseif($delivery_location == 4){//จัดส่งพร้อมบิลอื่น
+        //   $delivery_location_frontend = 'sent_another_bill';
+
+        // }elseif($delivery_location == 5){//ส่งแบบพิเศษ/พรีเมี่ยม
+        //   $delivery_location_frontend = 'shipping_special';
+        //   $shipping_special = 1;
+        // }else{
+        //   $delivery_location_frontend = '';
+        //   $shipping_special = 0;
+        // }
+
+        // $update_orders = DB::table('db_orders')
+        // ->where('id',$frontstore_id)
+        // ->update(['delivery_location_frontend' => $delivery_location_frontend,
+        //     'shipping_special' => $shipping_special]);
+
 
 
         // return $sum_price;

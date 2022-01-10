@@ -1452,7 +1452,7 @@ if(@$sRow->check_press_save==2){
                   <div class="divTableRow show_div_aicash_price " style="<?=$show_div_aicash_price?>">
                       <div class="divTableCell" ></div>
                       <div class="divTH">
-                        <label for="aicash_price" class="" > ระบุรหัสสมาชิก Ai-cash :  </label>
+                        <label for="aicash_price" class="" > ระบุรหัสสมาชิก Ai-cash : </label>
                       </div>
                       <div class="divTableCell">
 
@@ -1889,7 +1889,7 @@ if(@$sRow->check_press_save==2){
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-body" > 
+              <div class="card-body" >
 
                 <div class=" d-flex " >
                   <button class="btn btn-success btnProductAll1 " data-value="1" style="margin-right: 1%;" >ทั้งหมด</button>
