@@ -1072,9 +1072,11 @@ class FrontstoreController extends Controller
   public function update(Request $request, $id)
   {
 
+
     // dd($request->transfer_money_datetime." : AAAA");
     // db_delivery
     // dd($request->all());
+
     DB::beginTransaction();
     try {
       // dd($request->all());
@@ -1108,7 +1110,9 @@ class FrontstoreController extends Controller
         ->where('id', $request->frontstore_id)
         ->update([
           'delivery_location_frontend' => $delivery_location_frontend,
-          'shipping_special' => $shipping_special
+          'shipping_special' => $shipping_special,
+          'approve_status' => 1,
+          'order_status_id_fk' => 2
         ]);
 
 
@@ -1595,7 +1599,7 @@ class FrontstoreController extends Controller
 
         if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 || request('pay_type_id_fk') == 3 || request('pay_type_id_fk') == 6 || request('pay_type_id_fk') == 9 || request('pay_type_id_fk') == 14) {
 
-          DB::select(" UPDATE `db_orders` SET `approve_status`=1 WHERE (`id`=" . $sRow->id . ") ");
+          DB::select(" UPDATE `db_orders` SET `approve_status`=1,`order_status_id_fk`=2 WHERE (`id`=" . $sRow->id . ") ");
         } else {
 
           $rs = PvPayment::PvPayment_type_confirme($sRow->id, \Auth::user()->id, '1', 'admin');;

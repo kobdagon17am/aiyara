@@ -14,6 +14,7 @@ class RequisitionBetweenBranch extends Model
         'from_branch_id',
         'to_branch_id',
         'requisitioned_by',
+        'approved_by',
         'is_approve',
     ];
 
@@ -23,21 +24,29 @@ class RequisitionBetweenBranch extends Model
     public function scopeWaitApproveByBranch($query)
     {
         // auth()->user()->branch_id_fk
-        return $query->when(auth()->user()->permission !== 1, function ($query) {
-                return $query->where('to_branch_id', auth()->user()->branch_id_fk)
-                    ->where('is_approve', static::WAIT_APPROVE);
-            })
-            ->get();
+        return $query->when(auth()->user()->permission != 1, function ($query) {
+                return $query->where(function ($query) {
+                    $query->where('to_branch_id', auth()->user()->branch_id_fk)
+                        ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
+                    });
+            })->where('is_approve', static::WAIT_APPROVE);
     }
 
     public function scopeisApprove($query)
     {
         // auth()->user()->branch_id_fk
         return $query->when(auth()->user()->permission !== 1, function ($query) {
-                return $query->where('from_branch_id', auth()->user()->branch_id_fk)
-                    ->where('is_approve', static::APPROVED);
-            })
-            ->get();
+                return $query->where('from_branch_id', auth()->user()->branch_id_fk);
+            })->where('is_approve', static::APPROVED);
+    }
+
+    public function scopeWaitApproveCount($query)
+    {
+        return $query->when(auth()->user()->permission != 1, function ($query) {
+            return $query->where('to_branch_id', auth()->user()->branch_id_fk);
+        })
+        ->where('is_approve', static::WAIT_APPROVE)
+        ->count();
     }
 
     /**
@@ -61,5 +70,10 @@ class RequisitionBetweenBranch extends Model
     public function requisition_by()
     {
         return $this->belongsTo(\App\Models\Backend\Permission\Admin::class, 'requisitioned_by', 'id');
+    }
+
+    public function approve_by()
+    {
+        return $this->belongsTo(\App\Models\Backend\Permission\Admin::class, 'approved_by', 'id');
     }
 }
