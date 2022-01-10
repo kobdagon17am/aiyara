@@ -19,8 +19,6 @@ class RequisitionBetweenBranchController extends Controller
 
         $toBranchs = Branchs::get();
 
-        $currentUserBranch = Branchs::where('id', auth()->user()->branch_id_fk)->value('b_name');
-
         $products = DB::table('products')
             ->selectRaw('products.id as product_id, products.product_code, CASE WHEN products_details.product_name IS NULL THEN "* ไม่ได้กรอกชื่อสินค้า" ELSE products_details.product_name END as product_name')
             ->leftJoin('products_details', 'products_details.product_id_fk', '=', 'products.id')
@@ -31,7 +29,6 @@ class RequisitionBetweenBranchController extends Controller
             'fromBranchs' => $fromBranchs,
             'toBranchs' => $toBranchs,
             'products' => $products,
-            'currentUserBranch' => $currentUserBranch
         ]);
     }
 
@@ -59,7 +56,7 @@ class RequisitionBetweenBranchController extends Controller
 
     public function update(Request $request, RequisitionBetweenBranch $requisition_between_branch)
     {
-        $requisition_between_branch->update($request->only('is_approve'));
+        $requisition_between_branch->update($request->only('is_approve') + ['approved_by' => auth()->user()->id]);
 
         $message = $request->is_approve == 1 ? 'อนุมัติรายการแล้ว.' : 'ยกเลิกรายการแล้ว';
 
@@ -72,11 +69,18 @@ class RequisitionBetweenBranchController extends Controller
 
       return DataTables::of($approves)
         ->editColumn('to_branch_id', function ($approve) {
-          return $approve->to_branch->b_name;
+          if (auth()->user()->permission == 1) {
+            return $approve->from_branch->b_name . ' => ' . $approve->to_branch->b_name;
+          } else {
+            return $approve->to_branch->b_name;
+          }
         })
         ->addColumn('button_products', function ($approve) {
           $products = $approve->requisition_details;
           return "<button type='button' class='btn btn-success btn-sm waves-effect waves-light' data-toggle='modal' data-target='#modalProducts' data-products='$products'>ดูรายการสินค้า</button>";
+        })
+        ->addColumn('approved_by', function ($approve) {
+          return $approve->approve_by->name;
         })
         ->editColumn('created_at', function ($approve) {
           return $approve->created_at->format('d/m/Y H:i:s');

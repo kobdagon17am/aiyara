@@ -14,6 +14,7 @@ class RequisitionBetweenBranch extends Model
         'from_branch_id',
         'to_branch_id',
         'requisitioned_by',
+        'approved_by',
         'is_approve',
     ];
 
@@ -60,5 +61,10 @@ class RequisitionBetweenBranch extends Model
     public function requisition_by()
     {
         return $this->belongsTo(\App\Models\Backend\Permission\Admin::class, 'requisitioned_by', 'id');
+    }
+
+    public function approve_by()
+    {
+        return $this->belongsTo(\App\Models\Backend\Permission\Admin::class, 'approved_by', 'id');
     }
 }

@@ -31,7 +31,6 @@
                                 <label for="from_branch_id" class="col-md-3 col-form-label"> สาขาผู้ดำเนินการ : </label>
                                 <div class="col-md-9">
                                     <select id="from_branch_id" name="from_branch_id" class="form-control select2-templating">
-                                        <option value="">== เลือกสาขาที่ดำเนินการ ===</option>
                                         @foreach ($fromBranchs as $branch)
                                             <option value="{{ $branch->id }}" @if($branch->id == auth()->user()->branch_id_fk) selected @endif>{{ $branch->b_name }}</option>
                                         @endforeach
@@ -108,13 +107,18 @@
     <div class="col-12">
         <div class="card card-body">
             <div class="myBorder">
-                <h4 class="mb-0 font-size-18"><i class="bx bxs-file"></i> รายการอนุมัติสำเร็จ (สาขาผู้ดำเนินการ : {{ $currentUserBranch }})</h4>
+                <h4 class="mb-0 font-size-18"><i class="bx bxs-file"></i> รายการอนุมัติสำเร็จ </h4>
                 <table id="tableListApprove" class="table table-sm table-bordered my-3">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>สาขาที่อนุมัติคำขอ</th>
+                            @if(auth()->user()->permission == 1)
+                                <th>สาขาผู้ดำเนินการ => สาขาที่อนุมัติคำขอ</th>
+                            @else
+                                <th>สาขาที่อนุมัติคำขอ</th>
+                            @endif
                             <th>สินค้า</th>
+                            <th>ผู้อนุมัติ</th>
                             <th>วันที่ยื่นคำขอ</th>
                             <th>วันที่อนุมัติ</th>
                         </tr>
@@ -252,6 +256,7 @@
           { data: "id", name: "id" },
           { data: "to_branch_id", name: "to_branch_id" },
           { data: "button_products", name: "button_products", sortable: false, orderable: false },
+          { data: "approved_by", name: "approved_by" },
           { data: "created_at", name: "created_at" },
           { data: "updated_at", name: "updated_at" },
         ]
