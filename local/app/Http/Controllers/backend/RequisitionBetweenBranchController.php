@@ -76,7 +76,7 @@ class RequisitionBetweenBranchController extends Controller
         })
         ->addColumn('button_products', function ($approve) {
           $products = $approve->requisition_details;
-          return "<button type='button' class='btn btn-primary btn-sm waves-effect waves-light' data-toggle='modal' data-target='#modalProducts' data-products='$products'>ดูรายการสินค้า</button>";
+          return "<button type='button' class='btn btn-success btn-sm waves-effect waves-light' data-toggle='modal' data-target='#modalProducts' data-products='$products'>ดูรายการสินค้า</button>";
         })
         ->editColumn('created_at', function ($approve) {
           return $approve->created_at->format('d/m/Y H:i:s');
