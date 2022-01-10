@@ -1110,7 +1110,9 @@ class FrontstoreController extends Controller
         ->where('id', $request->frontstore_id)
         ->update([
           'delivery_location_frontend' => $delivery_location_frontend,
-          'shipping_special' => $shipping_special
+          'shipping_special' => $shipping_special,
+          'approve_status' => 1,
+          'order_status_id_fk' => 2
         ]);
 
 
