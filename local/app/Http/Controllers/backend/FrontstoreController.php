@@ -2462,7 +2462,7 @@ class FrontstoreController extends Controller
                 ) as total_price,
 
                 SUM(
-                 CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
+                 CASE WHEN db_orders.shipping_free = 1 THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
                 FROM
@@ -2984,11 +2984,15 @@ class FrontstoreController extends Controller
     // SUM(
     //   total_price - gift_voucher_price
     // ) as sum_price,
-    
+
+
     $d1 = DB::select("
 SELECT count(db_orders.id) as cnt,
 
-SUM(CASE WHEN gift_voucher_price is null THEN total_price ELSE total_price - gift_voucher_price END) as sum_price,
+SUM(
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3083,7 +3087,10 @@ $purchase_type_id_fk_02
 
 SELECT count(db_orders.id) as cnt,
 
-SUM(CASE WHEN gift_voucher_price is null THEN total_price ELSE total_price - gift_voucher_price END) as sum_price,
+SUM(
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3149,7 +3156,10 @@ $purchase_type_id_fk_02
 
 SELECT count(db_orders.id) as cnt,
 
-SUM(CASE WHEN gift_voucher_price is null THEN total_price ELSE total_price - gift_voucher_price END) as sum_price,
+SUM(
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3215,7 +3225,10 @@ $purchase_type_id_fk_02
 
 SELECT count(db_orders.id) as cnt,
 
-SUM(CASE WHEN gift_voucher_price is null THEN total_price ELSE total_price - gift_voucher_price END) as sum_price,
+SUM(
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3280,7 +3293,10 @@ $purchase_type_id_fk_02
 
 SELECT count(db_orders.id) as cnt,
 
-SUM(CASE WHEN gift_voucher_price is null THEN total_price ELSE total_price - gift_voucher_price END) as sum_price,
+SUM(
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3541,9 +3557,8 @@ $purchase_type_id_fk_02
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
-                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,
-                sum_credit_price,
-                db_orders.charger_type
+                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,
+                db_orders.shipping_free
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
@@ -3611,8 +3626,10 @@ ORDER BY created_at DESC
         }
       })
       ->addColumn('shipping_price', function ($row) {
-        if (@$row->shipping_price) {
+        if (@$row->shipping_price && @$row->shipping_free != 1) {
           return @number_format(@$row->shipping_price, 0);
+        }else{
+          return '';
         }
       })
       ->addColumn('tooltip_price', function ($row) {
@@ -3640,7 +3657,7 @@ ORDER BY created_at DESC
           $tootip_price .= ' Ai-Cash: ' . $row->aicash_price;
         }
 
-        if ($row->shipping_price > 0) {
+        if ($row->shipping_price > 0 && @$row->shipping_free != 1) {
           $tootip_price .= ' ค่าขนส่ง: ' . $row->shipping_price;
         }
 
@@ -3677,7 +3694,7 @@ ORDER BY created_at DESC
         }
 
         if (@$row->pay_type_id_fk != 10) {
-          if ($row->shipping_price > 0) {
+          if ($row->shipping_price > 0 && @$row->shipping_free != 1) {
             $shipping_price  =  $row->shipping_price;
           } else {
             $shipping_price  = 0;
