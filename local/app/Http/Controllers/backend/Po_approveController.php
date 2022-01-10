@@ -211,7 +211,11 @@ class Po_approveController extends Controller
               // if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->id!='' && @$sRow->delivery_location>0 ){
                 if($sRow->check_press_save==2 && $sRow->approve_status>1 && $sRow->id!='' && @$sRow->delivery_location>0 ){
 
-                       DB::select("
+                     // วุฒิเพิ่มมาเช็คว่ามาชาร์ไหม จะได้รู้ว่าต้องบวกค่าธรรมเนียมไหม
+                    //  (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+                    $check_order = DB::table('db_orders')->where('id',$sRow->id)->first();
+                    if($check_order->charger_type==1){
+                        DB::select("
                         INSERT IGNORE INTO db_delivery
                         ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
                         SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
@@ -220,11 +224,27 @@ class Po_approveController extends Controller
                         (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                         (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                         (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
-                        (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                         ))
                         FROM db_orders WHERE (`id`=".$sRow->id.") AND delivery_location <> 0 ;
                       ");
+                    }else{
+                          // (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) 
+                        DB::select("
+                        INSERT IGNORE INTO db_delivery
+                        ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
+                        SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
+                        (SUM(
+                        (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+                        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+                        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+                        ))
+                        FROM db_orders WHERE (`id`=".$sRow->id.") AND delivery_location <> 0 ;
+                      ");
+                    }
+
+                     
 
 
 // Clear ก่อน ค่อย อัพเดต ใส่ตามเงื่อนไขทีหลัง
