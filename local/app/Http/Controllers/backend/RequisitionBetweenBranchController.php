@@ -19,19 +19,19 @@ class RequisitionBetweenBranchController extends Controller
 
         $toBranchs = Branchs::get();
 
+        $currentUserBranch = Branchs::where('id', auth()->user()->branch_id_fk)->value('b_name');
+
         $products = DB::table('products')
             ->selectRaw('products.id as product_id, products.product_code, CASE WHEN products_details.product_name IS NULL THEN "* ไม่ได้กรอกชื่อสินค้า" ELSE products_details.product_name END as product_name')
             ->leftJoin('products_details', 'products_details.product_id_fk', '=', 'products.id')
             ->where('products_details.lang_id', 1)
             ->get();
 
-        $requisitons = RequisitionBetweenBranch::with('requisition_details')->waitApproveByBranch();
-
         return view('backend.requisition.index')->with([
             'fromBranchs' => $fromBranchs,
             'toBranchs' => $toBranchs,
             'products' => $products,
-            'requisitons' => $requisitons,
+            'currentUserBranch' => $currentUserBranch
         ]);
     }
 
@@ -71,8 +71,8 @@ class RequisitionBetweenBranchController extends Controller
       $approves = RequisitionBetweenBranch::with('requisition_details:requisition_between_branch_id,product_name,amount')->isApprove();
 
       return DataTables::of($approves)
-        ->editColumn('from_branch_id', function ($approve) {
-          return $approve->from_branch->b_name;
+        ->editColumn('to_branch_id', function ($approve) {
+          return $approve->to_branch->b_name;
         })
         ->addColumn('button_products', function ($approve) {
           $products = $approve->requisition_details;
@@ -93,8 +93,8 @@ class RequisitionBetweenBranchController extends Controller
       $wait_approves = RequisitionBetweenBranch::with('requisition_details:requisition_between_branch_id,product_name,amount')->waitApproveByBranch();
 
       return DataTables::of($wait_approves)
-        ->editColumn('to_branch_id', function ($wait_approve) {
-          return $wait_approve->to_branch->b_name;
+        ->editColumn('from_branch_id', function ($wait_approve) {
+          return $wait_approve->from_branch->b_name . ' => ' . $wait_approve->to_branch->b_name;
         })
         ->addColumn('requisition_by', function ($wait_approve) {
           return $wait_approve->requisition_by->name;
@@ -110,20 +110,25 @@ class RequisitionBetweenBranchController extends Controller
           $routeUpdate = route('backend.requisition_between_branch.update', $wait_approve);
           $csrfToken = csrf_field();
           $methodField = "<input type='hidden' name='_method' value='PATCH' />";
-          return "
-            <form action='$routeUpdate' method='POST' class='d-inline form-approve'>
-              $csrfToken
-              $methodField
-              <input type='hidden' name='is_approve' value='1'>
-              <input type='submit' class='btn btn-success btn-sm' value='อนุมัติ'>
-            </form>
-            <form action='$routeUpdate' method='POST' class='d-inline form-approve'>
-              $csrfToken
-              $methodField
-              <input type='hidden' name='is_approve' value='2'>
-              <input type='submit' class='btn btn-danger btn-sm' value='ไม่อนุมัติ'>
-            </form>
-          ";
+
+          if ($wait_approve->from_branch_id === auth()->user()->branch_id_fk) {
+            return "<span class='badge badge-secondary font-size-15'>รอยืนยันการอนุมัติ</span>";
+          } else {
+            return "
+              <form action='$routeUpdate' method='POST' class='d-inline form-approve'>
+                $csrfToken
+                $methodField
+                <input type='hidden' name='is_approve' value='1'>
+                <input type='submit' class='btn btn-success btn-sm' value='อนุมัติ'>
+              </form>
+              <form action='$routeUpdate' method='POST' class='d-inline form-approve'>
+                $csrfToken
+                $methodField
+                <input type='hidden' name='is_approve' value='2'>
+                <input type='submit' class='btn btn-danger btn-sm' value='ไม่อนุมัติ'>
+              </form>
+            ";
+          }
         })
         ->rawColumns(['button_products', 'actions'])
         ->make(true);

@@ -24,18 +24,19 @@ class RequisitionBetweenBranch extends Model
     {
         // auth()->user()->branch_id_fk
         return $query->when(auth()->user()->permission !== 1, function ($query) {
-                return $query->where('to_branch_id', auth()->user()->branch_id_fk)
-                    ->where('is_approve', static::WAIT_APPROVE);
-            });
+                return $query->where(function ($query) {
+                    $query->where('to_branch_id', auth()->user()->branch_id_fk)
+                        ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
+                    });
+            })->where('is_approve', static::WAIT_APPROVE);
     }
 
     public function scopeisApprove($query)
     {
         // auth()->user()->branch_id_fk
         return $query->when(auth()->user()->permission !== 1, function ($query) {
-                return $query->where('from_branch_id', auth()->user()->branch_id_fk)
-                    ->where('is_approve', static::APPROVED);
-            });
+                return $query->where('from_branch_id', auth()->user()->branch_id_fk);
+            })->where('is_approve', static::APPROVED);
     }
 
     /**

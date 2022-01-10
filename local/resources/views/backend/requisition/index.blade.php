@@ -28,10 +28,10 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label for="from_branch_id" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
+                                <label for="from_branch_id" class="col-md-3 col-form-label"> สาขาผู้ดำเนินการ : </label>
                                 <div class="col-md-9">
                                     <select id="from_branch_id" name="from_branch_id" class="form-control select2-templating">
-                                        <option value="">เลือกสาขาที่ดำเนินการ</option>
+                                        <option value="">== เลือกสาขาที่ดำเนินการ ===</option>
                                         @foreach ($fromBranchs as $branch)
                                             <option value="{{ $branch->id }}" @if($branch->id == auth()->user()->branch_id_fk) selected @endif>{{ $branch->b_name }}</option>
                                         @endforeach
@@ -44,7 +44,7 @@
                                 <label for="to_branch_id" class="col-md-3 col-form-label"> สาขาที่ต้องการยื่นคำขอ : </label>
                                 <div class="col-md-9">
                                     <select id="to_branch_id" name="to_branch_id" class="form-control select2-templating" required>
-                                        <option value="">สาขาที่ต้องการยื่นคำขอ</option>
+                                        <option value="">== เลือกสาขาที่ต้องการยื่นคำขอ ===</option>
                                         @foreach ($toBranchs as $branch)
                                             <option value="{{ $branch->id }}">{{ $branch->b_name }}</option>
                                         @endforeach
@@ -108,12 +108,12 @@
     <div class="col-12">
         <div class="card card-body">
             <div class="myBorder">
-                <h4 class="mb-0 font-size-18"><i class="bx bxs-file"></i> รายการได้รับการอนุมัติ </h4>
+                <h4 class="mb-0 font-size-18"><i class="bx bxs-file"></i> รายการอนุมัติสำเร็จ (สาขาผู้ดำเนินการ : {{ $currentUserBranch }})</h4>
                 <table id="tableListApprove" class="table table-sm table-bordered my-3">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>สาขาที่ยื่นคำขอ</th>
+                            <th>สาขาที่อนุมัติคำขอ</th>
                             <th>สินค้า</th>
                             <th>วันที่ยื่นคำขอ</th>
                             <th>วันที่อนุมัติ</th>
@@ -134,7 +134,8 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>สาขาที่ยื่นคำขอ</th>
+                            <!-- <th>สาขาที่ยื่นคำขอ</th> -->
+                            <th>สาขาผู้ดำเนินการ => สาขาที่รับคำขอ</th>
                             <th>สินค้า</th>
                             <th>ผู้ยื่นคำขอ</th>
                             <th>วันที่ยื่นคำขอ</th>
@@ -238,7 +239,7 @@
             });
         })
 
-      const dtListApptove = $('#tableListApprove').DataTable({
+      const dtListApprove = $('#tableListApprove').DataTable({
         sDom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
         processing: true,
         serverSide: true,
@@ -249,7 +250,7 @@
         },
         columns: [
           { data: "id", name: "id" },
-          { data: "from_branch_id", name: "from_branch_id" },
+          { data: "to_branch_id", name: "to_branch_id" },
           { data: "button_products", name: "button_products", sortable: false, orderable: false },
           { data: "created_at", name: "created_at" },
           { data: "updated_at", name: "updated_at" },
@@ -267,7 +268,7 @@
         },
         columns: [
           { data: "id", name: "id" },
-          { data: "to_branch_id", name: "to_branch_id" },
+          { data: "from_branch_id", name: "from_branch_id" },
           { data: "button_products", name: "button_products", sortable: false, orderable: false },
           { data: "requisition_by", name: "requisition_by" },
           { data: "created_at", name: "created_at" },
