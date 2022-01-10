@@ -6644,6 +6644,8 @@ var total_sum = 0;
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      $(document).ready(function() {
 
+      //  ตอนเริ่มระบบ ตรวจว่าจะให้อะไรโชว์บ้าง ************************************************************************
+
           if(localStorage.getItem('pay_type_id_fk')){
               $('#pay_type_id_fk').val(localStorage.getItem('pay_type_id_fk')).select2();
           }
@@ -6720,7 +6722,6 @@ var total_sum = 0;
 18  Gift Voucher + TrueMoney
 */
 
-
            var check_press_save = "{{@$sRow->check_press_save}}";
            var check_product_value = "{{@$sRow->product_value}}";
            // / // console.log(check_press_save);
@@ -6765,7 +6766,7 @@ var total_sum = 0;
           }
 
           // ประเภทที่มีเงินโอนพ่วงด้วย
-          if ((pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11)) {
+          if ((pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11) || (pay_type_id_fk == 12)) {
 
             $(".show_div_transfer_price").show();
             $(".div_account_bank_id").show();
