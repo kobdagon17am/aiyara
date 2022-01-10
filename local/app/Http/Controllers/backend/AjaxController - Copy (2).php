@@ -758,6 +758,7 @@ class AjaxController extends Controller
         $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
 
 
+
         // return $sum_price;
         // return $frontstore_id;
         // return $delivery_location;
@@ -785,6 +786,7 @@ if($frontstore[0]->check_press_save==2){
 
             // return $province_id;
             // dd();
+
 
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=4 ");
             DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price='".$shipping[0]->shipping_cost."', shipping_free=0 ,shipping_special=1,transfer_price=(transfer_price+".$shipping[0]->shipping_cost.") WHERE id=$frontstore_id ");
