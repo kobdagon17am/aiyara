@@ -3,18 +3,21 @@
 namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\Backend\RequisitionBetweenBranch;
 
 class HomeController extends Controller
 {
 
     public function index(Request $request)
     {
-
+      $wait_approve_requisition = RequisitionBetweenBranch::waitApproveCount();
       // return view('backend.index');
       // return view('backend.banner.index');
-      return view('backend.index');
+      return view('backend.index')->with([
+        'wait_approve_requisition' => $wait_approve_requisition
+      ]);
 
     }
     public function testme(Request $request)

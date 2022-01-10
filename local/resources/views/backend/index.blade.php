@@ -163,41 +163,24 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body">
-                                                <div class="media">
-                                                    <div class="media-body">
-                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-18">Administrator</span></p>
-                                                        <!-- <h4 class="mb-0"> 35,555 </h4> -->
-                                                    </div>
-
-                                                    <div class="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                                                        <span class="avatar-title rounded-circle bg-primary">
-                                                                <i class="bx bx-purchase-tag-alt font-size-24"></i>
+                                        <a href="{{ route('backend.requisition_between_branch.index') }}">
+                                            <div class="card mini-stats-wid">
+                                                <div class="card-body">
+                                                    <div class="media">
+                                                        <div class="media-body">
+                                                            <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-warning font-size-18">ใบเบิกรออนุมัติ</span></p>
+                                                            <!-- <h4 class="mb-0"> 35,555 </h4> -->
+                                                        </div>
+    
+                                                        <div class="avatar-sm rounded-circle bg-warning align-self-center mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-warning">
+                                                                <span class="font-size-16">{{ $wait_approve_requisition }}</span>
                                                             </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                     <div class="col-md-4">
-                                        <div class="card mini-stats-wid">
-                                            <div class="card-body">
-                                                <div class="media">
-                                                    <div class="media-body">
-                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-18">Others</span></p>
-                                                        <!-- <h4 class="mb-0"> 2,2234 </h4> -->
-                                                    </div>
-
-                                                    <div class="avatar-sm rounded-circle bg-primary align-self-center mini-stat-icon">
-                                                        <span class="avatar-title rounded-circle bg-primary">
-                                                                <i class="bx bx-purchase-tag-alt font-size-24"></i>
-                                                            </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </a>
                                     </div>
 
                                 </div>

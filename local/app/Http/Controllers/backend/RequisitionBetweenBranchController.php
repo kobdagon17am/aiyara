@@ -115,7 +115,7 @@ class RequisitionBetweenBranchController extends Controller
           $csrfToken = csrf_field();
           $methodField = "<input type='hidden' name='_method' value='PATCH' />";
 
-          if ($wait_approve->from_branch_id === auth()->user()->branch_id_fk) {
+          if (auth()->user()->permission != 1 && $wait_approve->from_branch_id === auth()->user()->branch_id_fk) {
             return "<span class='badge badge-secondary font-size-15'>รอยืนยันการอนุมัติ</span>";
           } else {
             return "
