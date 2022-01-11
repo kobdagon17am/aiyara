@@ -2333,9 +2333,6 @@ if(@$sRow->check_press_save==2){
 
 <script type="text/javascript">
 
-
-
-
             var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
             var purchase_type_id_fk = "{{@$sRow->purchase_type_id_fk}}"; ////alert(frontstore_id_fk);
             var oTable;
@@ -3042,7 +3039,7 @@ if(@$sRow->check_press_save==2){
                // data:{ d:d , _token: '{{csrf_token()}}' },
                data: $(".frmFrontstorelist").serialize()+"&product_id_fk_this="+product_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                 success: function(response){ // What to do if we succeed
-                        console.log(response);
+                        // console.log(response);
                        //  console.log(frontstore_id_fk);
                        return false;
                         var oTable;
@@ -3326,7 +3323,7 @@ if(@$sRow->check_press_save==2){
                  // data:{ d:d , _token: '{{csrf_token()}}' },
                  data: $(".frmFrontstorelistPro").serialize()+"&promotion_id_fk_this="+promotion_id_fk_this+"&purchase_type_id_fk="+purchase_type_id_fk,
                   success: function(response){ // What to do if we succeed
-                          console.log(response);
+                          // console.log(response);
                          //  console.log(frontstore_id_fk);
                          // return false;
 
@@ -6844,7 +6841,7 @@ var total_sum = 0;
       $(document).ready(function() {
 
         var ch_Disabled = "{{@$ch_Disabled}}";
-        console.log(ch_Disabled);
+        // console.log(ch_Disabled);
         if(ch_Disabled=='1'){
           $('.class_btnSave').remove();
           $('.btnAddFromPromotion').remove();

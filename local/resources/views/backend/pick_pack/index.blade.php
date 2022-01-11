@@ -102,7 +102,7 @@
             <div class="card-body">
 
                     
-              {{-- <div class="row">
+              <div class="row">
                 <div class="col-12 d-flex ">
 
                   <div class="col-md-3 d-flex  ">
@@ -118,7 +118,7 @@
                     </div>
                   </div>
                 </div>
-              </div> --}}
+              </div>
 
 
         <div class="myBorder">
@@ -140,7 +140,7 @@
 
                 </div>
  -->
-
+{{-- 
               <div class="row">
                     <div class="col-12 d-flex ">
 
@@ -232,7 +232,7 @@
                         </div>
                       </div>
                     </div>
-                  </div> 
+                  </div>  --}}
 
               <?php //if($can_packing_list=='1'){ ?>
 
@@ -1456,7 +1456,7 @@ $(function() {
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
         $('#startDate').datepicker({
              format: 'dd/mm/yyyy',
@@ -1480,9 +1480,9 @@ $(function() {
            $('#endDate').val($(this).val());
          });
          
-</script>
+</script> --}}
 
-{{-- <script>
+<script>
 
   var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
   $('#startDate').datepicker({
@@ -1520,7 +1520,7 @@ $(function() {
   });  
 
 
-</script> --}}
+</script>
 
 
 

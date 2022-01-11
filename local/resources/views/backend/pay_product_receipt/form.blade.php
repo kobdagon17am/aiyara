@@ -611,8 +611,7 @@ $(document).on('click', '.btnCancel', function(){
 // 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
 
                                               // ถ้าจ่ายครบแล้ว aData['status_sent']==3
-                                              if(aData['status_sent']==3){
-
+                                              if(aData['status_sent']==3 || Data['status_sent']==4){
                                                     $(".div_btn_save").hide();
                                                     $(".div_btn_save_004").hide();
                                                     $(".div_datatables_003").hide();
@@ -681,7 +680,7 @@ $(document).on('click', '.btnCancel', function(){
 
                                             $(".myloading").hide();
 
-                                              // console.log(aData['ch_amt_remain']);
+                                              // console.log(aData);
                                               // console.log(aData['ch_amt_lot_wh']);
                                               // console.log(aData['status_sent']);
                                               // console.log(aData['status_cancel_some']);
@@ -708,15 +707,18 @@ $(document).on('click', '.btnCancel', function(){
                                                       }else{  //มีการยกเลิก
                                                             // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
                                                             // ถ้าไม่มีสินค้าในคลังเลย
-                                                            console.log('ch_amt_lot_wh : '+aData['ch_amt_lot_wh']);
-                                                            console.log('status_sent : '+aData['status_sent']);
-                                                            console.log('status_cancel_some : '+aData['status_cancel_some']);
+                                                            // console.log('ch_amt_lot_wh : '+aData['ch_amt_lot_wh']);
+                                                            // console.log('status_sent : '+aData['status_sent']);
+                                                            // console.log('status_cancel_some : '+aData['status_cancel_some']);
                                                             if(aData['ch_amt_lot_wh']==0){
                                                                 $(".div_btn_save_004").hide();
                                                                 $(".div_btn_save_cancel").hide();
                                                             }else{
                                                               $(".div_btn_save_cancel").hide();
+                                                              if(aData['status_sent']!=4){
                                                                 $(".div_btn_save_004").show();
+                                                              }
+                                                               
                                                             }
 
                                                       }

@@ -1339,7 +1339,7 @@ foreach($temp_ppr_0021_data as $tmp){
         // return "IN";
         DB::select(" TRUNCATE TABLE $temp_ppr_004  ");
       }else{
-        // return "Not";
+        // return "Not"; time_pay
         DB::select(" CREATE TABLE $temp_ppr_004 LIKE temp_ppr_004_template ");
       }
 
@@ -1382,7 +1382,12 @@ foreach($temp_ppr_0021_data as $tmp){
 
           // วุฒิแก้เพราะมันคิวรี่ไม่เจอ
           $max_time_pay =  DB::table('db_pay_product_receipt_002')->select('time_pay')->where('invoice_code',$row->invoice_code)->where('status_cancel',0)->orderby('time_pay','desc')->first();
-          $Products = DB::table('db_pay_product_receipt_002')->where('invoice_code',$row->invoice_code)->where('status_cancel',0)->where('time_pay',$max_time_pay->time_pay)->groupBy('product_id_fk')->orderby('time_pay','desc')->get();
+          if($max_time_pay){
+            $Products = DB::table('db_pay_product_receipt_002')->where('invoice_code',$row->invoice_code)->where('status_cancel',0)->where('time_pay',$max_time_pay->time_pay)->groupBy('product_id_fk')->orderby('time_pay','desc')->get();
+          }else{
+            $Products = DB::table('db_pay_product_receipt_002')->where('invoice_code',$row->invoice_code)->where('status_cancel',0)->groupBy('product_id_fk')->orderby('time_pay','desc')->get();
+          }
+         
           // $Products = DB::select("
           //   SELECT db_pay_product_receipt_002.* from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' and amt_remain <> 0 AND time_pay=(SELECT max(time_pay) from db_pay_product_receipt_002 WHERE status_cancel=0 LIMIT 1) and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay
           // ");
