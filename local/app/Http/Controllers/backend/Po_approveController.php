@@ -887,6 +887,7 @@ ORDER BY updated_at DESC
 
 
                 ");
+                
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('created_at', function ($row) {
