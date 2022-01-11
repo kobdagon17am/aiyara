@@ -611,7 +611,7 @@ $(document).on('click', '.btnCancel', function(){
 // 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
 
                                               // ถ้าจ่ายครบแล้ว aData['status_sent']==3
-                                              if(aData['status_sent']==3 || Data['status_sent']==4){
+                                              if(aData['status_sent']==3 || aData['status_sent']==4){
                                                     $(".div_btn_save").hide();
                                                     $(".div_btn_save_004").hide();
                                                     $(".div_datatables_003").hide();

@@ -6768,6 +6768,15 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
       if($request->ajax()){
         // return $request->id;
         if(!empty(@$request->id) && !empty(@$request->table)){
+
+            $orders = DB::table($request->table)->where('id',$request->id)->first();
+            if($orders){
+                $arr = explode( ',', $orders->receipt );
+               DB::table('db_delivery')->whereIn('receipt',$arr)->update([
+                   'status_pick_pack' => 0
+               ]);
+            }
+
             DB::select(" DELETE FROM ".$request->table." where id =".$request->id." ");
         }
 
