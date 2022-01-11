@@ -119,7 +119,7 @@ class PvPayment extends Model
 
                 }
 
-
+             
                 // if ($order_data->pay_type_id_fk == 4 || $order_data->pay_type_id_fk == 12 || $order_data->pay_type_id_fk == 13 || $order_data->pay_type_id_fk == 14
                 // || $order_data->pay_type_id_fk == 17 || $order_data->pay_type_id_fk == 18 || $order_data->pay_type_id_fk == 19) { //กิฟวอยเชอ
 
@@ -163,7 +163,7 @@ class PvPayment extends Model
                     //$x= 'น้อยกว่า : '.date('Y-m-d H:i:s',$strtotime_date_now_30).'||'.date('Y-m-d H:i:s',$strtotime_date_now_23);
                     $cancel_expiry_date = date('Y-m-d H:i:s', $strtotime_date_now_30);
                 }
-
+           
                 $order_update->approver = $admin_id;
                 $order_update->order_status_id_fk = $orderstatus_id;
                 $order_update->cancel_expiry_date = $cancel_expiry_date;
@@ -266,7 +266,7 @@ class PvPayment extends Model
 
                 }
                 //end check รายการของแถม
-
+              
                 $check_payment_code = DB::table('db_invoice_code') //เจนเลข payment order
                     ->where('order_id', '=', $order_id)
                     ->first();
@@ -294,7 +294,7 @@ class PvPayment extends Model
                 $order_update->invoice_code_id_fk = $code_order;
                 $order_update->invoice_code = $order_data->code_order;
                 //check รายการสินค้าแถม
-
+            
                 if ($type_id == 1) { //ทำคุณสมบติ
 
                     $add_pv = $customer_update->pv + $pv;
@@ -324,7 +324,7 @@ class PvPayment extends Model
                     $strtime = strtotime(date("Y-m-d"));
 
                     if ($customer_update->status_pv_mt == 'first') {
-
+                 
                         // if($strtime_user < $strtime){
                         //     //$contract_date = strtotime(date('Y-m',$strtime_user));
                         //     //$caltime = strtotime("+1 Month",$contract_date);
@@ -356,20 +356,24 @@ class PvPayment extends Model
                             $pv_mt_total = $pv_mt_all - ($mt_mount * $pro_mt); //ค่า pv ที่ต้องเอาไปอัพเดท DB
 
                             $mt_mount_new = $mt_mount+1;//กำหนดให้เป็นวันที่ 1 ของเดือนหน้า
+                        
                             $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
+                     
                             $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
-
+                     
                             $customer_update->pv_mt = $pv_mt_total;
                             $customer_update->pv_mt_active = $mt_active;
                             $customer_update->status_pv_mt = 'not';
+                       
                             $customer_update->date_mt_first = date('Y-m-d h:i:s');
-
+                        
                             $order_update->pv_banlance = $pv_mt_total;
-                            $order_update->active_mt_date =  date('Y-m-1',$mt_active);
-
+                        
+                            $order_update->active_mt_date =  date('Y-m-1',strtotime($mt_active));
+              
                         } else {
                             //dd('อัพเดท');
-
+                        
                             $customer_update->pv_mt = $pv_mt_all;
                             $mt_mount_new = strtotime("+1 Month", strtotime($start_month));
                             $customer_update->pv_mt_active = date('Y-m-1',$mt_mount_new);
@@ -378,6 +382,7 @@ class PvPayment extends Model
 
                             $order_update->pv_banlance = $pv_mt_all;
                             $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
+                           
                         }
 
                         $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
@@ -546,7 +551,7 @@ class PvPayment extends Model
                     DB::rollback();
                     return $resule;
                 }
-
+     
 
                 //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
                 if ($order_data->pv_total >= 10000) {

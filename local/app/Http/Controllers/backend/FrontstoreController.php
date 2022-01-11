@@ -1222,7 +1222,7 @@ class FrontstoreController extends Controller
         return redirect()->to(url("backend/frontstore"));
       } else if (isset($request->receipt_save_list)) {
 
-
+    
         // dd($request->transfer_money_datetime." : BBBB");
 
 
@@ -1303,7 +1303,7 @@ class FrontstoreController extends Controller
 
           $lastInsertId_01 = DB::getPdo()->lastInsertId();
         }
-
+    
         if ($request->hasFile('image02')) {
           @UNLINK(@$sRow->file_slip_02);
           $this->validate($request, [
@@ -1338,7 +1338,7 @@ class FrontstoreController extends Controller
 
 
 
-
+      
 
         //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
         // dd("1233");
@@ -1404,7 +1404,6 @@ class FrontstoreController extends Controller
 
           DB::select("UPDATE db_orders SET address_sent_id_fk='" . (DB::getPdo()->lastInsertId()) . "' WHERE (id='" . $request->frontstore_id . "')");
         }
-
 
         if (@$request->delivery_location == 2) {
 
@@ -1523,6 +1522,7 @@ class FrontstoreController extends Controller
         }
 
 
+  
         // dd('1215');
         /*
 1 เงินโอน
@@ -1597,19 +1597,19 @@ class FrontstoreController extends Controller
 
 
         DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
-
+    
         if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 || request('pay_type_id_fk') == 3 || request('pay_type_id_fk') == 6 || request('pay_type_id_fk') == 9 || request('pay_type_id_fk') == 14) {
 
           DB::select(" UPDATE `db_orders` SET `approve_status`=1,`order_status_id_fk`=2 WHERE (`id`=" . $sRow->id . ") ");
         } else {
-
-          $rs = PvPayment::PvPayment_type_confirme($sRow->id, \Auth::user()->id, '1', 'admin');;
+          $rs = PvPayment::PvPayment_type_confirme($sRow->id, \Auth::user()->id, '1', 'admin');
           //DB::select(" UPDATE `db_orders` SET `approve_status`=2 WHERE (`id`=".$sRow->id.") ");
         }
+    
         if ($request->shipping_free == 1) {
           DB::select(" UPDATE `db_orders` SET `shipping_price`=0 WHERE (`id`=" . $sRow->id . ") ");
         }
-
+ 
         // วุฒิปรับให้อนุมัติก่อนค่อยอัพเดทไปโชวรอส่ง
         // if(@$request->pay_type_id_fk != 1 && @$request->pay_type_id_fk != 8 && @$request->pay_type_id_fk != 10 && @$request->pay_type_id_fk != 11 && @$request->pay_type_id_fk != 12){
         $this->fncUpdateDeliveryAddress($sRow->id);

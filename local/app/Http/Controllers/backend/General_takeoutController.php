@@ -155,7 +155,7 @@ class General_takeoutController extends Controller
           }else{
             $sRow = new \App\Models\Backend\General_takeout;
           }
-
+// dd(request('stocks_id_fk'));
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_out_cause_id_fk    = request('product_out_cause_id_fk');
           $sRow->description    = request('description');
