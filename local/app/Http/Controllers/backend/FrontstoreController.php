@@ -1080,13 +1080,14 @@ class FrontstoreController extends Controller
     DB::beginTransaction();
     try {
       // dd($request->all());
+      // shipping_special
       $orderHistoryLog = new DbOrderHistoryLog;
 
       $this->fnManageGiveaway(@$request->frontstore_id);
       $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
 
       $delivery_location = request('delivery_location');
-      $shipping_special = 0;
+      $shipping_special = $request->shipping_special;
 
       if ($delivery_location == 0) { //รับสินค้าด้วยตัวเอง
         $delivery_location_frontend = 'sent_office';
