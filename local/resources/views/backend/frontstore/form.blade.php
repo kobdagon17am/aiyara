@@ -2988,7 +2988,7 @@ if(@$sRow->check_press_save==2){
 // ส่งแบบพิเศษ / Premium
        $(document).on('click', '#addr_05', function(event) {
               var v = $(this).val();
-              // / // console.log(v);
+              console.log(v);
             if (this.checked) {
               $("#addr_04").prop("disabled", true);
               $("#addr_00").prop("disabled", true);
@@ -4500,7 +4500,7 @@ $(document).ready(function() {
 
                 });
 
-
+                fnShippingCalculate(0);
                 $('.ShippingCalculate').on('click change', function(e) {
 
                     var v = $(this).val();
@@ -5494,8 +5494,6 @@ $(document).ready(function() {
 
 
             });
-
-
 
 
 
