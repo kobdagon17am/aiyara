@@ -1652,21 +1652,39 @@ class FrontstoreController extends Controller
     // if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->id!='' && @$sRow->delivery_location>0 ){
     if ($sRow->check_press_save == 2 && $sRow->approve_status > 1 && $sRow->id != '' && @$sRow->delivery_location > 0) {
 
-      DB::select("
-                        INSERT IGNORE INTO db_delivery
-                        ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
-                        SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
-                        (SUM(
-                        (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
-                        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                        (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
-                        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
-                        (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
-                        ))
-                        FROM db_orders WHERE (`id`=" . $sRow->id . ") AND delivery_location <> 0 ;
-                      ");
-
+      // วุฒิเพิ่มมาเช็คว่ามาชาร์ไหม จะได้รู้ว่าต้องบวกค่าธรรมเนียมไหม
+      $check_order = DB::table('db_orders')->where('id',$sRow->id)->first();
+      if($check_order->charger_type==1){
+   // วุฒิเอา (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) ออกมา
+            DB::select("
+            INSERT IGNORE INTO db_delivery
+            ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
+            SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
+            (SUM(
+            (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+            (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+            (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+            (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+            (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+            ))
+            FROM db_orders WHERE (`id`=" . $sRow->id . ") AND delivery_location <> 0 ;
+          ");
+      }else{
+   // วุฒิเอา (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) ออกมา
+  // วุฒิเอา (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) ออกมา
+                DB::select("
+                INSERT IGNORE INTO db_delivery
+                ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
+                SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price,
+                (SUM(
+                (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+                (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+                (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+                ))
+                FROM db_orders WHERE (`id`=" . $sRow->id . ") AND delivery_location <> 0 ;
+              ");
+      }
 
       // Clear ก่อน ค่อย อัพเดต ใส่ตามเงื่อนไขทีหลัง
       DB::select(" UPDATE db_delivery
@@ -2417,6 +2435,7 @@ class FrontstoreController extends Controller
     // dd($approve_status);
     // dd($viewcondition_01);
 
+    // วุฒิเปลี่ยน db_orders.credit_price เป็น db_orders.sum_credit_price 
     $sDBFrontstoreSumCostActionUser = DB::select("
                 SELECT
                 db_orders.action_user,
@@ -2425,7 +2444,7 @@ class FrontstoreController extends Controller
                 dataset_pay_type.detail AS pay_type,
                 date(db_orders.action_date) AS action_date,
 
-                SUM(CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) AS credit_price,
+                SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS credit_price,
                 SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
                 SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
                 SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
@@ -2434,7 +2453,7 @@ class FrontstoreController extends Controller
 
 
                 SUM(
-                (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+                (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
                 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                 -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
@@ -2443,7 +2462,7 @@ class FrontstoreController extends Controller
                 ) as total_price,
 
                 SUM(
-                 CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
+                 CASE WHEN db_orders.shipping_free = 1 THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
                 FROM
@@ -2488,8 +2507,8 @@ class FrontstoreController extends Controller
                   <th width="5%" class="text-right">' . trans('message.ai_cash') . '</th>
                   <th width="5%" class="text-right">' . trans('message.transfer_cash') . '</th>
                   <th width="5%" class="text-right">' . trans('message.credit_card') . '</th>
-                  <th width="5%" class="text-right">' . trans('message.fee') . '</th>
                   <th width="10%" class="text-right">' . trans('message.total') . '</th>
+                  <th width="5%" class="text-right">(' . trans('message.fee') . ')</th>
                   <th width="5%" class="text-right">(' . trans('message.transportor_fee') . ')</th>
                 </tr>
               </thead>
@@ -2507,8 +2526,8 @@ class FrontstoreController extends Controller
                       <td class="text-right"> ' . number_format($r->aicash_price, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->transfer_price, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->credit_price, 2) . ' </td>
-                      <td class="text-right"> ' . number_format($r->fee_amt, 2) . ' </td>
                       <th class="text-right"> ' . number_format($r->total_price, 2) . ' </th>
+                      <td class="text-right"> ' . number_format($r->fee_amt, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->shipping_price, 2) . ' </td>
 
                     </tr>';
@@ -2962,11 +2981,19 @@ class FrontstoreController extends Controller
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // wut edit
+    // SUM(
+    //   total_price - gift_voucher_price
+    // ) as sum_price,
+
+
     $d1 = DB::select("
 SELECT count(db_orders.id) as cnt,
+
 SUM(
-  total_price
-) as sum_price,
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
+
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -3059,9 +3086,12 @@ $purchase_type_id_fk_02
     $d3 = DB::select("
 
 SELECT count(db_orders.id) as cnt,
+
 SUM(
-total_price
-) as sum_price,
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
+
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -3125,9 +3155,12 @@ $purchase_type_id_fk_02
     $d5 = DB::select("
 
 SELECT count(db_orders.id) as cnt,
+
 SUM(
-  total_price
-) as sum_price,
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
+
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -3191,9 +3224,12 @@ $purchase_type_id_fk_02
     $d7 = DB::select("
 
 SELECT count(db_orders.id) as cnt,
+
 SUM(
-  total_price
-) as sum_price,
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
+
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -3256,9 +3292,12 @@ $purchase_type_id_fk_02
     $d9 = DB::select("
 
 SELECT count(db_orders.id) as cnt,
+
 SUM(
-  total_price
-) as sum_price,
+  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+  )  as sum_price,
+
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -3515,7 +3554,11 @@ $purchase_type_id_fk_02
     // $action_user_02 บรรทัด ต่อจากinvoice_code
     $sTable = DB::select("
 
-                SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
+                SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
+                db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,
+                credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
+                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,
+                db_orders.shipping_free
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
@@ -3583,24 +3626,28 @@ ORDER BY created_at DESC
         }
       })
       ->addColumn('shipping_price', function ($row) {
-        if (@$row->shipping_price) {
+        if (@$row->shipping_price && @$row->shipping_free != 1) {
           return @number_format(@$row->shipping_price, 0);
+        }else{
+          return '';
         }
       })
       ->addColumn('tooltip_price', function ($row) {
-        // cash_pay,credit_price,fee_amt,transfer_price,aicash_price
+        // cash_pay,sum_credit_price,fee_amt,transfer_price,aicash_price
 
         $tootip_price = '';
-        if (@$row->cash_price != 0) {
-          $tootip_price = ' เงินสด: ' . $row->cash_price;
-        } elseif (@$row->cash_pay != 0) {
+        // if (@$row->cash_price != 0) {
+        //   $tootip_price = ' เงินสด: ' . $row->cash_price;
+        // } elseif (@$row->cash_pay != 0) {
           $tootip_price = ' เงินสด: ' . $row->cash_pay;
-        }
-        if (@$row->credit_price != 0) {
+        // }
+
+        if (@$row->sum_credit_price != 0) {
           if (@$row->charger_type == 1) {
-            $tootip_price .= ' เครดิต: ' . $row->credit_price . ' ค่าธรรมเนียม :' . $row->fee_amt;
+            $tootip_price .= ' เครดิต: ' . $row->sum_credit_price . ' ค่าธรรมเนียม :' . $row->fee_amt;
           } else {
-            $tootip_price .= ' เครดิต: ' . $row->credit_price;
+            // $tootip_price .= ' เครดิต: ' . $row->credit_price;
+            $tootip_price .= ' เครดิต: ' . $row->sum_credit_price . ' ค่าธรรมเนียม :' . $row->fee_amt;
           }
         }
         if (@$row->transfer_price != 0) {
@@ -3610,26 +3657,32 @@ ORDER BY created_at DESC
           $tootip_price .= ' Ai-Cash: ' . $row->aicash_price;
         }
 
-        if ($row->shipping_price > 0) {
+        if ($row->shipping_price > 0 && @$row->shipping_free != 1) {
           $tootip_price .= ' ค่าขนส่ง: ' . $row->shipping_price;
+        }
+
+        if ($row->gift_voucher_price > 0) {
+          $tootip_price .= ' Gift Voucher: ' . $row->gift_voucher_price;
         }
 
         return $tootip_price;
       })
       ->addColumn('total_price', function ($row) {
         $total_price = 0;
-        if (@$row->cash_price != 0) {
-          $total_price = $row->cash_price;
-        } elseif (@$row->cash_pay != 0) {
-          $total_price += $row->cash_pay;
-        }
 
-        if (@$row->credit_price != 0) {
-          if (@$row->charger_type == 1) {
-            $total_price += $row->credit_price + $row->fee_amt;
-          } else {
-            $total_price += $row->credit_price;
-          }
+        // if (@$row->cash_price != 0) {
+        //   $total_price = $row->cash_price;
+        // } elseif (@$row->cash_pay != 0) {
+          $total_price += $row->cash_pay;
+        // }
+          
+        if (@$row->sum_credit_price != 0) {
+          // if (@$row->charger_type == 1) {
+          //   $total_price += $row->credit_price + $row->fee_amt;
+          // } else {
+          //   $total_price += $row->credit_price;
+          // }
+          $total_price += $row->sum_credit_price;
         }
 
         if (@$row->transfer_price != 0) {
@@ -3641,7 +3694,7 @@ ORDER BY created_at DESC
         }
 
         if (@$row->pay_type_id_fk != 10) {
-          if ($row->shipping_price > 0) {
+          if ($row->shipping_price > 0 && @$row->shipping_free != 1) {
             $shipping_price  =  $row->shipping_price;
           } else {
             $shipping_price  = 0;
@@ -3650,28 +3703,7 @@ ORDER BY created_at DESC
           $shipping_price  = 0;
         }
 
-        // if(@$row->code_order=='O121120400087'){
-        //   dd(@$total_price);
-        // }
-
-        // if(@$row->purchase_type_id_fk==5){
-        //   if(@$row->gift_voucher_price!=0){
-        //     if($total_price!=0){
-        //       $total_price -= @$row->gift_voucher_price;
-        //     }
-        //  }
-        // }
-
-        // if(@$total_price>0){
-        //   if(@$row->sum_price+$shipping_price==$row->transfer_price || @$row->sum_price+$shipping_price==$row->credit_price){
         return @number_format((@$total_price), 2);
-        //   }else{
-        //     return @number_format((@$total_price+$shipping_price),2);
-        //   }
-        // }else{
-        //   return @number_format((@$total_price),2);
-        // }
-
       })
 
       ->addColumn('status_delivery_packing', function ($row) {

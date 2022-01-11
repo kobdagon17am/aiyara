@@ -1465,12 +1465,13 @@ class AjaxController extends Controller
 
           */
           // return $request->pay_type_id_fk;
-          // dd();
+        //   dd($request->all());
 
         $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = str_replace(',','',$request->sum_price);
         $shipping_price = str_replace(',','',$request->shipping_price);
+        // $sum_credit_price_input = str_replace(',','',$request->sum_credit_price);
 
 
          // กรณีส่งฟรี
