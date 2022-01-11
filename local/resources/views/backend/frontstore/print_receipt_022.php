@@ -193,6 +193,9 @@ if(@$shipping[0]->delivery_location==4){
 }else if(@$shipping[0]->delivery_location==3){
     // $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
     $shipping_desc = 'ตามที่อยู่ที่ระบุ ';
+}else if(@$shipping[0]->delivery_location==1){
+  // $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
+  $shipping_desc = 'ตามบัตร ปชช ';
 }else{
     $shipping_desc = '0';
 }
