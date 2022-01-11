@@ -413,14 +413,16 @@ class PvPayment extends Model
                             $pv_mt_total = $pv_mt_all - ($mt_mount * $pro_mt); //ค่า pv ที่ต้องเอาไปอัพเดท DB
 
                             $strtime = strtotime($start_month);
-                            $mt_active = strtotime("+$mt_mount Month", $strtime);
-                            $mt_active = date('Y-m-t', $mt_active); //วันที่ mt_active
+                            $mt_mount_new = $mt_mount+1;
+                            $mt_active = strtotime("+$mt_mount_new Month", $strtime);
+                            $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
 
                             $customer_update->pv_mt = $pv_mt_total;
                             $customer_update->pv_mt_active = $mt_active;
 
                             $order_update->pv_banlance = $pv_mt_total;
-                            $order_update->active_mt_date = date('Y-m-t', strtotime($mt_active));
+                            $order_update->active_mt_date =  date('Y-m-1',$mt_active);
+
 
                         } else {
                             //dd('อัพเดท');

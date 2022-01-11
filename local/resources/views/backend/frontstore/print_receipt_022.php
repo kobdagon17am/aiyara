@@ -165,6 +165,10 @@ $shipping = DB::select("
     db_orders.sentto_branch_id,
     dataset_delivery_location.txt_desc,
     db_orders.shipping_price,
+    db_orders.bill_transfer_other,
+    db_orders.fee_amt,
+    db_orders.shipping_free,
+    db_orders.sum_credit_price,
     branchs.b_name
     FROM
     db_orders
@@ -173,6 +177,8 @@ $shipping = DB::select("
     WHERE
     db_orders.id = '$id'
  ");
+$bill_transfer_other = "";
+$bill_transfer_other = $shipping[0]->bill_transfer_other;
 
 $shipping_desc = @$shipping[0]->shipping_price?@$shipping[0]->shipping_price:0;
 // $shipping_desc = $shipping_desc==0 ? '0':@$shipping[0]->txt_desc.'/ ค่าจัดส่ง '.(number_format(@$shipping_price,0));
@@ -182,9 +188,11 @@ if(@$shipping[0]->delivery_location==4){
 }else if(@$shipping[0]->delivery_location==0){
     $shipping_desc = 'รับสินค้าด้วยตัวเอง สาขา: '.@$shipping[0]->b_name;
 }else if(@$shipping[0]->delivery_location==2){
-    $shipping_desc = 'จัดส่ง ปณ./ขนส่ง / '.number_format(@$shipping_price,0);
+    // $shipping_desc = 'จัดส่ง ปณ./ขนส่ง / '.number_format(@$shipping_price,0);
+    $shipping_desc = 'จัดส่ง ปณ./ขนส่ง ';
 }else if(@$shipping[0]->delivery_location==3){
-    $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
+    // $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
+    $shipping_desc = 'ตามที่อยู่ที่ระบุ ';
 }else{
     $shipping_desc = '0';
 }
@@ -784,6 +792,7 @@ if(!empty($db_orders[0]->action_user)){
             db_orders.aicash_price,
             db_orders.cash_pay,
             db_orders.gift_voucher_price,
+            db_orders.sum_credit_price,
             dataset_pay_type.detail as pay_type
             from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
             WHERE db_orders.id=".$id."
@@ -825,35 +834,45 @@ if(!empty($db_orders[0]->action_user)){
 
     }else if(@$pay_type[0]->pay_type_id_fk==7){ // 7   เครดิต + เงินสด
         if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay==0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
+
         }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay>0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->cash_pay>0){
             $pay_type = 'เงินสด: '.@$pay_type[0]->cash_pay;
         }else{
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }
 
     }else if(@$pay_type[0]->pay_type_id_fk==8){ // 8   เครดิต + เงินโอน
         if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->transfer_price==0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
         }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->transfer_price>0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินโอน: '.@$pay_type[0]->transfer_price;
         }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->transfer_price>0){
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
         }else{
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินโอน: '.@$pay_type[0]->transfer_price;
         }
 
     }else if(@$pay_type[0]->pay_type_id_fk==9){ // 9   เครดิต + Ai-Cash
         if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->aicash_price==0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
         }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->aicash_price>0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
         }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->aicash_price>0){
             $pay_type = 'Ai-Cash: '.@$pay_type[0]->aicash_price;
         }else{
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
         }
 
     }else if(@$pay_type[0]->pay_type_id_fk==11){ // 11   เงินโอน + Ai-Cash
@@ -999,7 +1018,7 @@ if(!empty($db_orders[0]->action_user)){
 
         DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".$score_detail." ] $purchase_type ' WHERE id = (($n*$i)+16) ; ");
 
-        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc $bill_transfer_other ]' WHERE id = (($n*$i)+17) ; ");
 
         DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
 
@@ -1208,6 +1227,44 @@ for ($j=0; $j < $amt_page ; $j++) {
           </tr>
  <?php $runno++; }  ?>
 
+  <!-- วุฒิเพิ่ม ค่าธรรมเนียมและค่าจัดส่ง -->
+  <?php
+      $total_fee_amt = 0;
+      $total_shipping_price = 0;
+  ?>
+    <?php if($shipping[0]->fee_amt > 0){
+      if($shipping[0]->fee_amt!=null){
+        $total_fee_amt += $shipping[0]->fee_amt;
+      }
+        $text1 =  '
+        <tr style="vertical-align: top;line-height: 12px !important;">
+        <td style="width:2.6%;text-align: left;">  </td>
+        <td style="width:18%;text-align: left;"> ค่าบริการบัตรเครดิต </td>
+        <td style="width:10%;text-align: left;"> </td>
+        <td style="width:6%;text-align: right;"> </td>
+        <td style="width:5%;text-align: right;"> </td>
+        <td style="width:4%;text-align: right;"> </td>
+        <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
+        </tr> ';
+        echo $text1;
+    } ?>
+
+<?php if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
+      $total_shipping_price += $shipping[0]->shipping_price;
+        $text2 =  '
+        <tr style="vertical-align: top;line-height: 12px !important;">
+        <td style="width:2.6%;text-align: left;">  </td>
+        <td style="width:18%;text-align: left;"> ค่าบริการจัดส่งสินค้า </td>
+        <td style="width:10%;text-align: left;"> </td>
+        <td style="width:6%;text-align: right;"> </td>
+        <td style="width:5%;text-align: right;"> </td>
+        <td style="width:4%;text-align: right;"> </td>
+        <td style="width:11%;text-align: right;"> '.number_format($total_shipping_price, 2).' </td>
+        </tr> ';
+        echo $text2;
+    } ?>
+  
+      <?php// dd($total_fee_amt); ?>
 
     </table>
 
@@ -1262,7 +1319,16 @@ for ($j=0; $j < $amt_page ; $j++) {
       </td>
       <td colspan="2" style="width:50%;text-align: right;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
-        <?php echo @$DB[0]->g ; ?>
+        <?php
+        //  echo floatval(@$DB[0]->g); 
+        if($total_fee_amt > 0){
+          $new_total = str_replace(',', '', @$DB[0]->g);
+          $new_total = $new_total+$total_fee_amt;
+          echo number_format($new_total, 2); 
+        }else{
+          echo @$DB[0]->g; 
+        }
+         ?>
       </td>
     </tr>
 

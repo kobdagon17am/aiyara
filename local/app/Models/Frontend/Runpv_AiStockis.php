@@ -84,9 +84,9 @@ class Runpv_AiStockis extends Model
                                     $mt_mount = $pv_mt_all / $pro_mt;
                                     $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
                                     $pv_mt_total = $pv_mt_all - ($mt_mount * $pro_mt); //ค่า pv ที่ต้องเอาไปอัพเดท DB
-
-                                    $mt_active = strtotime("+$mt_mount Month", strtotime($start_month));
-                                    $mt_active = date('Y-m-t', $mt_active); //วันที่ mt_active
+                                    $mt_mount_new = $mt_mount+1;
+                                    $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
+                                    $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
 
 
                                     $update_to_customer->pv_mt = $pv_mt_total;
@@ -96,9 +96,9 @@ class Runpv_AiStockis extends Model
 
 
                                 } else {
-
+                                    $mt_mount_new = strtotime("+1 Month", strtotime($start_month));
                                     $update_to_customer->pv_mt = $pv_mt_all;
-                                    $update_to_customer->pv_mt_active = date('Y-m-t', strtotime($start_month));
+                                    $update_to_customer->pv_mt_active = date('Y-m-1', $mt_mount_new);
                                     $update_to_customer->status_pv_mt = 'not';
                                     $update_to_customer->date_mt_first = date('Y-m-d h:i:s');
                                 }
@@ -135,11 +135,10 @@ class Runpv_AiStockis extends Model
                                     $mt_mount = $pv_mt_all / $pro_mt;
                                     $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
                                     $pv_mt_total = $pv_mt_all - ($mt_mount * $pro_mt); //ค่า pv ที่ต้องเอาไปอัพเดท DB
-
+                                    $mt_mount_new = $mt_mount+1;
                                     $strtime = strtotime($start_month);
-                                    $mt_active = strtotime("+$mt_mount Month", $strtime);
-                                    $mt_active = date('Y-m-t', $mt_active); //วันที่ mt_active
-
+                                    $mt_active = strtotime("+$mt_mount_new Month", $strtime);
+                                    $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
 
                                     $update_to_customer->pv_mt = $pv_mt_total;
                                     $update_to_customer->pv_mt_active =  $mt_active;
