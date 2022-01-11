@@ -523,9 +523,8 @@ function g_export(id){
                    }else{
                        var layout = '<option value="" selected>- เลือก Lot number -</option>';
                        $.each(data,function(key,value){
-                        layout += '<option value='+value.id+'>'+value.lot_number+' [Expired:'+value.lot_expired_date+']</option>';
+                        layout += '<option value='+value.id+'>'+value.lot_number+' ['+value.w_name+'] [Expired:'+value.lot_expired_date+']</option>';
                         // $('#lot_number_txt').val(value.lot_number);
-
                        });
                        $('#lot_number').html(layout);
                    }

@@ -586,14 +586,30 @@ class AjaxController extends Controller
     {
         if($request->ajax()){
           // $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
+
+            $warehouse = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+
           if(@\Auth::user()->permission==1){
-
-            $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." GROUP BY  product_id_fk,lot_number ");
-
+            // วุฒิแก้
+            // $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." GROUP BY  product_id_fk,lot_number ");
+            $query = DB::table('db_stocks')
+            ->select('db_stocks.*','warehouse.w_name','warehouse.w_code')
+            ->join('warehouse', 'warehouse.id', '=', 'db_stocks.warehouse_id_fk')
+            ->where('db_stocks.product_id_fk',$request->product_id_fk)
+            ->whereIn('db_stocks.warehouse_id_fk',$warehouse)
+            ->get();
           }else{
-
-             $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk." GROUP BY  product_id_fk,lot_number ");
-          }
+          // วุฒิแก้
+            //  $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk." GROUP BY  product_id_fk,lot_number ");
+            $query = DB::table('db_stocks')
+            ->select('db_stocks.*','warehouse.w_name','warehouse.w_code')
+            ->join('warehouse', 'warehouse.id', '=', 'db_stocks.warehouse_id_fk')
+            ->where('db_stocks.product_id_fk',$request->product_id_fk)
+            ->where('db_stocks.business_location_id_fk',@\Auth::user()->business_location_id_fk)
+            ->where('db_stocks.branch_id_fk',@\Auth::user()->branch_id_fk)
+            ->whereIn('db_stocks.warehouse_id_fk',$warehouse)
+            ->get();
+        }
 
           return response()->json($query);
         }
@@ -623,7 +639,7 @@ class AjaxController extends Controller
         if($request->ajax()){
           // $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
           if(@\Auth::user()->permission==1){
-
+            
             $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." GROUP BY  product_id_fk,lot_number ");
 
           }else{
