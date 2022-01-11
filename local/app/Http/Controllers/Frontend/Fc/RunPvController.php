@@ -11,7 +11,7 @@ class RunPvController extends Controller
 
     public static function Runpv($username, $pv, $type, $order_code = null)
     {
-        
+
         // RunPv ทำคุณสมบัติ
 
         // dd($type);
@@ -495,10 +495,10 @@ class RunPvController extends Controller
             ->first();
 
         if ($user) {
-            if ($user->pv == 0) {
+            if ($user->pv < 500) {
                 $update_package = DB::table('customers')
                     ->where('user_name', $username)
-                    ->update(['package_id' => 1]);
+                    ->update(['package_id' => null]);
 
                 $resule = [
                     'status' => 'success',

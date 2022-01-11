@@ -407,6 +407,7 @@ class Add_ai_cashController extends Controller
     // }else{
     //    $w06 = "";
     // }
+
     if (!empty($req->approver)) {
       $w07 = " AND db_add_ai_cash.approver = " . $req->approver . " ";
     } else {
