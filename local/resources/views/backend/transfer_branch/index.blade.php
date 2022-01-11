@@ -68,6 +68,10 @@
 
 <!-- end page title -->
 
+<!-- แสดงใบเบิกระหว่างสาขา -->
+@include('backend.transfer_branch.partials.requisition')
+<!-- จบแสดงใบเบิกระหว่างสาขา -->
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -1594,6 +1598,94 @@
 
     </script> 
 
+    <!-- Scripts For Requisition -->
+    <script>
+      const dtRequisition = $('#dt-requisition').DataTable({
+        sDom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{ route('backend.transfer_branch.requisition-datatable') }}",
+          method: "POST",
+          data: { _token: "{{ csrf_token() }}" }
+        },
+        columns: [
+          { data: 'id', title :'No.', className: 'text-center w80' },
+          { data: 'from_branch_id', title :'จากสาขา', className: 'text-center w80' },
+          { data: 'to_branch_id', title :'ถึงสาขา', className: 'text-center w80' },
+          { data: 'requisition_by', name: 'requisitioned_by', title :'ผู้ยื่นใบเบิก', className: 'text-center w80' },
+          { data: 'approve_by', name: 'approved_by', title :'ผู้อนุมัติใบเบิก', className: 'text-center w80' },
+          { data: 'approved_at', name: 'approved_at', title :'วันที่อนุมัติใบเบิก', className: 'text-center w80' },
+          { data: 'actions', title :'Tools', className: 'text-center w80', orderable: false, searchable: false },
+        ]
+      })
 
+      $('.modal-requisition-details').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var details = button.data('details')
+        var fromBranchId = button.data('from_branch_id')
+        var toBranchId = button.data('to_branch_id')
+        var modal = $(this)
+
+        let output = ''
+
+        details.forEach(detail => {
+          output += `
+          <input type='hidden' name='branch_id_fk' value='${fromBranchId}' />
+          <input type='hidden' name='to_branch_id_fk' value='${toBranchId}' />
+          <tr>
+            <td>${detail.product_name}</td>  
+            <td>
+              <input type='hidden' name='lists[${detail.id}][product_id]' value='${detail.product_id}' />
+              <input type='number' name='lists[${detail.id}][amount]' class='form-control product-amount-${detail.product_id}' value='${detail.amount}'>  
+            </td>  
+            <td>
+              <select class='form-control product-stock-${detail.product_id} select-stock' name='lists[${detail.id}][stock]' data-product_id='${detail.product_id}'>
+              </select>
+            </td>
+          </tr>
+          `
+          generateStocks(toBranchId, detail.product_id)
+        })
+
+        modal.find('.modal-body #tbodyDetails').html(output)
+        checkStockSelected()
+      })
+
+      function generateStocks(to_branch_id, product_id) {
+        $.ajax({
+          url: "{{ route('backend.transfer_branch.check-stocks') }}",
+          method: "POST",
+          data: { _token: "{{ csrf_token() }}", to_branch_id, product_id },
+          success: function (response) {
+            $(`.product-stock-${product_id}`).html(response)
+          }
+        })
+      }
+
+      $(document).on('change', '.select-stock', function () {
+        const productId = $(this).data('product_id')
+        if ($(`.product-amount-${productId}`).val() > $(this).find(':selected').data('amt')) {
+          alert('จำนวนที่โอนควรมีค่าน้อยกว่าหรือเท่ากับจำนวนที่มีในคลัง กรุณาเปลี่ยนจำนวนหรือเปลี่ยนคลัง!')
+          $(this).val('')
+        }
+        checkStockSelected()
+      })
+
+      function checkStockSelected() {
+        let countChecked = 0;
+        $('.select-stock').each(function (index, el) {
+          if ($(el).val()) {
+            countChecked++
+          }
+
+          if (countChecked == $('.select-stock').length) {
+            $('#requisitionSubmitBtn').attr('disabled', false)
+          } else {
+            $('#requisitionSubmitBtn').attr('disabled', true)
+          }
+        })
+      } 
+    </script>
 @endsection
 

@@ -15,6 +15,6 @@ class RequisitionBetweenBranchDetail extends Model
 
     public function requisition()
     {
-        return $this->belongsTo(RequisitionBetweenBranch::class);
+        return $this->belongsTo(RequisitionBetweenBranch::class, 'requisition_between_branch_id', 'id');
     }
 }

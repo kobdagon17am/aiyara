@@ -9,6 +9,7 @@ class RequisitionBetweenBranch extends Model
     const WAIT_APPROVE = 0;
     const APPROVED = 1;
     const CANCEL = 2;
+    const WAIT_TRANSFER = 0;
 
     protected $fillable = [
         'from_branch_id',
@@ -16,7 +17,11 @@ class RequisitionBetweenBranch extends Model
         'requisitioned_by',
         'approved_by',
         'is_approve',
+        'is_transfer',
+        'approved_at'
     ];
+
+    protected $dates = ['approved_at'];
 
     /**
      *  Scopes
