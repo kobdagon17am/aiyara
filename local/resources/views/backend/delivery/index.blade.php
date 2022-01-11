@@ -684,12 +684,13 @@ $(function() {
 
                           var shipping_price = 0;
                           var total_price = 0;
+                          var shipping_special = 0;
 
                           var rows_selected = $('#data-table').DataTable().column(0).checkboxes.selected();
                           $.each(rows_selected, function(index, rowId){
 
                             var v = rowId.split(':');
-
+                            // console.log(v);
                             $('#last_form').after(
                                  $('<input>')
                                     .attr('type', 'hidden')
@@ -700,21 +701,14 @@ $(function() {
 
                             total_price+=parseFloat(v[1]); 
                             shipping_price+=parseFloat(v[2]); 
+                            shipping_special+=parseFloat(v[3]); 
 
                           });
-
-                          console.log('total_price='+total_price); 
-                          console.log('shipping_price='+shipping_price); 
 
                           // var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
                           // var shipping_price = rows_selected.rows( { selected: true } ).data().pluck( 'shipping_price' ).toArray();
                           // var total_price = rows_selected.rows( { selected: true } ).data().pluck( 'total_price' ).toArray();
-
-                          // console.log(ids); 
-                          // console.log(shipping_price); 
-                          // console.log(total_price); 
                           // $(".myloading").hide();
-                  
 
             					     setTimeout(function(){
             	            		if($('.select-info').text()!=''){
@@ -724,7 +718,7 @@ $(function() {
                                 if(parseInt(str[0])>0){
                               	// if(parseInt(str[0])>1){
 
-                                      if(shipping_price>0){
+                                      if(shipping_price>0 || shipping_special > 0){
                                              $('.divBtnSave').show();
                                         }else{
                                           $('.divBtnSave').hide();
@@ -736,7 +730,6 @@ $(function() {
                                           }
                                         }
                                 
-                  								
                   							}else{
                   								$('.divBtnSave').hide();
                   							}
@@ -746,13 +739,9 @@ $(function() {
                               $(".myloading").hide();
             		            }, 500);
 
-
-
                   }, 500);
 
             } );
-
-     
 
           var oTable2;
           $(function() {

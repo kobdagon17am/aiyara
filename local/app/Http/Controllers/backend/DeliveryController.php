@@ -102,7 +102,6 @@ class DeliveryController extends Controller
 
         $shipping_cost = DB::select(" SELECT purchase_amt FROM `dataset_shipping_cost` WHERE shipping_type_id=1 ; ");
         $shipping_cost= $shipping_cost[0]->purchase_amt;
-        // dd($shipping_cost);
 
       $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
       $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
@@ -844,7 +843,7 @@ class DeliveryController extends Controller
       ->addColumn('id2', function($row) {
              $total_price = @$row->total_price?@$row->total_price:0;
              $shipping_price = @$row->shipping_price?@$row->shipping_price:0;
-             return $row->id.':'.$total_price.':'.$shipping_price;
+             return $row->id.':'.$total_price.':'.$shipping_price.':'.@$row->shipping_special;
       })
 
       ->addColumn('updated_at', function($row) {
