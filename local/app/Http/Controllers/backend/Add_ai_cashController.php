@@ -397,7 +397,9 @@ class Add_ai_cashController extends Controller
     if (!empty($req->startDate) && !empty($req->endDate)) {
       $w05 = " and date(db_add_ai_cash.updated_at) BETWEEN '" . $req->startDate . "' AND '" . $req->endDate . "'  ";
     } else {
-      $w05 = "";
+      $startDate = date('Y-m-d');
+      $endDate =date('Y-m-d');
+      $w05 = " and date(db_add_ai_cash.updated_at) BETWEEN '" . $startDate . "' AND '" . $endDate . "'  ";
     }
 
     // if(!empty($req->invoice_code)){
