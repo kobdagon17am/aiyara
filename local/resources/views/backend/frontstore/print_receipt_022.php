@@ -1263,8 +1263,6 @@ for ($j=0; $j < $amt_page ; $j++) {
         </tr> ';
         echo $text2;
     } ?>
-  
-      <?php// dd($total_fee_amt); ?>
 
     </table>
 
