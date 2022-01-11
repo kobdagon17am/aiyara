@@ -735,7 +735,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('transfer_branch_product/datatable', 'Transfer_branchController@DatatableProduct')->name('transfer_branch_product.datatable');
 
-
     Route::get('transfer_branch_get/noget/{id}', 'Transfer_branch_getController@noget');
 
     Route::resource('transfer_branch_get_products', 'Transfer_branch_get_productsController');
@@ -890,6 +889,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('transfer_branch', 'Transfer_branchController');
     Route::post('transfer_branch/datatable', 'Transfer_branchController@Datatable')->name('transfer_branch.datatable');
+    Route::post('transfer_branch/requisition-datatable', 'Transfer_branchController@requisitionDatatable')->name('transfer_branch.requisition-datatable');
+    Route::post('transfer_branch/check-stocks', 'Transfer_branchController@checkStockOptions')->name('transfer_branch.check-stocks');
+    Route::post('transfer_branch/store-from-requisition', 'Transfer_branchController@storeFromRequisition')->name('transfer_branch.store-from-requisition');
 
     Route::resource('transfer_branch_code', 'Transfer_branch_codeController');
     Route::post('transfer_branch_code/datatable', 'Transfer_branch_codeController@Datatable')->name('transfer_branch_code.datatable');

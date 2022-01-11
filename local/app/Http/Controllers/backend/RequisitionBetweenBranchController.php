@@ -56,9 +56,15 @@ class RequisitionBetweenBranchController extends Controller
 
     public function update(Request $request, RequisitionBetweenBranch $requisition_between_branch)
     {
-        $requisition_between_branch->update($request->only('is_approve') + ['approved_by' => auth()->user()->id]);
+        if ($request->is_approve == RequisitionBetweenBranch::APPROVED) {
+          $data = $request->only('is_approve') + ['approved_by' => auth()->user()->id, 'approved_at' => now()];
+        } else {
+          $data = $request->only('is_approve');
+        }
 
-        $message = $request->is_approve == 1 ? 'อนุมัติรายการแล้ว.' : 'ยกเลิกรายการแล้ว';
+        $requisition_between_branch->update($data);
+
+        $message = $request->is_approve == RequisitionBetweenBranch::APPROVED ? 'อนุมัติรายการแล้ว.' : 'ยกเลิกรายการแล้ว';
 
         return back()->withSuccess($message);
     }
