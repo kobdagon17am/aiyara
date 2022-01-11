@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\backend;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\backend\AjaxController;
+use App\Models\Backend\RequisitionBetweenBranch;
+use App\Models\Backend\RequisitionBetweenBranchDetail;
 
 class Transfer_branchController extends Controller
 {
@@ -119,7 +121,6 @@ class Transfer_branchController extends Controller
     }
     public function store(Request $request)
     {
-
       if(isset($request->save_select_to_transfer)){
         // dd($request->all());
 
@@ -779,5 +780,126 @@ class Transfer_branchController extends Controller
       ->make(true);
     }
 
+    public function requisitionDatatable(Request $request)
+    {
+      $requisitions = RequisitionBetweenBranch::with('requisition_details')
+        ->where('is_approve', RequisitionBetweenBranch::APPROVED)
+        ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER);
 
+      return \DataTables::of($requisitions)
+        ->editColumn('from_branch_id', function ($requisition) {
+          return $requisition->from_branch->b_name;
+        })
+        ->editColumn('to_branch_id', function ($requisition) {
+          return $requisition->to_branch->b_name;
+        })
+        ->addColumn('requisition_by', function ($requisition) {
+          return $requisition->requisition_by->name;
+        })
+        ->addColumn('approve_by', function ($requisition) {
+          return $requisition->approve_by->name;
+        })
+        ->editColumn('approved_at', function ($requisition) {
+          return $requisition->approved_at->format('d/m/Y H:i:s');
+        })
+        ->addColumn('actions', function ($requisition) {
+          return 
+            "<button type='button' class='btn btn-primary btn-sm waves-effect waves-light' data-toggle='modal' data-target='.modal-requisition-details' data-details='$requisition->requisition_details' data-to_branch_id='$requisition->to_branch_id' data-from_branch_id='$requisition->from_branch_id'>
+              <i class='fas fa-edit'></i>
+            </button>";
+        })
+        ->rawColumns(['actions'])
+        ->make(true);
+    }
+
+    public function checkStockOptions(Request $request)
+    {
+      $stocks = DB::table('db_stocks')
+        ->select('db_stocks.id', 'db_stocks.shelf_floor', 'db_stocks.lot_number', 'db_stocks.amt', 'db_stocks.lot_expired_date', 'branchs.b_name', 'warehouse.w_name', 'zone.z_name', 'shelf.s_name')
+        ->leftJoin('branchs', 'branchs.id', '=', 'db_stocks.branch_id_fk')
+        ->leftJoin('warehouse', 'warehouse.id', '=', 'db_stocks.warehouse_id_fk')
+        ->leftJoin('zone', 'zone.id', '=', 'db_stocks.zone_id_fk')
+        ->leftJoin('shelf', 'shelf.id', '=', 'db_stocks.shelf_id_fk')
+        ->where('db_stocks.branch_id_fk', $request->to_branch_id)
+        ->where('db_stocks.product_id_fk', $request->product_id)
+        ->get();
+
+      $options = "<option value=''>เลือกคลัง</option>";
+
+      foreach ($stocks as $stock) {
+
+        $displayName = "$stock->b_name / $stock->w_name / $stock->z_name / $stock->s_name ชั้น > $stock->shelf_floor (จำนวน : $stock->amt)";
+
+        $options .= "<option value='$stock->id' data-amt='$stock->amt'>$displayName</option>";
+
+      }
+
+      return $options;
+    }
+
+    public function storeFromRequisition(Request $request)
+    {
+      // dd($request->all());
+
+      
+      try {
+        DB::beginTransaction();
+
+        $transferBranchCode = new \App\Models\Backend\Transfer_branch_code;
+
+        $data = $request->except(['_token', 'lists']) + [
+          'business_location_id_fk' => 1,
+          'action_date' => now()->format('Y-m-d'),
+          'action_user' => auth()->user()->id
+        ];
+
+        $transferBranchCode = $transferBranchCode->create($data);
+
+        $stock_type_id_fk = 8;
+        $ref_table_id = $transferBranchCode->id;
+        $ref_doc = 'TR'.$transferBranchCode->business_location_id_fk.$transferBranchCode->branch_id_fk.$stock_type_id_fk.date('ymd').$ref_table_id;
+
+        $transferBranchCode->update([
+          'tr_number' => $ref_doc,
+        ]);
+        
+        foreach ($request->lists as $key => $value) {
+
+          $requisitionBetweenBranchDetail = RequisitionBetweenBranchDetail::find($key);
+          $requisitionBetweenBranchDetail->update([
+            'amount' => $value['amount'] 
+          ]);
+          $requisitionBetweenBranchDetail->requisition->update(['is_transfer' => 1]);
+
+          $stocks = DB::table('db_stocks')->where('id', $value['stock'])->first();
+
+          $dataDetails = [
+            'transfer_branch_code_id' => $transferBranchCode->id,
+            'stocks_id_fk' => $stocks->id,
+            'product_id_fk' => $stocks->product_id_fk,
+            'lot_number' => $stocks->lot_number,
+            'lot_expired_date' => $stocks->lot_expired_date,
+            'amt' => $value['amount'],
+            'product_unit_id_fk' => $stocks->product_unit_id_fk,
+            'branch_id_fk' => $request->to_branch_id_fk,
+            'warehouse_id_fk' => $stocks->warehouse_id_fk,
+            'zone_id_fk' => $stocks->zone_id_fk,
+            'shelf_id_fk' => $stocks->shelf_id_fk,
+            'shelf_floor' => $stocks->shelf_floor,
+            'action_user' => auth()->user()->id,
+            'action_date' => now(),
+          ];
+
+          \App\Models\Backend\Transfer_branch_get_products_details::create($dataDetails);
+          DB::table('db_transfer_branch_details_log')->insert($dataDetails);
+        }
+        
+        DB::commit();
+        return back();
+      } catch (\Exception $e) {
+        DB::rollback();
+        return $e->getMessage();
+      }
+
+    }
 }
