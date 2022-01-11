@@ -839,9 +839,6 @@ class Transfer_branchController extends Controller
 
     public function storeFromRequisition(Request $request)
     {
-      // dd($request->all());
-
-      
       try {
         DB::beginTransaction();
 
@@ -895,7 +892,7 @@ class Transfer_branchController extends Controller
         }
         
         DB::commit();
-        return back();
+        return redirect()->route('backend.transfer_branch.edit', $transferBranchCode->id);
       } catch (\Exception $e) {
         DB::rollback();
         return $e->getMessage();
