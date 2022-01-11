@@ -75,11 +75,7 @@ class RequisitionBetweenBranchController extends Controller
 
       return DataTables::of($approves)
         ->editColumn('to_branch_id', function ($approve) {
-          if (auth()->user()->permission == 1) {
-            return $approve->from_branch->b_name . ' => ' . $approve->to_branch->b_name;
-          } else {
-            return $approve->to_branch->b_name;
-          }
+          return $approve->from_branch->b_name . ' => ' . $approve->to_branch->b_name;
         })
         ->addColumn('button_products', function ($approve) {
           $products = $approve->requisition_details;

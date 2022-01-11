@@ -1631,8 +1631,8 @@
 
         details.forEach(detail => {
           output += `
-          <input type='hidden' name='branch_id_fk' value='${fromBranchId}' />
-          <input type='hidden' name='to_branch_id_fk' value='${toBranchId}' />
+          <input type='hidden' name='branch_id_fk' value='${toBranchId}' />
+          <input type='hidden' name='to_branch_id_fk' value='${fromBranchId}' />
           <tr>
             <td>${detail.product_name}</td>  
             <td>

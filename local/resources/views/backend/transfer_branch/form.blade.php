@@ -47,7 +47,7 @@
               @endif
                 {{ csrf_field() }}
 
-
+     
       @if( @$sRow->approve_status!='2' )
 
             <div class="myBorder div_confirm_transfer_branch ">
@@ -94,9 +94,10 @@
                 </div>
 
                         <div class="form-group row">
-                          <label for="approve_note" class="col-md-3 col-form-label required_star_red "><i class="bx bx-play"></i>หมายเหตุ :</label>
+                          {{-- required_star_red  --}}
+                          <label for="approve_note" class="col-md-3 col-form-label "><i class="bx bx-play"></i>หมายเหตุ :</label>
                           <div class="col-md-9">
-                            <textarea class="form-control" rows="3" id="approve_note" name="approve_note" required minlength="5" >{{ @$sRow->approve_note }}</textarea>
+                            <textarea class="form-control" rows="3" id="approve_note" name="approve_note" minlength="5" >{{ @$sRow->approve_note }}</textarea>
                           </div>
                         </div>
 
