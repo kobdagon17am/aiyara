@@ -293,14 +293,14 @@ if(!empty($Products)){
   ?>
 
 
-          <tr>
+          {{-- <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: right;padding-right: 10px;font-weight: bold;"> รวมจำนวน </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;font-weight: bold;"> {{@$total}} </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
-          </tr>
+          </tr> --}}
 
 <?php } ?>
 <?php } ?>
