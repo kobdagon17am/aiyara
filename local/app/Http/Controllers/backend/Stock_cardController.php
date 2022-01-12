@@ -222,6 +222,8 @@ class Stock_cardController extends Controller
                  ->where(DB::raw($w_lot_number_01), "=", $w_lot_number_02)
                   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->start_date)
                   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->end_date)
+                  // วุฒิเพิ่มมา
+                  ->where('amt','!=',0)
                   ->get();
 
                   if($Stock_movement->count() > 0){

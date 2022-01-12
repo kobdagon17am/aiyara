@@ -113,8 +113,6 @@ class Pay_product_receipt_001Controller extends Controller
       DB::beginTransaction();
       try
       {
-      // return $request->id;
-      // return $request->invoice_code;
       // สถานะกลับไปเป็นรอจ่าย 1 ถ้าเป็นกรณียกเลิกใบเสร็จ 4 ให้เกิดจากการยกเลิกจากคลัง
       $r01 = DB::select(" SELECT * FROM db_pay_product_receipt_001 WHERE invoice_code='".$request->invoice_code."'; ");
       DB::update(" UPDATE `db_orders` SET `approve_status`='2' WHERE (`id`='".$r01[0]->orders_id_fk."') ");
@@ -126,15 +124,15 @@ class Pay_product_receipt_001Controller extends Controller
         action_date=now() ,
         status_sent=1
         WHERE invoice_code='".$request->invoice_code."' ");
-        // dd($request->invoice_code);
 
       DB::update(" UPDATE db_pay_product_receipt_002 SET status_cancel=1 WHERE invoice_code='".$request->invoice_code."' ");
       DB::update(" DELETE FROM db_pick_warehouse_qrcode WHERE invoice_code='".$request->invoice_code."' ");
+// **********
+
 
       // คืนสินค้ากลับ คลัง เพราะไม่ได้จ่ายแล้ว
       // DB::select(" TRUNCATE db_stocks_return; ");
       // $r = DB::table('db_pay_product_receipt_002')->where('invoice_code',$request->invoice_code)->orderBy('time_pay','desc')->limit(1)->get();
-// dd($r);
       // foreach ($r as $key => $v) {
             //  $_choose=DB::table("db_stocks_return")
             //     ->where('time_pay', $v->time_pay)
@@ -233,9 +231,8 @@ class Pay_product_receipt_001Controller extends Controller
                                 LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
                                 WHERE db_stocks_return.invoice_code = '".$request->invoice_code."'
                           ");
-                              // dd($Data);
                          }
-                            // dd($Data);
+                          
 
                               if(@$Data){
                                 DB::table('db_stock_movement_tmp')->truncate();
@@ -271,7 +268,8 @@ class Pay_product_receipt_001Controller extends Controller
                                         $insertStockMovement->insertStockMovement($insertData);
 
                                     }
-                                    $tmp = DB::table('db_stock_movement_tmp')->where('doc_no',$request->invoice_code)->orderBy('updated_at','desc')->groupBy('product_id_fk')->get();
+                                    $tmp = DB::table('db_stock_movement_tmp')->where('doc_no',$request->invoice_code)->where('warehouse_id_fk','!=',0)->orderBy('updated_at','desc')->groupBy('product_id_fk')->get();
+                            
                                     foreach($tmp as $t){
                                       DB::table('db_stock_movement')->insertOrignore(array(
                                         // ไม่เหมือน tmp
