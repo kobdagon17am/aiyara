@@ -262,7 +262,7 @@ class Transfer_branch_codeController extends Controller
 
     public function Datatable(Request $req){
 
-
+     
        if(!empty($req->id)){
            $w00 = " AND db_transfer_branch_code.id=".$req->id ;
         }else{
@@ -280,7 +280,9 @@ class Transfer_branch_codeController extends Controller
         if(!empty($req->branch_id_fk)){
            $w02 = " AND db_transfer_branch_code.branch_id_fk = ".$req->branch_id_fk." " ;
         }else{
-           $w02 = " AND (db_transfer_branch_code.branch_id_fk = ".\Auth::user()->branch_id_fk.")  " ;
+          //  $w02 = "AND (db_transfer_branch_code.branch_id_fk = ".\Auth::user()->branch_id_fk.")" ;
+            $userBranch = \Auth::user()->branch_id_fk;
+           $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch OR db_transfer_branch_code.to_branch_id_fk = $userBranch)";
         }
 
  // โอนไปให้สาขา 
@@ -338,7 +340,6 @@ class Transfer_branch_codeController extends Controller
       //   }
       // })
       // ->escapeColumns('created_at')
-
 
       ->addColumn('approve_date', function($row) {
         if(!is_null(@$row->approve_date)){
