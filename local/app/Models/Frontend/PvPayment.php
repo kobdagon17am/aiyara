@@ -311,7 +311,7 @@ class PvPayment extends Model
                     // dd($resule);
 
                 } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
-
+           
                     $active_mt_old_date = $customer_update->pv_mt_active;
                     $status_pv_mt_old = $customer_update->status_pv_mt;
 
@@ -322,9 +322,9 @@ class PvPayment extends Model
 
                     $strtime_user = strtotime($customer_update->pv_mt_active);
                     $strtime = strtotime(date("Y-m-d"));
-
-                    if ($customer_update->status_pv_mt == 'first') {
                  
+                    if ($customer_update->status_pv_mt == 'first') {
+                  
                         // if($strtime_user < $strtime){
                         //     //$contract_date = strtotime(date('Y-m',$strtime_user));
                         //     //$caltime = strtotime("+1 Month",$contract_date);
@@ -346,6 +346,7 @@ class PvPayment extends Model
                         $pro_mt = $promotion_mt->pv;
                         $pv_mt = $customer_update->pv_mt;
                         $pv_mt_all = $pv + $pv_mt;
+                    
 
                         if ($pv_mt_all >= $pro_mt) {
                             //dd('หักลบค่อยอัพเดท');
@@ -409,7 +410,7 @@ class PvPayment extends Model
                             $start_month = date("Y-m");
 
                         }
-
+                  
                         if ($pv_mt_all >= $pro_mt) {
 
                             //หักลบค่อยอัพเดท
@@ -426,9 +427,8 @@ class PvPayment extends Model
                             $customer_update->pv_mt_active = $mt_active;
 
                             $order_update->pv_banlance = $pv_mt_total;
-                            $order_update->active_mt_date =  date('Y-m-1',$mt_active);
-
-
+                            $order_update->active_mt_date =  date('Y-m-1',strtotime($mt_active));
+                   
                         } else {
                             //dd('อัพเดท');
                             $customer_update->pv_mt = $pv_mt_all;

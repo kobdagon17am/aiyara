@@ -1504,7 +1504,6 @@ class FrontstoreController extends Controller
         //    }
         //  }
 
-
         $r_addr = DB::select("select address_sent_id_fk from db_orders WHERE (id='" . $request->frontstore_id . "')");
 
         if (@$request->delivery_location != 3) {

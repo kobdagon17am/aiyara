@@ -182,6 +182,8 @@ class Stock_card_01Controller extends Controller
                   ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
                   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->start_date)
                   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->end_date)
+                  // วุฒิเพิ่มมาเช็คไม่เอายอด 0
+                  ->where('amt','!=',0)
                   ->get();
 
                   if($Stock_movement->count() > 0){
