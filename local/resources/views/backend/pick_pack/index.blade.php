@@ -101,27 +101,31 @@
         <div class="card">
             <div class="card-body">
 
-                    
-              <div class="row">
-                <div class="col-12 d-flex ">
+        <div class="myBorder">
 
-                  <div class="col-md-3 d-flex  ">
-                     <input id="startDate"  autocomplete="off" placeholder="วันเริ่ม" value="" />
-                     &nbsp;
-                     <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด" value="" />
-                  </div>
-                  <div class="col-md-2">
-                    <div class="form-group row"> &nbsp; &nbsp;
-                      <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
-                      <i class="bx bx-search font-size-18 align-middle mr-1"></i> &nbsp; ค้น&nbsp; &nbsp;&nbsp; &nbsp;
-                      </button>
-                    </div>
-                  </div>
+          <div class="row">
+            <div class="col-12 d-flex ">
+
+              <div class="col-md-3 d-flex  ">
+                 <input id="startDate" type="text" autocomplete="off" placeholder="วันเริ่ม" value="" />
+                
+                 &nbsp;
+                 <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด" value="" />
+              </div>
+              <div class="col-md-3 d-flex  ">
+                <input id="startTime" type="text" autocomplete="off" class="form-control" placeholder="เวลาเริ่ม 00:00" value="" />
+                &nbsp;
+                <input id="endTime" type="text" autocomplete="off" class="form-control" placeholder="เวลาสิ้นสุด 23:59" value="" />
+             </div>
+              <div class="col-md-2">
+                <div class="form-group row"> &nbsp; &nbsp;
+                  <button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;" >
+                  <i class="bx bx-search font-size-18 align-middle mr-1"></i> &nbsp; ค้น&nbsp; &nbsp;&nbsp; &nbsp;
+                  </button>
                 </div>
               </div>
-
-
-        <div class="myBorder">
+            </div>
+          </div>
 
           <form id="frm-example" action="{{ route('backend.pick_pack.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" name="save_to_packing" value="1" >
@@ -1456,6 +1460,10 @@ $(function() {
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="{{asset('asset/jquery.timepicker.js')}}" type="text/javascript"></script>
+    <link href="{{asset('asset/jquery.timepicker.css')}}" rel="stylesheet" type="text/css" />
+
     {{-- <script type="text/javascript">
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
         $('#startDate').datepicker({
@@ -1490,6 +1498,35 @@ $(function() {
       format: 'yyyy-mm-dd',
       uiLibrary: 'bootstrap4',
       iconsLibrary: 'fontawesome',
+  });
+
+  $('#startTime').timepicker({
+    timeFormat: 'HH:mm:ss',
+    // timeFormat: 'H:i:s',
+    interval: 60,
+    // minTime: '10',
+    // maxTime: '6:00pm',
+    defaultTime: '10',
+    startTime: '10:00',
+    dynamic: true,
+    dropdown: true,
+    scrollbar: true,
+    uiLibrary: 'bootstrap4',
+    iconsLibrary: 'fontawesome',
+  });
+
+  $('#endTime').timepicker({
+   timeFormat: 'HH:mm:ss',
+    interval: 60,
+    // minTime: '10',
+    // maxTime: '6:00pm',
+    defaultTime: '10',
+    startTime: '10:00',
+    dynamic: true,
+    dropdown: true,
+    scrollbar: true,
+    uiLibrary: 'bootstrap4',
+    iconsLibrary: 'fontawesome',
   });
 
   $('#endDate').datepicker({
