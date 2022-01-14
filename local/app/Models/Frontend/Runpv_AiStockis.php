@@ -84,7 +84,7 @@ class Runpv_AiStockis extends Model
                                     $mt_mount = $pv_mt_all / $pro_mt;
                                     $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
                                     $pv_mt_total = $pv_mt_all - ($mt_mount * $pro_mt); //ค่า pv ที่ต้องเอาไปอัพเดท DB
-                                    $mt_mount_new = $mt_mount+1;
+                                    $mt_mount_new = $mt_mount+2;
                                     $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
                                     $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
 
@@ -96,7 +96,7 @@ class Runpv_AiStockis extends Model
 
 
                                 } else {
-                                    $mt_mount_new = strtotime("+1 Month", strtotime($start_month));
+                                    $mt_mount_new = strtotime("+2 Month", strtotime($start_month));
                                     $update_to_customer->pv_mt = $pv_mt_all;
                                     $update_to_customer->pv_mt_active = date('Y-m-1', $mt_mount_new);
                                     $update_to_customer->status_pv_mt = 'not';
@@ -122,10 +122,14 @@ class Runpv_AiStockis extends Model
 
                                     // $caltime = strtotime("+1 Month",$contract_date);
                                     // $start_month = date("Y-m", $caltime);
+                                    $strtime_user = strtotime("-1 Month", $strtime_user);
                                     $start_month = date('Y-m', $strtime_user);
 
+
                                 } else {
-                                    $start_month = date("Y-m");
+
+                                  $strtime_user = strtotime("-1 Month");
+                                  $start_month = date('Y-m', $strtime_user);
 
                                 }
 
