@@ -1481,7 +1481,7 @@ class FrontstoreController extends Controller
               WHERE
               db_orders.invoice_code='" . @$request->invoice_code . "' ");
 
-        // dd($request);
+        // dd($request); 
         if ($request->frontstore_id) {
           $ch_aicash_02 = DB::select(" select * from db_orders where id=" . $request->frontstore_id . " ");
         } else {

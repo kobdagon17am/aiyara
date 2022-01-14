@@ -737,8 +737,8 @@ class DeliveryController extends Controller
 
             $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
             $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
-            $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
-
+            // $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
+            $billing_employee = " ";
         }
 
 
@@ -792,14 +792,13 @@ class DeliveryController extends Controller
 
 
       //   ");
-      
+      // วุฒิเอาออก $branch_id_fk
     $sTable = DB::select(" 
 
         SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price, db_orders.delivery_location, db_orders.charger_type, db_orders.fee_amt from db_delivery  
         Left Join db_orders ON db_orders.code_order = db_delivery.receipt
         WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1
         $business_location_id
-        $branch_id_fk
         $receipt
         $customer_id_fk
         $delivery_date
