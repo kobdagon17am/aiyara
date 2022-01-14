@@ -535,7 +535,7 @@ var endDate = $('#endDate').val();
       scroller: true,
       scrollCollapse: true,
       scrollX: true,
-      ordering: false,
+      // ordering: false,
       // scrollY: ''+($(window).height()-370)+'px',
       iDisplayLength: 20,
       // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
@@ -574,7 +574,10 @@ var endDate = $('#endDate').val();
                 // {data: 'id', title :'<a href="javascript:;" class="select-checkbox"><u>เลือกทั้งหมด</u></a>', className: 'text-center'},
                 {data: 'id', title :'เลือก', className: 'text-center '},
                 {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
-                {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
+                {data: 'delivery_date', name: 'delivery_date.timestamp', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 ', render: {
+                    _: 'display',
+                    sort: 'timestamp'
+                  }},
                 {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
                 {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                 {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
@@ -591,13 +594,17 @@ var endDate = $('#endDate').val();
                   return '-รอจัดเบิก-';
                 }},
             ],
+            order: [
+              [3, 'asc']
+            ],
             'columnDefs': [
              {
                 'targets': 0,
                 'checkboxes': {
                    'selectRow': true
                 }
-             }
+             },
+             { targets: [1,2,4,5,6,7,8,9], orderable: false},
             ],
             'select': {
                'style': 'multi',
@@ -742,7 +749,7 @@ $(function() {
         scroller: true,
         scrollCollapse: true,
         scrollX: true,
-        ordering: false,
+        // ordering: false,
         // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 20,
         // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
@@ -775,7 +782,10 @@ $(function() {
                   {data: 'id', title :'ID', className: 'text-center'},
                   {data: 'id', title :'เลือก', className: 'text-center '},
                   {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
-                  {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
+                  {data: 'delivery_date', name: 'delivery_date.timestamp', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 ', render: {
+                    _: 'display',
+                    sort: 'timestamp'
+                  }},
                   {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
                   {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
                   {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
@@ -792,13 +802,17 @@ $(function() {
                     return '-รอจัดเบิก-';
                   }},
               ],
+              order: [
+                [3, 'desc']
+              ],
               'columnDefs': [
                {
                   'targets': 0,
                   'checkboxes': {
                      'selectRow': true
-                  }
-               }
+                  },
+               },
+               { targets: [1,2,4,5,6,7,8,9], orderable: false},
               ],
               'select': {
                  'style': 'multi',

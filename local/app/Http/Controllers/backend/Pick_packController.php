@@ -326,14 +326,12 @@ class Pick_packController extends Controller
         $startDate
         $endDate
         GROUP BY packing_code
-        ORDER BY updated_at DESC
      ");
       }else{
         $sTable = DB::select(" 
         select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk
         UNION
         select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk GROUP BY packing_code
-        ORDER BY updated_at asc
      ");
       }
       
@@ -392,7 +390,7 @@ class Pick_packController extends Controller
 
       })
       ->escapeColumns('receipt')
-
+      
       ->addColumn('packing_code', function($row) {
 
         // $d = DB::select(" select * from db_delivery WHERE packing_code=".$row->packing_code." ");
@@ -600,7 +598,12 @@ class Pick_packController extends Controller
           }
       })
       ->escapeColumns('check_case_sent_free')
-
+      ->addColumn('delivery_date', function ($row) {
+          return [
+            'display' => date('Y-m-d H:i:s', strtotime($row->delivery_date)),
+            'timestamp' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $row->delivery_date)->timestamp,
+          ];
+      })
       ->make(true);
     }
 
