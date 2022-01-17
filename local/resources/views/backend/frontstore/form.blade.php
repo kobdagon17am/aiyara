@@ -356,11 +356,9 @@ if(@$sRow->check_press_save==2){
 
                                          <!-- Gift Voucher -->
                                       @if(!empty(@$sRow->purchase_type_id_fk) && @$sRow->purchase_type_id_fk==5)
-
                                            <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
                                            <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
                                       @ELSE
-
 <?php //echo @$sRow->purchase_type_id_fk;
 
    if(@$sRow->purchase_type_id_fk==4 || @$sRow->purchase_type_id_fk==6){
@@ -644,20 +642,25 @@ if(@$sRow->check_press_save==2){
  ?>
      </div>
 
-          @if($ChangePurchaseType==1)
-              @if(!empty(@$sRow->purchase_type_id_fk) and )
-                @if(@$sRow->purchase_type_id_fk==5)
-                    @else
+           @if($ChangePurchaseType==1)
+
+                @if(!empty(@$sRow->purchase_type_id_fk) and @$sRow->approve_status != 2 and @$sRow->approve_status != 4
+                and @$sRow->approve_status != 5 and @$sRow->approve_status != 9)
+
+                 @if(@$sRow->purchase_type_id_fk==5)
+                     @ELSE
                           <div class="col-md-11 text-right div_btnSaveChangePurchaseType">
                             <br>
                             <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ch_Disabled ">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > แก้ไขข้อมูล
                             </button>
                           </div>
-                    @endif
-              @endif
-          @endif
+                     @ENDIF
 
+                 @ELSE
+
+                @ENDIF
+           @endif
 <br>
 
 <?php
@@ -2445,6 +2448,7 @@ if(@$sRow->check_press_save==2){
 
 
          $(document).ready(function() {
+
 
             $(document).on('click', '.btnSaveChangePurchaseType', function(event) {
                var orders_id_fk = "{{@$sRow->id}}";

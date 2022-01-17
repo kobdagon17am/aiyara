@@ -174,7 +174,6 @@ class Runpv_AiStockis extends Model
                                 $strtime_user = strtotime("-1 Month", $strtime_user);
                                 $start_month = date('Y-m', $strtime_user);
 
-
                             } else {
 
                               $strtime_user = strtotime("-1 Month");
@@ -192,7 +191,6 @@ class Runpv_AiStockis extends Model
                                 $strtime = strtotime($start_month);
                                 $tv_active = strtotime("+$add_mount Month", $strtime);
                                 $tv_active = date('Y-m-1', $tv_active); //วันที่ tv_active
-
 
                                 $update_mt = DB::table('customers')
                                     ->where('id', $to_customer->id)
