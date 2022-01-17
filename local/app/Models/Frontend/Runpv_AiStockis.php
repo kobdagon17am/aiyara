@@ -180,6 +180,8 @@ class Runpv_AiStockis extends Model
                               $start_month = date('Y-m', $strtime_user);
 
                             }
+
+
                             if ($pv_tv_all >= $pro_tv) {
 
                                 //หักลบค่อยอัพเดท

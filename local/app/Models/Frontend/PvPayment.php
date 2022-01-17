@@ -463,13 +463,16 @@ class PvPayment extends Model
                     $pv_tv_all = $pv + $pv_tv;
 
                     if ($strtime_user > $strtime) {
+                      dd(1);
                       $strtime_user = strtotime("-1 Month", $strtime_user);
                       $start_month = date('Y-m', $strtime_user);
 
                   } else {
-                    $strtime_user = strtotime("-1 Month", $strtime_user);
+                    $strtime_user = strtotime("-1 Month");
                     $start_month = date('Y-m', $strtime_user);
                   }
+
+
                     if ($pv_tv_all >= $pro_tv) {
                         //หักลบค่อยอัพเดท
                         $tv_mount = $pv_tv_all / $pro_tv;
@@ -481,9 +484,9 @@ class PvPayment extends Model
                         $tv_active = strtotime("+$add_mount Month", $strtime);
                         $tv_active = date('Y-m-1', $tv_active); //วันที่ tv_active
 
+
                         $customer_update->pv_tv = $pv_tv_total;
                         $customer_update->pv_tv_active = $tv_active;
-
                         $order_update->pv_tv_old = $customer_update->pv_tv;
                         $order_update->pv_banlance = $pv_tv_total;
                         $order_update->active_tv_old_date = $active_tv_old_date;
