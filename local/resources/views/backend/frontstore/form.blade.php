@@ -644,11 +644,12 @@ if(@$sRow->check_press_save==2){
 
            @if($ChangePurchaseType==1)
 
-                @if(!empty(@$sRow->purchase_type_id_fk))
+                @if(!empty(@$sRow->purchase_type_id_fk) and @$sRow->approve_status != 2 and @$sRow->approve_status != 4
+                and @$sRow->approve_status != 5 and @$sRow->approve_status != 9)
 
                  @if(@$sRow->purchase_type_id_fk==5)
                      @ELSE
-                          <div class="col-md-11 text-right div_btnSaveChangePurchaseType " style="display: none;">
+                          <div class="col-md-11 text-right div_btnSaveChangePurchaseType">
                             <br>
                             <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ch_Disabled ">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > แก้ไขข้อมูล
@@ -2447,12 +2448,6 @@ if(@$sRow->check_press_save==2){
 
 
          $(document).ready(function() {
-
-
-            $(document).on('change', '#purchase_type_id_fk,#aistockist,#agency', function(event) {
-                  $(".div_btnSaveChangePurchaseType").show();
-            });
-
 
 
             $(document).on('click', '.btnSaveChangePurchaseType', function(event) {

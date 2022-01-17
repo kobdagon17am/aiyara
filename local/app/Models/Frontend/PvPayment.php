@@ -490,7 +490,7 @@ class PvPayment extends Model
                         $order_update->active_tv_date = $tv_active;
 
                     } else {
-                        dd('อัพเดท');
+
                         $customer_update->pv_tv = $pv_tv_all;
 
                         $order_update->pv_tv_old = $customer_update->pv_tv;
