@@ -792,12 +792,13 @@ class DeliveryController extends Controller
 
 
       //   ");
-      // วุฒิเอาออก $branch_id_fk
+
     $sTable = DB::select(" 
 
         SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price, db_orders.delivery_location, db_orders.charger_type, db_orders.fee_amt from db_delivery  
         Left Join db_orders ON db_orders.code_order = db_delivery.receipt
         WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1
+        $branch_id_fk
         $business_location_id
         $receipt
         $customer_id_fk
