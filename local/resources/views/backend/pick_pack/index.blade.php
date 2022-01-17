@@ -510,10 +510,12 @@ $(document).on('click','.btnSearchInList',function(){
 // });
 
 
-$(document).on('click','.select-checkbox',function(){
-  $('#data-table').DataTable().column(0).checkboxes.selected()
-  // $('#data-table').rows().select();
-  // $(".odd").addClass("selected");
+$(document).on('click','.select_all',function(){
+  var tbody = $('#data-table').find('tbody');
+  var tr = tbody.find('tr');
+  tr.each(function( index ) {
+      $(this).find('.dt-checkboxes').trigger('click');
+});
 });
 
 
@@ -526,6 +528,10 @@ var oTable ;
 // $(".myloading").show();
 var startDate = $('#startDate').val();
 var endDate = $('#endDate').val();
+
+var startTime = $('#startTime').val();
+var endTime = $('#endTime').val();
+
    $.fn.dataTable.ext.errMode = 'throw';
   oTable = $('#data-table').DataTable({
   "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
@@ -539,6 +545,8 @@ var endDate = $('#endDate').val();
       // scrollY: ''+($(window).height()-370)+'px',
       iDisplayLength: 20,
       // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
+      lengthMenu: [1000],
+      pageLength: 0,
       ajax: {
         url: '{{ route('backend.pick_pack.datatable') }}',
         data: function ( d ) {
@@ -566,13 +574,15 @@ var endDate = $('#endDate').val();
        data: {
          startDate:startDate,
          endDate:endDate,
+         startTime:startTime,
+         endTime:endTime,
         "_token": "{{ csrf_token() }}", 
          },
       },
             columns: [
                 {data: 'id', title :'ID', className: 'text-center'},
-                // {data: 'id', title :'<a href="javascript:;" class="select-checkbox"><u>เลือกทั้งหมด</u></a>', className: 'text-center'},
-                {data: 'id', title :'เลือก', className: 'text-center '},
+                {data: 'id', title :'<a href="javascript:;" class="select_all"><u>เลือกทั้งหมด</u></a>', className: 'text-center'},
+                // {data: 'id', title :'เลือก', className: 'text-center '},
                 {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
                 {data: 'delivery_date', name: 'delivery_date.timestamp', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 ', render: {
                     _: 'display',
@@ -753,6 +763,8 @@ $(function() {
         // scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 20,
         // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
+        lengthMenu: [1000],
+      pageLength: 0,
         ajax: {
           url: '{{ route('backend.pick_pack.datatable') }}',
           data: function ( d ) {
@@ -780,7 +792,8 @@ $(function() {
         },
               columns: [
                   {data: 'id', title :'ID', className: 'text-center'},
-                  {data: 'id', title :'เลือก', className: 'text-center '},
+                  // {data: 'id', title :'เลือก', className: 'text-center '},
+                  {data: 'id', title :'<a href="javascript:;" class="select_all"><u>เลือกทั้งหมด</u></a>', className: 'text-center'},
                   {data: 'status_pack', title :'<center> </center>', className: 'text-center '},
                   {data: 'delivery_date', name: 'delivery_date.timestamp', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 ', render: {
                     _: 'display',
@@ -1520,8 +1533,8 @@ $(function() {
     interval: 60,
     // minTime: '10',
     // maxTime: '6:00pm',
-    defaultTime: '10',
-    startTime: '10:00',
+    // defaultTime: '10',
+    startTime: '00:00',
     dynamic: true,
     dropdown: true,
     scrollbar: true,
@@ -1534,8 +1547,8 @@ $(function() {
     interval: 60,
     // minTime: '10',
     // maxTime: '6:00pm',
-    defaultTime: '10',
-    startTime: '10:00',
+    // defaultTime: '10',
+    startTime: '23:59',
     dynamic: true,
     dropdown: true,
     scrollbar: true,
