@@ -495,7 +495,6 @@ class PvPayment extends Model
                     } else {
 
                         $customer_update->pv_tv = $pv_tv_all;
-
                         $order_update->pv_tv_old = $customer_update->pv_tv;
                         $order_update->pv_banlance = $pv_tv_all;
                         $order_update->active_tv_old_date = $active_tv_old_date;
