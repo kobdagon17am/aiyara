@@ -124,7 +124,8 @@
 					$sheet->setCellValue('Q'.($i+2), $sRow[$i]->hrc);
 					$sheet->setCellValue('R'.($i+2), $sRow[$i]->invr);
 					// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
-					$sheet->setCellValue('S'.($i+2), $request->id);
+					// $sheet->setCellValue('S'.($i+2), $request->id);
+					$sheet->setCellValue('S'.($i+2), '');
 				}
 
 			}

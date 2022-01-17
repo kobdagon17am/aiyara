@@ -314,8 +314,18 @@ class Pick_packController extends Controller
         }
 
       if(isset($request->startDate)){
-        $startDate = " AND DATE(delivery_date) >= '".$request->startDate."' " ;
-        $endDate = " AND DATE(delivery_date) <= '".$request->endDate."' " ;
+       if($request->startTime == null){
+        $startTime = '00:00:00';
+        $endTime = '23:59:59';
+       }else{
+        $startTime = $request->startTime;
+        $endTime = $request->endTime;
+       }
+        // $startDate = " AND DATE(delivery_date) >= '".$request->startDate."' " ;
+        // $endDate = " AND DATE(delivery_date) <= '".$request->endDate."' " ;
+        $startDate = " AND delivery_date >= '".$request->startDate." ".$startTime."' " ;
+        $endDate = " AND delivery_date <= '".$request->endDate." ".$endTime."' " ;
+
 
         $sTable = DB::select(" 
         select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk 

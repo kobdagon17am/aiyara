@@ -509,6 +509,9 @@ class Products_borrowController extends Controller
       $product_borrow_detail = \App\Models\Backend\Products_borrow::find($request->id);
       $product_borrow_detail->is_returned = 1;
       $product_borrow_detail->save();
+
+      
+
       return [
         'success' => true
       ];
