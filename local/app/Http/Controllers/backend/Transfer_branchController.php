@@ -755,7 +755,7 @@ class Transfer_branchController extends Controller
       })
        ->escapeColumns('product_name')
       ->addColumn('warehouses', function($row) {
-        $Check_stock = \App\Models\Backend\Check_stock::where('product_id_fk',$row->product_id_fk)->where('lot_number',$row->lot_number)->first();
+        $Check_stock = \App\Models\Backend\Check_stock::where('id',$row->stocks_id_fk)->first();
         // return $Check_stock->branch_id_fk;
         $sBranchs = DB::select(" select * from branchs where id=".(@$Check_stock->branch_id_fk?$Check_stock->branch_id_fk:0)." ");
         $warehouse = DB::select(" select * from warehouse where id=".(@$Check_stock->warehouse_id_fk?$Check_stock->warehouse_id_fk:0)." ");
