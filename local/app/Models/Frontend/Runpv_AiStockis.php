@@ -158,7 +158,6 @@ class Runpv_AiStockis extends Model
 
                         } elseif ($type == 3) { //รักษาคุณสมบัติท่องเที่ยง
 
-
                             $strtime_user = strtotime($to_customer->pv_tv_active);
                             $strtime = strtotime(date("Y-m-d"));
 
@@ -172,10 +171,15 @@ class Runpv_AiStockis extends Model
 
                             if ($strtime_user > $strtime) {
 
+                                $strtime_user = strtotime("-1 Month", $strtime_user);
                                 $start_month = date('Y-m', $strtime_user);
 
+
                             } else {
-                                $start_month = date("Y-m");
+
+                              $strtime_user = strtotime("-1 Month");
+                              $start_month = date('Y-m', $strtime_user);
+
                             }
                             if ($pv_tv_all >= $pro_tv) {
 
@@ -184,10 +188,11 @@ class Runpv_AiStockis extends Model
                                 $tv_mount = floor($tv_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
                                 $pv_tv_total = $pv_tv_all - ($tv_mount * $pro_tv); //ค่า pv ที่ต้องเอาไปอัพเดท DB
 
-                                $add_mount = $tv_mount - 1;
+                                $add_mount = $tv_mount+1;
                                 $strtime = strtotime($start_month);
                                 $tv_active = strtotime("+$add_mount Month", $strtime);
-                                $tv_active = date('Y-m-t', $tv_active); //วันที่ tv_active
+                                $tv_active = date('Y-m-1', $tv_active); //วันที่ tv_active
+
 
                                 $update_mt = DB::table('customers')
                                     ->where('id', $to_customer->id)

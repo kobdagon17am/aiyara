@@ -458,29 +458,28 @@ class PvPayment extends Model
                         ->select('*')
                         ->where('code', '=', 'pv_tv')
                         ->first();
-
                     $pro_tv = $promotion_tv->pv;
                     $pv_tv = $customer_update->pv_tv;
                     $pv_tv_all = $pv + $pv_tv;
 
                     if ($strtime_user > $strtime) {
+                      $strtime_user = strtotime("-1 Month", $strtime_user);
+                      $start_month = date('Y-m', $strtime_user);
 
-                        $start_month = date('Y-m', $strtime_user);
-
-                    } else {
-                        $start_month = date("Y-m");
-                    }
+                  } else {
+                    $strtime_user = strtotime("-1 Month", $strtime_user);
+                    $start_month = date('Y-m', $strtime_user);
+                  }
                     if ($pv_tv_all >= $pro_tv) {
-
                         //หักลบค่อยอัพเดท
                         $tv_mount = $pv_tv_all / $pro_tv;
                         $tv_mount = floor($tv_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
                         $pv_tv_total = $pv_tv_all - ($tv_mount * $pro_tv); //ค่า pv ที่ต้องเอาไปอัพเดท DB
 
-                        $add_mount = $tv_mount - 1;
+                        $add_mount = $tv_mount+1;
                         $strtime = strtotime($start_month);
                         $tv_active = strtotime("+$add_mount Month", $strtime);
-                        $tv_active = date('Y-m-t', $tv_active); //วันที่ tv_active
+                        $tv_active = date('Y-m-1', $tv_active); //วันที่ tv_active
 
                         $customer_update->pv_tv = $pv_tv_total;
                         $customer_update->pv_tv_active = $tv_active;
@@ -491,7 +490,7 @@ class PvPayment extends Model
                         $order_update->active_tv_date = $tv_active;
 
                     } else {
-                        //dd('อัพเดท');
+                        dd('อัพเดท');
                         $customer_update->pv_tv = $pv_tv_all;
 
                         $order_update->pv_tv_old = $customer_update->pv_tv;
