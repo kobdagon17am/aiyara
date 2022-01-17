@@ -596,7 +596,7 @@ class Pay_product_receipt_001Controller extends Controller
           DB::beginTransaction();
           try
           {
-
+            
         // หา time+pay ครั้งที่จ่าย
           $rs_time_pay = DB::select(" SELECT * FROM `db_pay_product_receipt_001` WHERE invoice_code='$invoice_code' order by time_pay DESC limit 1 ");
           if(count($rs_time_pay)>0){

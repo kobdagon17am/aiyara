@@ -529,7 +529,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
-
+               
                   $pay_this = $value->amt ;
                   $amt_pay_remain = 0;
 
@@ -562,8 +562,8 @@ foreach($temp_ppr_0021_data as $tmp){
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
                           // TEMPORARY
                           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-                          // dd($temp_db_stocks_02);
-// dd($temp_db_stocks_02);
+                      
+                          // dd($w_arr);
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -622,7 +622,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
-                                      // dd($_choose);
+                             
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -1264,9 +1264,7 @@ foreach($temp_ppr_0021_data as $tmp){
          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
     }
 
-
-
-
+    // dd(DB::table($temp_db_stocks)->get());
          // $Data = DB::select(" SELECT * FROM $temp_db_stocks; ");
          // return $Data;
 
