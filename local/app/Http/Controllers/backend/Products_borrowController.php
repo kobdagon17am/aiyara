@@ -510,7 +510,45 @@ class Products_borrowController extends Controller
       $product_borrow_detail->is_returned = 1;
       $product_borrow_detail->save();
 
-      
+      $product_borrow_code = DB::table('db_products_borrow_code')->where('id',$product_borrow_detail->products_borrow_code_id)->first();
+
+      // วุฒิเพิ่มมา update stock
+      if($product_borrow_detail){
+        $data = DB::table('db_stocks')->where('id',$product_borrow_detail->stocks_id_fk)->first();
+        if($data){
+          DB::table('db_stocks')->where('id',$product_borrow_detail->stocks_id_fk)->update([
+            'amt' => $data->amt+$product_borrow_detail->amt,
+          ]);
+          if($product_borrow_code){
+            $move = new \App\Models\Backend\Stock_movement();
+            $move->stock_type_id_fk = 0;
+            $move->stock_id_fk = $product_borrow_detail->stocks_id_fk;
+            $move->ref_table = 'db_products_borrow_details';
+            $move->ref_doc = $product_borrow_code->borrow_number;
+            $move->doc_date = $product_borrow_detail->created_at;
+            $move->business_location_id_fk = $product_borrow_code->business_location_id_fk;
+            $move->branch_id_fk = $product_borrow_detail->branch_id_fk;
+            $move->product_id_fk = $product_borrow_detail->product_id_fk;
+            $move->lot_number = $product_borrow_detail->lot_number;
+            $move->lot_expired_date = $product_borrow_detail->lot_expired_date;
+            $move->amt = $product_borrow_detail->amt;
+            $move->in_out = 1;
+            $move->product_unit_id_fk = $product_borrow_detail->product_unit_id_fk;
+            $move->warehouse_id_fk = $product_borrow_detail->warehouse_id_fk;
+            $move->zone_id_fk = $product_borrow_detail->zone_id_fk;
+            $move->shelf_id_fk = $product_borrow_detail->shelf_id_fk;
+            $move->shelf_floor = $product_borrow_detail->shelf_floor;
+            $move->status = 1;
+            $move->note = 'รับคืนจากการ(เบิก/ยืม)('.$product_borrow_code->note.')';
+            $move->action_user =  @\Auth::user()->id;
+            $move->action_date = date('Y-m-d H:i:s');
+            $move->approver = 1;
+            $move->approve_date = date('Y-m-d H:i:s');
+            $move->save();
+          }
+        } 
+      }
+  
 
       return [
         'success' => true

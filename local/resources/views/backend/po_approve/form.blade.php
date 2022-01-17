@@ -112,8 +112,8 @@
                             &nbsp;
                             &nbsp; --}}
 
-                        @IF(@$sRow->transfer_bill_status==2)
-                        @ELSE
+                        {{-- @IF(@$sRow->transfer_bill_status==2) --}}
+                        @IF(@$sRow->approve_status==1 || @$sRow->approve_status==2)
                         <div class="div_confirm_transfer_slip">
                             <button type="button" class="btn btn-primary waves-effect waves-light"
                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
@@ -124,6 +124,17 @@
                         </button>
 
                     </div>
+                        @ELSE
+                        {{-- <div class="div_confirm_transfer_slip">
+                            <button type="button" class="btn btn-primary waves-effect waves-light"
+                            data-toggle="modal" data-target="#confirm">อนุมัติ</button>
+
+                        <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
+                            data-toggle="modal" data-target="#cancel">
+                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
+                        </button>
+
+                    </div> --}}
                         @endif
 
                                 <form action="{{ route('backend.po_approve.update', @$sRow->id) }}" method="POST"

@@ -85,7 +85,7 @@ class DeliveryPackingCodeController extends Controller
 
         }
 
-
+        // วุฒิเอา  $branch_id_fk ออก
        $sTable = DB::select(" 
 
           SELECT db_delivery_packing_code.*,db_orders.shipping_special,db_delivery.id as db_delivery_id from db_delivery_packing_code  
@@ -94,7 +94,7 @@ class DeliveryPackingCodeController extends Controller
           LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
           WHERE db_delivery.status_pick_pack<>1 AND db_delivery.status_delivery<>1
           $business_location_id
-          $branch_id_fk
+         
           group by db_delivery_packing_code.id
           order by db_delivery_packing_code.updated_at desc
 
