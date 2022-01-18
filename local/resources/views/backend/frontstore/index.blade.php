@@ -595,11 +595,11 @@ $(function() {
                           }
                           var str_D = '';
                           if(sD=='1'){
+
                             str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.frontstore.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel ccc " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
                           }
 
                           var str_V2 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="เบิกสินค้าจากคลัง" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
-
                           var str_V3 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="รวมในบิล Packing List แล้ว" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
 
                           var str_V4 = '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="เบิกจ่ายสินค้าแล้ว" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';

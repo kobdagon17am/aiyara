@@ -23,7 +23,7 @@ class PvPayment extends Model
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
         $GiftvoucherCus = new GiftvoucherCus;
-
+        $customer_update_ai_cash = Customer::find($order_data->member_id_aicash);
 
         // dd($movement_ai_cash);
 
@@ -71,10 +71,19 @@ class PvPayment extends Model
                 if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
 
+
+
+
                     $check_aicash = DB::table('customers') //อัพ Pv ของตัวเอง
-                        ->select('ai_cash')
-                        ->where('user_name', '=', $customer_update->user_name)
+                        ->select('ai_cash','id','user_name')
+                        ->where('id', '=', $order_data->member_id_aicash)
                         ->first();
+
+                        if(empty($check_aicash)){
+                          $resule = ['status' => 'fail', 'message' => 'ไม่มี Customers_id ให้ตัด Aicash'];
+                          DB::rollback();
+                          return $resule;
+                        }
 
                     $update_icash = $check_aicash->ai_cash - $order_data->aicash_price;
                     //$check_aicash->ai_cash;//Ai-Cash เดิม
@@ -93,7 +102,7 @@ class PvPayment extends Model
 
                         }
 
-                        $movement_ai_cash->customer_id_fk = $customer_id;
+                        $movement_ai_cash->customer_id_fk = $check_aicash->id;
                         $movement_ai_cash->order_id_fk = $order_id;
                         //'add_ai_cash_id_fk' => '';//กรณีเติม Aicash
                         $movement_ai_cash->business_location_id_fk = $order_data->business_location_id_fk;
@@ -107,7 +116,7 @@ class PvPayment extends Model
                         $movement_ai_cash->type = $movement_type;
                         $movement_ai_cash->detail = $movement_detail;
 
-                        $customer_update->ai_cash = $update_icash;
+                        $customer_update_ai_cash->ai_cash = $update_icash;
 
                     } else {
 
@@ -305,8 +314,15 @@ class PvPayment extends Model
 
                     // dd($customer_update->user_name);
                     // dd($pv);
+                    if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                      $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                      if($resule['status'] == 'success'){
+                        $order_update->status_run_pv = 'success';
+                      }
+                    }else{
+                      $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                    }
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
 
                     // dd($resule);
 
@@ -388,7 +404,16 @@ class PvPayment extends Model
                             $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
                         }
 
-                        $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+
+
+                        if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                          $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                          if($resule['status'] == 'success'){
+                            $order_update->status_run_pv = 'success';
+                          }
+                        }else{
+                          $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                        }
 
                     } else {
                         $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
@@ -444,7 +469,15 @@ class PvPayment extends Model
 
                         }
 
-                        $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+
+                        if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                          $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                          if($resule['status'] == 'success'){
+                            $order_update->status_run_pv = 'success';
+                          }
+                        }else{
+                          $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                        }
 
                     }
 
@@ -501,7 +534,16 @@ class PvPayment extends Model
 
                     }
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+
+
+                    if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                      $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                      if($resule['status'] == 'success'){
+                        $order_update->status_run_pv = 'success';
+                      }
+                    }else{
+                      $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                    }
 
                 } elseif ($type_id == 4) { //เติม Ai Stockist
 
@@ -526,7 +568,16 @@ class PvPayment extends Model
                         ->where('order_id_fk', $order_id)
                         ->update(['status' => 'success', 'pv_aistockist' => $add_pv_aipocket]);
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+
+
+                     if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                      $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                      if($resule['status'] == 'success'){
+                        $order_update->status_run_pv = 'success';
+                      }
+                    }else{
+                      $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                    }
 
                 } elseif ($type_id == 5) { // Ai Voucher
 
@@ -537,7 +588,17 @@ class PvPayment extends Model
 
                     $order_update->pv_banlance = $pv_banlance->pv;
                     //ไม่เข้าสถานะต้อง Approve
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+
+
+                    if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                      $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                      if($resule['status'] == 'success'){
+                        $order_update->status_run_pv = 'success';
+                      }
+                    }else{
+                      $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                    }
+
                 } elseif ($type_id == 6) { //couse อบรม
 
                     $update_couse = DB::table('course_event_regis')
@@ -550,7 +611,15 @@ class PvPayment extends Model
                     $order_update->pv_banlance = $add_pv;
                     $order_update->action_date = date('Y-m-d H:i:s');
 
-                    $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+
+                    if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                      $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                      if($resule['status'] == 'success'){
+                        $order_update->status_run_pv = 'success';
+                      }
+                    }else{
+                      $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                    }
 
                 } else { //ไม่เข้าเงื่อนไขได้เลย
                     $resule = ['status' => 'fail', 'message' => 'ไม่มีเงื่อนไขที่ตรงตามความต้องการ'];
@@ -570,6 +639,11 @@ class PvPayment extends Model
                     $movement_ai_cash->save();
                     $customer_update->save();
                     $order_update->save();
+
+                    if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
+                    || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
+                    $customer_update_ai_cash->save();
+                    }
 
                     $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($customer_update->user_name);
                     DB::commit();

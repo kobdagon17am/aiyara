@@ -178,6 +178,7 @@ class HistoryController extends Controller
 
     public function datatable(Request $request)
     {
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
           $business_location_id = 1;
@@ -198,6 +199,8 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
             ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
             ->orwhere('db_orders.address_sent_id_fk', '=', Auth::guard('c_user')->user()->id)
+            ->orwhere('db_orders.member_id_aicash', '=', Auth::guard('c_user')->user()->id)
+            ->groupBy('db_orders.code_order')
             ->orderby('db_orders.updated_at', 'DESC')
             ->get();
         //dd($orders);
@@ -283,10 +286,10 @@ class HistoryController extends Controller
 
               }else{
 
-                if(($row->pay_type_id_fk == 3 || $row->pay_type_id_fk == 6 || $row->pay_type_id_fk == 9 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 14) and $row->order_status_id_fk == 2 ){
+                if(($row->pay_type_id_fk == 3 || $row->pay_type_id_fk == 6 || $row->pay_type_id_fk == 9 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 14) and $row->order_status_id_fk == 2 and  $row->member_id_aicash == Auth::guard('c_user')->user()->id){
 
-                  $action = '<div class="dropdown-primary btn-sm dropdown open">
-                  <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
+                  $action = '<div class="dropdown-warning btn-sm dropdown open">
+                  <button class="btn btn-warning btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
                   <div class="dropdown-menu" aria-labelledby="dropdown-5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                   <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#confirm_aicash" onclick="confirm_aicash('.$row->id.',\''.$row->code_order.'\')">Confirm</a>
                   <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#cancel_aicash_backend" onclick="cancel_aicash_backend(' . $row->id . ',\'' . $row->code_order . '\')">Cancel</a>

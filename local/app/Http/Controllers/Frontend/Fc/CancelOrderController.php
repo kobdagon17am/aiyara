@@ -17,6 +17,8 @@ class CancelOrderController extends Controller
       ->where('id', '=', $order_id)
       ->first();
 
+
+
     $customer = DB::table('customers')
       ->select('user_name')
       ->where('id', $order_data->customers_id_fk)
@@ -211,21 +213,46 @@ class CancelOrderController extends Controller
 
           if ($pay_type == 3 || $pay_type == 6 || $pay_type == 9 || $pay_type == 11 || $pay_type == 14) { //Aicash
 
-            $update_icash = $customer_user->ai_cash + $order_data->aicash_price;
+            $customer_user_aicash = DB::table('customers') //อัพ Pv ของตัวเอง
+            ->select('*')
+            ->where('id', '=',$order_data->member_id_aicash)
+            ->first();
+
+            if(empty($customer_user_aicash)){
+              $log = [
+                'customer_user_name' => $customer->user_name,
+                'admin_user_name' => '',
+                'code_order' => $order_data->code_order,
+                'error_detail' => 'ไม่มี Customers_id ให้ตัด Aicash =' . $type_id,
+                'function' => 'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
+                'type' => '', //'admin','customer'
+                'order_type' => $type_id,
+              ];
+
+              $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
+
+
+              $resule = ['status' => 'fail', 'message' => 'ไม่มี Customers_id ให้ตัด Aicash'];
+              DB::commit();
+              return $resule;
+
+            }
+
+            $update_icash = $customer_user_aicash->ai_cash + $order_data->aicash_price;
             //$customer_user->ai_cash;//Ai-Cash เดิม
             //$update_icash; //Bicash_banlance
 
             $update_aicash = DB::table('db_orders') //update บิล
               ->where('id', $order_id)
-              ->update(['aicash_old' => $customer_user->ai_cash, 'aicash_banlance' => $update_icash]);
+              ->update(['aicash_old' => $customer_user_aicash->ai_cash, 'aicash_banlance' => $update_icash]);
 
             $inseart_aicash_movement = DB::table('db_movement_ai_cash')->insert([
-              'customer_id_fk' => $customer_id,
+              'customer_id_fk' => $customer_user_aicash->id,
               'order_id_fk' => $order_id,
               //'add_ai_cash_id_fk' => '';//กรณีเติม Aicash
               'business_location_id_fk' => $order_data->business_location_id_fk,
               'price_total' => $order_data->total_price,
-              'aicash_old' => $customer_user->ai_cash,
+              'aicash_old' => $customer_user_aicash->ai_cash,
               'aicash_price' => $order_data->aicash_price,
               'aicash_banlance' => $update_icash,
               'order_code' => $order_data->code_order,
@@ -236,7 +263,7 @@ class CancelOrderController extends Controller
             ]);
 
             $update_aicash = DB::table('customers')
-              ->where('id', $customer_id)
+              ->where('id', $customer_user_aicash->id)
               ->update(['ai_cash' => $update_icash]);
           }
 
