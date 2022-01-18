@@ -2987,31 +2987,31 @@ class FrontstoreController extends Controller
 
 
     $d1 = DB::select("
-SELECT count(db_orders.id) as cnt,
+                    SELECT count(db_orders.id) as cnt,
 
-SUM(
-  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
-  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
-  )  as sum_price,
+                    SUM(
+                      (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+                      (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+                      )  as sum_price,
 
-sum(pv_total) as pv_total
-FROM db_orders
-Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.check_press_save=2
-AND approve_status!='' AND approve_status!=0 AND approve_status!=5
-and approve_status in (1)
-$action_user_011
-$startDate1
-$endDate1
-$purchase_type_id_fk
-$customer_username
-$customer_name
-$invoice_code
-$action_user_02
-$status_sent_money
-$approve_status
-$viewcondition_01
-");
+                    sum(pv_total) as pv_total
+                    FROM db_orders
+                    Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+                    WHERE db_orders.check_press_save=2
+                    AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+                    and approve_status in (1)
+                    $action_user_011
+                    $startDate1
+                    $endDate1
+                    $purchase_type_id_fk
+                    $customer_username
+                    $customer_name
+                    $invoice_code
+                    $action_user_02
+                    $status_sent_money
+                    $approve_status
+                    $viewcondition_01
+                    ");
     // $d1 = DB::select("
 
     // SELECT count(db_orders.id) as cnt,
@@ -3301,7 +3301,7 @@ SUM(
 sum(pv_total) as pv_total
 FROM db_orders
 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-WHERE db_orders.check_press_save=2
+WHERE db_orders.check_press_save=2 AND approve_status!=5
 $action_user_011
 $startDate1
 $endDate1
@@ -3389,7 +3389,7 @@ $purchase_type_id_fk_02
                       </tr>
 
                       <tr>
-                        <th scope="row">' . trans('message.total') . '<br>(<font color=red>ยกเว้นรายการ * รอดำเนินการต่อ</font>)</th>
+                        <th scope="row">' . trans('message.total') . '<br>(<font color=red>ยกเว้นรายการ * รอดำเนินการต่อ ,ยกเลิก</font>)</th>
                         <td style="text-align: right;font-weight:bold;">' . @$cnt_05 . ' </td>
                         <td style="text-align: right;font-weight:bold;">' . number_format(@$pv_total_05, 0) . ' </td>
                         <td style="text-align: right;font-weight:bold;">' . number_format(@$sum_price_05, 2) . ' </td>
