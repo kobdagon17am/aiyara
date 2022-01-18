@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\ShippingCosController;
 use App\Http\Controllers\Frontend\HistoryController;
 use App\Http\Controllers\Frontend\Ksher\KsherController;
+use App\Http\Middleware\Customer;
 use App\Models\Db_Orders;
 use App\Models\Frontend\CourseCheckRegis;
 use App\Models\Frontend\Couse_Event;
@@ -573,13 +574,16 @@ class CartPaymentController extends Controller
             }
 
         } elseif ($request->submit == 'ai_cash') {
+
             $resule = Payment::ai_cash($request);
 
             if ($resule['status'] == 'success') {
                 if ($order_data->purchase_type_id_fk == 5) {
+
+                  $customer_id = Auth::guard('c_user')->user()->id;
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '14', 'aicash_price' => $total_price]);
+                        ->update(['pay_type_id_fk' => '14', 'aicash_price' => $total_price,'member_id_aicash'=>$customer_id]);
                 }
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {

@@ -76,7 +76,7 @@ class Payment extends Model
 
         $db_orders = DB::table('db_orders')
         ->where('id', $rs->id)
-        ->update(['pay_type_id_fk'=>'3','aicash_price'=>$rs->total_price]);
+        ->update(['pay_type_id_fk'=>'3','aicash_price'=>$rs->total_price,'member_id_aicash'=>$customer_id]);
 
         $resulePv = PvPayment::PvPayment_type_confirme($rs->id,$customer_id,'2','customer');
         return $resulePv;
