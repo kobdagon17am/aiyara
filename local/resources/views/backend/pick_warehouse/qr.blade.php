@@ -103,6 +103,8 @@
 
 @section('content')
 
+<form class="form-horizontal" method="POST" action="backend/pick_warehouse_scan_save" enctype="multipart/form-data">
+  {{ csrf_field() }}
 <div class="modal" tabindex="-1" id="scan_modal" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -113,16 +115,20 @@
         </button>
       </div>
       <div class="modal-body">
+        <input type="hidden" value="0" name="delivery_id" id="delivery_id_more">
         <table id="data-table-scan" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
       </div>
       <div class="modal-footer">
-        {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+        <button type="submit" class="btn btn-primary" onclick="myFunction()">Save Complete</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+</form>
 
+<form class="form-horizontal" method="POST" action="backend/pick_warehouse_scan_save" enctype="multipart/form-data">
+  {{ csrf_field() }}
 <div class="modal" tabindex="-1" id="scan_modal_single" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -133,16 +139,17 @@
         </button>
       </div>
       <div class="modal-body">
+        <input type="hidden" value="0" name="delivery_id" id="delivery_id_single">
         <table id="data-table-scan-single" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
       </div>
       <div class="modal-footer">
-        {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+        <button type="submit" class="btn btn-primary" onclick="myFunction()">Save Complete</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
-
+</form>
 
 <div class="myloading"></div>
 
@@ -219,6 +226,9 @@
               <div class="form-group row  " > 
   
                 <div class="col-md-12 ">
+
+                  <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+                  <br>
                   <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการเลขพัสดุบริษัทขนส่ง </span>
   
                   <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
@@ -280,9 +290,9 @@
           <div class="col-12">
             <div class="form-group row  " >
               <div class="col-md-12 ">
-                <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
-                <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
-                <table id="data-table-00022" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+                {{-- วุฒิปิดไว้ --}}
+                {{-- <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> --}}
+                {{-- <table id="data-table-00022" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> --}}
               </div>
             </div>
           </div>
@@ -367,7 +377,11 @@
 @section('script')
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
-
+<script>
+  function myFunction() {
+    confirm("ยืนยันการทำรายการ?");
+  }
+  </script>
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
           var id = "{{$id}}"; //alert(id);
@@ -395,9 +409,9 @@
                         },
                   columns: [
                       {data: 'column_001', title :'รหัสใบเบิก', className: 'text-center w231'},
-                      {data: 'column_002', title :'รายการบิลในใบเบิก', className: 'text-center '},
+                      {data: 'column_002', title :'รายการบิลในใบเบิก <u>(คลิกที่รายการเพื่อ Scan)</u>', className: 'text-center '},
                       {data: 'p_weight', title :'จำนวนกล่อง', className: 'text-center '},
-                      {data: 'column_003', title :'รายละเอียดลูกค้า', className: 'text-center '},
+                      // {data: 'column_003', title :'รายละเอียดลูกค้า', className: 'text-center '},
                       // {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการ Packing List </span> ', className: 'text-left',render: function(d) {
                       //   return d;
                       // }},
@@ -553,6 +567,10 @@
                         return d ;
                       }},
                       {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> พิมพ์เสร็จ  </span> ', className: 'text-center w80 ',render: function(d) {
+                        return d ;
+                      }},
+
+                      {data: 'column_007',   title :'<span style="vertical-align: middle;"><center> รายละเอียดลูกค้า  </span> ', className: 'text-center w80 ',render: function(d) {
                         return d ;
                       }},
              
@@ -1220,6 +1238,8 @@ setTimeout(function(){
       var id = "{{$id}}";  //alert(id);
            var packing_id = "{{$packing_id}}"; //alert(packing_id);
            var oTable0002;
+           var delivery_id = $(this).attr('delivery_id');
+          $('#delivery_id_more').val(delivery_id);
            $(function() {
              $.fn.dataTable.ext.errMode = 'throw';
                oTable0002 = $('#data-table-scan').DataTable({
@@ -1244,7 +1264,7 @@ setTimeout(function(){
                        // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},
                        {data: 'column_001', title :'<span style="vertical-align: middle;"> รายการจัดส่งรวมแพ็ค </span> ', className: 'text-left '},
                        {data: 'column_002', title :'<span style="vertical-align: middle;"><center> รายการสินค้า  </span> ', className: 'text-left '},
-                    
+                        {data: 'column_003', title :'<span style="vertical-align: middle;"><center> ข้อมูลอื่นๆ  </span> ', className: 'text-left '},
                    ],
                    rowCallback: function(nRow, aData, dataIndex){
                       // $(".myloading").hide();
@@ -1269,6 +1289,8 @@ setTimeout(function(){
     var id = "{{$id}}";  //alert(id);
           var packing_id = "{{$packing_id}}"; //alert(packing_id);
           var oTable0002;
+          var delivery_id = $(this).attr('delivery_id');
+          $('#delivery_id_single').val(delivery_id);
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
               oTable0002 = $('#data-table-scan-single').DataTable({
@@ -1293,7 +1315,7 @@ setTimeout(function(){
                       // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},
                       {data: 'column_001', title :'<span style="vertical-align: middle;"> รายการจัดส่งแยกแพ็ค (กรณีแยกบิล) </span> ', className: 'text-left '},
                       {data: 'column_002', title :'<span style="vertical-align: middle;"><center> รายการสินค้า  </span> ', className: 'text-left '},
-                      // {data: 'column_003', title :'<span style="vertical-align: middle;"><center>   </span> ', className: 'text-left '},
+                      {data: 'column_003', title :'<span style="vertical-align: middle;"><center> ข้อมูลอื่นๆ  </span> ', className: 'text-left '},
                    
                   ],
                   rowCallback: function(nRow, aData, dataIndex){

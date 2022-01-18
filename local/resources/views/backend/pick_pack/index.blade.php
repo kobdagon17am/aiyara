@@ -105,17 +105,16 @@
 
           <div class="row">
             <div class="col-12 d-flex ">
-
               <div class="col-md-3 d-flex  ">
                  <input id="startDate" type="text" autocomplete="off" placeholder="วันเริ่ม" value="" />
                 
                  &nbsp;
                  <input id="endDate"  autocomplete="off" placeholder="วันสิ้นสุด" value="" />
               </div>
-              <div class="col-md-3 d-flex  ">
-                <input id="startTime" type="text" autocomplete="off" class="form-control" placeholder="เวลาเริ่ม 00:00" value="" />
+              <div class="col-md-4 d-flex  ">
+                <input id="startTime" type="text" autocomplete="off" class="form-control" placeholder="เวลาเริ่ม 00:00:00 ใส่วันที่ก่อนค้นหา" value="" />
                 &nbsp;
-                <input id="endTime" type="text" autocomplete="off" class="form-control" placeholder="เวลาสิ้นสุด 23:59" value="" />
+                <input id="endTime" type="text" autocomplete="off" class="form-control" placeholder="เวลาสิ้นสุด 23:59:59 ใส่วันที่ก่อนค้นหา" value="" />
              </div>
               <div class="col-md-2">
                 <div class="form-group row"> &nbsp; &nbsp;

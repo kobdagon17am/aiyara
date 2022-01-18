@@ -433,6 +433,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('pick_warehouse', 'Pick_warehouseController');
     Route::post('pick_warehouse/datatable', 'Pick_warehouseController@Datatable')->name('pick_warehouse.datatable');
+    Route::post('pick_warehouse_scan_save', 'Pick_warehouseController@pick_warehouse_scan_save');
 
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
     // หน้าแรก

@@ -323,6 +323,14 @@
 
                     <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
+                    {{-- <div class="form-group row">
+                      <div class="col-md-12">
+                        <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ จัดส่งบิลเดียว </span>
+                      </div>
+                    </div>
+
+                    <table id="data-table-packing2" class="table table-bordered dt-responsive" style="width: 100%;"></table> --}}
+
               <?php //}?>
 
 							<center>
@@ -1019,7 +1027,6 @@ $(function() {
       });
 
     </script>
-
 
 
     <script type="text/javascript">

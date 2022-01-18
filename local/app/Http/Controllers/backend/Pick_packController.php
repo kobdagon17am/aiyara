@@ -326,22 +326,22 @@ class Pick_packController extends Controller
         $startDate = " AND delivery_date >= '".$request->startDate." ".$startTime."' " ;
         $endDate = " AND delivery_date <= '".$request->endDate." ".$endTime."' " ;
 
-
+// วุฒิเพิ่ม and status_to_wh=1
         $sTable = DB::select(" 
-        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk 
+        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 and status_to_wh=1 AND orders_id_fk is not NULL $branch_id_fk 
         $startDate
         $endDate
         UNION
-        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk 
+        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 and status_to_wh=1 AND orders_id_fk is not NULL $branch_id_fk 
         $startDate
         $endDate
         GROUP BY packing_code
      ");
       }else{
         $sTable = DB::select(" 
-        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk
+        select * from db_delivery WHERE status_pack=0 and status_pick_pack=0 and status_to_wh=1 AND orders_id_fk is not NULL $branch_id_fk
         UNION
-        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 AND orders_id_fk is not NULL $branch_id_fk GROUP BY packing_code
+        select * from db_delivery WHERE status_pack=1 and status_pick_pack=0 and status_to_wh=1 AND orders_id_fk is not NULL $branch_id_fk GROUP BY packing_code
      ");
       }
       

@@ -371,7 +371,7 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+
         if(isset($request->update_delivery_custom)){
 
             $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)." ");
@@ -540,54 +540,62 @@ class DeliveryController extends Controller
       		return redirect()->to(url("backend/delivery"));
       	}
 
-      	$arr = implode(',', $request->row_id);
+        // วุฒิเพิ่ม if มา
+        if(count($request->row_id)>1){
+          $arr = implode(',', $request->row_id);
 
-        DB::update(" UPDATE db_delivery SET status_pack='1',updated_at=now() WHERE id in ($arr)  ");
-
-        $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
-
-        $rsDeliveryAddr = DB::select("
-
-          SELECT
-          db_orders.address_sent_id_fk as addr
-          FROM
-          db_delivery
-          Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
-          WHERE db_delivery.id in ($arr) limit 1  ");
-
-  	      $DeliveryPackingCode = new \App\Models\Backend\DeliveryPackingCode;
-  	      if( $DeliveryPackingCode ){
-  	      	$DeliveryPackingCode->address_sent_id_fk = @$rsDeliveryAddr[0]->addr;
-  	      	$DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
-  	        $DeliveryPackingCode->save();
-  	      }
-
-  	     foreach ($rsDelivery as $key => $value) {
-    	     	$DeliveryPacking = new \App\Models\Backend\DeliveryPacking;
-    	     	$DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode->id;
-            $DeliveryPacking->packing_code = "P1".sprintf("%05d",$DeliveryPackingCode->id) ;
-    	     	$DeliveryPacking->delivery_id_fk = @$value->id;
-    	     	$DeliveryPacking->created_at = date('Y-m-d H:i:s');
-  	        $DeliveryPacking->save();
-
-  	     }
-
-         // เพื่อเอาไว้ไปทำตารางเบิก
-         DB::update(" UPDATE
+          DB::update(" UPDATE db_delivery SET status_pack='1',updated_at=now() WHERE id in ($arr)  ");
+  
+          $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+  
+          $rsDeliveryAddr = DB::select("
+  
+            SELECT
+            db_orders.address_sent_id_fk as addr
+            FROM
             db_delivery
-            Inner Join db_delivery_packing ON db_delivery.id = db_delivery_packing.delivery_id_fk
-            SET
-            db_delivery.packing_code=db_delivery_packing.packing_code_id_fk ");
-
-         // รหัสนี้สร้างใหม่เพื่อเอาไว้อ้างอิงให้มันชัดเจนยิ่งขึ้น
-         $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
-         foreach ($rsDelivery as $key => $value) {
-
-              $pc = "P1".sprintf("%05d",$value->packing_code) ;
-              DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' WHERE id=$value->id  ");
-            
-         }
-
+            Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
+            WHERE db_delivery.id in ($arr) limit 1  ");
+  
+            $DeliveryPackingCode = new \App\Models\Backend\DeliveryPackingCode;
+            if( $DeliveryPackingCode ){
+              $DeliveryPackingCode->address_sent_id_fk = @$rsDeliveryAddr[0]->addr;
+              $DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
+              $DeliveryPackingCode->save();
+            }
+  
+           foreach ($rsDelivery as $key => $value) {
+               $DeliveryPacking = new \App\Models\Backend\DeliveryPacking;
+               $DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode->id;
+              $DeliveryPacking->packing_code = "P1".sprintf("%05d",$DeliveryPackingCode->id) ;
+               $DeliveryPacking->delivery_id_fk = @$value->id;
+               $DeliveryPacking->created_at = date('Y-m-d H:i:s');
+              $DeliveryPacking->save();
+  
+           }
+  
+           // เพื่อเอาไว้ไปทำตารางเบิก
+           DB::update(" UPDATE
+              db_delivery
+              Inner Join db_delivery_packing ON db_delivery.id = db_delivery_packing.delivery_id_fk
+              SET
+              db_delivery.packing_code=db_delivery_packing.packing_code_id_fk ");
+  
+           // รหัสนี้สร้างใหม่เพื่อเอาไว้อ้างอิงให้มันชัดเจนยิ่งขึ้น
+           $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+           foreach ($rsDelivery as $key => $value) {
+  
+                $pc = "P1".sprintf("%05d",$value->packing_code) ;
+                DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' , status_to_wh=1 WHERE id=$value->id  ");
+              
+           }
+        }else{
+          $arr = implode(',', $request->row_id);
+          $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+          foreach ($rsDelivery as $key => $value) {
+            DB::select(" UPDATE db_delivery SET status_to_wh=1 WHERE id=$value->id  ");
+          }
+        }
         return redirect()->to(url("backend/delivery"));
 
       }elseif(isset($request->save_select_addr)){
@@ -797,7 +805,7 @@ class DeliveryController extends Controller
 
         SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price, db_orders.delivery_location, db_orders.charger_type, db_orders.fee_amt from db_delivery  
         Left Join db_orders ON db_orders.code_order = db_delivery.receipt
-        WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1
+        WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1 AND db_delivery.status_to_wh=0
         $branch_id_fk
         $business_location_id
         $receipt

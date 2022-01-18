@@ -695,8 +695,8 @@ class Pick_warehouseController extends Controller
       $sTable = DB::table('db_pick_pack_packing_code')
       // ->join('db_orders','db_pick_pack_packing_code.receipt','=','db_orders.code_order')
       // ->select('db_pick_pack_packing_code.*','db_orders.id as order_id')
-      ->where('db_pick_pack_packing_code.id',$reg->id);
-    // dd($sTable);
+      ->where('db_pick_pack_packing_code.id',$reg->id)->get();
+      
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) {
@@ -705,8 +705,9 @@ class Pick_warehouseController extends Controller
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
-// dd($row);
+
         $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+    
         if(!empty($DP)){
         
           $pn = '<div class="divTable"><div class="divTableBody">';
@@ -714,7 +715,12 @@ class Pick_warehouseController extends Controller
        
           foreach ($DP as $key => $value) {
              $delivery = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-        
+   
+              if($delivery[0]->status_scan_wh==1){
+                $color = 'style="color:green;"';
+              }else{
+                $color = '';
+              }
              if($delivery[0]->status_pack==1){
               $d1 = DB::select(" SELECT * FROM `db_delivery_packing` where packing_code_id_fk in (".$delivery[0]->packing_code.")  ");
               $arr1 = [];
@@ -730,14 +736,14 @@ class Pick_warehouseController extends Controller
               $rs2 = implode(',',$arr2);
               $pn .=     
                 '<div class="divTableRow">
-                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - <a href="javaScript:;" class="pack_modal" data_id="'.$value->id.'">'.@$delivery[0]->packing_code_desc.' (Packing list) : '.$rs2.' </a> </div> 
+                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - <a href="javaScript:;" delivery_id="'.$delivery[0]->id.'" '.$color.' class="pack_modal" data_id="'.$value->id.'">'.@$delivery[0]->packing_code_desc.' (Packing list) : '.$rs2.' </a> </div> 
                  </div>
               ';
              }else{
 
                 $pn .=     
                 '<div class="divTableRow">
-                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - <a href="javaScript:;" class="single_modal" data_id="'.$value->id.'">'.@$delivery[0]->receipt.' </a> </div> 
+                 <div class="divTableCell" style="text-align:left;font-weight:bold;"> - <a href="javaScript:;" delivery_id="'.$delivery[0]->id.'" '.$color.' class="single_modal" data_id="'.$value->id.'">'.@$delivery[0]->receipt.' </a> </div> 
                  </div>
               ';
 
@@ -1091,6 +1097,7 @@ GROUP BY db_order_products_list.product_id_fk
   db_pick_pack_packing.p_amt_box,
   db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
   db_pick_pack_packing.packing_code as packing_code,
+  db_delivery.user_scan,
   CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
   CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
   db_delivery.id as db_delivery_id,
@@ -1111,11 +1118,111 @@ GROUP BY db_order_products_list.product_id_fk
         $sQuery = \DataTables::of($sTable);
         return $sQuery
         ->addColumn('column_001', function($row) {
-          if(@$row->lists){
-            return '<b>'.$row->lists.'</b>' ;
-          }else{
-            return "-";
+          $customer = DB::table('db_delivery')->select('recipient_name')->where('id',$row->db_delivery_id)->first();
+          $user_name = "<br> บันทึกสแกน : ";
+          if($row->user_scan!=0 && $row->user_scan!=''){
+            $user_admin = DB::table('ck_users_admin')->where('id',$row->user_scan)->first();
+            if($user_admin){
+              $user_name .= 'คุณ '.$user_admin->name;
+            }
           }
+     
+          $Products = DB::select("
+  
+          (SELECT 
+          
+          db_delivery.orders_id_fk,
+          db_order_products_list.product_id_fk,
+          db_order_products_list.product_name,
+          db_order_products_list.product_unit_id_fk,
+          SUM(db_order_products_list.amt) AS amt ,
+          dataset_product_unit.product_unit,
+          db_orders.code_order,
+          db_orders.id as orders_id_fk
+          
+          FROM `db_order_products_list` 
+          left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+          left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+          left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+          LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+          
+          WHERE type_product='product' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
+          
+          GROUP BY db_order_products_list.product_id_fk
+          )
+          
+          UNION
+          
+          (
+          SELECT 
+          
+          db_delivery.orders_id_fk,
+          db_order_products_list.product_id_fk,
+          db_order_products_list.product_name,
+          db_order_products_list.product_unit_id_fk,
+          SUM(db_order_products_list.amt) AS amt ,
+          dataset_product_unit.product_unit,
+          db_orders.code_order,
+          db_orders.id as orders_id_fk
+          
+          FROM `db_order_products_list` 
+          left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+          left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+          left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+          LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+          
+          WHERE type_product='promotion' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
+          
+          GROUP BY db_order_products_list.product_id_fk
+          )
+          
+          
+                           ");
+          
+                        $sum_amt = 0 ;
+                        $r_ch_t = '';
+
+                   if(@$Products){
+                        foreach ($Products as $key => $value) {
+
+                // บิลปกติ
+                $arr_inv = [];
+                $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
+                LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
+                left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+                left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+                WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='product'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
+                if(@$p1){
+                  foreach (@$p1 as $inv) {
+                      array_push($arr_inv,@$inv->code_order);
+                  }
+                }
+
+                // บิลโปร
+                $p2 = DB::select(" 
+                select db_orders.code_order 
+                FROM `promotions_products` 
+                LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
+                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+                left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
+                left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
+                WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='promotion'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
+                if(@$p2){
+                  foreach (@$p2 as $inv) {
+                      array_push($arr_inv,@$inv->code_order);
+                  }
+                }
+
+              $invoice_code = implode(",",$arr_inv);
+              $r_ch_t .= $invoice_code.'<br>';
+        }}
+
+        if(@$row->lists){
+          return '<b>'.$row->lists.'</b><br><b>ผู้รับ : '.$customer->recipient_name.$user_name .'</b><br><br>'.$r_ch_t;
+        }else{
+          return "-";
+        }
+
         })
         ->escapeColumns('column_001')  
         ->addColumn('column_002', function($row) {
@@ -1241,12 +1348,12 @@ GROUP BY db_order_products_list.product_id_fk
   
                   
                   // $sum_amt += $value->amt;
+                  //เอาออก ('.@$invoice_code.')<br> 
                   $sum_amt += $c_amt_get;
                   $pn .=     
                   '<div class="divTableRow">
                   <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                   '.@$value->product_name.'</b><br>
-                  ('.@$invoice_code.')<br>
                   <font color=red>'.$r_ch_t.'</font>
                   </div>
                   <div class="divTableCell" style="text-align:center;">'.@$c_amt_get.'</div> 
@@ -1586,6 +1693,7 @@ ORDER BY db_pick_pack_packing.id
       db_pick_pack_packing.p_amt_box,
       db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
       db_pick_pack_packing.packing_code as packing_code,
+      db_delivery.user_scan,
       CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
       CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
       db_delivery.id as db_delivery_id,
@@ -1609,8 +1717,17 @@ ORDER BY db_pick_pack_packing.id
             $sQuery = \DataTables::of($sTable);
             return $sQuery
             ->addColumn('column_001', function($row) {
+              $customer = DB::table('db_delivery')->select('recipient_name')->where('id',$row->db_delivery_id)->first();
+              $user_name = "<br> บันทึกสแกน : ";
+              if($row->user_scan!=0 && $row->user_scan!=''){
+                $user_admin = DB::table('ck_users_admin')->where('id',$row->user_scan)->first();
+                if($user_admin){
+                  $user_name .= 'คุณ '.$user_admin->name;
+                }
+              }
+            
               if(@$row->lists){
-                return '<b>'.$row->lists.'</b>' ;
+                return '<b>'.$row->lists.'</b><br><b>ผู้รับ : '.$customer->recipient_name.$user_name ;
               }else{
                 return "-";
               }
@@ -1979,11 +2096,12 @@ ORDER BY db_pick_pack_packing.id
 
       $sTable = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk='$reg->packing_id' group by pick_pack_requisition_code_id_fk ");
       $sQuery = \DataTables::of($sTable);
+
       return $sQuery
 
       ->addColumn('column_001', function($row) {
         
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ");
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -1998,7 +2116,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_002', function($row) {
         
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ");
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -2018,7 +2136,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_004', function($row) {
           
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ");
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -2032,7 +2150,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_005', function($row) {
           
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ");
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
 
           $f = [] ;
           $tx = '';
@@ -2057,12 +2175,40 @@ ORDER BY db_pick_pack_packing.id
       ->addColumn('column_006', function($row) {
           return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
       })
+
       ->escapeColumns('column_006')  
+
+      ->addColumn('column_007', function($row) {
+        $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
+        if($p_code){
+            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$p_code->id)->orderBy('delivery_id_fk','asc')->get();
+            if(!empty($DP)){
+              $pn = '<div class="divTable"><div class="divTableBody">';
+              $arr = [];
+              foreach ($DP as $key => $value) {
+                  $pn .=     
+                    '<center> <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="พิมพ์ใบเบิก" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a><br><br><br>';
+              }
+                 $pn .= '</div>';  
+               return $pn;
+            }else{
+              return '-';
+            }
+        }else{
+          return '-';
+        }
+        })
 
       ->make(true);
     }
 
 
-
+    function pick_warehouse_scan_save(Request $r){
+      DB::table('db_delivery')->where('id',$r->delivery_id)->update([
+        'status_scan_wh' => 1,
+        'user_scan' => \Auth::user()->id,
+      ]);
+        return redirect()->back();
+    }
 
 }
