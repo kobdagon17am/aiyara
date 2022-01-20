@@ -114,7 +114,7 @@ class AipocketController extends Controller
 
                 if ($row->status == 'success') {
                     if (empty($row->banlance)) {
-                        $banlance = '';
+                        $banlance = '0';
                     } else {
                         $banlance = number_format($row->banlance);
                     }

@@ -23,7 +23,7 @@ class Runpv_AiStockis extends Model
 
 
                 $to_customer= DB::table('customers')
-                ->select('id','pv_aistockist','user_name','pv_mt_active','status_pv_mt','pv_mt','pv_tv','pv')
+                ->select('id','pv_aistockist','user_name','pv_mt_active','pv_tv_active','status_pv_mt','pv_mt','pv_tv','pv')
                 ->where('user_name', '=', $to_customer_user)
                 ->first();
 
@@ -65,15 +65,14 @@ class Runpv_AiStockis extends Model
                             $strtime_user = strtotime($to_customer->pv_mt_active);
                             $strtime = strtotime(date("Y-m-d"));
 
-                            if ($to_customer->status_pv_mt == 'first') {
-
-                                $start_month = date("Y-m");
-
-                                $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
+                            $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
                                     ->select('*')
                                     ->where('code', '=', 'pv_mt')
                                     ->first();
 
+                            if ($to_customer->status_pv_mt == 'first') {
+
+                                $start_month = date("Y-m");
                                 $pro_mt = $promotion_mt->pv;
                                 $pv_mt = $to_customer->pv_mt;
                                 $pv_mt_all = $pv + $pv_mt;
@@ -87,7 +86,6 @@ class Runpv_AiStockis extends Model
                                     $mt_mount_new = $mt_mount+2;
                                     $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
                                     $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
-
 
                                     $update_to_customer->pv_mt = $pv_mt_total;
                                     $update_to_customer->pv_mt_active = $mt_active;
@@ -107,14 +105,12 @@ class Runpv_AiStockis extends Model
 
 
                             } else {
-                                $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
-                                    ->select('*')
-                                    ->where('code', '=', 'pv_mt')
-                                    ->first();
 
-                                $pro_mt = $to_customer->pv;
+                                $pro_mt =  $promotion_mt->pv;
                                 $pv_mt = $to_customer->pv_mt;
                                 $pv_mt_all = $pv + $pv_mt;
+
+
 
                                 if ($strtime_user > $strtime) {
 
@@ -133,7 +129,10 @@ class Runpv_AiStockis extends Model
 
                                 }
 
+
+
                                 if ($pv_mt_all >= $pro_mt) {
+
 
                                     //หักลบค่อยอัพเดท
                                     $mt_mount = $pv_mt_all / $pro_mt;
@@ -143,6 +142,7 @@ class Runpv_AiStockis extends Model
                                     $strtime = strtotime($start_month);
                                     $mt_active = strtotime("+$mt_mount_new Month", $strtime);
                                     $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
+
 
                                     $update_to_customer->pv_mt = $pv_mt_total;
                                     $update_to_customer->pv_mt_active =  $mt_active;
@@ -157,6 +157,8 @@ class Runpv_AiStockis extends Model
                             }
 
                         } elseif ($type == 3) { //รักษาคุณสมบัติท่องเที่ยง
+
+
 
                             $strtime_user = strtotime($to_customer->pv_tv_active);
                             $strtime = strtotime(date("Y-m-d"));
@@ -194,14 +196,14 @@ class Runpv_AiStockis extends Model
                                 $tv_active = strtotime("+$add_mount Month", $strtime);
                                 $tv_active = date('Y-m-1', $tv_active); //วันที่ tv_active
 
-                                $update_mt = DB::table('customers')
+                                $update_tv = DB::table('customers')
                                     ->where('id', $to_customer->id)
                                     ->update(['pv_tv' => $pv_tv_total, 'pv_tv_active' => $tv_active]);
                                 //dd($tv_active);
 
                             } else {
                                 //dd('อัพเดท');
-                                $update_mt = DB::table('customers')
+                                $update_tv = DB::table('customers')
                                     ->where('id', $to_customer->id)
                                     ->update(['pv_tv' => $pv_tv_all]);
                             }
@@ -220,6 +222,8 @@ class Runpv_AiStockis extends Model
                 }
                 if ($resule['status'] == 'success') {
                   $update_ai_stockist->save();
+                  $update_to_customer->save();
+                  $update_use->save();
                     DB::commit();
                     //DB::rollback();
                     return $resule;

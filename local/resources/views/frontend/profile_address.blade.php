@@ -11,7 +11,7 @@
  		<h4>แก้ไขที่อยู่การจัดส่ง</h4>
  	</div>
  	<div class="card-block">
- 		<form action="{{route('edit_address')}}" method="POST">
+ 		<form action="{{route('edit_address')}}" method="POST" autocomplete="off">
  			@csrf
  		{{-- 	<div class="form-group row">
  				<div class="col-sm-12">
@@ -94,7 +94,7 @@
 
  				<div class="col-sm-3">
  					<label>รหัสไปษณีย์</label>
- 					<input type="text" class="form-control" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ @$customer->zipcode }}">
+ 					<input type="text" class="form-control" autocomplete="off" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ @$customer->zipcode }}">
  				</div>
  			</div>
 
@@ -127,7 +127,7 @@
  										<span class="input-group-addon">
  											<i class="fa fa-lock"></i>
  										</span>
- 										<input type="password" name="password" class="form-control" placeholder="Password" required="">
+ 										<input type="password" name="password" class="form-control" autocomplete="off" placeholder="Password" required="">
  									</div>
  								</div>
  								<div class="col-sm-2">
