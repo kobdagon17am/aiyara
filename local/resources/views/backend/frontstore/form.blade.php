@@ -189,7 +189,9 @@
 if(@$sRow->check_press_save==2){
 
     if(@$sRow->pay_type_id_fk==6||@$sRow->pay_type_id_fk==8||@$sRow->pay_type_id_fk==9||@$sRow->pay_type_id_fk==10||@$sRow->pay_type_id_fk==11){
-      $pay_type_transfer_aicash = " disabled ";
+      // วุฒิแก้
+      // $pay_type_transfer_aicash = " disabled ";
+      $pay_type_transfer_aicash = " ";
     }else{
       $pay_type_transfer_aicash = "";
     }
@@ -1034,7 +1036,7 @@ if(@$sRow->check_press_save==2){
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_02?>">
                           <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->province?>"
-                           class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ </label>
+                           class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_02" value="2" <?=(@$sRow->delivery_location==2?'checked':'')?> {{@$dis_addr}}  > <label for="addr_02"> ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ {{@$sRow->delivery_location}} </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
@@ -1253,7 +1255,9 @@ if(@$sRow->check_press_save==2){
     @if(@$sRow->check_press_save==2  && ($sRow->pay_type_id_fk!="" || $sRow->pay_type_id_fk!=0) && ($sRow->pay_type_id_fk==1 || $sRow->pay_type_id_fk==8 || $sRow->pay_type_id_fk==10 || $sRow->pay_type_id_fk==11 || $sRow->pay_type_id_fk==12 || $sRow->pay_type_id_fk==3 || $sRow->pay_type_id_fk==6 || $sRow->pay_type_id_fk==9 ) )
 
       @php
-      $disAfterSave = 'disabled'
+      // วุฒิลบ disabled
+      // $disAfterSave = 'disabled'
+      $disAfterSave = ''
       @endphp
 
     @ELSE
@@ -2446,11 +2450,16 @@ if(@$sRow->check_press_save==2){
 
             });
 
-
+            function checkStatus(){
+             var status = "{{$sRow->approve_status}}";
+            if( status != 1 && status != 2){
+              $("input").prop("disabled", true);
+              $("select").prop("disabled", true);
+              }
+           }
 
          $(document).ready(function() {
-
-
+        
             $(document).on('click', '.btnSaveChangePurchaseType', function(event) {
                var orders_id_fk = "{{@$sRow->id}}";
                var purchase_type_id_fk = $("#purchase_type_id_fk").val();
@@ -4429,7 +4438,8 @@ $(document).ready(function() {
 
 // เริ่มต้น
             $(document).ready(function() {
-
+                fnShippingCalculate(0);
+                checkStatus();
 
                     var pay_type_id_fk =  $('#pay_type_id_fk').val();
                     var cnt_slip =  "{{@$cnt_slip}}";
@@ -4493,7 +4503,7 @@ $(document).ready(function() {
 
                 });
 
-                fnShippingCalculate(0);
+           
                 $('.ShippingCalculate').on('click change', function(e) {
 
                     var v = $(this).val();
