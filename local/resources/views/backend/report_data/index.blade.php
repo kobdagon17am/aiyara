@@ -40,7 +40,7 @@
                       <div class="col-md-9">
                         <select id="report_data" name="report_data" class="form-control select2-templating " required="" >
                             <option value="">-เลือกรายงาน-</option>
-                            <option value="inventory">รายงานสินค้าคงคลัง</option> 
+                            {{-- <option value="inventory">รายงานสินค้าคงคลัง</option>  --}}
                             <option value="inventory_in">รายงานรับเข้าสินค้า</option> 
                             <option value="inventory_out">รายงานจ่ายสินค้า</option> 
                             <option value="inventory_borrow">รายงานเบิก-ยืม</option> 
@@ -57,7 +57,7 @@
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label">วันที่เริ่ม : </label>
                       <div class="col-md-9">
-                        <input id="startDate_data" class="form-control" autocomplete="off" value="{{ @$sd }}" />
+                        <input id="startDate_data" class="form-control" value="{{date('Y-m-d')}}" autocomplete="off" value="{{ @$sd }}" />
                       </div>
                     </div>
                   </div>
@@ -66,7 +66,7 @@
                     <div class="form-group row">
                         <label for="zone_id_fk" class="col-md-2 col-form-label"> วันที่สิ้นสุด : </label>
                         <div class="col-md-10">
-                            <input id="endDate_data" class="form-control" autocomplete="off" value="{{ @$ed }}" />
+                            <input id="endDate_data" class="form-control" value="{{date('Y-m-d')}}" autocomplete="off" value="{{ @$ed }}" />
                         </div>
                       </div>
                 </div>
@@ -262,11 +262,11 @@
 
        <div class="row" >
 
-               <div class="col-md-6 " >
+               {{-- <div class="col-md-6 " >
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label"> สินค้า : </label>
                       <div class="col-md-9">
-                         <?php $dis03 = !empty(@$sRow->condition_product)?'disabled':'' ?>
+                         <php $dis03 = !empty(@$sRow->condition_product)?'disabled':'' ?>
                          <select name="product" id="product" class="form-control select2-templating " <?=$dis03?> >
                               <option value="">-รหัสสินค้า : ชื่อสินค้า-</option>
                                  @if(@$Products)
@@ -279,14 +279,14 @@
                             </select>
                       </div>
                     </div>
-                  </div>
+                  </div> --}}
 
 
-                  <div class="col-md-6 " >
+                  {{-- <div class="col-md-6 " >
                     <div class="form-group row">
                       <label for="lot_number" class="col-md-2 col-form-label"> Lot-No. : </label>
                       <div class="col-md-10">
-                           <?php $dis04 = !empty(@$sRow->condition_lot_number)?'disabled':'' ?>
+                           <php $dis04 = !empty(@$sRow->condition_lot_number)?'disabled':'' ?>
                            <select name="lot_number" id="lot_number" class="form-control select2-templating " <?=$dis04?> >
                               <option value="">-Lot Number-</option>
                                   @if(@$lot_number)
@@ -299,7 +299,7 @@
                             </select>
                       </div>
                     </div>
-                  </div>
+                  </div> --}}
 
                 </div>
 
@@ -360,20 +360,24 @@
                   event.preventDefault();
 
                   var report_data = $('#report_data').val();
-                  var start_date_data = $('#start_date_data').val();
-                  var end_date_data = $('#end_date_data').val();
+                  var startDate_data = $('#startDate_data').val();
+                  var endDate_data = $('#endDate_data').val();
              
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var start_date = $('#start_date').val();
                   var end_date = $('#end_date').val();
 
-                  var product = $('#product').val();
-                  var lot_number = $('#lot_number').val();
+                //   var product = $('#product').val();
+                //   var lot_number = $('#lot_number').val();
                   var warehouse_id_fk = $('#warehouse_id_fk').val();
                   var zone_id_fk = $('#zone_id_fk').val();
                   var shelf_id_fk = $('#shelf_id_fk').val();
                   var shelf_floor = $('#shelf_floor').val();
+                  if(report_data==''){
+                    alert('กรุณาเลือกรายงาน');
+                    return false;
+                  }
 
                   $.ajax({
 
@@ -381,14 +385,14 @@
                             url: " {{ url('backend/report_data/export_excel') }} ", 
                             data:{ _token: '{{csrf_token()}}',
                             report_data: report_data,
-                            start_date_data: start_date_data,
-                            end_date_data: end_date_data,
+                            startDate_data: startDate_data,
+                            endDate_data: endDate_data,
                             business_location_id_fk: business_location_id_fk,
                             branch_id_fk: branch_id_fk,
                             start_date: start_date,
                             end_date: end_date,
-                            product: product,
-                            lot_number: lot_number,
+                            // product: product,
+                            // lot_number: lot_number,
                             warehouse_id_fk: warehouse_id_fk,
                             zone_id_fk: zone_id_fk,
                             shelf_id_fk: shelf_id_fk,
@@ -657,6 +661,41 @@
          $('#endDate').change(function(event) {
          	if($('#startDate').val()>$(this).val()){
            		$('#startDate').val($(this).val());
+       		}
+         });
+
+        //  
+
+        $('#startDate_data').datepicker({
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            // setDate: today,
+            // minDate: today,
+            // maxDate: function () {
+            //     return $('#endDate').val();
+            // }
+        });
+
+        $('#endDate_data').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function () {
+                // return $('#start_date').val();
+            }
+        });
+
+         $('#startDate_data').change(function(event) {
+         	if($('#endDate_data').val()<$(this).val()){
+           		$('#endDate_data').val($(this).val());
+       		}
+         });
+
+         $('#endDate_data').change(function(event) {
+         	if($('#startDate_data').val()>$(this).val()){
+           		$('#startDate_data').val($(this).val());
        		}
          });
 
