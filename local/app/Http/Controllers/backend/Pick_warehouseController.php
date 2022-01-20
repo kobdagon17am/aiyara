@@ -2160,8 +2160,6 @@ ORDER BY db_pick_pack_packing.id
                  
                 <a href="backend/pick_warehouse/print_envelope/'.$v->recipient_code.'" target=_blank ><i class="bx bx-printer grow " data-toggle="tooltip" data-placement="left" title="ใบปะหน้ากล่อง" style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> 
 
-                <a href="javascript: void(0);" target=_blank data-id="'.$v->recipient_code.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
-
                  </center>' ;
 
              array_push($f,@$tx);
@@ -2172,8 +2170,30 @@ ORDER BY db_pick_pack_packing.id
       })
       ->escapeColumns('column_005')
 
+      ->addColumn('column_008', function($row) {
+          
+        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
+
+        $f = [] ;
+        $tx = '';
+        foreach ($d as $key => $v) {
+
+            $tx = '<center> 
+
+              <a href="javascript: void(0);" target=_blank data-id="'.$v->recipient_code.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
+
+               </center>' ;
+
+           array_push($f,@$tx);
+        }
+        $f = implode('<br><br>',$f);
+        return $f;
+
+    })
+    ->escapeColumns('column_008')
+
       ->addColumn('column_006', function($row) {
-          return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
+          return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
       })
 
       ->escapeColumns('column_006')  
@@ -2187,7 +2207,7 @@ ORDER BY db_pick_pack_packing.id
               $arr = [];
               foreach ($DP as $key => $value) {
                   $pn .=     
-                    '<center> <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="พิมพ์ใบเบิก" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a><br><br><br>';
+                    '<center> <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a><br><br><br>';
               }
                  $pn .= '</div>';  
                return $pn;

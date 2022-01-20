@@ -91,6 +91,7 @@ return [
     'get_money_back_type' => 'Types of Refund',
     'ce_regis_gift' => 'Gift Type',
     'transfer_branch_get' => 'Receive Products from transfer between branches',
+    'report_data' => 'Reports',
     ],
 
 // /backend/index

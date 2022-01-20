@@ -323,13 +323,14 @@
 
                     <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
-                    {{-- <div class="form-group row">
+                    <br>
+                    <div class="form-group row">
                       <div class="col-md-12">
                         <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ จัดส่งบิลเดียว </span>
                       </div>
                     </div>
 
-                    <table id="data-table-packing2" class="table table-bordered dt-responsive" style="width: 100%;"></table> --}}
+                    <table id="data-table-packing2" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
               <?php //}?>
 
@@ -871,6 +872,116 @@ $(function() {
           });
 
 
+          $(document).on('click','.btnSearchInList',function(){
+                get_data();
+        });
+
+
+$(document).on('click','.select_all',function(){
+  var tbody = $('#data-table').find('tbody');
+  var tr = tbody.find('tr');
+  tr.each(function( index ) {
+      $(this).find('.dt-checkboxes').trigger('click');
+});
+});
+
+$(document).ready(function(){
+  get_data2();
+});
+
+function get_data2() {
+var oTable ;
+
+   $.fn.dataTable.ext.errMode = 'throw';
+  oTable = $('#data-table-packing2').DataTable({
+  "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+  destroy: true,
+      processing: true,
+      serverSide: true,
+      scroller: true,
+      scrollCollapse: true,
+      scrollX: true,
+      iDisplayLength: 20,
+      lengthMenu: [1000],
+      pageLength: 0,
+      ajax: {
+        url: '{{ route('backend.delivery_packing_code.datatable2') }}',
+        data: function ( d ) {
+          d.Where={};
+          $('.myWhere').each(function() {
+            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              d.Where[$(this).attr('name')] = $.trim($(this).val());
+            }
+          });
+          d.Like={};
+          $('.myLike').each(function() {
+            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              d.Like[$(this).attr('name')] = $.trim($(this).val());
+            }
+          });
+          d.Custom={};
+          $('.myCustom').each(function() {
+            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+              d.Custom[$(this).attr('name')] = $.trim($(this).val());
+            }
+          });
+          oData = d;
+        },
+        method: 'POST',
+       data: {
+        "_token": "{{ csrf_token() }}", 
+         },
+      },
+            columns: [
+                {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
+                {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+                {data: 'customer_name', title :'<center>ชื่อลูกค้าตามใบเสร็จ </center>', className: 'text-center'},
+                {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                        return d ;
+                    }},
+                // {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
+                // {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
+                {data: 'status_delivery',   title :'<center>สถานะการเบิก </center>', className: 'text-center ',render: function(d) {
+                  return '-รอจัดเบิก-';
+                }},
+                // {data: 'business_location', title :'<center>Tool</center>', className: 'text-center'},
+            ],
+
+            rowCallback: function(nRow, aData, dataIndex){
+
+              // ยกเว้นกรณีส่งฟรี 
+              if(aData['check_case_sent_free']=="sent_free"){
+
+              }else{
+
+                    if(aData['status_pack'] != "1" && aData['delivery_location']==4){
+                      //  alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
+                       $("td:eq(0)", nRow).prop('disabled',true); 
+                       $("td:eq(1)", nRow).prop('disabled',true); 
+                       $("td:eq(2)", nRow).prop('disabled',true); 
+                       $("td:eq(3)", nRow).prop('disabled',true); 
+                       $("td:eq(4)", nRow).prop('disabled',true); 
+                       $("td:eq(5)", nRow).prop('disabled',true); 
+                       $("td:eq(6)", nRow).prop('disabled',true); 
+                       $("td:eq(7)", nRow).prop('disabled',true); 
+                       $("td:eq(8)", nRow).prop('disabled',true); 
+                       $("td:eq(9)", nRow).prop('disabled',true); 
+                    }
+              }
+              
+
+              $("td:eq(6)", nRow).prop('disabled',true); 
+              
+
+              $(".myloading").hide();
+
+            }
+        });
+        }
+
+          
 </script>
 
   <script> 

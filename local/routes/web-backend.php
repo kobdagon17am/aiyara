@@ -622,6 +622,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('delivery_packing_code', 'DeliveryPackingCodeController');
     Route::post('delivery_packing_code/datatable', 'DeliveryPackingCodeController@Datatable')->name('delivery_packing_code.datatable');
+    Route::post('delivery_packing_code/datatable2', 'DeliveryPackingCodeController@Datatable2')->name('delivery_packing_code.datatable2');
 
     Route::resource('pick_warehouse_packing_code', 'Pick_warehousePackingCodeController');
     Route::post('pick_warehouse_packing_code/datatable', 'Pick_warehousePackingCodeController@Datatable')->name('pick_warehouse_packing_code.datatable');
@@ -969,6 +970,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('requisition_between_branch/datatable-list-approve', 'RequisitionBetweenBranchController@dtListApprove')->name('requisition_between_branch.dt-list-approve');
     Route::post('requisition_between_branch/datatable-list-wait-approve', 'RequisitionBetweenBranchController@dtListWaitApprove')->name('requisition_between_branch.dt-list-wait-approve');
 
+
+    // รายงานต่างๆ วุฒิเพิ่มมา
+    Route::get('report_data', 'ReportDataController@index')->name('report_data.index');
+    // Route::get('report_data/inventory', 'ReportDataController@inventory');
+    Route::post('report_data/export_excel', 'ReportDataController@export_excel');
 
 	#===========================================================================================
 
