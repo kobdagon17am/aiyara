@@ -175,8 +175,8 @@
                                                             <img src="{{ asset('frontend/assets/images/scb.png') }}"
                                                                 class="img-fluid" alt="Responsive image" width="80">
                                                             <h5 class="m-t-20"><span
-                                                                    class="text-c-blue">019-7-03027-3</span></h5>
-                                                            <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
+                                                                    class="text-c-blue">401-110-1843</span></h5>
+                                                            <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>บริษัท ไอยรา แพลนเน็ต จำกัด</p>
                                                             {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
                                                         </div>
                                                     </div>
@@ -519,32 +519,37 @@
                     </div>
                     <div class="row invoive-info">
                         <div class="col-md-4 col-xs-12 invoice-client-info">
-                            <h6>ที่อยู่การจัดส่ง :</h6>
-                            @if($address)
-                                <p><b>{{ $address['name'] }}</b><br>
-                                    @if ($address['tel']) Tel: {{ $address['tel'] }}
-                                        <br>@endif
-                                    @if ($address['email']) Email:
-                                        {{ $address['email'] }}<br>@endif
-                                    @if ($address['house_no']) {{ $address['house_no'] }},
-                                    @endif
-                                    @if ($address['moo']) หมู่.{{ $address['moo'] }},
-                                    @endif
-                                    @if ($address['house_name'])
-                                        บ.{{ $address['house_name'] }},@endif
-                                    @if ($address['soi']) ซอย.{{ $address['soi'] }},
-                                    @endif
-                                    @if ($address['road']) ถนน.{{ $address['road'] }},
-                                    @endif
+                          <?php
+                          //'sent_address','sent_address_card','sent_office','sent_address_other'
 
-                                    @if ($address['district_name'])<br>
-                                        ต.{{ $address['district_name'] }},@endif
-                                    @if ($address['amphures_name'])
-                                        อ.{{ $address['amphures_name'] }},@endif
-                                    @if ($address['provinces_name'])
-                                        จ.{{ $address['provinces_name'] }},@endif
-                                    @if ($address['zipcode']) {{ $address['zipcode'] }}
-                                    @endif
+                          if($data->delivery_location_frontend == 'sent_address'){
+                           $address_sent = 'ที่อยู่ตามที่ลงทะเบียน';
+                          }elseif ($data->delivery_location_frontend == 'sent_address_card') {
+                           $address_sent = 'ที่อยู่ตามบัตรประชาชน';
+                          }elseif ($data->delivery_location_frontend == 'sent_office') {
+                           $address_sent = 'รับที่สาขา';
+                          }elseif ($data->delivery_location_frontend == 'sent_address_other') {
+                           $address_sent = 'ที่อยู่อื่นๆ';
+                          }else {
+                           $address_sent = '';
+                          }
+
+                          ?>
+                            <h6>ที่อยู่การจัดส่ง : <span class="label label-{{ $data->css_class }}">{{ $address_sent }}</span></h6>
+                            @if ($address)
+                                <p><b>{{ $address['name'] }}</b><br>
+                                    @if ($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
+                                    @if ($address['email']) Email: {{ $address['email'] }}<br>@endif
+                                    @if ($address['house_no']) {{ $address['house_no'] }},@endif
+                                    @if ($address['moo'] != '-' and $address['moo'] != '') หมู่.{{ $address['moo'] }},@endif
+                                    @if ($address['house_name'] != '-' and $address['house_name'] != '') บ.{{ $address['house_name'] }},@endif
+                                    @if ($address['soi'] != '-' and $address['soi'] != '') ซอย.{{ $address['soi'] }},@endif
+                                    @if ($address['road'] != '-' and $address['road'] != '') ถนน.{{ $address['road'] }},@endif
+
+                                    @if ($address['district_name'] != '-' and $address['district_name'] != '')<br> ต.{{ $address['district_name'] }},@endif
+                                    @if ($address['amphures_name'] != '-' and $address['amphures_name'] != '') อ.{{ $address['amphures_name'] }},@endif
+                                    @if ($address['provinces_name'] != '-' and $address['provinces_name'] != '') จ.{{ $address['provinces_name'] }},@endif
+                                    @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
                                 </p>
                             @else
                                 <p><b> Address Is Null</b>
