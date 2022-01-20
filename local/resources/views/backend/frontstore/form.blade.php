@@ -2459,7 +2459,7 @@ if(@$sRow->check_press_save==2){
            }
 
          $(document).ready(function() {
-        
+
             $(document).on('click', '.btnSaveChangePurchaseType', function(event) {
                var orders_id_fk = "{{@$sRow->id}}";
                var purchase_type_id_fk = $("#purchase_type_id_fk").val();
@@ -4503,7 +4503,7 @@ $(document).ready(function() {
 
                 });
 
-           
+
                 $('.ShippingCalculate').on('click change', function(e) {
 
                     var v = $(this).val();
