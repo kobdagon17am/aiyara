@@ -78,9 +78,15 @@ class ReportDataController extends Controller
 			   'font'  => array(
 			        'bold'  => true,
 			        'color' => array('rgb' => '002699'),
-			        // 'size'  => 16,
+			        'size'  => 10,
 			        'name'  => 'Verdana'
-			    ));
+         ),
+         'alignment' => [
+          'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+          'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+      ],
+        
+        );
 
 			for ($j=0; $j < $amt_sheet ; $j++) {
 
@@ -91,30 +97,93 @@ class ReportDataController extends Controller
 				$spreadsheet->setActiveSheetIndex($j);
 				$sheet = $spreadsheet->getActiveSheet();
 				$sheet->setTitle("Sheet".($j+1));
+    
+        $head = 2;
+        $date = 1;
+        $sheet->mergeCells("A".$date.":B".$date);  
+        $sheet->setCellValue('A'.$date, 'วันที่ '.$request->startDate_data.' ถึง '.$request->endDate_data);
 
-				// $sRow = \App\Models\Backend\Consignments::where('pick_pack_requisition_code_id_fk',$request->id)->get();
+        if($request->report_data=='inventory_in'){
+          $sheet->setCellValue('A'.$head, 'รหัสสินค้า');
+          $sheet->setCellValue('B'.$head, 'ชื่อสินค้า');
+          $sheet->setCellValue('C'.$head, 'หน่วยนับ');
+          $sheet->setCellValue('D'.$head, 'จำนวนยกมา');
+          $sheet->setCellValue('E'.$head, 'รับเข้า');
+          $sheet->setCellValue('F'.$head, 'จำนวนยกไป');
+        }
 
-				$sheet->setCellValue('A1', 'Consignment No. (หมายเลขพัสดุ)');
-				$sheet->setCellValue('B1', 'Customer Ref No. (เลขอ้างอิง)');
-				$sheet->setCellValue('C1', 'Sender Code (รหัสผู้ส่ง)');
-				$sheet->setCellValue('D1', 'Recipient Code (รหัสผู้รับ)');
-				$sheet->setCellValue('E1', 'Recipient Name (ชื่อผู้รับ)');
-				$sheet->setCellValue('F1', 'Address (ที่อยู่ผู้รับ)');
-				$sheet->setCellValue('G1', 'Postcode (รหัสไปรษณีย์ผู้รับ)');
-				$sheet->setCellValue('H1', 'Mobile (เบอร์มือถือผู้รับ)');
-				$sheet->setCellValue('I1', 'Contact Person (ชื่อผู้ติดต่อ)');
-				$sheet->setCellValue('J1', 'Phone No. (เบอร์ผู้รับ)');
-				$sheet->setCellValue('K1', 'Email (อีเมลผู้รับ)');
-				$sheet->setCellValue('L1', 'Declare Value (มูลค่าสินค้า)');
-				$sheet->setCellValue('M1', 'COD Amount (ยอดเก็บเงินปลายทาง)');
-				$sheet->setCellValue('N1', 'Remark (หมายเหตุ)');
-				$sheet->setCellValue('O1', 'Total Box (จำนวนกล่อง)');
-				$sheet->setCellValue('P1', 'Sat Del (จัดส่งวันเสาร์)');
-				$sheet->setCellValue('Q1', 'HCR (Y/N)');
-				$sheet->setCellValue('R1', 'INVR (Y/N)');
-				$sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
+        if($request->report_data=='inventory_out'){
+          $sheet->setCellValue('A'.$head, 'รหัสสินค้า');
+          $sheet->setCellValue('B'.$head, 'ชื่อสินค้า');
+          $sheet->setCellValue('C'.$head, 'หน่วยนับ');
+          $sheet->setCellValue('D'.$head, 'จำนวนยกมา');
+          $sheet->setCellValue('E'.$head, 'จ่ายออก');
+          $sheet->setCellValue('F'.$head, 'จำนวนยกไป');
+        }
+
+        if($request->report_data=='inventory_borrow'){
+          $sheet->setCellValue('A'.$head, 'รหัสสินค้า');
+          $sheet->setCellValue('B'.$head, 'ชื่อสินค้า');
+          $sheet->setCellValue('C'.$head, 'หน่วยนับ');
+          $sheet->setCellValue('D'.$head, 'ยอดยืม');
+          $sheet->setCellValue('E'.$head, 'ยอดคืน');
+          $sheet->setCellValue('F'.$head, 'คงค้าง');
+        }
+
+        if($request->report_data=='inventory_claim'){
+          $sheet->setCellValue('A'.$head, 'รหัสสินค้า');
+          $sheet->setCellValue('B'.$head, 'ชื่อสินค้า');
+          $sheet->setCellValue('C'.$head, 'หน่วยนับ');
+          $sheet->setCellValue('D'.$head, 'ยอดเคลม');
+        }
+
+        if($request->report_data=='inventory_remain'){
+          $sheet->setCellValue('A'.$head, 'รหัสสินค้า');
+          $sheet->setCellValue('B'.$head, 'ชื่อสินค้า');
+          $sheet->setCellValue('C'.$head, 'หน่วยนับ');
+          $sheet->setCellValue('D'.$head, 'ยอดคงเหลือ');
+        }
+
+				// $sheet->setCellValue('A1', 'รหัสสินค้า');
+				// $sheet->setCellValue('B1', 'ชื่อสินค้า');
+				// $sheet->setCellValue('C1', 'หน่วยนับ');
+				// $sheet->setCellValue('D1', 'จำนวนยกมา');
+				// $sheet->setCellValue('E1', 'ยอดเข้า');
+				// $sheet->setCellValue('F1', 'ยอดออก');
+				// $sheet->setCellValue('G1', 'Postcode (รหัสไปรษณีย์ผู้รับ)');
+				// $sheet->setCellValue('H1', 'Mobile (เบอร์มือถือผู้รับ)');
+				// $sheet->setCellValue('I1', 'Contact Person (ชื่อผู้ติดต่อ)');
+				// $sheet->setCellValue('J1', 'Phone No. (เบอร์ผู้รับ)');
+				// $sheet->setCellValue('K1', 'Email (อีเมลผู้รับ)');
+				// $sheet->setCellValue('L1', 'Declare Value (มูลค่าสินค้า)');
+				// $sheet->setCellValue('M1', 'COD Amount (ยอดเก็บเงินปลายทาง)');
+				// $sheet->setCellValue('N1', 'Remark (หมายเหตุ)');
+				// $sheet->setCellValue('O1', 'Total Box (จำนวนกล่อง)');
+				// $sheet->setCellValue('P1', 'Sat Del (จัดส่งวันเสาร์)');
+				// $sheet->setCellValue('Q1', 'HCR (Y/N)');
+				// $sheet->setCellValue('R1', 'INVR (Y/N)');
+				// $sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
 
 				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
+        $sheet->getStyle('A2:S2')->applyFromArray($styleArray);
+
+        if($request->report_data=='inventory_remain'){
+          // $sRow = \App\Models\Backend\Consignments::where('pick_pack_requisition_code_id_fk',$request->id)->get();
+
+          $Stock = \App\Models\Backend\Check_stock::
+          // where('product_id_fk',$request->product_id_fk)
+           where(DB::raw($request->business_location_id_fk_01), "=", $request->business_location_id_fk_02)
+          ->where(DB::raw($request->branch_id_fk_01), "=", $request->branch_id_fk_02)
+          ->where(DB::raw($request->warehouse_id_fk_01), "=", $request->warehouse_id_fk_02)
+          ->where(DB::raw($request->zone_id_fk_01), "=", $request->zone_id_fk_02)
+          ->where(DB::raw($request->shelf_id_fk_01), "=", $request->shelf_id_fk_02)
+          ->where(DB::raw($request->shelf_floor_01), "=", $request->shelf_floor_02)
+          // ->where(DB::raw($request->lot_number_01), "=", $request->lot_number_02)
+          ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->startDate_data)
+          ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->endDate_data)
+          ->get();
+          dd($Stock);
+        }
 				
 				// $p_i = 0;
 				// for ($i=0; $i < count($sRow) ; $i++) {

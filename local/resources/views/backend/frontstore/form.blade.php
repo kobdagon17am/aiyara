@@ -2451,8 +2451,8 @@ if(@$sRow->check_press_save==2){
             });
 
             function checkStatus(){
-             var status = "{{$sRow->approve_status}}";
-            if( status != 1 && status != 2){
+             var status = "{{@$sRow->approve_status}}";
+            if( status != 1 && status != 2 && status != 0 && status != ''){
               $("input").prop("disabled", true);
               $("select").prop("disabled", true);
               }
