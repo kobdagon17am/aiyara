@@ -353,17 +353,18 @@ if(@$sRow->check_press_save==2){
                                   <label for="" class="col-md-4 col-form-label"> ประเภทการซื้อ : * </label>
                                   <div class="col-md-7">
 <?php //echo @$sRow->purchase_type_id_fk; ?>
-<?php //echo $ChangePurchaseType ?>
+
                          @if($ChangePurchaseType==1)
 
                                          <!-- Gift Voucher -->
-                                      @if(!empty(@$sRow->purchase_type_id_fk) && @$sRow->purchase_type_id_fk==5)
+
+                                      @if(  @$sRow->purchase_type_id_fk==5 )
                                            <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
                                            <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
                                       @ELSE
 <?php //echo @$sRow->purchase_type_id_fk;
 
-   if(@$sRow->purchase_type_id_fk==4 || @$sRow->purchase_type_id_fk==6){
+   if(@$sRow->purchase_type_id_fk==4 || @$sRow->purchase_type_id_fk==6 || @$sRow->status_run_pv== 'success'){
       $disAiStockist = " disabled ";
    }else{
       $disAiStockist = " ";
@@ -646,8 +647,7 @@ if(@$sRow->check_press_save==2){
 
            @if($ChangePurchaseType==1)
 
-                @if(!empty(@$sRow->purchase_type_id_fk) and @$sRow->approve_status != 2 and @$sRow->approve_status != 4
-                and @$sRow->approve_status != 5 and @$sRow->approve_status != 9)
+                @if(!empty(@$sRow->purchase_type_id_fk) and $sRow->status_run_pv != 'success')
 
                  @if(@$sRow->purchase_type_id_fk==5)
                      @ELSE
@@ -798,7 +798,6 @@ if(@$sRow->check_press_save==2){
     $div_cost = "";
   }
 ?>
-
 
         <div class="row div_cost " style="<?=$div_cost?>">
           <div class="col-lg-6">
@@ -974,7 +973,9 @@ if(@$sRow->check_press_save==2){
                               @$address .=  " อ. ". @$addr[0]->ampname;
                               @$address .=  " จ. ". @$addr[0]->provname;
                               @$address .=  " รหัส ปณ. ". @$addr[0]->card_zipcode;
+                              $address_disabled = '';
                             }else{
+                              $address_disabled = 'disabled';
                               @$address = '-ไม่พบข้อมูล-';
                             }
 
@@ -982,7 +983,7 @@ if(@$sRow->check_press_save==2){
 
                       <tr>
                         <th scope="row" class="bg_addr" style="<?=$bg_01?>">
-                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
+                          <input {{@$disChannel3}} {{@$pay_type_transfer_aicash}} type="radio" {{$address_disabled}} province_id="<?=@$addr[0]->card_province?>" class="ShippingCalculate ch_Disabled " name="delivery_location" id="addr_01" value="1" <?=(@$sRow->delivery_location==1?'checked':'')?> {{@$dis_addr}}  > <label for="addr_01"> ที่อยู่ตามบัตร ปชช. </label>
                            <br><?=@$address?>
                         </th>
                       </tr>
