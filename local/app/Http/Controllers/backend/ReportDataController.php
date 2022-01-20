@@ -100,6 +100,7 @@ class ReportDataController extends Controller
     
         $head = 2;
         $date = 1;
+        $td_data = 3;
         $sheet->mergeCells("A".$date.":B".$date);  
         $sheet->setCellValue('A'.$date, 'วันที่ '.$request->startDate_data.' ถึง '.$request->endDate_data);
 
@@ -167,23 +168,451 @@ class ReportDataController extends Controller
 				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
         $sheet->getStyle('A2:S2')->applyFromArray($styleArray);
 
-        if($request->report_data=='inventory_remain'){
-          // $sRow = \App\Models\Backend\Consignments::where('pick_pack_requisition_code_id_fk',$request->id)->get();
-
-          $Stock = \App\Models\Backend\Check_stock::
-          // where('product_id_fk',$request->product_id_fk)
-           where(DB::raw($request->business_location_id_fk_01), "=", $request->business_location_id_fk_02)
-          ->where(DB::raw($request->branch_id_fk_01), "=", $request->branch_id_fk_02)
-          ->where(DB::raw($request->warehouse_id_fk_01), "=", $request->warehouse_id_fk_02)
-          ->where(DB::raw($request->zone_id_fk_01), "=", $request->zone_id_fk_02)
-          ->where(DB::raw($request->shelf_id_fk_01), "=", $request->shelf_id_fk_02)
-          ->where(DB::raw($request->shelf_floor_01), "=", $request->shelf_floor_02)
-          // ->where(DB::raw($request->lot_number_01), "=", $request->lot_number_02)
-          ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->startDate_data)
-          ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->endDate_data)
+        if($request->report_data=='inventory_remain' || $request->report_data=='inventory_in' || $request->report_data=='inventory_out' || $request->report_data=='inventory_borrow'){
+       
+          $Stock = \App\Models\Backend\Check_stock::select('db_stocks.product_id_fk', 
+          'db_stocks.updated_at',
+          'db_stocks.warehouse_id_fk',
+          'db_stocks.zone_id_fk',
+          'db_stocks.shelf_id_fk',
+          'db_stocks.shelf_floor',
+          'dataset_product_unit.product_unit',
+          'products.product_code',
+            DB::raw("(CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name"),
+          )
+          ->join('products','products.id','db_stocks.product_id_fk')
+          ->join('products_details','products_details.product_id_fk','db_stocks.product_id_fk')
+          ->join('products_units','products_units.product_id_fk','db_stocks.product_id_fk')
+          ->join('dataset_product_unit','dataset_product_unit.id','products_units.product_unit_id_fk')
+          ->where('db_stocks.business_location_id_fk', "=", $request->business_location_id_fk)
+          ->where('db_stocks.branch_id_fk', "=", $request->branch_id_fk)
+          // ->distinct('db_stocks.product_id_fk')
+          ->groupBy('db_stocks.product_id_fk')
+          ->orderBy('products.product_code','asc')
           ->get();
-          dd($Stock);
+          if($request->startDate_data <= date('Y-m-d') ){
+            // $Stock = $Stock->where(DB::raw("(DATE_FORMAT(db_stocks.updated_at,'%Y-%m-%d'))"), "<=", $request->startDate_data);  
+            // $Stock = $Stock->where(DB::raw("(DATE_FORMAT(db_stocks.updated_at,'%Y-%m-%d'))"), "<=", $request->endDate_data);
+            $Stock = $Stock->whereBetween('updated_at', [$request->startDate_data.' 00:00:00', $request->endDate_data.' 59:59:59']);
+            // $Stock = $Stock->where('updated_at','>=',$request->startDate_data.' 00:00:00')->where('updated_at','>=',$request->endDate_data.' 59:59:59');
+            // $Stock = $Stock->whereBetween('updated_at', ['2022-01-01 16:36:12', '2022-01-30 16:36:12']);
+            // $Stock = $Stock->where(DB::raw("(DATE_FORMAT(updated_at,'Y-m-d'))"), "==", $request->startDate_data);
+            // $Stock = $Stock->where(DB::raw("(DATE_FORMAT(updated_at,'Y-m-d'))"), "<=", $request->endDate_data);
+            // dd($Stock);
+          }else{
+            $Stock = $Stock->where(DB::raw("(DATE_FORMAT(updated_at,'Y-m-d'))"), "<=", $request->endDate_data);
+          }
+
+          if($request->warehouse_id_fk!=''){
+            $Stock = $Stock->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+          }
+          if($request->zone_id_fk!=''){
+            $Stock = $Stock->where('zone_id_fk', "=", $request->zone_id_fk);  
+          }
+          if($request->shelf_id_fk!=''){
+            $Stock = $Stock->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+          }
+          if($request->shelf_floor!=''){
+            $Stock = $Stock->where('shelf_floor', "=", $request->shelf_floor);  
+          }
+        
+          if(count($Stock)!=0){
+
+               if($request->report_data=='inventory_in'){
+                foreach($Stock as $key => $st){
+                      $amt_top = 0;
+                      $product_code = "";
+                      $product_name = "";
+                      $product_unit = "";
+                      // ยอดรับเข้า
+                      $Stock_movement_in = \App\Models\Backend\Stock_movement::
+                      select(
+                        // DB::raw('(CASE WHEN amt > 0 THEN sum(amt) ELSE 0 END) AS amt'),
+                        DB::raw('sum(amt) AS sum'),
+                        'product_id_fk',
+                        'updated_at',
+                        'warehouse_id_fk',
+                        'zone_id_fk',
+                        'shelf_id_fk',
+                        'shelf_floor',         
+                        'product_id_fk',   
+                        'id',
+                      )
+                      ->where('product_id_fk',($st->product_id_fk?$st->product_id_fk:0))
+                      ->where('business_location_id_fk', "=", $request->business_location_id_fk)
+                      ->where('branch_id_fk', "=", $request->branch_id_fk)
+                      ->where('in_out','1')
+                      ->where('updated_at','>=',$request->startDate_data.' 00:00:00')
+                      ->where('updated_at','>=',$request->endDate_data.' 59:59:59')
+                      ->get();
+
+                      if($request->warehouse_id_fk!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+                      }
+                      if($request->zone_id_fk!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('zone_id_fk', "=", $request->zone_id_fk);  
+                      }
+                      if($request->shelf_id_fk!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+                      }
+                      if($request->shelf_floor!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('shelf_floor', "=", $request->shelf_floor);  
+                      }
+                      
+                      $amt_balance_stock = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
+                      $product_code = $st->product_code;
+                      $product_name = $st->product_name;
+                      $product_unit = $st->product_unit;
+                      $amt_top += $amt_balance_stock;
+                      $sheet->setCellValue('A'.($td_data+$key), $product_code);
+                      $sheet->setCellValue('B'.($td_data+$key), $product_name);
+                      $sheet->setCellValue('C'.($td_data+$key), $product_unit);
+                      $sheet->setCellValue('D'.($td_data+$key), 0);
+                      $sheet->setCellValue('E'.($td_data+$key), $amt_top);
+                      $sheet->setCellValue('F'.($td_data+$key), $amt_top+0);
+                  }
+              }
+       
+              if($request->report_data=='inventory_out'){
+           
+                foreach($Stock as $key => $st){
+                      $amt_top = 0;
+                      $product_code = "";
+                      $product_name = "";
+                      $product_unit = "";
+                      // ยอดรับเข้า
+                      $Stock_movement_out = \App\Models\Backend\Stock_movement::
+                      select(
+                        // DB::raw('(CASE WHEN amt > 0 THEN sum(amt) ELSE 0 END) AS amt'),
+                        DB::raw('sum(amt) AS sum'),
+                        'product_id_fk',
+                        'updated_at',
+                        'warehouse_id_fk',
+                        'zone_id_fk',
+                        'shelf_id_fk',
+                        'shelf_floor',         
+                        'product_id_fk',   
+                        'id',
+                      )
+                      ->where('product_id_fk',($st->product_id_fk?$st->product_id_fk:0))
+                      ->where('business_location_id_fk', "=", $request->business_location_id_fk)
+                      ->where('branch_id_fk', "=", $request->branch_id_fk)
+                      ->where('in_out','2')
+                      ->where('updated_at','>=',$request->startDate_data.' 00:00:00')
+                      ->where('updated_at','>=',$request->endDate_data.' 59:59:59')
+                      ->get();
+                      
+                      if($request->warehouse_id_fk!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+                      }
+                      if($request->zone_id_fk!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('zone_id_fk', "=", $request->zone_id_fk);  
+                      }
+                      if($request->shelf_id_fk!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+                      }
+                      if($request->shelf_floor!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('shelf_floor', "=", $request->shelf_floor);  
+                      }
+                      
+                      $amt_balance_stock = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
+                      $product_code = $st->product_code;
+                      $product_name = $st->product_name;
+                      $product_unit = $st->product_unit;
+                      $amt_top += $amt_balance_stock;
+                      $sheet->setCellValue('A'.($td_data+$key), $product_code);
+                      $sheet->setCellValue('B'.($td_data+$key), $product_name);
+                      $sheet->setCellValue('C'.($td_data+$key), $product_unit);
+                      $sheet->setCellValue('D'.($td_data+$key), 0);
+                      $sheet->setCellValue('E'.($td_data+$key), $amt_top);
+                      $sheet->setCellValue('F'.($td_data+$key), $amt_top+0);
+                  }
+              }
+
+              if($request->report_data=='inventory_borrow'){
+           
+                foreach($Stock as $key => $st){
+                      $amt_top = 0;
+                      $product_code = "";
+                      $product_name = "";
+                      $product_unit = "";
+                      // ยอดยืม
+                      $Stock_movement_out = \App\Models\Backend\Stock_movement::
+                      select(
+                        // DB::raw('(CASE WHEN amt > 0 THEN sum(amt) ELSE 0 END) AS amt'),
+                        DB::raw('sum(amt) AS sum'),
+                        'product_id_fk',
+                        'updated_at',
+                        'warehouse_id_fk',
+                        'zone_id_fk',
+                        'shelf_id_fk',
+                        'shelf_floor',         
+                        'product_id_fk',   
+                      )
+                      ->where('product_id_fk',($st->product_id_fk?$st->product_id_fk:0))
+                      ->where('business_location_id_fk', "=", $request->business_location_id_fk)
+                      ->where('branch_id_fk', "=", $request->branch_id_fk)
+                      ->where('in_out','2')
+                      ->where('ref_table','db_products_borrow_details')
+                      ->where('updated_at','>=',$request->startDate_data.' 00:00:00')
+                      ->where('updated_at','>=',$request->endDate_data.' 59:59:59')
+                      ->get();
+                      
+                      if($request->warehouse_id_fk!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+                      }
+                      if($request->zone_id_fk!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('zone_id_fk', "=", $request->zone_id_fk);  
+                      }
+                      if($request->shelf_id_fk!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+                      }
+                      if($request->shelf_floor!=''){
+                        $Stock_movement_out = $Stock_movement_out->where('shelf_floor', "=", $request->shelf_floor);  
+                      }
+                      
+                      $amt_balance_stock_out = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
+
+                      // ยอดคืน
+                      $Stock_movement_in = \App\Models\Backend\Stock_movement::
+                      select(
+                        // DB::raw('(CASE WHEN amt > 0 THEN sum(amt) ELSE 0 END) AS amt'),
+                        DB::raw('sum(amt) AS sum'),
+                        'product_id_fk',
+                        'updated_at',
+                        'warehouse_id_fk',
+                        'zone_id_fk',
+                        'shelf_id_fk',
+                        'shelf_floor',         
+                        'product_id_fk',   
+                        'id',
+                      )
+                      ->where('product_id_fk',($st->product_id_fk?$st->product_id_fk:0))
+                      ->where('business_location_id_fk', "=", $request->business_location_id_fk)
+                      ->where('branch_id_fk', "=", $request->branch_id_fk)
+                      ->where('in_out','1')
+                      ->where('ref_table','db_products_borrow_details')
+                      ->where('updated_at','>=',$request->startDate_data.' 00:00:00')
+                      ->where('updated_at','>=',$request->endDate_data.' 59:59:59')
+                      ->get();
+
+                      if($request->warehouse_id_fk!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+                      }
+                      if($request->zone_id_fk!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('zone_id_fk', "=", $request->zone_id_fk);  
+                      }
+                      if($request->shelf_id_fk!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+                      }
+                      if($request->shelf_floor!=''){
+                        $Stock_movement_in = $Stock_movement_in->where('shelf_floor', "=", $request->shelf_floor);  
+                      }
+                      
+                      $amt_balance_stock_in = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
+
+                      
+
+                      $amt_balance_stock = $amt_balance_stock_out-$amt_balance_stock_in;
+
+                      $product_code = $st->product_code;
+                      $product_name = $st->product_name;
+                      $product_unit = $st->product_unit;
+                      $amt_top += $amt_balance_stock;
+                      $sheet->setCellValue('A'.($td_data+$key), $product_code);
+                      $sheet->setCellValue('B'.($td_data+$key), $product_name);
+                      $sheet->setCellValue('C'.($td_data+$key), $product_unit);
+                      $sheet->setCellValue('D'.($td_data+$key), $amt_balance_stock_out);
+                      $sheet->setCellValue('E'.($td_data+$key), $amt_balance_stock_in);
+                      $sheet->setCellValue('F'.($td_data+$key), $amt_top);
+                  }
+              }
+
+              if($request->report_data=='inventory_remain'){
+               // ถ้าวันที่ $request->start_date > ปัจจุบัน ให้เอายอด ใน stock คงเหลือปัจจุบัน เลย
+                if($request->startDate_data > date('Y-m-d') ){
+                  // วนสินค้าในคลัง 
+                  foreach($Stock as $key => $st){
+                      $amt_top = 0;
+                      $product_code = "";
+                      $product_name = "";
+                      $product_unit = "";
+                          $sBalance = \App\Models\Backend\Check_stock::
+                          select(
+                            // DB::raw('(CASE WHEN amt > 0 THEN sum(amt) ELSE 0 END) AS amt'),
+                            DB::raw('sum(amt) AS amt'),
+                            'product_id_fk',
+                            'updated_at',
+                            'warehouse_id_fk',
+                            'zone_id_fk',
+                            'shelf_id_fk',
+                            'shelf_floor',            
+                            )
+                          ->where('product_id_fk',($st->product_id_fk?$st->product_id_fk:0))
+                          ->where('business_location_id_fk', "=", $request->business_location_id_fk)
+                          ->where('branch_id_fk', "=", $request->branch_id_fk)
+                          ->groupBy('product_id_fk')
+                          ->get();
+                          // $sBalance = $sBalance->whereBetween('updated_at', [$request->startDate_data.' 00:00:00', $request->endDate_data.' 59:59:59']);
+                          $sBalance = $sBalance->where('updated_at','>=',$request->startDate_data.' 00:00:00')->where('updated_at','>=',$request->endDate_data.' 59:59:59');
+                          if($request->warehouse_id_fk!=''){
+                            $sBalance = $sBalance->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+                          }
+                          if($request->zone_id_fk!=''){
+                            $sBalance = $sBalance->where('zone_id_fk', "=", $request->zone_id_fk);  
+                          }
+                          if($request->shelf_id_fk!=''){
+                            $sBalance = $sBalance->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+                          }
+                          if($request->shelf_floor!=''){
+                            $sBalance = $sBalance->where('shelf_floor', "=", $request->shelf_floor);  
+                          }
+                            $amt_balance_stock = @$sBalance[0]->amt?$sBalance[0]->amt:0;
+                            $amt_top += $amt_balance_stock;
+                            $product_code = $st->product_code;
+                            $product_name = $st->product_name;
+                            $product_unit = $st->product_unit;
+                            $sheet->setCellValue('A'.($td_data+$key), $product_code);
+                            $sheet->setCellValue('B'.($td_data+$key), $product_name);
+                            $sheet->setCellValue('C'.($td_data+$key), $product_unit);
+                            $sheet->setCellValue('D'.($td_data+$key), $amt_top);
+                  }
+           }else{
+            foreach($Stock as $key => $st){
+              $amt_top = 0;
+              $product_code = "";
+              $product_name = "";
+              $product_unit = "";
+                            // รายการก่อน start_date เพื่อหายอดยกมา
+                            // ยอดออก
+                            $Stock_movement_in = \App\Models\Backend\Stock_movement::
+                            select(
+                              // DB::raw('(CASE WHEN amt > 0 THEN sum(amt) ELSE 0 END) AS amt'),
+                              DB::raw('sum(amt) AS sum'),
+                              'product_id_fk',
+                              'updated_at',
+                              'warehouse_id_fk',
+                              'zone_id_fk',
+                              'shelf_id_fk',
+                              'shelf_floor',            
+                            )
+                            ->where('product_id_fk',($st->product_id_fk?$st->product_id_fk:0))
+                            ->where('business_location_id_fk', "=", $request->business_location_id_fk)
+                            ->where('branch_id_fk', "=", $request->branch_id_fk)
+                            ->where('in_out','1')
+                            ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->startDate_data)
+                            // ->selectRaw('sum(amt) as sum')
+                            ->get();
+                            if($request->warehouse_id_fk!=''){
+                              $Stock_movement_in = $Stock_movement_in->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+                            }
+                            if($request->zone_id_fk!=''){
+                              $Stock_movement_in = $Stock_movement_in->where('zone_id_fk', "=", $request->zone_id_fk);  
+                            }
+                            if($request->shelf_id_fk!=''){
+                              $Stock_movement_in = $Stock_movement_in->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+                            }
+                            if($request->shelf_floor!=''){
+                              $Stock_movement_in = $Stock_movement_in->where('shelf_floor', "=", $request->shelf_floor);  
+                            }
+
+                            // ยอดเบิกออก
+                            $amt_balance_in = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
+                            $Stock_movement_out = \App\Models\Backend\Stock_movement::
+                            select(
+                              // DB::raw('(CASE WHEN amt > 0 THEN sum(amt) ELSE 0 END) AS amt'),
+                              DB::raw('sum(amt) AS sum'),
+                              'product_id_fk',
+                              'updated_at',
+                              'warehouse_id_fk',
+                              'zone_id_fk',
+                              'shelf_id_fk',
+                              'shelf_floor',            
+                            )
+                            ->where('product_id_fk',($st->product_id_fk?$st->product_id_fk:0))
+                            ->where('business_location_id_fk', "=", $request->business_location_id_fk)
+                            ->where('branch_id_fk', "=", $request->branch_id_fk)
+                            ->where('in_out','2')
+                            ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->startDate_data)
+                            // ->selectRaw('sum(amt) as sum')
+                            ->get();
+                            if($request->warehouse_id_fk!=''){
+                              $Stock_movement_out = $Stock_movement_out->where('warehouse_id_fk', "=", $request->warehouse_id_fk);  
+                            }
+                            if($request->zone_id_fk!=''){
+                              $Stock_movement_out = $Stock_movement_out->where('zone_id_fk', "=", $request->zone_id_fk);  
+                            }
+                            if($request->shelf_id_fk!=''){
+                              $Stock_movement_out = $Stock_movement_out->where('shelf_id_fk', "=", $request->shelf_id_fk);  
+                            }
+                            if($request->shelf_floor!=''){
+                              $Stock_movement_out = $Stock_movement_out->where('shelf_floor', "=", $request->shelf_floor);  
+                            }
+                               // ยอดรับเข้า
+                            $amt_balance_out = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
+                            $amt_balance_stock = $amt_balance_in - $amt_balance_out ;
+                            $product_code = $st->product_code;
+                            $product_name = $st->product_name;
+                            $product_unit = $st->product_unit;
+                            $amt_top += $amt_balance_stock;
+                            $sheet->setCellValue('A'.($td_data+$key), $product_code);
+                            $sheet->setCellValue('B'.($td_data+$key), $product_name);
+                            $sheet->setCellValue('C'.($td_data+$key), $product_unit);
+                            $sheet->setCellValue('D'.($td_data+$key), $amt_top);
+
+                            // // รายการตามช่วงวันที่ระบุ start_date to end_date
+                            // $Stock_movement = \App\Models\Backend\Stock_movement::
+                            // where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
+                            // ->where(DB::raw($w_business_location_id_fk_01), "=", $w_business_location_id_fk_02)
+                            // ->where(DB::raw($w_branch_id_fk_01), "=", $w_branch_id_fk_02)
+                            // ->where(DB::raw($w_warehouse_id_fk_01), "=", $w_warehouse_id_fk_02)
+                            // ->where(DB::raw($w_zone_id_fk_01), "=", $w_zone_id_fk_02)
+                            // ->where(DB::raw($w_shelf_id_fk_01), "=", $w_shelf_id_fk_02)
+                            // ->where(DB::raw($w_shelf_floor_01), "=", $w_shelf_floor_02)
+                            // ->where(DB::raw($w_lot_number_01), "=", $w_lot_number_02)
+                            // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->start_date)
+                            // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->end_date)
+                            // // วุฒิเพิ่มมา
+                            // ->where('amt','!=',0)
+                            // ->get();
+
+                            // if($Stock_movement->count() > 0){
+
+                            //         foreach ($Stock_movement as $key => $value) {
+                            //               $insertData = array(
+                            //                 "ref_inv" =>  @$value->ref_doc?$value->ref_doc:NULL,
+                            //                 "action_date" =>  @$value->updated_at?$value->updated_at:NULL,
+                            //                 "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                            //                 "approver" =>  @$value->approver?$value->approver:NULL,
+                            //                 "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+                            //                 "sender" =>  @$value->sender?$value->sender:NULL,
+                            //                 "sent_date" =>  @$value->sent_date?$value->sent_date:NULL,
+                            //                 "who_cancel" =>  @$value->who_cancel?$value->who_cancel:NULL,
+                            //                 "cancel_date" =>  @$value->cancel_date?$value->cancel_date:NULL,
+                            //                 "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                            //                 "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                            //                 "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                            //                 "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                            //                 "details" =>  (@$value->note?$value->note:NULL).' '.(@$value->note2?$value->note2:NULL),
+                            //                 "amt_in" =>  @$value->in_out==1?$value->amt:0,
+                            //                 "amt_out" =>  @$value->in_out==2?$value->amt:0,
+                            //                 "warehouse_id_fk" =>  @$value->warehouse_id_fk>0?$value->warehouse_id_fk:0,
+                            //                 "zone_id_fk" =>  @$value->zone_id_fk>0?$value->zone_id_fk:0,
+                            //                 "shelf_id_fk" =>  @$value->shelf_id_fk>0?$value->shelf_id_fk:0,
+                            //                 "shelf_floor" =>  @$value->shelf_floor>0?$value->shelf_floor:0,
+                            //                 "created_at" =>@$value->dd?$value->dd:NULL
+                            //             );
+
+                            //               DB::table($temp_db_stock_card)->insert($insertData);
+                            //         }
+
+                            // }
+            }     
+          }
         }
+    }
+
+  }
 				
 				// $p_i = 0;
 				// for ($i=0; $i < count($sRow) ; $i++) {
