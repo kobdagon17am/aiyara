@@ -259,11 +259,13 @@ class Member_regisController extends Controller
          ");
 
       $sQuery = \DataTables::of($sTable);
+    
       return $sQuery
 
        ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
+     
           return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
         }else{
           return '';
@@ -279,7 +281,8 @@ class Member_regisController extends Controller
            array_push($f,$filetype[0]->txt_desc);
         }
         $f = implode('<br>',$f);
-        return $f;
+   
+        return @$f;
 
       })
       ->escapeColumns('filetype')
@@ -357,7 +360,7 @@ class Member_regisController extends Controller
         }
 
         $f = implode('<br>',$f);
-        return $f;
+        return @$f;
 
       })
       ->escapeColumns('filetype')
@@ -369,11 +372,14 @@ class Member_regisController extends Controller
         $f = [] ;
         foreach ($d as $key => $value) {
             $c = DB::select("select * from ck_users_admin where id = ".(@$value->approver?$value->approver:0));
-            array_push($f,isset($c) ? $c[0]->name : '');
+            if(count($c)!=0){
+              array_push($f,isset($c) ? $c[0]->name : '');
+            }
+        
         }
 
         $f = implode('<br>',$f);
-        return $f;
+        return @$f;
 
       })
       ->escapeColumns('approver')
@@ -388,7 +394,7 @@ class Member_regisController extends Controller
         }
 
         $f = implode('<br>',$f);
-        return $f;
+        return @$f;
 
       })
       ->escapeColumns('approve_date')
@@ -460,7 +466,7 @@ class Member_regisController extends Controller
            array_push($f,$filetype[0]->icon);
         }
         $f = implode('<br>',$f);
-        return $f;
+        return @$f;
 
       })
       ->escapeColumns('icon')
@@ -475,7 +481,7 @@ class Member_regisController extends Controller
             // }
         }
         $f = implode('<br>',$f);
-        return $f;
+        return @$f;
 
       })
       ->escapeColumns('tools')

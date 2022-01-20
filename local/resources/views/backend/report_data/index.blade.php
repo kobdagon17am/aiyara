@@ -379,6 +379,16 @@
                     return false;
                   }
 
+                  if(business_location_id_fk==''){
+                    alert('กรุณาเลือก Business Location');
+                    return false;
+                  }
+
+                  if(branch_id_fk==''){
+                    alert('กรุณาเลือกสาขา');
+                    return false;
+                  }
+
                   $.ajax({
 
                             type:'POST',
