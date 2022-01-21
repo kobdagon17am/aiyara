@@ -782,9 +782,18 @@ class Transfer_branchController extends Controller
 
     public function requisitionDatatable(Request $request)
     {
-      $requisitions = RequisitionBetweenBranch::with('requisition_details')
+
+      // วุฒิเพิ่มมา
+      if (\Auth::user()->permission == '1' ) {
+        $requisitions = RequisitionBetweenBranch::with('requisition_details')
         ->where('is_approve', RequisitionBetweenBranch::APPROVED)
         ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER);
+      }else{
+        $requisitions = RequisitionBetweenBranch::with('requisition_details')
+        ->where('is_approve', RequisitionBetweenBranch::APPROVED)
+        ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER)
+        ->where('from_branch_id',\Auth::user()->branch_id_fk);
+      }
 
       return \DataTables::of($requisitions)
         ->editColumn('from_branch_id', function ($requisition) {

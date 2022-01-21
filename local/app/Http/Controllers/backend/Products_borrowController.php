@@ -507,13 +507,11 @@ class Products_borrowController extends Controller
     public function updateReturned(Request $request)
     {
       $product_borrow_detail = \App\Models\Backend\Products_borrow::find($request->id);
-      $product_borrow_detail->is_returned = 1;
-      $product_borrow_detail->save();
-
+    
       $product_borrow_code = DB::table('db_products_borrow_code')->where('id',$product_borrow_detail->products_borrow_code_id)->first();
 
       // วุฒิเพิ่มมา update stock
-      if($product_borrow_detail){
+      if($product_borrow_detail && $product_borrow_detail->is_returned!=1){
         $data = DB::table('db_stocks')->where('id',$product_borrow_detail->stocks_id_fk)->first();
         if($data){
           DB::table('db_stocks')->where('id',$product_borrow_detail->stocks_id_fk)->update([
@@ -548,6 +546,9 @@ class Products_borrowController extends Controller
           }
         } 
       }
+
+      $product_borrow_detail->is_returned = 1;
+      $product_borrow_detail->save();
   
 
       return [
