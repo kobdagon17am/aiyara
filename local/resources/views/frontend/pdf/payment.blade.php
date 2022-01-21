@@ -87,19 +87,19 @@
          <th style="text-align: left;">
           @if($address)
           <p><b>{{ $address['name'] }}</b><br>
-           @if($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
-           @if($address['email']) Email: {{ $address['email']}}<br>@endif
-           @if($address['house_no']) {{$address['house_no']}},@endif
-           @if($address['moo']) หมู่.{{ $address['moo'] }},@endif
-           @if($address['house_name']) บ.{{ $address['house_name'] }},@endif
-           @if($address['soi']) ซอย.{{ $address['soi'] }},@endif
-           @if($address['road']) ถนน.{{ $address['road'] }},@endif
+            @if ($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
+            @if ($address['email']) Email: {{ $address['email'] }}<br>@endif
+            @if ($address['house_no']) {{ $address['house_no'] }},@endif
+            @if ($address['moo'] != '-' and $address['moo'] != '') หมู่.{{ $address['moo'] }},@endif
+            @if ($address['house_name'] != '-' and $address['house_name'] != '') บ.{{ $address['house_name'] }},@endif
+            @if ($address['soi'] != '-' and $address['soi'] != '') ซอย.{{ $address['soi'] }},@endif
+            @if ($address['road'] != '-' and $address['road'] != '') ถนน.{{ $address['road'] }},@endif
 
-           @if($address['district_name'])<br> ต.{{ $address['district_name'] }},@endif
-           @if($address['amphures_name']) อ.{{ $address['amphures_name'] }},@endif
-           @if($address['provinces_name']) จ.{{ $address['provinces_name'] }},@endif
-           @if($address['zipcode']) {{ $address['zipcode'] }}@endif
-       </p>
+            @if ($address['district_name'] != '-' and $address['district_name'] != '')<br> ต.{{ $address['district_name'] }},@endif
+            @if ($address['amphures_name'] != '-' and $address['amphures_name'] != '') อ.{{ $address['amphures_name'] }},@endif
+            @if ($address['provinces_name'] != '-' and $address['provinces_name'] != '') จ.{{ $address['provinces_name'] }},@endif
+            @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
+        </p>
       @else
        <p><b> Address Is Null</b>
       @endif
