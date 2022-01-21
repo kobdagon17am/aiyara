@@ -190,13 +190,16 @@ tr.border_bottom td {
 
     <?php 
 
+        $borrow_code = DB::table('db_products_borrow_code')->select('db_products_borrow_code.*','branchs.b_name')
+        ->join('branchs','branchs.id','db_products_borrow_code.branch_id_fk')
+        ->where('db_products_borrow_code.id',$data[0])->get();
 
-         $borrow_code = DB::select(" 
-            SELECT *
-            FROM db_products_borrow_code 
-            WHERE
-            id = ".$data[0]."
-         ");
+        //  $borrow_code = DB::select(" 
+        //     SELECT *
+        //     FROM db_products_borrow_code 
+        //     WHERE
+        //     id = ".$data[0]."
+        //  ");
 
         if(@$borrow_code[0]->borrow_cause_id_fk!=''){
           $borrow_cause = DB::select(" select * from dataset_borrow_cause where id=".@$borrow_code[0]->borrow_cause_id_fk." ");
@@ -253,7 +256,8 @@ tr.border_bottom td {
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;" >
       <tr>
-        <td style="border-left: 1px solid #ccc;width: 50%;font-weight: bold;">สาขา : <?=@$branchs_from[0]->b_name?>
+        <!-- <td style="border-left: 1px solid #ccc;width: 50%;font-weight: bold;">สาขา : <=@$branchs_from[0]->b_name?> -->
+        <td style="border-left: 1px solid #ccc;width: 50%;font-weight: bold;">สาขา : <?=@$borrow_code[0]->b_name?>
           <br>
           <br>
         </td>

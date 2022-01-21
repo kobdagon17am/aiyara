@@ -2423,19 +2423,7 @@ class FrontstoreController extends Controller
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-    // dd($action_user_011);
-    // dd($startDate1);
-    // dd($endDate1);
-    // dd($invoice_code);
-    // dd($purchase_type_id_fk);
-    // dd($customer_username);
-    // dd($customer_name);
-    // dd($action_user_02);
-    // dd($status_sent_money);
-    // dd($approve_status);
-    // dd($viewcondition_01);
-
-    // วุฒิเปลี่ยน db_orders.credit_price เป็น db_orders.sum_credit_price 
+    // วุฒิเปลี่ยน db_orders.credit_price เป็น db_orders.sum_credit_price  
     $sDBFrontstoreSumCostActionUser = DB::select("
                 SELECT
                 db_orders.action_user,
@@ -2450,7 +2438,6 @@ class FrontstoreController extends Controller
                 SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
                 SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
                 SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-
 
                 SUM(
                 (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
@@ -2583,8 +2570,8 @@ class FrontstoreController extends Controller
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->aicash_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->transfer_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->credit_price, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->total_price, 2) . ' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->shipping_price, 2) . ' </th>
                     </tr>';
     }
@@ -2985,14 +2972,22 @@ class FrontstoreController extends Controller
     //   total_price - gift_voucher_price
     // ) as sum_price,
 
-
+// วุฒิเอาออกมาเปลี่ยน 
+// SUM(
+//   (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+//   (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
+//   )  as sum_price,
     $d1 = DB::select("
                     SELECT count(db_orders.id) as cnt,
 
-                    SUM(
-                      (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
-                      (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
-                      )  as sum_price,
+                      SUM(
+                        (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+                        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+                        -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+                        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+                        -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+                        ) as sum_price,
 
                     sum(pv_total) as pv_total
                     FROM db_orders
@@ -3012,65 +3007,34 @@ class FrontstoreController extends Controller
                     $approve_status
                     $viewcondition_01
                     ");
-    // $d1 = DB::select("
-
-    // SELECT count(db_orders.id) as cnt,
-    // SUM(
-    // (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
-    // (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-    // (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
-    // (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-    // (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
-    // -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
-    // ) as sum_price,
-    // sum(pv_total) as pv_total
-    // FROM db_orders
-    // Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-    // WHERE db_orders.check_press_save=2
-    // AND approve_status!='' AND approve_status!=0 AND approve_status!=5
-    // and approve_status in (1)
-    // $action_user_011
-    // $startDate1
-    // $endDate1
-    // $purchase_type_id_fk
-    // $customer_username
-    // $customer_name
-    // $invoice_code
-    // $action_user_02
-    // $status_sent_money
-    // $approve_status
-    // $viewcondition_01
-
-
-    // ");
 
     $cnt_01 = $d1[0]->cnt;
     $sum_price_01 = $d1[0]->sum_price;
     $pv_total_01 = $d1[0]->pv_total;
 
+// วุฒิปิดไม่รวมยอด AI CASH
+//     $d2 = DB::select("
 
-    $d2 = DB::select("
+// SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
+// FROM db_add_ai_cash
+// WHERE 1
+// AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+// and approve_status in (1)
+// $action_user_012
+// $startDate2
+// $endDate2
+// $purchase_type_id_fk_02
+//               $customer_username_02
+//               $customer_name_02
+//               $action_user_022
+//               $status_sent_money_02
+//               $approve_status_02
+//               $viewcondition_02
+//               $invoice_code2
+// ");
 
-SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
-FROM db_add_ai_cash
-WHERE 1
-AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0 AND approve_status!=5
-and approve_status in (1)
-$action_user_012
-$startDate2
-$endDate2
-$purchase_type_id_fk_02
-              $customer_username_02
-              $customer_name_02
-              $action_user_022
-              $status_sent_money_02
-              $approve_status_02
-              $viewcondition_02
-              $invoice_code2
-");
-
-    $cnt_01 = $d2[0]->cnt + $cnt_01;
-    $sum_price_01 = $d2[0]->sum_price + $sum_price_01;
+    // $cnt_01 = $d2[0]->cnt + $cnt_01;
+    // $sum_price_01 = $d2[0]->sum_price + $sum_price_01;
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -3088,9 +3052,13 @@ $purchase_type_id_fk_02
 SELECT count(db_orders.id) as cnt,
 
 SUM(
-  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
-  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
-  )  as sum_price,
+  (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+  (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+  -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+  (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+  (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+  -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+  ) as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3116,29 +3084,29 @@ $endDate1
     $pv_total_02 = $d3[0]->pv_total;
 
 
-    $d4 = DB::select("
+//     $d4 = DB::select("
 
-SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
-FROM db_add_ai_cash
-WHERE 1
-AND db_add_ai_cash.approve_status<>4
-AND approve_status!='' AND approve_status!=0 AND approve_status!=5
-and approve_status in (2)
-$action_user_012
-$startDate2
-$endDate2
-$purchase_type_id_fk_02
-              $customer_username_02
-              $customer_name_02
-              $action_user_022
-              $status_sent_money_02
-              $approve_status_02
-              $viewcondition_02
-              $invoice_code2
-");
+// SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
+// FROM db_add_ai_cash
+// WHERE 1
+// AND db_add_ai_cash.approve_status<>4
+// AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+// and approve_status in (2)
+// $action_user_012
+// $startDate2
+// $endDate2
+// $purchase_type_id_fk_02
+//               $customer_username_02
+//               $customer_name_02
+//               $action_user_022
+//               $status_sent_money_02
+//               $approve_status_02
+//               $viewcondition_02
+//               $invoice_code2
+// ");
 
-    $cnt_02 = $d4[0]->cnt + $cnt_02;
-    $sum_price_02 = $d4[0]->sum_price + $sum_price_02;
+//     $cnt_02 = $d4[0]->cnt + $cnt_02;
+//     $sum_price_02 = $d4[0]->sum_price + $sum_price_02;
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -3157,9 +3125,13 @@ $purchase_type_id_fk_02
 SELECT count(db_orders.id) as cnt,
 
 SUM(
-  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
-  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
-  )  as sum_price,
+  (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+  (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+  -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+  (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+  (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+  -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+  ) as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3186,29 +3158,29 @@ $endDate1
     $pv_total_03 = $d5[0]->pv_total;
 
 
-    $d6 = DB::select("
+//     $d6 = DB::select("
 
-SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
-FROM db_add_ai_cash
-WHERE 1
-AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0
-and approve_status in (5)
-$action_user_012
-$startDate2
-$endDate2
-$purchase_type_id_fk_02
-              $customer_username_02
-              $customer_name_02
-              $action_user_022
-              $status_sent_money_02
-              $approve_status_02
-              $viewcondition_02
-              $invoice_code2
+// SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
+// FROM db_add_ai_cash
+// WHERE 1
+// AND db_add_ai_cash.approve_status<>4 AND approve_status!='' AND approve_status!=0
+// and approve_status in (5)
+// $action_user_012
+// $startDate2
+// $endDate2
+// $purchase_type_id_fk_02
+//               $customer_username_02
+//               $customer_name_02
+//               $action_user_022
+//               $status_sent_money_02
+//               $approve_status_02
+//               $viewcondition_02
+//               $invoice_code2
 
-");
+// ");
 
-    $cnt_03 = $d6[0]->cnt + $cnt_03;
-    $sum_price_03 = $d6[0]->sum_price + $sum_price_03;
+//     $cnt_03 = $d6[0]->cnt + $cnt_03;
+//     $sum_price_03 = $d6[0]->sum_price + $sum_price_03;
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -3226,9 +3198,13 @@ $purchase_type_id_fk_02
 SELECT count(db_orders.id) as cnt,
 
 SUM(
-  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
-  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
-  )  as sum_price,
+  (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+  (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+  -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+  (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+  (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+  -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+  ) as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3254,27 +3230,27 @@ $endDate1
     $pv_total_04 = $d7[0]->pv_total;
 
 
-    $d8 = DB::select("
+//     $d8 = DB::select("
 
-SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
-FROM db_add_ai_cash
-WHERE 1
-and approve_status not in (1,2,5)
-$action_user_012
-$startDate2
-$endDate2
-$purchase_type_id_fk_02
-              $customer_username_02
-              $customer_name_02
-              $action_user_022
-              $status_sent_money_02
-              $approve_status_02
-              $viewcondition_02
-              $invoice_code2
-");
+// SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
+// FROM db_add_ai_cash
+// WHERE 1
+// and approve_status not in (1,2,5)
+// $action_user_012
+// $startDate2
+// $endDate2
+// $purchase_type_id_fk_02
+//               $customer_username_02
+//               $customer_name_02
+//               $action_user_022
+//               $status_sent_money_02
+//               $approve_status_02
+//               $viewcondition_02
+//               $invoice_code2
+// ");
 
-    $cnt_04 = $d8[0]->cnt + $cnt_04;
-    $sum_price_04 = $d8[0]->sum_price + $sum_price_04;
+//     $cnt_04 = $d8[0]->cnt + $cnt_04;
+//     $sum_price_04 = $d8[0]->sum_price + $sum_price_04;
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -3294,9 +3270,13 @@ $purchase_type_id_fk_02
 SELECT count(db_orders.id) as cnt,
 
 SUM(
-  (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
-  (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
-  )  as sum_price,
+  (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+  (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+  -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+  (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+  (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+  -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+  ) as sum_price,
 
 sum(pv_total) as pv_total
 FROM db_orders
@@ -3321,26 +3301,26 @@ $endDate1
     $pv_total_05 = $d9[0]->pv_total;
 
 
-    $d10 = DB::select("
+//     $d10 = DB::select("
 
-SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
-FROM db_add_ai_cash
-WHERE 1
-$action_user_012
-$startDate2
-$endDate2
-$purchase_type_id_fk_02
-              $customer_username_02
-              $customer_name_02
-              $action_user_022
-              $status_sent_money_02
-              $approve_status_02
-              $viewcondition_02
-              $invoice_code2
-");
+// SELECT count(db_add_ai_cash.id) as cnt,sum(db_add_ai_cash.aicash_amt) as sum_price
+// FROM db_add_ai_cash
+// WHERE 1
+// $action_user_012
+// $startDate2
+// $endDate2
+// $purchase_type_id_fk_02
+//               $customer_username_02
+//               $customer_name_02
+//               $action_user_022
+//               $status_sent_money_02
+//               $approve_status_02
+//               $viewcondition_02
+//               $invoice_code2
+// ");
 
-    $cnt_05 = $d10[0]->cnt + $cnt_05;
-    $sum_price_05 = $d10[0]->sum_price + $sum_price_05;
+//     $cnt_05 = $d10[0]->cnt + $cnt_05;
+//     $sum_price_05 = $d10[0]->sum_price + $sum_price_05;
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -3572,6 +3552,7 @@ $purchase_type_id_fk_02
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+                $action_user_02
                 ORDER BY created_at DESC
 
               ");

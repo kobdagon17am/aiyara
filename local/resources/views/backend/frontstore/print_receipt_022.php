@@ -796,6 +796,7 @@ if(!empty($db_orders[0]->action_user)){
             db_orders.cash_pay,
             db_orders.gift_voucher_price,
             db_orders.sum_credit_price,
+            db_orders.cash_pay,
             dataset_pay_type.detail as pay_type
             from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
             WHERE db_orders.id=".$id."
@@ -892,7 +893,8 @@ if(!empty($db_orders[0]->action_user)){
 
 
     }else{ // 5   เงินสด
-        $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
+        // $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
+        $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->cash_pay,2);
     }
 
 
