@@ -792,7 +792,8 @@ class Transfer_branchController extends Controller
         $requisitions = RequisitionBetweenBranch::with('requisition_details')
         ->where('is_approve', RequisitionBetweenBranch::APPROVED)
         ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER)
-        ->where('from_branch_id',\Auth::user()->branch_id_fk);
+        ->where('from_branch_id',\Auth::user()->branch_id_fk)
+        ->orWhere('to_branch_id',\Auth::user()->branch_id_fk);
       }
 
       return \DataTables::of($requisitions)
