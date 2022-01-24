@@ -207,7 +207,7 @@
                                              <div class="radio radio-inline">
                                                  <label>
                                                      <input type="radio" id="sent_office_check"
-                                                         onchange="sent_address('sent_office')" name="receive"
+                                                         onchange="sent_address('sent_office','')" name="receive"
                                                          value="sent_office">
                                                      <i class="helper"></i><b>รับที่สาขา</b>
                                                  </label>
@@ -827,9 +827,10 @@
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
+
      <script type="text/javascript">
-         var address_provinces_id = '{{ @$address->provinces_id }}';
-         check_shipping({{ @$address->provinces_id }});
+         var address_provinces_id = '{{ @province_id_fk }}';
+         check_shipping('{{@province_id_fk}}','');
          var type = '{{ $bill['type'] }}';
 
           // var premium = document.getElementById('checkbox13').checked;
@@ -839,7 +840,7 @@
               //   document.getElementById('shipping_premium').value = false;
               // }
 
-        sent_address('sent_address',address_provinces_id);
+        //sent_address('sent_address',address_provinces_id);
 
          //console.log(data_1);
          function check_premium() {
@@ -855,25 +856,28 @@
             //  }
 
              if (sent_address) {
-                 check_shipping({{ @$address->provinces_id }});
+                 check_shipping({{ @province_id_fk }},'');
              }
              if (sent_address_card) {
                  var sent_address = document.getElementById('sent_address_check').checked;
-                 check_shipping({{ @$address_card->provinces_id }});
+                 check_shipping('{{ @$address_card->provinces_id }}','');
              }
 
              if (sent_other) {
                  var sent_other = document.getElementById('province').value;
                  if (sent_other) {
-                     check_shipping(sent_other);
+                     check_shipping(sent_other,'');
                  }
              }
          }
 
          function check_shipping(provinces_id='', type_sent = '') {
-           if(provinces_id == ''){
+
+           if(provinces_id == '' && type_sent !== 'sent_office'){
              return '';
            }
+
+
              var location_id = '{{ $bill['location_id'] }}';
              var price = '{{ $bill['price'] }}';
 
@@ -905,6 +909,7 @@
 
                      document.getElementById('shipping_detail').innerHTML = '<label class="label label-inverse-warning">'+data['data']['shipping_name']+'</label>';
 
+
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
 
@@ -935,6 +940,8 @@
          }
 
          function sent_address(type_sent, provinces_id) {
+
+
 
              if (type_sent == 'sent_address') {
 
@@ -975,14 +982,15 @@
                   }
 
              } else if (type_sent == 'sent_office') {
-                 check_shipping(provinces_id = '', type_sent);
+
+                 check_shipping('',type_sent);
+
                  var price = numberWithCommas('{{ $bill['price'] }}');
                  document.getElementById("sent_address").style.display = 'none';
                  document.getElementById("sent_address_card").style.display = 'none';
                  document.getElementById("sent_address_other").style.display = 'none';
                  document.getElementById("sent_office").style.display = 'block';
                  $('.sent_address_other').prop('required', false);
-
                  document.getElementById('shipping').textContent = 0;
                 //  document.getElementById("html_shipping_premium").style.display = 'none';
                 //  document.getElementById("checkbox13").checked = false;
@@ -1019,69 +1027,14 @@
 
          }
 
-         function open_input(data) {
-             var conten_4 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
 
-             if (data == '1') {
-
-                 check_shipping({{ @$address->provinces_id }});
-                 document.getElementById("cart_payment_tranfer").style.display = "block";
-                 document.getElementById("cart_payment_credit_card").style.display = "none";
-                 document.getElementById("cart_payment_aicash").style.display = "none";
-                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
-
-
-
-                 document.getElementById("submit_upload").disabled = true;
-                 document.getElementById("submit_upload").className = "btn btn-success";
-                 $('#upload').change(function() {
-                     var fileExtension = ['jpg', 'png'];
-                     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
-                         alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
-                         this.value = '';
-                         return false;
-                     } else {
-                         document.getElementById("submit_upload").disabled = false;
-                     }
-                 });
-             } else if (data == '2') {
-                 document.getElementById("cart_payment_tranfer").style.display = "none";
-                 document.getElementById("cart_payment_credit_card").style.display = "block";
-                 document.getElementById("cart_payment_aicash").style.display = "none";
-                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
-             } else if (data == '3') {
-
-
-               var ai_cash = '{{ Auth::guard('c_user')->user()->ai_cash }}';
-               var price_total = $('#price_total').val();
-
-               if(ai_cash < price_total){
-                document.getElementById("ai_cash_submit").style.display = "none";
-                $('#error_aicash').html('<label class="label label-inverse-danger text-right">Ai-Cash ไม่พอสำหรับการชำระเงิน</label>');
-               }
-
-                 document.getElementById("cart_payment_tranfer").style.display = "none";
-                 document.getElementById("cart_payment_credit_card").style.display = "none";
-                 document.getElementById("cart_payment_aicash").style.display = "block";
-                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
-
-
-             } else if (data == '4') {
-                 document.getElementById("cart_payment_tranfer").style.display = "none";
-                 document.getElementById("cart_payment_credit_card").style.display = "none";
-                 document.getElementById("cart_payment_aicash").style.display = "none";
-                 document.getElementById("cart_payment_mobile_banking").style.display = "block";
-             } else {
-               alert('ไม่มีช่องทางให้ชำระ (Data is Null)');
-             }
-         }
 
      </script>
 
      <script type="text/javascript">
          $('#province').change(function() {
              var province = $(this).val();
-             check_shipping(province);
+             check_shipping(province,'');
              $.ajax({
                  async: false,
                  type: "get",

@@ -86,6 +86,7 @@ class CartPaymentController extends Controller
         //vatใน 7%
         $p_vat = $price * ($vat / (100 + $vat));
 
+
         //มูลค่าสินค้า
         $price_vat = $price - $p_vat;
 
