@@ -843,6 +843,7 @@
         //sent_address('sent_address',address_provinces_id);
 
          //console.log(data_1);
+
          function check_premium() {
              var sent_address = document.getElementById('sent_address_check').checked;
              var sent_address_card = document.getElementById('sent_address_card_check').checked;

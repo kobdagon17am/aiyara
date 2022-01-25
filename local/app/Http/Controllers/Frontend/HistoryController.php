@@ -517,8 +517,18 @@ class HistoryController extends Controller
                 ->get();
         }
 
+        $customer_confirm =  DB::table('customers')
+        ->select('first_name','last_name','user_name','business_name')
+        ->where('id','=',$order->member_id_aicash)
+        ->first();
+
+        $customer_use =  DB::table('customers')
+        ->select('first_name','last_name','user_name','business_name')
+        ->where('id','=',$order->customers_id_fk)
+        ->first();
+
         if (!empty($order)) {
-            return view('frontend/product/cart-payment-history', compact('order', 'order_items', 'address'));
+            return view('frontend/product/cart-payment-history', compact('order', 'order_items', 'address','customer_confirm','customer_use'));
         } else {
             return redirect('product-history')->withError('Payment Data is Null');
         }
@@ -592,5 +602,32 @@ class HistoryController extends Controller
           }
 
     }
+
+    public static function get_detail_order_aicash(Request $rs){
+
+      $order = DB::table('db_orders')
+      ->select('db_orders.customers_id_fk','db_orders.aicash_price','db_orders.credit_price','db_orders.transfer_price','db_orders.cash_pay','db_orders.member_id_aicash','dataset_pay_type.detail as pay_type_name')
+      ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+      ->where('db_orders.id', '=', $rs->id)
+      ->first();
+
+
+
+      $customer =  DB::table('customers')
+      ->select('first_name','last_name','user_name','business_name')
+      ->where('id','=',$order->customers_id_fk)
+      ->first();
+
+      if(empty($order)){
+        $resule = ['status' => 'fail', 'message' => 'ไม่พบข้อมูลผู้อนุมัต AiCash กรุณาติดต่อเจ้าหน้าที่'];
+        return $resule;
+      }else{
+        //$order['cash_pay'] = number_format($order->cash_pay);
+        $resule = ['status' => 'success', 'message' => 'success','order'=>$order,'customer'=>$customer];
+        return $resule;
+      }
+
+    }
+
 
 }

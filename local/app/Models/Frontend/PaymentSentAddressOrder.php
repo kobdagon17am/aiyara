@@ -125,7 +125,6 @@ class PaymentSentAddressOrder extends Model
                 if ($data_shipping['data']->shipping_type_id == 1) {
                     $insert_db_orders->shipping_free = 1;
                 }
-
                 $insert_db_orders->shipping_price = $shipping;
                 $insert_db_orders->shipping_cost_id_fk = $data_shipping['data']->shipping_type_id;
                 $insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;

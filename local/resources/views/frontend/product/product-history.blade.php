@@ -320,6 +320,30 @@
                                 </div>
 
                                 <div class="modal-body">
+
+                                  <div class="col-md-12 col-xl-12">
+                                    <div class="card widget-statstic-card borderless-card">
+
+                                        <div class="card-block">
+                                          <div class="row">
+                                            <div class="col-md-12">
+                                              <h4 id="aicash_user" style="color: #000">Ai-Cash</h4>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="m-b-0">จำนวนเงินคงเหลือ</p>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                              <h4 class="m-b-0 text-success"> {{ number_format(Auth::guard('c_user')->user()->ai_cash) }} </h4>
+                                            </div>
+                                        </div>
+
+                                        <div id="text_confirm_aicash"></div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12 text-center">
                                             <button type="button" class="btn btn-default waves-effect "
@@ -552,10 +576,61 @@ function qrcode(id,type='') {
             $('#truemoney_title').html('Repeat TrueMouney (' + code + ')');
 
         }
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
 
         function confirm_aicash(order_id,code) {
-            $('#confirm_aicash_order_id').val(order_id);
-            $('#confirm_aicash_title').html('Confirm Ai Cash (' + code + ')');
+          $.ajax({
+                    url: '{{ route('get_detail_order_aicash') }}',
+                    type: 'GET',
+                    data: {
+                        id: order_id,'type':code
+                    },
+                })
+                .done(function(data){
+                  // ->select('first_name','last_name','user_name','business_name')
+                  var cash_pay = numberWithCommas(data['order']['cash_pay']);
+                  var html = `<hr class="m-b-5 m-t-5">
+                  <div class="row">
+                      <div class="col-md-4">
+                          <h6 class="m-b-0" style="color: #000">ผู้ขออนุมัติ</h6>
+                      </div>
+                      <div class="col-md-8">
+
+                          <p class="m-b-0 text-right" id="text_pv" style="color: #000">`+data['customer']['first_name']+` `+data['customer']['last_name']+`(`+data['customer']['business_name']+`)</p>
+                      </div>
+
+                      <div class="col-md-4">
+                          <h6 class="m-b-0" style="color: #000">รหัส</h6>
+                      </div>
+                      <div class="col-md-8">
+
+                          <p class="m-b-0 text-right" id="text_pv" style="color: #000">`+data['customer']['user_name']+`</p>
+                      </div>
+                  </div>
+                  <hr class="m-b-5 m-t-5">
+                  <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="m-b-0" style="color: #000">ยอดขอชำระด้วย AiCash</h6>
+                    </div>
+                    <div class="col-md-6" id="">
+                        <u><h5 class="m-b-0 text-right" id="text_pv" style="color: #000">`+cash_pay+`</h5></u>
+                    </div>
+                </div>`;
+
+                  $('#text_confirm_aicash').html(html);
+                  $('#confirm_aicash_order_id').val(order_id);
+                  $('#confirm_aicash_title').html('Confirm AiCash (' + code + ')');
+
+                })
+
+
+                .fail(function() {
+                    console.log("error");
+                })
+
+
 
         }
 
