@@ -183,6 +183,20 @@ class HistoryController extends Controller
         if(empty($business_location_id)){
           $business_location_id = 1;
         }
+
+        $not_show = DB::table('db_orders')
+        ->select('id')
+        ->whereRaw('db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk = 8 ')
+        ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
+        ->get();
+
+
+        $not_show_arr = array();
+        foreach($not_show as $value){
+          $not_show_arr[] = $value->id;
+        }
+
+
         $orders = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class',
                 'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon',
@@ -190,6 +204,7 @@ class HistoryController extends Controller
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+            ->whereNotIn('db_orders.id',$not_show_arr)
             ->where('dataset_order_status.lang_id', '=', $business_location_id)
             ->where('dataset_orders_type.lang_id', '=', $business_location_id)
             ->whereRaw(("case WHEN '{$request->dt_order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$request->dt_order_type}' END"))
@@ -197,13 +212,10 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) >= '{$request->s_date}' and date(db_orders.created_at) <= '{$request->e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
-            ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
-            ->orwhere('db_orders.address_sent_id_fk', '=', Auth::guard('c_user')->user()->id)
-            ->orwhere('db_orders.member_id_aicash', '=', Auth::guard('c_user')->user()->id)
+            ->whereRaw("(db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.address_sent_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.member_id_aicash = ".Auth::guard('c_user')->user()->id." )")
             ->groupBy('db_orders.code_order')
             ->orderby('db_orders.updated_at', 'DESC')
             ->get();
-        //dd($orders);
 
         $sQuery = Datatables::of($orders);
         return $sQuery
