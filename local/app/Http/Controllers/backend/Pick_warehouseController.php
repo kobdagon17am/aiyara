@@ -1106,7 +1106,8 @@ GROUP BY db_order_products_list.product_id_fk
   LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
   LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
   WHERE 
-  
+  db_pick_pack_packing.delivery_id_fk =".$reg->delivery_id." 
+  AND
   db_pick_pack_packing.packing_code_id_fk =".$reg->id." 
   
   AND db_delivery_packing.packing_code is not null
@@ -1114,10 +1115,13 @@ GROUP BY db_order_products_list.product_id_fk
   ORDER BY db_pick_pack_packing.id
   
   ");
-  
+        
+        $r_delivery_id = $reg->delivery_id;
+        // dd($sTable);
         $sQuery = \DataTables::of($sTable);
         return $sQuery
-        ->addColumn('column_001', function($row) {
+        ->addColumn('column_001', function($row) use($r_delivery_id){
+
           $customer = DB::table('db_delivery')->select('recipient_name')->where('id',$row->db_delivery_id)->first();
           $user_name = "<br> บันทึกสแกน : ";
           if($row->user_scan!=0 && $row->user_scan!=''){
@@ -1126,96 +1130,30 @@ GROUP BY db_order_products_list.product_id_fk
               $user_name .= 'คุณ '.$user_admin->name;
             }
           }
-     
-          $Products = DB::select("
-  
-          (SELECT 
-          
-          db_delivery.orders_id_fk,
-          db_order_products_list.product_id_fk,
-          db_order_products_list.product_name,
-          db_order_products_list.product_unit_id_fk,
-          SUM(db_order_products_list.amt) AS amt ,
-          dataset_product_unit.product_unit,
-          db_orders.code_order,
-          db_orders.id as orders_id_fk
-          
-          FROM `db_order_products_list` 
-          left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-          left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-          left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-          LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-          
-          WHERE type_product='product' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
-          
-          GROUP BY db_order_products_list.product_id_fk
-          )
-          
-          UNION
-          
-          (
-          SELECT 
-          
-          db_delivery.orders_id_fk,
-          db_order_products_list.product_id_fk,
-          db_order_products_list.product_name,
-          db_order_products_list.product_unit_id_fk,
-          SUM(db_order_products_list.amt) AS amt ,
-          dataset_product_unit.product_unit,
-          db_orders.code_order,
-          db_orders.id as orders_id_fk
-          
-          FROM `db_order_products_list` 
-          left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-          left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-          left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-          LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-          
-          WHERE type_product='promotion' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
-          
-          GROUP BY db_order_products_list.product_id_fk
-          )
-          
-          
-                           ");
-          
-                        $sum_amt = 0 ;
-                        $r_ch_t = '';
+                           $sum_amt = 0 ;
+                           $r_ch_t = '';
+
+                          //  วุฒิเพิ่มมา
+                          $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$r_delivery_id."");
+                          $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+                           $receipt = "";
+                           foreach ($d2 as $key => $d) {
+                            $receipt .= $d->receipt.',';
+                          }
+                          $fid_arr = explode(',',$receipt); 
+                          $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
+                          $Products = DB::table('db_pay_requisition_002')
+                          ->select('db_pay_requisition_002.product_name','db_pay_requisition_002.product_unit','db_pay_requisition_002_item.*','db_orders.code_order')
+                          ->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
+                          ->join('db_orders','db_orders.id','db_pay_requisition_002_item.order_id')
+                          ->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
+                          ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+                          ->get();
 
                    if(@$Products){
                         foreach ($Products as $key => $value) {
-
-                // บิลปกติ
-                $arr_inv = [];
-                $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
-                LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-                left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-                left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-                WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='product'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
-                if(@$p1){
-                  foreach (@$p1 as $inv) {
-                      array_push($arr_inv,@$inv->code_order);
-                  }
-                }
-
-                // บิลโปร
-                $p2 = DB::select(" 
-                select db_orders.code_order 
-                FROM `promotions_products` 
-                LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
-                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-                left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-                left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-                WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='promotion'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
-                if(@$p2){
-                  foreach (@$p2 as $inv) {
-                      array_push($arr_inv,@$inv->code_order);
-                  }
-                }
-
-              $invoice_code = implode(",",$arr_inv);
-              $r_ch_t .= $invoice_code.'<br>';
-        }}
+                            $r_ch_t .= $value->code_order.'<br>';
+                      }}
 
         if(@$row->lists){
           return '<b>'.$row->lists.'</b><br><b>ผู้รับ : '.$customer->recipient_name.$user_name .'</b><br><br>'.$r_ch_t;
@@ -1225,7 +1163,7 @@ GROUP BY db_order_products_list.product_id_fk
 
         })
         ->escapeColumns('column_001')  
-        ->addColumn('column_002', function($row) {
+        ->addColumn('column_002', function($row)  use($r_delivery_id){
   
               $pn = '<div class="divTable"><div class="divTableBody">';
               $pn .=     
@@ -1236,73 +1174,32 @@ GROUP BY db_order_products_list.product_id_fk
               <div class="divTableCell" style="width:300px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
               </div>
               ';
-  
-  
+
                 // ต้องรวมสินค้า โปรโมชั่น ด้วย 
-  
-            $Products = DB::select("
-  
-  (SELECT 
-  
-  db_delivery.orders_id_fk,
-  db_order_products_list.product_id_fk,
-  db_order_products_list.product_name,
-  db_order_products_list.product_unit_id_fk,
-  SUM(db_order_products_list.amt) AS amt ,
-  dataset_product_unit.product_unit,
-  db_orders.code_order,
-  db_orders.id as orders_id_fk
-  
-  FROM `db_order_products_list` 
-  left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-  LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-  
-  WHERE type_product='product' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
-  
-  GROUP BY db_order_products_list.product_id_fk
-  )
-  
-  UNION
-  
-  (
-  SELECT 
-  
-  db_delivery.orders_id_fk,
-  db_order_products_list.product_id_fk,
-  db_order_products_list.product_name,
-  db_order_products_list.product_unit_id_fk,
-  SUM(db_order_products_list.amt) AS amt ,
-  dataset_product_unit.product_unit,
-  db_orders.code_order,
-  db_orders.id as orders_id_fk
-  
-  FROM `db_order_products_list` 
-  left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-  LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-  
-  WHERE type_product='promotion' AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' 
-  
-  GROUP BY db_order_products_list.product_id_fk
-  )
-  
-  
-                   ");
   
                 $sum_amt = 0 ;
                 $r_ch_t = '';
+
+                  //  วุฒิเพิ่มมา
+                  $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$r_delivery_id."");
+                  $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+                   $receipt = "";
+                   foreach ($d2 as $key => $d) {
+                    $receipt .= $d->receipt.',';
+                  }
+                 $fid_arr = explode(',',$receipt); 
+                 $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
+                 $Products = DB::table('db_pay_requisition_002')
+                 ->select('db_pay_requisition_002.product_name','db_pay_requisition_002.product_unit','db_pay_requisition_002_item.*','db_orders.code_order')
+                 ->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
+                 ->join('db_orders','db_orders.id','db_pay_requisition_002_item.order_id')
+                 ->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
+                 ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+                 ->get();
   
            if(@$Products){
                 foreach ($Products as $key => $value) {
-                           // วุฒิเพิ่มมาเช็คยอดที่โดนตัดแล้ว
-                $pro_check = DB::table('db_pay_requisition_002')->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)->where('product_id_fk',$value->product_id_fk)->first();
-                $c_amt_get = 0;
-                if($pro_check){
-                  $c_amt_get = $pro_check->amt_get;
-                }
+                  
                   // วุฒิเพิ่มมาเช็ค if
                   if($value->product_id_fk!=null){
                     
@@ -1315,60 +1212,27 @@ GROUP BY db_order_products_list.product_id_fk
                    }else{
                      $r_ch_t = '';
                    }
-  
-                    // บิลปกติ
-                  $arr_inv = [];
-                  $p1 = DB::select(" select db_orders.code_order FROM db_order_products_list
-                  LEFT JOIN db_orders on db_orders.id = db_order_products_list.frontstore_id_fk
-                  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-                  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-                  WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='product'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
-                  if(@$p1){
-                    foreach (@$p1 as $inv) {
-                        array_push($arr_inv,@$inv->code_order);
-                    }
-                  }
-  
-                  // บิลโปร
-                  $p2 = DB::select(" 
-                  select db_orders.code_order 
-                  FROM `promotions_products` 
-                  LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
-                  LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-                  left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-                  left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-                  WHERE db_order_products_list.product_id_fk in (".($value->product_id_fk?$value->product_id_fk:0).")  AND type_product='promotion'  AND db_delivery_packing.packing_code_id_fk = '".$row->db_delivery_packing_code."' ");
-                  if(@$p2){
-                    foreach (@$p2 as $inv) {
-                        array_push($arr_inv,@$inv->code_order);
-                    }
-                  }
-  
-                  $invoice_code = implode(",",$arr_inv);
-  
-                  
-                  // $sum_amt += $value->amt;
-                  //เอาออก ('.@$invoice_code.')<br> 
-                  $sum_amt += $c_amt_get;
+
+                  $sum_amt += $value->amt_get;
                   $pn .=     
                   '<div class="divTableRow">
                   <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                   '.@$value->product_name.'</b><br>
                   <font color=red>'.$r_ch_t.'</font>
                   </div>
-                  <div class="divTableCell" style="text-align:center;">'.@$c_amt_get.'</div> 
+                  <div class="divTableCell" style="text-align:center;">'.@$value->amt_get.'</div> 
                   <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
                   <div class="divTableCell" style="text-align:left;"> ';
   
                   $item_id = 1;
-                  $amt_scan = @$c_amt_get;
+                  $amt_scan = @$value->amt_get;
   
                   for ($i=0; $i < $amt_scan ; $i++) { 
   
-                  $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
+                  $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and invoice_code='".$value->code_order."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
                   
                               if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
-  
+
                                 $pn .= 
                                  '
                                   <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly > 
@@ -1376,10 +1240,10 @@ GROUP BY db_order_products_list.product_id_fk
                                  ';
   
                               }else{
-  
+                       
                                  $pn .= 
                                  '
-                                  <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                                  <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
                                   <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
                                  ';
   

@@ -541,7 +541,7 @@ class DeliveryController extends Controller
       	}
 
         // วุฒิเพิ่ม if มา
-        if(count($request->row_id)>1){
+        // if(count($request->row_id)>1){
           $arr = implode(',', $request->row_id);
 
           DB::update(" UPDATE db_delivery SET status_pack='1',updated_at=now() WHERE id in ($arr)  ");
@@ -589,13 +589,15 @@ class DeliveryController extends Controller
                 DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' , status_to_wh=1 WHERE id=$value->id  ");
               
            }
-        }else{
-          $arr = implode(',', $request->row_id);
-          $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
-          foreach ($rsDelivery as $key => $value) {
-            DB::select(" UPDATE db_delivery SET status_to_wh=1 WHERE id=$value->id  ");
-          }
-        }
+
+        // }else{
+        //   $arr = implode(',', $request->row_id);
+        //   $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
+        //   foreach ($rsDelivery as $key => $value) {
+        //     DB::select(" UPDATE db_delivery SET status_to_wh=1 WHERE id=$value->id  ");
+        //   }
+        // }
+
         return redirect()->to(url("backend/delivery"));
 
       }elseif(isset($request->save_select_addr)){
