@@ -103,13 +103,15 @@
 				$sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
 
 				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
-				
+			
 				$p_i = 0;
 				for ($i=0; $i < count($sRow) ; $i++) {
 					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box')->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
-					if($pick_pack_packing){
+					
+					// if($pick_pack_packing){
 						if($pick_pack_packing->p_amt_box != null && $pick_pack_packing->p_amt_box != ''){
 							for($p=0; $p < $pick_pack_packing->p_amt_box; $p++){
+								// dd($i+2+$p_i);
 								$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
 								$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
 								$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
@@ -158,30 +160,31 @@
 							// $sheet->setCellValue('S'.($i+2), $request->id);
 							$sheet->setCellValue('S'.($i+2+$p_i), '');
 						}
-					}else{
-						$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
-						$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
-						$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
-						$sheet->setCellValue('D'.($i+2+$p_i), $sRow[$i]->recipient_code);
-						$sheet->setCellValue('E'.($i+2+$p_i), $sRow[$i]->recipient_name);
-						$sheet->setCellValue('F'.($i+2+$p_i), $sRow[$i]->address);
-						$sheet->setCellValue('G'.($i+2+$p_i), $sRow[$i]->postcode);
-						$sheet->setCellValue('H'.($i+2+$p_i), $sRow[$i]->mobile);
-						// $sheet->setCellValue('I'.($i+2), $sRow[$i]->contact_person);
-						$sheet->setCellValue('I'.($i+2+$p_i), $sRow[$i]->recipient_name);
-						$sheet->setCellValue('J'.($i+2+$p_i), $sRow[$i]->phone_no);
-						$sheet->setCellValue('K'.($i+2+$p_i), $sRow[$i]->email);
-						$sheet->setCellValue('L'.($i+2+$p_i), $sRow[$i]->declare_value);
-						$sheet->setCellValue('M'.($i+2+$p_i), $sRow[$i]->cod_amount);
-						$sheet->setCellValue('N'.($i+2+$p_i), $sRow[$i]->remark);
-						$sheet->setCellValue('O'.($i+2+$p_i), $sRow[$i]->total_box);
-						$sheet->setCellValue('P'.($i+2+$p_i), $sRow[$i]->sat_del);
-						$sheet->setCellValue('Q'.($i+2+$p_i), $sRow[$i]->hrc);
-						$sheet->setCellValue('R'.($i+2+$p_i), $sRow[$i]->invr);
-						// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
-						// $sheet->setCellValue('S'.($i+2), $request->id);
-						$sheet->setCellValue('S'.($i+2+$p_i), '');
-					}
+						$p_i = $p_i-1;
+					// }else{
+					// 	$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
+					// 	$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
+					// 	$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
+					// 	$sheet->setCellValue('D'.($i+2+$p_i), $sRow[$i]->recipient_code);
+					// 	$sheet->setCellValue('E'.($i+2+$p_i), $sRow[$i]->recipient_name);
+					// 	$sheet->setCellValue('F'.($i+2+$p_i), $sRow[$i]->address);
+					// 	$sheet->setCellValue('G'.($i+2+$p_i), $sRow[$i]->postcode);
+					// 	$sheet->setCellValue('H'.($i+2+$p_i), $sRow[$i]->mobile);
+					// 	// $sheet->setCellValue('I'.($i+2), $sRow[$i]->contact_person);
+					// 	$sheet->setCellValue('I'.($i+2+$p_i), $sRow[$i]->recipient_name);
+					// 	$sheet->setCellValue('J'.($i+2+$p_i), $sRow[$i]->phone_no);
+					// 	$sheet->setCellValue('K'.($i+2+$p_i), $sRow[$i]->email);
+					// 	$sheet->setCellValue('L'.($i+2+$p_i), $sRow[$i]->declare_value);
+					// 	$sheet->setCellValue('M'.($i+2+$p_i), $sRow[$i]->cod_amount);
+					// 	$sheet->setCellValue('N'.($i+2+$p_i), $sRow[$i]->remark);
+					// 	$sheet->setCellValue('O'.($i+2+$p_i), $sRow[$i]->total_box);
+					// 	$sheet->setCellValue('P'.($i+2+$p_i), $sRow[$i]->sat_del);
+					// 	$sheet->setCellValue('Q'.($i+2+$p_i), $sRow[$i]->hrc);
+					// 	$sheet->setCellValue('R'.($i+2+$p_i), $sRow[$i]->invr);
+					// 	// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
+					// 	// $sheet->setCellValue('S'.($i+2), $request->id);
+					// 	$sheet->setCellValue('S'.($i+2+$p_i), '');
+					// }
 					
 				}
 

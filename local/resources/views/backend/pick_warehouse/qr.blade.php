@@ -745,6 +745,7 @@ setTimeout(function(){
           var item_id = $(this).data('item_id');
           var packing_code = $(this).data('packing_code');
           var product_id_fk = $(this).data('product_id_fk');
+          var invoice_code = $(this).attr('invoice_code');
           // alert(v+":"+invoice_code+":"+product_id_fk);
           if($(this).val()!=''){
             $(this).css({ 'background-color' : '', 'opacity' : '' });
@@ -755,7 +756,9 @@ setTimeout(function(){
              $.ajax({
                  type:'POST',
                  url: " {{ url('backend/ajaxScanQrcodeProductPacking') }} ",
-                 data:{ _token: '{{csrf_token()}}',item_id:item_id,qr_code:v,packing_code:packing_code,product_id_fk:product_id_fk },
+                 data:{ _token: '{{csrf_token()}}',item_id:item_id,
+                 invoice_code:invoice_code,
+                 qr_code:v,packing_code:packing_code,product_id_fk:product_id_fk },
                   success:function(data){
                        // console.log(data);
                        $.each(data,function(key,value){
@@ -1245,6 +1248,7 @@ setTimeout(function(){
            var packing_id = "{{$packing_id}}"; //alert(packing_id);
            var oTable0002;
            var delivery_id = $(this).attr('delivery_id');
+           var data_id = $(this).attr('data_id');
           $('#delivery_id_more').val(delivery_id);
            $(function() {
              $.fn.dataTable.ext.errMode = 'throw';
@@ -1264,7 +1268,12 @@ setTimeout(function(){
                          ajax: {
                              url: '{{ url('backend/warehouse_qr_0002/warehouse_qr_0002_pack_scan') }}',
                              method: "POST",
-                             data:{ _token: '{{csrf_token()}}',picking_id:packing_id,id:id},
+                             data:{ _token: '{{csrf_token()}}',
+                             data_id:data_id,
+                             delivery_id:delivery_id,
+                             picking_id:packing_id,
+                             id:id
+                             },
                          },
                    columns: [
                        // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},

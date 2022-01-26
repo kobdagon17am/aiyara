@@ -3619,6 +3619,7 @@ class AjaxController extends Controller
                     ->where('item_id', $request->item_id)
                     ->where('packing_code', $request->packing_code)
                     ->where('product_id_fk', $request->product_id_fk)
+                    ->where('invoice_code', $request->invoice_code)
                     ->get();
                     if($value->count() == 0){
                           DB::table('db_pick_warehouse_qrcode')->insert(array(
@@ -3626,6 +3627,7 @@ class AjaxController extends Controller
                             'packing_code' => $request->packing_code,
                             'product_id_fk' => $request->product_id_fk,
                             'qr_code' => $request->qr_code,
+                            'invoice_code' => $request->invoice_code,
                             'created_at' => date("Y-m-d H:i:s"),
                           ));
                     }else{
@@ -3633,6 +3635,7 @@ class AjaxController extends Controller
                           ->where('item_id', $request->item_id)
                           ->where('packing_code', $request->packing_code)
                           ->where('product_id_fk', $request->product_id_fk)
+                          ->where('invoice_code', $request->invoice_code)
                           ->update(array(
                             'qr_code' => $request->qr_code,
                           ));
