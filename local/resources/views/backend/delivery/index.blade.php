@@ -699,7 +699,7 @@ $(function() {
                           $.each(rows_selected, function(index, rowId){
 
                             var v = rowId.split(':');
-                            // console.log(v);
+                            console.log(v);
                             $('#last_form').after(
                                  $('<input>')
                                     .attr('type', 'hidden')
@@ -710,7 +710,9 @@ $(function() {
 
                             total_price+=parseFloat(v[1]); 
                             shipping_price+=parseFloat(v[2]); 
-                            shipping_special+=parseFloat(v[3]); 
+                            if(v[3]!=''){
+                              shipping_special+=parseFloat(v[3]); 
+                            }
 
                           });
 
@@ -718,11 +720,12 @@ $(function() {
                           // var shipping_price = rows_selected.rows( { selected: true } ).data().pluck( 'shipping_price' ).toArray();
                           // var total_price = rows_selected.rows( { selected: true } ).data().pluck( 'total_price' ).toArray();
                           // $(".myloading").hide();
-
+                          console.log('shipping_special '+shipping_special);
             					     setTimeout(function(){
             	            		if($('.select-info').text()!=''){
             	            			var str = $('.select-info').text();
                   							var str = str.split(" ");
+       
                                 // วุฒิปรับให้อันเดียวก็ส่งได้
                                 if(parseInt(str[0])>0){
                               	// if(parseInt(str[0])>1){
@@ -732,6 +735,7 @@ $(function() {
                                         }else{
                                           $('.divBtnSave').hide();
                                           var shipping_cost = "{{@$shipping_cost}}";
+                                          console.log('xxx : '+ total_price);
                                           if(total_price>=shipping_cost){
                                             $('.divBtnSave').show();
                                           }else{
