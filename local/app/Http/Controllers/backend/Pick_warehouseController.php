@@ -1227,7 +1227,7 @@ GROUP BY db_order_products_list.product_id_fk
                   $item_id = 1;
                   $amt_scan = @$value->amt_get;
   
-                  for ($i=0; $i < $amt_scan ; $i++) { 
+                  // for ($i=0; $i < $amt_scan ; $i++) { 
   
                   $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and invoice_code='".$value->code_order."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
                   
@@ -1246,12 +1246,18 @@ GROUP BY db_order_products_list.product_id_fk
                                   <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
                                   <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
                                  ';
-  
+
+                              
+                                //  วุฒิเพิ่มมา
+                                 $pn .= 
+                                 '  <a href="'.url('backend/qr_show/'.$value->code_order.'/'.$row->packing_code.'/'.$value->product_id_fk).'" target="bank" class="qr_scan_show" data-item_id="'.@$item_id.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'"><u>แสดง</u></a>
+                                 <br>
+                                 ';
                               }
   
-                                @$item_id++;
+                            //     @$item_id++;
                                 
-                            }  
+                            // }  
   
                   $pn .= '</div>';  
                   $pn .= '</div>';  
@@ -2094,5 +2100,22 @@ ORDER BY db_pick_pack_packing.id
       ]);
         return redirect()->back();
     }
+
+    function qr_show($oid,$pid,$proid){
+        $qrs = DB::table('db_pick_warehouse_qrcode')
+        ->where('invoice_code',$oid)->where('product_id_fk',$proid)
+        ->where('packing_code',$pid)
+        ->orderBy('item_id','asc')
+        ->get();
+        $product = DB::table('products')
+        ->join('products_details','products_details.product_id_fk','products_details.id')
+        ->where('products.id',$proid)
+        ->first();
+      return view('backend.pick_warehouse.qr_show',[
+        'qrs' => $qrs,
+        'product' => $product,
+      ]);
+    }
+
 
 }

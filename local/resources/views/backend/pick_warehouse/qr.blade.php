@@ -742,7 +742,7 @@ setTimeout(function(){
       $(document).on('change', '.qr_scan', function(e) {
 
           var v = $(this).val();
-          var item_id = $(this).data('item_id');
+          // var item_id = $(this).data('item_id');
           var packing_code = $(this).data('packing_code');
           var product_id_fk = $(this).data('product_id_fk');
           var invoice_code = $(this).attr('invoice_code');
@@ -756,7 +756,8 @@ setTimeout(function(){
              $.ajax({
                  type:'POST',
                  url: " {{ url('backend/ajaxScanQrcodeProductPacking') }} ",
-                 data:{ _token: '{{csrf_token()}}',item_id:item_id,
+                 data:{ _token: '{{csrf_token()}}',
+                //  item_id:item_id,
                  invoice_code:invoice_code,
                  qr_code:v,packing_code:packing_code,product_id_fk:product_id_fk },
                   success:function(data){
@@ -764,13 +765,12 @@ setTimeout(function(){
                        $.each(data,function(key,value){
                        });
                        $(".myloading").hide();
+                       $('.btnDeleteQrcodeProduct').trigger('click');
                     },
                   error: function(jqXHR, textStatus, errorThrown) {
                       $(".myloading").hide();
                   }
               });
-
-        
       });
 
 
@@ -1297,6 +1297,11 @@ setTimeout(function(){
  
         $('#scan_modal').modal('show');
     });
+
+        // $(document).on('click','.qr_scan_show',function(){
+        //     alert('ok');
+        // });
+
   </script>
 
 <script>
