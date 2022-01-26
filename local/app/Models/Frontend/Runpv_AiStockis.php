@@ -50,6 +50,7 @@ class Runpv_AiStockis extends Model
                       $update_ai_stockist->set_transection_code = date('ym');
                       $update_ai_stockist->pv = $pv;
                       $update_ai_stockist->status = 'success';
+                      $update_ai_stockist->status_add_remove = 'remove';
                       $update_ai_stockist->type_id =$type;
                       $update_ai_stockist->banlance = $pv_total;
                       $update_ai_stockist->code_order = $code_order;
@@ -288,6 +289,7 @@ class Runpv_AiStockis extends Model
                       $update_ai_stockist->transection_code = $transection_code;
                       $update_ai_stockist->set_transection_code = date('ym');
                       $update_ai_stockist->pv = $pv;
+                      $update_ai_stockist->status_add_remove = 'add';
                       $update_ai_stockist->status = 'success';
                       $update_ai_stockist->type_id =$type;
                       $update_ai_stockist->banlance = $pv_total;

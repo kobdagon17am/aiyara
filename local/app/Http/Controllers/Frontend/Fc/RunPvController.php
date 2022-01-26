@@ -222,7 +222,7 @@ class RunPvController extends Controller
             } else {
                 $resule = [
                     'status' => 'success',
-                    'message' => 'Pv add Type AA Success',
+                    'message' => '',
                 ];
                 // dd($resule);
             }
@@ -462,7 +462,7 @@ class RunPvController extends Controller
             } else {
                 $resule = [
                     'status' => 'success',
-                    'message' => 'Pv add Type AA Success',
+                    'message' => '',
                 ];
 
                 // dd($resule);

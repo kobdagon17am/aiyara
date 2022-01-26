@@ -308,6 +308,7 @@ class CancelOrderController extends Controller
               $update_ai_stockist->order_id_fk = $order_data->id;
               $update_ai_stockist->order_channel = 'MEMBER';
               $update_ai_stockist->status_transfer = 2;
+              $update_ai_stockist->status_add_remove = 'add';
               $update_ai_stockist->banlance = $add_pv_aistockist;
               $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
               $update_ai_stockist->save();
