@@ -58,6 +58,7 @@ class ShippingCosController extends Controller
       $price_total = $request->price + $data->shipping_cost;
     }
 
+
     if($request->type == 5){
 
 			$gv = $request->sum_gv;

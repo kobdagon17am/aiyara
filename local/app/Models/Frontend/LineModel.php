@@ -268,7 +268,7 @@ public static function check_line($username){
 
 				}elseif($data->upline_id == 'AA'){
 
-					$resule = ['status'=>'fail','message'=>'No Under line'];
+					$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
 					$j =0;
 				}else{
 
@@ -281,7 +281,7 @@ public static function check_line($username){
 				}
 
 			}else{
-				$resule = ['status'=>'fail','message'=>'No Under line'];
+				$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
 				$j =0;
 			}
 		}
@@ -333,7 +333,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 
 				}elseif($data->upline_id == 'AA'){
 
-					$resule = ['status'=>'fail','message'=>'No Under line'];
+					$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
 					$j =0;
 				}else{
 
@@ -346,7 +346,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 				}
 
 			}else{
-				$resule = ['status'=>'fail','message'=>'No Under line'];
+				$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
 				$j =0;
 			}
 		}
@@ -388,7 +388,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 		if (in_array($introduce_id, $upline_id_arr)) {
 			$resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
 		}else{
-			$resule = ['status'=>'fail','message'=>'No Underline and Upline','data'=>null];
+			$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน','data'=>null];
 
 		}
 		return $resule;
@@ -441,7 +441,7 @@ public static function check_line_backend($username_buy,$username_check){
 
 				}elseif($data->upline_id == 'AA' || empty($data)){
 
-					$resule = ['status'=>'fail','message'=>'No Under line'];
+					$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
 					$j =0;
 				}else{
 
@@ -454,7 +454,7 @@ public static function check_line_backend($username_buy,$username_check){
 				}
 
 			}else{
-				$resule = ['status'=>'fail','message'=>'No Under line'];
+				$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
 				$j =0;
 			}
 		}
@@ -495,7 +495,7 @@ public static function check_line_backend($username_buy,$username_check){
 		if (in_array($username_check, $upline_id_arr)) {
 			$resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
 		}else{
-			$resule = ['status'=>'fail','message'=>'No Underline and Upline '];
+			$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน '];
 
 		}
 		return $resule;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend\Fc;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Frontend\Fc\RunPvController;
 use Illuminate\Support\Facades\DB;
+use App\Models\Db_Ai_stockist;
 
 class CancelOrderController extends Controller
 {
@@ -290,9 +291,26 @@ class CancelOrderController extends Controller
               ->where('id', $customer_user->id)
               ->update(['pv_aistockist' => $add_pv_aistockist]);
 
-            $update_ai_stockist = DB::table('ai_stockist')
-              ->where('order_id_fk', $order_id)
-              ->update(['status' => 'cancel']);
+              $ai_stockist = DB::table('ai_stockist')
+              ->select('transection_code')
+              ->where('ai_stockist.code_order', '=',$order_data->code_order)
+              ->first();
+
+              $update_ai_stockist = new Db_Ai_stockist();
+              $update_ai_stockist->customer_id = $order_data->customers_id_fk;
+              $update_ai_stockist->to_customer_id = $order_data->customers_id_fk;
+              $update_ai_stockist->transection_code = $ai_stockist->transection_code;
+              // $update_ai_stockist->set_transection_code = date('ym');
+              $update_ai_stockist->pv = $order_data->pv;
+              $update_ai_stockist->status = 'cancel';
+              $update_ai_stockist->type_id = 4;
+              $update_ai_stockist->code_order = $order_data->code_order;
+              $update_ai_stockist->order_id_fk = $order_data->id;
+              $update_ai_stockist->order_channel = 'MEMBER';
+              $update_ai_stockist->status_transfer = 2;
+              $update_ai_stockist->banlance = $add_pv_aistockist;
+              $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
+              $update_ai_stockist->save();
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 6) { // Course
@@ -341,6 +359,7 @@ class CancelOrderController extends Controller
 
 
       if ($resule['status'] == 'success') {
+        $update_ai_stockist->save();
         DB::commit();
         return $resule;
       } else {

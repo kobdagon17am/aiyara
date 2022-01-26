@@ -30,7 +30,7 @@ class Po_approveController extends Controller
         }
 // dd($code_order);
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
-     
+
         return View('backend.po_approve.index')->with(
         array(
            'sBusiness_location'=>$sBusiness_location,
@@ -229,7 +229,7 @@ class Po_approveController extends Controller
                         FROM db_orders WHERE (`id`=".$sRow->id.") AND delivery_location <> 0 ;
                       ");
                     }else{
-                          // (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) 
+                          // (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END)
                         DB::select("
                         INSERT IGNORE INTO db_delivery
                         ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
@@ -238,13 +238,13 @@ class Po_approveController extends Controller
                         (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
                         (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                         (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) 
+                        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                         ))
                         FROM db_orders WHERE (`id`=".$sRow->id.") AND delivery_location <> 0 ;
                       ");
                     }
 
-                     
+
 
 
 // Clear ก่อน ค่อย อัพเดต ใส่ตามเงื่อนไขทีหลัง
@@ -791,7 +791,7 @@ class Po_approveController extends Controller
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
 
-    
+
 
         if(@\Auth::user()->permission==1){
 
@@ -887,7 +887,7 @@ ORDER BY updated_at DESC
 
 
                 ");
-                
+
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('created_at', function ($row) {

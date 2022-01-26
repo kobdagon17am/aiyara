@@ -86,6 +86,7 @@ class CartPaymentController extends Controller
         //vatใน 7%
         $p_vat = $price * ($vat / (100 + $vat));
 
+
         //มูลค่าสินค้า
         $price_vat = $price - $p_vat;
 
@@ -485,7 +486,7 @@ class CartPaymentController extends Controller
 
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '12', 'transfer_price' => $total_price]);
+                        ->update(['pay_type_id_fk' => '12','approve_status'=>1, 'transfer_price' => $total_price]);
                 }
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
@@ -541,7 +542,7 @@ class CartPaymentController extends Controller
                 if ($order_data->purchase_type_id_fk == 5) {
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '18']);
+                        ->update(['pay_type_id_fk' => '18','approve_status'=>1]);
                 }
                 return redirect($data['url']);
             } else {
@@ -566,7 +567,7 @@ class CartPaymentController extends Controller
                 if ($order_data->purchase_type_id_fk == 5) {
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '2']);
+                        ->update(['pay_type_id_fk' => '2','approve_status'=>1]);
                 }
                 return redirect($data['url']);
             } else {

@@ -210,7 +210,7 @@ class Runpv_AiStockis extends Model
 
                             $resule =  RunPvController::Runpv($to_customer_user,$pv,$type,$transection_code);
                         }elseif ($type == 4) {//ซื้อเพื่อเติม เก็บ log เฉยๆ
-                          $resule = ['status' => 'success', 'message' => 'ซื้อเพื่อเติม เก็บ log เฉยๆ '];
+                          $resule = ['status' => '', 'message' => 'success'];
                         }else {
                             $resule = ['status' => 'fail', 'message' => 'ไม่มี Type ที่เลือก'];
                             return  $resule;
@@ -221,6 +221,18 @@ class Runpv_AiStockis extends Model
 
                 }
                 if ($resule['status'] == 'success') {
+
+                  $strtotime_date_now_30 = strtotime("+30 minutes");
+                  $strtotime_date_now_23 = strtotime(date('Y-m-d 23:00:00'));
+
+                  if ($strtotime_date_now_30 > $strtotime_date_now_23) {
+                      //$x= 'มากกว่า : '.date('Y-m-d H:i:s',$strtotime_date_now_30).'||'.date('Y-m-d H:i:s',$strtotime_date_now_23);
+                      $cancel_expiry_date = date('Y-m-d H:i:s', $strtotime_date_now_23);
+                  } else {
+                      //$x= 'น้อยกว่า : '.date('Y-m-d H:i:s',$strtotime_date_now_30).'||'.date('Y-m-d H:i:s',$strtotime_date_now_23);
+                      $cancel_expiry_date = date('Y-m-d H:i:s', $strtotime_date_now_30);
+                  }
+                  $update_ai_stockist->cancel_expiry_date = $cancel_expiry_date;
                   $update_ai_stockist->save();
                   $update_to_customer->save();
                   $update_use->save();

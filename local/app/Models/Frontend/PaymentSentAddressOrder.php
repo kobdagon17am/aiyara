@@ -12,8 +12,6 @@ class PaymentSentAddressOrder extends Model
     public static function update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv,$quantity)
     {
 
-
-
         try {
             DB::BeginTransaction();
             $insert_db_orders = new Db_Orders();
@@ -79,7 +77,7 @@ class PaymentSentAddressOrder extends Model
 
 
             $insert_db_orders->product_value = $price_vat;
-            $insert_db_orders->tax = $rs->vat;
+            $insert_db_orders->tax =  $p_vat;
             $insert_db_orders->sum_price = $rs->price;
             $insert_db_orders->total_price = $rs->price_total;
             $insert_db_orders->pv_total = $rs->pv_total;
@@ -127,7 +125,6 @@ class PaymentSentAddressOrder extends Model
                 if ($data_shipping['data']->shipping_type_id == 1) {
                     $insert_db_orders->shipping_free = 1;
                 }
-
                 $insert_db_orders->shipping_price = $shipping;
                 $insert_db_orders->shipping_cost_id_fk = $data_shipping['data']->shipping_type_id;
                 $insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;
@@ -149,8 +146,6 @@ class PaymentSentAddressOrder extends Model
 
                 $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->other_province,$rs->price,$rs->shipping_premium,$rs->receive);
                 $shipping = $data_shipping['data']->shipping_cost;
-
-
 
                 if ($data_shipping['data']->shipping_type_id == 1) {
                     $insert_db_orders->shipping_free = 1;
@@ -174,6 +169,8 @@ class PaymentSentAddressOrder extends Model
 
             } elseif ($rs->receive == 'sent_office') {
                 $insert_db_orders->shipping_price = 0;
+
+
                 $insert_db_orders->shipping_free = 1;
                 $insert_db_orders->tel = $rs->receive_tel_mobile;
                 $insert_db_orders->name = $rs->office_name;

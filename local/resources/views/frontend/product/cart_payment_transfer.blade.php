@@ -757,16 +757,12 @@
                                     <tr>
                                         <th>มูลค่าสินค้า : </th>
 
-                                        <?php
 
-                                        $price_vat = $data->sum_price * ($data->tax / 100);
-                                        $price_vat_sum = $data->sum_price - $price_vat;
-                                        ?>
-                                        <td> {{ number_format($price_vat_sum, 2) }}</td>
+                                        <td> {{ number_format($data->product_value, 2) }}</td>
                                     </tr>
                                     <tr>
-                                        <th>VAT({{ $data->tax }}%) : </th>
-                                        <td> {{ number_format($price_vat, 2) }}</td>
+                                        <th>VAT({{ $data->vat }}%) : </th>
+                                        <td> {{ number_format($data->tax, 2) }}</td>
                                     </tr>
                                     <tr>
                                         <th>รวม : </th>
@@ -863,8 +859,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>Vat({{ $data->tax }}%)</strong></td>
-                                <td align="right"><strong> {{ $data->sum_price - $data->product_value }} </strong></td>
+                                <td><strong>Vat({{ $data->vat }}%)</strong></td>
+                                <td align="right"><strong> {{ $data->tax}} </strong></td>
                             </tr>
                             <tr>
                                 <td><strong>มูลค่าสินค้า + Vat</strong></td>

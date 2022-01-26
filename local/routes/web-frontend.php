@@ -168,7 +168,7 @@ Route::get('modal_qr_recive_product','Frontend\HistoryController@modal_qr_recive
 Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
 
 Route::get('datable/history','Frontend\HistoryController@datatable')->name('datable/history');
-
+Route::get('get_detail_order_aicash','Frontend\HistoryController@get_detail_order_aicash')->name('get_detail_order_aicash');
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
 Route::post('re_new_payment','Frontend\HistoryController@re_new_payment')->name('re_new_payment');
 
@@ -188,6 +188,7 @@ Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')
 Route::post('use_aipocket','Frontend\AipocketController@use_aipocket')->name('use_aipocket');
 Route::get('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_aipocket');
 Route::get('dt_aistockist_panding','Frontend\AipocketController@dt_aistockist_panding')->name('dt_aistockist_panding');
+Route::post('cancel_aistockist','Frontend\AipocketController@cancel_aistockist')->name('cancel_aistockist');
 
 Route::get('ai-cash','Frontend\AiCashController@index')->name('ai-cash');
 Route::post('dt_aicash','Frontend\AiCashController@dt_aicash')->name('dt_aicash');

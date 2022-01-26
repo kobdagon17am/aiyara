@@ -96,6 +96,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                     </table>
                 </div>
+                <div class="row">
+                  <code>กรณียกเลิกบิลสามารถทำได้ถายใน 30 นาที หลังจากบิลถูกอนุมัติและสามารถยกเลิกบิลได้ภายใน 23.00 น.
+                      ของวันที่ทำรายการเท่านั้น</code>
+              </div>
 
             </div>
 
@@ -216,6 +220,37 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         </div>
     </div>
 
+
+    <div class="modal fade" id="cancel_aistockist" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-md" role="document">
+          <form action="{{ route('cancel_aistockist') }}" method="POST" enctype="multipart/form-data">
+              @csrf
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="cancel_title_aistockist">ยกเลิกรายการ Ai-Stockist</h5>
+                  </div>
+
+                  <div class="modal-body">
+                      <div class="form-group row">
+                          <div class="col-sm-12 text-center">
+                              <button type="button" class="btn btn-default waves-effect "
+                                  data-dismiss="modal">Close</button>
+                              <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
+                              <input type="hidden" name="cancel_code" id="cancel_code" value="">
+                          </div>
+                      </div>
+                  </div>
+
+                  {{-- <div class="modal-footer">
+      <button type="button" class="btn btn-default waves-effect "
+          data-dismiss="modal">Close</button>
+
+  </div> --}}
+              </div>
+          </form>
+      </div>
+  </div>
+
 @endsection
 @section('js')
     <!-- Masking js -->
@@ -300,6 +335,11 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                             "data": "detail",
                             "name": "detail",
                             "title": '<center>Detail</center>',
+                        },
+                        {
+                            "data": "action",
+                            "name": "action",
+                            "title": '<center>Action</center>',
                         },
                   ],order:[[0,'DESC']],
         });
@@ -450,6 +490,16 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     console.log("error");
                 })
         }
+
+
+        function cancel_aistockist(id,code) {
+          console.log(id,code);
+            $('#cancel_code').val(code);
+            $('#cancel_title_aistockist').html('ยืนยันการยกเลิกรายการ (' + code + ')');
+        }
+
+
+
     </script>
 
 
