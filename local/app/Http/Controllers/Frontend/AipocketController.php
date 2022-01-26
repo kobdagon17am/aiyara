@@ -104,25 +104,19 @@ class AipocketController extends Controller
       })
 
       ->addColumn('pv', function ($row) {
-
-        if (Auth::guard('c_user')->user()->id == $row->customer_id and Auth::guard('c_user')->user()->id == $row->to_customer_id) {
-
-          if ($row->type_id == 4 || $row->type_id == 8) {
+        if (Auth::guard('c_user')->user()->id == $row->customer_id) {
+          if ($row->status_add_remove == 'add') {
             $pv = '<b class="text-success">' . $row->pv . '</b>';
           } else {
             $pv = '<b class="text-danger"> -' . $row->pv . '</b>';
           }
-        } elseif (Auth::guard('c_user')->user()->id == $row->customer_id and Auth::guard('c_user')->user()->id != $row->to_customer_id) {
-          if ($row->type_id == 4 || $row->type_id == 8) {
-            $pv = '<b class="text-success">' . $row->pv . '</b>';
-          } else {
+        }else{
+          if ($row->status_add_remove == 'add') {
             $pv = '<b class="text-danger"> -' . $row->pv . '</b>';
+          } else {
+            $pv = '<b class="text-success">' . $row->pv . '</b>';
           }
-        } else {
-          $pv = '<b class="text-success">' . $row->pv . '</b>';
         }
-
-
         return $pv;
       })
 
@@ -148,6 +142,22 @@ class AipocketController extends Controller
         }
 
         return $banlance;
+      })
+
+      ->addColumn('status', function ($row) {
+
+
+        if ($row->status == 'success') {
+          $status = '<span class="label label-success"><b style="color: #000">' . $row->status . '</b></span>';
+        } elseif($row->status == 'cancel') {
+          $status = '<span class="label label-warning"><b style="color: #000">' . $row->status . '</b></span>';
+        }elseif($row->status == 'panding') {
+          $status = '<span class="label label-warning"><b style="color: #000">' . $row->status . '</b></span>';
+        }else{//fail
+          $status = '<span class="label label-danger"><b style="color: #000">' . $row->status . '</b></span>';
+        }
+
+        return $status;
       })
 
       ->addColumn('detail', function ($row) {
@@ -183,7 +193,7 @@ class AipocketController extends Controller
         return $action;
       })
 
-      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail', 'action'])
+      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail', 'action','status'])
       ->make(true);
   }
 
@@ -427,15 +437,15 @@ class AipocketController extends Controller
     $update_ai_stockist->customer_id = $ai_stockist->customer_id;
     $update_ai_stockist->to_customer_id =$ai_stockist->to_customer_id;
     $update_ai_stockist->transection_code = $ai_stockist->transection_code;
-    // $update_ai_stockist->set_transection_code = date('ym');
+    $update_ai_stockist->set_transection_code = date('ym');
     $update_ai_stockist->pv = $ai_stockist->pv;
-    $update_ai_stockist->status = 'cencel';
+    $update_ai_stockist->status = 'cancel';
     $update_ai_stockist->type_id = $ai_stockist->type_id;
     $update_ai_stockist->code_order = $ai_stockist->code_order;
     $update_ai_stockist->order_id_fk = $ai_stockist->order_id_fk;
     $update_ai_stockist->order_channel = $ai_stockist->order_channel;
     $update_ai_stockist->status_transfer = 2;
-
+    $update_ai_stockist->status_add_remove = 'add';
 
     if ($ai_stockist->type_id == 1){ //ทำคุณสมบัติ
 
@@ -450,7 +460,11 @@ class AipocketController extends Controller
         $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
         $update_ai_stockist->save();
 
-        $update_pv = DB::table('customers')
+        $update_pv = DB::table('ai_stockist')
+          ->where('set_transection_code',$ai_stockist->set_transection_code)
+          ->update(['cancel_expiry_date' => null]);
+
+          $update_pv = DB::table('customers')
           ->where('id',$ai_stockist->customer_id)
           ->update(['pv_aistockist' => $add_pv_aistockist]);
 

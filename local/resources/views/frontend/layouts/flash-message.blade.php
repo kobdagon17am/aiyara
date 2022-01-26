@@ -4,7 +4,7 @@
         icon: 'success',
         title:'Success !',
         text:"{{Session::get('success')}}",
-        timer:4000,
+        // timer:4000,
         type:'success'
     }).then((value) => {
     }).catch(swal.noop);
@@ -17,7 +17,7 @@
     	icon: 'error',
         title:'Error !',
         text:"{{Session::get('error')}}",
-        timer:4000,
+        // timer:4000,
         type:'error'
     }).then((value) => {
     }).catch(swal.noop);
@@ -28,7 +28,7 @@
     swal.fire({
         title:'Warning !',
         text:"{{Session::get('warning')}}",
-        timer:4000,
+        // timer:4000,
         type:'warning'
     }).then((value) => {
     }).catch(swal.noop);

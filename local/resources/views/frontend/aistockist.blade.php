@@ -331,6 +331,13 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                             "name": "banlance",
                             "title": '<center>Banlance</center>',
                         },
+
+                        {
+                            "data": "status",
+                            "name": "status",
+                            "title": '<center>Status</center>',
+                        },
+
                         {
                             "data": "detail",
                             "name": "detail",
