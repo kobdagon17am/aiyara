@@ -3542,6 +3542,7 @@ $endDate1
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
+                AND db_orders.order_status_id_fk <> 1
                 $action_user_011
                 $startDate
                 $endDate
