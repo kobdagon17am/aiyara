@@ -188,6 +188,7 @@ Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')
 Route::post('use_aipocket','Frontend\AipocketController@use_aipocket')->name('use_aipocket');
 Route::get('dt_aipocket','Frontend\AipocketController@dt_aipocket')->name('dt_aipocket');
 Route::get('dt_aistockist_panding','Frontend\AipocketController@dt_aistockist_panding')->name('dt_aistockist_panding');
+Route::post('cancel_aistockist','Frontend\AipocketController@cancel_aistockist')->name('cancel_aistockist');
 
 Route::get('ai-cash','Frontend\AiCashController@index')->name('ai-cash');
 Route::post('dt_aicash','Frontend\AiCashController@dt_aicash')->name('dt_aicash');

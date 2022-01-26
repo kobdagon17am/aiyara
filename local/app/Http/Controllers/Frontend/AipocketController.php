@@ -10,6 +10,8 @@ use Auth;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Frontend\Fc\RunPvController;
+use App\Models\Db_Ai_stockist;
 
 class AipocketController extends Controller
 {
@@ -51,7 +53,7 @@ class AipocketController extends Controller
       ->leftjoin('users', 'users.id', '=', 'ai_stockist.user_id_fk')
       ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
       ->where('dataset_orders_type.lang_id', '=', '1')
-      ->where('ai_stockist.status', '=', 'success')
+      ->where('ai_stockist.status', '!=', 'panding')
       ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')
       ->get();
 
@@ -133,13 +135,12 @@ class AipocketController extends Controller
             } else {
               $banlance = number_format($row->banlance);
             }
-          } elseif ($row->status == 'panding') {
-            $class_css = 'warning';
-            $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $row->status . '</b></span>';
           } else {
-            $class_css = 'danger';
-            $class_css = 'danger';
-            $banlance = '<span class="label label-' . $class_css . '"><b style="color: #000">' . $row->status . '</b></span>';
+            if (empty($row->banlance)) {
+              $banlance = '';
+            } else {
+              $banlance = number_format($row->banlance);
+            }
           }
         } else {
 
@@ -160,7 +161,29 @@ class AipocketController extends Controller
         return $detail;
       })
 
-      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail'])
+
+      ->addColumn('action', function ($row) {
+
+        if ($row->status == 'success' and Auth::guard('c_user')->user()->id == $row->customer_id) {
+
+          if ($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date))) {
+            $action = '';
+          } else {
+            if ($row->code_order) {
+              $action = '';
+            } else {
+              $action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel_aistockist" onclick="cancel_aistockist(' . $row->id . ',\'' . $row->transection_code . '\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+            }
+          }
+        } else {
+
+          $action = '';
+        }
+
+        return $action;
+      })
+
+      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail', 'action'])
       ->make(true);
   }
 
@@ -274,7 +297,29 @@ class AipocketController extends Controller
         return $detail;
       })
 
-      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail'])
+
+      ->addColumn('action', function ($row) {
+
+        if ($row->status == 'success' and Auth::guard('c_user')->user()->id == $row->customer_id) {
+
+          if ($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date))) {
+            $action = '';
+          } else {
+            if ($row->order_id_fk and $row->code_order) {
+              $action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order(' . $row->order_id_fk . ',\'' . $row->code_order . '\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+            } else {
+              $action = '2';
+            }
+          }
+        } else {
+
+          $action = '';
+        }
+
+        return $action;
+      })
+
+      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'action'])
       ->make(true);
   }
 
@@ -320,6 +365,7 @@ class AipocketController extends Controller
 
         //dd($resule);
         if ($resule['status'] == 'success') {
+
           return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
         } else {
           return redirect('ai-stockist')->withError('Sent Ai-Stockist Fail');
@@ -345,4 +391,81 @@ class AipocketController extends Controller
       }
     }
   }
+
+
+  public static function cancel_aistockist(Request $rs)
+  {
+
+    if (empty($rs->cancel_code)) {
+
+      return redirect('ai-stockist')->withError('ไม่พบข้อมูลเลขบิล กรุณาติดต่อเจ้าหน้าที่');
+    }
+
+    $ai_stockist = DB::table('ai_stockist')
+      ->select(
+        'ai_stockist.*',
+        'c_use.business_name as business_name_use',
+        'c_to.business_name as business_name_to',
+        'c_use.user_name as c_use',
+        'c_to.user_name as c_to',
+        'dataset_orders_type.orders_type',
+
+      )
+      ->leftjoin('customers as c_use', 'ai_stockist.customer_id', '=', 'c_use.id')
+      ->leftjoin('customers as c_to', 'ai_stockist.to_customer_id', '=', 'c_to.id')
+      ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
+      ->where('dataset_orders_type.lang_id', '=', '1')
+      ->where('ai_stockist.status', '=', 'success')
+      ->where('ai_stockist.customer_id', '=', Auth::guard('c_user')->user()->id)
+      ->first();
+
+    if (empty($ai_stockist)) {
+      return redirect('ai-stockist')->withError('ไม่พบข้อมูลเลขบิล กรุณาติดต่อเจ้าหน้าที่');
+    }
+
+    $update_ai_stockist = new Db_Ai_stockist();
+    $update_ai_stockist->customer_id = $ai_stockist->customer_id;
+    $update_ai_stockist->to_customer_id =$ai_stockist->to_customer_id;
+    $update_ai_stockist->transection_code = $ai_stockist->transection_code;
+    // $update_ai_stockist->set_transection_code = date('ym');
+    $update_ai_stockist->pv = $ai_stockist->pv;
+    $update_ai_stockist->status = 'cencel';
+    $update_ai_stockist->type_id = $ai_stockist->type_id;
+    $update_ai_stockist->code_order = $ai_stockist->code_order;
+    $update_ai_stockist->order_id_fk = $ai_stockist->order_id_fk;
+    $update_ai_stockist->order_channel = $ai_stockist->order_channel;
+    $update_ai_stockist->status_transfer = 2;
+
+
+    if ($ai_stockist->type_id == 1){ //ทำคุณสมบัติ
+
+      $customer =  DB::table('customers')
+      ->select('user_name','pv_aistockist')
+      ->where('id','=',$ai_stockist->customer_id)
+      ->first();
+      $resule = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv,$ai_stockist->type_id, $ai_stockist->transection_code);
+      if($resule['status'] == 'success'){
+        $add_pv_aistockist = $customer->pv_aistockist + $ai_stockist->pv;
+        $update_ai_stockist->banlance = $add_pv_aistockist;
+        $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
+        $update_ai_stockist->save();
+
+        $update_pv = DB::table('customers')
+          ->where('id',$ai_stockist->customer_id)
+          ->update(['pv_aistockist' => $add_pv_aistockist]);
+
+        return redirect('ai-stockist')->withSuccess($resule['message']);
+        }else {
+          return redirect('ai-stockist')->withError($resule['message']);
+        }
+
+    } elseif ($ai_stockist->type_id == 2){ //รักษาคุณสมบัติรายเดือน
+      return redirect('ai-stockist')->withError('ตอนนี้ทำได้แค่ยกเลิกทำคุณสมบัติ รายการยกเลิกรักษาคุณสมบัติรายเดือน กำลังดำเนินการครับ Golf');
+    } elseif ($ai_stockist->type_id == 3){ //รักษาคุณสมบัติท่องเที่ยว
+      return redirect('ai-stockist')->withError('ตอนนี้ทำได้แค่ยกเลิกทำคุณสมบัติ รายการยกเลิกรักษาคุณสมบัติท่องเที่ยว กำลังดำเนินการครับ Golf');
+    } else {
+      return redirect('ai-stockist')->withError('ไม่สามารถยกเลิกบิลได้ กรุณาติดต่อเจ้าหน้าที่');
+    }
+  }
+
 }
