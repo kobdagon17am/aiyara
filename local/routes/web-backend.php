@@ -412,6 +412,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');
+    Route::get('delivery_approve_to_wh/{id}', 'DeliveryController@delivery_approve_to_wh');
 
     Route::resource('stock_notify', 'Stock_notifyController');
     Route::post('stock_notify/datatable', 'Stock_notifyController@Datatable')->name('stock_notify.datatable');

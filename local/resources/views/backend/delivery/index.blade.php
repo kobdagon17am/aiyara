@@ -321,10 +321,10 @@
 
               <?php //if($can_payproduct=='1'){ ?>
 
-                    {{-- <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                    <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
                     <br>
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                       <div class="col-md-12">
                         <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ จัดส่งบิลเดียว </span>
                       </div>
@@ -821,6 +821,11 @@ $(function() {
   	                  		return '-รอเบิกสินค้าจากคลัง-';
   	                  	}
 	                    }},
+
+                      {data: 'approve',   title :'', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+
                       {data: 'id', title :'Tools ', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){

@@ -88,7 +88,7 @@ class DeliveryPackingCodeController extends Controller
         // วุฒิเอา  $branch_id_fk ออก
        $sTable = DB::select(" 
 
-          SELECT db_delivery_packing_code.*,db_orders.shipping_special,db_delivery.id as db_delivery_id from db_delivery_packing_code  
+          SELECT db_delivery_packing_code.*,db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by from db_delivery_packing_code  
           LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
           LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
           LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
@@ -190,6 +190,27 @@ class DeliveryPackingCodeController extends Controller
 
       })
       ->escapeColumns('addr_to_send')
+
+      ->addColumn('approve', function($row) {
+        if($row->status_to_wh==1){
+          $user = DB::table('ck_users_admin')->where('id',$row->status_to_wh_by)->first();
+          if($user){
+            $user_name = $user->name;
+          }else{
+            $user_name = '';
+          }
+          $p = '
+          <b class="" style="color:green;">ยืนยันแล้ว</b>
+          <br> โดย : '.$user_name.'
+          ';
+        }else{
+          $p = '
+          <a onclick="return confirm(\'ยืนยันการทำรายการ\')" href="'.url('backend/delivery_approve_to_wh/'.$row->db_delivery_id).'" class="btn btn-sm btn-success">ยืนยัน</a>
+        ';
+        }
+      
+        return $p;
+      })    
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

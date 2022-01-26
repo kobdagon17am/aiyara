@@ -586,7 +586,7 @@ class DeliveryController extends Controller
            foreach ($rsDelivery as $key => $value) {
   
                 $pc = "P1".sprintf("%05d",$value->packing_code) ;
-                DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' , status_to_wh=1 WHERE id=$value->id  ");
+                DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' , status_to_wh=0 WHERE id=$value->id  ");
               
            }
 
@@ -887,6 +887,14 @@ class DeliveryController extends Controller
     }
 
 
+    public function delivery_approve_to_wh($id)
+    {
+      DB::table('db_delivery')->where('id',$id)->update([
+        'status_to_wh' => 1,
+        'status_to_wh_by' => @\Auth::user()->id,
+      ]);
+      return redirect()->back();
+    }
 
 
 }
