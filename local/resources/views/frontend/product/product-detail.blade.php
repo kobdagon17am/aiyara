@@ -284,7 +284,7 @@
                  var type = '{{ $data['type'] }}';
                  var quantity = $('#quant').val();
                  var name = '{{ @$data['product_data']->ce_name }}';
-                 var title = '{{ @$data['product_data']->ce_place }}';
+                 var title = `{{ @$data['product_data']->ce_place }}`;
                  var price = '{{ @$data['product_data']->ce_ticket_price }}';
 
 
@@ -292,7 +292,7 @@
                  var quantity = $('#quant').val();
                  var name = '{{ @$data['product_data']->product_name }}';
                  var price = '{{ @$data['product_data']->member_price }}';
-                 var title = '{{ @$data['product_data']->title }}';
+                 var title = `{{ @$data['product_data']->title }}`;
                  var product_unit_id = '{{ @$data['product_data']->product_unit_id_fk }}';
                  var product_unit_name = '{{ @$data['product_data']->product_unit_name }}';
 
