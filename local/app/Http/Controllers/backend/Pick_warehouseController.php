@@ -760,7 +760,7 @@ class Pick_warehouseController extends Controller
       })
       ->escapeColumns('column_002')  
       ->addColumn('column_003', function($row) {
-         
+
         $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
         if(!empty($DP)){
 
@@ -784,19 +784,19 @@ class Pick_warehouseController extends Controller
 
         })
 
-        ->addColumn('p_weight',function($row){
-          $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
-          $pn = '';
-          if(!empty($DP)){
-            foreach ($DP as $key => $value) {
-              $pn .= '<input type="number" class="p_amt_box" data-id="'.@$value->id.'" box-id="0"  type="text" value="'.@$value->p_amt_box.'"><br>';
-            }
+        // ->addColumn('p_weight',function($row){
+          // $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+          // $pn = '';
+          // if(!empty($DP)){
+          //   foreach ($DP as $key => $value) {
+          //     $pn .= '<input type="number" class="p_amt_box" data-id="'.@$value->id.'" box-id="0"  type="text" value="'.@$value->p_amt_box.'"><br>';
+          //   }
  
-            return $pn;
-          }else{
-            return '-';
-          }
-        })
+          //   return $pn;
+          // }else{
+          //   return '-';
+          // }
+        // })
     
 
       ->escapeColumns('column_003')        
@@ -1148,6 +1148,8 @@ GROUP BY db_order_products_list.product_id_fk
                           ->join('db_orders','db_orders.id','db_pay_requisition_002_item.order_id')
                           ->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
                           ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+                          // เพิ่มมา
+                          ->groupBy('db_orders.code_order')
                           ->get();
 
                    if(@$Products){
@@ -1190,11 +1192,18 @@ GROUP BY db_order_products_list.product_id_fk
                  $fid_arr = explode(',',$receipt); 
                  $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
                  $Products = DB::table('db_pay_requisition_002')
-                 ->select('db_pay_requisition_002.product_name','db_pay_requisition_002.product_unit','db_pay_requisition_002_item.*','db_orders.code_order')
+                 ->select('db_pay_requisition_002.product_name',
+                 'db_pay_requisition_002.product_unit',
+                 'db_pay_requisition_002_item.*',
+                 'db_orders.code_order',
+                 DB::raw('SUM(db_pay_requisition_002_item.amt_get) AS amt_get')
+                 )
                  ->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
                  ->join('db_orders','db_orders.id','db_pay_requisition_002_item.order_id')
                  ->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
                  ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+                  // เพิ่มมา
+                  ->groupBy('db_pay_requisition_002_item.product_id_fk')
                  ->get();
   
            if(@$Products){
@@ -1243,7 +1252,7 @@ GROUP BY db_order_products_list.product_id_fk
                        
                                  $pn .= 
                                  '
-                                  <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;'.(empty(@$qr[0]->qr_code)?"background-color:blanchedalmond;":"").'" value="'.@$qr[0]->qr_code.'" > 
+                                  <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;" value="" > 
                                   <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
                                  ';
 
@@ -1915,7 +1924,6 @@ ORDER BY db_pick_pack_packing.id
 
 
   public function warehouse_address_sent(Request $reg){
-
     // return $reg->id;
     if(!empty($reg->packing_id)){
         $d1 = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `pick_pack_requisition_code_id_fk`=".$reg->packing_id." "); 
@@ -2063,8 +2071,20 @@ ORDER BY db_pick_pack_packing.id
     ->escapeColumns('column_008')
 
       ->addColumn('column_006', function($row) {
-          return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
-      })
+          // return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
+
+          $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+          $pn = '';
+          if(!empty($DP)){
+            foreach ($DP as $key => $value) {
+              $pn .= '<input type="number" class="p_amt_box form-control" data-id="'.@$value->id.'" box-id="0"  type="text" value="'.@$value->p_amt_box.'"><br><br>';
+            }
+            return $pn;
+          }else{
+            return '-';
+          }
+      
+        })
 
       ->escapeColumns('column_006')  
 

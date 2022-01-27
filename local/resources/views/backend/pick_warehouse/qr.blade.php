@@ -410,7 +410,7 @@
                   columns: [
                       {data: 'column_001', title :'รหัสใบเบิก', className: 'text-center w231'},
                       {data: 'column_002', title :'รายการบิลในใบเบิก <u>(คลิกที่รายการเพื่อ Scan)</u>', className: 'text-center '},
-                      {data: 'p_weight', title :'จำนวนกล่อง', className: 'text-center '},
+                      // {data: 'p_weight', title :'จำนวนกล่อง', className: 'text-center '},
                       // {data: 'column_003', title :'รายละเอียดลูกค้า', className: 'text-center '},
                       // {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> รายการ Packing List </span> ', className: 'text-left',render: function(d) {
                       //   return d;
@@ -571,12 +571,12 @@
                         return d ;
                       }},
 
-                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> พิมพ์ใบเบิก  </span> ', className: 'text-center w80 ',render: function(d) {
+                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> จำนวนกล่อง  </span> ', className: 'text-center w180 ',render: function(d) {
                         return d ;
                       }},
 
                     
-                      {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง </span> ', className: 'text-center w180 ',render: function(d) {
+                      {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง </span> ', className: 'text-center w80 ',render: function(d) {
                         return d ;
                       }},
              
