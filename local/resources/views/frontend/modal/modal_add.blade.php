@@ -15,7 +15,7 @@
       <div class="modal-footer">
         @if($canAccess)
         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-        <a href="{{route('register',['id'=>$data->id,'line_type'=>$type])}}" type="button" class="btn btn-primary waves-effect waves-light ">Add</a>
+        <a href="{{route('register',['id'=>$data->user_name,'line_type'=>$type])}}" type="button" class="btn btn-primary waves-effect waves-light ">Add</a>
         @endcan
       </div>
     </div>

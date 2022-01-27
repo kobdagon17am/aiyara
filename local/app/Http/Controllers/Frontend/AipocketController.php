@@ -472,7 +472,7 @@ class AipocketController extends Controller
         $mt_active = strtotime("-$m Month", strtotime($customer->pv_mt_active));
 
         $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
-        $customer->pv_mt = $mt_active;
+        $customer->pv_mt_active = $mt_active;
       }
 
       $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
@@ -488,7 +488,7 @@ class AipocketController extends Controller
         $tv_active = strtotime("-$m Month", strtotime($customer->pv_tv_active));
 
         $tv_active = date('Y-m-1', $tv_active); //วันที่ mt_active
-        $customer->pv_mt = $tv_active;
+        $customer->pv_tv_active = $tv_active;
       }
 
       $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);

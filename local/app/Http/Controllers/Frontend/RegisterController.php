@@ -20,15 +20,15 @@ class RegisterController extends Controller
   //   $this->middleware('customer');
   // }
 
-  public function index($id,$line_type){
+  public function index($user_name,$line_type){
 
-      if(empty($id) || empty($line_type)){
+      if(empty($user_name) || empty($line_type)){
         return redirect('home')->withError('กรุณาเลือกตำแหน่งที่ต้องการ Add User');
 
       }else{
        $resule = DB::table('customers')
        ->select('*')
-       ->where('id','=',$id)
+       ->where('user_name','=',$user_name)
        ->limit(1)
        ->first();
 
@@ -124,6 +124,7 @@ class RegisterController extends Controller
   }
 
   public function register_new_member(Request $req){
+
     if(empty($req->introduce)){
       $data = Register::register($req);
 
@@ -146,7 +147,7 @@ class RegisterController extends Controller
 
       if($introduce_id){
         //add data and introduce_id
-        $data = Register::register($req,$introduce_id->id);
+        $data = Register::register($req,$req->introduce);
 
         if($data['status'] == 'success'){
           return view('frontend/register_success',compact('data'));

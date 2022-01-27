@@ -298,6 +298,7 @@ public static function check_line($username){
  //check_type_introduce($introduce_id,$under_line_id){
 public static function check_type_introduce($introduce_id,$under_line_id){//คนแนะนำ//สร้างภายใต้ id
 
+
 	$data_user = DB::table('customers')
 	->select('upline_id','user_name','upline_id','line_type')
 	->where('user_name','=',$under_line_id)
@@ -363,7 +364,6 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 			->select('upline_id','user_name','upline_id','line_type')
 			->where('user_name','=',$introduce_id)
 			->first();
-
 
 
 			$username = $data_account->upline_id;
