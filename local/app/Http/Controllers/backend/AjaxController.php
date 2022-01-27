@@ -3641,7 +3641,7 @@ class AjaxController extends Controller
                     //         'qr_code' => $request->qr_code,
                     //       ));
                     // }
-
+// dd($request->qr_code);
                     if(isset($request->item_id)){
                         DB::table('db_pick_warehouse_qrcode')
                         ->where('item_id', $request->item_id)
