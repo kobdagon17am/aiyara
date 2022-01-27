@@ -95,7 +95,7 @@
                         <div class="row">
                             <div class="col-md-12 text-center">
 
-                                <button type="button" onclick="add_password()" class="btn btn-primary"> Submit </button>
+                                <button type="button" onclick="add_password()" class="btn btn-primary"> Register PassWord </button>
 
                             </div>
                         </div>
