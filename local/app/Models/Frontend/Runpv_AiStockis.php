@@ -83,7 +83,7 @@ class Runpv_AiStockis extends Model
                                     //หักลบค่อยอัพเดท
                                     $mt_mount = $pv_mt_all / $pro_mt;
                                     $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
-                                    $pv_mt_total = $pv_mt_all - ($mt_mount * $pro_mt); //ค่า pv ที่ต้องเอาไปอัพเดท DB
+                                    $pv_mt_total = $pv_mt_all % $pro_mt; //ค่า pv ที่ต้องเอาไปอัพเดท DB
                                     $mt_mount_new = $mt_mount+2;
                                     $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
                                     $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
@@ -113,6 +113,7 @@ class Runpv_AiStockis extends Model
 
 
 
+
                                 if ($strtime_user > $strtime) {
 
                                     // $contract_date = strtotime(date('Y-m',$strtime_user));
@@ -138,12 +139,11 @@ class Runpv_AiStockis extends Model
                                     //หักลบค่อยอัพเดท
                                     $mt_mount = $pv_mt_all / $pro_mt;
                                     $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
-                                    $pv_mt_total = $pv_mt_all - ($mt_mount * $pro_mt); //ค่า pv ที่ต้องเอาไปอัพเดท DB
+                                    $pv_mt_total = $pv_mt_all % $pro_mt; //ค่า pv ที่ต้องเอาไปอัพเดท DB
                                     $mt_mount_new = $mt_mount+1;
                                     $strtime = strtotime($start_month);
                                     $mt_active = strtotime("+$mt_mount_new Month", $strtime);
                                     $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
-
 
                                     $update_to_customer->pv_mt = $pv_mt_total;
                                     $update_to_customer->pv_mt_active =  $mt_active;
@@ -190,7 +190,7 @@ class Runpv_AiStockis extends Model
                                 //หักลบค่อยอัพเดท
                                 $tv_mount = $pv_tv_all / $pro_tv;
                                 $tv_mount = floor($tv_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
-                                $pv_tv_total = $pv_tv_all - ($tv_mount * $pro_tv); //ค่า pv ที่ต้องเอาไปอัพเดท DB
+                                $pv_tv_total = $pv_tv_all % $pro_tv; //ค่า pv ที่ต้องเอาไปอัพเดท DB
 
                                 $add_mount = $tv_mount+1;
                                 $strtime = strtotime($start_month);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Frontend\Fc\RunPvController;
 use Illuminate\Support\Facades\DB;
 use App\Models\Db_Ai_stockist;
+use App\Models\Frontend\Customer;
 
 class CancelOrderController extends Controller
 {
@@ -18,12 +19,7 @@ class CancelOrderController extends Controller
       ->where('id', '=', $order_id)
       ->first();
 
-
-
-    $customer = DB::table('customers')
-      ->select('user_name')
-      ->where('id', $order_data->customers_id_fk)
-      ->first();
+    $customer = Customer::find($order_data->customers_id_fk);
 
     //dd($order_data->approve_status);
     if (empty($order_data)) {
@@ -210,7 +206,7 @@ class CancelOrderController extends Controller
           // 11 เงินโอน + Ai-Cash
           // 12  Ai Voucher + เงินโอน
           // 13  Ai Voucher + บัตรเครดิต
-          // 14  Ai Voucher + Ai-Cash
+        // 14  Ai Voucher + Ai-Cash
 
           if ($pay_type == 3 || $pay_type == 6 || $pay_type == 9 || $pay_type == 11 || $pay_type == 14) { //Aicash
 
@@ -272,16 +268,45 @@ class CancelOrderController extends Controller
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
-            $update_tv = DB::table('customers')
-              ->where('id', $customer_user->id)
-              ->update(['pv_mt' => $order_data->pv_mt_old, 'pv_mt_active' => $order_data->active_mt_old_date, 'status_pv_mt' => $order_data->status_pv_mt_old]);
+
+            $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($customer_user->id,$pv_total);
+
+            $customer->pv_mt = $rs['pv'];
+            if ($rs['mt_active'] > 0) {
+              $customer->pv_mt = $rs['pv'];
+              $m = $rs['mt_active'];
+
+              $mt_active = strtotime("-$m Month", strtotime($customer->pv_mt_active));
+
+              $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
+              $customer->pv_mt_active = $mt_active;
+            }
+
+            // $update_tv = DB::table('customers')
+            //   ->where('id', $customer_user->id)
+            //   ->update(['pv_mt' => $order_data->pv_mt_old, 'pv_mt_active' => $order_data->active_mt_old_date, 'status_pv_mt' => $order_data->status_pv_mt_old]);
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 3) { //รักษาคุณสมบัตรการท่องเที่ยว
 
-            $update_tv = DB::table('customers')
-              ->where('id', $customer_user->id)
-              ->update(['pv_tv' => $order_data->pv_tv_old, 'pv_tv_active' => $order_data->active_tv_old_date]);
+            $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_tv($customer_user->id,$pv_total);
+
+            $customer->pv_tv = $rs['pv'];
+            if ($rs['tv_active'] > 0) {
+
+              $customer->pv_tv = $rs['pv'];
+              $m = $rs['tv_active'];
+
+              $tv_active = strtotime("-$m Month", strtotime($customer->pv_tv_active));
+
+              $tv_active = date('Y-m-1', $tv_active); //วันที่ mt_active
+              $customer->pv_tv_active = $tv_active;
+            }
+
+
+            // $update_tv = DB::table('customers')
+            //   ->where('id', $customer_user->id)
+            //   ->update(['pv_tv' => $order_data->pv_tv_old, 'pv_tv_active' => $order_data->active_tv_old_date]);
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 4) { //เติม Aistockis
@@ -361,6 +386,7 @@ class CancelOrderController extends Controller
 
       if ($resule['status'] == 'success') {
         $update_ai_stockist->save();
+        $customer->save();
         DB::commit();
         return $resule;
       } else {

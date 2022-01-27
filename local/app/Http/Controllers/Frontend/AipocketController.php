@@ -449,12 +449,7 @@ class AipocketController extends Controller
     $update_ai_stockist->order_channel = $ai_stockist->order_channel;
     $update_ai_stockist->status_transfer = 2;
     $update_ai_stockist->status_add_remove = 'add';
-
     $customer = Customer::find($ai_stockist->customer_id);
-
-
-
-
     $add_pv_aistockist = $customer->pv_aistockist + $ai_stockist->pv;
     $update_ai_stockist->banlance = $add_pv_aistockist;
     $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
@@ -477,10 +472,27 @@ class AipocketController extends Controller
         $mt_active = strtotime("-$m Month", strtotime($customer->pv_mt_active));
 
         $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
-        $customer->pv_mt = $mt_active;
+        $customer->pv_mt_active = $mt_active;
       }
+
+      $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
     } elseif ($ai_stockist->type_id == 3) { //รักษาคุณสมบัติท่องเที่ยว
-      return redirect('ai-stockist')->withError('รักษาคุณสมบัติท่องเที่ยว กำลังดำเนินการครับ Golf');
+      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_tv($ai_stockist->customer_id, $ai_stockist->pv);
+
+      $customer->pv_tv = $rs['pv'];
+      if ($rs['tv_active'] > 0) {
+
+        $customer->pv_tv = $rs['pv'];
+        $m = $rs['tv_active'];
+
+        $tv_active = strtotime("-$m Month", strtotime($customer->pv_tv_active));
+
+        $tv_active = date('Y-m-1', $tv_active); //วันที่ mt_active
+        $customer->pv_tv_active = $tv_active;
+      }
+
+      $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
+
     } else {
       return redirect('ai-stockist')->withError('ไม่สามารถยกเลิกบิลได้ กรุณาติดต่อเจ้าหน้าที่');
     }
