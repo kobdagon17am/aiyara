@@ -40,18 +40,17 @@ class Cancel_mt_tv extends Controller
         $mt_active =  $pv / $pro_mt;
       }else{
         $mt_active =  floor($pv / $pro_mt);
+
       }
 
-      $pv = $customer->pv_mt - $mt_active ;
+      $pv = $customer->pv_mt - $pv_mt_new;
       if($pv<0){
         $pv = $pv*-1;
         $mt_active = $mt_active+1;
       }
-
-
     }else{
-
       $pv = $customer->pv_mt - $pv;
+
       if($pv<0){
         $pv = $pv*-1;
         $mt_active = 1;
@@ -61,7 +60,7 @@ class Cancel_mt_tv extends Controller
 
     }
 
-    $resule = ['pv'=>$pv,'mt_active'=>$mt_active];
+    $resule = ['status' => 'success', 'message' => 'Cancle Ai-Stockis Success','pv'=>$pv,'mt_active'=>$mt_active];
     //จำนวนเต็มคือเดือนนี้ต้องไปไปย้อนหลัง
     return $resule;
    }

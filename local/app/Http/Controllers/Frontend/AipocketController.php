@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Frontend\Fc\RunPvController;
 use App\Models\Db_Ai_stockist;
+use App\Models\Frontend\Customer;
 
 class AipocketController extends Controller
 {
@@ -110,7 +111,7 @@ class AipocketController extends Controller
           } else {
             $pv = '<b class="text-danger"> -' . $row->pv . '</b>';
           }
-        }else{
+        } else {
           if ($row->status_add_remove == 'add') {
             $pv = '<b class="text-danger"> -' . $row->pv . '</b>';
           } else {
@@ -149,11 +150,11 @@ class AipocketController extends Controller
 
         if ($row->status == 'success') {
           $status = '<span class="label label-success"><b style="color: #000">' . $row->status . '</b></span>';
-        } elseif($row->status == 'cancel') {
+        } elseif ($row->status == 'cancel') {
           $status = '<span class="label label-warning"><b style="color: #000">' . $row->status . '</b></span>';
-        }elseif($row->status == 'panding') {
+        } elseif ($row->status == 'panding') {
           $status = '<span class="label label-warning"><b style="color: #000">' . $row->status . '</b></span>';
-        }else{//fail
+        } else { //fail
           $status = '<span class="label label-danger"><b style="color: #000">' . $row->status . '</b></span>';
         }
 
@@ -193,7 +194,7 @@ class AipocketController extends Controller
         return $action;
       })
 
-      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail', 'action','status'])
+      ->rawColumns(['created_at', 'customer_id', 'to_customer_id', 'type', 'pv', 'banlance', 'detail', 'action', 'status'])
       ->make(true);
   }
 
@@ -437,7 +438,7 @@ class AipocketController extends Controller
 
     $update_ai_stockist = new Db_Ai_stockist();
     $update_ai_stockist->customer_id = $ai_stockist->customer_id;
-    $update_ai_stockist->to_customer_id =$ai_stockist->to_customer_id;
+    $update_ai_stockist->to_customer_id = $ai_stockist->to_customer_id;
     $update_ai_stockist->transection_code = $ai_stockist->transection_code;
     $update_ai_stockist->set_transection_code = date('ym');
     $update_ai_stockist->pv = $ai_stockist->pv;
@@ -449,48 +450,50 @@ class AipocketController extends Controller
     $update_ai_stockist->status_transfer = 2;
     $update_ai_stockist->status_add_remove = 'add';
 
-    $customer =  DB::table('customers')
-    ->select('user_name','pv_aistockist')
-    ->where('id','=',$ai_stockist->customer_id)
-    ->first();
+    $customer = Customer::find($ai_stockist->customer_id);
 
-    // $ai_stockist_update_not_cancel = DB::table('ai_stockist')
-    // ->where('set_transection_code',$ai_stockist->set_transection_code)
-    // ->update(['cancel_expiry_date' => null]);
+
+
 
     $add_pv_aistockist = $customer->pv_aistockist + $ai_stockist->pv;
     $update_ai_stockist->banlance = $add_pv_aistockist;
     $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
 
-    if ($ai_stockist->type_id == 1){ //ทำคุณสมบัติ
+    $customer->pv_aistockist = $add_pv_aistockist;
 
-      $resule = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv,$ai_stockist->type_id, $ai_stockist->transection_code);
+    if ($ai_stockist->type_id == 1) { //ทำคุณสมบัติ
 
-    } elseif ($ai_stockist->type_id == 2){ //รักษาคุณสมบัติรายเดือน
-      //$rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($ai_stockist->customer_id,$ai_stockist->pv);
+      $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
+    } elseif ($ai_stockist->type_id == 2) { //รักษาคุณสมบัติรายเดือน
 
-      //dd($rs);
-      return redirect('ai-stockist')->withError('ตอนนี้ทำได้แค่ยกเลิกทำคุณสมบัติ รายการยกเลิกรักษาคุณสมบัติรายเดือน กำลังดำเนินการครับ Golf');
-    } elseif ($ai_stockist->type_id == 3){ //รักษาคุณสมบัติท่องเที่ยว
-      return redirect('ai-stockist')->withError('ตอนนี้ทำได้แค่ยกเลิกทำคุณสมบัติ รายการยกเลิกรักษาคุณสมบัติท่องเที่ยว กำลังดำเนินการครับ Golf');
+      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($ai_stockist->customer_id, $ai_stockist->pv);
+
+      $customer->pv_mt = $rs['pv'];
+      if ($rs['mt_active'] > 0) {
+
+        $customer->pv_mt = $rs['pv'];
+        $m = $rs['mt_active'];
+
+        $mt_active = strtotime("-$m Month", strtotime($customer->pv_mt_active));
+
+        $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
+        $customer->pv_mt = $mt_active;
+      }
+    } elseif ($ai_stockist->type_id == 3) { //รักษาคุณสมบัติท่องเที่ยว
+      return redirect('ai-stockist')->withError('รักษาคุณสมบัติท่องเที่ยว กำลังดำเนินการครับ Golf');
     } else {
       return redirect('ai-stockist')->withError('ไม่สามารถยกเลิกบิลได้ กรุณาติดต่อเจ้าหน้าที่');
     }
 
-    if($resule['status'] == 'success'){
-
+    if ($rs['status'] == 'success') {
+      $ai_stockist_update_not_cancel = DB::table('ai_stockist')
+        ->where('set_transection_code', $ai_stockist->set_transection_code)
+        ->update(['cancel_expiry_date' => null]);
       $update_ai_stockist->save();
-      $update_pv = DB::table('customers')
-      ->where('id',$ai_stockist->customer_id)
-      ->update(['pv_aistockist' => $add_pv_aistockist]);
-
-      return redirect('ai-stockist')->withSuccess($resule['message']);
-      }else {
-        return redirect('ai-stockist')->withError($resule['message']);
-      }
-
-
-
+      $customer->save();
+      return redirect('ai-stockist')->withSuccess($rs['message']);
+    } else {
+      return redirect('ai-stockist')->withError($rs['message']);
+    }
   }
-
 }

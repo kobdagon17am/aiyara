@@ -387,7 +387,7 @@ class PvPayment extends Model
 
                             $order_update->pv_banlance = $pv_mt_total;
 
-                            $order_update->active_mt_date =  date('Y-m-1',strtotime($mt_active));
+                            $order_update->active_mt_date =  $mt_active;
 
                         } else {
                             //dd('อัพเดท');
