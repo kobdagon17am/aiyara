@@ -124,7 +124,7 @@ class RegisterController extends Controller
   }
 
   public function register_new_member(Request $req){
-    dd($req->all());
+
     if(empty($req->introduce)){
       $data = Register::register($req);
 
