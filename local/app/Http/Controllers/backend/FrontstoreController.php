@@ -2332,8 +2332,23 @@ class FrontstoreController extends Controller
 
 
     if (!empty($req->invoice_code)) {
-      $invoice_code = " AND db_orders.code_order = '" . $req->invoice_code . "' ";
-      $invoice_code2 = " AND db_add_ai_cash.code_order = '" . $req->invoice_code . "' ";
+      // $invoice_code = " AND db_orders.code_order = '" . $req->invoice_code . "' ";
+      // $invoice_code2 = " AND db_add_ai_cash.code_order = '" . $req->invoice_code . "' ";
+      
+      if(count($req->invoice_code) > 0){
+        $or_str = "";
+        foreach($req->invoice_code as $key => $or){
+          if($key+1 == count($req->invoice_code)){
+            $or_str.= "'".$or."'";
+          }else{
+            $or_str.= "'".$or."'".',';
+          }
+         
+        }
+        $invoice_code = " AND db_orders.code_order IN (".$or_str.") ";
+        $invoice_code2 = " AND db_add_ai_cash.code_order IN (".$or_str.") ";
+    }
+
     } else {
       $invoice_code = "";
       $invoice_code2 = "";
@@ -2888,8 +2903,23 @@ class FrontstoreController extends Controller
     $sD3 = $sD3 . $eD3;
 
     if (!empty($req->invoice_code)) {
-      $invoice_code = " AND db_orders.code_order = '" . $req->invoice_code . "' ";
-      $invoice_code2 = " AND db_add_ai_cash.code_order = '" . $req->invoice_code . "' ";
+      // $invoice_code = " AND db_orders.code_order = '" . $req->invoice_code . "' ";
+      // $invoice_code2 = " AND db_add_ai_cash.code_order = '" . $req->invoice_code . "' ";
+
+      if(count($req->invoice_code) > 0){
+        $or_str = "";
+        foreach($req->invoice_code as $key => $or){
+          if($key+1 == count($req->invoice_code)){
+            $or_str.= "'".$or."'";
+          }else{
+            $or_str.= "'".$or."'".',';
+          }
+         
+        }
+        $invoice_code = " AND db_orders.code_order IN (".$or_str.") ";
+        $invoice_code2 = " AND db_add_ai_cash.code_order IN (".$or_str.") ";
+    }
+
     } else {
       $invoice_code = "";
       $invoice_code2 = "";
@@ -3389,7 +3419,7 @@ $endDate1
   {
 
     // return($req);
-
+// dd($req->all());
     $user_login_id = \Auth::user()->id;
     $sPermission = \Auth::user()->permission;
     // dd($sPermission);
@@ -3470,10 +3500,22 @@ $endDate1
     }
 
     if (!empty($req->invoice_code)) {
-      $invoice_code = " AND code_order = '" . $req->invoice_code . "' ";
-      // wut เพิ่ม
-      $action_user_01 = "";
-      $action_user_011 = "";
+      if(count($req->invoice_code) > 0){
+          $or_str = "";
+          foreach($req->invoice_code as $key => $or){
+            if($key+1 == count($req->invoice_code)){
+              $or_str.= "'".$or."'";
+            }else{
+              $or_str.= "'".$or."'".',';
+            }
+           
+          }
+          $invoice_code = " AND code_order IN (".$or_str.") ";
+        // $invoice_code = " AND code_order = '" . $req->invoice_code . "' ";
+        // wut เพิ่ม
+        $action_user_01 = "";
+        $action_user_011 = "";
+      }
     } else {
       $invoice_code = "";
     }

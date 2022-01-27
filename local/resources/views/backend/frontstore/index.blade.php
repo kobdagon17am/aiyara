@@ -171,7 +171,7 @@
               </div>
               <div class="divTableCell" style="width: 15%">
                      @if(@$r_invoice_code)
-                     <select id="invoice_code" name="invoice_code" class="form-control select2-templating " >
+                     <select id="invoice_code" name="invoice_code" class="form-control order_id_select2" multiple="multiple">
                          <option value="">Select</option>
                           @foreach(@$r_invoice_code AS $r)
                           <option value="{{$r->code_order}}" >
@@ -902,6 +902,8 @@ $(document).ready(function() {
           		$('#endDate').val(today);
           		$('.btnSearchTotal').trigger('click');
             });
+
+            $('.order_id_select2').select2();
 
      });
     </script>
