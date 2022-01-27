@@ -85,6 +85,7 @@ class Cancel_mt_tv extends Controller
     ->where('code', '=', 'pv_tv')
     ->first();
 
+
     $pro_tv = $promotion_mt->pv;
 
     if($pv >= $pro_tv){

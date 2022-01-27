@@ -477,10 +477,10 @@ class AipocketController extends Controller
 
       $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
     } elseif ($ai_stockist->type_id == 3) { //รักษาคุณสมบัติท่องเที่ยว
-      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($ai_stockist->customer_id, $ai_stockist->pv);
+      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_tv($ai_stockist->customer_id, $ai_stockist->pv);
 
       $customer->pv_tv = $rs['pv'];
-      if ($rs['mt_active'] > 0) {
+      if ($rs['tv_active'] > 0) {
 
         $customer->pv_tv = $rs['pv'];
         $m = $rs['tv_active'];
