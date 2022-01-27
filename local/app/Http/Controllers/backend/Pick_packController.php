@@ -433,7 +433,8 @@ class Pick_packController extends Controller
    ->addColumn('addr_to_send', function($row) { 
 
         if(@$row->set_addr_send_this==1){
-               return @$row->recipient_name."<br>".@$row->addr_send."<br>".@$row->postcode." ".@$row->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [เปลี่ยนที่อยู่] </span> ";
+               return @$row->recipient_name."<br>".@$row->addr_send."<br>".@$row->postcode." ".@$row->mobile."<br>";
+              //  ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [เปลี่ยนที่อยู่] </span> ";
         }else{
 
             $d = DB::select(" 

@@ -837,9 +837,11 @@ setTimeout(function(){
 
 
                 $(document).on('click','.btnExportElsx',function(event){
+            
                     /* Act on the event */
                     $(".myloading").show();
                     var id = $(this).data('id');
+                    console.log(id);
                     $.ajax({
 
                            type:'POST',
@@ -1027,8 +1029,9 @@ setTimeout(function(){
 
              if (e.keyCode == 13) {
                   // alert("13");
-                 var index = $('.in-tx').index(this) + 1;
-                 $('.in-tx').eq(index).focus();
+                //  var index = $('.in-tx').index(this) + 1;
+                //  $('.in-tx').eq(index).focus();
+                $('.in-tx').eq($('.in-tx').index(this)).change();
                   return false; // block form from being submitted yet
              }
 
@@ -1037,14 +1040,13 @@ setTimeout(function(){
         });
 
         $(document).on('keyup', '.in-tx', function(e) {
-
           if (this.value.length >= 10) {
-
-                 var index = $('.in-tx').index(this) + 1;
-                 $('.in-tx').eq(index).focus();
+            $('.in-tx').eq($('.in-tx').index(this)).change();
+            // $('.in-tx').index(this).focus();
+                //  var index = $('.in-tx').index(this) + 1;
+                //  $('.in-tx').eq(index).focus();
                   return false;
                 }
-
         });
 
                      $(window).scannerDetection();
@@ -1054,25 +1056,23 @@ setTimeout(function(){
           // element where your barcode is to be entered even if its not focused
                   $("#barcode").val(data.string);
                   console.log("Barcode Scanned" + data.string);
-                           $('.in-tx').next().focus();
+                          //  $('.in-tx').next().focus();
+                               $('.in-tx').eq($('.in-tx').index(this)).change();
                             return false; // block form from being submitted yet
-
                 })
                 .bind('scannerDetectionError', function(e, data) {
-
                   console.log("Error in Barcode Scanning");
-                           $('.in-tx').next().focus();
+                          //  $('.in-tx').next().focus();
+                               $('.in-tx').eq($('.in-tx').index(this)).change();
                             return false; // block form from being submitted yet
                 })
                 .bind('scannerDetectionReceive', function(e, data) {
                   console.log("recieving data:" + data);
-                           $('.in-tx').next().focus();
+                          //  $('.in-tx').next().focus();
+                               $('.in-tx').eq($('.in-tx').index(this)).change();
                             return false; // block form from being submitted yet
-
                 })
-
       });
-
     </script>
 
 
