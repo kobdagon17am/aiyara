@@ -406,6 +406,7 @@ class AipocketController extends Controller
   public static function cancel_aistockist(Request $rs)
   {
 
+
     if (empty($rs->cancel_code)) {
 
       return redirect('ai-stockist')->withError('ไม่พบข้อมูลเลขบิล กรุณาติดต่อเจ้าหน้าที่');
@@ -425,6 +426,7 @@ class AipocketController extends Controller
       ->leftjoin('customers as c_to', 'ai_stockist.to_customer_id', '=', 'c_to.id')
       ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
       ->where('dataset_orders_type.lang_id', '=', '1')
+      ->where('ai_stockist.transection_code', '=', $rs->cancel_code)
       ->where('ai_stockist.status', '=', 'success')
       ->where('ai_stockist.customer_id', '=', Auth::guard('c_user')->user()->id)
       ->first();
@@ -447,39 +449,48 @@ class AipocketController extends Controller
     $update_ai_stockist->status_transfer = 2;
     $update_ai_stockist->status_add_remove = 'add';
 
+    $customer =  DB::table('customers')
+    ->select('user_name','pv_aistockist')
+    ->where('id','=',$ai_stockist->customer_id)
+    ->first();
+
+    // $ai_stockist_update_not_cancel = DB::table('ai_stockist')
+    // ->where('set_transection_code',$ai_stockist->set_transection_code)
+    // ->update(['cancel_expiry_date' => null]);
+
+    $add_pv_aistockist = $customer->pv_aistockist + $ai_stockist->pv;
+    $update_ai_stockist->banlance = $add_pv_aistockist;
+    $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
+
     if ($ai_stockist->type_id == 1){ //ทำคุณสมบัติ
 
-      $customer =  DB::table('customers')
-      ->select('user_name','pv_aistockist')
-      ->where('id','=',$ai_stockist->customer_id)
-      ->first();
       $resule = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv,$ai_stockist->type_id, $ai_stockist->transection_code);
-      if($resule['status'] == 'success'){
-        $add_pv_aistockist = $customer->pv_aistockist + $ai_stockist->pv;
-        $update_ai_stockist->banlance = $add_pv_aistockist;
-        $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
-        $update_ai_stockist->save();
-
-        $update_pv = DB::table('ai_stockist')
-          ->where('set_transection_code',$ai_stockist->set_transection_code)
-          ->update(['cancel_expiry_date' => null]);
-
-          $update_pv = DB::table('customers')
-          ->where('id',$ai_stockist->customer_id)
-          ->update(['pv_aistockist' => $add_pv_aistockist]);
-
-        return redirect('ai-stockist')->withSuccess($resule['message']);
-        }else {
-          return redirect('ai-stockist')->withError($resule['message']);
-        }
 
     } elseif ($ai_stockist->type_id == 2){ //รักษาคุณสมบัติรายเดือน
+      //$rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($ai_stockist->customer_id,$ai_stockist->pv);
+
+      //dd($rs);
       return redirect('ai-stockist')->withError('ตอนนี้ทำได้แค่ยกเลิกทำคุณสมบัติ รายการยกเลิกรักษาคุณสมบัติรายเดือน กำลังดำเนินการครับ Golf');
     } elseif ($ai_stockist->type_id == 3){ //รักษาคุณสมบัติท่องเที่ยว
       return redirect('ai-stockist')->withError('ตอนนี้ทำได้แค่ยกเลิกทำคุณสมบัติ รายการยกเลิกรักษาคุณสมบัติท่องเที่ยว กำลังดำเนินการครับ Golf');
     } else {
       return redirect('ai-stockist')->withError('ไม่สามารถยกเลิกบิลได้ กรุณาติดต่อเจ้าหน้าที่');
     }
+
+    if($resule['status'] == 'success'){
+
+      $update_ai_stockist->save();
+      $update_pv = DB::table('customers')
+      ->where('id',$ai_stockist->customer_id)
+      ->update(['pv_aistockist' => $add_pv_aistockist]);
+
+      return redirect('ai-stockist')->withSuccess($resule['message']);
+      }else {
+        return redirect('ai-stockist')->withError($resule['message']);
+      }
+
+
+
   }
 
 }
