@@ -842,6 +842,7 @@ class DeliveryController extends Controller
           return '';
         }
       })
+      // status_to_wh_by
       ->addColumn('business_location', function($row) {
         if(@$row->business_location_id!=''){
         	   $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id." ");

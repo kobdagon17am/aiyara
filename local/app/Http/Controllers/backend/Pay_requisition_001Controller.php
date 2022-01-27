@@ -1636,10 +1636,10 @@ class Pay_requisition_001Controller extends Controller
 
                  // วุฒิเพิ่มมา เอาไว้ตรวจว่าสินค้าไหนจ่ายแล้วของบิลไหน
     $db_pay_requisition_002_datas = DB::table('db_pay_requisition_002')
-    ->where('pick_pack_requisition_code_id_fk',@$data[1])->get();
+    ->where('pick_pack_requisition_code_id_fk',@$pick_pack_requisition_code_id_fk)->get();
     foreach($db_pay_requisition_002_datas as $data_002){
                   $product_amt_get = $data_002->amt_get;
-                  $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->select('id','orders_id_fk')->where('id',@$data[1])->first();
+                  $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->select('id','orders_id_fk')->where('id',@$pick_pack_requisition_code_id_fk)->first();
                   $arr_order = explode(',',$db_pick_pack_packing_code_data->orders_id_fk);
                   $promotions_products_arr = DB::table('promotions_products')->select('promotion_id_fk')
                   ->where('product_id_fk',$data_002->product_id_fk)->pluck('promotion_id_fk')->toArray();
