@@ -747,7 +747,7 @@ class PagesController extends Controller{
 
 
         public function uploadFileXLSConsignments(Request $request){
-
+            // dd($request->requisition_code);
             // dd($request->input('submit'));
 
           if ($request->input('submit') != null ){

@@ -183,6 +183,27 @@
                                         </a>
                                     </div>
 
+                                    <div class="col-md-4">
+                                        <a href="{{ route('backend.member_regis.index') }}">
+                                            <div class="card mini-stats-wid">
+                                                <div class="card-body">
+                                                    <div class="media">
+                                                        <div class="media-body">
+                                                            <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-warning font-size-18">เอกสารลูกค้า รออนุมัติ</span></p>
+                                                            <!-- <h4 class="mb-0"> 35,555 </h4> -->
+                                                        </div>
+    
+                                                        <div class="avatar-sm rounded-circle bg-warning align-self-center mini-stat-icon">
+                                                            <span class="avatar-title rounded-circle bg-warning">
+                                                                <span class="font-size-16">{{ $wait_approve_customer_doc }}</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+
                                 </div>
 
                                 <!-- end row -->

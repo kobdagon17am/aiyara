@@ -103,15 +103,17 @@
 				$sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
 
 				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
-			
+		
 				$p_i = 0;
 				for ($i=0; $i < count($sRow) ; $i++) {
 					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box')->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
-		
+	
 					if($pick_pack_packing){
+			
 						if($pick_pack_packing->p_amt_box != null && $pick_pack_packing->p_amt_box != ''){
+						
 							for($p=0; $p < $pick_pack_packing->p_amt_box; $p++){
-								// dd($i+2+$p_i);
+					
 								$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
 								$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
 								$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
@@ -137,6 +139,7 @@
 								$p_i++;
 							}
 						}else{
+						
 							$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
 							$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
 							$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);

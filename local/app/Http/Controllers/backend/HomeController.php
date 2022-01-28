@@ -13,10 +13,13 @@ class HomeController extends Controller
     public function index(Request $request)
     {
       $wait_approve_requisition = RequisitionBetweenBranch::waitApproveCount();
+      $customer_doc = DB::table('register_files')->select('id')->where('regis_doc_status',0)->get();
+      $wait_approve_customer_doc = count($customer_doc);
       // return view('backend.index');
       // return view('backend.banner.index');
       return view('backend.index')->with([
-        'wait_approve_requisition' => $wait_approve_requisition
+        'wait_approve_requisition' => $wait_approve_requisition,
+        'wait_approve_customer_doc' => $wait_approve_customer_doc
       ]);
 
     }

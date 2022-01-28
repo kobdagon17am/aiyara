@@ -239,7 +239,8 @@ class Member_regisController extends Controller
         }
 
 
-      // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');
+      // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');    
+      //  
       $sTable = DB::select("
 
         SELECT * FROM `register_files`
@@ -252,12 +253,25 @@ class Member_regisController extends Controller
                 ".$w06."
                 ".$w07."
 
-       GROUP BY customer_id
+                GROUP BY customer_id
        ORDER BY updated_at DESC
 
 
          ");
+$text = "      SELECT * FROM `register_files`
+where 1
+        ".$w01."
+        ".$w02."
+        ".$w03."
+        ".$w04."
+        ".$w05."
+        ".$w06."
+        ".$w07."
 
+        GROUP BY customer_id
+ORDER BY updated_at DESC
+";
+// dd($text);
       $sQuery = \DataTables::of($sTable);
     
       return $sQuery
@@ -274,7 +288,7 @@ class Member_regisController extends Controller
 
       ->addColumn('filetype', function($row) {
 
-        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type ");
+        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
         $f = [] ;
         foreach ($d as $key => $value) {
            $filetype = DB::select(" select txt_desc from dataset_regis_filetype where id=".$value->type." order by id  ");
@@ -289,7 +303,7 @@ class Member_regisController extends Controller
 
       ->addColumn('regis_status', function($row) {
 
-        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type ");
+        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
         $f = [] ;
         $r1 = '' ;
         $r2 = '' ;
@@ -302,9 +316,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==1){
 
                if($Customers->regis_doc1_status=="1"){
-                  $r1 =  'ผ่าน';
+                  $r1 =  'ผ่าน1';
                 }elseif($Customers->regis_doc1_status=="2"){
-                  $r1 =  'ไม่ผ่าน';
+                  $r1 =  'ไม่ผ่าน1';
                 }else{
                    $r1 =  'รอตรวจสอบ';
                 }
@@ -315,9 +329,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==2){
 
                if($Customers->regis_doc2_status=="1"){
-                  $r2 =  'ผ่าน';
+                  $r2 =  'ผ่าน2';
                 }elseif($Customers->regis_doc2_status=="2"){
-                  $r2 =  'ไม่ผ่าน';
+                  $r2 =  'ไม่ผ่าน2';
                 }else{
                   $r2 =  'รอตรวจสอบ';
                 }
@@ -330,9 +344,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==3){
 
                if($Customers->regis_doc3_status=="1"){
-                  $r3 =  'ผ่าน';
+                  $r3 =  'ผ่าน3';
                 }elseif($Customers->regis_doc3_status=="2"){
-                  $r3 =  'ไม่ผ่าน';
+                  $r3 =  'ไม่ผ่าน3';
                 }else{
                   $r3 =  'รอตรวจสอบ';
                 }
@@ -344,9 +358,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==4){
 
                if($Customers->regis_doc4_status=="1"){
-                  $r4 =  'ผ่าน';
+                  $r4 =  'ผ่าน4';
                 }elseif($Customers->regis_doc4_status=="2"){
-                  $r4 =  'ไม่ผ่าน';
+                  $r4 =  'ไม่ผ่าน4';
                 }else{
                   $r4 =  'รอตรวจสอบ';
                 }
@@ -368,7 +382,7 @@ class Member_regisController extends Controller
 
       ->addColumn('approver', function($row) {
 
-        $d = DB::select(" select approver from register_files where customer_id=".$row->customer_id." group by type ");
+        $d = DB::select(" select approver from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
         $f = [] ;
         foreach ($d as $key => $value) {
             $c = DB::select("select * from ck_users_admin where id = ".(@$value->approver?$value->approver:0));
@@ -387,7 +401,7 @@ class Member_regisController extends Controller
 
       ->addColumn('approve_date', function($row) {
 
-        $d = DB::select(" select approve_date from register_files where customer_id=".$row->customer_id." group by type ");
+        $d = DB::select(" select approve_date from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
         $f = [] ;
         foreach ($d as $key => $value) {
             array_push($f,(@$value->approve_date?$value->approve_date:''));
@@ -459,7 +473,7 @@ class Member_regisController extends Controller
 
       ->addColumn('icon', function($row) {
 
-        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type ");
+        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
         $f = [] ;
         foreach ($d as $key => $value) {
            $filetype = DB::select(" select icon from dataset_regis_filetype where id=".$value->type." order by id  ");
@@ -473,7 +487,7 @@ class Member_regisController extends Controller
 
       ->addColumn('tools', function($row) {
 
-        $d = DB::select(" select id,item_checked from register_files where customer_id=".$row->customer_id." group by type ");
+        $d = DB::select(" select id,item_checked from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
         $f = [] ;
         foreach ($d as $key => $value) {
             // if($value->item_checked==1){
