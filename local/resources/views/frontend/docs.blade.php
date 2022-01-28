@@ -84,22 +84,26 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                                     </div>
                                 @endif
-                            </div>
-                            <div class="row">
-                                <div class="form-group row ml-auto">
 
-                                    <div class="col-sm-10">
-                                        @if ($canAccess)
-                                            <button type="submit" class="btn btn-primary m-b-0">Upload</button>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
 
+                            </div>
 
 
 
                         </div>
+
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-12 text-center mb-2">
+                          <button type="submit" class="btn btn-primary">Upload File</button>
+                          </div>
+                        </div>
+
+
+
+
+
+
+
 
                     </form>
 
@@ -139,7 +143,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                 if ($value->regis_doc_status == '1') {
                                     $status = "<span class='pcoded-badge label label-success'>ผ่านการอนุมัติ</span>";
                                 } elseif ($value->regis_doc_status == '2') {
-                                    $status = "<span class='pcoded-badge label label-danger'>รอการอนุมัติ</span>";
+                                    $status = "<span class='pcoded-badge label label-danger'>ไม่ผ่านการอนุมัติ</span>";
                                 } elseif ($value->regis_doc_status == '3') {
                                     $status = "<span class='pcoded-badge label label-warning'>ยังไม่ส่งเอกสาร</span>"; # code...
                                 } else {
