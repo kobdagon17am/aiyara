@@ -259,13 +259,13 @@ class Member_regisController extends Controller
          ");
 
       $sQuery = \DataTables::of($sTable);
-    
+
       return $sQuery
 
        ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
-     
+
           return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
         }else{
           return '';
@@ -281,7 +281,7 @@ class Member_regisController extends Controller
            array_push($f,$filetype[0]->txt_desc);
         }
         $f = implode('<br>',$f);
-   
+
         return @$f;
 
       })
@@ -375,7 +375,7 @@ class Member_regisController extends Controller
             if(count($c)!=0){
               array_push($f,isset($c) ? $c[0]->name : '');
             }
-        
+
         }
 
         $f = implode('<br>',$f);
