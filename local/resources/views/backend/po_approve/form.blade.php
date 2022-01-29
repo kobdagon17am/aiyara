@@ -113,7 +113,7 @@
                             &nbsp; --}}
 
                         {{-- @IF(@$sRow->transfer_bill_status==2) --}}
-                        @IF(@$sRow->approve_status==1 || @$sRow->approve_status==2)
+                        @IF(@$sRow->approve_status==1 || @$sRow->approve_status==2 || @$sRow->approve_status==0)
                         <div class="div_confirm_transfer_slip">
                             <button type="button" class="btn btn-primary waves-effect waves-light"
                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>

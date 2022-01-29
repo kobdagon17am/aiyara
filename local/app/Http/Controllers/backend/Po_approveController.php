@@ -846,6 +846,11 @@ class Po_approveController extends Controller
            $transfer_bill_approvedate = "";
         }
 
+        // if(@\Auth::user()->role_group_id_fk==4){
+            $branch_id_fk = "" ;
+            $action_user = "" ;
+        // }
+
         // return $transfer_bill_status;
 
 // qry อันที่สองที่มา UNION ALL เอาไว้แสดงผลรวม
