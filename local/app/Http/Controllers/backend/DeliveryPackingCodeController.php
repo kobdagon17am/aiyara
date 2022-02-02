@@ -122,7 +122,9 @@ class DeliveryPackingCodeController extends Controller
             if(@$DP){
               foreach ($DP as $key => $value) {
                 $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-                array_push($array, @$rs[0]->receipt);
+                // array_push($array, @$rs[0]->receipt);
+                $p = "<a href='".url('backend/frontstore/print_receipt_022/'.@$rs[0]->orders_id_fk)."' target='blank'>".@$rs[0]->receipt."</a>";
+                array_push($array, $p);
               }
               $arr = array_filter($array);
               $arr = implode('<br>', $arr);

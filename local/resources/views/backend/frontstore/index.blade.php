@@ -491,13 +491,14 @@ $(function() {
                 return '';
                }
             }},
-            {data: 'code_order',   title :'<center>{{ __("message.receipt_code_no") }}</center>', className: 'text-center ',render: function(d) {
-               if(d){
-                return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
-               }else{
-                return '';
-               }
-            }},
+            // {data: 'code_order',   title :'<center>{{ __("message.receipt_code_no") }}</center>', className: 'text-center ',render: function(d) {
+            //    if(d){
+            //     return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+            //    }else{
+            //     return '';
+            //    }
+            // }},
+            {data: 'code_order_select', title :'<center>รหัสใบเสร็จ </center>', className: 'text-center'},
             {data: 'pay_type', title :'<center>{{ __("message.payment_type") }} </center>', className: 'text-center'},
             {data: 'shipping_price',   title :'<center>{{ __("message.transportor_fee") }}</center>', className: 'text-center',render: function(d) {
               if(d>0){
@@ -1006,13 +1007,14 @@ $(document).ready(function() {
                                                         return '';
                                                        }
                                                     }},
-                                                    {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                                                       if(d){
-                                                        return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
-                                                       }else{
-                                                        return '';
-                                                       }
-                                                    }},
+                                                    // {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                                                    //    if(d){
+                                                    //     return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                                    //    }else{
+                                                    //     return '';
+                                                    //    }
+                                                    // }},
+                                                    {data: 'code_order_select', title :'<center>รหัสใบเสร็จ </center>', className: 'text-center'},
                                                     {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
                                                     {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
 
@@ -1260,6 +1262,16 @@ $(document).ready(function() {
    $(document).ready(function() {
 
 
+ 
+        $(document).on('click', '.order_select', function(event) {
+                var code = $(this).attr('code_id');
+                var select = $('#invoice_code').val();
+                select.push(code);
+                $('#invoice_code').val(select);
+                $('#invoice_code').trigger('change');
+           });
+
+
            $(document).on('click', '.btnSearchSub', function(event) {
                 var d = $(this).data('attr');
                 var v = $("#"+d).val();
@@ -1361,13 +1373,14 @@ $(document).ready(function() {
                                           return '';
                                          }
                                       }},
-                                      {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                                         if(d){
-                                          return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
-                                         }else{
-                                          return '';
-                                         }
-                                      }},
+                                      // {data: 'code_order',   title :'<center>รหัสใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                                      //    if(d){
+                                      //     return '<span class="badge badge-pill badge-soft-primary font-size-16">'+d+'</span>';
+                                      //    }else{
+                                      //     return '';
+                                      //    }
+                                      // }},
+                                      {data: 'code_order_select', title :'<center>รหัสใบเสร็จ </center>', className: 'text-center'},
                                       {data: 'pay_type', title :'<center>ประเภท <br> การชำระเงิน </center>', className: 'text-center'},
                                       {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center',render: function(d) {
 

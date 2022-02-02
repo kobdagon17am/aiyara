@@ -993,7 +993,8 @@ $(document).ready(function() {
   					        destroy: true,
   					        searching: false,
   					        // paging: false,
-
+                    pageLength: 0,
+                    lengthMenu: [500],
                     ajax: {
                         url: '{{ route('backend.check_stock_transfer_warehouses.datatable') }}',
                         data :{
@@ -1058,6 +1059,8 @@ $(document).ready(function() {
             "info":     false,
             destroy: true,
             searching: false,
+            pageLength: 0,
+            lengthMenu: [500],
             // paging: false,
             ajax: {
               url: '{{ route('backend.transfer_choose.datatable') }}',
