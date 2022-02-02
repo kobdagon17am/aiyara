@@ -288,7 +288,7 @@ public static function check_line($username){
 		return $resule;
 
 	}else{
-		$resule = ['status'=>'fail','message'=>'No data'];
+		$resule = ['status'=>'fail','message'=>'ไม่พบข้อมูลผู้ใช้งานรหัสนี้'];
 		return $resule;
 
 	}
@@ -365,9 +365,14 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 			->where('user_name','=',$introduce_id)
 			->first();
 
+      if(empty($data_account)){
+        	$username = null;
+        $j = 0;
+      }else{
+        	$username = $data_account->upline_id;
+        $j = 2;
+      }
 
-			$username = $data_account->upline_id;
-			$j = 2;
 			for ($i=1; $i <= $j ; $i++){
 				if($username == 'AA'){
 					$upline_id_arr[] = $data_account->user_name;
@@ -377,9 +382,16 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 					->select('upline_id','user_name','upline_id','line_type')
 					->where('user_name','=',$username)
 					->first();
-					$upline_id_arr[] = $data_account->user_name;
-					$username = $data_account->upline_id;
-					$j = $j+1;
+
+          if(empty($data_account)){
+            $j = 0;
+          }else{
+            $upline_id_arr[] = $data_account->user_name;
+            $username = $data_account->upline_id;
+            $j = $j+1;
+          }
+
+
 				}
 			}
 
@@ -394,7 +406,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 		return $resule;
 
 	}else{
-		$resule = ['status'=>'fail','message'=>'No data'];
+		$resule = ['status'=>'fail','message'=>'ไม่พบข้อมูลผู้ใช้งานรหัสนี้'];
 		return $resule;
 
 	}
@@ -472,10 +484,16 @@ public static function check_line_backend($username_buy,$username_check){
 			->where('user_name','=',$use_username)
 			->first();
 
-			$id = $data_account->upline_id;
-			$j = 2;
+      if(empty($data_account)){
+        $id = null;
+        $j = 0;
+      }else{
+        $id = $data_account->upline_id;
+        $j = 2;
+      }
+
 			for ($i=1; $i <= $j ; $i++){
-				if($id == 'AA' || empty($data_account)){
+				if($id == 'AA'){
 					$upline_id_arr[] = $data_account->user_name;
 					$j =0;
 				}else{
@@ -501,7 +519,7 @@ public static function check_line_backend($username_buy,$username_check){
 		return $resule;
 
 	}else{
-		$resule = ['status'=>'fail','message'=>'No data'];
+		$resule = ['status'=>'fail','message'=>'ไม่พบข้อมูลผู้ใช้งานรหัสนี้'];
 		return $resule;
 
 	}

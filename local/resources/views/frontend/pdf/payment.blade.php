@@ -101,7 +101,7 @@
             @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
         </p>
       @else
-       <p><b> Address Is Null</b>
+       <p><b> จัดส่งพร้อมบิลอื่น </b></p>
       @endif
          </th>
 
