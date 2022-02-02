@@ -50,7 +50,7 @@
                                 <input class="form-control" type="date" id="e_date">
                             </div>
                             <div class="col-lg-1 col-md-1 p-1">
-                                <button id="search-form" class="btn btn-primary btn-block"> Seart </button>
+                                <button id="search-form" class="btn btn-primary btn-block"> Search </button>
                             </div>
                         </div>
                     </div>

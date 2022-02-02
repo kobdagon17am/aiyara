@@ -79,7 +79,8 @@
 
  <body>
    <div>
-    <img src="{{ asset('backend/images/logo2.png')}}" width="40">
+     <?php //dd(asset('backend/images/logo2.png')) ?>
+    <img src="<?=public_path('images/logo2.png')?>" width="50">
   </div>
 
     <table width="100%" style="width:100%" border=0" width="30%" >
@@ -101,7 +102,7 @@
             @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
         </p>
       @else
-       <p><b> Address Is Null</b>
+       <p><b> จัดส่งพร้อมบิลอื่น </b></p>
       @endif
          </th>
 
@@ -235,7 +236,12 @@
          @endif
          <tr>
              <th style="text-align: right;">คะแนนที่ได้รับ : </th>
+             @if($order->purchase_type_id_fk == 5)
+             <th  style="text-align: left;padding-left:10px;font-size: 18px"><b> 0 PV </b> </th>
+             @else
              <th  style="text-align: left;padding-left:10px;font-size: 18px"><b> {{ $order->pv_total }} PV </b> </th>
+             @endif
+
          </tr>
 
          @if($order->purchase_type_id_fk == 5)
