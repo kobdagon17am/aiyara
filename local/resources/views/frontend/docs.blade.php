@@ -129,13 +129,13 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                             @foreach ($data as $value)
                                 <?php $i++;
                                 if ($value->type == 1) {
-                                    $type = 'บัตรประชาชน';
+                                    $type = 'ภาพถ่ายบัตรประชาชน';
                                 } elseif ($value->type == 2) {
-                                    $type = 'หน้าบัญชีธนาคาร';
+                                    $type = 'ภายถ่ายหน้าตรง';
                                 } elseif ($value->type == 3) {
-                                    $type = 'เอกสารการสมัคร';
+                                    $type = 'ภาพถ่ายหน้าตรงถือบัตรประชาชน';
                                 } elseif ($value->type == 4) {
-                                    $type = 'ภาพใบหน้าพร้อมถือบัตรประชาชน';
+                                    $type = 'ภาพถ่ายหน้าบัญชีธนาคาร';
                                 } else {
                                     $type = 'อื่นๆ';
                                 }
