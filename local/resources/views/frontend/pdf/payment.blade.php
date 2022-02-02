@@ -79,7 +79,8 @@
 
  <body>
    <div>
-    <img src="{{ asset('backend/images/logo2.png')}}" width="40">
+     <?php //dd(asset('backend/images/logo2.png')) ?>
+    <img src="<?=public_path('images/logo2.png')?>" width="50">
   </div>
 
     <table width="100%" style="width:100%" border=0" width="30%" >
