@@ -323,7 +323,8 @@ tr.border_bottom td {
             $branchs = @$sBranchs[0]->b_name;
 
              $d_lot_expired_date = strtotime($v->lot_expired_date); 
-             $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
+            //  $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
+            $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date));
 
            if(@$v->action_user!=''){
               $sD = DB::select(" select * from ck_users_admin where id=".$v->action_user." ");
@@ -333,7 +334,8 @@ tr.border_bottom td {
             }
 
             if(@$v->action_date!=''){
-              $action_date = strtotime($v->action_date); $action_date =  date("d/m/", $action_date).(date("Y", $action_date)+543);
+              // $action_date = strtotime($v->action_date); $action_date =  date("d/m/", $action_date).(date("Y", $action_date)+543);
+              $action_date = strtotime($v->action_date); $action_date =  date("d/m/", $action_date).(date("Y", $action_date));
             }else{
               $action_date =  '';
             }
@@ -384,7 +386,8 @@ tr.border_bottom td {
         }
 
         if(@$warehouses_code[0]->approve_date!=''){
-          $approve_date = strtotime($warehouses_code[0]->approve_date); $approve_date =  date("d/m/", $approve_date).(date("Y", $approve_date)+543);
+          // $approve_date = strtotime($warehouses_code[0]->approve_date); $approve_date =  date("d/m/", $approve_date).(date("Y", $approve_date)+543);
+          $approve_date = strtotime($warehouses_code[0]->approve_date); $approve_date =  date("d/m/", $approve_date).(date("Y", $approve_date));
         }else{
           $approve_date =  '';
         }
@@ -446,7 +449,8 @@ tr.border_bottom td {
 
 
             if(@$branch_get[0]->approve_date!=''){
-              $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date)+543);
+              // $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date)+543);
+              $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date));
             }else{
               $get_date =  ' * รอฝั่งรับโอน รับสินค้า * ';
             }

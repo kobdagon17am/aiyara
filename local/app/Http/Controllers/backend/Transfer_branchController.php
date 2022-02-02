@@ -793,7 +793,9 @@ class Transfer_branchController extends Controller
         ->where('is_approve', RequisitionBetweenBranch::APPROVED)
         ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER)
         ->where('from_branch_id',\Auth::user()->branch_id_fk)
-        ->orWhere('to_branch_id',\Auth::user()->branch_id_fk);
+        ->orWhere('to_branch_id',\Auth::user()->branch_id_fk)
+        ->where('is_approve', RequisitionBetweenBranch::APPROVED)
+        ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER);
       }
 
       return \DataTables::of($requisitions)
@@ -872,6 +874,7 @@ class Transfer_branchController extends Controller
         
         foreach ($request->lists as $key => $value) {
 
+        if($value['stock']!=null && $value['stock']!=''){  
           $requisitionBetweenBranchDetail = RequisitionBetweenBranchDetail::find($key);
           $requisitionBetweenBranchDetail->update([
             'amount' => $value['amount'] 
@@ -899,6 +902,7 @@ class Transfer_branchController extends Controller
 
           \App\Models\Backend\Transfer_branch_get_products_details::create($dataDetails);
           DB::table('db_transfer_branch_details_log')->insert($dataDetails);
+        }
         }
         
         DB::commit();

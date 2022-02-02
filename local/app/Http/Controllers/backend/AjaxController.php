@@ -587,7 +587,8 @@ class AjaxController extends Controller
         if($request->ajax()){
           // $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
 
-            $warehouse = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+            // $warehouse = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+            $warehouse = DB::table('warehouse')->pluck('id')->toArray();
 
           if(@\Auth::user()->permission==1){
             // วุฒิแก้

@@ -286,7 +286,8 @@ tr.border_bottom td {
             $warehouses = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$v->shelf_floor;
 
              $d_lot_expired_date = strtotime($v->lot_expired_date); 
-             $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
+            //  $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
+            $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date));
 
            if(@$v->action_user!=''){
               $sD = DB::select(" select * from ck_users_admin where id=".$v->action_user." ");
@@ -296,7 +297,8 @@ tr.border_bottom td {
             }
 
             if(@$v->action_date!=''){
-              $action_date = strtotime($v->action_date); $action_date =  date("d/m/", $action_date).(date("Y", $action_date)+543);
+              // $action_date = strtotime($v->action_date); $action_date =  date("d/m/", $action_date).(date("Y", $action_date)+543);
+              $action_date = strtotime($v->action_date); $action_date =  date("d/m/", $action_date).(date("Y", $action_date));
             }else{
               $action_date =  '';
             }
@@ -348,7 +350,8 @@ tr.border_bottom td {
         }
 
         if(@$warehouses_code[0]->approve_date!=''){
-          $approve_date = strtotime($warehouses_code[0]->approve_date); $approve_date =  date("d/m/", $approve_date).(date("Y", $approve_date)+543);
+          // $approve_date = strtotime($warehouses_code[0]->approve_date); $approve_date =  date("d/m/", $approve_date).(date("Y", $approve_date)+543);
+          $approve_date = strtotime($warehouses_code[0]->approve_date); $approve_date =  date("d/m/", $approve_date).(date("Y", $approve_date));
         }else{
           $approve_date =  '';
         }

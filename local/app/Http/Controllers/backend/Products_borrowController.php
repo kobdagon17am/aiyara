@@ -445,15 +445,15 @@ class Products_borrowController extends Controller
 
        $product_borrow_code = Products_borrow_code::find($request->products_borrow_code_id);
 
-        if(@\Auth::user()->permission==1){
+        // if(@\Auth::user()->permission==1){
 
             $sTable = \App\Models\Backend\Products_borrow::where('products_borrow_code_id',$request->products_borrow_code_id)->orderBy('id', 'asc');
 
-        }else{
+        // }else{
 
-           $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->where('action_user',@\Auth::user()->id)->where('products_borrow_code_id',$request->products_borrow_code_id)->orderBy('id', 'asc');
+        //    $sTable = \App\Models\Backend\Products_borrow::where('branch_id_fk',$User_branch_id)->where('action_user',@\Auth::user()->id)->where('products_borrow_code_id',$request->products_borrow_code_id)->orderBy('id', 'asc');
 
-        }
+        // }
 
 
       // $sTable = \App\Models\Backend\Products_borrow::search()->orderBy('id', 'asc');

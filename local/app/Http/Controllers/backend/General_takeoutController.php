@@ -123,8 +123,32 @@ class General_takeoutController extends Controller
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
-      $Check_stock = \App\Models\Backend\Check_stock::get();
-      // dd($Check_stock);
+      // $Check_stock = \App\Models\Backend\Check_stock::get();
+
+      $warehouse = DB::table('warehouse')->pluck('id')->toArray();
+
+      if(@\Auth::user()->permission==1){
+        // วุฒิแก้
+        // $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." GROUP BY  product_id_fk,lot_number ");
+        $Check_stock = DB::table('db_stocks')
+        ->select('db_stocks.*','warehouse.w_name','warehouse.w_code')
+        ->join('warehouse', 'warehouse.id', '=', 'db_stocks.warehouse_id_fk')
+        // ->where('db_stocks.product_id_fk',$request->product_id_fk)
+        ->whereIn('db_stocks.warehouse_id_fk',$warehouse)
+        ->get();
+      }else{
+      // วุฒิแก้
+        //  $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." and business_location_id_fk=".@\Auth::user()->business_location_id_fk." AND branch_id_fk=".@\Auth::user()->branch_id_fk." GROUP BY  product_id_fk,lot_number ");
+        $Check_stock = DB::table('db_stocks')
+        ->select('db_stocks.*','warehouse.w_name','warehouse.w_code')
+        ->join('warehouse', 'warehouse.id', '=', 'db_stocks.warehouse_id_fk')
+        // ->where('db_stocks.product_id_fk',$request->product_id_fk)
+        ->where('db_stocks.business_location_id_fk',@\Auth::user()->business_location_id_fk)
+        ->where('db_stocks.branch_id_fk',@\Auth::user()->branch_id_fk)
+        ->whereIn('db_stocks.warehouse_id_fk',$warehouse)
+        ->get();
+    }
+
       return View('backend.general_takeout.form')->with(
         array(
            'sRow'=>$sRow, 'id'=>$id,

@@ -387,6 +387,15 @@ class Transfer_branch_codeController extends Controller
       })
       ->escapeColumns('tr_status_to')
 
+      ->addColumn('to_branch_id', function($row) {
+          $b = DB::table('branchs')->where('id',$row->to_branch_id_fk)->first();
+          $data = "";
+          if($b){
+            $data = $b->b_name;
+          }
+          return $data;
+      })  
+
       ->make(true);
     }
 

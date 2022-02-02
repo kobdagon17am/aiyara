@@ -892,6 +892,7 @@
               columns: [
                   {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w100'},
                   {data: 'action_date', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                  {data: 'to_branch_id', title :'<center>สาขาปลายทาง </center>', className: 'text-center'},
                   {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
                   {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
                     if(d==1){
@@ -1188,6 +1189,7 @@
                                columns: [
                                     {data: 'tr_number', title :'รหัสใบโอน', className: 'text-center w80'},
                                     {data: 'action_date', title :'<center>วันที่สร้างใบโอน </center>', className: 'text-center'},
+                                    {data: 'to_branch_id', title :'<center>สาขาปลายทาง </center>', className: 'text-center'},
                                     {data: 'action_user', title :'<center>พนักงาน<br>ที่ทำการโอน </center>', className: 'text-center'},
                                     {data: 'approve_status',   title :'<center>สถานะ<br>การอนุมัติ</center>', className: 'text-center w100 ',render: function(d) {
                                       if(d==1){
@@ -1678,8 +1680,13 @@
           if ($(el).val()) {
             countChecked++
           }
-
-          if (countChecked == $('.select-stock').length) {
+          // วุฒิเพิ่มให้โอนอย่างเดียวได้
+          // if (countChecked == $('.select-stock').length) {
+          //   $('#requisitionSubmitBtn').attr('disabled', false)
+          // } else {
+          //   $('#requisitionSubmitBtn').attr('disabled', true)
+          // }
+          if (countChecked > 0) {
             $('#requisitionSubmitBtn').attr('disabled', false)
           } else {
             $('#requisitionSubmitBtn').attr('disabled', true)
