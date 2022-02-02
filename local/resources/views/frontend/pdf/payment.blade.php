@@ -235,7 +235,12 @@
          @endif
          <tr>
              <th style="text-align: right;">คะแนนที่ได้รับ : </th>
+             @if($row->purchase_type_id_fk == 5)
+             <th  style="text-align: left;padding-left:10px;font-size: 18px"><b> 0 PV </b> </th>
+             @else
              <th  style="text-align: left;padding-left:10px;font-size: 18px"><b> {{ $order->pv_total }} PV </b> </th>
+             @endif
+
          </tr>
 
          @if($order->purchase_type_id_fk == 5)

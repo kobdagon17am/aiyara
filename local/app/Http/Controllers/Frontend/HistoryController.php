@@ -240,7 +240,12 @@ class HistoryController extends Controller
             })
 
             ->addColumn('pv_total', function ($row) {
+              if($row->purchase_type_id_fk == 5){
+                return '<b class="text-success"> 0 </b>';
+              }else{
                 return '<b class="text-success">' . number_format($row->pv_total) . '</b>';
+              }
+
             })
             ->addColumn('date', function ($row) {
                 return date('Y/m/d H:i:s', strtotime($row->created_at));
