@@ -383,6 +383,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxDeleteQrcodeProduct', 'AjaxController@ajaxDeleteQrcodeProduct');
     Route::post('ajaxScanQrcodeProductPacking', 'AjaxController@ajaxScanQrcodeProductPacking');
     Route::post('ajaxScanQrcodeProductPackingRemark', 'AjaxController@ajaxScanQrcodeProductPackingRemark');
+    Route::post('ajaxScanQrcodeProductPackingDelete', 'AjaxController@ajaxScanQrcodeProductPackingDelete');
     Route::post('ajaxDeleteQrcodeProductPacking', 'AjaxController@ajaxDeleteQrcodeProductPacking');
 
     Route::post('ajaxProductPackingSize', 'AjaxController@ajaxProductPackingSize');
@@ -814,7 +815,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
     Route::get('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
 
-    Route::get('qr_show/{oid}/{pid}/{proid}', 'Pick_warehouseController@qr_show');
+    Route::get('qr_show/{oid}/{pid}/{proid}/{p_list}', 'Pick_warehouseController@qr_show');
 
 
     Route::resource('supplier', 'SupplierController');

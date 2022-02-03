@@ -253,8 +253,8 @@ class Member_regisController extends Controller
                 ".$w06."
                 ".$w07."
 
-                GROUP BY customer_id
-       ORDER BY updated_at DESC
+       GROUP BY customer_id
+       ORDER BY id DESC
 
 
          ");
@@ -269,7 +269,7 @@ where 1
         ".$w07."
 
         GROUP BY customer_id
-ORDER BY updated_at DESC
+        ORDER BY id DESC
 ";
 // dd($text);
       $sQuery = \DataTables::of($sTable);
@@ -288,7 +288,13 @@ ORDER BY updated_at DESC
 
       ->addColumn('filetype', function($row) {
 
-        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
+        // $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by id desc");
+        $d = DB::table('register_files')
+        ->select(DB::raw('max(id) as id'),'type')
+        ->where('customer_id',$row->customer_id)
+        ->orderBy('id', 'desc')
+        ->groupBy('type')
+        ->get();
         $f = [] ;
         foreach ($d as $key => $value) {
            $filetype = DB::select(" select txt_desc from dataset_regis_filetype where id=".$value->type." order by id  ");
@@ -303,7 +309,13 @@ ORDER BY updated_at DESC
 
       ->addColumn('regis_status', function($row) {
 
-        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
+        // $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by id desc");
+        $d = DB::table('register_files')
+        ->select(DB::raw('max(id) as id'),'type')
+        ->where('customer_id',$row->customer_id)
+        ->orderBy('id', 'desc')
+        ->groupBy('type')
+        ->get();
         $f = [] ;
         $r1 = '' ;
         $r2 = '' ;
@@ -316,9 +328,9 @@ ORDER BY updated_at DESC
             if($filetype[0]->id==1){
 
                if($Customers->regis_doc1_status=="1"){
-                  $r1 =  'ผ่าน1';
+                  $r1 =  'ผ่าน';
                 }elseif($Customers->regis_doc1_status=="2"){
-                  $r1 =  'ไม่ผ่าน1';
+                  $r1 =  'ไม่ผ่าน';
                 }else{
                    $r1 =  'รอตรวจสอบ';
                 }
@@ -329,9 +341,9 @@ ORDER BY updated_at DESC
             if($filetype[0]->id==2){
 
                if($Customers->regis_doc2_status=="1"){
-                  $r2 =  'ผ่าน2';
+                  $r2 =  'ผ่าน';
                 }elseif($Customers->regis_doc2_status=="2"){
-                  $r2 =  'ไม่ผ่าน2';
+                  $r2 =  'ไม่ผ่าน';
                 }else{
                   $r2 =  'รอตรวจสอบ';
                 }
@@ -344,9 +356,9 @@ ORDER BY updated_at DESC
             if($filetype[0]->id==3){
 
                if($Customers->regis_doc3_status=="1"){
-                  $r3 =  'ผ่าน3';
+                  $r3 =  'ผ่าน';
                 }elseif($Customers->regis_doc3_status=="2"){
-                  $r3 =  'ไม่ผ่าน3';
+                  $r3 =  'ไม่ผ่าน';
                 }else{
                   $r3 =  'รอตรวจสอบ';
                 }
@@ -358,9 +370,9 @@ ORDER BY updated_at DESC
             if($filetype[0]->id==4){
 
                if($Customers->regis_doc4_status=="1"){
-                  $r4 =  'ผ่าน4';
+                  $r4 =  'ผ่าน';
                 }elseif($Customers->regis_doc4_status=="2"){
-                  $r4 =  'ไม่ผ่าน4';
+                  $r4 =  'ไม่ผ่าน';
                 }else{
                   $r4 =  'รอตรวจสอบ';
                 }
@@ -382,7 +394,13 @@ ORDER BY updated_at DESC
 
       ->addColumn('approver', function($row) {
 
-        $d = DB::select(" select approver from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
+        // $d = DB::select(" select approver from register_files where customer_id=".$row->customer_id." group by type order by id desc");
+        $d = DB::table('register_files')
+        ->select(DB::raw('max(id) as id'),'approver')
+        ->where('customer_id',$row->customer_id)
+        ->orderBy('id', 'desc')
+        ->groupBy('type')
+        ->get();
         $f = [] ;
         foreach ($d as $key => $value) {
             $c = DB::select("select * from ck_users_admin where id = ".(@$value->approver?$value->approver:0));
@@ -401,7 +419,13 @@ ORDER BY updated_at DESC
 
       ->addColumn('approve_date', function($row) {
 
-        $d = DB::select(" select approve_date from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
+        // $d = DB::select(" select approve_date from register_files where customer_id=".$row->customer_id." group by type order by id desc");
+        $d = DB::table('register_files')
+        ->select(DB::raw('max(id) as id'),'approve_date')
+        ->where('customer_id',$row->customer_id)
+        ->orderBy('id', 'desc')
+        ->groupBy('type')
+        ->get();
         $f = [] ;
         foreach ($d as $key => $value) {
             array_push($f,(@$value->approve_date?$value->approve_date:''));
@@ -473,7 +497,13 @@ ORDER BY updated_at DESC
 
       ->addColumn('icon', function($row) {
 
-        $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
+        // $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by id desc");
+        $d = DB::table('register_files')
+        ->select(DB::raw('max(id) as id'),'type')
+        ->where('customer_id',$row->customer_id)
+        ->orderBy('id', 'desc')
+        ->groupBy('type')
+        ->get();
         $f = [] ;
         foreach ($d as $key => $value) {
            $filetype = DB::select(" select icon from dataset_regis_filetype where id=".$value->type." order by id  ");
@@ -486,8 +516,14 @@ ORDER BY updated_at DESC
       ->escapeColumns('icon')
 
       ->addColumn('tools', function($row) {
+        $d = DB::table('register_files')
+        ->select(DB::raw('max(id) as id'),'item_checked')
+        ->where('customer_id',$row->customer_id)
+        ->orderBy('id', 'desc')
+        ->groupBy('type')
+        ->get();
+        // $d = DB::select(" select id,item_checked from register_files where customer_id=".$row->customer_id." group by type order by id desc");
 
-        $d = DB::select(" select id,item_checked from register_files where customer_id=".$row->customer_id." group by type order by updated_at");
         $f = [] ;
         foreach ($d as $key => $value) {
             // if($value->item_checked==1){
