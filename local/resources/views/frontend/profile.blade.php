@@ -169,7 +169,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
 <?php //dd($data); ?>
 <div class="row">
-  <div class="col-lg-4 col-md-12">
+  <div class="col-lg-6 col-md-6">
     <div class="card user-card">
         <div class="card-header">
             <h5>Profile</h5>
@@ -187,7 +187,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             @if(@$data->business_name)
             <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
             @else
-             
+
              <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
 
             @endif
@@ -213,7 +213,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         </div>
     </div>
 </div>
-  <div class="col-md-8">
+  <div class="col-md-6">
 
     <div class="card">
 
