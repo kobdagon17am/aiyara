@@ -111,7 +111,7 @@ class RunPvController extends Controller
 
                             $resule = [
                                 'status' => 'success',
-                                'message' => 'Pv upline Type 1 Success',
+                                'message' => 'Add PV Success',
                             ];
                             $j = 0;
                         } elseif ($last_upline_type == 'B') {
@@ -122,7 +122,7 @@ class RunPvController extends Controller
 
                             $resule = [
                                 'status' => 'success',
-                                'message' => 'Pv upline Type 1 Success',
+                                'message' => 'Add PV Success',
                             ];
                             $j = 0;
                         } elseif ($last_upline_type == 'C') {
@@ -133,7 +133,7 @@ class RunPvController extends Controller
 
                             $resule = [
                                 'status' => 'success',
-                                'message' => 'Pv upline Type 1 Success',
+                                'message' => 'Add PV Success',
                             ];
                             $j = 0;
                         } else {
@@ -249,8 +249,6 @@ class RunPvController extends Controller
     public static function Cancle_pv($username, $pv, $type, $order_code)
     {
         // RunPv ทำคุณสมบัติ
-
-        // dd($type);
         // dd($username);
         // dd($pv);
 

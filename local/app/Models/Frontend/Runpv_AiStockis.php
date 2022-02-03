@@ -60,6 +60,7 @@ class Runpv_AiStockis extends Model
 
                           $resule =  RunPvController::Runpv($to_customer_user,$pv,$type,$transection_code);
 
+
                         } elseif ($type == 2) { //รักษาคุณสมบัติรายเดือน
 
 
