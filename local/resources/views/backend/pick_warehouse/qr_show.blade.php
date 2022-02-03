@@ -106,13 +106,16 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            รายการ QR CODE สินค้า {{$product->product_code}} : {{$product->product_name}}
+            รายการ QR CODE 
+            {{-- สินค้า {{$product->product_code}} : {{$product->product_name}} --}}
             <br><br>
             @foreach($qrs as $qr)
             {{$qr->item_id}} : 
-            <input type="text" class="in-tx qr_scan " data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" placeholder="scan qr" value="{{$qr->qr_code}}">
+            <input type="text" class="in-tx qr_scan " packing_list="{{$qr->packing_list}}" data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" placeholder="scan qr" value="{{$qr->qr_code}}">
             &nbsp;       &nbsp;       &nbsp;
-            <input type="text" class="in-tx qr_scan_remark " data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" placeholder="หมายเหตุ" value="{{$qr->remark}}">
+            <input type="text" class="qr_scan_remark " packing_list="{{$qr->packing_list}}" data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" placeholder="หมายเหตุ" value="{{$qr->remark}}">
+           
+           <a href="javascript:;" class="qr_scan_delete " packing_list="{{$qr->packing_list}}" data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" style="color:red;"> <u>Remove</u> </a>
             <br><br>
             @endforeach 
             <div class="myloading"></div>
@@ -132,6 +135,7 @@
             var packing_code = $(this).data('packing_code');
             var product_id_fk = $(this).data('product_id_fk');
             var invoice_code = $(this).attr('invoice_code');
+            var packing_list = $(this).attr('packing_list');
             // alert(v+":"+invoice_code+":"+product_id_fk);
             if($(this).val()!=''){
             $(this).css({ 'background-color' : '', 'opacity' : '' });
@@ -145,7 +149,10 @@
                 data:{ _token: '{{csrf_token()}}',
                  item_id:item_id,
                 invoice_code:invoice_code,
-                qr_code:v,packing_code:packing_code,product_id_fk:product_id_fk },
+                qr_code:v,packing_code:packing_code,
+                packing_list:packing_list,
+                product_id_fk:product_id_fk 
+                },
                     success:function(data){
                         // console.log(data);
                         $.each(data,function(key,value){
@@ -164,6 +171,7 @@
             var packing_code = $(this).data('packing_code');
             var product_id_fk = $(this).data('product_id_fk');
             var invoice_code = $(this).attr('invoice_code');
+            var packing_list = $(this).attr('packing_list');
             // alert(v+":"+invoice_code+":"+product_id_fk);
             if($(this).val()!=''){
             $(this).css({ 'background-color' : '', 'opacity' : '' });
@@ -179,11 +187,49 @@
                 invoice_code:invoice_code,
                 remark:v,
                 packing_code:packing_code,
+                packing_list:packing_list,
                 product_id_fk:product_id_fk },
                     success:function(data){
                         // console.log(data);
                         $.each(data,function(key,value){
                         });
+                        $(".myloading").hide();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $(".myloading").hide();
+                    }
+                });
+            });
+
+            $(document).on('click', '.qr_scan_delete', function(e) {
+            var v = $(this).val();
+            var item_id = $(this).data('item_id');
+            var packing_code = $(this).data('packing_code');
+            var product_id_fk = $(this).data('product_id_fk');
+            var invoice_code = $(this).attr('invoice_code');
+            var packing_list = $(this).attr('packing_list');
+            // alert(v+":"+invoice_code+":"+product_id_fk);
+            if($(this).val()!=''){
+            $(this).css({ 'background-color' : '', 'opacity' : '' });
+            }
+
+            $(".myloading").show();
+
+            $.ajax({
+                type:'POST',
+                url: " {{ url('backend/ajaxScanQrcodeProductPackingDelete') }} ",
+                data:{ _token: '{{csrf_token()}}',
+                 item_id:item_id,
+                invoice_code:invoice_code,
+                remark:v,
+                packing_code:packing_code,
+                packing_list:packing_list,
+                product_id_fk:product_id_fk },
+                    success:function(data){
+                        // console.log(data);
+                        // $.each(data,function(key,value){
+                        // });
+                        location.reload();
                         $(".myloading").hide();
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

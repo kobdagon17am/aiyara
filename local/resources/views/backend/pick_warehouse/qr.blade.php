@@ -746,6 +746,7 @@ setTimeout(function(){
           var packing_code = $(this).data('packing_code');
           var product_id_fk = $(this).data('product_id_fk');
           var invoice_code = $(this).attr('invoice_code');
+          var packing_list = $(this).attr('packing_list');
           // alert(v+":"+invoice_code+":"+product_id_fk);
           // if($(this).val()!=''){
           //   $(this).css({ 'background-color' : '', 'opacity' : '' });
@@ -757,7 +758,11 @@ setTimeout(function(){
                  data:{ _token: '{{csrf_token()}}',
                 //  item_id:item_id,
                  invoice_code:invoice_code,
-                 qr_code:v,packing_code:packing_code,product_id_fk:product_id_fk },
+                 qr_code:v,
+                 packing_code:packing_code,
+                 packing_list:packing_list,
+                 product_id_fk:product_id_fk
+                  },
                   success:function(data){
                        // console.log(data);
                        $.each(data,function(key,value){

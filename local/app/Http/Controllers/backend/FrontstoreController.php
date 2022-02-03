@@ -3607,7 +3607,7 @@ AND db_orders.branch_id_fk = '1'
 AND DATE(db_orders.created_at) >= CURDATE()
 UNION ALL
 SELECT  '' as code_order,  db_add_ai_cash.id,  db_add_ai_cash.created_at as d2,  0 as purchase_type_id_fk,  '\u0e40\u0e15\u0e34\u0e21 Ai-Cash' AS type,  db_add_ai_cash.customer_id_fk as c2,  db_add_ai_cash.aicash_amt,  db_add_ai_cash.id as inv_no,approve_status  ,'',  db_add_ai_cash.updated_at as ud2,  'ai_cash' as pay_type,cash_price,  credit_price,fee_amt,transfer_price,  0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user  FROM db_add_ai_cash  WHERE 1
-AND db_add_ai_cash.approve_status<>4
+AND db_add_ai_cash.approve_status<span>4
 AND DATE(db_add_ai_cash.created_at) >= CURDATE()
 
 ORDER BY created_at DESC
@@ -3789,7 +3789,7 @@ ORDER BY created_at DESC
           } else {
             return '';
           }
-          // return $row->code_order;
+          // return $row->code_order; 
         }
       })
       ->addColumn('status_sent_desc', function ($row) {
@@ -3823,6 +3823,11 @@ ORDER BY created_at DESC
           return '';
         }
       })
+      ->addColumn('code_order_select', function ($row) {
+        $p = "<a href='javascript:;' class='order_select' code_id='".@$row->code_order."'><span class='badge badge-pill badge-soft-primary font-size-16'>".@$row->code_order."</span></a>";
+        return $p;
+      })
+
       ->make(true);
   }
 
