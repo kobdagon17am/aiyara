@@ -517,22 +517,33 @@ foreach($temp_ppr_0021_data as $tmp){
           // TEMPORARY
           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
 
-
           foreach ($Products as $key => $value) {
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
                $amt_pay_this = $value->amt;
+              // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
+               $w_arr2 = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+               $w_str2 = '';
+               foreach($w_arr2 as $key => $w){
+                 if($key+1==count($w_arr2)){
+                   $w_str2.=$w;
+                 }else{
+                   $w_str2.=$w.',';
+                 }
+
+               }
+               
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
-                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
+                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
-               
+    
                   $pay_this = $value->amt ;
                   $amt_pay_remain = 0;
-
+       
                     $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
@@ -909,7 +920,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
                 }else{ // กรณีไม่มีสินค้าในคลังเลย
-
+          
                      $amt_pay_remain = $value->amt ;
                      $pay_this = 0 ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
@@ -931,8 +942,9 @@ foreach($temp_ppr_0021_data as $tmp){
 
                       @$_SESSION['check_product_instock'] = 0;
 
-                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
-
+                              // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE product_id_fk=".$value->product_id_fk." ");
+                              // dd($temp_db_stocks_02);
                      $i = 1;
 
                   //  dd($temp_db_stocks_01[0]->amt);
@@ -1421,11 +1433,26 @@ foreach($temp_ppr_0021_data as $tmp){
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
                $amt_pay_this = $value->amt_remain;
+
+     // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
+     $w_arr2 = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+     $w_str2 = '';
+     foreach($w_arr2 as $key => $w){
+       if($key+1==count($w_arr2)){
+         $w_str2.=$w;
+       }else{
+         $w_str2.=$w.',';
+       }
+
+     }
+     
+
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
 
                if(!empty($value->product_id_fk)){
-                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
+                // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
+                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                }
@@ -1821,7 +1848,8 @@ foreach($temp_ppr_0021_data as $tmp){
 
                       @$_SESSION['check_product_instock'] = 0;
 
-                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                      // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE product_id_fk=".$value->product_id_fk." ");
 
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {

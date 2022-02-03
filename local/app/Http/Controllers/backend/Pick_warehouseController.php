@@ -595,7 +595,7 @@ class Pick_warehouseController extends Controller
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
 
            @$rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
-
+// dd($row->pick_pack_requisition_code_id_fk);
            if(count(@$rs_pay_history)>0){
                return 2;
            }else{

@@ -890,9 +890,26 @@ if(!empty($db_orders[0]->action_user)){
         }else{
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
         }
+    }else if(@$pay_type[0]->pay_type_id_fk==4){ // 4  Gift Voucher
+          $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price;
+  }
+  
+  else if(@$pay_type[0]->pay_type_id_fk==12){ // 12  Gift Voucher + เงินโอน
+    $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+}
 
+else if(@$pay_type[0]->pay_type_id_fk==13){ // 13  Gift Voucher + บัตรเครดิต
+  $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + เครดิต: '.@$pay_type[0]->sum_credit_price;
+}
 
-    }else{ // 5   เงินสด
+else if(@$pay_type[0]->pay_type_id_fk==14){ // 14  Gift Voucher + Ai-Cash
+  $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+}
+else if(@$pay_type[0]->pay_type_id_fk==19){ // 19  Gift Voucher + เงินสด
+  $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
+}
+
+  else{ // 5   เงินสด
         // $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
         $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->cash_pay,2);
     }
