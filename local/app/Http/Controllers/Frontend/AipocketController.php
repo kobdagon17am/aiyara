@@ -408,6 +408,7 @@ class AipocketController extends Controller
   {
 
 
+
     if (empty($rs->cancel_code)) {
 
       return redirect('ai-stockist')->withError('ไม่พบข้อมูลเลขบิล กรุณาติดต่อเจ้าหน้าที่');
@@ -431,6 +432,8 @@ class AipocketController extends Controller
       ->where('ai_stockist.status', '=', 'success')
       ->where('ai_stockist.customer_id', '=', Auth::guard('c_user')->user()->id)
       ->first();
+
+
 
     if (empty($ai_stockist)) {
       return redirect('ai-stockist')->withError('ไม่พบข้อมูลเลขบิล กรุณาติดต่อเจ้าหน้าที่');
@@ -458,7 +461,8 @@ class AipocketController extends Controller
 
     if ($ai_stockist->type_id == 1) { //ทำคุณสมบัติ
 
-      $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
+
+      $rs = RunPvController::Cancle_pv($ai_stockist->c_to, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
     } elseif ($ai_stockist->type_id == 2) { //รักษาคุณสมบัติรายเดือน
 
       $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($ai_stockist->customer_id, $ai_stockist->pv);
@@ -475,7 +479,7 @@ class AipocketController extends Controller
         $customer->pv_mt_active = $mt_active;
       }
 
-      $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
+      $rs = RunPvController::Cancle_pv($ai_stockist->c_to, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
     } elseif ($ai_stockist->type_id == 3) { //รักษาคุณสมบัติท่องเที่ยว
       $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_tv($ai_stockist->customer_id, $ai_stockist->pv);
 
@@ -491,7 +495,7 @@ class AipocketController extends Controller
         $customer->pv_tv_active = $tv_active;
       }
 
-      $rs = RunPvController::Cancle_pv($customer->user_name, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
+      $rs = RunPvController::Cancle_pv($ai_stockist->c_to, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
 
     } else {
       return redirect('ai-stockist')->withError('ไม่สามารถยกเลิกบิลได้ กรุณาติดต่อเจ้าหน้าที่');
