@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Frontend;
-
+use App\Models\Frontend\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
@@ -34,6 +34,8 @@ class DocsController extends Controller
 		$file_3 = $request->file_3;
 		$file_4 = $request->file_4;
 
+    $update_use = Customer::find(Auth::guard('c_user')->user()->id);
+
 		if(!empty($file_1) || !empty($file_2) || !empty($file_3) || !empty($file_4)){
 
 			if(isset($file_1)){
@@ -44,7 +46,7 @@ class DocsController extends Controller
 				if($file_1->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'1','url'=>$url,'file'=>$f_name]);
-
+          $update_use->regis_doc1_status = 0;
 				}
 			}
 
@@ -55,6 +57,7 @@ class DocsController extends Controller
 				if($file_2->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'2','url'=>$url,'file'=>$f_name]);
+          $update_use->regis_doc2_status = 0;
 
 				}
 			}
@@ -66,6 +69,7 @@ class DocsController extends Controller
 				if($file_3->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'3','url'=>$url,'file'=>$f_name]);
+          $update_use->regis_doc3_status = 0;
 
 				}
 			}
@@ -77,9 +81,10 @@ class DocsController extends Controller
 				if($file_4->move($url,$f_name)){
 					DB::table('register_files')
 					->insert(['customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'4','url'=>$url,'file'=>$f_name]);
+          $update_use->regis_doc4_status = 0;
 				}
 			}
-
+      $update_use->save();
 			return redirect('docs')->withSuccess('Docs upload Success');
 
 

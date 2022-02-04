@@ -13,7 +13,7 @@ class Member_pvController extends Controller
 
     public function index(Request $request)
     {
-
+      
        ini_set('max_execution_time', '0'); 
        ini_set('memory_limit', '-1'); 
 
@@ -57,6 +57,46 @@ class Member_pvController extends Controller
     }
     public function edit($id)
     {
+      $customer = DB::table('customers')
+        ->select(
+          'customers.*', 
+          'detail.house_no', 
+          'detail.house_name', 
+          'detail.moo', 
+          'detail.soi', 
+          'detail.road', 
+          'detail.province_id_fk', 
+          'detail.amphures_id_fk', 
+          'detail.district_id_fk', 
+          'detail.bank_account', 
+          'detail.bank_no', 
+          'detail.bank_name', 
+          'detail.bank_branch', 
+          'detail.bank_type', 
+          DB::raw(
+            "(SELECT CONCAT(introduce.first_name, ' ', introduce.last_name) FROM customers as introduce 
+            WHERE introduce.user_name = customers.introduce_id) as introduce_name")
+        )
+        ->leftJoin('customers_detail as detail', 'detail.customer_id', '=', 'customers.id')
+        ->where('customers.id', $id)
+        ->first();
+
+      $addressCard = DB::table('customers_address_card')
+          ->where('customer_id', $id)
+          ->first();
+    
+      $qualifications = DB::table('dataset_qualification')->pluck('business_qualifications', 'id');
+      $packages = DB::table('dataset_package')->pluck('dt_package', 'id');
+
+      $provinces = DB::table('dataset_provinces')->pluck('name_th', 'id');
+
+      return view('backend.member_pv.edit')->with([
+        'customer' => $customer,
+        'qualifications' => $qualifications,
+        'packages' => $packages,
+        'addressCard' => $addressCard,
+        'provinces' => $provinces
+      ]);
     }
 
     public function update(Request $request, $id)
@@ -220,6 +260,9 @@ class Member_pvController extends Controller
         }else{
           return 0;
         }
+      })
+      ->addColumn('edit_user', function ($user) {
+        return route('backend.member_pv.edit', $user->id);
       })
       ->addColumn('aistockist_status', function ($row) {
           if($row->aistockist_status==1){
