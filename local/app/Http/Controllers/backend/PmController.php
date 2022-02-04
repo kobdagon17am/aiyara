@@ -35,13 +35,23 @@ class PmController extends Controller
     public function edit($id)
     {
        $sRow = \App\Models\Backend\Pm::find($id);
-       $sUser = \App\Models\Backend\Permission\Admin::where('id', $sRow->subject_recipient)->get();
-       // dd($sUser[0]->name);
-       $subject_recipient = $sUser[0]->name;
-       $operator_name = \App\Models\Backend\Permission\Admin::where('id', $sRow->operator)->get();
-       $operator_name = $operator_name[0]->name;
+       $sUser = \App\Models\Backend\Permission\Admin::where('id', $sRow->subject_recipient)->first();
+        if($sUser){
+          $subject_recipient = $sUser->name;
+        }else{
+          $subject_recipient = '';
+        }
+       $operator_name = \App\Models\Backend\Permission\Admin::where('id', $sRow->operator)->first();
+
+       if($sUser){
+        $operator_name = $operator_name->name;
+      }else{
+        $operator_name = '';
+      }
+      
        $Customer = DB::select(" select * from customers limit 100 ");
        $sMainGroup = DB::select(" select * from role_group where id<>1 ");
+  
        return View('backend.pm.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
     }
 

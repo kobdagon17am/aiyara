@@ -1343,6 +1343,10 @@ for ($j=0; $j < $amt_page ; $j++) {
         //  echo floatval(@$DB[0]->g); 
         if($total_fee_amt > 0){
           $new_total = str_replace(',', '', @$DB[0]->g);
+ 
+          if($new_total=='' || $new_total==null){
+            $new_total = 0;
+          }
           $new_total = $new_total+$total_fee_amt;
           echo number_format($new_total, 2); 
         }else{

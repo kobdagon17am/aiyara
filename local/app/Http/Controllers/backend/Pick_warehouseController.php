@@ -594,8 +594,10 @@ class Pick_warehouseController extends Controller
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
 
-           @$rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
-// dd($row->pick_pack_requisition_code_id_fk);
+          // วุฒืแก้เป็น pick_pack_packing_code_id_fk
+          //  @$rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
+          @$rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
+// dd($rs_pay_history);
            if(count(@$rs_pay_history)>0){
                return 2;
            }else{
@@ -611,6 +613,7 @@ class Pick_warehouseController extends Controller
             SELECT * from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' 
             AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay DESC limit 1 ;
           ");
+     
           // Case ที่มีการบันทึกข้อมูลแล้ว
               if(@$Products){
 
