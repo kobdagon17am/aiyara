@@ -18,6 +18,7 @@ class PaymentSentAddressOrder extends Model
             $insert_db_orders->quantity = $quantity;
             $insert_db_orders->customers_id_fk = $customer_id;
             $insert_db_orders->address_sent_id_fk = $rs->address_sent_id_fk;
+
             $insert_db_orders->business_location_id_fk = $business_location_id;
             $insert_db_orders->delivery_location_frontend = $rs->receive;
             $insert_db_orders->delivery_province_id = $rs->province_id_fk;
