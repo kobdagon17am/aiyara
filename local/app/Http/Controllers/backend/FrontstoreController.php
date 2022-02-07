@@ -19,12 +19,14 @@ use App\Models\Frontend\RunNumberPayment;
 use App\Models\Backend\DatasetOrderHistoryStatus;
 use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\CancelOrderController;
+use App\Helpers\General;
 
 class FrontstoreController extends Controller
 {
 
   public function index(Request $request)
   {
+    General::gen_id_url();
     // dump($request->all());
     // dd(\Auth::user()->position_level);
     // dd(\Auth::user()->branch_id_fk);
@@ -254,7 +256,8 @@ class FrontstoreController extends Controller
 
     $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
 
-    $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and status=1 ");
+    // $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and status=1 ");
+    $sPay_type = DB::select(" select * from dataset_pay_type where status=1 ");
 
     $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
     $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
@@ -530,7 +533,8 @@ class FrontstoreController extends Controller
     if ($sRow->purchase_type_id_fk == '5') {
       $sPay_type = DB::select(" select * from dataset_pay_type where id in (4,12,13,14,19) and status=1 ");
     } else {
-      $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
+      // $sPay_type = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ");
+      $sPay_type = DB::select(" select * from dataset_pay_type where id <=11 and id != 4 and status=1 ");
     }
     // dd($sRow->pay_type_id_fk);
     $sDistribution_channel = DB::select(" select * from dataset_distribution_channel where id<>3 AND status=1  ");
