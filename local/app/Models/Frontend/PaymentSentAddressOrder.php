@@ -18,7 +18,6 @@ class PaymentSentAddressOrder extends Model
             $insert_db_orders->quantity = $quantity;
             $insert_db_orders->customers_id_fk = $customer_id;
             $insert_db_orders->address_sent_id_fk = $rs->address_sent_id_fk;
-
             $insert_db_orders->business_location_id_fk = $business_location_id;
             $insert_db_orders->delivery_location_frontend = $rs->receive;
             $insert_db_orders->delivery_province_id = $rs->province_id_fk;
@@ -94,6 +93,11 @@ class PaymentSentAddressOrder extends Model
             }
 
             if ($rs->receive == 'sent_address') {
+                       // ที่อยู่ผู้รับ>0=รับสินค้าด้วยตัวเอง
+                //|1=ที่อยู่ตามบัตร ปชช.>customers_address_card
+            // |2=ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ>customers_detail
+            // |3=ที่อยู่กำหนดเอง>customers_addr_frontstore|4=จัดส่งพร้อมบิลอื่น|5=ส่งแบบพิเศษ/พรีเมี่ยม
+            $insert_db_orders->delivery_location = 2;
                 $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->province,$rs->price,$rs->shipping_premium,$rs->receive);
                 $shipping = $data_shipping['data']->shipping_cost;
 
@@ -120,6 +124,7 @@ class PaymentSentAddressOrder extends Model
 
             } elseif ($rs->receive == 'sent_address_card') {
 
+            $insert_db_orders->delivery_location = 1;
                 $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->card_province,$rs->price,$rs->shipping_premium,$rs->receive);
                 $shipping = $data_shipping['data']->shipping_cost;
 
@@ -145,6 +150,8 @@ class PaymentSentAddressOrder extends Model
 
             } elseif ($rs->receive == 'sent_address_other') {
 
+
+                $insert_db_orders->delivery_location = 3;
                 $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id,$rs->other_province,$rs->price,$rs->shipping_premium,$rs->receive);
                 $shipping = $data_shipping['data']->shipping_cost;
 
@@ -169,9 +176,13 @@ class PaymentSentAddressOrder extends Model
                 $insert_db_orders->name = $rs->other_name;
 
             } elseif ($rs->receive == 'sent_office') {
+
+                // ที่อยู่ผู้รับ>0=รับสินค้าด้วยตัวเอง
+                //|1=ที่อยู่ตามบัตร ปชช.>customers_address_card
+                // |2=ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ>customers_detail
+                // |3=ที่อยู่กำหนดเอง>customers_addr_frontstore|4=จัดส่งพร้อมบิลอื่น|5=ส่งแบบพิเศษ/พรีเมี่ยม
+                $insert_db_orders->delivery_location = 0;
                 $insert_db_orders->shipping_price = 0;
-
-
                 $insert_db_orders->shipping_free = 1;
                 $insert_db_orders->tel = $rs->receive_tel_mobile;
                 $insert_db_orders->name = $rs->office_name;
