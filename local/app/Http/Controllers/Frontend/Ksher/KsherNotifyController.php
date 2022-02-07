@@ -151,6 +151,8 @@ class KsherNotifyController extends Controller
 
                 if ($getOrderData->order_status_id_fk == 1 || $getOrderData->order_status_id_fk == 3) {
                     $resulePv = PvPayment::PvPayment_type_confirme($getOrderData->id, $getOrderData->customers_id_fk, '2', 'customer');
+
+
                 }
 
             } else {
