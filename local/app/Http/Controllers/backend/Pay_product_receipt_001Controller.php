@@ -1191,7 +1191,9 @@ class Pay_product_receipt_001Controller extends Controller
     $endDate = " AND DATE(db_orders.approve_date) <= '".$req->endDate."' " ;
   }
   // sentto_branch_id
+
 if(count($sTable_re)!=0){
+
             $sTable = DB::select("
             SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
             FROM db_orders
@@ -1217,36 +1219,76 @@ if(count($sTable_re)!=0){
 
           ");
 }else{
-  $sTable = DB::select("
-            SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
-            FROM db_orders
-            Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-            WHERE 1
-            $action_user_011
-            AND db_orders.approve_status = 2
-            AND delivery_location = 0
-            UNION ALL
-            SELECT
-            gift_voucher_price,
-            code_order,
-            db_add_ai_cash.id,
-            db_add_ai_cash.created_at as d2,
-            0 as purchase_type_id_fk,
-            'เติม Ai-Cash' AS type,
-            db_add_ai_cash.customer_id_fk as c2,
-            db_add_ai_cash.aicash_amt,
-            db_add_ai_cash.id as inv_no,approve_status
-            ,'',
-            db_add_ai_cash.updated_at as ud2,
-            'ai_cash' as pay_type,cash_price,
-            credit_price,fee_amt,transfer_price,
-            0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user,''
-            FROM db_add_ai_cash
-            WHERE 1 AND db_add_ai_cash.approve_status<>4
-            $action_user_01
-            ORDER BY created_at DESC
+  // $sTable = DB::select("
+  //           SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
+  //           FROM db_orders
+  //           Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+  //           WHERE 1
+  //           $action_user_011
+  //           AND db_orders.approve_status = 2
+  //           AND delivery_location = 0
+  //           UNION ALL
+  //           SELECT
+  //           gift_voucher_price,
+  //           code_order,
+  //           db_add_ai_cash.id,
+  //           db_add_ai_cash.created_at as d2,
+  //           0 as purchase_type_id_fk,
+  //           'เติม Ai-Cash' AS type,
+  //           db_add_ai_cash.customer_id_fk as c2,
+  //           db_add_ai_cash.aicash_amt,
+  //           db_add_ai_cash.id as inv_no,approve_status
+  //           ,'',
+  //           db_add_ai_cash.updated_at as ud2,
+  //           'ai_cash' as pay_type,cash_price,
+  //           credit_price,fee_amt,transfer_price,
+  //           0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user,''
+  //           FROM db_add_ai_cash
+  //           WHERE 1 AND db_add_ai_cash.approve_status<>4
+  //           $action_user_01
+  //           ORDER BY created_at DESC
 
-          ");
+  //         ");
+              $sTable = DB::select("
+              SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
+              FROM db_orders
+              Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+              WHERE 1
+              $action_user_011
+              $action_user_011_2
+              $startDate
+              $endDate
+              AND db_orders.approve_status = 2
+              AND delivery_location = 0
+  
+              OR 1
+              $action_user_011_1
+              $startDate
+              $endDate
+              AND db_orders.approve_status = 2
+              AND delivery_location = 0
+              UNION ALL
+              SELECT
+              gift_voucher_price,
+              code_order,
+              db_add_ai_cash.id,
+              db_add_ai_cash.created_at as d2,
+              0 as purchase_type_id_fk,
+              'เติม Ai-Cash' AS type,
+              db_add_ai_cash.customer_id_fk as c2,
+              db_add_ai_cash.aicash_amt,
+              db_add_ai_cash.id as inv_no,approve_status
+              ,'',
+              db_add_ai_cash.updated_at as ud2,
+              'ai_cash' as pay_type,cash_price,
+              credit_price,fee_amt,transfer_price,
+              0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user,''
+              FROM db_add_ai_cash
+              WHERE 1 AND db_add_ai_cash.approve_status<>4
+              $action_user_01
+              ORDER BY created_at DESC
+
+            ");
 }
 
 
