@@ -218,7 +218,7 @@
 
             */
     if (@$sRow->check_press_save == 2) {
-        if (@$sRow->pay_type_id_fk == 6 || @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 10 || @$sRow->pay_type_id_fk == 11) {
+        if (@$sRow->pay_type_id_fk == 1 || @$sRow->pay_type_id_fk == 6 || @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 10 || @$sRow->pay_type_id_fk == 11) {
             // วุฒิแก้
             // $pay_type_transfer_aicash = " disabled ";
             $pay_type_transfer_aicash = ' ';
@@ -1733,7 +1733,7 @@
                                                                 </div>
 
 
-                                                                <?php $show_div_transfer_price = @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 10 || @$sRow->pay_type_id_fk == 11 ? '' : 'display: none;'; ?>
+                                                                <?php $show_div_transfer_price = @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 10 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 1 ? '' : 'display: none;'; ?>
                                                                 <div class="divTableRow show_div_transfer_price "
                                                                     style="<?= $show_div_transfer_price ?>">
                                                                     <div class="divTableCell"></div>
@@ -1762,7 +1762,7 @@
                                                                 </div>
 
 
-                                                                <?php $show_div_aicash_price = @$sRow->pay_type_id_fk == 6 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 ? '' : 'display: none;'; ?>
+                                                                <?php $show_div_aicash_price = @$sRow->pay_type_id_fk == 6 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 3 ? '' : 'display: none;'; ?>
 
                                                                 <div class="divTableRow show_div_aicash_price "
                                                                     style="<?= $show_div_aicash_price ?>">
@@ -1884,8 +1884,7 @@
                                                                 style="<?= $show_div_aicash_price ?>">
                                                                 <div class="divTableCell"></div>
                                                                 <div class="divTH">
-                                                                    <label for="aicash_price" class=""> ยอด
-                                                                        Ai-cash ที่ชำระ : </label>
+                                                                    <label for="aicash_price" class=""> ยอด Ai-cash ที่ชำระ : </label>
                                                                 </div>
                                                                 <div class="divTableCell">
                                                                     <!-- CalPriceAicash -->
@@ -2950,9 +2949,11 @@
 
         function checkStatus() {
             var status = "{{ @$sRow->approve_status }}";
-            if (status != 1 && status != 2 && status != 0 && status != '') {
+            var distribution_channel_id_fk = "{{ @$sRow->distribution_channel_id_fk }}";
+            if (status != 1 && status != 2 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
                 $("input").prop("disabled", true);
                 $("select").prop("disabled", true);
+                $("button").prop("disabled", true);
             }
         }
 
@@ -5282,8 +5283,7 @@
                                         $('.input_shipping_nofree').show();
                                     }
 
-                                    if (pay_type_id_fk == 6 || pay_type_id_fk ==
-                                        11) {
+                                    if (pay_type_id_fk == 6 || pay_type_id_fk == 11 || pay_type_id_fk == 3) {
                                         if (value.aicash_price > 0) {
                                             $("#aicash_price").val(formatNumber(
                                                 parseFloat(value
@@ -6239,7 +6239,36 @@
                             $('.class_btnSave').addClass(' btnSave ');
                             $('.class_btnSave').removeAttr("disabled");
                             $('.class_btnSave').show();
-                        } else
+                        } 
+                        else
+                                            // 1  เงินโอน
+                                            if (pay_type_id_fk == 1) {
+
+                                                // เงินโอน
+                                                $(".show_div_transfer_price").show();
+                                                // $('input[name=account_bank_id]').prop('checked',false);
+                                                $('input[name=account_bank_id]').attr(
+                                                    'required', true);
+                                                $(".div_account_bank_id").show();
+                                                $(".div_pay_with_other_bill").show();
+                                                $("#transfer_price").val('');
+                                                // $(".transfer_money_datetime").attr('required', true);
+                                                $("#transfer_price").attr('required', true);
+                                                $("#transfer_price").removeClass(
+                                                    'input-aireadonly').addClass(
+                                                    'input-aifill').addClass('CalPrice');
+
+                                                // $(".show_div_cash_pay").show();
+                                                $('#fee').removeAttr('required');
+                                                $('#aicash_price').removeAttr('required');
+                                                $("#cash_pay").val('');
+
+                                                // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
+                                                $('.class_btnSave').prop('disabled', true);
+
+                                            } 
+
+                        else
                             // 2  เงินสด + Ai-Cash
                             if (pay_type_id_fk == 6) {
 
@@ -6257,6 +6286,24 @@
                                 $('.class_btnSave').show();
 
                             } else
+
+                            if (pay_type_id_fk == 3) {
+
+                                $("#aicash_price").val('');
+                                // $("#aicash_price").removeAttr('readonly');
+                                // $('#aicash_price').attr('required', true);
+                                // $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+                                // $("#cash_pay").val('');
+                                $(".show_div_aicash_price").show();
+                                // $(".show_div_cash_pay").show();
+                                $('#member_id_aicash_select').attr('required', true);
+
+                                $('.class_btnSave').addClass(' btnSave ');
+                                $('.class_btnSave').removeAttr("disabled");
+                                $('.class_btnSave').show();
+
+                                }else
+
                                 // 3  เครดิต + เงินสด
                                 if (pay_type_id_fk == 7) {
                                     // เครดิต
@@ -6269,6 +6316,32 @@
                                     $("#sum_credit_price").val('');
                                     // เงินสด
                                     $(".show_div_cash_pay").show();
+                                    $("#cash_pay").val('');
+                                    var fee = $("#fee").val();
+                                    if (fee == '') {
+                                        $("#fee").select2('open');
+                                    } else {
+                                        $("#credit_price").attr('disabled', false);
+                                        $("#credit_price").focus();
+                                    }
+
+                                    $('.class_btnSave').addClass(' btnSave ');
+                                    $('.class_btnSave').removeAttr("disabled");
+                                    $('.class_btnSave').show();
+
+                                } else
+                                    // 2 บัตรเครดิต
+                                    if (pay_type_id_fk == 2) {
+                                    // เครดิต
+                                    $(".show_div_credit").show();
+                                    // $("#credit_price").attr('disabled', false);
+                                    $("#credit_price").val('');
+                                    $(".div_fee").show();
+                                    $("#fee_amt").val('');
+                                    $('#fee').attr('required', true);
+                                    $("#sum_credit_price").val('');
+                                    // เงินสด
+                                    // $(".show_div_cash_pay").show();
                                     $("#cash_pay").val('');
                                     var fee = $("#fee").val();
                                     if (fee == '') {
@@ -6556,8 +6629,8 @@
             var pay_type_id_fk = $("#pay_type_id_fk").val();
 
             //      if(pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11){
-            if (pay_type_id_fk == 10 || pay_type_id_fk == 11 || pay_type_id_fk == 12) {
-                console.log(pay_type_id_fk);
+            if (pay_type_id_fk == 1 || pay_type_id_fk == 10 || pay_type_id_fk == 11 || pay_type_id_fk == 12) {
+                // console.log(pay_type_id_fk);
                 var transfer_price = $("#transfer_price").val();
                 if (transfer_price <= 0) {
                     alert(
@@ -6964,6 +7037,12 @@
                             $("#aicash_price").val(formatNumber(parseFloat(0).toFixed(2)));
                         }
 
+                        if (pay_type_id_fk == 3) {
+                            $("#aicash_price").focus();
+                            $("#cash_price").val('');
+                            $("#cash_pay").val('');
+                        }
+
                         if (pay_type_id_fk == 6) {
                             $("#aicash_price").focus();
                             $("#cash_price").val('');
@@ -7021,7 +7100,7 @@
                                 $('.input_shipping_nofree').show();
                             }
 
-                            if (pay_type_id_fk == 6 || pay_type_id_fk == 11) {
+                            if (pay_type_id_fk == 6 || pay_type_id_fk == 11 || pay_type_id_fk == 3) {
                                 if (value.aicash_price > 0) {
                                     $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price)
                                         .toFixed(2)));
@@ -7102,6 +7181,12 @@
                             $("#cash_price").val('');
                             $("#cash_pay").val('');
                         }
+                        
+                        if (pay_type_id_fk == 3) {
+                            $("#aicash_price").focus();
+                            $("#cash_price").val('');
+                            $("#cash_pay").val('');
+                        }
 
                         $.each(d, function(key, value) {
 
@@ -7143,7 +7228,7 @@
                                 $('.input_shipping_nofree').show();
                             }
 
-                            if (pay_type_id_fk == 6 || pay_type_id_fk == 11) {
+                            if (pay_type_id_fk == 6 || pay_type_id_fk == 11 || pay_type_id_fk == 3) {
                                 if (value.aicash_price > 0) {
                                     $("#aicash_price").val(formatNumber(parseFloat(value.aicash_price)
                                         .toFixed(2)));
@@ -7390,7 +7475,7 @@
             var total_sum = 0;
 
             var pay_type_id_fk = $("#pay_type_id_fk").val();
-            if (pay_type_id_fk == 8 || pay_type_id_fk == 10 || pay_type_id_fk == 11) {
+            if (pay_type_id_fk == 1 || pay_type_id_fk == 8 || pay_type_id_fk == 10 || pay_type_id_fk == 11) {
                 $('input[name=account_bank_id]').attr('required', true);
 
                 var account_bank = new Array();
@@ -7493,7 +7578,7 @@
                     $('.myloading').hide();
 
                     // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
-                    if (pay_type_id_fk == 6 || pay_type_id_fk == 9 || pay_type_id_fk == 11) {
+                    if (pay_type_id_fk == 6 || pay_type_id_fk == 9 || pay_type_id_fk == 11 || pay_type_id_fk == 3) {
                         // event.preventDefault();
                         $("#aicash_price").focus();
                         if (aicash_price >= 0 && aicash_remain <= 0) {
@@ -7909,7 +7994,7 @@
             }
 
             // ประเภทที่มีเงินโอนพ่วงด้วย
-            if ((pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11) || (pay_type_id_fk ==
+            if ((pay_type_id_fk == 1) || (pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11) || (pay_type_id_fk ==
                     12)) {
 
                 $(".show_div_transfer_price").show();

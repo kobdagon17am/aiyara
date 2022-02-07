@@ -13,10 +13,7 @@ class Po_approveController extends Controller
 
     public function index(Request $request)
     {
-        $menu_id = Session::get('session_menu_id');
-        if($menu_id=='' || $menu_id==null){
-           General::gen_id_url();
-        }
+        General::gen_id_url();
         // $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
         //     return $query->where('id', auth()->user()->business_location_id_fk);
         // })->get();
