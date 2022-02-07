@@ -3,8 +3,25 @@ namespace App\Helpers;
 use DateTime;
 use DateInterval;
 use DB;
+use Session;
 
 class General {
+
+
+	static function gen_id_url() {
+		$curr = url()->current();
+		$menus = DB::table('ck_backend_menu')->select('url','id')->get();
+		$data_id = 0;
+		foreach($menus as $m){
+			$c = strpos($curr,$m->url);
+			if($c > 0 && $c != null){
+				$data_id = $m->id;
+				break;
+			}
+		}
+		Session::put('session_menu_id', $data_id);
+	}
+
 
 	static function gen_thai_date($date, $year = '0') {
 		if($date) {

@@ -77,7 +77,7 @@ class AjaxController extends Controller
         Session::put('session_menu_id', $request->session_menu_id);
          // echo "session created";
         echo (Session::get('session_menu_id'));
-
+            // dd(Session::get('session_menu_id'));
         $roleApprove = DB::select(" SELECT can_approve from role_permit WHERE role_group_id_fk=(SELECT role_group_id_fk FROM ck_users_admin WHERE id=".(\Auth::user()->id).") and menu_id_fk='$request->session_menu_id'  ; ");
         // echo $roleApprove[0]->can_approve;
         Session::put('roleApprove', @$roleApprove[0]->can_approve);

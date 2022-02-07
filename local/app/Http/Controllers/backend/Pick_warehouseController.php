@@ -1978,14 +1978,14 @@ ORDER BY db_pick_pack_packing.id
   
       }
 
-      $sTable = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk='$reg->packing_id' group by pick_pack_requisition_code_id_fk ");
+      $sTable = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk='$reg->packing_id' group by pick_pack_requisition_code_id_fk order by recipient_code asc");
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
 
       ->addColumn('column_001', function($row) {
         
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -2000,7 +2000,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_002', function($row) {
         
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -2020,7 +2020,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_004', function($row) {
           
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -2034,7 +2034,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_005', function($row) {
           
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
 
           $f = [] ;
           $tx = '';
@@ -2056,7 +2056,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_008', function($row) {
           
-        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk ORDER BY delivery_id_fk ASC ");
+        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
 
         $f = [] ;
         $tx = '';
