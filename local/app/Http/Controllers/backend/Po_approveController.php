@@ -112,9 +112,16 @@ class Po_approveController extends Controller
                 // return $request->slip_ids;
 
                 if(!empty($request->slip_ids)){
-
                     for ($i=0; $i < count($request->slip_ids) ; $i++) {
-                        DB::select(" UPDATE `payment_slip` SET `code_order`='".$sRow->code_order."',`status`='2',transfer_bill_date='".$request->transfer_bill_date[$i]."' WHERE (`id`='".$request->slip_ids[$i]."') ");
+                        // DB::select(" UPDATE `payment_slip` SET `note`='".$request->slip_note[$i]."',`code_order`='".$sRow->code_order."',`status`='2',transfer_bill_date='".$request->transfer_bill_date[$i]."' WHERE (`id`='".$request->slip_ids[$i]."') ");
+                      DB::table('payment_slip')->where('id',$request->slip_ids[$i])->update([
+                          'note' => $request->slip_note[$i],
+                          'code_order' => $sRow->code_order,
+                          'status' => 2,
+                          'transfer_bill_date' => $request->transfer_bill_date[$i],
+                      ]);
+                    //   $t = DB::table('payment_slip')->where('id',$request->slip_ids[$i])->first();
+
                     }
 
                 }
@@ -157,7 +164,7 @@ class Po_approveController extends Controller
 
                 }
 
-
+                // note
                 $sRow->transfer_bill_status = 1;
                 $sRow->status_slip = 'true';
 
@@ -167,6 +174,7 @@ class Po_approveController extends Controller
                 $sRow->transfer_bill_date  = NULL;
                 $sRow->transfer_bill_approvedate = NULL;
                 $sRow->transfer_bill_note = @request('detail');
+       
 
                 DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
 
@@ -190,9 +198,9 @@ class Po_approveController extends Controller
                 $this->fncUpdateDeliveryAddress($sRow->id);
                 $this->fncUpdateDeliveryAddressDefault($sRow->id);
             }
-
+  
             \DB::commit();
-
+// dd($t);
             return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg('success')]);
 
         } catch (\Exception $e) {

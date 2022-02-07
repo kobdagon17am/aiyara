@@ -300,13 +300,13 @@
                                   {{ csrf_field() }}
 
                                    <div class="form-group row">
-                                        <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ (Admin Login) :</label>
+                                        <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ :</label>
                                         <div class="col-md-6">
                                           @if( empty(@$sRow->id) )
-                                            <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                                            <input class="form-control" type="text" value="" readonly style="background-color: #f2f2f2;" >
                                               <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
                                               @else
-                                                <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                                                <input class="form-control" type="text" value="{{ @$approve_user }}" readonly style="background-color: #f2f2f2;" >
                                               <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                                            @endif
                                             

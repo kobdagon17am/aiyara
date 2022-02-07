@@ -69,7 +69,7 @@
                                                     class="grow">
                                                     <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
 
-                                                     <input  type="text" class="form-control" name="note" placeholder="" value="หมายเหตุ : {{@$r->note}}" >
+                                                     <input  type="text" class="form-control" name="note" placeholder="" readonly value="หมายเหตุ : {{@$r->note}}" >
 
 
                                             @ELSE
@@ -215,6 +215,8 @@
                                                     </div>
                                                 </div>
 
+                                             
+
 
                                   @IF(!empty(@$sRow->pay_with_other_bill))
 
@@ -249,9 +251,18 @@
                                                     <div class="col-md-6 text-left">
                                                       <h5 class="font-size-14 required_star_red ">Slip {{@$i}} : วันที่เวลาที่โอนในสลิป </h5>
                                                     </div>
-                                                    <div class="col-md-6 text-left">
+                                                    <div class="col-md-12 text-left">
                                                         <input type="hidden" name="slip_ids[]" value="{{@$r->id}}">
                                                         <input class="form-control transfer_bill_date " name="transfer_bill_date[]" type="text" value="{{@$r->transfer_bill_date?@$r->transfer_bill_date:NULL}}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 mt-2 mb-2 text-left">
+                                                <div class="row form-group " >
+                                                    <div class="col-md-12 text-left">
+                                                        <h5 class="font-size-14 required_star_red">หมายเหตุ : </h5>
+                                                           <input class="form-control slip_note " type="text" name="slip_note[]" value="{{@$r->note}}">
                                                     </div>
                                                 </div>
                                             </div>

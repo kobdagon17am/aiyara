@@ -92,6 +92,15 @@ class Add_ai_cashController extends Controller
       } else {
         $CustomerAicashName = 'ไม่ระบุชื่อ';
       }
+
+      if($sRow->approver!=0){
+        $approve_user = \App\Models\Backend\Permission\Admin::where('id', $sRow->approver)->first();
+        $approve_user = $approve_user->name;
+      }else{
+        $approve_user = '';
+      }
+
+
     } else {
       $action_user = NULL;
       $CustomerAicash = NULL;
@@ -115,6 +124,7 @@ class Add_ai_cashController extends Controller
       'CustomerAicash' => $CustomerAicash,
       'CustomerAicash' => $CustomerAicash,
       'CustomerAicashName' => $CustomerAicashName,
+      'approve_user' => $approve_user,
     ));
   }
 
@@ -172,8 +182,6 @@ class Add_ai_cashController extends Controller
 
       $admin_id = \Auth::user()->id;
       $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id, $admin_id, 'admin', $request->note, $pay_type_id = '1');
-
-
 
       $sRow = \App\Models\Backend\Add_ai_cash::find($id);
       $sRow->approve_status = 2;
