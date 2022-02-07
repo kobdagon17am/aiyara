@@ -579,6 +579,13 @@ class PvPayment extends Model
                       $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
                     }
 
+                      //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
+                        if ($order_data->pv_total >= 10000) {
+
+                          $customer_update->aistockist_status = '1';
+                          $customer_update->aistockist_date = date('Y-m-d h:i:s');
+                      }
+
                 } elseif ($type_id == 5) { // Ai Voucher
 
                     $pv_banlance = DB::table('customers')
@@ -628,12 +635,6 @@ class PvPayment extends Model
                 }
 
 
-                //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
-                if ($order_data->pv_total >= 10000) {
-
-                    $customer_update->aistockist_status = '1';
-                    $customer_update->aistockist_date = date('Y-m-d h:i:s');
-                }
 
                 if ($resule['status'] == 'success') {
                     $movement_ai_cash->save();
