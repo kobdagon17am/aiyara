@@ -1536,7 +1536,7 @@ class Pay_requisition_001Controller extends Controller
         // หา time+pay ครั้งที่จ่าย
           $rs_time_pay = DB::select(" SELECT * FROM db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk in ($db_pick_pack_packing_code_id)  order by time_pay DESC limit 1 ");
           // return $rs_time_pay;
-          // dd();
+
 
           if(count($rs_time_pay)>0){
             $time_pay = $rs_time_pay[0]->time_pay + 1;
@@ -1552,7 +1552,7 @@ class Pay_requisition_001Controller extends Controller
             $temp_ppp_001
             Inner Join $temp_ppp_002 ON $temp_ppp_002.frontstore_id_fk = $temp_ppp_001.id
             limit 1;");
-
+         
          @$pick_pack_requisition_code_id_fk = @$pick_pack_requisition_code_id_fk[0]->pick_pack_requisition_code_id_fk;
 
 // เก็บลงตารางจริง
@@ -1562,6 +1562,7 @@ class Pay_requisition_001Controller extends Controller
           // db_pay_requisition_002
 
           $db_temp_ppp_003 = DB::select(" select * from $temp_ppp_003 ;");
+
           $data_db_pay_requisition_001 = [];
           foreach ($db_temp_ppp_003 as $key => $value) {
                 $data_db_pay_requisition_001 = array(
@@ -1599,6 +1600,7 @@ class Pay_requisition_001Controller extends Controller
 
                // เก็บรายการสินค้าที่จ่าย 
                 $db_temp_ppp_004 = DB::select(" select * from $temp_ppp_004 ;");
+             
                 $data_db_pay_requisition_002 = [];
 
                 // return $db_temp_ppp_004;
@@ -1712,8 +1714,8 @@ class Pay_requisition_001Controller extends Controller
                 DB::select(" INSERT IGNORE INTO  db_pay_requisition_002_pay_history (time_pay,pick_pack_requisition_code_id_fk,pick_pack_packing_code_id_fk,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,pick_pack_requisition_code_id_fk,$db_pick_pack_packing_code_id,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppp_004 ");
 
 
-              DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk ");
-
+              // DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk ");
+              DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_packing_code_id_fk=$pick_pack_requisition_code_id_fk ");
 
               DB::select(" TRUNCATE $temp_db_stocks_compare ;");
               DB::select(" UPDATE db_pay_requisition_001 SET pay_date=now(),pay_user=".\Auth::user()->id." WHERE (id='$lastInsertId') ");

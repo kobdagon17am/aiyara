@@ -78,7 +78,7 @@
                        url: " {{ url('backend/ajaxSetSession') }} ", 
                        data:{ _token: '{{csrf_token()}}',session_menu_id:menu_id },
                         success:function(data){
-                             // console.log(data); 
+                             console.log(data); 
                              // return false;
                           },
                         error: function(jqXHR, textStatus, errorThrown) { 

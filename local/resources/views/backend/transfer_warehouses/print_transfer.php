@@ -236,7 +236,7 @@ tr.border_bottom td {
 
 <div class="" >
 
-  <div style="border-radius: 5px; height: 90mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;width:100%;" >
       <tr style="background-color: #e6e6e6;">
 
@@ -374,7 +374,7 @@ tr.border_bottom td {
 
 <div class="NameAndAddress" >
 
-  <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
+  <div style="border-radius: 5px; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
       
       <tr>
@@ -394,7 +394,7 @@ tr.border_bottom td {
         <br>
         วันที่ <?=@$approve_date?>
         </td>
-
+        <br>
       </tr>
 
 

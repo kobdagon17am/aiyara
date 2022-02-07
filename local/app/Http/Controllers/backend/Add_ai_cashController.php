@@ -8,6 +8,7 @@ use DB;
 use File;
 use App\Models\Frontend\RunNumberPayment;
 use Auth;
+use Session;
 class Add_ai_cashController extends Controller
 {
 
@@ -77,7 +78,7 @@ class Add_ai_cashController extends Controller
   {
     // dd($id);
     $sRow = \App\Models\Backend\Add_ai_cash::find($id);
-    // dd($sRow);
+
 
     $sPay_type = DB::select(" select * from dataset_pay_type where id in(1,5,7,8,10); ");
 

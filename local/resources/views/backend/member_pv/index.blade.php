@@ -91,32 +91,25 @@
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
             <h4 class="mb-0 font-size-18"> {{ __('message.member_service_system') }} </h4>
-
         </div>
     </div>
 </div>
 <!-- end page title -->
   <?php
       $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
+      // if($sPermission==1){
         $sC = '';
         $sU = '';
         $sD = '';
         $role_group_id = '%';
-      }else{
-        $role_group_id = \Auth::user()->role_group_id_fk;
-        // echo $role_group_id;
-        // echo $menu_id;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-      }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;
+      // }else{
+      //   $role_group_id = \Auth::user()->role_group_id_fk;
+      //   $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      //   $sC = @$menu_permit->c==1?'':'display:none;';
+      //   $sU = @$menu_permit->u==1?'':'display:none;';
+      //   $sD = @$menu_permit->d==1?'':'display:none;';
+      // }
    ?>
 
 <div class="row" >
@@ -282,9 +275,14 @@ $(function() {
               $('td:last-child', nRow).html('-');
           }else{
             // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
-               $('td:last-child', nRow).html(''
-                  + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
-                ).addClass('input');
+               $('td:last-child', nRow).html(`
+                <a class="btn btn-sm btn-info " href='${aData['routes_user']}' target="_blank" class="btn btn-primary">
+                  <i class="bx bx-file-find font-size-16 align-middle"></i> 
+                </a>
+                <a class="btn btn-sm btn-warning " href='${aData['edit_user']}' target="_blank" class="btn btn-primary">
+                  <i class="bx bx-edit font-size-16 align-middle"></i> 
+                </a>
+               `).addClass('input');
           }
         }
     });

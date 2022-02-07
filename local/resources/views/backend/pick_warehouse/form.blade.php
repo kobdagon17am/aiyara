@@ -615,7 +615,7 @@
                                             $(".myloading").hide();
 
                                             var check_product_instock = "<?=@$_SESSION['check_product_instock']?>";
-                                            console.log(check_product_instock);
+                                            console.log('status_sent : ' + aData['status_sent']);
                                               // console.log(aData['ch_amt_remain']);
                                               // console.log(aData['ch_amt_lot_wh']);
                                               // console.log(aData['status_sent']);
@@ -627,43 +627,47 @@
 // 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
 
                                               // ถ้าจ่ายครบแล้ว aData['status_sent']==3
+                                              
                                               if(aData['status_sent']==3){
 
-                                                    // $(".div_btn_save").hide();
+                                                    $(".div_btn_save").hide();
                                                     $(".div_btn_save_004").hide();
                                                     $(".div_datatables_003").hide();
                                                     $(".div_datatables_004").hide();
 
-                                              }else{
+                                                  }else{
 
-                                                  // ถ้ามีการยกเลิกเมื่อไร ให้แสดงตาราง 4 กรณีอื่นๆ แสดงตาราง 3 
-                                                      if(aData['status_cancel_all']==1 ){ //มีการยกเลิก
+                                                  if(aData['status_cancel_some']==0 ){ //ไม่มีการยกเลิก
 
-                                                            $(".div_datatables_003").hide();
-                                                            $(".div_datatables_004").show();
+                                                          // น้องวุฒิคนหล่อเพิ่มมาเองงับ เช็คว่าจ่ายสินค้าครบยัง
+                                                          if(aData['status_sent']==2){
+                                                            // $(".div_btn_save_cancel").show();
+                                                            $(".div_btn_save_004").hide();
+                                                          }else{
+                                                            $(".div_btn_save_004").hide();
+                                                            $(".div_btn_save_cancel").hide();
+                                                          }
+                                                      
+                                                  }else{  //มีการยกเลิก
+                                                        // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
+                                                        // ถ้าไม่มีสินค้าในคลังเลย
+                                                        console.log('ch_amt_lot_wh : '+aData['ch_amt_lot_wh']);
+                                                        // console.log('status_sent : '+aData['status_sent']);
+                                                        // console.log('status_cancel_some : '+aData['status_cancel_some']);
+                                                        if(aData['ch_amt_lot_wh']==0){
+                                                            $(".div_btn_save_004").hide();
+                                                            $(".div_btn_save_cancel").hide();
+                                                        }else{
+                                                          $(".div_btn_save_cancel").hide();
+                                                          if(aData['status_sent']!=4){
+                                                            $(".div_btn_save_004").show();
+                                                          }
+                                                          
+                                                        }
 
-                                                            if(aData['ch_amt_lot_wh']<=0){
-                                                                $(".div_btn_save_004").hide();
-                                                            }else{
-                                                                $(".div_btn_save_004").show();
-                                                            }
+                                                  }
 
-                                                      }else{  // ไม่มีการยกเลิก
-
-                                                            $(".div_datatables_003").show();
-                                                            $(".div_datatables_004").hide();
-
-                                                            // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
-                                                            // ถ้าไม่มีสินค้าในคลังเลย
-                                                            if(aData['ch_amt_lot_wh']<=0){
-                                                                $(".div_btn_save_004").hide();
-                                                            }else{
-                                                                $(".div_btn_save_004").show();
-                                                            }
-
-                                                      }
-
-                                                }
+                                                  }
 
                                           }
                                       });

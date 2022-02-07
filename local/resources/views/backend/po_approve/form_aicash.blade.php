@@ -46,6 +46,7 @@
     }else{
       $role_group_id = \Auth::user()->role_group_id_fk;
       $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+      // dd($menu_id);
       // $menu_permit = DB::select(" select * from role_permit where role_group_id_fk=2 AND menu_id_fk=34 ");
       // print_r($menu_permit);
       // print_r($role_group_id);
@@ -222,7 +223,7 @@
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
                             }else{$ds='';} ?>           
-                              <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" disabled="" />
+                              <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
 
                           </div>
@@ -285,7 +286,7 @@
               </form>
               </div>
 
-
+              
                   @if( !empty(@$sRow->id) )
                   @if( $sPermission==1 || @$menu_permit->can_approve==1 )
                   @if( @$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 )
@@ -339,8 +340,8 @@
                                       <textarea class="form-control" rows="3" id="note" name="note" minlength="5" required >{{ @$sRow->note }}</textarea>
                                     </div>
                                   </div>
-
                       @IF(@$sRow->approve_status >= 2)
+
                       @ELSE
                                   <div class="form-group row" style="padding: 1%;">
                                     <div class="col-md-4">
