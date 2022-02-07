@@ -640,7 +640,7 @@ class AjaxController extends Controller
         if($request->ajax()){
           // $query = \App\Models\Backend\Check_stock::where('product_id_fk',$request->product_id_fk)->get()->toArray();
           if(@\Auth::user()->permission==1){
-            
+
             $query = DB::select(" select * from db_stocks where product_id_fk=".$request->product_id_fk." GROUP BY  product_id_fk,lot_number ");
 
           }else{
@@ -945,22 +945,22 @@ class AjaxController extends Controller
             // shipping_price
             DB::select(" UPDATE db_orders SET shipping_special=0  WHERE id=$frontstore_id ");
 
-            // กรณีส่งฟรี 
+            // กรณีส่งฟรี
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
 
             if($sum_price>=$shipping[0]->purchase_amt){
 
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
             }else{
-              
+
                 DB::select(" UPDATE db_orders SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
 
                  if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น
-                       
+
                 }else{
 
                         $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
-                        
+
                         if($province_id==$branchs[0]->province_id_fk){
                             DB::select(" UPDATE db_orders SET delivery_location=$delivery_location ,delivery_province_id=$province_id ,shipping_price=0  WHERE id=$frontstore_id ");
                         }else{
@@ -3691,7 +3691,7 @@ class AjaxController extends Controller
     {
 
       if($request->ajax()){
-     
+
                     if(isset($request->item_id)){
                         DB::table('db_pick_warehouse_qrcode')
                         ->where('item_id', $request->item_id)
@@ -3712,7 +3712,7 @@ class AjaxController extends Controller
     {
 
       if($request->ajax()){
-     
+
                     if(isset($request->item_id)){
                         DB::table('db_pick_warehouse_qrcode')
                         ->where('item_id', $request->item_id)
@@ -4660,6 +4660,15 @@ class AjaxController extends Controller
             $rs =  DB::select("
                 SELECT regis_date_doc from customers where id=".$request->customer_id."
              ");
+
+             $customer =  DB::table('customers')
+             ->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name')
+             ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
+             ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
+             ->where('customers.id','=',$request->customer_id)
+             ->first();
+
+             $rs['customer'] =  $customer;
 
             return response()->json($rs);
 
