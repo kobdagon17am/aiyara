@@ -88,7 +88,7 @@ class DeliveryPackingCodeController extends Controller
         // วุฒิเอา  $branch_id_fk ออก
        $sTable = DB::select(" 
 
-          SELECT db_delivery_packing_code.*,db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by from db_delivery_packing_code  
+          SELECT db_delivery_packing_code.*,db_orders.action_user as action_user_data,db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by from db_delivery_packing_code  
           LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
           LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
           LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
@@ -111,6 +111,15 @@ class DeliveryPackingCodeController extends Controller
               }
             }
       })  
+      ->addColumn('action_user_data', function($row) {
+        $user = DB::table('ck_users_admin')->where('id',$row->action_user_data)->first();
+        if($user){
+          $user_name = $user->name;
+        }else{
+          $user_name = '';
+        }
+        return $user_name;
+     })  
       ->addColumn('packing_code_desc', function($row) {
         $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->first();
         return $DP->packing_code;

@@ -805,6 +805,9 @@ $(function() {
                           // }
                           return d ;
                       }},
+                      {data: 'action_user_data',   title :'<center>ผู้ออกบิล</center>', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
                       {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
