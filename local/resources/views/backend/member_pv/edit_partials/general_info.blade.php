@@ -4,10 +4,11 @@
       <div class="card-body">
         <h5 class="font-weight-bold">ข้อมูลทั่วไป</h5>
         <hr class="mt-1 mb-2">
-        <form action="#" method="POST">
+        <form action="{{ route('backend.member_pv.update', $customer->id) }}" method="POST">
           @csrf
-
+          @method('PATCH')
           <div class="row">
+
             <div class="col-md-3">
               <div class="form-group">
                 <label for="first_name">ชื่อ</label>
@@ -25,7 +26,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="upline_id">Upline</label>
-                <input type="text" class="form-control" name="upline_id" id="upline_id" placeholder="Upline" value="{{ $customer->upline_id }}">
+                <input type="text" class="form-control" name="upline_id" id="upline_id" placeholder="Upline" value="{{ $customer->upline_id }}" disabled>
               </div>
             </div>
             <div class="col-md-3">
@@ -60,7 +61,7 @@
           </div>
 
           <div class="text-right">
-            <button type="submit" class="btn btn-info">แก้ไขข้อมูล</button>
+            <button type="submit" name="type" value="customer" class="btn btn-info">แก้ไขข้อมูล</button>
           </div>
 
         </form>
