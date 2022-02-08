@@ -1641,7 +1641,7 @@ class FrontstoreController extends Controller
 
 
 
-  public function fncUpdateDeliveryAddress($id)
+  public static function fncUpdateDeliveryAddress($id)
   {
     // dd($id);
     $sRow = \App\Models\Backend\Frontstore::find($id);
@@ -1654,7 +1654,7 @@ class FrontstoreController extends Controller
 
     // วุฒิปรับ approve_status > 1
     // if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->id!='' && @$sRow->delivery_location>0 ){
-    if ($sRow->check_press_save == 2 && $sRow->approve_status > 1 && $sRow->id != '' && @$sRow->delivery_location > 0) {
+    if ($sRow->check_press_save == 2 && $sRow->approve_status > 1 && $sRow->id != '' && @$sRow->delivery_location > 0 || @$sRow->distribution_channel_id_fk == 3) {
 
       // วุฒิเพิ่มมาเช็คว่ามาชาร์ไหม จะได้รู้ว่าต้องบวกค่าธรรมเนียมไหม
       $check_order = DB::table('db_orders')->where('id',$sRow->id)->first();
@@ -1940,7 +1940,7 @@ class FrontstoreController extends Controller
 
   // กรณี เลือก จัดส่งพร้อมบิลอื่น หรือ รับสินค้าด้วยตัวเอง ให้เช็คดูว่า มี ที่อยู่จัดส่ง ปณ. หรือไม่ ถ้ามี เซ็ตเป็นดีฟอลท์ ถ้าไม่มี เช็คต่อ ที่อยู่ตามบัตร ปชช. เช็คต่ออีก ที่อยู่กำหนดเอง ถ้าไม่มีทั้ง 3 แจ้งว่า ไม่ได้ลงทะเบียนที่อยู่ไว้
 
-  public function fncUpdateDeliveryAddressDefault($id)
+  public static function fncUpdateDeliveryAddressDefault($id)
   {
     // dd($id);
 

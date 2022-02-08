@@ -825,7 +825,17 @@ if(!empty($db_orders[0]->action_user)){
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }
 
-    }else if(@$pay_type[0]->pay_type_id_fk==6){ // 6   เงินสด + Ai-Cash
+    }else
+    if(@$pay_type[0]->pay_type_id_fk==1){ // 1 เงินโอน 
+          $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
+  }else
+  if(@$pay_type[0]->pay_type_id_fk==2){ // 2 บัตรเครดิต 
+      $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
+}else
+if(@$pay_type[0]->pay_type_id_fk==3){ // 3 Ai-Cash
+    $pay_type = 'Ai-Cash: '.@$pay_type[0]->aicash_price;
+}
+    else if(@$pay_type[0]->pay_type_id_fk==6){ // 6   เงินสด + Ai-Cash
         if(@$pay_type[0]->cash_pay>0 && @$pay_type[0]->aicash_price==0){
             $pay_type = 'เงินสด: '.@$pay_type[0]->transfer_price;
         }elseif(@$pay_type[0]->cash_pay>0 && @$pay_type[0]->aicash_price>0){

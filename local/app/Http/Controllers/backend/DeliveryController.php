@@ -819,7 +819,7 @@ class DeliveryController extends Controller
 
 
         ");
-
+        
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {

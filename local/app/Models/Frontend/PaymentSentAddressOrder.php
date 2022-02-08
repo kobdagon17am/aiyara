@@ -5,6 +5,8 @@ use App\Http\Controllers\Frontend\Fc\ShippingCosController;
 use App\Models\Db_Orders;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Backend\DatasetOrderHistoryStatus;
+use App\Models\Backend\DbOrderHistoryLog;
 
 class PaymentSentAddressOrder extends Model
 {
@@ -197,10 +199,140 @@ class PaymentSentAddressOrder extends Model
 
                 return $resule;
             }
-
+            
             $insert_db_orders->save();
 
+            if ($insert_db_orders->delivery_location == 1) {
+                DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='" . $insert_db_orders->code_order . "' ");
+                $addr = DB::select("SELECT
+                                            customers_address_card.id,
+                                            customers_address_card.customer_id,
+                                            customers_address_card.card_house_no,
+                                            customers_address_card.card_house_name,
+                                            customers_address_card.card_moo,
+                                            customers_address_card.card_zipcode,
+                                            customers_address_card.card_soi,
+                                            customers_address_card.card_district_id_fk,
+                                            customers_address_card.card_amphures_id_fk,
+                                            customers_address_card.card_road,
+                                            customers_address_card.card_province_id_fk,
+                                            customers_address_card.created_at,
+                                            customers_address_card.updated_at,
+                                            dataset_provinces.name_th AS provname,
+                                            dataset_amphures.name_th AS ampname,
+                                            dataset_districts.name_th AS tamname,
+                                            customers.prefix_name,
+                                            customers.first_name,
+                                            customers.last_name
+                                            FROM
+                                            customers_address_card
+                                            Left Join dataset_provinces ON customers_address_card.card_province_id_fk= dataset_provinces.id
+                                            Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                                            Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+                                            Left Join customers ON customers_address_card.customer_id = customers.id
+                                            where customers_address_card.customer_id = " . ($insert_db_orders->customers_id_fk ? $insert_db_orders->customers_id_fk : 0) . "
+                                       ");
+                $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,customer_id, recipient_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('" . $insert_db_orders->code_order . "','" . $insert_db_orders->customers_id_fk . "', '" . @$addr[0]->first_name . " " . @$addr[0]->last_name . "','" . @$addr[0]->card_house_no . "','" . @$addr[0]->card_zipcode . "', '" . @$addr[0]->card_amphures_id_fk . "', '" . @$addr[0]->card_district_id_fk . "', '" . @$addr[0]->card_province_id_fk . "', 'customers_address_card', '" . @$addr[0]->id . "','" . $insert_db_orders->code_order . "') ");
+                DB::select("UPDATE db_orders SET address_sent_id_fk='" . (DB::getPdo()->lastInsertId()) . "' WHERE (id='" . $insert_db_orders->id . "')");
+              }
+
+              if ($insert_db_orders->delivery_location == 2) {
+
+                DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='" . $insert_db_orders->code_order . "' ");
+      
+                $addr = DB::select("SELECT
+                                customers_detail.id,
+                                customers_detail.customer_id,
+                                customers_detail.house_no,
+                                customers_detail.house_name,
+                                customers_detail.moo,
+                                customers_detail.zipcode,
+                                customers_detail.soi,
+                                customers_detail.amphures_id_fk,
+                                customers_detail.district_id_fk,
+                                customers_detail.road,
+                                customers_detail.province_id_fk,
+                                customers.prefix_name,
+                                customers.first_name,
+                                customers.last_name,
+                                dataset_amphures.name_th AS amp_name,
+                                            dataset_districts.name_th AS tambon_name,
+                                            dataset_provinces.name_th AS province_name
+                                FROM
+                                customers_detail
+                                Left Join customers ON customers_detail.customer_id = customers.id
+                                Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                              Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                              Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                WHERE customers_detail.customer_id =
+                                 " . $insert_db_orders->customers_id_fk . " ");
+      
+                @$recipient_name = @$addr[0]->prefix_name . @$addr[0]->first_name . " " . @$addr[0]->last_name;
+      
+                $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,
+                              customer_id,
+                              recipient_name,
+                               house_no,house_name, zipcode,
+                               amphures_id_fk, district_id_fk,province_id_fk,
+                                from_table, from_table_id, receipt_no) VALUES ( '" . $insert_db_orders->code_order . "',
+                                '" . $insert_db_orders->customers_id_fk . "',
+                                '" . @$recipient_name . "',
+                                '" . @$addr[0]->house_no . "','" . @$addr[0]->house_name . "','" . @$addr[0]->zipcode . "',
+                                '" . @$addr[0]->district . "', '" . @$addr[0]->district_sub . "', '" . @$addr[0]->province . "',
+                                'customers_detail', '" . @$addr[0]->id . "','" . $insert_db_orders->invoice_code . "') ");
+      
+                DB::select("UPDATE db_orders SET address_sent_id_fk='" . (DB::getPdo()->lastInsertId()) . "' WHERE (id='" . $insert_db_orders->id . "')");
+              }
+
+              if ($insert_db_orders->delivery_location == 3) {
+
+                DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='" . $insert_db_orders->invoice_code . "' ");
+      
+                $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                                    dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
+                                    from customers_addr_frontstore
+                                    Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                                    Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                                    Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                                    where customers_addr_frontstore.frontstore_id_fk = " . $insert_db_orders->id . " ");
+      
+                $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,customer_id, recipient_name, house_no, zipcode,amphures_id_fk,district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('" .$insert_db_orders->code_order . "','" . $insert_db_orders->customers_id_fk . "', '" . @$addr[0]->recipient_name . "','" . @$addr[0]->addr_no . "','" . @$addr[0]->zip_code . "', '" . @$addr[0]->ampname . "', '" . @$addr[0]->tamname . "', '" . @$addr[0]->provname . "', 'customers_addr_frontstore', '" . @$addr[0]->id . "','" . $insert_db_orders->code_order . "') ");
+      
+                DB::select("UPDATE db_orders SET address_sent_id_fk='" . (DB::getPdo()->lastInsertId()) . "' WHERE (id='" . $insert_db_orders->id . "')");
+              }
+
+              DB::select("UPDATE
+              db_delivery_packing_code
+              Inner Join db_delivery_packing ON db_delivery_packing_code.id = db_delivery_packing.packing_code
+              Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
+              Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
+              SET
+              db_delivery_packing_code.address_sent_id_fk=db_orders.address_sent_id_fk
+              WHERE
+              db_orders.invoice_code='" . $insert_db_orders->invoice_code . "' ");
+
+                                $r_addr = DB::select("select address_sent_id_fk from db_orders WHERE (id='" . $insert_db_orders->id . "')");
+
+                                if ($insert_db_orders->delivery_location != 3) {
+                                DB::select(" UPDATE
+                                        customers_addr_sent
+                                        Left Join dataset_amphures ON customers_addr_sent.amphures_id_fk = dataset_amphures.id
+                                        left Join dataset_districts ON customers_addr_sent.district_id_fk = dataset_districts.id
+                                        LEFT Join dataset_provinces ON customers_addr_sent.province_id_fk = dataset_provinces.id
+                                        SET
+                                        customers_addr_sent.amphures=dataset_amphures.name_th,
+                                        customers_addr_sent.district=dataset_districts.name_th,
+                                        customers_addr_sent.province=dataset_provinces.name_th
+                                        WHERE
+                                        customers_addr_sent.id='" . ($r_addr[0]->address_sent_id_fk) . "' ");
+                                }
+
+
+
             \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($insert_db_orders->id);
+            \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($insert_db_orders->id);
+            // $orderHistoryLog = new DbOrderHistoryLog;
+            // $orderHistoryLog->store($insert_db_orders->id, DatasetOrderHistoryStatus::CREATE_ORDER, \Auth::user()->id);
 
             DB::commit();
             $resule = ['status' => 'success', 'message' => 'Order Update Success', 'id' => $insert_db_orders->id];
