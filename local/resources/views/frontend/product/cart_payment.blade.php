@@ -240,14 +240,14 @@
                                           <label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
                                           <input type="text" class="form-control form-control-bold"
                                               placeholder="เบอร์โทรศัพท์" name="tel_mobile"
-                                              value="{{  $address->tel_mobile }}" readonly="">
+                                              value="{{  $address->tel_mobile }}" >
                                       </div>
                                   </div>
                                   <div class="row m-t-5">
                                       <div class="col-md-6 col-sm-6 col-6">
                                           <label>Email </label>
                                           <input type="email" class="form-control form-control-bold" placeholder="Email"
-                                              name="email" value="{{ $customer->email }}" readonly="">
+                                              name="email" value="{{ $customer->email }}" >
                                       </div>
 
                                   </div>
