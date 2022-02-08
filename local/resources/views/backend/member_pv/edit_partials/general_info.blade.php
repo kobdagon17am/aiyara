@@ -23,6 +23,32 @@
                   value="{{ $customer->last_name }}">
               </div>
             </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="business_name">ชื่อที่ใช้ในธุรกิจ</label>
+                <input type="text" class="form-control" name="business_name" id="business_name" placeholder="ชื่อที่ใช้ในธุรกิจ"
+                  value="{{ $customer->business_name }}">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="id_card">รหัสบัตรประชาชน</label>
+                <input type="text" class="form-control" name="id_card" id="id_card" placeholder="รหัสบัตรประชาชน"
+                  value="{{ $customer->id_card }}">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="id_card">Email</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="email"
+                  value="{{ $customer->email }}">
+              </div>
+            </div>
+
+
             <div class="col-md-3">
               <div class="form-group">
                 <label for="upline_id">Upline</label>
@@ -51,6 +77,7 @@
                 </select>
               </div>
             </div>
+
             <div class="col-md-3">
               <div class="form-group">
                 <label for="introduce_id">ผู้แนะนำ</label>

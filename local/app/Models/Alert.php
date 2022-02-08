@@ -11,6 +11,9 @@ class Alert extends Model
 	{
     if($sMode =='success' && $sCode==NULL){
       $method = \Request::method();
+      if($method=='PATCH'){
+        return array('status'=>'success', 'msg'=>'บันทึกข้อมูลเรียบร้อย');
+      }
       if($method=='PUT'){
         return array('status'=>'success', 'msg'=>'บันทึกข้อมูลเรียบร้อย');
       }
