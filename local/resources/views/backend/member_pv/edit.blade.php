@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 
-@section('title', 'แก้ไขข้อมูลสมาชิก | ' . $customer->user_name)
+@section('title', 'แก้ไขข้อมูลสมาชิก | ' . @$customer->user_name)
 
 @section('content')
 <div class="myloading"></div>
@@ -9,7 +9,7 @@
 <div class="row">
   <div class="col-12">
     <div class="page-title-box d-flex align-items-center justify-content-between">
-      <h4 class="mb-0 font-size-18">แก้ไขข้อมูลสมาชิก : {{ $customer->user_name }}</h4>
+      <h4 class="mb-0 font-size-18">แก้ไขข้อมูลสมาชิก : {{ @$customer->user_name }}</h4>
     </div>
   </div>
 </div>
@@ -35,8 +35,8 @@
 
   $(document).ready(function () {
 
-    const addressCard = "{{ $addressCard->card_province_id_fk ?? '' }}"
-    const addressSend = "{{ $customer->province_id_fk ?? '' }}"
+    const addressCard = "{{ @$addressCard->card_province_id_fk ?? '' }}"
+    const addressSend = "{{ @$customer->province_id_fk ?? '' }}"
 
     if (addressCard) {
       $('[data-card-province]').trigger('change')
@@ -44,7 +44,7 @@
 
     if (addressSend) {
       $('[data-send-province]').trigger('change')
-    } 
+    }
 
   })
 
@@ -58,11 +58,11 @@
     let amphureId;
 
     if (prefix == 'card') {
-      amphureId = "{{ $addressCard->card_amphures_id_fk }}"  
+      amphureId = "{{ @$addressCard->card_amphures_id_fk }}"
     }
 
     if (prefix == 'send') {
-      amphureId = "{{ $customer->amphures_id_fk }}"  
+      amphureId = "{{ @$customer->amphures_id_fk }}"
     }
 
     $.ajax({
@@ -88,11 +88,11 @@
     const prefix = $(this).attr('data-prefix')
 
     if (prefix == 'card') {
-      tambonId = "{{ $addressCard->card_district_id_fk }}"  
+      tambonId = "{{ @$addressCard->card_district_id_fk }}"
     }
 
     if (prefix == 'send') {
-      tambonId = "{{ $customer->district_id_fk }}"  
+      tambonId = "{{ @$customer->district_id_fk }}"
     }
 
     $.ajax({

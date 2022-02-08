@@ -277,10 +277,10 @@ $(function() {
             // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
                $('td:last-child', nRow).html(`
                 <a class="btn btn-sm btn-info " href='${aData['routes_user']}' target="_blank" class="btn btn-primary">
-                  <i class="bx bx-file-find font-size-16 align-middle"></i> 
+                  <i class="bx bx-file-find font-size-16 align-middle"></i>
                 </a>
                 <a class="btn btn-sm btn-warning " href='${aData['edit_user']}' target="_blank" class="btn btn-primary">
-                  <i class="bx bx-edit font-size-16 align-middle"></i> 
+                  <i class="bx bx-edit font-size-16 align-middle"></i>
                 </a>
                `).addClass('input');
           }
@@ -457,9 +457,14 @@ $(function() {
                                             $('td:last-child', nRow).html('-');
                                         }else{
                                           // console.log(aData['customer_id']+" : "+aData['type']+" : "+aData['regis_status_02']+" : "+aData['item_checked']);
-                                             $('td:last-child', nRow).html(''
-                                                + '<a class="btn btn-sm btn-info " href='+aData['routes_user']+' target="_blank" class="btn btn-primary"><i class="bx bx-file-find font-size-16 align-middle"></i> </a>'
-                                              ).addClass('input');
+                                          $('td:last-child', nRow).html(`
+                                          <a class="btn btn-sm btn-info " href='${aData['routes_user']}' target="_blank" class="btn btn-primary">
+                                            <i class="bx bx-file-find font-size-16 align-middle"></i>
+                                          </a>
+                                          <a class="btn btn-sm btn-warning " href='${aData['edit_user']}' target="_blank" class="btn btn-primary">
+                                            <i class="bx bx-edit font-size-16 align-middle"></i>
+                                          </a>
+                                        `).addClass('input');
                                         }
                                       }
                                 });

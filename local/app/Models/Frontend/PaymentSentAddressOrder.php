@@ -199,6 +199,9 @@ class PaymentSentAddressOrder extends Model
             }
 
             $insert_db_orders->save();
+
+            \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($insert_db_orders->id);
+
             DB::commit();
             $resule = ['status' => 'success', 'message' => 'Order Update Success', 'id' => $insert_db_orders->id];
             return $resule;

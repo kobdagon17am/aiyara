@@ -7,15 +7,16 @@ use File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\Frontend\Customer;
 
 class Member_pvController extends Controller
 {
 
     public function index(Request $request)
     {
-      
-       ini_set('max_execution_time', '0'); 
-       ini_set('memory_limit', '-1'); 
+
+       ini_set('max_execution_time', '0');
+       ini_set('memory_limit', '-1');
 
        $sApprover = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
        $sBusiness_location = \App\Models\Backend\Business_location::get();
@@ -46,7 +47,7 @@ class Member_pvController extends Controller
 
         ) );
       // return view('backend.member_pv.index');
-      
+
     }
 
     public function create()
@@ -57,34 +58,38 @@ class Member_pvController extends Controller
     }
     public function edit($id)
     {
+
       $customer = DB::table('customers')
         ->select(
-          'customers.*', 
-          'detail.house_no', 
-          'detail.house_name', 
-          'detail.moo', 
-          'detail.soi', 
-          'detail.road', 
-          'detail.province_id_fk', 
-          'detail.amphures_id_fk', 
-          'detail.district_id_fk', 
-          'detail.bank_account', 
-          'detail.bank_no', 
-          'detail.bank_name', 
-          'detail.bank_branch', 
-          'detail.bank_type', 
+          'customers.*',
+          'detail.house_no',
+          'detail.house_name',
+          'detail.moo',
+          'detail.soi',
+          'detail.road',
+          'detail.province_id_fk',
+          'detail.amphures_id_fk',
+          'detail.district_id_fk',
+          'detail.bank_account',
+          'detail.bank_no',
+          'detail.bank_name',
+          'detail.bank_branch',
+          'detail.bank_type',
           DB::raw(
-            "(SELECT CONCAT(introduce.first_name, ' ', introduce.last_name) FROM customers as introduce 
+            "(SELECT CONCAT(introduce.first_name, ' ', introduce.last_name) FROM customers as introduce
             WHERE introduce.user_name = customers.introduce_id) as introduce_name")
         )
         ->leftJoin('customers_detail as detail', 'detail.customer_id', '=', 'customers.id')
         ->where('customers.id', $id)
         ->first();
 
+
+
       $addressCard = DB::table('customers_address_card')
           ->where('customer_id', $id)
           ->first();
-    
+
+
       $qualifications = DB::table('dataset_qualification')->pluck('business_qualifications', 'id');
       $packages = DB::table('dataset_package')->pluck('dt_package', 'id');
 
@@ -99,10 +104,42 @@ class Member_pvController extends Controller
       ]);
     }
 
-    public function update(Request $request, $id)
+
+
+   public function update(Request $request, $customer_id)
     {
-      // return $this->form($id);
+
+      if ($request->type == 'customer') {
+
+        $this->updatePersonalInformation($request, $customer_id);
+
+      } else {
+        $this->updateBankInformation($request, $customer_id);
+      }
+
+      return back()->with(['success' => 'แก้ไขข้อมูลข้อมูลทั่วไปสำเร็จ']);
     }
+
+    public function updatePersonalInformation($request, $customer_id)
+    {
+      $customer = Customer::find($customer_id);
+      $customer->update($request->except(['_method', '_token','type']));
+      //$request->session()->flash('status_personal', 'แก้ไขข้อมูลสมาชิกเรียบร้อย');
+    }
+
+    public function updateBankInformation($request, $customer_id)
+    {
+      $data = collect($request)->filter(function ($req, $key) {
+        return str_contains($key, 'bank_');
+      })->toArray();
+
+      DB::table('customers_detail')->updateOrInsert([
+        'customer_id' => $customer_id
+      ], $data);
+
+      $request->session()->flash('status_bank', 'แก้ไขข้อมูลธนาคารเรียบร้อย');
+    }
+
 
    public function form($id=NULL)
     {
@@ -191,7 +228,7 @@ class Member_pvController extends Controller
         }
       })
       ->addColumn('regis_status', function($row) {
-        // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers 
+        // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers
         //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
         //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
         //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
