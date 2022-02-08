@@ -112,12 +112,14 @@ class Member_pvController extends Controller
       if ($request->type == 'customer') {
 
         $this->updatePersonalInformation($request, $customer_id);
-
-      } else {
+        return back()->with(['alert' =>['status'=>'success', 'msg'=>'บันทึกข้อมูลทั่วไปสำเร็จ']]);
+      } elseif($request->type == 'customer_address_card') {
+        $this->updateAddressCardInformation($request, $customer_id);
+        return back()->with(['alert' =>['status'=>'success', 'msg'=>'บันทึกข้อมูลที่อยู่ตามบัตรประชาชนสำเร็จ']]);
+      }else{
         $this->updateBankInformation($request, $customer_id);
       }
 
-      return back()->with(['success' => 'แก้ไขข้อมูลข้อมูลทั่วไปสำเร็จ']);
     }
 
     public function updatePersonalInformation($request, $customer_id)
@@ -125,6 +127,15 @@ class Member_pvController extends Controller
       $customer = Customer::find($customer_id);
       $customer->update($request->except(['_method', '_token','type']));
       //$request->session()->flash('status_personal', 'แก้ไขข้อมูลสมาชิกเรียบร้อย');
+    }
+
+    public function updateAddressCardInformation($request, $customer_id)
+    {
+      DB::table('customers_address_card')->updateOrInsert([
+        'customer_id' => $customer_id
+      ],$request->except(['_method', '_token','type']));
+
+     // $request->session()->flash('status_bank', 'แก้ไขข้อมูลธนาคารเรียบร้อย');
     }
 
     public function updateBankInformation($request, $customer_id)

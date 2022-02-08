@@ -5,8 +5,9 @@
         <h5 class="font-weight-bold">ที่อยู่ตามบัตรประชาชน</h5>
         <hr class="mt-1 mb-2">
 
-        <form action="#" method="POST">
+        <form action="{{ route('backend.member_pv.update', $customer->id) }}" method="POST">
           @csrf
+          @method('PATCH')
 
           <div class="text-left">
             <div class="row">
@@ -43,7 +44,7 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <label>จังหวัด</label>
-                  <select name="card_province" class="form-control select2-templating select2-province" data-prefix="card" data-card-province>
+                  <select name="card_province_id_fk" class="form-control select2-templating select2-province" data-prefix="card" data-card-province>
                     <option value="">- เลือกจังหวัด -</option>
                     @foreach ($provinces as $provinceId => $provinceName)
                         <option value="{{ $provinceId }}" @if($provinceId === @@$addressCard->card_province_id_fk) selected @endif>{{ $provinceName }}</option>
@@ -54,13 +55,13 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <label>เขต/อำเภอ</label>
-                  <select name="card_district" class="form-control select2-templating select2-district" data-prefix="card" data-card-district></select>
+                  <select name="card_amphures_id_fk" class="form-control select2-templating select2-district" data-prefix="card" data-card-district></select>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label>แขวง/ตำบล</label>
-                  <select name="card_sub_district" class="form-control select2-templating select2-sub-district" data-prefix="card" data-card-sub-district></select>
+                  <select name="card_district_id_fk" class="form-control select2-templating select2-sub-district" data-prefix="card" data-card-sub-district></select>
                 </div>
               </div>
               <div class="col-md-3">
@@ -69,10 +70,21 @@
                   <input type="text" class="form-control" name="card_zipcode" value="{{ @$addressCard->card_zipcode ?? '' }}" data-card-zip-code>
                 </div>
               </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="village">เบอร์โทรที่ 1. </label>
+                  <input type="text" class="form-control" name="tel" value="{{ @$addressCard->tel ?? '' }}">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="village">เบอร์โทรที่ 2.</label>
+                  <input type="text" class="form-control" name="tel_home" value="{{ @$addressCard->tel_home ?? '' }}">
+                </div>
+              </div>
             </div>
-
             <div class="text-right">
-              <button type="submit" class="btn btn-info">แก้ไขข้อมูล</button>
+              <button type="submit" name="type" value="customer_address_card" class="btn btn-info">แก้ไขข้อมูล</button>
             </div>
           </div>
         </form>
