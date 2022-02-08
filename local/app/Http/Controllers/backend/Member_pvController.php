@@ -116,8 +116,14 @@ class Member_pvController extends Controller
       } elseif($request->type == 'customer_address_card') {
         $this->updateAddressCardInformation($request, $customer_id);
         return back()->with(['alert' =>['status'=>'success', 'msg'=>'บันทึกข้อมูลที่อยู่ตามบัตรประชาชนสำเร็จ']]);
-      }else{
+      } elseif($request->type == 'address_send') {
+        $this->updateAddresSendInformation($request, $customer_id);
+        return back()->with(['alert' =>['status'=>'success', 'msg'=>'บันทึกข้อมูลที่อยู่จัดส่งสำเร็จ']]);
+      } elseif($request->type == 'bank') {
         $this->updateBankInformation($request, $customer_id);
+        return back()->with(['alert' =>['status'=>'success', 'msg'=>'บันทึกข้อมูลธนาคารสำเร็จ']]);
+      }else{
+        return back()->with(['alert' =>['status'=>'fail', 'msg'=>'การบันทึกข้อมูลไม่ถูกต้อง']]);
       }
 
     }
@@ -131,24 +137,26 @@ class Member_pvController extends Controller
 
     public function updateAddressCardInformation($request, $customer_id)
     {
-      DB::table('customers_address_card')->updateOrInsert([
+      $rs = DB::table('customers_address_card')->updateOrInsert([
         'customer_id' => $customer_id
       ],$request->except(['_method', '_token','type']));
+
 
      // $request->session()->flash('status_bank', 'แก้ไขข้อมูลธนาคารเรียบร้อย');
     }
 
-    public function updateBankInformation($request, $customer_id)
+    public function updateAddresSendInformation($request, $customer_id)
     {
-      $data = collect($request)->filter(function ($req, $key) {
-        return str_contains($key, 'bank_');
-      })->toArray();
 
       DB::table('customers_detail')->updateOrInsert([
         'customer_id' => $customer_id
-      ], $data);
-
-      $request->session()->flash('status_bank', 'แก้ไขข้อมูลธนาคารเรียบร้อย');
+      ],$request->except(['_method', '_token','type']));
+    }
+    public function updateBankInformation($request, $customer_id)
+    {
+      DB::table('customers_detail')->updateOrInsert([
+        'customer_id' => $customer_id
+      ],$request->except(['_method', '_token','type']));
     }
 
 
