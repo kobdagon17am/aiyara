@@ -116,7 +116,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     <table class="table">
                         <thead>
                             <tr>
-                                <th width="100">#</th>
+                                {{-- <th width="100">#</th> --}}
                                 <th>เอกสาร</th>
                                 <th width="200">วันที่</th>
                                 <th width="200">สถานะ</th>
@@ -152,7 +152,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                                 ?>
                                 <tr>
-                                    <th scope="row">{{ $i }}</th>
+                                    {{-- <th scope="row">{{ $i }}</th> --}}
                                     <td>{{ $type }}</td>
                                     <td>{{ date('d/m/Y', strtotime($value->created_at)) }}</td>
                                     <td>{!! $status !!}</td>
