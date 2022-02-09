@@ -583,6 +583,14 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                              <label for="" class="col-md-4 col-form-label"> เติม AiStockist : </label>
+                              <div class="col-md-6">
+                                  <input type="text" class="form-control"
+                                      value="{{$customer_pv->pv_aistockist}} PV" readonly>
+                              </div>
+                          </div>
+
                               <div class="form-group row">
                                   <label for="" class="col-md-4 col-form-label"> Ai-Stockist : </label>
                                   <div class="col-md-6">
@@ -632,8 +640,13 @@
                                   </div>
                               </div>
 
-
-
+                              <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> เติม AiStockist : </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="view_customer_ai" class="form-control"
+                                        value=" " readonly>
+                                </div>
+                            </div>
 
                               <div class="form-group row">
                                   <label for="" class="col-md-4 col-form-label"> Ai-Stockist : </label>
@@ -6239,7 +6252,7 @@
                             $('.class_btnSave').addClass(' btnSave ');
                             $('.class_btnSave').removeAttr("disabled");
                             $('.class_btnSave').show();
-                        } 
+                        }
                         else
                                             // 1  เงินโอน
                                             if (pay_type_id_fk == 1) {
@@ -6266,7 +6279,7 @@
                                                 // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
                                                 $('.class_btnSave').prop('disabled', true);
 
-                                            } 
+                                            }
 
                         else
                             // 2  เงินสด + Ai-Cash
@@ -7181,7 +7194,7 @@
                             $("#cash_price").val('');
                             $("#cash_pay").val('');
                         }
-                        
+
                         if (pay_type_id_fk == 3) {
                             $("#aicash_price").focus();
                             $("#cash_price").val('');
@@ -7828,7 +7841,9 @@
                       }
                         $('#view_pv').val(data['customer']['pv']);
                         $('#view_customer_mt').val(data['customer']['pv_mt']);
-                        $('#view_customer_tv').val(data['customer']['pv_tv']);
+
+                        $('#view_customer_tv').val(data['customer']['pv_aistockist']);
+                        $('#view_customer_ai').val(data['customer']['view_customer_ai']);
                         $('#view_customer_aistockist').val(aistockist_status);
                         $('#view_customer_q').val(data['customer']['qualification_name']);
                         $('#view_customer_package').val(data['customer']['dt_package']);
