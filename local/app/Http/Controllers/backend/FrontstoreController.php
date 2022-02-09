@@ -676,7 +676,7 @@ class FrontstoreController extends Controller
         'customers.date_mt_first',
         'customers.pv_mt_active',
         'customers.pv_mt',
-        'customers.pv_mt',
+        'customers.pv_aistockist',
         'customers.bl_a',
         'customers.bl_b',
         'customers.bl_c',
@@ -1226,7 +1226,7 @@ class FrontstoreController extends Controller
         return redirect()->to(url("backend/frontstore"));
       } else if (isset($request->receipt_save_list)) {
 
-    
+
         // dd($request->transfer_money_datetime." : BBBB");
 
 
@@ -1307,7 +1307,7 @@ class FrontstoreController extends Controller
 
           $lastInsertId_01 = DB::getPdo()->lastInsertId();
         }
-    
+
         if ($request->hasFile('image02')) {
           @UNLINK(@$sRow->file_slip_02);
           $this->validate($request, [
@@ -1342,7 +1342,7 @@ class FrontstoreController extends Controller
 
 
 
-      
+
 
         //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
         // dd("1233");
@@ -1485,7 +1485,7 @@ class FrontstoreController extends Controller
               WHERE
               db_orders.invoice_code='" . @$request->invoice_code . "' ");
 
-        // dd($request); 
+        // dd($request);
         if ($request->frontstore_id) {
           $ch_aicash_02 = DB::select(" select * from db_orders where id=" . $request->frontstore_id . " ");
         } else {
@@ -1525,7 +1525,7 @@ class FrontstoreController extends Controller
         }
 
 
-  
+
         // dd('1215');
         /*
 1 เงินโอน
@@ -1600,7 +1600,7 @@ class FrontstoreController extends Controller
 
 
         DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
-    
+
         if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 || request('pay_type_id_fk') == 3 || request('pay_type_id_fk') == 6 || request('pay_type_id_fk') == 9 || request('pay_type_id_fk') == 14) {
 
           DB::select(" UPDATE `db_orders` SET `approve_status`=1,`order_status_id_fk`=2 WHERE (`id`=" . $sRow->id . ") ");
@@ -1608,11 +1608,11 @@ class FrontstoreController extends Controller
           $rs = PvPayment::PvPayment_type_confirme($sRow->id, \Auth::user()->id, '1', 'admin');
           //DB::select(" UPDATE `db_orders` SET `approve_status`=2 WHERE (`id`=".$sRow->id.") ");
         }
-    
+
         if ($request->shipping_free == 1) {
           DB::select(" UPDATE `db_orders` SET `shipping_price`=0 WHERE (`id`=" . $sRow->id . ") ");
         }
- 
+
         // วุฒิปรับให้อนุมัติก่อนค่อยอัพเดทไปโชวรอส่ง
         // if(@$request->pay_type_id_fk != 1 && @$request->pay_type_id_fk != 8 && @$request->pay_type_id_fk != 10 && @$request->pay_type_id_fk != 11 && @$request->pay_type_id_fk != 12){
         $this->fncUpdateDeliveryAddress($sRow->id);
@@ -2338,7 +2338,7 @@ class FrontstoreController extends Controller
     if (!empty($req->invoice_code)) {
       // $invoice_code = " AND db_orders.code_order = '" . $req->invoice_code . "' ";
       // $invoice_code2 = " AND db_add_ai_cash.code_order = '" . $req->invoice_code . "' ";
-      
+
       if(count($req->invoice_code) > 0){
         $or_str = "";
         foreach($req->invoice_code as $key => $or){
@@ -2347,7 +2347,7 @@ class FrontstoreController extends Controller
           }else{
             $or_str.= "'".$or."'".',';
           }
-         
+
         }
         $invoice_code = " AND db_orders.code_order IN (".$or_str.") ";
         $invoice_code2 = " AND db_add_ai_cash.code_order IN (".$or_str.") ";
@@ -2442,7 +2442,7 @@ class FrontstoreController extends Controller
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-    // วุฒิเปลี่ยน db_orders.credit_price เป็น db_orders.sum_credit_price  
+    // วุฒิเปลี่ยน db_orders.credit_price เป็น db_orders.sum_credit_price
     $sDBFrontstoreSumCostActionUser = DB::select("
                 SELECT
                 db_orders.action_user,
@@ -2918,7 +2918,7 @@ class FrontstoreController extends Controller
           }else{
             $or_str.= "'".$or."'".',';
           }
-         
+
         }
         $invoice_code = " AND db_orders.code_order IN (".$or_str.") ";
         $invoice_code2 = " AND db_add_ai_cash.code_order IN (".$or_str.") ";
@@ -3006,9 +3006,9 @@ class FrontstoreController extends Controller
     //   total_price - gift_voucher_price
     // ) as sum_price,
 
-// วุฒิเอาออกมาเปลี่ยน 
+// วุฒิเอาออกมาเปลี่ยน
 // SUM(
-//   (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) - 
+//   (CASE WHEN db_orders.gift_voucher_price is null THEN db_orders.total_price ELSE db_orders.total_price - db_orders.gift_voucher_price END) -
 //   (CASE WHEN db_orders.shipping_free = 1 THEN db_orders.shipping_price ELSE 0 END)
 //   )  as sum_price,
     $d1 = DB::select("
@@ -3512,7 +3512,7 @@ $endDate1
             }else{
               $or_str.= "'".$or."'".',';
             }
-           
+
           }
           $invoice_code = " AND code_order IN (".$or_str.") ";
         // $invoice_code = " AND code_order = '" . $req->invoice_code . "' ";
@@ -3703,7 +3703,7 @@ ORDER BY created_at DESC
         // } elseif (@$row->cash_pay != 0) {
           $total_price += $row->cash_pay;
         // }
-          
+
         if (@$row->sum_credit_price != 0) {
           // if (@$row->charger_type == 1) {
           //   $total_price += $row->credit_price + $row->fee_amt;
@@ -3793,7 +3793,7 @@ ORDER BY created_at DESC
           } else {
             return '';
           }
-          // return $row->code_order; 
+          // return $row->code_order;
         }
       })
       ->addColumn('status_sent_desc', function ($row) {

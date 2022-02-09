@@ -568,7 +568,7 @@
                               </div>
 
                               <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติ : </label>
+                                  <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติรายเดือน : </label>
                                   <div class="col-md-6">
                                       <input type="text" class="form-control"
                                           value="{{$customer_pv->pv_mt}} PV" readonly>
@@ -624,6 +624,14 @@
                                       <input type="text" id="view_pv" class="form-control" value=""  readonly>
                                   </div>
                               </div>
+
+                              <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติรายเดือน : </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="view_customer_mt" class="form-control"
+                                        value=" " readonly>
+                                </div>
+                            </div>
                               <div class="form-group row">
                                 <label for="" class="col-md-4 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
                                 <div class="col-md-6">
@@ -632,13 +640,7 @@
                                 </div>
                             </div>
 
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติรายเดือน : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" id="view_customer_mt" class="form-control"
-                                          value=" " readonly>
-                                  </div>
-                              </div>
+
 
                               <div class="form-group row">
                                 <label for="" class="col-md-4 col-form-label"> เติม AiStockist : </label>
@@ -5459,7 +5461,7 @@
 
         // เริ่มต้น
         $(document).ready(function() {
-          
+
             checkStatus();
 
             var pay_type_id_fk = $('#pay_type_id_fk').val();
@@ -7844,9 +7846,8 @@
                       }
                         $('#view_pv').val(data['customer']['pv']);
                         $('#view_customer_mt').val(data['customer']['pv_mt']);
-
-                        $('#view_customer_tv').val(data['customer']['pv_aistockist']);
-                        $('#view_customer_ai').val(data['customer']['view_customer_ai']);
+                        $('#view_customer_tv').val(data['customer']['pv_tv']);
+                        $('#view_customer_ai').val(data['customer']['pv_aistockist']);
                         $('#view_customer_aistockist').val(aistockist_status);
                         $('#view_customer_q').val(data['customer']['qualification_name']);
                         $('#view_customer_package').val(data['customer']['dt_package']);
