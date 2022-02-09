@@ -2947,13 +2947,16 @@
 
         });
 
+        // วุฒิเพิ่มมาเช็คสเตตัส
         function checkStatus() {
             var status = "{{ @$sRow->approve_status }}";
             var distribution_channel_id_fk = "{{ @$sRow->distribution_channel_id_fk }}";
             if (status != 1 && status != 2 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
-                $("input").prop("disabled", true);
-                $("select").prop("disabled", true);
-                $("button").prop("disabled", true);
+                $(".card-body input").prop("disabled", true);
+                $(".card-body select").prop("disabled", true);
+                $(".card-body button").prop("disabled", true);
+            }else{
+                fnShippingCalculate(0);
             }
         }
 
@@ -5443,7 +5446,7 @@
 
         // เริ่มต้น
         $(document).ready(function() {
-            fnShippingCalculate(0);
+          
             checkStatus();
 
             var pay_type_id_fk = $('#pay_type_id_fk').val();

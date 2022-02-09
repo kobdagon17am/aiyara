@@ -956,9 +956,9 @@ class AjaxController extends Controller
                 DB::select(" UPDATE db_orders SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
 
                  if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น
-
+                    // dd($delivery_location);
                 }else{
-
+// dd('k');
                         $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
 
                         if($province_id==$branchs[0]->province_id_fk){

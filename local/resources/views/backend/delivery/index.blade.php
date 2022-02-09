@@ -525,7 +525,7 @@ $(function() {
         scrollX: true,
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 10,
+        iDisplayLength: 1000,
         // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
         ajax: {
           url: '{{ route('backend.delivery.datatable') }}',

@@ -27,7 +27,7 @@ class PaymentSentAddressOrder extends Model
             $insert_db_orders->distribution_channel_id_fk = 3;
             $insert_db_orders->purchase_type_id_fk = $rs->type;
             $insert_db_orders->branch_id_fk = 12;
-
+            $insert_db_orders->check_press_save = 2;
             if ($rs->type == '5') { //โอนชำระแบบกิฟวอยเชอ
               $insert_db_orders->gift_voucher_cost = $gv;
               $insert_db_orders->gift_voucher_price = $rs->gift_voucher_price;
@@ -327,10 +327,9 @@ class PaymentSentAddressOrder extends Model
                                         customers_addr_sent.id='" . ($r_addr[0]->address_sent_id_fk) . "' ");
                                 }
 
-
-
             \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($insert_db_orders->id);
             \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($insert_db_orders->id);
+
             // $orderHistoryLog = new DbOrderHistoryLog;
             // $orderHistoryLog->store($insert_db_orders->id, DatasetOrderHistoryStatus::CREATE_ORDER, \Auth::user()->id);
 
