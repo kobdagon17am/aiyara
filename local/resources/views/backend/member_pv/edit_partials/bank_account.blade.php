@@ -5,9 +5,11 @@
         <h5 class="font-weight-bold">ข้อมูลธนาคาร</h5>
         <hr class="mt-1 mb-2">
 
-        <form action="#" method="POST">
+        <form action="{{ route('backend.member_pv.update', $customer->id) }}" method="POST">
           @csrf
           @method('PATCH')
+
+          <input type="hidden" name="type" value="bank">
 
           <div class="row">
             <div class="col-md-3">
@@ -25,7 +27,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="bank_name">ธนาคาร</label>
-                <input type="text" class="form-control" value="{{ $customer->bank_name }}">
+                <input type="text" class="form-control" name="bank_name" value="{{ $customer->bank_name }}">
               </div>
             </div>
             <div class="col-md-3">

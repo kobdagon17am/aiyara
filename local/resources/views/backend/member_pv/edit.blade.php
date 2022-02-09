@@ -76,7 +76,6 @@
           response.forEach(res => {
             options += `<option value="${res.id}" ${amphureId == res.id ? 'selected' : ''}>${res.amphur_name}</option>`
           })
-
           $(`[data-${prefix}-district]`).html(options).change()
         }
       }
@@ -87,20 +86,19 @@
   function getSubDistrict() {
     const prefix = $(this).attr('data-prefix')
 
-    if (prefix == 'card') {
-      tambonId = "{{ @$addressCard->card_district_id_fk }}"
-    }
-
-    if (prefix == 'send') {
-      tambonId = "{{ @$customer->district_id_fk }}"
-    }
-
     $.ajax({
       url: "{{ url('backend/ajaxGetTambon') }}",
       method: "POST",
       data: { _token: "{{ csrf_token() }}", amphur_id: $(this).val() },
       success: function (response) {
         if (response) {
+          if (prefix == 'card') {
+            tambonId = "{{ @$addressCard->card_district_id_fk }}"
+          }
+
+          if (prefix == 'send') {
+            tambonId = "{{ @$customer->district_id_fk }}"
+          }
 
           let options = '<option value="">- เลือกตำบล -</option>'
           response.forEach(res => {
