@@ -7,11 +7,13 @@ use File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\General;
 
 class Stock_notifyController extends Controller
 {
     public function index(Request $request)
     {
+      General::gen_id_url();
       // $sTable = \App\Models\Backend\Stock_notify::search()->orderBy('id', 'asc');
       // dd($sTable);
         $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
@@ -32,6 +34,7 @@ class Stock_notifyController extends Controller
          $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
            return $query->where('id', auth()->user()->branch_id_fk);
          })->get();
+      
          $Warehouse = \App\Models\Backend\Warehouse::get();
 
         return View('backend.stock_notify.index')->with(array(
