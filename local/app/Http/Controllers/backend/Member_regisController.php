@@ -238,7 +238,13 @@ class Member_regisController extends Controller
            $w07 = "";
         }
 
-
+        // $w01 = "";
+        // $w02 = "";
+        // $w03 = "";
+        // $w04 = "";
+        // $w05 = "";
+        // $w06 = "";
+        // $w07 = "";
       // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');    
       //  
       $sTable = DB::select("

@@ -171,7 +171,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-6 " >
+                    {{-- <div class="col-md-6 " >
                       <div class="form-group row">
                             <label for="branch_id_fk" class="col-md-3 col-form-label"> {{ __('message.branch') }} : </label>
                             <div class="col-md-9">
@@ -194,7 +194,7 @@
                               </select>
                             </div>
                           </div>
-                    </div>
+                    </div> --}}
                </div>
 
               <div class="row" >
@@ -774,7 +774,8 @@ $(function() {
                   $('#data-table').DataTable().clear();
                   $(".myloading").show();
                   var business_location_id_fk = $('#business_location_id_fk').val();
-                  var branch_id_fk = $('#branch_id_fk').val();
+                  // var branch_id_fk = $('#branch_id_fk').val();
+                  var branch_id_fk = '';
                   var startDate = $('#startDate').val();
                   var endDate = $('#endDate').val();
                   var approver = $('#approver').val();
@@ -788,11 +789,11 @@ $(function() {
                     return false;
                   }
                   // alert(branch_id_fk);
-                  if(branch_id_fk=='' || branch_id_fk === null ){
-                    $('#branch_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
+                  // if(branch_id_fk=='' || branch_id_fk === null ){
+                  //   $('#branch_id_fk').select2('open');
+                  //   $(".myloading").hide();
+                  //   return false;
+                  // }
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                         var sU = "{{@$sU}}";
                         var sD = "{{@$sD}}";
