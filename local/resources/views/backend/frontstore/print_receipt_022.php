@@ -1261,6 +1261,8 @@ for ($j=0; $j < $amt_page ; $j++) {
 
   <!-- วุฒิเพิ่ม ค่าธรรมเนียมและค่าจัดส่ง -->
   <?php
+
+
       $total_fee_amt = 0;
       $total_shipping_price = 0;
   ?>
