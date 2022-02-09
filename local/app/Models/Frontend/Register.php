@@ -216,7 +216,7 @@ class Register extends Model
                       $f_name =  date('YmdHis').'_'.$id.'_1'.'.'.$file_1->getClientOriginalExtension();
                       if($file_1->move($url,$f_name)){
                          DB::table('register_files')
-                         ->insert(['customer_id'=>$id,'type'=>'1','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0']);
+                         ->insert(['customer_id'=>$id,'type'=>'1','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0','business_location_id_fk'=>$business_location]);
 
                      }
 
@@ -229,7 +229,7 @@ class Register extends Model
                   $f_name =  date('YmdHis').'_'.$id.'_2'.'.'.$file_2->getClientOriginalExtension();
                   if($file_2->move($url,$f_name)){
                      DB::table('register_files')
-                     ->insert(['customer_id'=>$id,'type'=>'2','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0']);
+                     ->insert(['customer_id'=>$id,'type'=>'2','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0','business_location_id_fk'=>$business_location]);
 
                  }
              }
@@ -241,7 +241,7 @@ class Register extends Model
               $f_name =  date('YmdHis').'_'.$id.'_3'.'.'.$file_3->getClientOriginalExtension();
               if($file_3->move($url,$f_name)){
                  DB::table('register_files')
-                 ->insert(['customer_id'=>$id,'type'=>'3','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0']);
+                 ->insert(['customer_id'=>$id,'type'=>'3','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0','business_location_id_fk'=>$business_location]);
 
              }
          }
@@ -252,7 +252,7 @@ class Register extends Model
               $f_name =  date('YmdHis').'_'.$id.'_4'.'.'.$file_4->getClientOriginalExtension();
               if($file_4->move($url,$f_name)){
                  DB::table('register_files')
-                 ->insert(['customer_id'=>$id,'type'=>'4','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0']);
+                 ->insert(['customer_id'=>$id,'type'=>'4','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0','business_location_id_fk'=>$business_location]);
              }
          }
 
