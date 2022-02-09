@@ -7,11 +7,13 @@ use File;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\General;
 
 class Stock_notifyController extends Controller
 {
     public function index(Request $request)
     {
+      General::gen_id_url();
       // $sTable = \App\Models\Backend\Stock_notify::search()->orderBy('id', 'asc');
       // dd($sTable);
         $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
@@ -32,6 +34,7 @@ class Stock_notifyController extends Controller
          $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
            return $query->where('id', auth()->user()->branch_id_fk);
          })->get();
+      
          $Warehouse = \App\Models\Backend\Warehouse::get();
 
         return View('backend.stock_notify.index')->with(array(
@@ -126,16 +129,20 @@ class Stock_notifyController extends Controller
       if(!empty($req->product_name) ){
         // $sTable = \App\Models\Backend\Stock_notify::where('product_id_fk', 'like', '%' . $req->product_name . '%')->get();
         $sTable = DB::select("
-          select db_stocks_notify.*,products_details.product_name from db_stocks_notify
+          select db_stocks_notify.*,products_details.product_name, products.product_code from db_stocks_notify
           Left Join products_details ON products_details.product_id_fk = db_stocks_notify.product_id_fk
+          Left Join products ON products.id = db_stocks_notify.product_id_fk
           WHERE
           products_details.product_name LIKE '%".$req->product_name."%' OR
           db_stocks_notify.product_id_fk LIKE '%".ltrim($req->product_name, '0')."%'
-          AND products_details.lang_id=1
+          AND products_details.lang_id=1 order by products.product_code ASC
       ");
         // $sTable = \App\Models\Backend\Stock_notify::where('product_id_fk', '1')->get();
       }else{
-        $sTable = \App\Models\Backend\Stock_notify::search()->orderBy('updated_at', 'desc');
+        $sTable = \App\Models\Backend\Stock_notify::select('db_stocks_notify.*','products.product_code','products.id as p_id')
+        ->join('products','products.id','db_stocks_notify.product_id_fk')
+        ->search()
+        ->orderBy('products.product_code', 'ASC');
       }
 
       $sQuery = \DataTables::of($sTable);

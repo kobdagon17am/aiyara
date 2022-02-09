@@ -486,7 +486,7 @@ class AjaxController extends Controller
         if($request->ajax()){
           $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)
             ->when(auth()->user()->permission !== 1, function ($query) {
-              return $query->where('id', auth()->user()->business_location_id_fk);
+              return $query->where('id', auth()->user()->branch_id_fk);
             })
             ->get()
             ->toArray();

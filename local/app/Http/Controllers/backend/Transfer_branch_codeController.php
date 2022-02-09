@@ -262,7 +262,7 @@ class Transfer_branch_codeController extends Controller
 
     public function Datatable(Request $req){
 
-     
+      $sPermission  = \Auth::user()->permission;
        if(!empty($req->id)){
            $w00 = " AND db_transfer_branch_code.id=".$req->id ;
         }else{
@@ -280,9 +280,16 @@ class Transfer_branch_codeController extends Controller
         if(!empty($req->branch_id_fk)){
            $w02 = " AND db_transfer_branch_code.branch_id_fk = ".$req->branch_id_fk." " ;
         }else{
-          //  $w02 = "AND (db_transfer_branch_code.branch_id_fk = ".\Auth::user()->branch_id_fk.")" ;
-            $userBranch = \Auth::user()->branch_id_fk;
-           $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch OR db_transfer_branch_code.to_branch_id_fk = $userBranch)";
+         
+           if($sPermission==1){
+              $w02 = "";
+          }else{
+             //  $w02 = "AND (db_transfer_branch_code.branch_id_fk = ".\Auth::user()->branch_id_fk.")" ;
+             $userBranch = \Auth::user()->branch_id_fk;
+             $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch OR db_transfer_branch_code.to_branch_id_fk = $userBranch)";
+  
+          }
+
         }
 
  // โอนไปให้สาขา 
@@ -315,6 +322,8 @@ class Transfer_branch_codeController extends Controller
       }else{
           $w07 = "";
       }
+
+    
 
 
       $sTable = DB::select(" SELECT * FROM db_transfer_branch_code 
