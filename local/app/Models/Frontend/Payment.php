@@ -40,7 +40,7 @@ class Payment extends Model
 
                     $db_orders = DB::table('db_orders')
                         ->where('id', $rs->id)
-                        ->update(['order_status_id_fk' => $orderstatus_id,'transfer_price'=>$rs->total_price,'pay_type_id_fk'=>'1']);
+                        ->update(['order_status_id_fk' => $orderstatus_id,'approve_status'=>1,'transfer_price'=>$rs->total_price,'pay_type_id_fk'=>'1']);
                         $resule = ['status' => 'success', 'message' => 'ชำระเงินแบบโอนชำระสำเร็จ'];
                 }
             }

@@ -479,6 +479,8 @@ class CartPaymentController extends Controller
         }
 
         if ($request->submit == 'upload') {
+
+
             $resule = Payment::payment_uploadfile($request);
             if ($resule['status'] == 'success') {
 
@@ -486,8 +488,11 @@ class CartPaymentController extends Controller
 
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '12','approve_status'=>1, 'transfer_price' => $total_price]);
+                        ->update(['pay_type_id_fk' => '12', 'transfer_price' => $total_price]);
+
+
                 }
+                DB::commit();
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
                 return redirect('cart_payment_transfer/' . $request->code_order)->withError($resule['message']);
@@ -586,6 +591,7 @@ class CartPaymentController extends Controller
                         ->where('id', $order_data->id)
                         ->update(['pay_type_id_fk' => '14', 'aicash_price' => $total_price,'member_id_aicash'=>$customer_id]);
                 }
+                DB::commit();
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
                 return redirect('cart_payment_transfer/' . $request->code_order)->withError($resule['message']);
@@ -602,6 +608,7 @@ class CartPaymentController extends Controller
                         ->where('id', $order_data->id)
                         ->update(['pay_type_id_fk' => '4']);
                 }
+                DB::commit();
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
                 return redirect('cart_payment_transfer/' . $request->code_order)->withError($resule['message']);
