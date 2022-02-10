@@ -14,6 +14,7 @@ class CancelOrderController extends Controller
   public static function cancel_order($order_id, $customer_or_admin, $type_user_cancel, $action_type)
   {
 
+
     DB::BeginTransaction();
     $order_data = DB::table('db_orders')
       ->where('id', '=', $order_id)
@@ -38,6 +39,8 @@ class CancelOrderController extends Controller
       DB::commit();
       return $resule;
     }
+
+    $update_ai_stockist = new Db_Ai_stockist();
 
     try {
       $type_id = $order_data->purchase_type_id_fk;
@@ -340,7 +343,7 @@ class CancelOrderController extends Controller
               ->where('ai_stockist.code_order', '=',$order_data->code_order)
               ->first();
 
-              $update_ai_stockist = new Db_Ai_stockist();
+
               $update_ai_stockist->customer_id = $order_data->customers_id_fk;
               $update_ai_stockist->to_customer_id = $order_data->customers_id_fk;
               $update_ai_stockist->transection_code = $ai_stockist->transection_code;
@@ -355,7 +358,7 @@ class CancelOrderController extends Controller
               $update_ai_stockist->status_add_remove = 'add';
               $update_ai_stockist->banlance = $add_pv_aistockist;
               $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
-              $update_ai_stockist->save();
+
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 6) { // Course
@@ -404,8 +407,11 @@ class CancelOrderController extends Controller
 
 
       if ($resule['status'] == 'success') {
+        if ($type_id == 4) {
+          $update_ai_stockist->save();
+        }
 
-        $update_ai_stockist->save();
+
         $customer->save();
         DB::commit();
         return $resule;
