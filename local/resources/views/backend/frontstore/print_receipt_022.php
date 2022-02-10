@@ -1052,9 +1052,9 @@ else if(@$pay_type[0]->pay_type_id_fk==19){ // 19  Gift Voucher + เงิน�
 
         DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc $bill_transfer_other ]' WHERE id = (($n*$i)+17) ; ");
 
-        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
+        // DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
 
-        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->note!=''?'* '.@$sRow->note:'&nbsp;')."' WHERE id = (($n*$i)+19) ; ");
+        // DB::select(" UPDATE $TABLE SET a = '".(@$sRow->note!=''?'* '.@$sRow->note:'&nbsp;')."' WHERE id = (($n*$i)+19) ; ");
 
 
         if($amt_page==1){
