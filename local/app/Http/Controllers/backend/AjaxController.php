@@ -1586,7 +1586,7 @@ class AjaxController extends Controller
 
         }
 
-        
+
         if($pay_type_id_fk==2){
 
             if(empty($request->credit_price)){
@@ -5237,49 +5237,32 @@ class AjaxController extends Controller
     public function ajaxCancelOrderBackend(Request $request)
     {
       $Orders = \App\Models\Backend\Frontstore::where('id',$request->id)->get();
-      if($request->ajax()){
-
-          // check กรณีคูปอง ให้ return pro_status กลับไปเป็น 1
-            $Frontstorelist = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',$request->id)->get();
-            foreach ($Frontstorelist as $key => $v) {
-
-                 if($v->promotion_code!=""){
-                        DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$v->promotion_code."') ");
-                  }
-
-            }
-
-           // $cancel = \App\Http\Controllers\Frontend\Fc\cancel_order($r[0]->id, \Auth::user()->id , 'admin', 'admin');
-           // dd($cancel);
-  // `approve_status` int(11) DEFAULT '0' COMMENT '1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id',
-  // `order_status_id_fk` int(11) DEFAULT NULL COMMENT '(ยึดตาม* dataset_order_status )',
 
 
-      // return $Orders[0]->approve_status;
-      // dd();
       if($Orders[0]->approve_status==0){
         $resule = \App\Http\Controllers\Frontend\Fc\DeleteOrderController::delete_order($request->id);
 
        }else{
           //DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
           $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+      }
 
+      if($resule['status'] == 'success' ){
+        //DB::select(" DELETE FROM `db_delivery` where orders_id_fk=$request->id ");
+
+        DB::table('db_pay_product_receipt_001')->where('orders_id_fk',$request->id)->update([
+            'status_sent'=>4
+        ]);
+
+        $data = ['status'=>'success','ms'=>'ยกเลิกบิลสำเร็จ'];
+        return $data;
+
+      }else{
+        $data = ['status'=>'fail','ms'=>$resule['message']];
+        return $data;
 
       }
 
-      DB::select(" DELETE FROM `db_delivery` where orders_id_fk=$request->id ");
-
-      DB::table('db_pay_product_receipt_001')->where('orders_id_fk',$request->id)->update([
-          'status_sent'=>4
-      ]);
-
-      // $resule = CancelOrderController::cancel_order($rs->cancel_order_id, $customer_id, 1, 'customer');
-
-      // dd($resule);
-
-      return response()->json(\App\Models\Alert::Msg('success'));
-      //return redirect()->to(url("backend/frontstore"));
-       }
     }
 
     public function ajaxDelUser(Request $request)
