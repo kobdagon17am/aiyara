@@ -36,26 +36,26 @@
                     <h6>ที่อยู่การจัดส่ง : <span class="label label-{{ $order->css_class }}">{{ $address_sent }}</span>
                     </h6>
                     @if ($address)
-                        <p><b>{{ $address['name'] }}</b><br>
-                            @if ($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
-                            @if ($address['email']) Email: {{ $address['email'] }}<br>@endif
-                            @if ($address['house_no']) {{ $address['house_no'] }},@endif
-                            @if ($address['moo'] != '-' and $address['moo'] != '') หมู่.{{ $address['moo'] }},@endif
-                            @if ($address['house_name'] != '-' and $address['house_name'] != '') บ.{{ $address['house_name'] }},@endif
-                            @if ($address['soi'] != '-' and $address['soi'] != '') ซอย.{{ $address['soi'] }},@endif
-                            @if ($address['road'] != '-' and $address['road'] != '') ถนน.{{ $address['road'] }},@endif
+                    <p><b>{{ $address['name'] }}</b><br>
+                      @if ($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
+                      @if ($address['email']) Email: {{ $address['email'] }}<br>@endif
+                      @if ($address['house_no']) {{ $address['house_no'] }} @endif
+                      @if ($address['moo'] != '-' and $address['moo'] != '') หมู่.{{ $address['moo'] }} @endif
+                      @if ($address['house_name'] != '-' and $address['house_name'] != '') {{ $address['house_name'] }} @endif
+                      @if ($address['soi'] != '-' and $address['soi'] != '') {{ $address['soi'] }} @endif
+                      @if ($address['road'] != '-' and $address['road'] != '') ถนน.{{ $address['road'] }} @endif
 
-                            @if ($address['district_name'] != '-' and $address['district_name'] != '')<br> ต.{{ $address['district_name'] }},@endif
-                            @if ($address['amphures_name'] != '-' and $address['amphures_name'] != '') อ.{{ $address['amphures_name'] }},@endif
-                            @if ($address['provinces_name'] != '-' and $address['provinces_name'] != '') จ.{{ $address['provinces_name'] }},@endif
-                            @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
-                        </p>
+                      @if ($address['district_name'] != '-' and $address['district_name'] != '')<br>{{ $address['district_name'] }} @endif
+                      @if ($address['amphures_name'] != '-' and $address['amphures_name'] != ''){{ $address['amphures_name'] }} @endif
+                      @if ($address['provinces_name'] != '-' and $address['provinces_name'] != ''){{ $address['provinces_name'] }} @endif
+                      @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
+                  </p>
                     @else
                         <p><b> </b>
                     @endif
                     @if ($order->status_payment_sent_other == 1)
                         <?php
-                        $sent_to_customer_data = \App\Helpers\Frontend::get_customer($order->address_sent_id_fk);
+                        $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($order->address_sent_id_fk);
 
                         // dd($sent_to_customer_data);
                         // +"prefix_name": "คุณ"
