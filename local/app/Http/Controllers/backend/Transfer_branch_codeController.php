@@ -280,16 +280,13 @@ class Transfer_branch_codeController extends Controller
         if(!empty($req->branch_id_fk)){
            $w02 = " AND db_transfer_branch_code.branch_id_fk = ".$req->branch_id_fk." " ;
         }else{
-         
            if($sPermission==1){
               $w02 = "";
           }else{
              //  $w02 = "AND (db_transfer_branch_code.branch_id_fk = ".\Auth::user()->branch_id_fk.")" ;
              $userBranch = \Auth::user()->branch_id_fk;
-             $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch OR db_transfer_branch_code.to_branch_id_fk = $userBranch)";
-  
+             $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch OR db_transfer_branch_code.to_branch_id_fk = $userBranch AND db_transfer_branch_code.approve_status = 1)";
           }
-
         }
 
  // โอนไปให้สาขา 
@@ -322,9 +319,6 @@ class Transfer_branch_codeController extends Controller
       }else{
           $w07 = "";
       }
-
-    
-
 
       $sTable = DB::select(" SELECT * FROM db_transfer_branch_code 
           WHERE 1 

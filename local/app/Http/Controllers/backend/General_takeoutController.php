@@ -7,13 +7,14 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 use App\Http\Controllers\backend\AjaxController;
+use App\Helpers\General;
 
 class General_takeoutController extends Controller
 {
 
     public function index(Request $request)
     {
-
+      General::gen_id_url();
       return view('backend.general_takeout.index');
 
     }
@@ -179,7 +180,7 @@ class General_takeoutController extends Controller
           }else{
             $sRow = new \App\Models\Backend\General_takeout;
           }
-// dd(request('stocks_id_fk'));
+// dd(request()->all());
           $sRow->business_location_id_fk    = request('business_location_id_fk');
           $sRow->product_out_cause_id_fk    = request('product_out_cause_id_fk');
           $sRow->description    = request('description');

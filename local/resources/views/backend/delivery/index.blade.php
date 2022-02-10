@@ -362,11 +362,11 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
+        <p style="color:red;">หากต้องการเปลี่ยน ตำบล,อำเภอ กรุณาเลือกจังหวัดใหม่อีกครั้งเป็นจังหวัดอื่นก่อน หลังจากนั้นกดกลับมาที่จังหวัดของตน</p>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button> 
       </div>
-
       <div class="modal-body">
 
 

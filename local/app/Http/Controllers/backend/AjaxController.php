@@ -3915,6 +3915,7 @@ class AjaxController extends Controller
     {
 
       if($request->ajax()){
+
          // $r= DB::select(" SELECT amt FROM db_stocks where product_id_fk = $request->product_id_fk AND id = $request->id ");
          // return @$r[0]->amt;
           $rs = DB::select("

@@ -209,7 +209,7 @@
 
                                   @if(@$Check_stock)
                                     @foreach(@$Check_stock AS $r)
-                                      <option value="{{$r->lot_number}}" {{ (@$r->lot_number==@$sRow->lot_number)?'selected':'' }} >
+                                      <option value="{{$r->lot_number}}" {{ (@$r->id==@$sRow->stocks_id_fk)?'selected':'' }} >
                                         {{$r->lot_number}}
                                         [{{ $r->w_name }}]
                                         [Expired : {{ $r->lot_expired_date }}]

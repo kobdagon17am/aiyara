@@ -4,7 +4,8 @@
 
 @section('css')
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('backend/libs/magnific-popup/magnific-popup.min.css') }}">
-@endsection
+    <link href="{{ asset('asset/lity/lity.min.css') }}" rel="stylesheet">
+    @endsection
 
 @section('content')
 
@@ -65,7 +66,7 @@
                                              <br>
 
                                             @if (!empty(@$r->file))
-                                                <img src="{{ $r->url }}/{{ @$r->file }}" width="200px"
+                                                <img src="{{ $r->url }}/{{ @$r->file }}" data-lity width="200px"
                                                     class="grow">
                                                     <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
 
@@ -73,7 +74,7 @@
 
 
                                             @ELSE
-                                                <img src="{{ asset('local/public/images/example_img.png') }}"
+                                                <img data-lity src="{{ asset('local/public/images/example_img.png') }}"
                                                     class="grow" width="200px">
                                             @ENDIF
 
@@ -407,6 +408,7 @@
 
     <!-- Lightbox init js -->
     <script src="{{ URL::asset('backend/js/pages/lightbox.init.js') }}"></script>
+    <script src="{{ asset('asset/lity/lity.min.js') }}"></script>
 
 <script>
 var id = "{{@$sRow->id}}"; // alert(id);
