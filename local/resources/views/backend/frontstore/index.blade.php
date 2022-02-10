@@ -1262,7 +1262,7 @@ $(document).ready(function() {
    $(document).ready(function() {
 
 
- 
+
         $(document).on('click', '.order_select', function(event) {
                 var code = $(this).attr('code_id');
                 var select = $('#invoice_code').val();
@@ -1831,19 +1831,23 @@ DB::select(" TRUNCATE db_consignments_import ; ");
                   },
                   success:function(data)
                   {
-                    // console.log(data);
-                    // return false;
-                        Swal.fire({
+                    if(data['status'] == 'success'){
+                         Swal.fire({
                           type: 'success',
-                          title: 'ทำการยกเลิกรายการสั่งซื้อที่ระบุเรียบร้อยแล้ว',
+                          title: data['ms'],
                           showConfirmButton: false,
                           timer: 2000
                         });
+                        location.reload();
+                    }else{
+                      Swal.fire({
+                          type: 'error',
+                          title: data['ms'],
+                          showConfirmButton: false,
+                          // timer: 2000
+                        });
+                    }
 
-                        setTimeout(function () {
-                          // $('#data-table').DataTable().clear().draw();
-                          location.reload();
-                        }, 1500);
                   }
                 });
 

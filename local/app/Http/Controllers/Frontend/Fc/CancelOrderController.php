@@ -77,6 +77,14 @@ class CancelOrderController extends Controller
               ->where('id', $value->giftvoucher_cus_id_fk)
               ->first();
 
+            if(empty($db_giftvoucher_cus)){
+              $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
+              //DB::commit();
+              DB::rollback();
+              return $resule;
+              }
+
+
             $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance + $value->giftvoucher_value_use;
 
             $update_giftvoucher = DB::table('db_giftvoucher_cus')
@@ -87,6 +95,7 @@ class CancelOrderController extends Controller
         } else { //ได้จากการแถมสินค้า
 
           foreach ($giv_log as $value) {
+
             $gv = \App\Helpers\Frontend::get_gitfvoucher($customer->user_name);
             $gv_banlance = $gv->sum_gv - $value->giftvoucher_value_use;
 
@@ -114,6 +123,16 @@ class CancelOrderController extends Controller
               ->select('giftvoucher_banlance')
               ->where('id', $value->giftvoucher_cus_id_fk)
               ->first();
+
+            if(empty($db_giftvoucher_cus)){
+                $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
+                //DB::commit();
+                DB::rollback();
+                return $resule;
+                }
+
+
+
 
             $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance - $value->giftvoucher_value_use;
 
@@ -326,7 +345,7 @@ class CancelOrderController extends Controller
               $update_ai_stockist->to_customer_id = $order_data->customers_id_fk;
               $update_ai_stockist->transection_code = $ai_stockist->transection_code;
               // $update_ai_stockist->set_transection_code = date('ym');
-              $update_ai_stockist->pv = $order_data->pv;
+              $update_ai_stockist->pv = $order_data->pv_total;
               $update_ai_stockist->status = 'cancel';
               $update_ai_stockist->type_id = 4;
               $update_ai_stockist->code_order = $order_data->code_order;
@@ -385,6 +404,7 @@ class CancelOrderController extends Controller
 
 
       if ($resule['status'] == 'success') {
+
         $update_ai_stockist->save();
         $customer->save();
         DB::commit();
