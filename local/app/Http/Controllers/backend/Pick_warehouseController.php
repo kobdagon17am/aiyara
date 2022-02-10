@@ -2080,6 +2080,7 @@ ORDER BY db_pick_pack_packing.id
           // return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
 
           $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+          // dd($row);
           $pn = '';
           if(!empty($DP)){
             foreach ($DP as $key => $value) {
