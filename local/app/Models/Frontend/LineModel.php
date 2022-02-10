@@ -511,7 +511,9 @@ public static function check_line_backend($username_buy,$username_check){
 		}
 
 		if (in_array($username_check, $upline_id_arr)) {
-			$resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
+
+
+			$resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_user];
 		}else{
 			$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน '];
 
