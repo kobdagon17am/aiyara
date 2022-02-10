@@ -30,6 +30,18 @@ class Frontend{
 		return $customer;
 	}
 
+  public static function get_customer_id($id){
+		$customer =  DB::table('customers')
+		->select('customers.*','dataset_package.dt_package','dataset_qualification.code_name','dataset_qualification.business_qualifications as qualification_name')
+		->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
+		->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
+		->where('customers.id','=',$id)
+		->first();
+
+
+		return $customer;
+	}
+
   public static function check_kyc($user_customer){
 		$customer =  DB::table('customers')
 		->select('*')

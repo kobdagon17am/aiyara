@@ -556,9 +556,10 @@
                             @endif
                             @if ($data->status_payment_sent_other == 1)
                                 <?php
-                                $sent_to_customer_data = \App\Helpers\Frontend::get_customer($data->address_sent_id_fk);
 
-                                //                dd($sent_to_customer_data);
+                                $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($data->address_sent_id_fk);
+
+
                                 //                +"prefix_name": "คุณ"
                                 // +"first_name": "ชฎาพรww"
                                 // +"last_name": "พิกุลe"
