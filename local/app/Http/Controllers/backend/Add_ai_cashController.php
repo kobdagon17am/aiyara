@@ -223,6 +223,8 @@ class Add_ai_cashController extends Controller
         $sRow = new \App\Models\Backend\Add_ai_cash;
       }
 
+      $sRow->type_create = 'admin';
+
       // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
       if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11) {
         $sRow->approve_status = 1;

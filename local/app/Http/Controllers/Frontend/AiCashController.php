@@ -148,6 +148,12 @@ class AiCashController extends Controller
 
             ->addColumn('action', function ($row) {
                 $button = '';
+
+                if($row->type_create == 'admin'){
+                  return $button;
+                }
+
+
                 if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
           //           $button .= '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#upload_slip_aicash"
           //  onclick="upload_slip_aicash(' . $row->id . ',\'' . $row->code_order . '\')"><i class="fa fa-upload"></i> Upload </button>';
