@@ -1320,7 +1320,7 @@ ORDER BY created_at DESC
         $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
          return @$sD[0]->name;
       }else{
-        return '';
+        return 'V3';
       }
     })
      ->addColumn('status', function($row) {
@@ -2131,47 +2131,42 @@ foreach($temp_ppr_0021_data as $tmp){
 
           $amt_get = 0;
           foreach ($Products as $key => $v) {
-
-                   $css_font = $v->amt_remain>0?"color:red;font-weight:bold;":"";
-
-                     $pn .=
-                    '<div class="divTableRow">
-                    <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;"> '.$v->product_name.'</div>
-                    <div class="divTableCell" style="text-align:center;color:blue;font-weight:bold;"> '.$v->sum_amt_get.'</div>
-                    <div class="divTableCell" style="text-align:center;'.$css_font.'"> '.$v->amt_remain.'</div>
-                    <div class="divTableCell" style="text-align:center;width:400px;padding-bottom:15px !important;">
-                    ';
-
-                      $WH = DB::select("
-                         SELECT * from db_pay_product_receipt_002
-                         where db_pay_product_receipt_002.invoice_code='".$row->invoice_code."' AND time_pay = ".$v->time_pay." AND product_id_fk=".$v->product_id_fk."
-                      ");
-
-                      foreach ($WH AS $v_wh) {
-
-                          $zone = DB::select(" select * from zone where id=".$v_wh->zone_id_fk." ");
-                          $shelf = DB::select(" select * from shelf where id=".$v_wh->shelf_id_fk." ");
-                          if($v_wh->zone_id_fk!=''){
-                            $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$v_wh->shelf_floor;
-                            $lot_number = $v_wh->lot_number.' ['.$v_wh->lot_expired_date.']';
-                          }else{
-                            $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ไม่มีสินค้าในคลัง ***</span>';
-                            $lot_number = '';
-                          }
-
-                          $pn .=
-                              '<div class="divTableRow">
-                              <div class="divTableCell" style="width:200px;text-align:center;">'.$sWarehouse.'</div>
-                              <div class="divTableCell" style="width:200px;text-align:center;">'.$lot_number.'</div>
-                              <div class="divTableCell" style="width:80px;text-align:center;color:blue;font-weight:bold;">'.($v_wh->amt_get>0?$v_wh->amt_get:'').'</div>
-                              </div>
-                              ';
-
-                     }
-
-
-            $pn .= '</div>';
-            $pn .= '</div>';
+                if($v->amt_remain==0 && $v->sum_amt_get==0){
+                }else{
+                  $css_font = $v->amt_remain>0?"color:red;font-weight:bold;":"";
+                  $pn .=
+                 '<div class="divTableRow">
+                 <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;"> '.$v->product_name.'</div>
+                 <div class="divTableCell" style="text-align:center;color:blue;font-weight:bold;"> '.$v->sum_amt_get.'</div>
+                 <div class="divTableCell" style="text-align:center;'.$css_font.'"> '.$v->amt_remain.'</div>
+                 <div class="divTableCell" style="text-align:center;width:400px;padding-bottom:15px !important;">
+                 ';
+                   $WH = DB::select("
+                      SELECT * from db_pay_product_receipt_002
+                      where db_pay_product_receipt_002.invoice_code='".$row->invoice_code."' AND time_pay = ".$v->time_pay." AND product_id_fk=".$v->product_id_fk."
+                   ");
+                   foreach ($WH AS $v_wh) {
+                       $zone = DB::select(" select * from zone where id=".$v_wh->zone_id_fk." ");
+                       $shelf = DB::select(" select * from shelf where id=".$v_wh->shelf_id_fk." ");
+                       if($v_wh->zone_id_fk!=''){
+                         $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$v_wh->shelf_floor;
+                         $lot_number = $v_wh->lot_number.' ['.$v_wh->lot_expired_date.']';
+                       }else{
+                         $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ไม่มีสินค้าในคลัง ***</span>';
+                         $lot_number = '';
+                       }
+                       $pn .=
+                           '<div class="divTableRow">
+                           <div class="divTableCell" style="width:200px;text-align:center;">'.$sWarehouse.'</div>
+                           <div class="divTableCell" style="width:200px;text-align:center;">'.$lot_number.'</div>
+                           <div class="divTableCell" style="width:80px;text-align:center;color:blue;font-weight:bold;">'.($v_wh->amt_get>0?$v_wh->amt_get:'').'</div>
+                           </div>
+                           ';
+                  }
+         $pn .= '</div>';
+         $pn .= '</div>';
+                }
+                
           }
 
           $pn .= '</div>';

@@ -360,7 +360,11 @@ class Pick_packController extends Controller
           $sD = DB::select(" select * from ck_users_admin where id=".$row->billing_employee." ");
            return @$sD[0]->name;
         }else{
-          return '';
+          // if($row->distribution_channel_id_fk == 3){
+          //   return 'V3';
+          // }else{
+            return 'V3';
+          // }
         }
       })
       ->addColumn('business_location', function($row) {

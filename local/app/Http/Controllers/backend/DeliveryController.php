@@ -436,8 +436,8 @@ class DeliveryController extends Controller
                                   recipient_name = '".@$v->recipient_name."',
                                   addr_send = '".@$address."',
                                   postcode = '".@$v->zip_code."',
-                                  mobile = '".(@$tel?$tel:'')."',
-                                  tel_home = '".(@$tel_home?$tel_home:'')."',
+                                  mobile = '".(@$v->tel?$v->tel:'')."',
+                                  tel_home = '".(@$v->tel_home?$v->tel_home:'')."',
                                   province_id_fk = '".@$v->province_id_fk."',
                                   province_name = '".@$v->provname."',
                                   set_addr_send_this = '1'
@@ -848,7 +848,12 @@ class DeliveryController extends Controller
           $sD = DB::select(" select * from ck_users_admin where id=".$row->billing_employee." ");
            return @$sD[0]->name;
         }else{
-          return '';
+          if($row->distribution_channel_id_fk == 3){
+            return 'V3';
+          }else{
+            return '';
+          }
+      
         }
       })
       // status_to_wh_by

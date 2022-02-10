@@ -262,7 +262,7 @@
                                             <div class="col-md-12 mt-2 mb-2 text-left">
                                                 <div class="row form-group " >
                                                     <div class="col-md-12 text-left">
-                                                        <h5 class="font-size-14 required_star_red">หมายเหตุ : </h5>
+                                                        <h5 class="font-size-14">หมายเหตุ : </h5>
                                                            <input class="form-control slip_note " type="text" name="slip_note[]" value="{{@$r->note}}">
                                                     </div>
                                                 </div>

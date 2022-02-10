@@ -88,7 +88,7 @@ class DeliveryPackingCodeController extends Controller
         // วุฒิเอา  $branch_id_fk ออก
        $sTable = DB::select(" 
 
-          SELECT db_delivery_packing_code.*,db_orders.action_user as action_user_data,db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by from db_delivery_packing_code  
+          SELECT db_delivery_packing_code.*,db_orders.action_user as action_user_data,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by from db_delivery_packing_code  
           LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
           LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
           LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
@@ -116,7 +116,11 @@ class DeliveryPackingCodeController extends Controller
         if($user){
           $user_name = $user->name;
         }else{
-          $user_name = '';
+          if($row->distribution_channel_id_fk == 3){
+            $user_name ='V3';
+          }else{
+            $user_name = '';
+          }
         }
         return $user_name;
      })  
@@ -177,7 +181,7 @@ class DeliveryPackingCodeController extends Controller
                 $arr = implode(',', $array);
               }
             }
-
+            
             $addr = DB::select(" SELECT
                   db_delivery.set_addr_send_this,
                   db_delivery.recipient_name,
@@ -195,9 +199,9 @@ class DeliveryPackingCodeController extends Controller
                   db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
             if($addr){
               if($row->status_to_wh==0){
-                return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
               }else{
-                return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>";
+                return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>";
                 // ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
               }
               

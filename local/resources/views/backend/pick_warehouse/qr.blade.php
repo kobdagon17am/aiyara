@@ -119,7 +119,7 @@
         <table id="data-table-scan" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" onclick="myFunction()">Save Complete</button>
+        <button type="submit" class="btn btn-primary" onclick="return confirm('ยืนยันการทำรายการ');">Save Complete</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -143,7 +143,7 @@
         <table id="data-table-scan-single" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" onclick="myFunction()">Save Complete</button>
+        <button type="submit" class="btn btn-primary" onclick="return confirm('ยืนยันการทำรายการ');">Save Complete</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
