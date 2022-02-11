@@ -199,7 +199,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   รักษาคุณสมบัติท่องเที่ยว : {{ $data->pv_tv }} PV
                 </div>
                 <div class="col-sm-6">
-                  Ai-Stockist : {{ $data->aistockist_status ? 'เป็น' : 'ไม่เป็น' }}
+
+                  Ai-Stockist : {{ $data->aistockist_status ? 'เป็น' : 'ไม่เป็น' }}<br>
+                  ตำแหน่ง : {{ $data->q_name }}<br>
+                  Package : {{ $data->dt_package }}
                 </div>
             </div>
             <!-- <p class="text-muted">PV {{number_format($data->pv)}} | {{$data->q_name}} </p>
@@ -227,7 +230,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                 </div>
                 <div class="col-sm-6">
                   <span>อีเมลล์ : {{ $data->email }}</span>
-                </div>  
+                </div>
               </div>
               <hr>
 
