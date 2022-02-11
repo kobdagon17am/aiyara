@@ -93,9 +93,19 @@
 
 
  				<div class="col-sm-3">
- 					<label>รหัสไปษณีย์</label>
+ 					<label>รหัสไปรษณีย์</label>
  					<input type="text" class="form-control" autocomplete="off" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ @$customer->zipcode }}">
  				</div>
+
+				<div class="col-sm-3 mt-3">
+					<label>เบอร์โทรศัพท์</label>
+					<input type="text" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}">
+				</div>
+
+				<div class="col-sm-3 mt-3">
+					<label>อีเมลล์</label>
+					<input type="text" class="form-control" autocomplete="off" placeholder="อีเมลล์" id="email" name="email" value="{{ @$customer->email }}">
+				</div>
  			</div>
 
 

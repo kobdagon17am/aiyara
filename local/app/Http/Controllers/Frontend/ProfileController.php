@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\DbCustomersDetail;
+use App\Models\Frontend\Customer;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,12 +60,12 @@ class ProfileController extends Controller
     public function profile_address()
     {
         $customer = DB::table('customers_detail')
-            ->select('customers_detail.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id', 'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name')
-
+            ->select('customers_detail.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id', 'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name', 'customers.email')
             ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
-            ->where('customer_id', '=', Auth::guard('c_user')->user()->id)
+            ->leftJoin('customers', 'customers.id', '=', 'customers_detail.customer_id')
+            ->where('customers_detail.customer_id', '=', Auth::guard('c_user')->user()->id)
             ->first();
 
         $provinces = DB::table('dataset_provinces')
@@ -75,7 +76,6 @@ class ProfileController extends Controller
 
     public function edit_address(Request $request)
     {
-
         $checkpass = DB::table('customers')
             ->where('id', '=', Auth::guard('c_user')->user()->id)
             ->where('password', '=', md5($request->password))
@@ -90,12 +90,17 @@ class ProfileController extends Controller
                 'road' => trim($request->road),
                 'province_id_fk' => trim($request->province),
                 'zipcode' => trim($request->zipcode),
+                'tel_mobile' => trim($request->tel_mobile)
             );
 
             try {
                 DbCustomersDetail::updateOrCreate([
                     'customer_id' => Auth::guard('c_user')->user()->id,
                 ], $data);
+
+                if ($request->has('email')) {
+                    Customer::find(Auth::guard('c_user')->user()->id)->update(['email' => $request->email]);
+                }
 
                 //  $update = DB::table('customers_detail')
                 //  ->where('customer_id','=',Auth::guard('c_user')->user()->id)
