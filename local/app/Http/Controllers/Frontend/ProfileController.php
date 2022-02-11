@@ -39,7 +39,7 @@ class ProfileController extends Controller
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             ->where('customers.user_name', '=', Auth::guard('c_user')->user()->user_name)
             ->first();
-        
+
         $details = DB::table('customers_detail')
             ->select('customers_detail.*', 'dataset_districts.name_th as district', 'dataset_amphures.name_th as amphure', 'dataset_provinces.name_th as province')
             ->leftJoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
@@ -59,8 +59,13 @@ class ProfileController extends Controller
 
     public function profile_address()
     {
+
+
+
+
         $customer = DB::table('customers_detail')
-            ->select('customers_detail.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id', 'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name', 'customers.email')
+            ->select('customers_detail.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id',
+            'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name', 'customers.first_name','customers.last_name','customers.business_name')
             ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
@@ -101,6 +106,10 @@ class ProfileController extends Controller
                 if ($request->has('email')) {
                     Customer::find(Auth::guard('c_user')->user()->id)->update(['email' => $request->email]);
                 }
+
+                if ($request->has('business_name')) {
+                  Customer::find(Auth::guard('c_user')->user()->id)->update(['business_name' => $request->business_name]);
+              }
 
                 //  $update = DB::table('customers_detail')
                 //  ->where('customer_id','=',Auth::guard('c_user')->user()->id)
