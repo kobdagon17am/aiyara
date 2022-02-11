@@ -31,19 +31,23 @@ class ProfileController extends Controller
         $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package(Auth::guard('c_user')->user()->user_name);
       }
         $data = DB::table('customers')
-            ->select('customers.user_name','customers.business_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name', 'customers.user_name', 'customers.created_at', 'customers.date_mt_first', 'customers.pv_mt_active',
-                'customers.pv_mt', 'customers.pv_mt', 'customers.bl_a', 'customers.bl_b', 'customers.bl_c', 'customers.pv_a', 'customers.pv_b', 'customers.pv_c',
-                'customers.pv', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
+            ->select('customers.*', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
                 'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name', 'customers.team_active_a', 'customers.team_active_b', 'customers.team_active_c')
             ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
             ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             ->where('customers.user_name', '=', Auth::guard('c_user')->user()->user_name)
             ->first();
+        
+        $details = DB::table('customers_detail')
+            ->select('customers_detail.*', 'dataset_districts.name_th as district', 'dataset_amphures.name_th as amphure', 'dataset_provinces.name_th as province')
+            ->leftJoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
+            ->leftJoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
+            ->leftJoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
+            ->where('customers_detail.customer_id', Auth::guard('c_user')->id())
+            ->first();
 
-
-
-        return view('frontend/profile', compact('data'));
+        return view('frontend/profile', compact('data', 'details'));
     }
 
     // public function edit_profile()

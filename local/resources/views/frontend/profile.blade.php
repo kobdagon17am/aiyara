@@ -171,7 +171,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 <div class="row">
   <div class="col-lg-6 col-md-6">
     <div class="card user-card">
-        <div class="card-header">
+        <div class="card-header pb-0">
             <h5>Profile</h5>
         </div>
         <div class="card-block">
@@ -185,31 +185,117 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             </div>
 
             @if(@$data->business_name)
-            <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
+              <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
             @else
-
-             <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
-
+              <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
             @endif
 
-            <p class="text-muted">PV {{number_format($data->pv)}} | {{$data->q_name}} </p>
             <hr>
-            <p class="text-muted m-t-15">Package : {{$data->dt_package}} </p>
-            {{-- <ul class="list-unstyled activity-leval">
-                <li class="active"></li>
-                <li class="active"></li>
-                <li class="active"></li>
-                <li></li>
-                <li></li>
-            </ul> --}}
 
-            {{-- <p class="m-t-15 text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-            <hr> --}}
-            {{-- <div class="row justify-content-center user-social-link">
-                <div class="col-auto"><a href="#!"><i class="fa fa-facebook text-facebook"></i></a></div>
-                <div class="col-auto"><a href="#!"><i class="fa fa-twitter text-twitter"></i></a></div>
-                <div class="col-auto"><a href="#!"><i class="fa fa-dribbble text-dribbble"></i></a></div>
-            </div> --}}
+            <div class="row f-14 text-left">
+                <div class="col-sm-6">
+                  ทำคุณสมบัติ : {{ $data->pv }} PV <br>
+                  รักษาคุณสมบัติรายเดือน : {{ $data->pv_mt }} PV <br>
+                  รักษาคุณสมบัติท่องเที่ยว : {{ $data->pv_tv }} PV
+                </div>
+                <div class="col-sm-6">
+                  Ai-Stockist : {{ $data->aistockist_status ? 'เป็น' : 'ไม่เป็น' }}
+                </div>
+            </div>
+            <!-- <p class="text-muted">PV {{number_format($data->pv)}} | {{$data->q_name}} </p>
+            <hr>
+            <p class="text-muted m-t-15">Package : {{$data->dt_package}} </p> -->
+            <hr>
+
+            <div class="text-left">
+              <p class="f-w-600 mb-2">ข้อมูลพื้นฐาน</p>
+              <div class="row f-14">
+                <div class="col-sm-6">
+                  <span>รหัสสมาชิก : {{ $data->user_name }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>ชื่อ-นามสกุล : {{ Str::of($data->prefix_name)->append($data->first_name .' '. $data->last_name) }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>วันเดือนปีเกิด : {{ date('d/m/Y', strtotime($data->birth_day)) }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>เลขบัตรปชช : {{ $data->id_card }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>โทรศัพท์มือถือ : {{ $details->tel_mobile  }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>อีเมลล์ : {{ $data->email }}</span>
+                </div>  
+              </div>
+              <hr>
+
+              <p class="f-w-600 mb-2">บัญชีธนาคาร</p>
+              <div class="row f-14">
+                <div class="col-sm-6">
+                  <span>ธนาคาร : {{ $details->bank_name }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>สาขา : {{ $details->bank_branch }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>ชื่อบัญชี : {{ $details->bank_account }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>เลขบัญชี : {{ $details->bank_no }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>ชนิดบัญชี : {{ $details->bank_type }}</span>
+                </div>
+              </div>
+              <hr>
+
+              <p class="f-w-600 mb-2">ที่อยู่สำหรับการจัดส่งเอกสาร / สินค้า</p>
+              <div class="row f-14">
+                <div class="col-sm-6">
+                  <span>เลขที่ : {{ $details->house_no }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>อาคาร : {{ $details->house_name }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>หมู่ : {{ $details->moo }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>ซอย : {{ $details->soi }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>ถนน : {{ $details->road }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>แขวง/ตำบล : {{ $details->district }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>เขต/อำเภอ : {{ $details->amphure }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>จังหวัด : {{ $details->province }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>รหัสไปรษณีย์ : {{ $details->zipcode }}</span>
+                </div>
+              </div>
+              <hr>
+
+              <p class="f-w-600 mb-2">การสืบทอดผลประโยชน์</p>
+              <div class="row f-14">
+                <div class="col-sm-6">
+                  <span>ผู้สืบทอดผลประโยชน์ : {{ $details->benefit_name }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>เลขบัตรปชช : {{ $details->benefit_id_card }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>ความสัมพันธ์ : {{ $details->benefit_relation }}</span>
+                </div>
+              </div>
+            </div>
         </div>
     </div>
 </div>
