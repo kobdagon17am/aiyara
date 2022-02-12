@@ -120,17 +120,17 @@ class Register extends Model
     ->count();
 
 
-    if($check_email > 0 ){
-       $data = ['status'=>'fail','massage'=>'Email already exists in the system.'];
-       DB::rollback();
-       return $data;
-   }
+  //   if($check_email > 0 ){
+  //      $data = ['status'=>'fail','massage'=>'Email already exists in the system.'];
+  //      DB::rollback();
+  //      return $data;
+  //  }
 
-   if($count_tel > 0 ){
-       $data = ['status'=>'fail','massage'=>'MobileNumber already exists in the system.'];
-       DB::rollback();
-       return $data;
-   }
+  //  if($count_tel > 0 ){
+  //      $data = ['status'=>'fail','massage'=>'MobileNumber already exists in the system.'];
+  //      DB::rollback();
+  //      return $data;
+  //  }
 
    if($check_id_card > 0 ){
        $data = ['status'=>'fail','massage'=>'ID Card already exists in the system.'];

@@ -9,7 +9,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
  <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
    <div class="modal-header bg-c-green">
-    @if(@$data->business_name)
+    @if(@$data->business_name and $data->business_name  != '-')
 
     <h4 class="modal-title" style="color: #FFFF">{{$data->business_name}} ({{$data->user_name}})</h4>
     @else
