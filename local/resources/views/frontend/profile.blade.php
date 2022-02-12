@@ -226,7 +226,8 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   <span>เลขบัตรปชช : {{ $data->id_card }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>โทรศัพท์มือถือ : {{ $details->tel_mobile  }}</span>
+
+                  <span>โทรศัพท์มือถือ : {{ @$details->tel_mobile  }}</span>
                 </div>
                 <div class="col-sm-6">
                   <span>อีเมลล์ : {{ $data->email }}</span>
@@ -237,19 +238,19 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
               <p class="f-w-600 mb-2">บัญชีธนาคาร</p>
               <div class="row f-14">
                 <div class="col-sm-6">
-                  <span>ธนาคาร : {{ $details->bank_name }}</span>
+                  <span>ธนาคาร : {{ @$details->bank_name }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>สาขา : {{ $details->bank_branch }}</span>
+                  <span>สาขา : {{ @$details->bank_branch }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ชื่อบัญชี : {{ $details->bank_account }}</span>
+                  <span>ชื่อบัญชี : {{ @$details->bank_account }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>เลขบัญชี : {{ $details->bank_no }}</span>
+                  <span>เลขบัญชี : {{ @$details->bank_no }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ชนิดบัญชี : {{ $details->bank_type }}</span>
+                  <span>ชนิดบัญชี : {{ @$details->bank_type }}</span>
                 </div>
               </div>
               <hr>
@@ -257,31 +258,31 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
               <p class="f-w-600 mb-2">ที่อยู่สำหรับการจัดส่งเอกสาร / สินค้า</p>
               <div class="row f-14">
                 <div class="col-sm-6">
-                  <span>เลขที่ : {{ $details->house_no }}</span>
+                  <span>เลขที่ : {{ @$details->house_no }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>อาคาร : {{ $details->house_name }}</span>
+                  <span>อาคาร : {{ @$details->house_name }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>หมู่ : {{ $details->moo }}</span>
+                  <span>หมู่ : {{ @$details->moo }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ซอย : {{ $details->soi }}</span>
+                  <span>ซอย : {{ @$details->soi }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ถนน : {{ $details->road }}</span>
+                  <span>ถนน : {{ @$details->road }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>แขวง/ตำบล : {{ $details->district }}</span>
+                  <span>แขวง/ตำบล : {{ @$details->district }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>เขต/อำเภอ : {{ $details->amphure }}</span>
+                  <span>เขต/อำเภอ : {{ @$details->amphure }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>จังหวัด : {{ $details->province }}</span>
+                  <span>จังหวัด : {{ @$details->province }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>รหัสไปรษณีย์ : {{ $details->zipcode }}</span>
+                  <span>รหัสไปรษณีย์ : {{ @$details->zipcode }}</span>
                 </div>
               </div>
               <hr>
@@ -289,13 +290,13 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
               <p class="f-w-600 mb-2">การสืบทอดผลประโยชน์</p>
               <div class="row f-14">
                 <div class="col-sm-6">
-                  <span>ผู้สืบทอดผลประโยชน์ : {{ $details->benefit_name }}</span>
+                  <span>ผู้สืบทอดผลประโยชน์ : {{ @$details->benefit_name }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>เลขบัตรปชช : {{ $details->benefit_id_card }}</span>
+                  <span>เลขบัตรปชช : {{ @$details->benefit_id_card }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ความสัมพันธ์ : {{ $details->benefit_relation }}</span>
+                  <span>ความสัมพันธ์ : {{ @$details->benefit_relation }}</span>
                 </div>
               </div>
             </div>
