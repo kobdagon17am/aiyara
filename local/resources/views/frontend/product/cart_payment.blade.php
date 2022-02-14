@@ -113,7 +113,7 @@
                                                                      </span>
                                                                  </div>
                                                                  <span
-                                                                     style="font-size: 12px">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span>
+                                                                     style="font-size: 12px" class="text-danger">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span>
                                                              </div>
 
                                                          </div>

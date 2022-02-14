@@ -108,7 +108,7 @@
 
 
                      <div class="col-sm-4">
-                         <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">*</font></label>
+                         <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">* กรณีไม่มีชื่อให้ใส่(-)</font></label>
                          <input type="text" class="form-control" placeholder="ชื่อที่ใช้ในธุรกิจ" name="name_business"
                              value="{{ old('name_business') }}" required="">
                      </div>

@@ -153,10 +153,10 @@
                       @if($data['lv1']->id == Auth::guard('c_user')->user()->id)
 
                       <a href="#" onclick="modal_tree('{{ $data['lv1']->user_name }})'">
-                        <b class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
+                        <b class="text-primary">@if($data['lv1']->business_name and $data['lv1']->business_name  != '-'){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
                         @else
                         <a href="#" onclick="modal_tree('{{ $data['lv1']->user_name }}')">
-                          <b  class="text-primary">@if($data['lv1']->business_name){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
+                          <b  class="text-primary">@if($data['lv1']->business_name and $data['lv1']->business_name  != '-'){{ $data['lv1']->business_name }}@else {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name }} @endif</b></a>
 
                           @endif
 
@@ -190,7 +190,7 @@
                           ?>
                           @if($data_lv2)
                           <li data-jstree='{"opened":true}'>
-                           <a href="#" onclick="modal_tree('{{ $data_lv2->user_name }}')"><b> @if($data_lv2->business_name){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
+                           <a href="#" onclick="modal_tree('{{ $data_lv2->user_name }}')"><b> @if($data_lv2->business_name and $data_lv2->business_name  != '-'){{ $data_lv2->business_name }}@else {{$data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }} @endif</b></a>
                            <ul>
                             @for($j=1;$j<=3;$j++)
                             <?php
@@ -214,7 +214,7 @@
 
                             ?>
                             @if($data_lv3)
-                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_tree('{{ $data_lv3->user_name }}')">@if($data_lv3->business_name){{ $data_lv3->business_name }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
+                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_tree('{{ $data_lv3->user_name }}')">@if($data_lv3->business_name and $data_lv3->business_name  != '-'){{ $data_lv3->business_name and $data_lv3->business_name  != '-' }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
                             @else
                             <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_add('{{ $data_lv2->user_name }}','{{ $line_lv3 }}')"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
                             @endif
@@ -264,8 +264,10 @@
                                     <div class="member-details">
                                         <h6 class="f-w-600 m-t-15">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
                                         <p class="text-muted">
-                                          @if ($data['lv1']->business_name)
+                                          @if ($data['lv1']->business_name and $data['lv1']->business_name  != '-')
                                               {{ $data['lv1']->business_name }}
+                                          @else
+                                              {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }}
                                           @endif
                                         </p>
                                     </div>
@@ -311,8 +313,8 @@
                                           <div class="member-details">
                                             <h6 class="f-w-600 m-t-15"> {{ $line_lv2 }} : {{ $data_lv2->user_name }}</h6>
                                             <p class="text-muted">
-                                              @if($data_lv2->business_name)
-                                                {{ $data_lv2->business_name }}
+                                              @if($data_lv2->business_name and $data_lv2->business_name  != '-')
+                                                {{ $data_lv2->business_name  }}
                                               @else
                                                 {{ $data_lv2->prefix_name.' '.$data_lv2->first_name.' '.$data_lv2->last_name }}
                                               @endif
@@ -330,7 +332,7 @@
                                           <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{ $line_lv2 }}</h6>
                                           <p class="text-muted">
                                             ภายใต้ :
-                                            @if($data['lv1']->business_name)
+                                            @if($data['lv1']->business_name and $data['lv1']->business_name  != '-')
                                               {{ $data['lv1']->business_name }}
                                             @else
                                               {{$data['lv1']->prefix_name.' '.$data['lv1']->first_name.' '.$data['lv1']->last_name }}
@@ -375,7 +377,7 @@
                                                 <div class="member-details">
                                                   <h6 class="f-w-600 m-t-15">{{ $line_lv3 }} : {{ $data_lv3->user_name }}</h6>
                                                   <p class="text-muted">
-                                                    @if($data_lv3->business_name)
+                                                    @if($data_lv3->business_name and $data_lv3->business_name  != '-')
                                                       {{ $data_lv3->business_name }}
                                                     @else
                                                       {{ $data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }}

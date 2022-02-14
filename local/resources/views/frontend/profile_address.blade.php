@@ -7,9 +7,9 @@
  @endsection
  @section('conten')
  <div class="card">
- 	<div class="card-header">
- 		<h4>แก้ไขที่อยู่การจัดส่ง</h4>
- 	</div>
+ 	{{-- <div class="card-header">
+ 		<h5>ที่อยู่การจัดส่ง</h5>
+ 	</div> --}}
  	<div class="card-block">
  		<form action="{{route('edit_address')}}" method="POST" autocomplete="off">
  			@csrf
@@ -18,6 +18,37 @@
  					<h4 class="sub-title" >ที่อยู่ที่สะดวกสำหรับการติดต่อและจัดส่งผลิตภัณฑ์ถึงบ้าน (โปรดแจ้งให้บริษัทฯทราบทันทีหากมีการเปลี่ยนแปลงที่อยู่) </h4>
  				</div>
  			</div> --}}
+       <h4 class="sub-title" >ข้อมูลส่วนตัว</h4>
+
+       <div class="form-group row">
+        <div class="col-sm-3">
+          <label>ชื่อ </label>
+          <input type="text" class="form-control form-control-bold"  value="{{@$customer->first_name}}" disabled>
+        </div>
+
+        <div class="col-sm-3">
+          <label>นามสกุล </label>
+          <input type="text" class="form-control form-control-bold"  value="{{@$customer->last_name}}" disabled>
+        </div>
+
+        <div class="col-sm-3">
+          <label>นามแฝง </label>
+          <input type="text" class="form-control form-control-bold"  name="business_name" value="{{@$customer->business_name}}" >
+        </div>
+
+        <div class="col-sm-3">
+					<label>เบอร์โทรศัพท์</label>
+					<input type="text" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}">
+				</div>
+
+				<div class="col-sm-3">
+					<label>อีเมลล์</label>
+					<input type="text" class="form-control" autocomplete="off" placeholder="อีเมลล์" id="email" name="email" value="{{ @$customer->email }}">
+				</div>
+ 			</div>
+
+       <h4 class="sub-title" >ที่อยู่การจัดส่ง</h4>
+
 
  			<div class="form-group row">
  				<div class="col-sm-2">
@@ -93,22 +124,25 @@
 
 
  				<div class="col-sm-3">
- 					<label>รหัสไปษณีย์</label>
+ 					<label>รหัสไปรษณีย์</label>
  					<input type="text" class="form-control" autocomplete="off" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ @$customer->zipcode }}">
  				</div>
- 			</div>
+
+      </div>
 
 
 
- 			<div class="form-group row text-right">
- 				<label class="col-sm-2"></label>
- 				<div class="col-sm-10">
+
+ 			<div class="form-group row text-center mt-2">
+
+ 				<div class="col-sm-12">
           @if($canAccess)
- 					<button type="button" class="btn btn-primary m-b-0" data-toggle="modal" data-target="#default-Modal">บันทึก</button>
+ 					<button type="button" class="btn btn-success m-b-0" data-toggle="modal" data-target="#default-Modal">แก้ไขข้อมูล</button>
           @endif
  				</div>
 
  			</div>
+
  			<div class="modal fade" id="default-Modal" tabindex="-1" role="dialog">
  				<div class="modal-dialog" role="document">
  					<div class="modal-content">

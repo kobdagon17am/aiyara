@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>Register AIYARA</title>
 
@@ -179,7 +178,7 @@
 
 
                                                     <div class="col-sm-4">
-                                                        <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">*</font>
+                                                        <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">* กรณีไม่มีชื่อให้ใส่(-)</font>
                                                             </label>
                                                         <input type="text" class="form-control"
                                                             placeholder="ชื่อที่ใช้ในธุรกิจ" name="name_business"
@@ -668,7 +667,7 @@
     <!-- Custom js -->
     <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
-    
+
     <script type="text/javascript">
         // function copy_address() {
         //     var ckeck_address = document.getElementById("copy_card_address");
@@ -974,7 +973,7 @@
         //     }
         // }
 
-        
+
     </script>
 
     <script>

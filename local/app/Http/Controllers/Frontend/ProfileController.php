@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\DbCustomersDetail;
+use App\Models\Frontend\Customer;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,9 +32,7 @@ class ProfileController extends Controller
         $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package(Auth::guard('c_user')->user()->user_name);
       }
         $data = DB::table('customers')
-            ->select('customers.user_name','customers.business_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name', 'customers.user_name', 'customers.created_at', 'customers.date_mt_first', 'customers.pv_mt_active',
-                'customers.pv_mt', 'customers.pv_mt', 'customers.bl_a', 'customers.bl_b', 'customers.bl_c', 'customers.pv_a', 'customers.pv_b', 'customers.pv_c',
-                'customers.pv', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
+            ->select('customers.*', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
                 'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name', 'customers.team_active_a', 'customers.team_active_b', 'customers.team_active_c')
             ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
             ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
@@ -41,9 +40,15 @@ class ProfileController extends Controller
             ->where('customers.user_name', '=', Auth::guard('c_user')->user()->user_name)
             ->first();
 
+        $details = DB::table('customers_detail')
+            ->select('customers_detail.*', 'dataset_districts.name_th as district', 'dataset_amphures.name_th as amphure', 'dataset_provinces.name_th as province')
+            ->leftJoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
+            ->leftJoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
+            ->leftJoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
+            ->where('customers_detail.customer_id', Auth::guard('c_user')->id())
+            ->first();
 
-
-        return view('frontend/profile', compact('data'));
+        return view('frontend/profile', compact('data', 'details'));
     }
 
     // public function edit_profile()
@@ -54,13 +59,18 @@ class ProfileController extends Controller
 
     public function profile_address()
     {
-        $customer = DB::table('customers_detail')
-            ->select('customers_detail.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id', 'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name')
 
+
+
+
+        $customer = DB::table('customers_detail')
+            ->select('customers_detail.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id',
+            'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name', 'customers.first_name','customers.last_name','customers.business_name')
             ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
-            ->where('customer_id', '=', Auth::guard('c_user')->user()->id)
+            ->leftJoin('customers', 'customers.id', '=', 'customers_detail.customer_id')
+            ->where('customers_detail.customer_id', '=', Auth::guard('c_user')->user()->id)
             ->first();
 
         $provinces = DB::table('dataset_provinces')
@@ -71,7 +81,6 @@ class ProfileController extends Controller
 
     public function edit_address(Request $request)
     {
-
         $checkpass = DB::table('customers')
             ->where('id', '=', Auth::guard('c_user')->user()->id)
             ->where('password', '=', md5($request->password))
@@ -86,12 +95,21 @@ class ProfileController extends Controller
                 'road' => trim($request->road),
                 'province_id_fk' => trim($request->province),
                 'zipcode' => trim($request->zipcode),
+                'tel_mobile' => trim($request->tel_mobile)
             );
 
             try {
                 DbCustomersDetail::updateOrCreate([
                     'customer_id' => Auth::guard('c_user')->user()->id,
                 ], $data);
+
+                if ($request->has('email')) {
+                    Customer::find(Auth::guard('c_user')->user()->id)->update(['email' => $request->email]);
+                }
+
+                if ($request->has('business_name')) {
+                  Customer::find(Auth::guard('c_user')->user()->id)->update(['business_name' => $request->business_name]);
+              }
 
                 //  $update = DB::table('customers_detail')
                 //  ->where('customer_id','=',Auth::guard('c_user')->user()->id)
