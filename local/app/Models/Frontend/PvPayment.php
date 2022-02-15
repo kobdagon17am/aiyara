@@ -39,12 +39,15 @@ class PvPayment extends Model
 
         $pv = $order_data->pv_total;
         if ($order_data->status_payment_sent_other == 1) {
-            $customer_id = $order_data->address_sent_id_fk;
+
+            $customer_id = $order_data->customers_sent_id_fk;
         } else {
             $customer_id = $order_data->customers_id_fk;
+
         }
 
         $customer_update = Customer::find($customer_id);
+
 
         $type_id = $order_data->purchase_type_id_fk;
         $business_location_id = $order_data->business_location_id_fk;
@@ -315,6 +318,7 @@ class PvPayment extends Model
                     // dd($customer_update->user_name);
                     // dd($pv);
                     if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+
                       $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
                       if($resule['status'] == 'success'){
                         $order_update->status_run_pv = 'success';
