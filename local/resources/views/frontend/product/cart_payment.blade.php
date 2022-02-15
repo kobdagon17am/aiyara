@@ -80,7 +80,7 @@
                                                      <input type="radio" name="sent_type_to_customer"
                                                          value="sent_type_customer" id="sent_type_customer"
                                                          onclick="sent_type('customer')" checked="checked">
-                                                     <i class="helper"></i><b>จัดส่งให้ตัวเอง</b>
+                                                     <i class="helper"></i><b>ซื้อให้ตัวเอง</b>
                                                  </label>
                                              </div>
                                              <div class="radio radio-inline">
@@ -88,7 +88,7 @@
                                                      <input type="radio" name="sent_type_to_customer"
                                                          value="sent_type_other" id="sent_type_other"
                                                          onclick="sent_type('other')">
-                                                     <i class="helper"></i><b>จัดส่งให้ลูกทีม</b>
+                                                     <i class="helper"></i><b>ซื้อให้ลูกทีม</b>
                                                  </label>
                                              </div>
                                          </div>
@@ -1170,13 +1170,17 @@
 
     if(sent_type_other){
         address_sent_id_fk = document.getElementById("address_sent_id_fk").value;
-        if(address_sent_id_fk == ''){
+
+
+        if(address_sent_id_fk == '' || address_sent_id_fk === 'undefined'){
+
           Swal.fire({
                     icon: 'error',
                     text: 'ไม่มีรหัสของลูกทีมที่ท่านเลือก กรุณาเช็คข้อมูลก่อนทำการชำระเงิน',
                   })
             return false;
         }else{
+
           var username = $('#username').val();
              $.ajax({
                      url: '{{ route('check_customer_id') }}',

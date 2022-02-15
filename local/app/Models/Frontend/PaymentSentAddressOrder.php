@@ -14,12 +14,13 @@ class PaymentSentAddressOrder extends Model
     public static function update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv,$quantity)
     {
 
+
         try {
             DB::BeginTransaction();
             $insert_db_orders = new Db_Orders();
             $insert_db_orders->quantity = $quantity;
             $insert_db_orders->customers_id_fk = $customer_id;
-            $insert_db_orders->address_sent_id_fk = $rs->address_sent_id_fk;
+            $insert_db_orders->customers_sent_id_fk = $rs->address_sent_id_fk;
             $insert_db_orders->business_location_id_fk = $business_location_id;
             $insert_db_orders->delivery_location_frontend = $rs->receive;
             $insert_db_orders->delivery_province_id = $rs->province_id_fk;
@@ -204,7 +205,7 @@ class PaymentSentAddressOrder extends Model
 
 
             if ($rs->receive == 'sent_address_other') {
-                    
+
                 // วุฒิเพิ่มมา บันทึกที่อยู่ลงระบุเอง
                 DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
                 VALUES
@@ -222,7 +223,7 @@ class PaymentSentAddressOrder extends Model
                 )
               ");
 
-            } 
+            }
 
 
             if ($insert_db_orders->delivery_location == 1) {
@@ -350,8 +351,8 @@ class PaymentSentAddressOrder extends Model
                                         customers_addr_sent.id='" . ($r_addr[0]->address_sent_id_fk) . "' ");
                                 }
 
-            
-                       
+
+
 
             DB::commit();
             $resule = ['status' => 'success', 'message' => 'Order Update Success', 'id' => $insert_db_orders->id];

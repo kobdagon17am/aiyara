@@ -212,7 +212,7 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) >= '{$request->s_date}' and date(db_orders.created_at) <= '{$request->e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
-            ->whereRaw("(db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.address_sent_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.member_id_aicash = ".Auth::guard('c_user')->user()->id." )")
+            ->whereRaw("(db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.customers_sent_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.member_id_aicash = ".Auth::guard('c_user')->user()->id." )")
             ->groupBy('db_orders.code_order')
             ->orderby('db_orders.updated_at', 'DESC')
             ->get();

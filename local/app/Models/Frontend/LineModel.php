@@ -415,7 +415,7 @@ public static function check_type_introduce($introduce_id,$under_line_id){//аЄДа
 public static function check_line_backend($username_buy,$username_check){
 
 	$data_user =  DB::table('customers')
-	->select('upline_id','user_name','first_name','last_name','ai_cash','pv_mt_active','pv_tv_active','pv','dataset_package.dt_package','dataset_qualification.business_qualifications as qualification_name','business_name')
+	->select('customers.id','upline_id','user_name','first_name','last_name','ai_cash','pv_mt_active','pv_tv_active','pv','dataset_package.dt_package','dataset_qualification.business_qualifications as qualification_name','business_name')
   ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
   ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 	->where('user_name','=',$username_check)

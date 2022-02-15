@@ -359,6 +359,7 @@ class AipocketController extends Controller
     }
 
     //$data = ['status'=>'fail'];
+
     return $data;
   }
 

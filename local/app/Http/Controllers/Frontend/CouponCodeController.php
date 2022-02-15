@@ -19,7 +19,6 @@ class CouponCodeController extends Controller
 
    public static function coupon(Request $request){
 
-
     $cartCollection = Cart::session($request->type)->getContent();
     $data = $cartCollection->toArray();
 
@@ -50,6 +49,7 @@ class CouponCodeController extends Controller
        ->first();
 
 
+
        if($coupon){
           if($coupon->pro_status == 2){
             $resule = ['status'=>'fail','message'=>'Coupon Code นี้ถูกใช้งานเเล้ว'];
@@ -65,6 +65,7 @@ class CouponCodeController extends Controller
                $category_id = 9;//coupon type
                $html = Product::product_list_coupon($coupon->promotion_id_fk,$request->type,$category_id,$request->coupon_code);
 
+               dd($html);
                if($html['status'] == 'fail'){
                 $resule = ['status'=>'fail','message'=>$html['message']];
 

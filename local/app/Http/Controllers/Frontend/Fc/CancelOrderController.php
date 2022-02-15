@@ -204,7 +204,7 @@ class CancelOrderController extends Controller
         if ($pv_total > 0) {
 
           if ($order_data->status_payment_sent_other == 1) {
-            $customer_id = $order_data->address_sent_id_fk;
+            $customer_id = $order_data->customers_sent_id_fk;
           } else {
             $customer_id = $order_data->customers_id_fk;
           }
