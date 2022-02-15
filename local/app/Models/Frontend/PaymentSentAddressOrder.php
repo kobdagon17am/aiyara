@@ -202,6 +202,29 @@ class PaymentSentAddressOrder extends Model
 
             $insert_db_orders->save();
 
+
+            if ($rs->receive == 'sent_address_other') {
+                    
+                // วุฒิเพิ่มมา บันทึกที่อยู่ลงระบุเอง
+                DB::insert(" INSERT INTO customers_addr_frontstore (frontstore_id_fk, customer_id, recipient_name, addr_no, province_id_fk , amphur_code, tambon_code, zip_code, tel,tel_home, created_at)
+                VALUES
+                ('".@$insert_db_orders->id."',
+                 '".@$insert_db_orders->customers_id_fk."',
+                 '".@$rs->other_name."',
+                  '".@$rs->other_house_no."',
+                   '".@$rs->other_province."',
+                   '".@$rs->other_amphures."',
+                   '".@$rs->other_district."',
+                   '".@$rs->other_zipcode."',
+                   '".@$rs->other_tel_mobile."',
+               '".@$rs->other_tel_mobile."',
+                   now()
+                )
+              ");
+
+            } 
+
+
             if ($insert_db_orders->delivery_location == 1) {
                 DB::select(" DELETE FROM customers_addr_sent WHERE receipt_no='" . $insert_db_orders->code_order . "' ");
                 $addr = DB::select("SELECT
@@ -326,6 +349,9 @@ class PaymentSentAddressOrder extends Model
                                         WHERE
                                         customers_addr_sent.id='" . ($r_addr[0]->address_sent_id_fk) . "' ");
                                 }
+
+            
+                       
 
             DB::commit();
             $resule = ['status' => 'success', 'message' => 'Order Update Success', 'id' => $insert_db_orders->id];
