@@ -3,7 +3,7 @@
 @section('title') Aiyara Planet @endsection
 
 @section('css')
-
+<link href="{{ asset('asset/lity/lity.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -236,10 +236,10 @@
 
                                   <span width="100" class="span_file_slip" >
                                     @IF(!empty(@$sRow->file_slip))
-                                      <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;" > 
+                                      <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;"  data-lity > 
                                <!--        <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> -->
                                     @ELSE
-                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;" > 
+                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;"  data-lity > 
                                     @ENDIF
                                   </span>
                           </div>
@@ -381,7 +381,7 @@
 @endsection
 
 @section('script')
-
+<script src="{{ asset('asset/lity/lity.min.js') }}"></script>
 <script>
 
   $(document).ready(function() {

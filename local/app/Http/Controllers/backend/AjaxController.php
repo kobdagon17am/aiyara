@@ -4879,7 +4879,7 @@ class AjaxController extends Controller
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
                 ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                // ->take(15)
+                ->take(15)
                 ->orderBy('user_name', 'asc')
                 ->get();
             }

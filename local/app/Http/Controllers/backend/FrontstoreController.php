@@ -1081,6 +1081,16 @@ class FrontstoreController extends Controller
     // db_delivery
     // dd($request->all());
 
+    if (isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip == '1') {
+    if(isset($request->note_bill_id)){
+      foreach($request->note_bill_id as $key_data => $n_data){
+        DB::table('payment_slip')->where('id',$n_data)->update([
+          'note' => $request->note_bill[$key_data],
+        ]);
+      }
+    }
+  }
+
     DB::beginTransaction();
     try {
       // dd($request->all());
@@ -1216,7 +1226,6 @@ class FrontstoreController extends Controller
           $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order, $sRow->gift_voucher_price);
           DB::commit();
         }
-
 
         $sRow->save();
 
@@ -1601,7 +1610,7 @@ class FrontstoreController extends Controller
 
         DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
 
-        if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 ) {
+        if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 || request('pay_type_id_fk') == 3 || request('pay_type_id_fk') == 6 || request('pay_type_id_fk') == 9 || request('pay_type_id_fk') == 14) {
 
           DB::select(" UPDATE `db_orders` SET `approve_status`=1,`order_status_id_fk`=2 WHERE (`id`=" . $sRow->id . ") ");
         } else {

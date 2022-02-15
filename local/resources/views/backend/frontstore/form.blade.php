@@ -2038,8 +2038,10 @@
 
                                                                                 <input {{ @$disAfterSave }} type="text"
                                                                                     class="form-control ch_Disabled "
-                                                                                    name="note" placeholder=""
-                                                                                    value="หมายเหตุ : {{ @$slip->note }}">
+                                                                                    name="note_bill[]" placeholder=""
+                                                                                    value="{{ @$slip->note }}">
+
+                                                                                    <input type="hidden" name="note_bill_id[]" value="{{$slip->id}}">
 
                                                                             </span>
 
