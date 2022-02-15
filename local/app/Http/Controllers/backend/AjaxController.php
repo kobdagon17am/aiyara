@@ -4874,11 +4874,12 @@ class AjaxController extends Controller
                 $customers = DB::table('customers')->take(15)->get();
             }else{
                 $customers = DB::table('customers')
+                ->select('id','user_name','first_name','last_name')
                 // ->whereNotNull('regis_date_doc')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
                 ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->take(15)
+                // ->take(15)
                 ->orderBy('user_name', 'asc')
                 ->get();
             }
