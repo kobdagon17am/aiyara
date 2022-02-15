@@ -42,7 +42,7 @@
                             <option value="">Select</option>
                               @if(@$sPromotions)
                                 @foreach(@$sPromotions AS $r)
-                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->promotion_id_fk)?'selected':'' }} >{{$r->name_thai}}</option>
+                                  <option value="{{$r->id}}" {{ (@$r->id==@$sRow->promotion_id_fk)?'selected':'' }} >{{$r->pcode}} : {{$r->name_thai}}</option>
                                 @endforeach
                               @endif
                           </select>
