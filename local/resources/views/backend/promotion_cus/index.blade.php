@@ -133,7 +133,7 @@ $(function() {
         },
         columns: [
             {data: 'id', name: 'db_promotion_code.id', title :'ID', className: 'text-center ', orderable: true},
-            // {data: 'promotion_code', name: 'db_promotion_code.promotion_code', title :'<center>Pro Code</center>', className: 'text-left'},
+            {data: 'pcode', name: 'promotions.pcode', title :'<center>Pro Code</center>', className: 'text-center'},
             {data: 'promotion_name', name: 'db_promotion_code.promotion_id_fk', title :'<center>ชื่อคูปอง</center>', className: 'text-left'},
             {data: 'pro_sdate', name: 'db_promotion_code.pro_sdate', title :'<center>วันเริ่มต้นโปร</center>', className: 'text-center'},
             {data: 'pro_edate', name: 'db_promotion_code.pro_edate', title :'<center>วันสิ้นสุดโปร</center>', className: 'text-center'},
