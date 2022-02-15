@@ -179,7 +179,7 @@ class KsherNotifyController extends Controller
           if($getOrderData->purchase_type_id_fk == '5'){
             $pay_type_id_fk = 18;
           }else{
-            $pay_type_id_fk = 15;
+            $pay_type_id_fk = 16;
           }
           $payInfo = [
               'pay_type_id_fk' =>  $pay_type_id_fk,
