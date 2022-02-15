@@ -1601,7 +1601,7 @@ class FrontstoreController extends Controller
 
         DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
 
-        if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 || request('pay_type_id_fk') == 3 || request('pay_type_id_fk') == 6 || request('pay_type_id_fk') == 9 || request('pay_type_id_fk') == 14) {
+        if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 ) {
 
           DB::select(" UPDATE `db_orders` SET `approve_status`=1,`order_status_id_fk`=2 WHERE (`id`=" . $sRow->id . ") ");
         } else {
