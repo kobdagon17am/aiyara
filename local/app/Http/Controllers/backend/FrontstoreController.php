@@ -3833,7 +3833,7 @@ ORDER BY created_at DESC
           $sD = DB::select(" select * from ck_users_admin where id=" . $row->action_user . " ");
           return @$sD[0]->name;
         } else {
-          return '';
+          return 'V3';
         }
       })
       ->addColumn('code_order_select', function ($row) {
