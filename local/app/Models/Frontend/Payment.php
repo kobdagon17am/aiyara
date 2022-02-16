@@ -79,7 +79,14 @@ class Payment extends Model
         ->update(['pay_type_id_fk'=>'3','aicash_price'=>$rs->total_price,'member_id_aicash'=>$customer_id]);
 
         $resulePv = PvPayment::PvPayment_type_confirme($rs->id,$customer_id,'2','customer');
-        return $resulePv;
+        if ($resulePv['status'] == 'success') {
+          DB::commit();
+          return $resulePv;
+
+        } else {
+          DB::rollback();
+          return $resulePv;
+      }
 
     }
 
