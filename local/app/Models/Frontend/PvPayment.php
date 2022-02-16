@@ -650,6 +650,9 @@ class PvPayment extends Model
                     $customer_update_ai_cash->save();
                     }
 
+                    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($order_id);
+                    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($order_id);
+
                     $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($customer_update->user_name);
                     DB::commit();
                     //DB::rollback();
