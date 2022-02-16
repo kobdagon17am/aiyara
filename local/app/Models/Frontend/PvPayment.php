@@ -752,10 +752,8 @@ class PvPayment extends Model
             $customer_update->save();
             $order_update->save();
 
-            if($order_update->distribution_channel_id_fk == 3){
-              \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($order_id);
-              \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($order_id);
-            }
+            \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($order_id);
+            \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($order_id);
 
             DB::commit();
 
