@@ -220,7 +220,7 @@ class Promotion_cusController extends Controller
 
     public function DatatableChoose(Request $req){
 
-      $sTable = \App\Models\Backend\PromotionCus::where('customer_id_fk','=','0')->search()->orderBy('id', 'asc');
+     $sTable = \App\Models\Backend\PromotionCus::where('customer_id_fk','=','0')->search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->make(true);

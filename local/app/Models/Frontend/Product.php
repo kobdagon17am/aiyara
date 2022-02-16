@@ -396,10 +396,13 @@ class Product extends Model
             ->where('promotions.orders_type_id','LIKE','%'.$type.'%')
             ->where('promotions.business_location', '=', $business_location_id)
             ->where('promotions_cost.business_location_id', '=', $business_location_id)
-            ->where('promotions.promotion_coupon_status', '=', 1)
+            // ->where('promotions.promotion_coupon_status', '=', 0)// 0 ทั่วไป 1 ผู้มีคูปองเท่านั้น
+            ->where('promotions.status', '=', 0)// 0 ใช้ได้
             ->where('promotions.id', '=', $promotion_id)
             ->orderby('id', 'DESC')
             ->first();
+
+            //dd($promotions);
 
             if($promotions){
               $html = ProductList::product_list_html($promotions->id, $type, $promotions->img_url, $promotions->promotion_img, $promotions->name_thai,

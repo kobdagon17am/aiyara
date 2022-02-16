@@ -65,7 +65,7 @@ class CouponCodeController extends Controller
                $category_id = 9;//coupon type
                $html = Product::product_list_coupon($coupon->promotion_id_fk,$request->type,$category_id,$request->coupon_code);
 
-               dd($html);
+
                if($html['status'] == 'fail'){
                 $resule = ['status'=>'fail','message'=>$html['message']];
 
