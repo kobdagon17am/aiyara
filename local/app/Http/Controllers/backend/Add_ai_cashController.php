@@ -224,8 +224,8 @@ class Add_ai_cashController extends Controller
       }
 
       $sRow->type_create = 'admin';
-
-      // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
+// approved
+      // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status 
       if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11) {
         $sRow->approve_status = 1;
         $sRow->order_status_id_fk = 1;
@@ -304,7 +304,10 @@ class Add_ai_cashController extends Controller
         $sRow->file_slip = $image_path . $name;
       }
 
-      $sRow->created_at = date('Y-m-d H:i:s');
+      if($sRow->approve_status==0){
+        $sRow->action_user    = @\Auth::user()->id;
+        $sRow->created_at = date('Y-m-d H:i:s');
+      }
       $sRow->save();
 
       DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");

@@ -51,7 +51,7 @@ class AicashConfirmeController extends Controller
               ->update(  [
                 'aicash_old' =>$customer_data->ai_cash,
                 'aicash_banlance' =>$banlance,
-                'action_user' => $customer_or_admin_id,
+                // 'action_user' => $customer_or_admin_id,
                 'date_setting_code' => date('ym'),
                 'approve_status' => 2,
                 'order_type_id_fk' => 7,
