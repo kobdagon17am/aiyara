@@ -84,6 +84,7 @@ class AdminController extends Controller
               $sRow->permission    = request('permission')?request('permission'):'0';
               $sRow->role_group_id_fk    = request('role_group_id_fk');
               $sRow->isActive    = request('active')?request('active'):'N';
+              $sRow->can_edit_profile = request('can_edit_profile') ?: 0;
 
         }else{
 
