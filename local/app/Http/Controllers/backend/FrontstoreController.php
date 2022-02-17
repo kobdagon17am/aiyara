@@ -1663,7 +1663,7 @@ class FrontstoreController extends Controller
 
     // วุฒิปรับ approve_status > 1
     // if($sRow->check_press_save==2 && $sRow->approve_status>0 && $sRow->id!='' && @$sRow->delivery_location>0 ){
-    if ($sRow->check_press_save == 2 && $sRow->approve_status > 1 && $sRow->id != '' && @$sRow->delivery_location > 0 || @$sRow->distribution_channel_id_fk == 3) {
+    if ($sRow->check_press_save == 2 && $sRow->approve_status > 1 && $sRow->id != '' && @$sRow->delivery_location > 0 || @$sRow->distribution_channel_id_fk == 3 && @$sRow->delivery_location > 0) {
 
       // วุฒิเพิ่มมาเช็คว่ามาชาร์ไหม จะได้รู้ว่าต้องบวกค่าธรรมเนียมไหม
       $check_order = DB::table('db_orders')->where('id',$sRow->id)->first();
