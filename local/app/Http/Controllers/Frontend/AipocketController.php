@@ -377,6 +377,7 @@ class AipocketController extends Controller
 
         //dd($resule);
         if ($resule['status'] == 'success') {
+           $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($to_customer_user);
 
           return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
         } else {
@@ -386,6 +387,7 @@ class AipocketController extends Controller
         $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
         //dd($resule);
         if ($resule['status'] == 'success') {
+          $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($to_customer_user);
           return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
         } else {
           return redirect('ai-stockist')->withError('Sent Ai-Stockist Fail');
@@ -394,6 +396,7 @@ class AipocketController extends Controller
         $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
         //dd($resule);
         if ($resule['status'] == 'success') {
+          $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($to_customer_user);
           return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
         } else {
           return redirect('ai-stockist')->withError('Sent Ai-Stockist Fail');
