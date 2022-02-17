@@ -172,6 +172,16 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                  <label class="col-md-4 col-form-label">แก้ไขโปรไฟล์</label>
+                  <div class="col-md-8 mt-2">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="canEditProfile" name="can_edit_profile" value="1" {{ (isset($sRow) && $sRow->can_edit_profile)?'checked':'' }}  <?=$dis?> >
+                        <label class="custom-control-label" for="canEditProfile"></label>
+                    </div>
+                  </div>
+              </div>
+
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ route('backend.admin.index') }}">

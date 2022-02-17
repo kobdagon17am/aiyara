@@ -316,7 +316,18 @@ class Member_pvController extends Controller
         }
       })
       ->addColumn('edit_user', function ($user) {
-        return route('backend.member_pv.edit', $user->id);
+
+        $routeEdit = route('backend.member_pv.edit', $user->id);
+
+        if (auth()->user()->permission == 0 && !auth()->user()->can_edit_profile) {
+          return '';
+        }
+        
+        return "
+          <a class='btn btn-sm btn-warning' href='{$routeEdit}' target='_blank' class='btn btn-primary'>
+            <i class='bx bx-edit font-size-16 align-middle'></i>
+          </a>
+        ";
       })
       ->addColumn('aistockist_status', function ($row) {
           if($row->aistockist_status==1){
