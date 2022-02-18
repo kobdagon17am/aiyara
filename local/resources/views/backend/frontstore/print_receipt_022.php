@@ -714,7 +714,7 @@ if(!empty($db_orders[0]->action_user)){
                                       Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
-                                // print_r(@$addr);
+                                // print_r(@$addr[0]->recipient_name);
                                 @$address = @$addr[0]->recipient_name;
                                 @$address .= ' '.@$addr[0]->addr_no;
                                 @$address .= ",". @$addr[0]->tamname. " ";
@@ -737,6 +737,7 @@ if(!empty($db_orders[0]->action_user)){
                         }
 
                       }
+                      // dd( @$addr[0]);
    $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
@@ -760,7 +761,7 @@ if(!empty($db_orders[0]->action_user)){
         $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
         $action_user_name = @$action_user[0]->name;
     }else{
-        $action_user_name = "-";
+        $action_user_name = "V3";
     }
 
     $aistockist = @$db_orders[0]->user_name ? @$db_orders[0]->user_name : '-';

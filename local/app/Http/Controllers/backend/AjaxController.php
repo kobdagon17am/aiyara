@@ -4250,9 +4250,11 @@ class AjaxController extends Controller
           $sPermission = \Auth::user()->permission ;
           if($sPermission==1){
               $wh = "";
+              $wh_ai = "";
           }else{
               // $wh = " AND db_orders.action_user = ".(\Auth::user()->id)." AND branch_id_fk=".@\Auth::user()->branch_id_fk." ";
               $wh = " AND db_orders.action_user = '".(\Auth::user()->id)."' ";
+              $wh_ai = " AND db_add_ai_cash.action_user = '".(\Auth::user()->id)."' ";
           }
 
           // return($wh);
@@ -4266,8 +4268,17 @@ class AjaxController extends Controller
             AND code_order <> ''
             AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
 
-          // return $r0;
+            $r0_ai = DB::select(" SELECT * FROM `db_add_ai_cash`
+            WHERE date(updated_at)=CURDATE()
+            $wh_ai
+            AND approve_status in (2)
+            AND approve_status not in (0,1)
+            AND status_sent_money <> 1
+            AND code_order <> ''
+            AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.credit_price>0 or db_add_ai_cash.transfer_price>0)  ");
 
+          // return $r0;
+    
           if($r0){
 
             $arr_orders_id_fk = [];
@@ -4290,6 +4301,7 @@ class AjaxController extends Controller
                   $id = DB::getPdo()->lastInsertId();
 
                   DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
+                  $id = $id.'';
 
                   // return $id;
 
@@ -4299,6 +4311,41 @@ class AjaxController extends Controller
                   $id = DB::getPdo()->lastInsertId();
 
                   DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
+                  $id = $id.'';
+              }
+
+          }
+
+          if($r0_ai){
+
+            $arr_orders_id_fk = [];
+            foreach ($r0_ai as $key => $v) {
+                array_push($arr_orders_id_fk,$v->id);
+            }
+            $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
+            // return $arr_orders_id_fk;
+
+            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily_ai`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)."
+             ");
+
+            // return $r1;
+            if($r1){
+
+                  $time_sent = $r1[0]->time_sent + 1 ;
+
+                  $r2 = DB::select(" INSERT INTO db_sent_money_daily_ai(time_sent,sender_id,add_ai_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
+                  $id_ai = DB::getPdo()->lastInsertId();
+
+                  DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=1,sent_money_daily_id_fk=$id,sent_money_daily_id_fk_ai=$id_ai WHERE id in ($arr_orders_id_fk) ");
+
+                  // return $id;
+
+            }else{
+
+                  $r2 = DB::select(" INSERT INTO db_sent_money_daily_ai(time_sent,sender_id,add_ai_ids,created_at) values ('1',".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
+                  $id_ai = DB::getPdo()->lastInsertId();
+
+                  DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=1,sent_money_daily_id_fk=$id,sent_money_daily_id_fk_ai=$id_ai WHERE id in ($arr_orders_id_fk) ");
               }
 
           }
@@ -4313,12 +4360,22 @@ class AjaxController extends Controller
     {
 
       if($request->ajax()){
-
+// dd($request->id);
           $r1= DB::select(" SELECT * FROM `db_sent_money_daily`  WHERE id=".$request->id."  ");
           if($r1){
             DB::select(" UPDATE `db_orders` SET status_sent_money=0,sent_money_daily_id_fk=0 WHERE sent_money_daily_id_fk=".$request->id." ");
             DB::select(" UPDATE `db_sent_money_daily` SET `status_cancel`='1' WHERE (`id`='".$request->id."') ");
+
+            // wut add
+            $ai= DB::table('db_add_ai_cash')->where('sent_money_daily_id_fk',$request->id)->first();
+            if($ai){
+                DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=0,sent_money_daily_id_fk=0,sent_money_daily_id_fk_ai=0 WHERE sent_money_daily_id_fk=".$request->id." ");
+                DB::select(" UPDATE `db_sent_money_daily_ai` SET `status_cancel`='1' WHERE (`id`='".$ai->sent_money_daily_id_fk_ai."') ");
+            }
+           
           }
+
+        
 
       }
 

@@ -323,7 +323,6 @@ class Check_money_dailyController extends Controller
               $w05
           ");
 
-
       }
       // WHERE status_cancel=0
 
@@ -494,7 +493,7 @@ class Check_money_dailyController extends Controller
                 sum(db_orders.aicash_price) as aicash_price,
                 sum(db_orders.shipping_price) as shipping_price,
                 sum(db_orders.fee_amt) as fee_amt,
-                sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price+db_orders.shipping_price+db_orders.fee_amt) as total_price
+                sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
                 FROM
                 db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -514,9 +513,10 @@ class Check_money_dailyController extends Controller
                         <th class="text-right">Ai-cash</th>
                         <th class="text-right">เงินโอน</th>
                         <th class="text-right">เครดิต</th>
-                        <th class="text-right">ค่าธรรมเนียม</th>
-                        <th class="text-right">ค่าขนส่ง</th>
                         <th class="text-right">รวมทั้งสิ้น</th>
+                        <th class="text-right">(ค่าธรรมเนียม)</th>
+                        <th class="text-right">(ค่าขนส่ง)</th>
+                     
                       </tr>
                     </thead>
 
@@ -537,9 +537,10 @@ class Check_money_dailyController extends Controller
                                 <td class="text-right"> '.number_format($r->aicash_price,2).' </td>
                                 <td class="text-right"> '.number_format($r->transfer_price,2).' </td>
                                 <td class="text-right"> '.number_format($r->credit_price,2).' </td>
+                                <td class="text-right"> '.number_format(@$sum_total_price,2).' </td>
                                 <td class="text-right"> '.number_format($r->fee_amt,2).' </td>
                                 <td class="text-right"> '.number_format($r->shipping_price,2).' </td>
-                                <td class="text-right"> '.number_format(@$sum_total_price,2).' </td>
+                     
                                               </tr>';
 
                 }
@@ -566,7 +567,7 @@ class Check_money_dailyController extends Controller
 
                   $sDBFrontstoreSumCostActionUser = DB::select("
                       SELECT
-                      sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price+db_orders.shipping_price+db_orders.fee_amt) as total_price
+                      sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
                       FROM
                       db_orders
                       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -593,6 +594,46 @@ class Check_money_dailyController extends Controller
                                  </tr>';
 
                        }
+
+               //         $sDBFrontstoreUserAddAiCash = DB::select("
+               //         SELECT
+               //         db_add_ai_cash.action_user,ck_users_admin.`name`,
+               //         sum(db_add_ai_cash.aicash_amt) as sum,
+               //         count(*) as cnt,
+               //         db_add_ai_cash.created_at
+               //         FROM
+               //         db_add_ai_cash
+               //         Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
+               //         WHERE approve_status<>4
+               //         AND approve_status!='' AND approve_status!=0 AND approve_status!=5
+               //         $action_user_012
+               //         $startDate2
+               //         $endDate2
+               //         $invoice_code2
+               //         $purchase_type_id_fk_02
+               //         $customer_username_02
+               //         $customer_name_02
+               //         $action_user_022
+               //         $status_sent_money_02
+               //         $approve_status_02
+               //         $viewcondition_02
+         
+               //         GROUP BY action_user
+         
+               //   ");
+
+               //         $sum_ai = 0;
+               //         foreach(@$sDBFrontstoreSumCostActionUser AS $r){
+ 
+               //                 $sum_ai += $r->total_price;
+               //                 $pn .=   '            
+               //                    <tr>
+               //                   <td colspan="6">  </td>
+               //                   <td class="text-right" style="width:35%;color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </td>
+               //                   <td class="text-right" style="width:25%;color:black;font-size:16px;font-weight:bold;"> '.number_format($sum,2).' </td>
+               //                    </tr>';
+ 
+               //          }
                                 
                       $pn .=   '         
                         </tbody>
@@ -678,7 +719,7 @@ class Check_money_dailyController extends Controller
                       sum(db_orders.aicash_price) as aicash_price,
                       sum(db_orders.shipping_price) as shipping_price,
                       sum(db_orders.fee_amt) as fee_amt,
-                      sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price+db_orders.shipping_price+db_orders.fee_amt) as total_price
+                      sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
                       FROM
                       db_orders
                       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
