@@ -841,6 +841,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_money_daily', 'Check_money_dailyController');
     Route::post('check_money_daily/datatable', 'Check_money_dailyController@DatatableSentMoney')->name('check_money_daily.datatable');
+    Route::post('check_money_daily/datatable_ai', 'Check_money_dailyController@DatatableSentMoney_ai')->name('check_money_daily.datatable_ai');
     Route::post('check_money_daily02/datatable', 'Check_money_dailyController@DatatableTotal')->name('check_money_daily02.datatable');
 
 

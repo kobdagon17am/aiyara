@@ -66,6 +66,15 @@
                   @ENDIF
             </div>
 
+            <div class="myBorder">
+              <table id="data-table-0001_ai" class="table table-bordered dt-responsive" style="width: 100%;">
+                  </table>
+                  @IF($sRow->status_cancel==0)
+                  <center> รวมเงินทั้งสิ้น : <input type="text" name="sum_total_price_ai" id="sum_total_price_ai" style="text-align: center;" readonly=""></center>
+                  @ENDIF
+            </div>
+
+
         @IF($sRow->status_cancel==0 && $sRow->status_approve==0)
 
           <div class="myBorder">
@@ -75,6 +84,7 @@
               <form action="{{ route('backend.check_money_daily.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" name="id" value="{{@$sRow->id}}">
                 <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
+                   <input type="hidden" name="sum_total_price2_ai"  class="sum_total_price2_ai">
                 <input type="hidden" name="sum_total_price78" value="78">
               @else
               <form action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -82,6 +92,7 @@
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
                 <input name="sRowCheck_money_daily_id" type="hidden" value="{{@$sRowCheck_money_daily[0]->id}}">
                 <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
+                     <input type="hidden" name="sum_total_price2_ai"  class="sum_total_price2_ai">
                 <input type="text" name="sum_total_price85">
               @endif
                 {{ csrf_field() }}
@@ -155,6 +166,7 @@
                 <input name="sRowCheck_money_daily_id" type="hidden" value="{{@$sRowCheck_money_daily[0]->id}}">
                 <input name="approved" type="hidden" value="1">
                 <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
+                <input type="hidden" name="sum_total_price2_ai"  class="sum_total_price2_ai">
                 <input type="text" name="sum_total_price158">
                 {{ csrf_field() }}
 
@@ -535,6 +547,55 @@
         });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+        
+$.fn.dataTable.ext.errMode = 'throw';
+        var oTable0001;
+
+        var idsss = "{{$sRow->id}}"; //alert(id);
+
+        $(function() {
+            oTable0001 = $('#data-table-0001_ai').DataTable({
+             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                ordering: false,
+                "info":   false,
+                "paging": false,
+                destroy:true,
+
+                 ajax: {
+                            url: '{{ route('backend.check_money_daily.datatable_ai') }}',
+                            method: "POST",
+                            data:{ _token: '{{csrf_token()}}',
+                            id:idsss,
+                          },
+                        },
+
+                columns: [
+                    {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ </span> ', className: 'text-center'},
+                    {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+             
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
+
+                  $("#sum_total_price_ai").val(aData['sum_total_price']);
+
+                    let str = $("#sum_total_price_ai").val();
+                    let newStr = str.replace(',','');
+                    let v2 = parseFloat(newStr); 
+                    $(".sum_total_price2_ai").val(v2);
+  
+                }
+            });
+       
+        });
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
 /*
     var id = "{{@$sRow->id}}"; //alert(id);
 
@@ -675,9 +736,18 @@
                     let str = $("#sum_total_price").val();
                     let newStr = str.replace(',','');
                     let v2 = parseFloat(newStr); 
+
+                    let str_ai = $("#sum_total_price_ai").val();
+                      if (str_ai == undefined){
+                        str_ai = 0;
+                      }
+                      let newStr_ai = str_ai.replace(',','');
+                      let v2_ai = parseFloat(newStr_ai); 
+
+
                     // alert(v1+":"+v2);
-                    if(v1!=v2){
-                        alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง");
+                    if(v1!=v2+v2_ai){
+                        alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง ยอด "+(v2+v2_ai));
                         $(this).val("");
                           setTimeout(function(){
                                $("#total_money").focus();
@@ -724,9 +794,17 @@
             let str = $("#sum_total_price").val();
             let newStr = str.replace(',','');
             let v2 = parseFloat(newStr); 
+
+            let str_ai = $("#sum_total_price_ai").val();
+            if (str_ai == undefined){
+              str_ai = 0;
+            }
+            let newStr_ai = str_ai.replace(',','');
+            let v2_ai = parseFloat(newStr_ai); 
+
             // alert(v1+":"+v2);
-            if(v1!=v2){
-                alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง");
+            if(v1!=v2+v2_ai){
+                alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง ยอด "+(v2+v2_ai));
                 $(this).val("");
                 return false;
             }

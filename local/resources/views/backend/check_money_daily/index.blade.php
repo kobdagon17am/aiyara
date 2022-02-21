@@ -156,7 +156,12 @@
                     <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการส่งเงินรายวัน </span>
                     <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;">
                     </table>
+                    <br>
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash รายวัน  </span>
+                    <table id="data-table-0001_ai" class="table table-bordered dt-responsive" style="width: 100%;">
+                    </table>
                   </div>
+
           
                   <div class="myBorder">
                     <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย </span>
@@ -243,6 +248,45 @@
        
         });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+        // var txtSearch = $("input[name='txtSearch']").val();
+        $.fn.dataTable.ext.errMode = 'throw';
+        var oTable0001;
+        $(function() {
+            oTable0001 = $('#data-table-0001_ai').DataTable({
+             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                ordering: false,
+                "info":   false,
+                "paging": false,
+                destroy:true,
+                      ajax: {
+                          url: '{{ route('backend.check_money_daily.datatable_ai') }}',
+                          type: "POST",
+                          // data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
+                      },
+                columns: [
+                    {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ </span> ', className: 'text-center'},
+                    {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                   {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
+                  //  {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
+                  //       return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                  //   }},
+                ],
+                 rowCallback: function(nRow, aData, dataIndex){
+
+                }
+            });
+       
+        });
+// @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
 
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@

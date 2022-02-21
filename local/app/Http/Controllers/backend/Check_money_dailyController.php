@@ -158,6 +158,19 @@ class Check_money_dailyController extends Controller
 // `status_sent_money` int(1) DEFAULT '0' COMMENT '0= - (รอดำเนินการ) , 1=In process (cs กดปุ่มส่งเงินแล้ว)  , 2=Success (พ.เงิน กดรับเงินแล้ว)',
             DB::update(" UPDATE db_orders SET approve_status=9,status_sent_money=2 WHERE id in($sRow->orders_ids) ");
 
+            // wut ai cash
+            $ai = DB::table('db_add_ai_cash')->where('sent_money_daily_id_fk',request('id'))->first();
+            if($ai){
+               $sRow = DB::table('db_sent_money_daily_ai')->where('id',$ai->sent_money_daily_id_fk_ai)->update([
+                  'total_money' => request('total_money'),
+                  'status_approve' => 1,
+                  'approver' => \Auth::user()->id,
+                  'approve_date' => date('Y-m-d h:i:s'),
+               ]);
+               $sRow =  DB::table('db_sent_money_daily_ai')->where('id',$ai->sent_money_daily_id_fk_ai)->first();
+               DB::update(" UPDATE db_add_ai_cash SET approve_status=9,status_sent_money=2 WHERE id in($sRow->add_ai_ids) ");
+            }
+            
         }
 
         return redirect()->to(url("backend/check_money_daily"));
@@ -740,6 +753,429 @@ class Check_money_dailyController extends Controller
       ->escapeColumns('sum_total_price')    
       ->make(true);
     }
+
+    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    public function DatatableSentMoney_ai(Request $req){
+      
+      if(!empty($req->business_location_id_fk)){
+         $w01 = " HAVING business_location=".$req->business_location_id_fk ;
+      }else{
+         $w01 = "";
+      }
+      
+      if(!empty($req->branch_id_fk)){
+         $w02 = " AND branch=".$req->branch_id_fk ;
+      }else{
+         $w02 = "";
+      }
+
+      if(!empty($req->seller)){
+         $w03 = " AND db_sent_money_daily_ai.sender_id=".$req->seller ;
+      }else{
+         $w03 = "";
+      }
+
+      if(!empty($req->status_search)){
+         $w04 = " AND db_sent_money_daily_ai.status_approve=".$req->status_search ;
+      }else{
+         $w04 = "";
+      }
+
+      if(!empty($req->startDate) && !empty($req->endDate)){
+         $w05 = " AND date(db_sent_money_daily_ai.updated_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+      }else{
+         $w05 = " AND date(db_sent_money_daily_ai.updated_at)=CURDATE() ";
+      }
+
+      if(isset($req->id)){
+         $add_ai = DB::table('db_add_ai_cash')->where('sent_money_daily_id_fk',$req->id)->first();
+         if($add_ai){
+            $sTable = DB::select("  SELECT db_sent_money_daily_ai.*,1 as remark,(SELECT business_location_id_fk FROM db_add_ai_cash WHERE id in(db_sent_money_daily_ai.add_ai_ids) limit 1) as business_location FROM db_sent_money_daily_ai WHERE  id=".$add_ai->sent_money_daily_id_fk_ai." AND db_sent_money_daily_ai.status_cancel=0 
+            ");
+         }else{
+            $sTable = DB::select("  SELECT db_sent_money_daily_ai.*,1 as remark,(SELECT business_location_id_fk FROM db_add_ai_cash WHERE id in(db_sent_money_daily_ai.add_ai_ids) limit 1) as business_location FROM db_sent_money_daily_ai WHERE  id=".$req->id." AND db_sent_money_daily_ai.status_cancel=0 
+            ");
+         }
+       
+      }else{
+
+          $sTable = DB::select("  
+              SELECT db_sent_money_daily_ai.*,1 as remark
+              ,(SELECT business_location_id_fk FROM db_add_ai_cash WHERE id in(db_sent_money_daily_ai.add_ai_ids) limit 1) as business_location 
+              ,(SELECT branch_id_fk FROM db_add_ai_cash WHERE id in(db_sent_money_daily_ai.add_ai_ids) limit 1) as branch 
+              FROM db_sent_money_daily_ai WHERE db_sent_money_daily_ai.status_cancel=0 
+              $w01 
+              $w02
+              $w03
+              $w04
+              $w05
+              UNION ALL
+              SELECT db_sent_money_daily_ai.*,2 as remark
+              ,(SELECT business_location_id_fk FROM db_add_ai_cash WHERE id in(db_sent_money_daily_ai.add_ai_ids) limit 1) as business_location 
+              ,(SELECT branch_id_fk FROM db_add_ai_cash WHERE id in(db_sent_money_daily_ai.add_ai_ids) limit 1) as branch 
+              FROM db_sent_money_daily_ai WHERE db_sent_money_daily_ai.status_cancel=0
+              $w01
+              $w02
+              $w03
+              $w04
+              $w05
+          ");
+
+      }
+
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('column_001', function($row) {
+              
+              if(@$row->sender_id!='' && $row->remark==1){
+                $sD = DB::select(" select * from ck_users_admin where id=".$row->sender_id." ");
+                 return @$sD[0]->name;
+              }else{
+                 return '';
+              }
+      })
+      ->escapeColumns('column_001')
+
+      ->addColumn('column_002', function($row) {
+          if($row->remark==1){
+            return @$row->time_sent;
+          }else{
+             return '';
+          }
+      })
+      ->escapeColumns('column_002')     
+
+      ->addColumn('column_003', function($row) {
+         
+         if($row->remark==1){
+
+          $sDBSentMoneyDaily = DB::select("
+                SELECT
+                db_sent_money_daily_ai.*,
+                ck_users_admin.`name` as sender
+                FROM
+                db_sent_money_daily_ai
+                Left Join ck_users_admin ON db_sent_money_daily_ai.sender_id = ck_users_admin.id
+                WHERE date(db_sent_money_daily_ai.updated_at)=CURDATE() AND db_sent_money_daily_ai.id=".$row->id."
+                order by db_sent_money_daily_ai.time_sent
+          ");
+
+           $pn = '';
+
+            foreach(@$sDBSentMoneyDaily AS $r){
+                      $sOrders = DB::select("
+                            SELECT db_add_ai_cash.code_order ,customers.prefix_name,customers.first_name,customers.last_name
+                            FROM
+                            db_add_ai_cash Left Join customers ON db_add_ai_cash.customer_id_fk = customers.id
+                            where sent_money_daily_id_fk_ai in (".$r->id.");
+                        ");
+
+                        $i = 1;
+                        foreach ($sOrders as $key => $value) {
+
+                            $pn .=     
+                              ' 
+                              <div class="divTableRow invoice_code_list ">
+                              <div class="divTableCell" style="text-align:center;">'. $value->code_order.'</div>
+                              </div>
+                              ';
+                            $i++;
+                            if($i==4){
+                             break;
+                            }
+
+                      }
+
+                                 $arr = [];
+                          foreach ($sOrders as $key => $value) {
+                              array_push($arr,$value->code_order.' :'.(@$value->first_name.' '.@$value->last_name).'<br>');
+                            }
+                        $arr_inv = implode(",",$arr);
+
+                        
+
+                         if($i>3){
+                          $pn .=     
+                          '<div class="divTableRow  ">
+                          <div class="divTableCell" style="text-align:center;">...</div>
+                          </div>
+                          ';
+                        }
+
+                         $pn .=     
+                          '<input type="hidden" class="arr_inv" value="'.$arr_inv.'">
+                          ';
+                    }
+
+                  if($row->status_cancel==1){
+                     return " - ";
+                  }else{
+                     return $pn;
+                  }
+
+          }else{
+             return '';
+          }
+
+      })
+      ->escapeColumns('column_003') 
+
+      ->addColumn('column_004', function($row) {
+        if($row->remark==1){
+           return $row->updated_at;
+          }else{
+             return '';
+          }           
+      })
+      ->escapeColumns('column_004') 
+
+      ->addColumn('column_005', function($row) {
+
+        if($row)
+
+         if($row->remark==1){
+
+          $sDBSentMoneyDaily = DB::select("
+                SELECT
+                db_sent_money_daily_ai.*,
+                ck_users_admin.`name` as sender
+                FROM
+                db_sent_money_daily_ai
+                Left Join ck_users_admin ON db_sent_money_daily_ai.sender_id = ck_users_admin.id
+                WHERE date(db_sent_money_daily_ai.updated_at)=CURDATE() AND db_sent_money_daily_ai.id=".$row->id."
+                order by db_sent_money_daily_ai.time_sent
+          ");
+          
+          $arr = [];
+
+             foreach(@$sDBSentMoneyDaily AS $r){
+                      $sOrders = DB::select("
+                            SELECT * 
+                            FROM
+                            db_add_ai_cash where sent_money_daily_id_fk_ai in (".$r->id.");
+                        ");
+
+                        foreach ($sOrders as $key => $value) {
+                           array_push($arr,$value->id);
+                      }
+                      }
+                      $id = implode(',',$arr);
+
+                       $pn =  '';
+          
+          if($id){
+
+            $sDBFrontstoreSumCostActionUser = DB::select("
+                SELECT
+                db_add_ai_cash.action_user,
+                ck_users_admin.`name` as action_user_name,
+                db_add_ai_cash.pay_type_id_fk,
+                dataset_pay_type.detail AS pay_type,
+                date(db_add_ai_cash.created_at) AS action_date,
+                sum(db_add_ai_cash.cash_pay) as cash_pay,
+                sum(db_add_ai_cash.credit_price) as credit_price,
+                sum(db_add_ai_cash.transfer_price) as transfer_price,
+                sum(db_add_ai_cash.fee_amt) as fee_amt,
+                sum(db_add_ai_cash.cash_pay+db_add_ai_cash.credit_price+db_add_ai_cash.transfer_price) as total_price
+                FROM
+                db_add_ai_cash
+                Left Join dataset_pay_type ON db_add_ai_cash.pay_type_id_fk = dataset_pay_type.id
+                Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
+                WHERE db_add_ai_cash.pay_type_id_fk<>0 AND db_add_ai_cash.id in ($id) AND date(db_add_ai_cash.created_at)=CURDATE()
+                AND db_add_ai_cash.business_location_id_fk in(".$row->business_location.")
+                GROUP BY action_user
+           ");
+
+          
+           $pn .=   ' <div class="table-responsive">
+                  <table class="table table-sm m-0">
+                    <thead>
+                      <tr>
+                        <th>พนักงานขาย</th>
+                        <th class="text-right">เงินสด</th>
+                        <th class="text-right">เงินโอน</th>
+                        <th class="text-right">เครดิต</th>
+                        <th class="text-right">รวมทั้งสิ้น</th>
+                        <th class="text-right">(ค่าธรรมเนียม)</th>
+                     
+                      </tr>
+                    </thead>
+
+                        <tbody>';
+
+                foreach(@$sDBFrontstoreSumCostActionUser AS $r){
+                     @$cnt_row1 += 1;
+                              @$sum_cash_pay += $r->cash_pay;
+                              @$sum_transfer_price += $r->transfer_price;
+                              @$sum_credit_price += $r->credit_price;
+                              @$sum_fee_amt += $r->fee_amt;
+                              @$sum_total_price += $r->total_price;
+                                  $pn .=   '             <tr>
+                                <td>'.$r->action_user_name.'</td>
+                                <td class="text-right"> '.number_format($r->cash_pay,2).' </td>
+                                <td class="text-right"> '.number_format($r->transfer_price,2).' </td>
+                                <td class="text-right"> '.number_format($r->credit_price,2).' </td>
+                                <td class="text-right"> '.number_format(@$sum_total_price,2).' </td>
+                                <td class="text-right"> '.number_format($r->fee_amt,2).' </td>
+                     
+                                              </tr>';
+
+                }
+                          
+                $pn .=   '         
+                  </tbody>
+                  </table>
+                </div>';
+              }
+
+              if($row->status_cancel==1){
+                 return "<span style='color:red;'>* รายการนี้ได้ทำการยกเลิกการส่งเงิน</span>";
+              }else{
+                 return $pn;
+              }
+
+         }else{
+
+
+            if($row){
+              
+             
+                 $pn =  '';
+
+                  $sDBFrontstoreSumCostActionUser = DB::select("
+                      SELECT
+                      sum(db_add_ai_cash.cash_pay+db_add_ai_cash.credit_price+db_add_ai_cash.transfer_price) as total_price
+                      FROM
+                      db_add_ai_cash
+                      Left Join dataset_pay_type ON db_add_ai_cash.pay_type_id_fk = dataset_pay_type.id
+                      Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
+                      WHERE db_add_ai_cash.pay_type_id_fk<>0 AND date(db_add_ai_cash.created_at)=CURDATE() 
+                      AND db_add_ai_cash.business_location_id_fk in(".$row->business_location.")
+                      AND db_add_ai_cash.id in(".$row->add_ai_ids.")
+                      GROUP BY action_user
+                 ");
+               //   customers_id_fk
+                
+                 $pn .=   ' <div class="table-responsive">
+                        <table class="table table-sm m-0">
+                              <tbody>';
+                      $sum = 0;
+                      foreach(@$sDBFrontstoreSumCostActionUser AS $r){
+
+                              $sum += $r->total_price;
+                              $pn .=   '            
+                                 <tr>
+                                <td colspan="4">  </td>
+                                <td class="text-right" style="width:35%;color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </td>
+                                <td class="text-right" style="width:25%;color:black;font-size:16px;font-weight:bold;"> '.number_format($sum,2).' </td>
+                                 </tr>';
+
+                       }
+                                
+                      $pn .=   '         
+                        </tbody>
+                        </table>
+                      </div>';
+
+             return $pn;
+           }
+
+         }     
+
+      })
+      ->escapeColumns('column_005')         
+
+      ->addColumn('column_006', function($row) {
+          if($row->remark==1){
+              if($row->status_cancel==1){
+                 return "display:none;";
+              }else{
+                 return  $row->id ;
+              }
+          }else{
+             return  "display:none;" ;
+          }
+      })
+      ->escapeColumns('column_006') 
+      ->addColumn('column_007', function($row) {
+        
+        if($row->remark==1){
+
+                if($row->status_approve==1){
+                   return "<span style='color:green;'>รับเงินแล้ว</span>";
+                }else{
+                   return  "-" ;
+                }
+
+          }else{
+             return  "" ;
+          }
+          
+      })
+      ->escapeColumns('column_007') 
+      ->addColumn('sum_total_price', function($row) {
+       
+       if($row->remark==1){
+
+                $sDBSentMoneyDaily = DB::select("
+                      SELECT
+                      db_sent_money_daily_ai.*,
+                      ck_users_admin.`name` as sender
+                      FROM
+                      db_sent_money_daily_ai
+                      Left Join ck_users_admin ON db_sent_money_daily_ai.sender_id = ck_users_admin.id
+                      WHERE date(db_sent_money_daily_ai.updated_at)=CURDATE() AND db_sent_money_daily_ai.id=".$row->id."
+                      order by db_sent_money_daily_ai.time_sent
+                ");
+                $arr = [];
+
+                   foreach(@$sDBSentMoneyDaily AS $r){
+                            $sOrders = DB::select("
+                                  SELECT * 
+                                  FROM
+                                  db_add_ai_cash where sent_money_daily_id_fk_ai in (".$r->id.");
+                              ");
+
+                              foreach ($sOrders as $key => $value) {
+                                 array_push($arr,$value->id);
+                            }
+                            }
+                            $id = implode(',',$arr);
+
+                            if($id){
+                  $sDBFrontstoreSumCostActionUser = DB::select("
+                      SELECT
+                      db_add_ai_cash.action_user,
+                      ck_users_admin.`name` as action_user_name,
+                      db_add_ai_cash.pay_type_id_fk,
+                      dataset_pay_type.detail AS pay_type,
+                      date(db_add_ai_cash.created_at) AS action_date,
+                      sum(db_add_ai_cash.cash_pay) as cash_pay,
+                      sum(db_add_ai_cash.credit_price) as credit_price,
+                      sum(db_add_ai_cash.transfer_price) as transfer_price,
+                      sum(db_add_ai_cash.fee_amt) as fee_amt,
+                      sum(db_add_ai_cash.cash_pay+db_add_ai_cash.credit_price+db_add_ai_cash.transfer_price) as total_price
+                      FROM
+                      db_add_ai_cash
+                      Left Join dataset_pay_type ON db_add_ai_cash.pay_type_id_fk = dataset_pay_type.id
+                      Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
+                      WHERE db_add_ai_cash.pay_type_id_fk<>0 AND db_add_ai_cash.id in ($id) AND date(db_add_ai_cash.created_at)=CURDATE()
+                      AND db_add_ai_cash.business_location_id_fk in(".$row->business_location.")
+                      GROUP BY action_user
+                 ");
+
+                      return number_format($sDBFrontstoreSumCostActionUser[0]->total_price,2);
+                    }
+
+          }else{
+             return  '' ;
+          }
+
+      })
+      ->escapeColumns('sum_total_price')    
+      ->make(true);
+    }
+
 
 
 
