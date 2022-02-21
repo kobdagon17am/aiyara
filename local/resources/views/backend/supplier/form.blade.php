@@ -63,6 +63,13 @@
                             </div>
 
                             <div class="form-group row">
+                                <label for="tel" class="col-md-3 col-form-label">เลขประจำตัวผู้เสียภาษ :</label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" value="{{ @$sRow->tax_number }}" name="tax_number"  >
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="addr" class="col-md-3 col-form-label">ที่อยู่ :</label>
                                 <div class="col-md-9">
                                     <input class="form-control" type="text" value="{{ @$sRow->addr }}" name="addr"  >

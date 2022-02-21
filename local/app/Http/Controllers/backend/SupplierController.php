@@ -55,6 +55,7 @@ class SupplierController extends Controller
           $sRow->txt_desc    = request('txt_desc');
           $sRow->tel    = request('tel');
           $sRow->addr    = request('addr');
+          $sRow->tax_number    = request('tax_number');
           $sRow->status    = request('status')?request('status'):0;
           $sRow->save();
 

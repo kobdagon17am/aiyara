@@ -284,10 +284,9 @@ $value = DB::select("
          <?php
 
                 $r_supplier = DB::select("SELECT * FROM `dataset_supplier` where id=".$value[0]->supplier_id_fk."");
-                echo "<b>SUPPLIER : </b>"."<br>";
-                echo $r_supplier[0]->txt_desc." : ";
-                echo $r_supplier[0]->addr."<br>";
-                echo $r_supplier[0]->tel."  ";
+                echo "ผู้จำหน่าย : ".$r_supplier[0]->txt_desc."<br>";
+                echo "ที่อยู่ : ".$r_supplier[0]->addr."<br>";
+                echo "โทร : ".$r_supplier[0]->tel." เลขประจำตัวผู้เสียภาษี : ".$r_supplier[0]->tax_number;
 
          ?>
       </td>

@@ -173,7 +173,7 @@ class Check_money_dailyController extends Controller
             
         }
 
-        return redirect()->to(url("backend/check_money_daily"));
+        return redirect()->to(url("backend/check_money_daily"));   
 
        \DB::commit();
 
