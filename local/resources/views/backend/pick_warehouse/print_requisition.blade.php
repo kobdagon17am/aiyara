@@ -263,11 +263,28 @@ if(!empty($Products)){
 
           $zone = DB::select(" select * from zone where id=".$p->zone_id_fk." ");
           $shelf = DB::select(" select * from shelf where id=".$p->shelf_id_fk." ");
+
+          // วุฒิเพิ่มมา เช็คว่าค้างจากบิลไหน
+          $item_amt_remain = DB::table('db_pay_requisition_002_item')
+          ->select('db_pay_requisition_002_item.*','db_orders.code_order')
+          ->join('db_orders','db_orders.id','db_pay_requisition_002_item.order_id')
+          ->where('db_pay_requisition_002_item.requisition_002_id',$p->id)
+          ->where('db_pay_requisition_002_item.product_id_fk',$p->product_id_fk)
+          ->get();
+          $bill_remain = '';
+          foreach($item_amt_remain as $item){
+            if($item->amt_remain>0){
+              $bill_remain .= $item->code_order.'<br>';
+            }
+          }
+
           if($p->zone_id_fk!=''){
             $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$p->shelf_floor;
             $lot_number = $p->lot_number.' <br>[expired '.$p->lot_expired_date.']';
           }else{
-            $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ไม่มีสินค้าในคลัง ***</span>';
+            // $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ไม่มีสินค้าในคลัง ***</span>';
+            $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ค้างสินค้าจากบิลเลขที่  *** '.$bill_remain.' </span>';
+            // 
             $lot_number = '';
           }
 

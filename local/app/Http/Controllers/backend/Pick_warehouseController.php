@@ -473,13 +473,13 @@ class Pick_warehouseController extends Controller
 
 
     public function Datatable0002(Request $req){
-
+// dd($req->packing_id);
       $sTable = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$req->packing_id."' 
         group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('column_001', function($row) { 
-
+            // วุฒิเปลี่ยน pick_pack_requisition_code_id_fk เป็น pick_pack_packing_code_id_fk
             $rs = DB::select(" SELECT
                   db_pay_requisition_002_pay_history.id,
                   db_pay_requisition_002_pay_history.time_pay,
@@ -489,7 +489,7 @@ class Pick_warehouseController extends Controller
                   ck_users_admin.`name` as pay_user
                   FROM
                   db_pay_requisition_002_pay_history
-                  Left Join ck_users_admin ON db_pay_requisition_002_pay_history.pay_user = ck_users_admin.id  WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay order By time_pay ");
+                  Left Join ck_users_admin ON db_pay_requisition_002_pay_history.pay_user = ck_users_admin.id  WHERE pick_pack_packing_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and time_pay=".$row->time_pay." group by time_pay order By time_pay ");
 
                         $pn = '<div class="divTable"><div class="divTableBody">';
                         $pn .=     
@@ -1994,7 +1994,7 @@ ORDER BY db_pick_pack_packing.id
           // $f = implode('<br><br><br>',$f);
             $web_all = "";
           foreach($f as $value){
-            $web = "<div class='col-md-12' style='height: 60px;'>";
+            $web = "<div class='col-md-12' style='height: 70px;'>";
             $web .=$value;
             $web .= "</div>";
             $web_all .=$web.'<br>';
@@ -2017,7 +2017,7 @@ ORDER BY db_pick_pack_packing.id
 
           $web_all = "";
           foreach($f as $value){
-            $web = "<div class='col-md-12'style='height: 60px;'>";
+            $web = "<div class='col-md-12'style='height: 70px;'>";
             $web .=$value;
             $web .= "</div>";
             $web_all .=$web.'<br>';
@@ -2049,7 +2049,7 @@ ORDER BY db_pick_pack_packing.id
 
           $web_all = "";
           foreach($f as $value){
-            $web = "<div class='col-md-12'style='height: 60px;'>";
+            $web = "<div class='col-md-12'style='height: 70px;'>";
             $web .=$value;
             $web .= "</div>";
             $web_all .=$web.'<br>';
@@ -2081,7 +2081,7 @@ ORDER BY db_pick_pack_packing.id
 
           $web_all = "";
           foreach($f as $value){
-            $web = "<div class='col-md-12'style='height: 60px;'>";
+            $web = "<div class='col-md-12'style='height: 70px;'>";
             $web .=$value;
             $web .= "</div>";
             $web_all .=$web.'<br>';
@@ -2112,7 +2112,7 @@ ORDER BY db_pick_pack_packing.id
         // return $f;
         $web_all = "";
         foreach($f as $value){
-          $web = "<div class='col-md-12'style='height: 60px;'>";
+          $web = "<div class='col-md-12'style='height: 70px;'>";
           $web .=$value;
           $web .= "</div>";
           $web_all .=$web.'<br>';
@@ -2147,7 +2147,7 @@ ORDER BY db_pick_pack_packing.id
 
           $web_all = "";
           foreach($f as $value){
-            $web = "<div class='col-md-12'style='height: 60px;'>";
+            $web = "<div class='col-md-12'style='height: 70px;'>";
             $web .=$value;
             $web .= "</div>";
             $web_all .=$web.'<br>';
@@ -2168,7 +2168,7 @@ ORDER BY db_pick_pack_packing.id
               $arr = [];
               foreach ($DP as $key => $value) {
                   $pn .=     
-                    '<div class="col-md-12" style="height: 60px;">
+                    '<div class="col-md-12" style="height: 70px;">
                     <center> 
                     <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
                     </center>

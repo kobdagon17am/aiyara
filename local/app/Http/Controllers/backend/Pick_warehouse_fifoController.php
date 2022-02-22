@@ -1842,6 +1842,7 @@ class Pick_warehouse_fifoController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
        ->addColumn('column_001', function($row) { 
+
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=     
             '<div class="divTableRow">
@@ -1866,12 +1867,18 @@ class Pick_warehouse_fifoController extends Controller
           $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+// dd($row->pick_pack_requisition_code_id_fk);
+          $max_time_pay = DB::table('db_pay_requisition_002')
+          ->select('time_pay')
+          ->where('pick_pack_requisition_code_id_fk',$row->pick_pack_requisition_code_id_fk)
+          ->where('amt_remain','!=',0)
+          ->where('status_cancel',0)
+          ->first();
 
           $Products = DB::select("
-            SELECT db_pay_requisition_002.* from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and amt_remain <> 0 AND time_pay=(SELECT max(time_pay) from db_pay_requisition_002 WHERE status_cancel=0 LIMIT 1) and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay 
+            SELECT db_pay_requisition_002.* from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and amt_remain <> 0 AND time_pay='".$max_time_pay->time_pay."' and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay 
           ");
-
-
+          // status_sent
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=     
           '<div class="divTableRow">
@@ -1899,21 +1906,34 @@ class Pick_warehouse_fifoController extends Controller
          // TEMPORARY
          DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
                          
-        
+
           foreach ($Products as $key => $value) {
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
                $amt_pay_this = $value->amt_remain; 
+             
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
-                // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
-                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
-                $amt_floor = $temp_db_stocks_01[0]->amt_floor;
+               // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+              // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
+            $w_arr2 = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+            $w_str2 = '';
+            foreach($w_arr2 as $key => $w){
+              if($key+1==count($w_arr2)){
+                $w_str2.=$w;
+              }else{
+                $w_str2.=$w.',';
+              }
 
+            }
+                // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
+                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+                $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
 
                   $pay_this = $value->amt_remain ;
+           
                   $amt_pay_remain = 0;
 
                     $pn .=     
@@ -1926,7 +1946,8 @@ class Pick_warehouse_fifoController extends Controller
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                     // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
                      
                       DB::select(" DROP TABLE IF EXISTS temp_001; ");
                       // TEMPORARY
@@ -2062,7 +2083,8 @@ class Pick_warehouse_fifoController extends Controller
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
                      // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+                    $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
                     
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
@@ -2277,7 +2299,8 @@ class Pick_warehouse_fifoController extends Controller
 
                       @$_SESSION['check_product_instock'] = 0;
                     
-                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                      // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                      $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt=0 AND branch_id_fk=".\Auth::user()->branch_id_fk."  AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
                     
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {

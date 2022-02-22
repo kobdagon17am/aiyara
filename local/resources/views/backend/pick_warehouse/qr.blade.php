@@ -552,14 +552,14 @@
                             data:{ _token: '{{csrf_token()}}',packing_id:packing_id,id:id},
                         },
                   columns: [
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> Recipient Code (รหัสผู้รับ)  </span> ', className: 'text-center w250'},
+                      {data: 'column_001', title :'<span style="vertical-align: middle;"> Recipient Code <br> (รหัสผู้รับ)  </span> ', className: 'text-center w80'},
                       {data: 'column_002',   title :'<span style="vertical-align: middle;"><center> Recipient Name (ชื่อผู้รับ) / Address (ที่อยู่ผู้รับ) </span> ', className: 'text-left',render: function(d) {
                         return d;
                       }},
-                      {data: 'column_003',   title :'<span style="vertical-align: middle;"><center> ส่งรายการให้ Kerry เพื่อขอเลขพัสดุ </span> ', className: 'text-center',render: function(d) {
+                      {data: 'column_003',   title :'<span style="vertical-align: middle;"><center> ส่งรายการให้ Kerry <br> เพื่อขอเลขพัสดุ </span> ', className: 'text-center',render: function(d) {
                         return d ;
                       }},
-                      {data: 'column_004',   title :'<span style="vertical-align: middle;"><center> หมายเลขพัสดุ <br> (Consignment number) </span> ', className: 'text-center w200 ',render: function(d) {
+                      {data: 'column_004',   title :'<span style="vertical-align: middle;"><center> หมายเลขพัสดุ <br> (Consignment number) </span> ', className: 'text-center w150 ',render: function(d) {
                         return d ;
                       }},
 
@@ -571,7 +571,7 @@
                         return d ;
                       }},
 
-                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> จำนวนกล่อง  </span> ', className: 'text-center w180 ',render: function(d) {
+                      {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> จำนวนกล่อง  </span> ', className: 'text-center w100 ',render: function(d) {
                         return d ;
                       }},
 
