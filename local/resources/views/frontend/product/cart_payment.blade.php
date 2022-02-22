@@ -101,7 +101,7 @@
                                              <div class="col-md-5 col-lg-5 col-xl-5">
                                                  <div class="card">
                                                      <div class="card-block" style="padding: 10px;">
-                                                         <h6>รหัสของลูกทีมที่ต้องการส่งสินค้า</h6>
+                                                         <h6>รหัสของลูกทีมที่ต้องการซื้อสินค้า</h6>
                                                          <div class="form-group row">
                                                              <div class="col-md-12">
                                                                  <div class="input-group input-group-button">
@@ -161,7 +161,7 @@
                                                                  </p>
                                                              </div>
                                                              <div class="col-md-6 text-right">
-                                                                 <div id="c_pv_tv_active"></div>
+                                                                 <div id="c_pv_mt_active"></div>
                                                              </div>
                                                          </div>
 
@@ -173,7 +173,7 @@
                                                                  </p>
                                                              </div>
                                                              <div class="col-md-6 text-right">
-                                                                 <div id="c_pv_mt_active"></div>
+                                                                 <div id="c_pv_tv_active"></div>
                                                              </div>
                                                          </div>
                                                      </div>
@@ -786,7 +786,7 @@
                                          <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติรายเดือน</b></p>
                                      </div>
                                      <div class="col-md-6 text-right">
-                                         <div id="modal_pv_tv_active"></div>
+                                         <div id="modal_pv_mt_active"></div>
                                      </div>
                                  </div>
 
@@ -796,9 +796,9 @@
                                          <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติท่องเที่ยว</b></p>
                                      </div>
                                      <div class="col-md-6 text-right">
-                                         <div id="modal_pv_mt_active"></div>
+                                         <div id="modal_pv_tv_active"></div>
                                      </div>
-                                 </div>
+                                 </div> 
 
                              </div>
                          </div>
