@@ -263,6 +263,7 @@ if(!empty($Products)){
 
           $zone = DB::select(" select * from zone where id=".$p->zone_id_fk." ");
           $shelf = DB::select(" select * from shelf where id=".$p->shelf_id_fk." ");
+          $wh_data = DB::select(" select * from warehouse where id=".$p->warehouse_id_fk." ");
 
           // วุฒิเพิ่มมา เช็คว่าค้างจากบิลไหน
           $item_amt_remain = DB::table('db_pay_requisition_002_item')
@@ -279,7 +280,7 @@ if(!empty($Products)){
           }
 
           if($p->zone_id_fk!=''){
-            $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$p->shelf_floor;
+            $sWarehouse = @$wh_data[0]->w_name.' / '.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$p->shelf_floor;
             $lot_number = $p->lot_number.' <br>[expired '.$p->lot_expired_date.']';
           }else{
             // $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ไม่มีสินค้าในคลัง ***</span>';
@@ -298,6 +299,21 @@ if(!empty($Products)){
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$lot_number?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$sWarehouse?> </td>
           </tr>
+
+          @if($p->amt_get > 0 && $p->amt_remain > 0)
+          <?php 
+          $i++; 
+          $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ค้างสินค้าจากบิลเลขที่  *** '.$bill_remain.' </span>';
+          ?>
+          <tr>
+            <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > <?=$i?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> <?=$p->product_name?> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> 0  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> ชิ้น </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$sWarehouse?> </td>
+          </tr>
+          @endif
 
      <?php
     $i++;

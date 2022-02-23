@@ -218,13 +218,15 @@
           <!-- <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> -->
           <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;"> </table>
 
+                
                        <div class=" div_datatables_003 " style="" >
                            <table id="data-table-0003" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
                         </div>     
 
-                        <div class=" div_datatables_004 " style="" >
+                        {{-- วุฒิปิดไว้ --}}
+                        {{-- <div class=" div_datatables_004 " style="" >
                            <table id="data-table-0004" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                        </div>  
+                        </div>   --}}
                 
                 
                         <div class="col-md-12 text-center div_btn_save_004 " style="display: none;" >
@@ -590,9 +592,9 @@
                                       oTable0003 = $('#data-table-0003').DataTable({
                                           processing: true,
                                           serverSide: true,
-                                          scroller: false,
+                                          scroller: true,
                                           scrollCollapse: true,
-                                          scrollX: false,
+                                          scrollX: true,
                                           ordering: false,
                                           "searching": false,
                                           "info":     false,
@@ -603,12 +605,19 @@
                                               type: "POST",
                                               data: { _token : "{{ csrf_token() }}", packing_id:packing_id },
                                           },
+                                          // columns: [
+
+                                          //     {data: 'column_001', title :'<center> 3 </center> ', className: 'text-center '},
+                                          //     {data: 'column_002', title :'<center>  </center> ', className: ''},
+                                          //     {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
+                                                                   
+                                          // ],
                                           columns: [
 
-                                              {data: 'column_001', title :'<center> 3 </center> ', className: 'text-center '},
-                                              {data: 'column_002', title :'<center>  </center> ', className: ''},
-                                              {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
-                                                                   
+                                          {data: 'column_001', title :'<center> ตารางจ่ายสินค้า </center> ', className: 'text-center '},
+                                          {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
+                                          {data: 'column_003', title :'<center> ยกเลิก </center> ', className: 'text-center'},
+                                                              
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
 

@@ -1876,7 +1876,7 @@ class Pick_warehouse_fifoController extends Controller
           ->first();
 
           $Products = DB::select("
-            SELECT db_pay_requisition_002.* from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and amt_remain <> 0 AND time_pay='".$max_time_pay->time_pay."' and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay 
+            SELECT db_pay_requisition_002.* from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and amt_remain <> 0 AND time_pay='".@$max_time_pay->time_pay."' and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay 
           ");
           // status_sent
           $pn = '<div class="divTable"><div class="divTableBody">';
@@ -1924,12 +1924,13 @@ class Pick_warehouse_fifoController extends Controller
                 $w_str2.=$w.',';
               }
 
-            }
+            } 
+            // time_pay
                 // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
-                // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
+                // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ 
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
 
                   $pay_this = $value->amt_remain ;
