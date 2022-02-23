@@ -104,6 +104,22 @@
       @else
        <p><b> จัดส่งพร้อมบิลอื่น </b></p>
       @endif
+
+             @if ($order->status_payment_sent_other == 1)
+                 <?php
+                 $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($order->address_sent_id_fk);
+                 $customer_pay = \App\Helpers\Frontend::get_customer_id($order->customers_id_fk);
+                 ?>
+                 <hr>
+                 <span class="mb-2"><u>สั่งซื้อให้ลูกทีม</u></span>
+                 <p class="mt-1">
+                  <b>ผู้สังซื้อ </b> |  {{ $customer_pay->first_name }} {{ $customer_pay->last_name }} ({{ $customer_pay->user_name }})
+                   <br>
+                  <b>ผู้รับคะแนน </b> |  {{ $sent_to_customer_data->first_name }} {{ $sent_to_customer_data->last_name }} ({{ $sent_to_customer_data->user_name }})
+                 </p>
+
+            @endif
+
          </th>
 
          <th style="text-align: left;" valign="top">

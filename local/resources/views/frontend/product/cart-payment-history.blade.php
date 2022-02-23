@@ -53,28 +53,21 @@
                     @else
                         <p><b> </b>
                     @endif
-                    @if ($order->status_payment_sent_other == 1)
-                        <?php
-                        $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($order->customers_sent_id_fk);
+                         @if ($order->status_payment_sent_other == 1)
+                         <?php
+                         $sent_to_customer_data = \App\Helpers\Frontend::get_customer($order->address_sent_id_fk);
+                         $customer_pay = \App\Helpers\Frontend::get_customer($order->customers_id_fk);
 
-                        // dd($sent_to_customer_data);
-                        // +"prefix_name": "คุณ"
-                        // +"first_name": "ชฎาพรww"
-                        // +"last_name": "พิกุลe"
-                        // +"business_name": "Orange Thailand"
-                        // +"user_name": "A0000032"
+                         ?>
+                         <hr>
+                         <span class="label label-success mb-2">สั่งซื้อให้ลูกทีม</span>
+                         <p class="mt-1">
+                          <b>ผู้สังซื้อ </b> |  {{ $customer_pay->first_name }} {{ $customer_pay->last_name }} ({{ $customer_pay->user_name }})
+                           <br>
+                          <b>ผู้รับคะแนน </b> |  {{ $sent_to_customer_data->first_name }} {{ $sent_to_customer_data->last_name }} ({{ $sent_to_customer_data->user_name }})
+                         </p>
 
-                        ?>
-                        <hr>
-                        <p>
-                            <b>สั่งซื้อให้กับ {{ $sent_to_customer_data->prefix_name }}
-                                {{ $sent_to_customer_data->first_name }} {{ $sent_to_customer_data->last_name }}
-                            </b><br>
-                            <b>( {{ $sent_to_customer_data->business_name }} ) User :
-                                {{ $sent_to_customer_data->user_name }}</b>
-                        </p>
-
-                    @endif
+                     @endif
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6>Order Information :</h6>
