@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Consignments_import extends Model {
 
    public static function insertData($data){
-
+// dd($data);
       $value=DB::table('db_consignments_import')
       ->where('recipient_code', $data['recipient_code'])
       ->get();

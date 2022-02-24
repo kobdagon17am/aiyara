@@ -6,13 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use File;
+use Session;
+use App\Helpers\General;
 
 class Po_supplierController extends Controller
 {
 
     public function index(Request $request)
     {
-
+        General::gen_id_url();
        $sAction_user = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
            return $query->where('id', auth()->user()->business_location_id_fk);

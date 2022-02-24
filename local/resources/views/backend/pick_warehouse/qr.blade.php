@@ -151,6 +151,27 @@
 </div>
 </form>
 
+<div class="modal" tabindex="-1" id="modal_con_arr" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">หมายเลขพัสดุ (Consignment number)</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal_con_arr_data">
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="myloading"></div>
 
 
@@ -381,6 +402,18 @@
   function myFunction() {
     confirm("ยืนยันการทำรายการ?");
   }
+  
+      $(document).on('click','.con_arr_data_show',function(){
+        var arr = $(this).attr('con_arr');
+        arr = arr.split(",");
+        var arr_str = '';
+        for(var i=0; i<arr.length;i++){
+          arr_str+=arr[i]+'<br>';
+        }
+        $('.modal_con_arr_data').html(arr_str);
+        $('#modal_con_arr').modal('show'); 
+      });
+    
   </script>
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@

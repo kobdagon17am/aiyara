@@ -1219,11 +1219,28 @@ GROUP BY db_order_products_list.product_id_fk
                    $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
                 // Check ว่ามี status=2 ? (ค้างจ่าย)
                    $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
-                   if(count($r_ch02)>0){
-                      $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
-                   }else{
-                     $r_ch_t = '';
-                   }
+                  //  if(count($r_ch02)>0){
+                  //     $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+                  //  }else{
+                  //    $r_ch_t = '';
+                  //  }
+
+                  //  วุฒิเพิ่มมา
+                   $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
+                   ->where('product_id_fk',$value->product_id_fk) 
+                   ->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
+                   ->first();
+                   
+                  $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                  ->where('product_id_fk',$value->product_id_fk)
+                  ->where('order_id',$value->order_id)
+                  ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                  ->first();
+                    if($db_pay_requisition_002_item->amt_remain > 0){
+                      $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
+                    }else{
+                      $r_ch_t = '';
+                    }
 
                   $sum_amt += $value->amt_get;
                   $pn .=     
@@ -1231,7 +1248,7 @@ GROUP BY db_order_products_list.product_id_fk
                   <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                   '.@$value->product_name.'</b><br>
                   <font color=red>'.$r_ch_t.'</font>
-                  </div>
+                    </div>
                   <div class="divTableCell" style="text-align:center;">'.@$value->amt_get.'</div> 
                   <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
                   <div class="divTableCell" style="text-align:left;"> ';
@@ -2041,17 +2058,19 @@ ORDER BY db_pick_pack_packing.id
           $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
 
           $f = [] ;
+          $ff = [] ;
           foreach ($d as $key => $v) {
              array_push($f,@$v->consignment_no);
+             array_push($ff,@$v->con_arr);
           }
           // $f = implode('<br><br><br>',$f);
           // return $f;
 
           $web_all = "";
-          foreach($f as $value){
-            $web = "<div class='col-md-12'style='height: 70px;'>";
+          foreach($f as $key => $value){
+            $web = "<div class='col-md-12'style='height: 70px;'><a href='javascript:;' class='con_arr_data_show' con_arr=' ".$ff[$key]."' >";
             $web .=$value;
-            $web .= "</div>";
+            $web .= "</a></div>";
             $web_all .=$web.'<br>';
           }
 
@@ -2162,7 +2181,13 @@ ORDER BY db_pick_pack_packing.id
       ->addColumn('column_007', function($row) {
         $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
         if($p_code){
-            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$p_code->id)->orderBy('delivery_id_fk','asc')->get();
+            $DP = DB::table('db_pick_pack_packing')
+            ->select('db_pick_pack_packing.*','db_consignments.recipient_code')
+            ->join('db_consignments','db_consignments.delivery_id_fk','db_pick_pack_packing.delivery_id_fk')
+            ->where('db_pick_pack_packing.packing_code_id_fk',$p_code->id)
+            ->orderBy('db_consignments.recipient_code','asc')
+            ->get();
+
             if(!empty($DP)){
               $pn = '';
               $arr = [];

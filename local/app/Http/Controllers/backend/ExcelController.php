@@ -111,9 +111,19 @@
 					if($pick_pack_packing){
 			
 						if($pick_pack_packing->p_amt_box != null && $pick_pack_packing->p_amt_box != ''){
+							$arr_con_box = [];
+							if($sRow[$i]->con_arr!=''){
+								$arr_con_box = 	explode(',',$sRow[$i]->con_arr);
+							}
 						
 							for($p=0; $p < $pick_pack_packing->p_amt_box; $p++){
 					
+								if(isset($arr_con_box[$p])){
+									if($arr_con_box[$p] != ''){
+										$sRow[$i]->consignment_no = $arr_con_box[$p];
+									}
+								}
+
 								$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
 								$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
 								$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);

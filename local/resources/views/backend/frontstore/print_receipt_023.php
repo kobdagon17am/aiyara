@@ -287,8 +287,21 @@ foreach ($sTable as $key => $row) {
               // Check ว่ามี status=2 ? (ค้างจ่าย)
                  $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$row->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$data[1]." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
                  if(count($r_ch02)>0){
-                    $r_ch_t = '&nbsp;(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
-                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+
+                   $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
+                   ->where('product_id_fk',$row->product_id_fk) 
+                   ->where('pick_pack_requisition_code_id_fk',$data[1])
+                   ->first();
+                  $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                  ->where('product_id_fk',$row->product_id_fk)
+                  ->where('order_id',$sRow->id)
+                  ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                  ->first();
+                  
+                    if(@$db_pay_requisition_002_item->amt_remain > 0){
+                      $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
+                      DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                    }
                  }else{
                    $r_ch_t = '';
                  }

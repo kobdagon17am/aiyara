@@ -253,11 +253,13 @@ $value = DB::select("
           </th>
           <th style="text-align: right;">
             (<?php echo sprintf("%04d",$data[0]); ?>)<br>
+            <b style="text-align: center;font-size: 20px;">บริษัท ไอยรา แพลนเน็ด จำกัด</b><br>
               2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
               แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
               TEL : +66 (0) 2026 3555
               FAX : +66 (0) 2514 3944
-              E-MAIL : info@aiyara.co.th
+              E-MAIL : info@aiyara.co.th <br>
+              เลขประจำตัวผู้เสียภาษี : 0105551020419 สำนักงานใหญ่
           </th>
         </tr>
 

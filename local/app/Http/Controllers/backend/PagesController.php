@@ -747,7 +747,7 @@ class PagesController extends Controller{
 
 
         public function uploadFileXLSConsignments(Request $request){
-            // dd($request->requisition_code);
+            // dd($request->all());
             // dd($request->input('submit'));
 
           if ($request->input('submit') != null ){
@@ -799,30 +799,32 @@ class PagesController extends Controller{
                     Session::flash('message','There is no data in the Excel table');
 
                 }else{
-
+                    // dd($highestRow);
                     $i = 0;
+                    $arr_con = [];
 
                     for ($row = 1; $row <= $highestRow; ++$row) {
 
                          $consignment_no = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
                          $customer_ref_no = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
-                         $sender_code = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
-                         $recipient_code = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
-                         $recipient_name = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
-                         $address = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
-                         $postcode = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
-                         $mobile = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
+                         $sender_code = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
+                         $recipient_code = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
+                         $recipient_name = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
+                         $address = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
+
+                         $postcode = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
+                         $mobile = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
                          $contact_person = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
-                         $phone_no = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
-                         $email = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
-                         $declare_value = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
-                         $cod_amount = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
-                         $remark = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
-                         $total_box = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
-                         $sat_del = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
-                         $hrc = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
-                         $invr = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
-                         $service_code = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
+                         $phone_no = '';
+                         $email = '';
+                         $declare_value = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
+                         $cod_amount = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
+                         $remark = $worksheet->getCellByColumnAndRow(20, $row)->getValue();
+                         $total_box = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
+                         $sat_del = '';
+                         $hrc = '';
+                         $invr = '';
+                         $service_code = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
 
                           // Skip first row (Remove below comment if you want to skip the first row)
                          if($i == 0){
@@ -830,47 +832,84 @@ class PagesController extends Controller{
                             continue;
                          }
 
-
                         // $check=DB::table('db_consignments')
+                        //   ->select('recipient_code')
                         //   ->where('recipient_code', @$recipient_code)
-                        //   ->get();
-                        //   if($check->count() > 0){
+                        //   ->first();
+                        //   if($check){
                         //       Session::flash('message','พบรหัส Recipient Code ซ้ำกับการนำเข้าครั้งที่ผ่านมา');
                         //   }else{
                         //      Session::flash('message','test');
                         //   }
 
-                         $insertData = array(
-                           "consignment_no"=>@$consignment_no,
-                           "customer_ref_no"=>@$customer_ref_no,
-                           "sender_code"=>@$sender_code,
-                           "recipient_code"=>@$recipient_code,
-                           "recipient_name"=>@$recipient_name,
-                           "address"=>@$address,
-                           "postcode"=>@$postcode,
-                           "mobile"=>@$mobile,
-                           "contact_person"=>@$contact_person,
-                           "phone_no"=>@$phone_no,
-                           "email"=>@$email,
-                           "declare_value"=>@$declare_value,
-                           "cod_amount"=>@$cod_amount,
-                           "remark"=>@$remark,
-                           "total_box"=>@$total_box,
-                           "sat_del"=>@$sat_del,
-                           "hrc"=>@$hrc,
-                           "invr"=>@$invr,
-                           "service_code"=>@$service_code,
-                           "pick_pack_requisition_code_id_fk"=>@$request->id,
-                           "created_at"=>now());
-                         Consignments_import::insertData($insertData);
+                        if(isset($arr_con[@$recipient_code])){
+                          $arr_con[@$recipient_code] = @$arr_con[@$recipient_code].@$consignment_no.',';
+                        }else{
+                          $arr_con[@$recipient_code] = @$consignment_no.',';
+                        }
 
+                          DB::table('db_consignments')
+                          ->where('recipient_code', @$recipient_code)
+                          ->where('pick_pack_requisition_code_id_fk', @$request->id)
+                          ->update([
+                            'consignment_no' => @$consignment_no,
+                            // "customer_ref_no"=>@$customer_ref_no,
+                            // "sender_code"=>@$sender_code,
+                            "contact_person"=>@$contact_person,
+                            // "phone_no"=>@$phone_no,
+                            // "email"=>@$email,
+                            "declare_value"=>@$declare_value,
+                            "cod_amount"=>@$cod_amount,
+                            "remark"=>@$remark,
+                            "total_box"=>@$total_box,
+                            // "sat_del"=>@$sat_del,
+                            // "hrc"=>@$hrc,
+                            // "invr"=>@$invr,
+                            "service_code"=>@$service_code,
+                            "con_arr"=>$arr_con[@$recipient_code],
+                          ]);
+
+                        $con_data =  DB::table('db_consignments')
+                        // ->select('pay_requisition_001_id_fk','delivery_id_fk')
+                        ->where('recipient_code', @$recipient_code)
+                        ->where('pick_pack_requisition_code_id_fk', @$request->id)
+                        ->first();
+
+                          $insertData = array(
+                            "consignment_no"=>@$consignment_no,
+                            "customer_ref_no"=>@$customer_ref_no,
+                            "sender_code"=>@$sender_code,
+                            "recipient_code"=>@$recipient_code,
+                            "recipient_name"=>@$recipient_name,
+                            "address"=>@$address,
+                            "postcode"=>@$postcode,
+                            "mobile"=>@$mobile,
+                            "contact_person"=>@$contact_person,
+                            "phone_no"=>@$phone_no,
+                            "email"=>@$email,
+                            "declare_value"=>@$declare_value,
+                            "cod_amount"=>@$cod_amount,
+                            "remark"=>@$remark,
+                            "total_box"=>@$total_box,
+                            "sat_del"=>@$sat_del,
+                            "hrc"=>@$hrc,
+                            "invr"=>@$invr,
+                            "service_code"=>@$service_code,
+                            "pick_pack_requisition_code_id_fk"=>@$request->id,
+                            "pay_requisition_001_id_fk"=>@$con_data->pay_requisition_001_id_fk,
+                            "delivery_id_fk"=>@$con_data->delivery_id_fk,
+                            "created_at"=>now(),
+                            "con_arr"=>@$arr_con[@$recipient_code]
+                          );
+                          Consignments_import::insertData($insertData);
+                          
                          $i++;
 
                     }
 
-                    if(!empty($request->requisition_code)){
-                      DB::select("UPDATE db_consignments set consignment_no='' WHERE requisition_code='".$request->requisition_code."' ");
-                    }
+                    // if(!empty($request->requisition_code)){
+                    //   DB::select("UPDATE db_consignments set consignment_no='' WHERE requisition_code='".$request->requisition_code."' ");
+                    // }
 
                     Session::flash('message','Import Successful.');
 
@@ -891,14 +930,14 @@ class PagesController extends Controller{
           // return redirect()->to(url("backend/pick_warehouse"));
           // return redirect()->to(url("backend/pay_product_packing"));
 
-           DB::select(" UPDATE
-              db_consignments
-              Inner Join db_consignments_import ON db_consignments.recipient_code = db_consignments_import.recipient_code
-              SET
-              db_consignments.consignment_no=db_consignments_import.consignment_no ,
-              db_consignments.delivery_id_fk=db_consignments_import.delivery_id_fk
+          //  DB::select(" UPDATE
+          //     db_consignments
+          //     Inner Join db_consignments_import ON db_consignments.recipient_code = db_consignments_import.recipient_code
+          //     SET
+          //     db_consignments.consignment_no=db_consignments_import.consignment_no ,
+          //     db_consignments.delivery_id_fk=db_consignments_import.delivery_id_fk
 
-              ");
+          //     ");
            
           return redirect()->to(url("backend/pick_warehouse/".@$request->id."/qr"));
 
