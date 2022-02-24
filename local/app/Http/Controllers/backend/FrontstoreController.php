@@ -26,6 +26,7 @@ class FrontstoreController extends Controller
 
   public function index(Request $request)
   {
+
     General::gen_id_url();
     // dump($request->all());
     // dd(\Auth::user()->position_level);
@@ -708,6 +709,7 @@ class FrontstoreController extends Controller
     return View('backend.frontstore.form')->with(
       array(
         'customer_pv' => $customer_pv,
+        'user_name_buy' =>$sCustomer[0]->user_name,
         'sRow' => $sRow,
         'sPurchase_type' => $sPurchase_type,
         'sProductUnit' => $sProductUnit,
@@ -926,6 +928,7 @@ class FrontstoreController extends Controller
     return View('backend.frontstore.viewdata')->with(
       array(
         'sRow' => $sRow,
+
         'sPurchase_type' => $sPurchase_type,
         'sProductUnit' => $sProductUnit,
         'sDistribution_channel' => $sDistribution_channel,
