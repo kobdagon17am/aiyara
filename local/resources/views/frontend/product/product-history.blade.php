@@ -590,7 +590,7 @@ function qrcode(id,type='') {
                 })
                 .done(function(data){
                   // ->select('first_name','last_name','user_name','business_name')
-                  var cash_pay = numberWithCommas(data['order']['cash_pay']);
+                  var aicash_price = numberWithCommas(data['order']['aicash_price']);
                   var html = `<hr class="m-b-5 m-t-5">
                   <div class="row">
                       <div class="col-md-4">
@@ -615,7 +615,7 @@ function qrcode(id,type='') {
                         <h6 class="m-b-0" style="color: #000">ยอดขอชำระด้วย AiCash</h6>
                     </div>
                     <div class="col-md-6" id="">
-                        <u><h5 class="m-b-0 text-right" id="text_pv" style="color: #000">`+cash_pay+`</h5></u>
+                        <u><h5 class="m-b-0 text-right" id="text_pv" style="color: #000">`+aicash_price+`</h5></u>
                     </div>
                 </div>`;
 

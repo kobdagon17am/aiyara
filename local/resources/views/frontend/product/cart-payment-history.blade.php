@@ -311,7 +311,7 @@
                              </div>
                              <div class="col-md-6" id="">
                                  <u>
-                                     <h5 class="m-b-0 text-right" id="text_pv" style="color: #000">{{number_format($order->cash_price)}}</h5>
+                                     <h5 class="m-b-0 text-right" id="text_pv" style="color: #000">{{number_format($order->aicash_price)}}</h5>
                                  </u>
                              </div>
                          </div>
@@ -322,6 +322,7 @@
                   </div>
 
                   @endif
+
 
 
                 </div>
