@@ -823,26 +823,25 @@ $(function() {
                                             method: 'POST',
                                           },
                                        columns: [
-                                            {data: 'id', title :'ID', className: 'text-center w50'},
-                                            // {data: 'branch', title :'<center>สาขา</center>', className: 'text-center'},
-                                            {data: 'customer_name', title :'<center>รหัส : ชื่อสมาชิก </center>', className: 'text-left w200 '},
-                                            {data: 'filetype', title :'<center> ประเภทไฟล์ </center>', className: 'text-left'},
-                                            {data: 'regis_status', title :'<center>สถานะการอนุมัติ </center>', className: 'text-center'},
-                                            {data: 'approver', title :'<center>ผู้อนุมัติ </center>', className: 'text-center'},
-                                            {data: 'approve_date', title :'<center>วันที่อนุมัติ </center>', className: 'text-center'},
-                                            {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
-                                            {data: 'id', title :'Tools', className: 'text-center w80'},
+                                        {data: 'id', title :'ID', className: 'text-center w50'},
+                                        {data: 'customer_name', title :'<center>{{ __("message.info_member") }} </center>', className: 'text-left w300 '},
+                                        {data: 'filetype', title :'<center> {{ __("message.file_type") }} </center>', className: 'text-left'},
+                                        {data: 'regis_status', title :'<center> {{ __("message.status") }} </center>', className: 'text-center'},
+                                        {data: 'approver', title :'<center>{{ __("message.approver") }} </center>', className: 'text-center'},
+                                        {data: 'approve_date', title :'<center>{{ __("message.date_approve") }} </center>', className: 'text-center'},
+                                        {data: 'icon', title :'<center> Icon </center>', className: 'text-center'},
+                                        {data: 'tools', title :'Tools', className: 'text-center w80'},
                                   ],
                                   rowCallback: function(nRow, aData, dataIndex){
-                                    if(sU!=''&&sD!=''){
-                                        $('td:last-child', nRow).html('-');
-                                    }else{
+                                    // if(sU!=''&&sD!=''){
+                                    //     $('td:last-child', nRow).html('-');
+                                    // }else{
 
-                                        $('td:last-child', nRow).html(''
-                                          + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                        ).addClass('input');
+                                    //     $('td:last-child', nRow).html(''
+                                    //       + '<a href="{{ route('backend.po_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                    //     ).addClass('input');
 
-                                    }
+                                    // }
                                   }
                               });
                         });
