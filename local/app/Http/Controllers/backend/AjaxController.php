@@ -4278,7 +4278,7 @@ class AjaxController extends Controller
             AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.credit_price>0 or db_add_ai_cash.transfer_price>0)  ");
 
           // return $r0;
-    
+
           if($r0){
 
             $arr_orders_id_fk = [];
@@ -4372,10 +4372,10 @@ class AjaxController extends Controller
                 DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=0,sent_money_daily_id_fk=0,sent_money_daily_id_fk_ai=0 WHERE sent_money_daily_id_fk=".$request->id." ");
                 DB::select(" UPDATE `db_sent_money_daily_ai` SET `status_cancel`='1' WHERE (`id`='".$ai->sent_money_daily_id_fk_ai."') ");
             }
-           
+
           }
 
-        
+
 
       }
 
@@ -5030,23 +5030,27 @@ class AjaxController extends Controller
 
     public function ajaxGetCustomerForAicashSelect(Request $request)
     {
+
         if($request->ajax()){
 
-            $customers = DB::table('temp_cus_ai_cash')
-            ->where('user_name', 'LIKE', '%'.$request->term.'%')
-            ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-            ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-            ->take(15)
-            ->groupBy('user_name')
-            ->orderBy('user_name', 'asc')
-            ->get();
-            $json_result = [];
+            // $customers = DB::table('temp_cus_ai_cash')
+            // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+            // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+            // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+            // ->take(15)
+            // ->groupBy('user_name')
+            // ->orderBy('user_name', 'asc')
+            // ->get();
 
-            foreach($customers as $k => $v){
-                $json_result[] = [
-                    'id'    => $v->cus_id_fk,
-                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name.' ('.$v->ai_cash.')',
-                ];
+            $resule = LineModel::check_line_backend($request->user_by,$request->term);
+
+            if($resule['status'] == 'fail'){
+              $json_result = [];
+            }else{
+              $json_result[] = [
+                'id'    => $resule['data']->id,
+                'text'  =>  $resule['data']->user_name.':'. $resule['data']->first_name.' '. $resule['data']->last_name.' ('. $resule['data']->ai_cash.')',
+            ];
             }
             return json_encode($json_result);
 
@@ -5069,9 +5073,10 @@ class AjaxController extends Controller
    public function ajaxSearchMemberAicash(Request $request)
     {
 
-       // $resule = LineModel::check_line_backend($request->username_buy,$request->username_check);
+
+       $resule = LineModel::check_line_backend($request->username_buy,$request->username_check);
        // $resule = LineModel::check_line_backend('A567838','A10263');
-       $resule = LineModel::check_line_backend('A567838','A10263');
+       //$resule = LineModel::check_line_backend('A567838','A10263');
        // return($resule);
        if (@$resule['status'] == 'success') {
 

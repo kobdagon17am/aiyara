@@ -7746,7 +7746,8 @@
                     data: function(params) {
                         return {
                             term: params.term || '', // search term
-                            page: params.page || 1
+                            page: params.page || 1 ,
+                            user_by:'{{@$user_name_buy}}',
                         };
                     },
                     processResults: function(data, params) {
