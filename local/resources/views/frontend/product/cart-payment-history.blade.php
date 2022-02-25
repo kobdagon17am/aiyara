@@ -55,8 +55,8 @@
                     @endif
                          @if ($order->status_payment_sent_other == 1)
                          <?php
-                         $sent_to_customer_data = \App\Helpers\Frontend::get_customer($order->address_sent_id_fk);
-                         $customer_pay = \App\Helpers\Frontend::get_customer($order->customers_id_fk);
+                         $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($order->customers_sent_id_fk);
+                         $customer_pay = \App\Helpers\Frontend::get_customer_id($order->customers_id_fk);
 
                          ?>
                          <hr>
