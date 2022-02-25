@@ -363,73 +363,11 @@ class FrontstoreController extends Controller
         }
       }
 
-
-    // return $row->id;
-    // return @$r[0]->orders_id_fk;
-    // dd($ch_Disabled);
-
-
-
-    // $data =  CancelOrderController::cancel_order('204',\Auth::user()->id,'1','admin');
-    // dd($data);
-
-    // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all('1','A56');
-    // dd($Check);
-
-    // $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme('9','1','1','admin');
-    // dd($data);
-
-
-    //       $CourseCheckRegis = \App\Models\Frontend\CourseCheckRegis::check_register_all(1,'A0000014');
-    //        if($CourseCheckRegis){
-    //         echo "<pre>";
-    //         // foreach (@$CourseCheckRegis as $key => $value) {
-    //         //   print_r(@$value);
-    //         // }
-
-    //          $arr = [];
-    //           for ($i=0; $i < count(@$CourseCheckRegis) ; $i++) {
-
-    //                $c = array_column($CourseCheckRegis,$i);
-    //                foreach ($c as $key => $value) {
-    //                 if($value['status'] == "fail"){
-    //                    // echo ($value['message'])."<br>";
-    //                    array_push($arr,$value['message']);
-    //                 }
-    //                }
-
-    //                $im = implode(',',$arr);
-
-    //           }
-    //           echo $im;
-
-    //       }
-    // dd();
-
     $sRow = \App\Models\Backend\Frontstore::find($id);
-    // dd($sRow);
-    // dd($sRow->business_location_id_fk);
-    // dd($sRow->approve_status);
     if ($sRow->approve_status == 9) {
       $ch_Disabled = 1;
     }
 
-
-    // $resule = LineModel::check_line_backend('A0000008','A0000008');
-    // dd($resule['status']);
-    // dd($resule['message']);
-    // dd($resule['data']);
-    // dd($resule['data']->id);
-    // dd($resule['data']->user_name);
-    // if (@$resule['data']) {
-    //      foreach ($resule['data'] as $key  ) {
-    //          // return (@$v['user_name']);
-    //        return @$key;
-    //      }
-    // }
-    // dd();sPay_type
-
-    // dd($sRow->customers_id_fk);
     $sCustomer = DB::select(" select * from customers where id=" . $sRow->customers_id_fk . " ");
     @$CusName = (@$sCustomer[0]->user_name . " : " . @$sCustomer[0]->prefix_name . $sCustomer[0]->first_name . " " . @$sCustomer[0]->last_name);
     @$user_name = @$sCustomer[0]->user_name;
@@ -438,16 +376,12 @@ class FrontstoreController extends Controller
       $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($sCustomer[0]->user_name);
     }
 
-    // dd($CusName);
-    // dd($user_name);
     if (@$sRow->aistockist) {
       $sCusAistockist = DB::select(" select * from customers where id=" . $sRow->aistockist . " ");
       @$CusAistockistName = @$sCusAistockist[0]->user_name . " : " . @$sCusAistockist[0]->prefix_name . $sCusAistockist[0]->first_name . " " . @$sCusAistockist[0]->last_name;
     } else {
       @$CusAistockistName = '';
     }
-
-    // dd(@$CusAistockistName);
 
     if (@$sRow->agency) {
       $sCusAgency = DB::select(" select * from customers where id=" . $sRow->agency . " ");
@@ -456,16 +390,11 @@ class FrontstoreController extends Controller
       @$CusAgencyName = '';
     }
 
-    // dd(@$CusAgencyName);
-
-
     if (!empty($sRow->member_id_aicash)) {
       $sAicash = DB::select(" select * from customers where id=" . $sRow->member_id_aicash . " ");
-      // dd($sAicash);
       $Cus_Aicash = @$sAicash[0]->ai_cash;
       $Customer_id_Aicash = @$sRow->member_id_aicash;
       $Customer_name_Aicash = (@$sAicash[0]->user_name . " : " . @$sAicash[0]->prefix_name . $sAicash[0]->first_name . " " . @$sAicash[0]->last_name);
-      // dd($Customer_name_Aicash);
     } else {
       $sAicash  = NULL;
       $Cus_Aicash = "0.00";
@@ -473,22 +402,18 @@ class FrontstoreController extends Controller
       $Customer_name_Aicash = "";
     }
 
-
     $sBranchs = DB::select(" select * from branchs where id=" . $sRow->branch_id_fk . " ");
     $BranchName = $sBranchs[0]->b_name;
 
     $Purchase_type = DB::select(" select * from dataset_orders_type where id=" . $sRow->purchase_type_id_fk . " ");
     $PurchaseName = @$Purchase_type[0]->orders_type;
 
-
     $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk', $id)->get();
     $sUser = \App\Models\Backend\Permission\Admin::get();
-
 
     $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
 
     $shipping_special = DB::select(" select * from dataset_shipping_cost where business_location_id_fk=" . $sRow->business_location_id_fk . " AND shipping_type_id=4 ");
-    // dd($shipping_special);
 
     $Products = DB::select("
 
@@ -530,7 +455,6 @@ class FrontstoreController extends Controller
     // }
     $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 6");
 
-
     if ($sRow->purchase_type_id_fk == '5') {
       $sPay_type = DB::select(" select * from dataset_pay_type where id in (4,12,13,14,19) and status=1 ");
     } else {
@@ -559,9 +483,8 @@ class FrontstoreController extends Controller
     $aistockist = DB::select(" select * from customers_aistockist_agency where aistockist=1 AND user_name <> '" . $ThisCustomer[0]->user_name . "' ");
     $agency = DB::select(" select * from customers_aistockist_agency where agency=1 AND user_name <> '" . $ThisCustomer[0]->user_name . "' ");
 
-
     // $giftvoucher_this = DB::select(" select sum(banlance) as gift_total from gift_voucher where customer_id=".$sRow->customers_id_fk." AND banlance>0 AND expiry_date>=now() "); //AND expiry_date>=now()
-    // dd($sRow->customers_id_fk);
+
     $giftvoucher_this = DB::select("
 
         SELECT
@@ -591,16 +514,12 @@ class FrontstoreController extends Controller
 
              "); //AND expiry_date>=now()
 
-    // dd($giftvoucher_this);
-
     $giftvoucher_this = @$giftvoucher_this[0]->giftvoucher_value;
 
     $rs = DB::select(" SELECT count(*) as cnt FROM db_order_products_list WHERE frontstore_id_fk=$id ");
 
-
-
     $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
-    // dd($sFrontstoreDataTotal);
+ 
     if ($sFrontstoreDataTotal) {
       $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total) / 1.07);
       $vat = $vat > 0 ? $vat : 0;
@@ -613,21 +532,15 @@ class FrontstoreController extends Controller
     }
 
     $sAccount_bank = \App\Models\Backend\Account_bank::get();
-    // dd($sAccount_bank);
-
+  
     // $type = $sRow->purchase_type_id_fk;
     $pv_total = $sRow->pv_total;
     // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
-    // dd($customer_pv);
-    // dd($sRow->business_location_id_fk);
 
-    // dd($pv_total);
     // แถม
     $check_giveaway = GiveawayController::check_giveaway($sRow->purchase_type_id_fk, $ThisCustomer[0]->user_name, $pv_total);
-    // dd(@$check_giveaway);
 
     $sPay_type_purchase_type6 = DB::select(" select * from dataset_pay_type where id > 4 and id <=11 and status=1 ORDER BY id=5 DESC ");
-
 
     $DATE_CREATED = date("Y-m-d", strtotime($sRow->created_at));
     $DATE_YESTERDAY = Carbon::yesterday()->format('Y-m-d');
@@ -635,8 +548,7 @@ class FrontstoreController extends Controller
 
     $sPermission = \Auth::user()->permission; // Super Admin == 1
     $position_level = \Auth::user()->position_level;
-    // dd($sPermission);
-    // dd($position_level);
+
     $ChangePurchaseType = 0; // ปิด / ไม่แสดง
     if ($sPermission == 1) {
       $ChangePurchaseType = 1; // เปิด / แสดง
@@ -651,19 +563,15 @@ class FrontstoreController extends Controller
       }
     }
 
-
     $PaymentSlip = DB::select(" select * from payment_slip where code_order='" . $sRow->code_order . "' ");
-    // dd(count($PaymentSlip));
 
     $cnt_slip = count($PaymentSlip);
 
-    // dd($ThisCustomer[0]->user_name);
     $data_gv = \App\Helpers\Frontend::get_gitfvoucher(@$ThisCustomer[0]->user_name);
     // $data_gv = \App\Helpers\Frontend::get_gitfvoucher("A101987");
     // $gv = \App\Helpers\Frontend::get_gitfvoucher("A436875");
     // $gv = \App\Helpers\Frontend::get_gitfvoucher("A548815");
     $gv = @$data_gv->sum_gv;
-    // dd($gv);
     // $gitfvoucher = @$gv!=null?$gv:0;
     // $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
     $customer_pv = DB::table('customers')
@@ -701,10 +609,6 @@ class FrontstoreController extends Controller
       ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
       ->where('customers.user_name', '=', @$ThisCustomer[0]->user_name)
       ->first();
-
-    // dd($sRow->purchase_type_id_fk);
-    // dd($PaymentSlip);
-
 
     return View('backend.frontstore.form')->with(
       array(

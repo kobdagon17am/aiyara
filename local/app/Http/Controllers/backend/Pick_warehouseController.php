@@ -101,17 +101,12 @@ class Pick_warehouseController extends Controller
 
     public function edit($id)
     {
-
-      // dd($id);
-
       $r = DB::select("SELECT * FROM db_pay_requisition_001 where id in($id) ");
-      // dd($r[0]->status_sent);
       if(@$r[0]->status_sent==6){
         return redirect()->to(url("backend/pick_warehouse/".$id."/cancel"));
       }
       // $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
       $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
-      // dd($sRow);
 //   SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
         $addr_sent =  DB::select(" 
         
@@ -473,7 +468,7 @@ class Pick_warehouseController extends Controller
 
 
     public function Datatable0002(Request $req){
-// dd($req->packing_id);
+      
       $sTable = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$req->packing_id."' 
         group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);

@@ -849,16 +849,11 @@ class Pick_warehouse_fifoController extends Controller
       ->make(true);
     }
 
-
-
 // /backend/pay_product_receipt
 // http://localhost/aiyara/backend/pick_warehouse
 // %%%%%%%%%%%%%%%%%%%%%%%
    public function Datatable0002FIFO(Request $request){
-
     // return $request->picking_id;
-
-
       $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -898,8 +893,6 @@ class Pick_warehouse_fifoController extends Controller
 
       $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in($picking_id) ");
       // return $r_db_pick_pack_packing_code[0]->receipt ;
-
-
       $receipt = explode(",",$r_db_pick_pack_packing_code[0]->receipt);
 
       $arr_01 = [];
@@ -914,8 +907,6 @@ class Pick_warehouse_fifoController extends Controller
       $sTable = DB::select("
             SELECT * from $temp_ppp_0022 GROUP BY pick_pack_requisition_code_id_fk
         ");
-
-      
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -1078,7 +1069,7 @@ class Pick_warehouse_fifoController extends Controller
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
-
+                  
                   $pay_this = $value->amt ;
                   $amt_pay_remain = 0;
                   
@@ -1451,7 +1442,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
                 }else{ // กรณีไม่มีสินค้าในคลังเลย 
-
+                
                      $amt_pay_remain = $value->amt ;
                      $pay_this = 0 ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
@@ -1477,11 +1468,28 @@ class Pick_warehouse_fifoController extends Controller
 
                               // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_ppp_002 WHERE  product_id_fk=".$value->product_id_fk." ");
-                    
+
+                              // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                              if(count($temp_db_stocks_02)==0){
+                                $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                                ->select(
+                                  $temp_ppp_002.'.created_at',
+                                  'promotions_products.product_unit as product_unit_id_fk',
+                                  'promotions_products.product_id_fk as product_id_fk',
+                                  DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                                  'promotions_products.product_amt as amt', 
+                                )
+                                ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                                ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                                ->join('products','products.id','promotions_products.product_id_fk')  
+                                ->where($temp_ppp_002.'.type_product','promotion')
+                                ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                                ->groupBy('promotions_products.product_id_fk')
+                                ->get();
+                              }
+
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
-
-
                        
                              // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
                                      $p_unit  = DB::select("  SELECT product_unit
@@ -2303,7 +2311,26 @@ class Pick_warehouse_fifoController extends Controller
                       // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                       $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt=0 AND branch_id_fk=".\Auth::user()->branch_id_fk."  AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
                     
-                     $i = 1;
+                   // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                   if(count($temp_db_stocks_02)==0){
+                    $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                    ->select(
+                      $temp_ppp_002.'.created_at',
+                      'promotions_products.product_unit as product_unit_id_fk',
+                      'promotions_products.product_id_fk as product_id_fk',
+                      DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                      'promotions_products.product_amt as amt', 
+                    )
+                    ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                    ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                    ->join('products','products.id','promotions_products.product_id_fk')  
+                    ->where($temp_ppp_002.'.type_product','promotion')
+                    ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                    ->groupBy('promotions_products.product_id_fk')
+                    ->get();
+                  }
+                  
+                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
 
                               // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
@@ -2316,7 +2343,8 @@ class Pick_warehouse_fifoController extends Controller
                                      $_choose=DB::table("$temp_ppp_004")
                                       ->where('pick_pack_requisition_code_id_fk', $row->pick_pack_requisition_code_id_fk)
                                       ->where('product_id_fk', $v_02->product_id_fk)
-                                      ->where('branch_id_fk', $v_02->branch_id_fk)
+                                      // ->where('branch_id_fk', $v_02->branch_id_fk)
+                                      ->where('branch_id_fk', @\Auth::user()->branch_id_fk)
                                       ->get();
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppp_004 (
@@ -2977,7 +3005,27 @@ class Pick_warehouse_fifoController extends Controller
 
                             
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
-                            
+
+                               // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                               if(count($temp_db_stocks_02)==0){
+                                $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                                ->select(
+                                  $temp_ppp_002.'.created_at',
+                                  'promotions_products.product_unit as product_unit_id_fk',
+                                  'promotions_products.product_id_fk as product_id_fk',
+                                  DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                                  'promotions_products.product_amt as amt', 
+                                )
+                                ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                                ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                                ->join('products','products.id','promotions_products.product_id_fk')  
+                                ->where($temp_ppp_002.'.type_product','promotion')
+                                ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                                ->groupBy('promotions_products.product_id_fk')
+                                ->get();
+                              }
+
+                           
                              $i = 1;
                              foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -2991,7 +3039,8 @@ class Pick_warehouse_fifoController extends Controller
                                            $_choose=DB::table("$temp_ppp_004")
                                             ->where('pick_pack_requisition_code_id_fk', $row->pick_pack_requisition_code_id_fk)
                                             ->where('product_id_fk', $v_02->product_id_fk)
-                                            ->where('branch_id_fk', $v_02->branch_id_fk)
+                                            // ->where('branch_id_fk', $v_02->branch_id_fk)
+                                            ->where('branch_id_fk', @\Auth::user()->branch_id_fk)
                                             ->get();
                                               if($_choose->count() == 0){
                                                     DB::select(" INSERT IGNORE INTO $temp_ppp_004 (

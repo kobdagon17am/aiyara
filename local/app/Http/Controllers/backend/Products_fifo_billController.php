@@ -944,7 +944,26 @@ foreach($temp_ppr_0021_data as $tmp){
 
                               // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE product_id_fk=".$value->product_id_fk." ");
-                              // dd($temp_db_stocks_02);
+                        
+                                    // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                                    if(count($temp_db_stocks_02)==0){
+                                      $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                                      ->select(
+                                        $temp_ppp_002.'.created_at',
+                                        'promotions_products.product_unit as product_unit_id_fk',
+                                        'promotions_products.product_id_fk as product_id_fk',
+                                        DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                                        'promotions_products.product_amt as amt', 
+                                      )
+                                      ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                                      ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                                      ->join('products','products.id','promotions_products.product_id_fk')  
+                                      ->where($temp_ppp_002.'.type_product','promotion')
+                                      ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                                      ->groupBy('promotions_products.product_id_fk')
+                                      ->get();
+                                    }
+
                      $i = 1;
 
                   //  dd($temp_db_stocks_01[0]->amt);
@@ -962,7 +981,8 @@ foreach($temp_ppr_0021_data as $tmp){
                                      $_choose=DB::table("$temp_ppr_004")
                                       ->where('invoice_code', $row->invoice_code)
                                       ->where('product_id_fk', $v_02->product_id_fk)
-                                      ->where('branch_id_fk', $v_02->branch_id_fk)
+                                      // ->where('branch_id_fk', $v_02->branch_id_fk)
+                                      ->where('branch_id_fk', @\Auth::user()->branch_id_fk)
                                       ->get();
 
                                         if($_choose->count() == 0){
@@ -1851,6 +1871,25 @@ foreach($temp_ppr_0021_data as $tmp){
                       // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                       $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE product_id_fk=".$value->product_id_fk." ");
 
+                        // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                        if(count($temp_db_stocks_02)==0){
+                          $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                          ->select(
+                            $temp_ppp_002.'.created_at',
+                            'promotions_products.product_unit as product_unit_id_fk',
+                            'promotions_products.product_id_fk as product_id_fk',
+                            DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                            'promotions_products.product_amt as amt', 
+                          )
+                          ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                          ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                          ->join('products','products.id','promotions_products.product_id_fk')  
+                          ->where($temp_ppp_002.'.type_product','promotion')
+                          ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                          ->groupBy('promotions_products.product_id_fk')
+                          ->get();
+                        }
+
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -1864,7 +1903,8 @@ foreach($temp_ppr_0021_data as $tmp){
                                      $_choose=DB::table("$temp_ppr_004")
                                       ->where('invoice_code', $row->invoice_code)
                                       ->where('product_id_fk', $v_02->product_id_fk)
-                                      ->where('branch_id_fk', $v_02->branch_id_fk)
+                                      // ->where('branch_id_fk', $v_02->branch_id_fk)
+                                      ->where('branch_id_fk', @\Auth::user()->branch_id_fk)
                                       ->get();
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
@@ -2552,6 +2592,25 @@ foreach($temp_ppr_0021_data as $tmp){
 
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
 
+                                // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                                      if(count($temp_db_stocks_02)==0){
+                                        $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                                        ->select(
+                                          $temp_ppp_002.'.created_at',
+                                          'promotions_products.product_unit as product_unit_id_fk',
+                                          'promotions_products.product_id_fk as product_id_fk',
+                                          DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                                          'promotions_products.product_amt as amt', 
+                                        )
+                                        ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                                        ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                                        ->join('products','products.id','promotions_products.product_id_fk')  
+                                        ->where($temp_ppp_002.'.type_product','promotion')
+                                        ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                                        ->groupBy('promotions_products.product_id_fk')
+                                        ->get();
+                                      }
+
                              $i = 1;
                              foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -2565,7 +2624,8 @@ foreach($temp_ppr_0021_data as $tmp){
                                              $_choose=DB::table("$temp_ppr_004")
                                               ->where('invoice_code', $row->invoice_code)
                                               ->where('product_id_fk', $v_02->product_id_fk)
-                                              ->where('branch_id_fk', $v_02->branch_id_fk)
+                                              // ->where('branch_id_fk', $v_02->branch_id_fk)
+                                              ->where('branch_id_fk', @\Auth::user()->branch_id_fk)
                                               ->get();
                                               // return $row->invoice_code;
                                                 if($_choose->count() == 0){

@@ -313,17 +313,12 @@ class Pick_packPackingCodeController extends Controller
       ->make(true);
     }
 
-
-
-
  public function packing_list_for_fifo_02(Request $request){     
-
       // if(!empty($request->packing_id)){
           $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->id)->search();
       // }else{
       //     $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
       // }
-
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery

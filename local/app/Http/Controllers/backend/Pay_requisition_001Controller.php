@@ -1495,10 +1495,7 @@ class Pay_requisition_001Controller extends Controller
 
  public function ajaxSavePay_requisition(Request $request)
     {
-      // dd($request->all());  
-      // return $request;
-      // db_pay_requisition_001
-      // db_pay_requisition_002
+
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
@@ -1506,7 +1503,7 @@ class Pay_requisition_001Controller extends Controller
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
           $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
-
+// db_pay_requisition_002
           // if(gettype($request->picking_id)=='array'){
           //   $db_pick_pack_packing_code_id = implode(',',$request->picking_id);
           // }else{
@@ -1531,38 +1528,30 @@ class Pay_requisition_001Controller extends Controller
 
           // $picking_id = explode(", ", $request->picking_id);
           // return $picking_id;
-          // dd(); status_sent
 
         // หา time+pay ครั้งที่จ่าย
           $rs_time_pay = DB::select(" SELECT * FROM db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk in ($db_pick_pack_packing_code_id)  order by time_pay DESC limit 1 ");
           // return $rs_time_pay;
-
 
           if(count($rs_time_pay)>0){
             $time_pay = $rs_time_pay[0]->time_pay + 1;
           }else{
             $time_pay = 1;
           }
-
           // return $time_pay;
-          // dd();
+
           $pick_pack_requisition_code_id_fk = DB::select(" SELECT
             $temp_ppp_001.pick_pack_requisition_code_id_fk
             FROM
             $temp_ppp_001
             Inner Join $temp_ppp_002 ON $temp_ppp_002.frontstore_id_fk = $temp_ppp_001.id
             limit 1;");
-        //  dd(@$pick_pack_requisition_code_id_fk[0]);
          @$pick_pack_requisition_code_id_fk = @$pick_pack_requisition_code_id_fk[0]->pick_pack_requisition_code_id_fk;
 
-        //  dd($pick_pack_requisition_code_id_fk);
-
-// เก็บลงตารางจริง
-          
+          // เก็บลงตารางจริง
           // DB::select(" TRUNCATE db_pay_requisition_001 ;");
           // DB::select(" TRUNCATE db_pay_requisition_002 ;");
           // db_pay_requisition_002
-
           $db_temp_ppp_003 = DB::select(" select * from $temp_ppp_003 ;");
 
           $data_db_pay_requisition_001 = [];
@@ -1602,12 +1591,9 @@ class Pay_requisition_001Controller extends Controller
 
                // เก็บรายการสินค้าที่จ่าย 
                 $db_temp_ppp_004 = DB::select(" select * from $temp_ppp_004 ;");
-             
+          
                 $data_db_pay_requisition_002 = [];
-
                 // return $db_temp_ppp_004;
-
-    
                 foreach ($db_temp_ppp_004 as $key => $value) {
 
                       $data_db_pay_requisition_002 = array(
@@ -1637,7 +1623,6 @@ class Pay_requisition_001Controller extends Controller
                         DB::table('db_pay_requisition_002')->insertOrIgnore($data_db_pay_requisition_002);
                     }  
                 }
-
                  // วุฒิเพิ่มมา เอาไว้ตรวจว่าสินค้าไหนจ่ายแล้วของบิลไหน
     $db_pay_requisition_002_datas = DB::table('db_pay_requisition_002')
     ->where('pick_pack_requisition_code_id_fk',@$pick_pack_requisition_code_id_fk)->get();
