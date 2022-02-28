@@ -104,7 +104,7 @@
                   <div class="form-group row">
                     <label for="total_money" class="col-md-3 col-form-label">ยอดเงิน :</label>
                     <div class="col-md-6">
-                      <input class="form-control NumberOnly " id="total_money" name="total_money" type="text" value="{{@$sRowCheck_money_daily[0]->total_money}}" required autofocus >
+                      <input class="form-control NumberOnly " id="total_money" name="total_money" type="text" readonly value="{{@$sRowCheck_money_daily[0]->total_money}}" required autofocus >
                     </div>
                   </div>
 
@@ -303,7 +303,7 @@
                   <div class="form-group row">
                     <label for="total_money" class="col-md-3 col-form-label">ยอดเงิน :</label>
                     <div class="col-md-6">
-                      <input class="form-control NumberOnly " id="total_money" name="total_money" type="text" value="{{@$sRowCheck_money_daily_AiCash[0]->total_money}}" required >
+                      <input class="form-control NumberOnly " id="total_money" name="total_money" readonly type="text" value="{{@$sRowCheck_money_daily_AiCash[0]->total_money}}" required >
                     </div>
                   </div>
 

@@ -4257,7 +4257,7 @@ class AjaxController extends Controller
               $wh_ai = " AND db_add_ai_cash.action_user = '".(\Auth::user()->id)."' ";
           }
 
-          // return($wh);
+          // return($wh); db_sent_money_daily
 
           $r0 = DB::select(" SELECT * FROM `db_orders`
             WHERE date(updated_at)=CURDATE()
@@ -4287,6 +4287,7 @@ class AjaxController extends Controller
             }
             $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
             // return $arr_orders_id_fk;
+            // dd($arr_orders_id_fk);
 
             $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)."
              ");
