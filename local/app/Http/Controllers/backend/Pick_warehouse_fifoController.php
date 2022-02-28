@@ -1821,6 +1821,8 @@ class Pick_warehouse_fifoController extends Controller
       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
       $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      // วุฒิเพิ่มมา
+      $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
 
       $TABLES = DB::select(" SHOW TABLES ");
       // return $TABLES;
@@ -1846,7 +1848,7 @@ class Pick_warehouse_fifoController extends Controller
       $sTable = DB::select("
         SELECT * from db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk in ($pick_pack_requisition_code_id_fk) GROUP BY pick_pack_requisition_code_id_fk
         ");
-
+        // temp_ppp_002
       $sQuery = \DataTables::of($sTable);
       return $sQuery
        ->addColumn('column_001', function($row) { 
@@ -2311,7 +2313,9 @@ class Pick_warehouse_fifoController extends Controller
                       // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                       $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt=0 AND branch_id_fk=".\Auth::user()->branch_id_fk."  AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
                     
+
                    // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                   $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
                    if(count($temp_db_stocks_02)==0){
                     $temp_db_stocks_02 = DB::table($temp_ppp_002)
                     ->select(

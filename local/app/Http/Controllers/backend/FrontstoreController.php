@@ -3357,8 +3357,9 @@ $endDate1
     } else {
       $action_user_011 = " AND action_user = $user_login_id ";
     }
+    
+    if ($sPermission == 1 || \Auth::user()->role_group_id_fk==4) {
 
-    if ($sPermission == 1) {
       $action_user_01 = "";
       $action_user_011 = "";
       // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;

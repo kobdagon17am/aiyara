@@ -103,14 +103,19 @@
 				$sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
 
 				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
-		
+	
 				$p_i = 0;
 				for ($i=0; $i < count($sRow) ; $i++) {
-					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box')->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
-	
-					if($pick_pack_packing){
+					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box')->where('packing_code_id_fk',$sRow[$i]->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
 			
+					if($pick_pack_packing){
+
+						echo 'box number : '.$pick_pack_packing->p_amt_box.'<br>';
+
 						if($pick_pack_packing->p_amt_box != null && $pick_pack_packing->p_amt_box != ''){
+
+							echo 'box : '.$sRow[$i]->id.'<br>';
+
 							$arr_con_box = [];
 							if($sRow[$i]->con_arr!=''){
 								$arr_con_box = 	explode(',',$sRow[$i]->con_arr);
@@ -148,8 +153,9 @@
 								$sheet->setCellValue('S'.($i+2+$p_i), '');
 								$p_i++;
 							}
+
 						}else{
-						
+							echo 'no box : '.$sRow[$i]->id.'<br>';
 							$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
 							$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
 							$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);

@@ -243,7 +243,7 @@ Unit Price </td>
 <?php
 $orders = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$data[0]."' 
         group by time_pay order By time_pay  ");
-
+$p_wait  = '';
 if(!empty($orders)){
 
 foreach ($orders as $key => $value) {
@@ -291,6 +291,7 @@ if(!empty($Products)){
 
      ?>
 
+          @if($p->zone_id_fk!='')
           <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > <?=$i?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> <?=$p->product_name?> </td>
@@ -299,20 +300,53 @@ if(!empty($Products)){
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$lot_number?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$sWarehouse?> </td>
           </tr>
+          @endif
 
           @if($p->amt_get > 0 && $p->amt_remain > 0)
           <?php 
           $i++; 
           $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ค้างสินค้าจากบิลเลขที่  *** '.$bill_remain.' </span>';
           ?>
-          <tr>
+          
+          {{-- <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > <?=$i?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> <?=$p->product_name?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> 0  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> ชิ้น </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$sWarehouse?> </td>
+          </tr> --}}
+
+          <?php 
+          $p_wait .= 
+          '
+          <tr>
+            <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > '.$i.' </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> '.$p->product_name.' </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> 0  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> ชิ้น </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> '.$sWarehouse.' </td>
           </tr>
+          ';
+          ?>
+
+          @elseif($p->zone_id_fk=='')
+
+          <?php 
+          $p_wait .= 
+          '
+          <tr>
+            <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > '.$i.' </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> '.$p->product_name.' </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> 0  </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> ชิ้น </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
+            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> '.$sWarehouse.' </td>
+          </tr>
+          ';
+          ?>
+
           @endif
 
      <?php
@@ -337,6 +371,10 @@ if(!empty($Products)){
 
 <?php } ?>
 <?php } ?>
+
+       <?php 
+         echo $p_wait;
+       ?>
 
     </table>
   </div>

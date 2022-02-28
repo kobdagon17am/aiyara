@@ -9,18 +9,20 @@ use File;
 use PDF;
 use App\Models\Backend\AddressSent;
 use App\Models\Backend\Consignments_import;
+use Session;
+use App\Helpers\General;
 
 class Pick_packController extends Controller
 {
 
     public function index(Request $request)
     {
-
+      General::gen_id_url();
 
       $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
       $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
       $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
-
+    
         return View('backend.pick_pack.index')->with(
           array(
              'sProvince'=>$sProvince,
@@ -502,12 +504,14 @@ class Pick_packController extends Controller
                     WHERE 
                     db_delivery_packing_code.id = ".$row->packing_code." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
               if($addr){
-                    return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                    // return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                    return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."";
               }else{
 
                     if(@$addr2[0]->delivery_location==1 || @$addr2[0]->delivery_location==2){
                         // return "* ".@$d[0]->txt_desc."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-                        return '<font color=red>* ไม่พบข้อมูลที่อยู่ </font> <br>(ระบุในบิล : '.@$d[0]->txt_desc.")<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                        // return '<font color=red>* ไม่พบข้อมูลที่อยู่ </font> <br>(ระบุในบิล : '.@$d[0]->txt_desc.")<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                        return '<font color=red>* ไม่พบข้อมูลที่อยู่ </font> <br>(ระบุในบิล : '.@$d[0]->txt_desc.")<br>"." ";
                       }else{
                         if(@$addr2[0]->delivery_location==4){
                           return "<b>* ".@$d[0]->txt_desc."</b>";
@@ -541,7 +545,8 @@ class Pick_packController extends Controller
                                }else{
 
                                   // return "<b>* ".@$d[0]->txt_desc."</b>";
-                                 return @$addr2[0]->recipient_name."<br>".@$addr2[0]->addr_send."<br>".@$addr2[0]->postcode." ".@$addr2[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                                //  return @$addr2[0]->recipient_name."<br>".@$addr2[0]->addr_send."<br>".@$addr2[0]->postcode." ".@$addr2[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+                                return @$addr2[0]->recipient_name."<br>".@$addr2[0]->addr_send."<br>".@$addr2[0]->postcode." ".@$addr2[0]->mobile."<br>"." ";
 
                                }
 

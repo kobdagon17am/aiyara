@@ -49,7 +49,13 @@ class PmController extends Controller
         $operator_name = '';
       }
       
+
+      if($sRow->customers_id_fk!=0){
+        $Customer = DB::table('customers')->where('id',$sRow->customers_id_fk)->get();
+      }else{
        $Customer = DB::select(" select * from customers limit 100 ");
+      }
+    
        $sMainGroup = DB::select(" select * from role_group where id<>1 ");
   
        return View('backend.pm.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
