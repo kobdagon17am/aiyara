@@ -210,6 +210,22 @@
 
 @endif
 
+<div class="myBorder">
+<div style="">
+  <div class="form-group row">
+    <div class="col-md-12">
+      <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> ประวัติการรับสินค้า </span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-12">
+      <table id="data-table-history" class="table table-bordered dt-responsive" style="width: 100%;">
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
 
         </div>
     </div> <!-- end col -->
@@ -315,6 +331,45 @@
 
 
             </script>
+
+            
+  <script>
+
+    var po_supplier_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
+    var oTable2;
+    $(function() {
+        oTable2 = $('#data-table-history').DataTable({
+        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+            processing: true,
+            serverSide: true,
+            scroller: true,
+            scrollCollapse: true,
+            scrollX: true,
+            ordering: false,
+            scrollY: ''+($(window).height()-370)+'px',
+            iDisplayLength: 5,
+            ajax: {
+                url: '{{ route('backend.po_supplier_products_receive.datatable') }}',
+                data :{
+                      po_supplier_id_fk:po_supplier_id_fk,
+                    },
+                  method: 'POST',
+                },
+            columns: [
+                {data: 'id', title :'<center>ID', className: 'text-center w50'},
+                {data: 'action_date', title :'<center>วันที่ได้รับสินค้า', className: 'text-center'},
+                {data: 'product_name', title :'<center>ชื่อสินค้า', className: 'text-center'},
+                {data: 'amt_get', title :'<center>จำนวนที่ได้รับ', className: 'text-center'},
+                {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
+                {data: 'warehouses', title :'สินค้าอยู่ที่', className: 'text-center'},
+            ],
+
+        });
+
+    });
+
+
+    </script>
 
 
 

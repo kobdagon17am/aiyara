@@ -4278,7 +4278,7 @@ class AjaxController extends Controller
             AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.credit_price>0 or db_add_ai_cash.transfer_price>0)  ");
 
           // return $r0;
-
+          $id = 0;
           if($r0){
 
             $arr_orders_id_fk = [];

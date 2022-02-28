@@ -27,7 +27,8 @@
   <?php 
     $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
+      // $menu_id = Session::get('session_menu_id')
+      $menu_id = Session::get('session_menu_id');;
     if($sPermission==1){
       $sC = '';
       $sU = '';
@@ -43,8 +44,7 @@
       $can_sentmoney = @$menu_permit->can_sentmoney==1?'1':'0';
       $can_getmoney = @$menu_permit->can_getmoney==1?'1':'0';         
     }
-
-    // echo $can_sentmoney;
+    // echo $menu_permit->can_sentmoney
     // echo $can_getmoney;
     
    ?>
@@ -540,7 +540,8 @@
                     let newStr = str.replace(',','');
                     let v2 = parseFloat(newStr); 
                     $(".sum_total_price2").val(v2);
-  
+                    // วุฒิเพิ่มมา
+                    $("#total_money").val(v2);
                 }
             });
        
@@ -746,8 +747,8 @@ $.fn.dataTable.ext.errMode = 'throw';
 
 
                     // alert(v1+":"+v2);
-                    if(v1!=v2+v2_ai){
-                        alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง ยอด "+(v2+v2_ai));
+                    if(v1!=v2){
+                        alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง ยอด "+(v2));
                         $(this).val("");
                           setTimeout(function(){
                                $("#total_money").focus();
@@ -803,8 +804,8 @@ $.fn.dataTable.ext.errMode = 'throw';
             let v2_ai = parseFloat(newStr_ai); 
 
             // alert(v1+":"+v2);
-            if(v1!=v2+v2_ai){
-                alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง ยอด "+(v2+v2_ai));
+            if(v1!=v2){
+                alert("! กรอกยอดเงินไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง ยอด "+(v2));
                 $(this).val("");
                 return false;
             }

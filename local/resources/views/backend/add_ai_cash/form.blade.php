@@ -139,8 +139,8 @@
                             <label for="aicash_amt" class="col-md-4 col-form-label">{{ __('message.ai_cash_older') }}
                                 :</label>
                             <div class="col-md-8">
-                                <input class="form-control CalAicashAmt NumberOnly input-airight f-ainumber-18 input-aifill"
-                                    type="text" value="{{ @$sRow->aicash_amt }}" name="aicash_amt" id="aicash_amt"
+                                <input class="form-control CalAicashAmt input-airight f-ainumber-18 input-aifill"
+                                    type="number" step="0.01" value="{{ @$sRow->aicash_amt }}" name="aicash_amt" id="aicash_amt"
                                     {{ @$rr2 }}>
                             </div>
                         </div>
