@@ -455,6 +455,21 @@ class Check_money_dailyController extends Controller
              return '';
           }           
       })
+      ->addColumn('approver', function($row) {
+         $name = '';
+        if($row->approver!=0){
+            $app_name = DB::table('ck_users_admin')->select('name')->where('id',$row->approver)->first();
+            $name = $app_name->name;
+        }          
+        return $name;
+       })
+       ->addColumn('approver_time', function($row) {
+         $date_data = '';
+        if($row->approve_date!=''){
+            $date_data = $row->approve_date;
+        }          
+        return $date_data;
+       })
       ->escapeColumns('column_004') 
 
       ->addColumn('column_005', function($row) {
