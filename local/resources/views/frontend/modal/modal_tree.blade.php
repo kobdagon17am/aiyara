@@ -32,7 +32,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
       <td></td>
     </tr>
     <tr>
-      <td><strong>สั่งซื้อครั้งแรก </strong></td>
+      <td><strong>สั่งซื้อรักษาคุณสมบัติรายเดือนครั้งแรก </strong></td>
       <td>@if(empty($data->date_mt_first))
         -
         @else

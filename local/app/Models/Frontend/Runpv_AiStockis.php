@@ -236,6 +236,7 @@ class Runpv_AiStockis extends Model
                   }
                   $update_ai_stockist->cancel_expiry_date = $cancel_expiry_date;
                   $update_ai_stockist->save();
+
                   $update_to_customer->save();
                   $update_use->save();
                     DB::commit();
