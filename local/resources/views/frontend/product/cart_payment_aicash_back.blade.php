@@ -57,8 +57,8 @@
                           <div class="card-block text-center">
                               {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
                               <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
-                              <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
-                              <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
+                              <h5 class="m-t-20"><span class="text-c-blue">401-110-1843</span></h5>
+                              <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>บริษัท ไอยรา แพลนเน็ต จำกัด</p>
                               {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
                           </div>
                       </div>
@@ -176,8 +176,8 @@
                           <div class="card-block text-center">
                               {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
                               <img src="{{ asset('frontend/assets/images/scb.png') }}" class="img-fluid" alt="Responsive image" width="80">
-                              <h5 class="m-t-20"><span class="text-c-blue">019-7-03027-3</span></h5>
-                              <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>Aiyara Planet </p>
+                              <h5 class="m-t-20"><span class="text-c-blue">401-110-1843</span></h5>
+                              <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>บริษัท ไอยรา แพลนเน็ต จำกัด</p>
                               {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
                           </div>
                       </div>
