@@ -18,18 +18,15 @@ class Pick_packController extends Controller
     public function index(Request $request)
     {
       General::gen_id_url();
-
       $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
       $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
       $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
-    
         return View('backend.pick_pack.index')->with(
           array(
              'sProvince'=>$sProvince,
              'sAmphures'=>$sAmphures,
              'sTambons'=>$sTambons,
           ) );
-
     }
 
 
