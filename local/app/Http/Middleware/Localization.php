@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Session;
+use App\Helpers\General;
 
 class Localization
 {
@@ -15,9 +17,8 @@ class Localization
      */
     public function handle($request, Closure $next)
     {
-
+        General::gen_id_url();
         // dd(session()->get('locale'));
-
         if(session()->has('locale') && in_array(session()->get('locale'),['th','en','lo']))
         {
             app()->setLocale(session()->get('locale'));

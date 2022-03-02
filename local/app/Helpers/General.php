@@ -13,7 +13,7 @@ class General {
 		$menu_id = Session::get('session_menu_id');
         if($menu_id=='' || $menu_id==null){
 			$curr = url()->current();
-			$menus = DB::table('ck_backend_menu')->select('url','id')->get();
+			$menus = DB::table('ck_backend_menu')->select('url','id')->select('url','id')->get();
 			$data_id = 0;
 			foreach($menus as $m){
 				$c = strpos($curr,$m->url);
@@ -26,7 +26,6 @@ class General {
         }
 	
 	}
-
 
 	static function gen_thai_date($date, $year = '0') {
 		if($date) {
