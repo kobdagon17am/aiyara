@@ -40,12 +40,10 @@ class Po_receive_products_getController extends Controller
 
     public function store(Request $request)
     {
-      // dd($request->all()); 
+
       if(isset($request->save_set_to_warehouse)){
-        // dd($request->all());  
         // เช็คยอด ว่า ครบแล้วหรือไม่ ถ้าครบแล้ว ก็อัพเดตสถานะ ว่าได้รับครบแล้ว ถ้ายัง ก็เป็น ค้างรับสินค้า
-
-
+        // db_po_supplier_products_receive
         DB::select(" INSERT INTO `db_po_supplier_products_receive` (
                       `po_supplier_products_id_fk`,
                       `product_id_fk`,
@@ -87,6 +85,72 @@ class Po_receive_products_getController extends Controller
 
               $r = DB::select("SELECT * FROM `db_po_supplier_products` where id=".$request->po_supplier_products_id_fk." ");
 
+              // วุฒิเพิ่มมาไว้ตัดสต็อคเลย
+              $sRow_po_sup = DB::table('db_po_supplier_products')->where('id',$request->po_supplier_products_id_fk)->first();
+              $sRow_po = DB::table('db_po_supplier')->where('id',$sRow_po_sup->po_supplier_id_fk)->first();
+
+                $_check=DB::table('db_stocks')
+                ->where('business_location_id_fk', $sRow_po->business_location_id_fk)
+                ->where('branch_id_fk', $request->branch_id_fk_c)
+                ->where('product_id_fk', $request->product_id_fk)
+                ->where('lot_number', $request->lot_number)
+                ->where('lot_expired_date', $request->lot_expired_date)
+                ->where('warehouse_id_fk', $request->warehouse_id_fk_c)
+                ->where('zone_id_fk', $request->zone_id_fk_c)
+                ->where('shelf_id_fk', $request->shelf_id_fk_c)
+                ->where('shelf_floor', $request->shelf_floor_c)
+                ->get();
+                if($_check->count() == 0){
+
+                    $stock = new  \App\Models\Backend\Check_stock;
+                    $stock->business_location_id_fk = $sRow_po->business_location_id_fk ;
+                    $stock->product_id_fk = $request->product_id_fk ;
+                    $stock->lot_number = $request->lot_number ;
+                    $stock->lot_expired_date = $request->lot_expired_date ;
+                    $stock->amt = $request->amt_get ;
+                    $stock->product_unit_id_fk = $request->product_unit_id_fk ;
+                    $stock->branch_id_fk = $request->branch_id_fk_c ;
+                    $stock->warehouse_id_fk = $request->warehouse_id_fk_c ;
+                    $stock->zone_id_fk = $request->zone_id_fk_c ;
+                    $stock->shelf_id_fk = $request->shelf_id_fk_c ;
+                    $stock->shelf_floor = $request->shelf_floor_c ;
+                    $stock->date_in_stock = date("Y-m-d");
+                    $stock->created_at = date("Y-m-d H:i:s");
+                    $stock->save();
+
+                }else{
+
+                      DB::table('db_stocks')
+                      ->where('business_location_id_fk', $sRow_po->business_location_id_fk)
+                        ->where('branch_id_fk', $request->branch_id_fk_c)
+                        ->where('product_id_fk', $request->product_id_fk)
+                        ->where('lot_number', $request->lot_number)
+                        ->where('lot_expired_date', $request->lot_expired_date)
+                        ->where('warehouse_id_fk', $request->warehouse_id_fk_c)
+                        ->where('zone_id_fk', $request->zone_id_fk_c)
+                        ->where('shelf_id_fk', $request->shelf_id_fk_c)
+                        ->where('shelf_floor', $request->shelf_floor_c)
+                      ->update(array(
+                        'amt' => DB::raw( ' amt + '.$request->amt_get)
+                      ));
+
+          }
+
+          $stock_move = DB::table('db_stocks')
+          ->where('business_location_id_fk', $sRow_po->business_location_id_fk)
+          ->where('branch_id_fk', $request->branch_id_fk_c)
+          ->where('product_id_fk', $request->product_id_fk)
+          ->where('lot_number', $request->lot_number)
+          ->where('lot_expired_date', $request->lot_expired_date)
+          ->where('warehouse_id_fk', $request->warehouse_id_fk_c)
+          ->where('zone_id_fk', $request->zone_id_fk_c)
+          ->where('shelf_id_fk', $request->shelf_id_fk_c)
+          ->where('shelf_floor', $request->shelf_floor_c)
+          ->first();
+          if($stock_move){
+         \App\Models\Backend\Stock_movement::add_movement_po($stock_move->id,$sRow_po->id,$request->amt_get);
+          }
+       
               return redirect()->to(url("backend/po_receive/".$r[0]->po_supplier_id_fk."/edit"));
 
       }else{
@@ -178,20 +242,50 @@ class Po_receive_products_getController extends Controller
     public function destroy($id)
     {
 
-
        if($id){
         
         $r = DB::select("SELECT *  FROM `db_po_supplier_products_receive` WHERE (`id`='$id')");
 
+           // วุฒิเพิ่มมาไว้ตัดสต็อคเลย
+           $sRow_po_sup = DB::table('db_po_supplier_products')->where('id',$r[0]->po_supplier_products_id_fk)->first();
+           $sRow_po = DB::table('db_po_supplier')->where('id',$sRow_po_sup->po_supplier_id_fk)->first();
 
+                   DB::table('db_stocks')
+                   ->where('business_location_id_fk', $sRow_po->business_location_id_fk)
+                     ->where('branch_id_fk', $r[0]->branch_id_fk)
+                     ->where('product_id_fk', $r[0]->product_id_fk)
+                     ->where('lot_number', $r[0]->lot_number)
+                     ->where('lot_expired_date', $r[0]->lot_expired_date)
+                     ->where('warehouse_id_fk', $r[0]->warehouse_id_fk)
+                     ->where('zone_id_fk', $r[0]->zone_id_fk)
+                     ->where('shelf_id_fk', $r[0]->shelf_id_fk)
+                     ->where('shelf_floor', $r[0]->shelf_floor)
+                   ->update(array(
+                     'amt' => DB::raw( ' amt - '.$r[0]->amt_get)
+                   ));
+
+       $stock_move = DB::table('db_stocks')
+       ->where('business_location_id_fk', $sRow_po->business_location_id_fk)
+       ->where('branch_id_fk', $r[0]->branch_id_fk)
+       ->where('product_id_fk', $r[0]->product_id_fk)
+       ->where('lot_number', $r[0]->lot_number)
+       ->where('lot_expired_date', $r[0]->lot_expired_date)
+       ->where('warehouse_id_fk', $r[0]->warehouse_id_fk)
+       ->where('zone_id_fk', $r[0]->zone_id_fk)
+       ->where('shelf_id_fk', $r[0]->shelf_id_fk)
+       ->where('shelf_floor', $r[0]->shelf_floor)
+       ->first();
+       if($stock_move){
+      \App\Models\Backend\Stock_movement::remove_movement_po($stock_move->id,$sRow_po->id,$r[0]->amt_get);
+       }
+
+      //  
+        
         DB::select("DELETE FROM `db_po_supplier_products_receive` WHERE (`id`='$id')");
-
-
         DB::select("
           UPDATE `db_po_supplier_products` SET product_amt_receive=((SELECT sum(amt_get) as sum_amt FROM db_po_supplier_products_receive WHERE po_supplier_products_id_fk=".$r[0]->po_supplier_products_id_fk." AND product_id_fk=".$r[0]->product_id_fk.") - ".$r[0]->amt_get." ) 
           WHERE id=".$r[0]->po_supplier_products_id_fk." ;
         ");
-
         DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='1' where id=".$r[0]->po_supplier_products_id_fk." AND product_amt=product_amt_receive; ");
         DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='2' where id=".$r[0]->po_supplier_products_id_fk." AND product_amt>product_amt_receive; ");
         

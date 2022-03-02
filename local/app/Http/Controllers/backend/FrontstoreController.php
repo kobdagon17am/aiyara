@@ -2221,6 +2221,13 @@ class FrontstoreController extends Controller
         $action_user_011 = " AND db_orders.action_user = $user_login_id ";
         $action_user_012 = " AND db_add_ai_cash.action_user = $user_login_id ";
       }
+
+      $role_check = DB::table('role_group')->select('acc_status')->where('id',\Auth::user()->role_group_id_fk)->first();
+      if(@$role_check->acc_status==1){
+        $action_user_011 = "";
+        $action_user_012 = "";
+      }
+
     }
 
 
@@ -2807,6 +2814,12 @@ class FrontstoreController extends Controller
       }
     }
 
+     $role_check = DB::table('role_group')->select('acc_status')->where('id',\Auth::user()->role_group_id_fk)->first();
+      if(@$role_check->acc_status==1){
+        $action_user_011 = "";
+        $action_user_012 = "";
+      }
+
 
     if (!empty($req->startDate)) {
       $startDate1 = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
@@ -3370,13 +3383,19 @@ $endDate1
       $action_user_011 = " AND action_user = $user_login_id ";
     }
     
-    if ($sPermission == 1 || \Auth::user()->role_group_id_fk==4) {
+    if ($sPermission == 1) {
 
       $action_user_01 = "";
       $action_user_011 = "";
       // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
     } else {
       $action_user_01 = " AND action_user = $user_login_id ";
+    }
+    
+    $role_check = DB::table('role_group')->select('acc_status')->where('id',\Auth::user()->role_group_id_fk)->first();
+    if(@$role_check->acc_status==1){
+      $action_user_01 = "";
+      $action_user_011 = "";
     }
 
     // วุฒิเพิ่มมา

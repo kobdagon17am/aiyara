@@ -344,10 +344,6 @@
 </div>
 <!-- end row -->
 
-
-
-
-
 <div class="modal fade" id="setToWarehouseModal" tabindex="-1" role="dialog" aria-labelledby="setToWarehouseModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
@@ -972,7 +968,11 @@ $( function() {
             
                      setTimeout(function(){
                          $('#data-table').DataTable().draw();
-                      }, 1000);
+                      }, 100);
+                      setTimeout(function(){
+                         $('#data-table-history').DataTable().draw();
+                      }, 100);
+                      
        
            });
 
