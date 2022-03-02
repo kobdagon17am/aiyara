@@ -146,17 +146,18 @@ class Check_money_dailyController extends Controller
       \DB::beginTransaction();
       try {
 
-        // dd(request('id'));
+      //   dd(request('id'));
         if(@request('id')){
 
             $sRow = \App\Models\Backend\Sent_money_daily::find(request('id'));
             // dd($sRow);
             $sRow->total_money = request('total_money');
-            $sRow->status_approve = 1 ;
+            // $sRow->status_approve = 1 ;
+            $sRow->status_approve = request('select_approve_status');
+            $sRow->remark = request('remark');
             $sRow->approver = \Auth::user()->id;
             $sRow->approve_date = date('Y-m-d h:i:s');
             $sRow->save();
-// dd($sRow->orders_ids);
 //  `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
 // `status_sent_money` int(1) DEFAULT '0' COMMENT '0= - (รอดำเนินการ) , 1=In process (cs กดปุ่มส่งเงินแล้ว)  , 2=Success (พ.เงิน กดรับเงินแล้ว)',
             DB::update(" UPDATE db_orders SET approve_status=9,status_sent_money=2 WHERE id in($sRow->orders_ids) ");
@@ -318,7 +319,7 @@ class Check_money_dailyController extends Controller
       }else{
 
           $sTable = DB::select("  
-              SELECT db_sent_money_daily.*,1 as remark
+              SELECT db_sent_money_daily.*,1 as remark,remark as detail
               ,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location 
               ,(SELECT branch_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as branch 
               FROM db_sent_money_daily WHERE db_sent_money_daily.status_cancel=0 
@@ -328,7 +329,7 @@ class Check_money_dailyController extends Controller
               $w04
               $w05
               UNION ALL
-              SELECT db_sent_money_daily.*,2 as remark
+              SELECT db_sent_money_daily.*,2 as remark,remark as detail
               ,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location 
               ,(SELECT branch_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as branch 
               FROM db_sent_money_daily WHERE db_sent_money_daily.status_cancel=0
@@ -621,7 +622,7 @@ class Check_money_dailyController extends Controller
                                  <tr>
                                 <td colspan="6">  </td>
                                 <td class="text-right" style="width:35%;color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </td>
-                                <td class="text-right" style="width:25%;color:black;font-size:16px;font-weight:bold;"> '.number_format($sum,2).' </td>
+                                <td class="text-right" style="width:25%;color:black;font-size:16px;font-weight:bold;" > '.number_format($sum,2).' </td>
                                  </tr>';
 
                        }
@@ -697,7 +698,9 @@ class Check_money_dailyController extends Controller
 
                 if($row->status_approve==1){
                    return "<span style='color:green;'>รับเงินแล้ว</span>";
-                }else{
+                }elseif($row->status_approve==2){
+                  return "<span style='color:red;'>ไม่อนุมัติ</span>";
+               }else{
                    return  "-" ;
                 }
 
@@ -706,6 +709,9 @@ class Check_money_dailyController extends Controller
           }
           
       })
+      ->addColumn('detail', function($row) {
+         return @$row->detail;
+       })
       ->escapeColumns('column_007') 
       ->addColumn('sum_total_price', function($row) {
        

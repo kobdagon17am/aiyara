@@ -239,6 +239,7 @@
                    {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
                    {data: 'approver', title :'<span style="vertical-align: middle;">ผู้รับเงิน </span> ', className: 'text-center'},
                    {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},
+                   {data: 'detail', title :'<span style="vertical-align: middle;">หมายเหตุ </span> ', className: 'text-center'},
                    {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
                         return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
                     }},

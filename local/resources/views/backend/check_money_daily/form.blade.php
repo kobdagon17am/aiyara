@@ -111,10 +111,15 @@
                   <div class="form-group row">
                     <label for="sent_money_type" class="col-md-3 col-form-label">ประเภทการส่งเงิน :</label>
                     <div class="col-md-6">
-                    <?php //echo @$sRowCheck_money_daily[0]->sent_money_type ?>
+                    <?php
+                      $selected_str = "";
+                      if(!isset($sRowCheck_money_daily[0]->sent_money_type)){
+                        $selected_str = "selected";
+                      }
+                      ?>
                        <select id="sent_money_type" name="sent_money_type" class="form-control select2-templating " required >
                            <option value="">Select</option>
-                            <option value="1" {{@$sRowCheck_money_daily[0]->sent_money_type==1?'selected':''}} >เงินสด</option>
+                            <option value="1" {{$selected_str}} {{@$sRowCheck_money_daily[0]->sent_money_type==1?'selected':''}} >เงินสด</option>
                             <option value="2" {{@$sRowCheck_money_daily[0]->sent_money_type==2?'selected':''}} >เงินโอน</option>
                        </select>
 
@@ -125,6 +130,24 @@
                     <label for="bank" class="col-md-3 col-form-label"> ถ้าเป็นประเภทการโอน :</label>
                     <div class="col-md-6">
                       <input class="form-control" id="bank" name="bank" type="text" value="{{@$sRowCheck_money_daily[0]->bank}}"  placeholder=" กรอก บัญชีธนาคาร และ เลขที่บัญชีฯ " >
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="bank" class="col-md-3 col-form-label" style="color:red;"> ทำรายการ * :</label>
+                    <div class="col-md-6">
+                     <select class="form-control" name="select_approve_status" id="select_approve_status" required>
+                        <option value="">รอดำเนินการ กรุณาเลือก</option>
+                        <option {{@$sRowCheck_money_daily[0]->status_approve==1?'selected':''}} value="1">อนุมัติ</option>
+                        <option {{@$sRowCheck_money_daily[0]->status_approve==2?'selected':''}} value="2">ไม่อนุมัติ</option>
+                     </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="bank" class="col-md-3 col-form-label"> หมายเหตุ :</label>
+                    <div class="col-md-6">
+                      <input type="text" value="" name="remark" class="form-control">
                     </div>
                   </div>
 
@@ -723,14 +746,13 @@ $.fn.dataTable.ext.errMode = 'throw';
 
               var total_money = $("#total_money").val(); //alert(total_money);
               var sent_money_type = $("#sent_money_type").val(); //alert(total_money);
+              var select_approve_status = $("#select_approve_status").val(); //alert(total_money);
 
-              if(total_money=='' || sent_money_type==''){
-
-
-                $("#total_money").focus();
+              if(total_money=='' || sent_money_type=='' || select_approve_status==''){  
+                alert('กรุณาระบุข้อมูลให้ครบ');
+                // $("#total_money").focus();
                 // $("#frm").validate();
                 return false;
-
               }else{
                     event.preventDefault();
                     let v1 = parseFloat($("#total_money").val()); 

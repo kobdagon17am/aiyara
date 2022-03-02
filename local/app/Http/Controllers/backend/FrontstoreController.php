@@ -2649,6 +2649,8 @@ class FrontstoreController extends Controller
                           <th class="text-center">' . trans('message.send_reciept_list') . '</th>
                           <th class="text-center">' . trans('message.sender') . '</th>
                           <th class="text-center">' . trans('message.send_time') . '</th>
+                          <th class="text-center"> Status </th>
+                          <th class="text-center"> remark </th>
                           <th class="text-center">Tool</th>
                         </tr>
                       </thead>
@@ -2728,13 +2730,23 @@ class FrontstoreController extends Controller
                           </td>';
         }
 
+        if(@$r->status_approve == 1){
+            $status_approve = '<label style="color:green;">อนุมติ</label>';
+        }elseif(@$r->status_approve == 2){
+          $status_approve = '<label style="color:red;">ไม่อนุมัติ</label>';
+        }else{
+          $status_approve = '<label style="color:black;">รอดำเนินการ</label>';
+        }
+
         $show .= '
                           <td class="text-center">' . @$r->sender . '</td>
                           <td class="text-center">' . @$r->updated_at . '</td>
+                          <td class="text-center">' . $status_approve . '</td>
+                          <td class="text-center">' . @$r->remark . '</td>
                           <td class="text-center">';
 
-        if (@$r->status_approve == 0) {
-          if (@$r->status_cancel == 0) {
+        if (@$r->status_approve == 0 || @$r->status_approve == 2) {
+          if (@$r->status_cancel == 0 ) {
             $show .= '
                             <a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data-id="' . @$r->id . '" > ยกเลิก </a>';
           }

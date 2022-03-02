@@ -4237,10 +4237,7 @@ class AjaxController extends Controller
 
   public function ajaxSentMoneyDaily(Request $request)
     {
-      // return($request);
-
       if($request->ajax()){
-
         //  $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND status_sent_money=0  ");
         // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
 // ของเดิม
