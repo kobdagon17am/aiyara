@@ -110,7 +110,6 @@
                     $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($order->customers_sent_id_fk);
                     $customer_pay = \App\Helpers\Frontend::get_customer_id($order->customers_id_fk);
 
-
                  ?>
                  <hr>
                  <span class="mb-2"><u>สั่งซื้อให้ลูกทีม</u></span>
