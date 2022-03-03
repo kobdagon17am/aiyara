@@ -62,7 +62,7 @@ class RequisitionBetweenBranch extends Model
      */
     public function requisition_details()
     {
-        return $this->hasMany(RequisitionBetweenBranchDetail::class);
+        return $this->hasMany(RequisitionBetweenBranchDetail::class)->select('products.product_code')->join('products','products.id','requisition_between_branch_details.product_id')->orderBy('products.product_code','asc');
     }
 
     public function from_branch()

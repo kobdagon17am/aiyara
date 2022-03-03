@@ -868,7 +868,7 @@ class Po_approveController extends Controller
 
        $sTable =     DB::select("
 
-select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
+select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
 left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
 left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
 where
@@ -984,7 +984,8 @@ ORDER BY updated_at DESC
                     // }else{
                     //     return '-';
                     // }
-                    return $row->txt_desc;
+                    $str = "<label style='color:".$row->color.";'>".$row->txt_desc."</label>";
+                    return $str;
 
                 // }
             })

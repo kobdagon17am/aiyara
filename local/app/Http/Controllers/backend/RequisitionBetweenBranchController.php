@@ -23,6 +23,7 @@ class RequisitionBetweenBranchController extends Controller
             ->selectRaw('products.id as product_id, products.product_code, CASE WHEN products_details.product_name IS NULL THEN "* ไม่ได้กรอกชื่อสินค้า" ELSE products_details.product_name END as product_name')
             ->leftJoin('products_details', 'products_details.product_id_fk', '=', 'products.id')
             ->where('products_details.lang_id', 1)
+            ->orderBy('products.product_code','asc')
             ->get();
 
         return view('backend.requisition.index')->with([

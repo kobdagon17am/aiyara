@@ -244,7 +244,7 @@ tr.border_bottom td {
         <td style="width:15%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">รหัสสินค้า : ชื่อสินค้า </td>
         <td style="width:8%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">ล็อตนัมเบอร์ </td>
         <td style="width:8%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> วันหมดอายุ </td>
-        <td style="width:8%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนที่มีในคลัง
+        <!-- <td style="width:8%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> จำนวนที่มีในคลัง -->
         <td style="width:9%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">  จำนวนที่ต้องการโอน
         <td style="width:30%;border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> โอนย้ายไปที่คลัง  </td>
 
@@ -311,7 +311,7 @@ tr.border_bottom td {
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$product_name?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->lot_number?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$lot_expired_date?> </td>
-            <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$amt_in_warehouse?>  </td>
+            <!-- <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <=$amt_in_warehouse?>  </td> -->
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->amt?>  </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$warehouses?>  </td>
           </tr>
