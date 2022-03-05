@@ -683,10 +683,11 @@ class Add_ai_cashController extends Controller
           @$approve_status = DB::select(" select * from `dataset_approve_status` where id=" . @$row->approve_status . " ");
           // return $purchase_type[0]->orders_type;
           if (@$approve_status[0]->id == 2 || @$approve_status[0]->id == 3 || @$approve_status[0]->id == 4) {
-            return "อนุมัติแล้ว";
+            return "<label style='color:green;'>อนุมัติแล้ว";
           } else {
             // return $approve_status[0]->orders_type;
-            return @$approve_status[0]->txt_desc;
+            return "<label style='color:".@$approve_status[0]->color.";'>".@$approve_status[0]->txt_desc."</label>";  
+            // return @$approve_status[0]->txt_desc;
           }
           // return @$approve_status[0]->txt_desc;
         } else {

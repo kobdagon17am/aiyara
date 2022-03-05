@@ -623,6 +623,7 @@ $(function() {
                                 destroy:true,
                                 ordering: false,
                                 "info":     false,
+                                iDisplayLength: 25,
 
                                          ajax: {
                                           url: '{{ route('backend.po_approve.datatable') }}',
@@ -685,9 +686,121 @@ $(function() {
                                                   ).addClass('input');
                                               },
                                     });
-
                                 });
-// @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+                                var oTable2;
+                        $(function() {
+                          $.fn.dataTable.ext.errMode = 'throw';
+
+                                oTable2 = $('#data-table-02').DataTable({
+                                        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                        processing: true,
+                                        serverSide: true,
+                                        scroller: true,
+                                        destroy:true,
+                                        ordering: false,
+                                        "info":     false,
+                                            // scrollY: ''+($(window).height()-370)+'px',
+                                            iDisplayLength: 25,
+                                            ajax: {
+                                              url: '{{ route('backend.add_ai_cash_02.datatable') }}',
+
+                                              data :{
+                                            _token: '{{csrf_token()}}',
+                                                business_location_id_fk:business_location_id_fk,
+                                                branch_id_fk:branch_id_fk,
+                                                doc_id:doc_id,
+                                                bill_sdate:bill_sdate,
+                                                bill_edate:bill_edate,
+                                                transfer_amount_approver:transfer_amount_approver,
+                                                transfer_bill_status:transfer_bill_status,
+                                                transfer_bill_approve_sdate:transfer_bill_approve_sdate,
+                                                transfer_bill_approve_edate:transfer_bill_approve_edate,
+                                                // approve_sdate:approve_sdate,
+                                                // approve_edate:approve_edate,
+                                              },
+
+                                              data: function ( d ) {
+                                                d.Where={};
+                                                $('.myWhere').each(function() {
+                                                  if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                                    d.Where[$(this).attr('name')] = $.trim($(this).val());
+                                                  }
+                                                });
+                                                d.Like={};
+                                                $('.myLike').each(function() {
+                                                  if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                                    d.Like[$(this).attr('name')] = $.trim($(this).val());
+                                                  }
+                                                });
+                                                d.Custom={};
+                                                $('.myCustom').each(function() {
+                                                  if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                                    d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                                                  }
+                                                });
+                                                oData = d;
+                                              },
+                                              method: 'POST'
+                                            },
+
+        columns: [
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+            {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
+            {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
+            {data: 'aicash_remain', title :'<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>', className: 'text-center'},
+            {data: 'aicash_amt', title :'<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>', className: 'text-center'},
+            {data: 'action_user', title :'<center>พนักงาน <br> ที่ดำเนินการ </center>', className: 'text-center'},
+            {data: 'pay_type_id_fk', title :'<center>รูปแบบการชำระเงิน </center>', className: 'text-center'},
+            {data: 'total_amt', title :'<center>ยอดชำระเงิน </center>', className: 'text-center'},
+            {data: 'status', title :'<center>สถานะ </center>', className: 'text-center'},
+            {data: 'approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+            {data: 'approve_date', title :'<center>วันที่อนุมัติ</center>', className: 'text-center'},
+            {data: 'id', title :'Tools', className: 'text-center w60'},
+        ],
+        rowCallback: function(nRow, aData, dataIndex){
+
+          if(aData['transfer_bill_status']==5){
+            for (var i = 0; i < 6; i++) {
+              $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
+            }
+            // $('td:last-child', nRow).html('-ยกเลิก-');
+            $('td:last-child', nRow).html('-');
+
+          }else{
+
+
+              var sPermission = "<?=\Auth::user()->permission?>";
+              var sU = sessionStorage.getItem("sU");
+              var sD = sessionStorage.getItem("sD");
+              if(sPermission==1){
+                sU = 1;
+                sD = 1;
+              }
+              var str_U = '';
+              if(sU=='1'){
+                str_U = '<a href="{{ URL('backend/po_approve/form_aicash') }}/'+aData['id']+'" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+              }
+              var str_D = '';
+              // if(sD=='1'){
+              //   str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
+              // }
+              if(sU!='1' && sD!='1'){
+                 $('td:last-child', nRow).html('-');
+              }else{
+                $('td:last-child', nRow).html( str_U ).addClass('input');
+              }
+
+
+          }
+
+        }
+    });
+
+  });
+
+                                
               setTimeout(function(){
                    $(".myloading").hide();
                 }, 1500);

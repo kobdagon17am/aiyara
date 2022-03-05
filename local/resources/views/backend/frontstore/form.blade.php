@@ -2026,6 +2026,18 @@
 
                                                                         @foreach (@$PaymentSlip as $slip)
 
+                                                                        <?php
+                                                                        $status_str = "";
+                                                                        if(@$slip->status==1){
+                                                                            $status_str = '<span style="color:;"><b>รออนุมัติ</b></span>';
+                                                                        }elseif(@$slip->status==2){
+                                                                            $status_str = '<span style="color:green;"><b>อนุมัติแล้ว</b></span>';
+                                                                        }elseif(@$slip->status==3){
+                                                                            $status_str = '<span style="color:red;"><b>ไม่อนุมัติ</b></span>';
+                                                                        }
+                                                                        ?>
+
+                                                                        <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป  {!!$status_str!!} </h5>
                                                                             <span width="100" class="span_file_slip">
 
                                                                                 <img src="{{ $slip->url }}/{{ @$slip->file }}"
@@ -2035,7 +2047,7 @@
                                                                                     data-id="{{ @$slip->id }}"
                                                                                     class="btn btn-danger btn-sm font-size-10 btnDelSlip ch_Disabled "
                                                                                     style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-
+                                                                                
                                                                                 <input {{ @$disAfterSave }} type="text"
                                                                                     class="form-control ch_Disabled "
                                                                                     name="note_bill[]" placeholder=""
@@ -2043,7 +2055,13 @@
 
                                                                                     <input type="hidden" name="note_bill_id[]" value="{{$slip->id}}">
 
+                                                                                    <input {{ @$disAfterSave }} type="text"
+                                                                                    class="form-control" style="color:red;"
+                                                                                    name="note_bill2[]" readonly placeholder="สำหรับพนักงานตอบกลับ"
+                                                                                    value="{{ @$slip->note2 }}">
+
                                                                             </span>
+                                                                            <br>
 
                                                                         @endforeach
 
@@ -2968,10 +2986,12 @@
         function checkStatus() {
             var status = "{{ @$sRow->approve_status }}";
             var distribution_channel_id_fk = "{{ @$sRow->distribution_channel_id_fk }}";
-            if (status != 1 && status != 2 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
+            // && status != 2
+            if (status != 1  && status != 6 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
+                 
             }else{
                 fnShippingCalculate(0);
             }

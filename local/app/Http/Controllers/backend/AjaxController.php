@@ -2853,6 +2853,28 @@ class AjaxController extends Controller
         }
     }
 
+    public function ajaxApproveFileSlip_04(Request $request)
+    {
+        if($request->ajax()){
+            if($request->id){
+              $r = DB::select(" SELECT url,file,order_id FROM `payment_slip` WHERE `id`=".$request->id." ");
+            //   DB::select(" UPDATE db_orders SET `transfer_bill_status`='1' where id=".@$r[0]->order_id."  ");
+              DB::select(" UPDATE payment_slip SET `status` = '".$request->status."' WHERE `id`=".$request->id." ");
+            }
+        }
+    }
+
+    public function ajaxChangeFileSlip_04(Request $request)
+    {
+        if($request->ajax()){
+            if($request->id){
+            //   $r = DB::select(" SELECT url,file,order_id FROM `payment_slip` WHERE `id`=".$request->id." ");
+            //   DB::select(" UPDATE db_orders SET `transfer_bill_status`='1' where id=".@$r[0]->order_id."  ");
+              DB::select(" UPDATE payment_slip SET `note2` = '".$request->note2."' WHERE `id`=".$request->id." ");
+            }
+        }
+    }
+
 
     public function ajaxDelFileSlip_02(Request $request)
     {

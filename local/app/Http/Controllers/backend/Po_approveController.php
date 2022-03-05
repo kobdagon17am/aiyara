@@ -52,12 +52,18 @@ class Po_approveController extends Controller
     {
     }
 
+    public function notAprrove(Request $request)
+    {
+
+    }
+
     public function edit($id)
     {
         $sRow = \App\Models\Backend\Orders::find($id);
         // $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'asc')->get();
         $slip = DB::table('payment_slip')->where('code_order', '=', $sRow->code_order)->orderby('id', 'asc')->get();
-        // dd($slip);
+        $slip_approve = DB::table('payment_slip')->where('code_order', '=', $sRow->code_order)->whereIn('status',[2])->orderby('id', 'asc')->get();
+        $slip_not_approve = DB::table('payment_slip')->where('code_order', '=', $sRow->code_order)->whereIn('status',[3])->orderby('id', 'asc')->get();
 
         $price = 0;
         if ($sRow->purchase_type_id_fk == 7) {
@@ -71,12 +77,12 @@ class Po_approveController extends Controller
 
         // $TransferBank = \App\Models\Backend\TransferBank::get();
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
-
-        // dd($price);
         return view('backend.po_approve.form')->with([
             'sRow' => $sRow,
             'id' => $id,
             'slip' => $slip,
+            'slip_approve' => $slip_approve,
+            'slip_not_approve' => $slip_not_approve,
             'price' => $price,
             'note_fullpayonetime' => $sRow->note_fullpayonetime,
             'approval_amount_transfer' => $sRow->approval_amount_transfer>0?$sRow->approval_amount_transfer:"",
@@ -139,27 +145,27 @@ class Po_approveController extends Controller
                 $sRow->order_status_id_fk = '3';
                 $sRow->approve_status  = 1;
 
-                 if ($request->hasFile('image01')) {
+                //  if ($request->hasFile('image01')) {
 
 
-                  $r = DB::select(" SELECT url,file FROM `payment_slip` where `code_order`='".$sRow->code_order."' ; ");
-                  @UNLINK(@$r[0]->url.@$r[0]->file);
+                //   $r = DB::select(" SELECT url,file FROM `payment_slip` where `code_order`='".$sRow->code_order."' ; ");
+                //   @UNLINK(@$r[0]->url.@$r[0]->file);
 
-                  DB::select(" DELETE FROM `payment_slip` WHERE `code_order`='".$sRow->code_order."'; ");
+                //   DB::select(" DELETE FROM `payment_slip` WHERE `code_order`='".$sRow->code_order."'; ");
 
-                  $this->validate($request, [
-                    'image01' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
-                  ]);
-                  $image = $request->file('image01');
-                  $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
-                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
-                  $image->move($image_path, $name);
-                  $sRow->file_slip = $image_path.$name;
-                  DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`,status)
-                   VALUES
-                   ('".$sRow->customers_id_fk."', '$id', '".$sRow->code_order."', '$image_path', '$name', now(), now() ,1  )");
+                //   $this->validate($request, [
+                //     'image01' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+                //   ]);
+                //   $image = $request->file('image01');
+                //   $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
+                //   $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                //   $image->move($image_path, $name);
+                //   $sRow->file_slip = $image_path.$name;
+                //   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`,status)
+                //    VALUES
+                //    ('".$sRow->customers_id_fk."', '$id', '".$sRow->code_order."', '$image_path', '$name', now(), now() ,1  )");
 
-                }
+                // }
 
                 // note
                 $sRow->transfer_bill_status = 1;
@@ -167,14 +173,14 @@ class Po_approveController extends Controller
 
                 $sRow->approval_amount_transfer = 0 ;
                 $sRow->account_bank_name_customer = 0;
-                $sRow->transfer_amount_approver = 0;
+                $sRow->transfer_amount_approver =  \Auth::user()->id;
                 $sRow->transfer_bill_date  = NULL;
                 $sRow->transfer_bill_approvedate = NULL;
                 $sRow->transfer_bill_note = @request('detail');
        
 
                 DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
-
+                $sRow->approve_status = 6;
 
             }
 
@@ -1100,6 +1106,7 @@ ORDER BY updated_at DESC
                     }
 
                 }
+                // return    $str = "<label style='color:".$row->color.";'>".$row->txt_desc."</label>";
             })
             ->escapeColumns('transfer_bill_status')
 

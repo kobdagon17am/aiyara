@@ -59,26 +59,43 @@
                             @endphp
                                 @foreach(@$slip AS $r)
 
+                                <?php
+                                $status_str = "";
+                                if(@$r->status==1){
+                                    $status_str = '<span style="color:;"><b>รออนุมัติ</b></span>';
+                                }elseif(@$r->status==2){
+                                    $status_str = '<span style="color:green;"><b>อนุมัติแล้ว</b></span>';
+                                }elseif(@$r->status==3){
+                                    $status_str = '<span style="color:red;"><b>ไม่อนุมัติ</b></span>';
+                                }
+                                ?>
+
                                     <label for="example-text-input" class="col-md-1 col-form-label">Slip {{@$i}} </label>
                                         <div class="col-md-3">
-                                            <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป </h5>
+                                            <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป  {!!$status_str!!} </h5>
                                              <input class="form-control  " type="text" value="{{@$r->transfer_bill_date?@$r->transfer_bill_date:NULL}}" readonly="" >
                                              <br>
 
                                             @if (!empty(@$r->file))
-                                                <img src="{{ $r->url }}/{{ @$r->file }}" data-lity width="200px"
-                                                    class="grow">
-                                                    <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-
+                                                <img src="{{ $r->url }}/{{ @$r->file }}" data-lity width="200px" height="200px" class="grow">
+                                                    
+                                                    <br> <br>
                                                      <input  type="text" class="form-control" name="note" placeholder="" readonly value="หมายเหตุ : {{@$r->note}}" >
-
-
+                                                     <br>
+                                                     <input  type="text" class="form-control note2" data-id="{{@$r->id}}" name="note2" placeholder="หมายเหตุ 2 สำหรับพนักงาน" value="{{@$r->note2}}" >
                                             @ELSE
+                                           
                                                 <img data-lity src="{{ asset('local/public/images/example_img.png') }}"
                                                     class="grow" width="200px">
                                             @ENDIF
-
-                                        </div>
+                                            <br>
+                                            @if(@$r->status==1)
+                                            <button  type="button" data-id="{{@$r->id}}" class="btn btn-success btn-sm font-size-10 btn_approve" style="vertical-align: bottom;margin-bottom: 5px;">อนุมัติ</button> 
+                                            <button  type="button" data-id="{{@$r->id}}" class="btn btn-warning btn-sm font-size-10 btn_not_approve" style="vertical-align: bottom;margin-bottom: 5px;">ไม่อนุมัติ</button> 
+                                            <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                                            @endif
+                                        </div>  
+                                        
                             @php
                             @$i++
                             @endphp
@@ -114,15 +131,16 @@
                             &nbsp; --}}
 
                         {{-- @IF(@$sRow->transfer_bill_status==2) --}}
-                        @IF(@$sRow->approve_status==1 || @$sRow->approve_status==2 || @$sRow->approve_status==0)
+                        @IF(@$sRow->approve_status==1 || @$sRow->approve_status==2 || @$sRow->approve_status==0 || @$sRow->approve_status==6)
                         <div class="div_confirm_transfer_slip">
                             <button type="button" class="btn btn-primary waves-effect waves-light"
                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
-
-                        <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
+                            
+                            <button type="button" class="btn btn-danger waves-effect waves-light btnNotAprrove" data-toggle="modal" data-target="#cancel" order_id="{{@$sRow->id}}">ไม่อนุมัติ</button>
+                        {{-- <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
                             data-toggle="modal" data-target="#cancel">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
-                        </button>
+                        </button> --}}
 
                     </div>
                         @ELSE
@@ -245,7 +263,7 @@
                             @php
                             @$i = 1
                             @endphp
-                                @foreach(@$slip AS $r)
+                                @foreach(@$slip_approve AS $r)
                                     <hr>
                                        <div class="col-md-12 mt-2 mb-2 text-left ">
                                                 <div class="row form-group " >
@@ -326,7 +344,8 @@
                                         <div class="modal-dialog modal-dialog-scrollable">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title mt-0" id="cancel">ยกเลิกบิลชำระ</h5>
+                                                    {{-- <h5 class="modal-title mt-0" id="cancel">ยกเลิกบิลชำระ</h5> --}}
+                                                    <h5 class="modal-title mt-0" id="cancel">ไม่อนุมัติ</h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
@@ -345,11 +364,11 @@
                                                     <center>
 
 
-                                                    @if(@$slip)
+                                                    @if(@$slip_not_approve)
                                                      <?php $i = 1 ; ?>
-                                                        @foreach(@$slip AS $r)
+                                                        @foreach(@$slip_not_approve AS $r)
 
-                                                        <input type="file" accept="image/*" id="image0{{$i}}" name="image0{{$i}}" class="form-control" OnChange="showPreview_0{{$i}}(this)" required="" >
+                                                        {{-- <input type="file" accept="image/*" id="image0{{$i}}" name="image0{{$i}}" class="form-control" OnChange="showPreview_0{{$i}}(this)" required="" > --}}
 
                                                             @if (!empty(@$r->file))
                                                                 <img id="imgAvatar_0{{$i}}" src="{{ @$r->url }}/{{ @$r->file }}"
@@ -365,8 +384,8 @@
 
 
                                                     @IF(count($slip)==0)
-                                                    <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" required="" >
-                                                       <center><img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" >
+                                                    {{-- <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" required="" >
+                                                       <center><img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;" > --}}
                                                     @endif
 
 
@@ -374,7 +393,7 @@
                                                 <div class="modal-footer">
 
                                                        <button type="submit" type="submit" name="no_approved"
-                                                        value='no_approved' class="btn btn-primary">อัพโหลดสลิปใหม่</button>
+                                                        value='no_approved' class="btn btn-primary">ไม่อนุมัติ</button>
 
                                                         <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">Close</button>
@@ -561,6 +580,61 @@ $(function() {
 
                   }
 
+        });
+
+        $(document).on('click', '.btn_approve', function(event) {
+                  var id = $(this).data('id');
+                  var status = 2;
+                      $.ajax({
+                          type: "POST",
+                          url: " {{ url('backend/ajaxApproveFileSlip_04') }} ",
+                           data:{ _token: '{{csrf_token()}}',id:id,status:status },
+                          success: function(data){
+                            // console.log(data);
+                            location.reload();
+                          }
+                      });
+        });
+
+        $(document).on('click', '.btn_not_approve', function(event) {
+                  var id = $(this).data('id');
+                  var status = 3;
+                      $.ajax({
+                          type: "POST",
+                          url: " {{ url('backend/ajaxApproveFileSlip_04') }} ",
+                           data:{ _token: '{{csrf_token()}}',id:id,status:status },
+                          success: function(data){
+                            // console.log(data);
+                            location.reload();
+                          }
+                      });
+        });
+
+        // $(document).on('click', '.btnNotAprrove', function(event) {
+        //           var id = $(this).attr('order_id');
+        //               $.ajax({
+        //                   type: "POST",
+        //                   url: " {{ url('backend/ajaxApproveFileSlip_04') }} ",
+        //                    data:{ _token: '{{csrf_token()}}',id:id},
+        //                   success: function(data){
+        //                     // console.log(data);
+        //                     location.reload();
+        //                   }
+        //               });
+        // });
+
+        $(document).on('change','.note2',function(){
+            var id = $(this).data('id');
+            var note2 = $(this).val();
+            console.log(note2);
+                      $.ajax({
+                          type: "POST",
+                          url: " {{ url('backend/ajaxChangeFileSlip_04') }} ",
+                           data:{ _token: '{{csrf_token()}}',id:id,note2:note2 },
+                          success: function(data){
+
+                          }
+                      });
         });
 
 </script>

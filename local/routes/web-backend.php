@@ -353,7 +353,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxDelFileSlip_02', 'AjaxController@ajaxDelFileSlip_02');
     Route::post('ajaxDelFileSlip_03', 'AjaxController@ajaxDelFileSlip_03');
     Route::post('ajaxDelFileSlip_04', 'AjaxController@ajaxDelFileSlip_04');
-
+    Route::post('ajaxApproveFileSlip_04', 'AjaxController@ajaxApproveFileSlip_04');
+    Route::post('ajaxChangeFileSlip_04', 'AjaxController@ajaxChangeFileSlip_04');
+    
     Route::post('ajaxDelFileSlipGiftVoucher', 'AjaxController@ajaxDelFileSlipGiftVoucher');
     Route::post('ajaxClearCostFrontstore', 'AjaxController@ajaxClearCostFrontstore');
     Route::post('ajaxClearPayTypeFrontstore', 'AjaxController@ajaxClearPayTypeFrontstore');

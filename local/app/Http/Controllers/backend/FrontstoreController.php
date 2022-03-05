@@ -364,7 +364,7 @@ class FrontstoreController extends Controller
       }
 
     $sRow = \App\Models\Backend\Frontstore::find($id);
-    if ($sRow->approve_status == 9) {
+    if ($sRow->approve_status == 9 || $sRow->approve_status == 2) {
       $ch_Disabled = 1;
     }
 
