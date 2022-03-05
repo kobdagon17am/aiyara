@@ -17,7 +17,7 @@ class Localization
      */
     public function handle($request, Closure $next)
     {
-        General::gen_id_url();
+        // General::gen_id_url();
         // dd(session()->get('locale'));
         if(session()->has('locale') && in_array(session()->get('locale'),['th','en','lo']))
         {

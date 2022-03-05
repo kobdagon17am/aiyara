@@ -2075,137 +2075,60 @@ class AjaxController extends Controller
 
     }
 
-
    public function ajaxCalPriceFrontstore04(Request $request)
     {
-        // return $request;
-        // dd();
-        // return response()->json("to this");
-
         $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
         $sum_price = $request->sum_price?str_replace(',','',$request->sum_price):0;
         $shipping_price = $request->shipping_price?str_replace(',','',$request->shipping_price):0;
         $sum_price = ($sum_price+$shipping_price) ;
 
-       // return response()->json($pay_type_id_fk);
-       // return response()->json($frontstore_id);
-       // return response()->json($sum_price);
-       // return response()->json($shipping_price);
+            @$request->aicash_price  = @$request->aicash_price!= 0 ? @$request->aicash_price : 0 ;
+            @$request->aicash_remain = @$request->aicash_remain!= 0 ? @$request->aicash_remain : 0 ;
 
        if($pay_type_id_fk==3){
-
         $aicash_price = str_replace(',','',@$request->aicash_price);
-        // return response()->json($aicash_price);
         $aicash_remain = str_replace(',','',@$request->aicash_remain);
-        // return response()->json($aicash_remain);
-
-        if(!empty($aicash_remain)){
-            $aicash_price = $aicash_remain ;
-            $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
-        }else{
-            $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
+        // if(!empty($aicash_remain)){
+        //     $aicash_price = $aicash_remain ;
+        //     $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
+        // }else{
+        //     $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
+        // }
+        if($aicash_remain<$aicash_price){
+            $aicash_price = $aicash_remain;
         }
-
-        // return response()->json($sum_price);
-        // return response()->json($aicash_price);
-
         $cash_pay = @$sum_price - @$aicash_price ;
-        // return response()->json($cash_pay);
-// dd($aicash_price);
-
          DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
-
-        // return response()->json($request->member_id_aicash);
-        // return response()->json($aicash_price);
-        // return response()->json($cash_pay);
-        // return response()->json($sum_price);
-        // return response()->json($frontstore_id);
-
     }
-
         if($pay_type_id_fk==6){
-
             $aicash_price = str_replace(',','',@$request->aicash_price);
-            // return response()->json($aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
-            // return response()->json($aicash_remain);
-
-            if(!empty($aicash_remain)){
-                $aicash_price = $aicash_remain ;
-                $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
-            }else{
-                $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
-            }
-
-            // return response()->json($sum_price);
-            // return response()->json($aicash_price);
-
-            $cash_pay = @$sum_price - @$aicash_price ;
-            // return response()->json($cash_pay);
-
-
-             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
-
-            // return response()->json($request->member_id_aicash);
-            // return response()->json($aicash_price);
-            // return response()->json($cash_pay);
-            // return response()->json($sum_price);
-            // return response()->json($frontstore_id);
-
-        }
-
-      if($pay_type_id_fk==9){
-
-            // sum_credit_price
-
-            // return response()->json($request->sum_credit_price);
-            // return response()->json($request->aicash_remain);
-            // return response()->json($request->member_id_aicash);
-
-            // $aicash_price = str_replace(',','',@$request->aicash_price);
-            // return response()->json($aicash_price);
-            $aicash_remain = str_replace(',','',@$request->aicash_remain);
-            $sum_credit_price = str_replace(',','',@$request->sum_credit_price);
-            // return response()->json($aicash_remain);
-
             // if(!empty($aicash_remain)){
             //     $aicash_price = $aicash_remain ;
             //     $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
             // }else{
             //     $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
             // }
-
-            // return response()->json($sum_price);
-            // return response()->json($aicash_price);
-
-            $cash_pay = @$sum_price - @$sum_credit_price  ;
-            // return response()->json($cash_pay);
-
-
-             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$cash_pay.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
-
-            // return response()->json($request->member_id_aicash);
-            // return response()->json($aicash_price);
-            // return response()->json($cash_pay);
-            // return response()->json($sum_price);
-            // return response()->json($frontstore_id);
-
+            if($aicash_remain<$aicash_price){
+                $aicash_price = $aicash_remain;
+            }
+            $cash_pay = @$sum_price - @$aicash_price;
+             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
         }
-
-
+      if($pay_type_id_fk==9){
+            $aicash_remain = str_replace(',','',@$request->aicash_remain);
+            $sum_credit_price = str_replace(',','',@$request->sum_credit_price);
+            $cash_pay = @$sum_price - @$sum_credit_price;
+             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$cash_pay.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
+        }
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=".$frontstore_id." ");
         return response()->json($rs);
-
     }
-
-
-
 
    public function ajaxGetProductPromotionCus(Request $request)
     {
         // echo $request->product_id_fk;
-
           $Products = DB::select("
                 SELECT products.id as product_id,
                   products.product_code,

@@ -89,6 +89,7 @@ class PvPayment extends Model
                         }
 
                     $update_icash = $check_aicash->ai_cash - $order_data->aicash_price;
+                    // dd($update_icash);
                     //$check_aicash->ai_cash;//Ai-Cash เดิม
                     //$update_icash; //Bicash_banlance
                     if ($update_icash >= 0) {
