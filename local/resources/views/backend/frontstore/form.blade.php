@@ -1700,8 +1700,9 @@
                                                                         @if (@$sAccount_bank)
                                                                             @foreach (@$sAccount_bank as $r)
                                                                                 <input
-                                                                                    class="class_transfer_edit ch_Disabled "
+                                                                                    class="class_transfer_edit ch_Disabled account_bank_id_select"
                                                                                     {{ @$disAfterSave }} type="radio"
+                                                                                    order_id = "{{@$sRow->id}}"
                                                                                     id="account_bank_id{{ @$r->id }}"
                                                                                     name="account_bank_id"
                                                                                     value="{{ @$r->id }}"
@@ -1726,10 +1727,11 @@
                                                                     </div>
                                                                     <div class="divTableCell">
 
-                                                                        <input class="class_transfer_edit ch_Disabled "
+                                                                        <input class="class_transfer_edit ch_Disabled pay_with_other_bill_select"
                                                                             {{ @$disAfterSave }} type="checkbox"
                                                                             id="pay_with_other_bill"
                                                                             name="pay_with_other_bill" value="1"
+                                                                            order_id = "{{@$sRow->id}}"
                                                                             {{ @$sRow->pay_with_other_bill == 1 ? 'checked' : '' }}>
                                                                         <label
                                                                             for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
@@ -1739,6 +1741,7 @@
                                                                             class="form-control ch_Disabled "
                                                                             id="pay_with_other_bill_note"
                                                                             name="pay_with_other_bill_note"
+                                                                            order_id = "{{@$sRow->id}}"
                                                                             placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น "
                                                                             value="{{ @$sRow->pay_with_other_bill_note }}">
 
@@ -2037,7 +2040,7 @@
                                                                         }
                                                                         ?>
 
-                                                                        <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป  {!!$status_str!!} </h5>
+                                                                        <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป {{$slip->transfer_bill_date}} {!!$status_str!!} </h5>
                                                                             <span width="100" class="span_file_slip">
 
                                                                                 <img src="{{ $slip->url }}/{{ @$slip->file }}"
@@ -5651,6 +5654,32 @@
 
             });
 
+
+            $(document).on('click','.account_bank_id_select',function(){
+                $('.myloading').show();
+                var id = $(this).val();
+                var order_id = $(this).attr('order_id');
+                var data_name = 'account_bank_id';
+                account_bank_id_cal(data_name,id,order_id);
+            });
+
+            $(document).on('click','.pay_with_other_bill_select',function(){
+                $('.myloading').show();
+                var id = $(this).val();
+                var order_id = $(this).attr('order_id');
+                var data_name = 'pay_with_other_bill';
+                account_bank_id_cal(data_name,id,order_id);
+            });
+
+            $(document).on('change','#pay_with_other_bill_note',function(){
+                $('.myloading').show();
+                var id = $(this).val();
+                var order_id = $(this).attr('order_id');
+                var data_name = 'pay_with_other_bill_note';
+                account_bank_id_cal(data_name,id,order_id);
+            });
+            
+ 
         });
 
 
@@ -5793,6 +5822,31 @@
                 }
             });
         }
+
+        function account_bank_id_cal(data_name,id,order_id) {
+            var id = id ? id : 0;
+            var order_id = order_id ? order_id : 0;
+            var data_name = data_name ? data_name : '';
+
+            $.ajax({
+                // type: 'POST',
+                method: "post",
+                data: {
+                    id: id,
+                    order_id: order_id,
+                    data_name: data_name,
+                    "_token": "{{ csrf_token() }}",
+                },
+                url: " {{ url('backend/ajaxAccountBankId') }} ",
+                success: function(data) {
+                    // console.log(data);
+                    $('.myloading').hide();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('.myloading').hide();
+                }
+            });
+            }
     </script>
 
 

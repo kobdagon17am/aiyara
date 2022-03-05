@@ -329,6 +329,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetFeeValue', 'AjaxController@ajaxGetFeeValue');
     Route::post('ajaxFeeCalculate', 'AjaxController@ajaxFeeCalculate');
     Route::post('ajaxShippingCalculate', 'AjaxController@ajaxShippingCalculate');
+    Route::post('ajaxAccountBankId', 'AjaxController@ajaxAccountBankId');
     Route::post('ajaxApproveCouponCode', 'AjaxController@ajaxApproveCouponCode');
     Route::post('ajaxApproveGiftvoucherCode', 'AjaxController@ajaxApproveGiftvoucherCode');
     Route::post('ajaxCheckDBfrontstore', 'AjaxController@ajaxCheckDBfrontstore');

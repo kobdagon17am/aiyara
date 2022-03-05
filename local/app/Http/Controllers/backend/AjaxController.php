@@ -1152,6 +1152,31 @@ class AjaxController extends Controller
 
     }
 
+    public function ajaxAccountBankId(Request $request)
+    {
+        if($request->data_name=='pay_with_other_bill'){
+            DB::table('db_orders')->where('id',$request->order_id)->update([
+                'pay_with_other_bill' => $request->id,
+                'account_bank_id' => 0,
+            ]);
+        }elseif($request->data_name=='account_bank_id'){
+            DB::table('db_orders')->where('id',$request->order_id)->update([
+                'account_bank_id' => $request->id,
+                'pay_with_other_bill' => 0,
+            ]);
+        }elseif($request->data_name=='pay_with_other_bill_note'){
+            DB::table('db_orders')->where('id',$request->order_id)->update([
+                'pay_with_other_bill_note' => $request->id,
+            ]);
+        }
+
+        
+     
+    }
+
+    
+
+
    public function ajaxClearAfterAddAiCash(Request $request)
     {
         // return $request;
