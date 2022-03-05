@@ -94,6 +94,7 @@ return [
     'transfer_branch_get' => 'รับสินค้าจากการโอนระหว่างสาขา',
     'requisition_between_branch' => 'ขอเบิกระหว่างสาขา',
     'report_data' => 'รายงานต่างๆ',
+    'status_delivery' => 'สถานะสินค้าจัดส่ง',
 ],
 
 // /backend/index

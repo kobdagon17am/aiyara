@@ -413,6 +413,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxCheckDescGiftvoucher', 'AjaxController@ajaxCheckDescGiftvoucher');
 
+    Route::get('status_delivery', 'StatusDeliveryController@index');
+    Route::post('status_delivery/datatable', 'StatusDeliveryController@Datatable');
 
     Route::resource('delivery', 'DeliveryController');
     Route::post('delivery/datatable', 'DeliveryController@Datatable')->name('delivery.datatable');

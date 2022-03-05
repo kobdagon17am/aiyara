@@ -92,6 +92,7 @@ return [
     'ce_regis_gift' => 'Gift Type',
     'transfer_branch_get' => 'Receive Products from transfer between branches',
     'report_data' => 'Reports',
+    'status_delivery' => 'Delevery Status',
     ],
 
 // /backend/index
