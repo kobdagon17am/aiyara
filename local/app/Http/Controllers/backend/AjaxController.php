@@ -4185,6 +4185,14 @@ class AjaxController extends Controller
           DB::select(" UPDATE `db_pay_requisition_001` SET status_sent=4 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET status=4 WHERE id='".$request->id."' ");
 
+          $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$request->id)->get();
+          foreach($db_pick_pack_packing_code as $data){
+              $arr = explode(',',$data->orders_id_fk);
+              DB::table('db_delivery')->whereIn('orders_id_fk',$arr)->update([
+                'status_tracking' => 3,
+              ]);
+          }
+
       }
 
     }

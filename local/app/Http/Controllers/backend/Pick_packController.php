@@ -90,7 +90,7 @@ class Pick_packController extends Controller
         // dd($orders_id_fk);
         // dd($receipt);
 
-        DB::update(" UPDATE db_delivery SET status_pick_pack='1' WHERE id in ($arr)  ");
+        DB::update(" UPDATE db_delivery SET status_pick_pack='1', status_tracking='1' WHERE id in ($arr)  ");
 
           $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
 
@@ -120,7 +120,7 @@ class Pick_packController extends Controller
             $DeliveryPacking->created_at = date('Y-m-d H:i:s');
             $DeliveryPacking->save();
 
-            DB::update(" UPDATE db_delivery SET status_pick_pack='1' WHERE packing_code<>0 and packing_code in (".@$value->packing_code.")  ");
+            DB::update(" UPDATE db_delivery SET status_pick_pack='1' , status_tracking='1' WHERE packing_code<>0 and packing_code in (".@$value->packing_code.")  ");
             DB::select(" UPDATE customers_addr_sent SET packing_code=".$DeliveryPackingCode->id." WHERE (receipt_no='".$value->receipt."'); ");
             DB::select(" UPDATE db_orders SET status_delivery=1 WHERE (invoice_code='".$value->receipt."'); ");
 

@@ -273,11 +273,7 @@
                     <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
 
                     <br>
-
-							<center>
-							<a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_pack") }}">ไปหน้า สร้างใบเบิก ></a>
-							</center>
-
+                    
                           </div>
                         </div>
                       </div>
@@ -708,7 +704,7 @@ $(function() {
                   scrollX: true,
                   ordering: false,
                   scrollY: ''+($(window).height()-370)+'px',
-                  iDisplayLength: 100,
+                  iDisplayLength: 25,
                   // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
                     // url: '{{ route('backend.delivery_packing_code.datatable') }}',
@@ -763,63 +759,29 @@ $(function() {
                       {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
-                      {data: 'status_delivery',   title :'<center>สถานะ. </center>', className: 'text-center ',render: function(d) {
-  	                  	if(d=='1'){
-  	                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-  	                  	}else{
-  	                  		return '-รอเบิกสินค้าจากคลัง-';
-  	                  	}
-	                    }},
+                      // {data: 'status_delivery',   title :'<center>สถานะ. </center>', className: 'text-center ',render: function(d) {
+  	                  // 	if(d=='1'){
+  	                  //       return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
+  	                  // 	}else{
+  	                  // 		return '-รอเบิกสินค้าจากคลัง-';
+  	                  // 	}
+	                    // }},
+
+                      {data: 'status_tracking',   title :'<center>สถานะการจัดส่ง </center>', className: 'text-center ',render: function(d) {
+                        return d ;
+                      }},
+
+                      {data: 'tracking_no',   title :'<center>เลขพัสดุ </center>', className: 'text-center ',render: function(d) {
+                        return d ;
+                      }},
 
                       {data: 'approve',   title :'', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
 
-                      {data: 'id', title :'Tools ', className: 'text-center w80'}, 
+                      // {data: 'id', title :'Tools ', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
-
-                        var sPermission = "<?=\Auth::user()->permission?>";
-                        var sU = sessionStorage.getItem("sU");
-                        var sD = sessionStorage.getItem("sD");
-                        if(sPermission==1){
-                          sU = 1;
-                          sD = 1;
-                        }
-                        var str_U = '';
-                        if(sU=='1'){
-                          str_U = '<a href="{{ route('backend.account_bank.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                        }
-                        var str_D = '';
-                        if(sD=='1'){
-                          str_D = '<button class="btn btn-sm btn-danger" onclick="go_to_rem('+aData['id']+')"><i class="bx bx-trash font-size-16 align-middle"></i></button>';
-                          // str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.account_bank.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
-                        }
-                        // if(sU!='1' && sD!='1'){
-                        //    $('td:last-child', nRow).html('-');
-                        // }else{
-                        //   $('td:last-child', nRow).html( str_U + str_D).addClass('input');
-                        // }
-
-
-                        if(sU!='1' && sD!='1'){
-                            $('td:last-child', nRow).html('-');
-                        }else{ 
-
-                        	if (aData['status_delivery'] != "1") {
-                        		$('td:last-child', nRow).html(''
-                                // + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-    	                          // + '<a href="backend/delivery/" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-
-                                 + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery_packing_code.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cCancel " data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-
-
-    	                        ).addClass('input');
-                    		  }
-                        }
-                    // }
-
-
                   }
               });
 
@@ -855,7 +817,7 @@ var oTable ;
       scroller: true,
       scrollCollapse: true,
       scrollX: true,
-      iDisplayLength: 20,
+      iDisplayLength: 25,
       lengthMenu: [1000],
       pageLength: 0,
       ajax: {

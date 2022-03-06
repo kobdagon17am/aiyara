@@ -1495,6 +1495,7 @@ class Pay_requisition_001Controller extends Controller
 
  public function ajaxSavePay_requisition(Request $request)
     {
+      // db_delivery
 
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
@@ -1700,6 +1701,7 @@ class Pay_requisition_001Controller extends Controller
 
                 DB::select(" INSERT IGNORE INTO  db_pay_requisition_002_pay_history (time_pay,pick_pack_requisition_code_id_fk,pick_pack_packing_code_id_fk,product_id_fk,pay_date,pay_user,amt_need,amt_get,amt_remain) select $time_pay,pick_pack_requisition_code_id_fk,$db_pick_pack_packing_code_id,product_id_fk,now(),".\Auth::user()->id.",amt_need,amt_get,amt_remain FROM  $temp_ppp_004 ");
 
+                // db_pick_pack_packing
 
               // DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_requisition_code_id_fk=$pick_pack_requisition_code_id_fk ");
               DB::select(" UPDATE db_pay_requisition_002_pay_history SET status=2 WHERE amt_remain>0 AND pick_pack_packing_code_id_fk=$pick_pack_requisition_code_id_fk ");
@@ -1905,6 +1907,18 @@ class Pay_requisition_001Controller extends Controller
                     }
              }
           }
+
+          // วุฒิพิ่มมาอัพเดทสถานะบิล
+          $arr1 = explode(',',$pick_pack_requisition_code_id_fk);
+          $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->whereIn('id',$arr1)->get();
+          foreach($db_pick_pack_packing_code as $data){
+              $arr = explode(',',$data->orders_id_fk);
+              // $oder = DB::table('db_orders')->select('db_delivery.id')
+              DB::table('db_delivery')->whereIn('orders_id_fk',$arr)->update([
+                'status_tracking' => 2,
+              ]);
+          }
+
           return $lastInsertId ;
     }
 
