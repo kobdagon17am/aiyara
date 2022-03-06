@@ -310,6 +310,10 @@ class PvPayment extends Model
 
                 if ($type_id == 1) { //ทำคุณสมบติ
 
+                  if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
+                    $customer_update->date_order_first = date('Y-m-d h:i:s');
+                  }
+
                     $add_pv = $customer_update->pv + $pv;
 
                     $order_update->pv_old = $customer_update->pv;
@@ -332,6 +336,10 @@ class PvPayment extends Model
                     // dd($resule);
 
                 } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
+
+                  if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
+                    $customer_update->date_order_first = date('Y-m-d h:i:s');
+                  }
 
                     $active_mt_old_date = $customer_update->pv_mt_active;
                     $status_pv_mt_old = $customer_update->status_pv_mt;
@@ -488,6 +496,10 @@ class PvPayment extends Model
 
                 } elseif ($type_id == 3) { //รักษาคุณสมบัติท่องเที่ยง
 
+                  if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
+                    $customer_update->date_order_first = date('Y-m-d h:i:s');
+                  }
+
                     $active_tv_old_date = $customer_update->pv_tv_active;
                     $strtime_user = strtotime($customer_update->pv_tv_active);
                     $strtime = strtotime(date("Y-m-d"));
@@ -552,6 +564,10 @@ class PvPayment extends Model
 
                 } elseif ($type_id == 4) { //เติม Ai Stockist
 
+                  if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
+                    $customer_update->date_order_first = date('Y-m-d h:i:s');
+                  }
+
                   $resule = Runpv_AiStockis::add_pv_aistockist($type_id, $pv,$customer_update->user_name,$customer_update->user_name,$order_data->code_order,$order_data->id);
 
                   if ($resule['status'] == 'fail') {
@@ -592,6 +608,12 @@ class PvPayment extends Model
                       }
 
                 } elseif ($type_id == 5) { // Ai Voucher
+
+                  if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
+                    $customer_update->date_order_first = date('Y-m-d h:i:s');
+                  }
+
+
 
                     $pv_banlance = DB::table('customers')
                         ->select('pv')
