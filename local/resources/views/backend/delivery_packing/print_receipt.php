@@ -185,7 +185,7 @@ $delivery_packing = DB::select("
       SELECT * FROM `db_delivery_packing`
       WHERE
       packing_code =
-     
+
       ".$data[0]."
  ");
 //  ".$delivery_packing_code[0]->id."

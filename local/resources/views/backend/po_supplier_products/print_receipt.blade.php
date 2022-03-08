@@ -326,8 +326,8 @@ Product Unit </td>
      $P = DB::select("
                     SELECT * from db_po_supplier_products
                     WHERE
-                    po_supplier_id_fk = 
-                    ".$data[0]." 
+                    po_supplier_id_fk =
+                    ".$data[0]."
 
      ");
 
@@ -367,7 +367,7 @@ Product Unit </td>
     </table>
   </div>
 
- 
+
    <br>
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;width: 100%;" >
