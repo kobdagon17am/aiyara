@@ -323,7 +323,9 @@ class CancelOrderController extends Controller
           if ($type_id == 5) {
 
             foreach ($giv_log as $value) {
-              $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order);
+
+              $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order->user_name);
+
               $gv_banlance = $gv->sum_gv + $value->giftvoucher_value_use;
 
               $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
