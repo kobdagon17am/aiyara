@@ -10,24 +10,41 @@
                 </button>
             </div>
 
-            <div class="modal-body text-left">
-                <span>เลขใบสั่งซื้อ : {{ $file_slip[0]->code_order }}</span>
-                <table class="table table-responsive">
-                    <tbody>
-                        @foreach ($file_slip as $value)
-                            <tr>
-                                <td>
-                                    <p>{{ date('d/m/Y') }}</p><img class="img-fluid"
-                                        src="{{ asset($value->url . '/' . $value->file) }}" alt="Theme-Logo">
-                                </td>
-                                <td>
-                                    <p>{{ $value->note }}</p>
-                                </td>
-                            </tr>
-                        @endforeach
+            <div class="modal-body text-left p-4">
+               <div class="col-md-12">
+                <div class="row">
+                  <p><span>เลขใบสั่งซื้อ : {{ $file_slip[0]->code_order }}</span><br>
+                    <code>{{  $order->transfer_bill_note }}</code>
+                  </p>
 
-                    </tbody>
-                </table>
+                  <div class="row">
+                    <table class="table table-responsive">
+                      <tbody>
+                        <tr>
+                          <th> บิลใบเสร็จ </th>
+                          <th> หมายเหตุ </th>
+                        </tr>
+                          @foreach ($file_slip as $value)
+                              <tr>
+                                  <td>
+                                      <p>{{ date('d/m/Y') }}</p><img class="img-fluid"
+                                          src="{{ asset($value->url . '/' . $value->file) }}" alt="Theme-Logo">
+                                  </td>
+                                  <td>
+                                      <p>{{ $value->note }}</p>
+                                  </td>
+                              </tr>
+                          @endforeach
+
+                      </tbody>
+                  </table>
+
+
+                  </div>
+
+              </div>
+               </div>
+
 
 
 

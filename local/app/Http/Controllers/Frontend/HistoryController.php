@@ -647,7 +647,12 @@ class HistoryController extends Controller
       ->where('id','=',$rs->customers_id_fk)
       ->first();
 
-      return view('frontend/modal/modal_tranfer_log', compact('customer','file_slip'));
+      $order =  DB::table('db_orders')
+      ->select('transfer_bill_note')
+      ->where('id','=',$rs->order_id)
+      ->first();
+
+      return view('frontend/modal/modal_tranfer_log', compact('customer','file_slip','order'));
     }
 
 
