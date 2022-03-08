@@ -463,6 +463,8 @@
       </div>
   </div>
 
+  <div id="log_tranfer"></div>
+
 
 @endsection
 @section('js')
@@ -805,6 +807,27 @@ function qrcode(id,type='') {
                     console.log("error");
                 })
         }
+
+
+        function modal_logtranfer(order_id,customers_id_fk){
+
+            $.ajax({
+              url: '{{ route('log_tranfer') }}',
+              type: 'GET',
+              data: {order_id:order_id,customers_id_fk:customers_id_fk},
+            })
+            .done(function(data) {
+              console.log("success");
+              $('#log_tranfer').html(data);
+              $('#log_tranfer_show').modal('show');
+            })
+            .fail(function() {
+              console.log("error");
+            })
+            .always(function() {
+              console.log("complete");
+            });
+          }
 
         function delete_aicash(aicash_id, code) {
             $('#delete_aicash_id').val(aicash_id);

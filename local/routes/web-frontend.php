@@ -174,7 +174,7 @@ Route::post('re_new_payment','Frontend\HistoryController@re_new_payment')->name(
 
 Route::get('cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
 Route::get('gift-cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('gift-cart-payment-history');
-
+Route::get('log_tranfer','Frontend\HistoryController@log_tranfer')->name('log_tranfer');
 
 Route::get('giftvoucher_history','Frontend\GiftVoucherController@index')->name('giftvoucher_history');
 Route::get('dt_giftvoucher_history','Frontend\GiftVoucherController@dt_giftvoucher_history')->name('dt_giftvoucher_history');

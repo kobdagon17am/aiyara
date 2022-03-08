@@ -257,7 +257,10 @@ class HistoryController extends Controller
                 } else {
                   if($row->order_status_id_fk == 1 ){
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')" > <b style="color: #000">' . $row->detail . '</b></button>';
-                  }else{
+                  }else if($row->order_status_id_fk == 3){
+                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="modal_logtranfer(' . $row->id . ','.$row->customers_id_fk.')" ><i class="fa fa-search"></i> <b style="color: #000">' . $row->detail . '</b></button>';
+
+                  }else {
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '"> <b style="color: #000">' . $row->detail . '</b></button>';
                   }
 
@@ -632,6 +635,24 @@ class HistoryController extends Controller
         return $resule;
       }
 
+    }
+
+    public function log_tranfer(Request $rs){
+      $file_slip =  DB::table('payment_slip')
+      ->where('order_id','=',$rs->order_id)
+      ->get();
+
+      $customer =  DB::table('customers')
+      ->select('first_name','last_name','user_name','business_name')
+      ->where('id','=',$rs->customers_id_fk)
+      ->first();
+
+      $order =  DB::table('db_orders')
+      ->select('transfer_bill_note')
+      ->where('id','=',$rs->order_id)
+      ->first();
+
+      return view('frontend/modal/modal_tranfer_log', compact('customer','file_slip','order'));
     }
 
 

@@ -370,7 +370,7 @@
           <li class="{{ (request()->is('commission-per-day') || request()->is('commission_faststart*') || request()->is('commission_matching*') ) ? 'active' : '' }}">
             <a href="{{route('commission-per-day')}}">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-              <span class="pcoded-mtext">ความเคลื่อนไหวคะแนน และโบนัดรายวัน</span>
+              <span class="pcoded-mtext">ความเคลื่อนไหวคะแนน และโบนัสรายวัน</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
