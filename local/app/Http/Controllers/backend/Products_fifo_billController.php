@@ -351,7 +351,7 @@ class Products_fifo_billController extends Controller
 
       $TABLES = DB::select(" SHOW TABLES ");
       // ch_amt_lot_wh
-      // return $TABLES;
+      // return $TABLES; temp_ppp_002
       $array_TABLES = [];
       foreach($TABLES as $t){
         // print_r($t->Tables_in_aiyaraco_v3);
@@ -945,24 +945,25 @@ foreach($temp_ppr_0021_data as $tmp){
                               // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE product_id_fk=".$value->product_id_fk." ");
                         
-                                    // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
-                                    if(count($temp_db_stocks_02)==0){
-                                      $temp_db_stocks_02 = DB::table($temp_ppp_002)
-                                      ->select(
-                                        $temp_ppp_002.'.created_at',
-                                        'promotions_products.product_unit as product_unit_id_fk',
-                                        'promotions_products.product_id_fk as product_id_fk',
-                                        DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                                        'promotions_products.product_amt as amt', 
-                                      )
-                                      ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                                      ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                                      ->join('products','products.id','promotions_products.product_id_fk')  
-                                      ->where($temp_ppp_002.'.type_product','promotion')
-                                      ->where('promotions_products.product_id_fk',$value->product_id_fk)
-                                      ->groupBy('promotions_products.product_id_fk')
-                                      ->get();
-                                    }
+                                    // // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                                    //   $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id;
+                                    // if(count($temp_db_stocks_02)==0){
+                                    //   $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                                    //   ->select(
+                                    //     $temp_ppp_002.'.created_at',
+                                    //     'promotions_products.product_unit as product_unit_id_fk',
+                                    //     'promotions_products.product_id_fk as product_id_fk',
+                                    //     DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                                    //     'promotions_products.product_amt as amt', 
+                                    //   )
+                                    //   ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                                    //   ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                                    //   ->join('products','products.id','promotions_products.product_id_fk')  
+                                    //   ->where($temp_ppp_002.'.type_product','promotion')
+                                    //   ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                                    //   ->groupBy('promotions_products.product_id_fk')
+                                    //   ->get();
+                                    // }
 
                      $i = 1;
 
