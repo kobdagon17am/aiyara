@@ -33,7 +33,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
     </tr>
     <tr>
       <td><strong>สั่งซื้อครั้งแรก </strong></td>
-      <td>@if(empty($data->date_order_first))
+      <td>@if(empty($data->date_order_first) ||  $data->date_order_first == '0000-00-00 00:00:00')
         -
         @else
         {{ date('d/m/Y',strtotime($data->date_order_first)) }}
