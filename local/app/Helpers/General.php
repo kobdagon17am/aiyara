@@ -1610,6 +1610,85 @@ class General {
 	}
 
 
+	static function create_pay_requisition_002_item($pick_pack_requisition_code_id_fk) {
+		 // วุฒิเพิ่มมา เอาไว้ตรวจว่าสินค้าไหนจ่ายแล้วของบิลไหน
+		 $db_pay_requisition_002_datas = DB::table('db_pay_requisition_002')
+		 ->where('pick_pack_requisition_code_id_fk',$pick_pack_requisition_code_id_fk)->get();
+		 foreach($db_pay_requisition_002_datas as $data_002){
+					   $product_amt_get = $data_002->amt_get;
+					   $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->select('id','orders_id_fk')->where('id',$pick_pack_requisition_code_id_fk)->first();
+					   $arr_order = explode(',',$db_pick_pack_packing_code_data->orders_id_fk);
+					   $promotions_products_arr = DB::table('promotions_products')->select('promotion_id_fk')
+					   ->where('product_id_fk',$data_002->product_id_fk)->pluck('promotion_id_fk')->toArray();
+					   $db_order_products_list_data1 = DB::table('db_order_products_list')
+					   ->select('frontstore_id_fk')
+					   ->whereIn('frontstore_id_fk',$arr_order)
+					   ->where('type_product','product')
+					   ->where('product_id_fk',$data_002->product_id_fk);
+					   $db_order_products_list_data2 = DB::table('db_order_products_list')
+					   ->select('frontstore_id_fk')
+					   ->whereIn('frontstore_id_fk',$arr_order)
+					   ->where('type_product','promotion')
+					   ->whereIn('promotion_id_fk',$promotions_products_arr)
+					   ->union($db_order_products_list_data1)
+					   ->get();
+					   foreach($db_order_products_list_data2 as $data2){
+							 $order_product1 = DB::table('db_order_products_list')
+							 ->where('frontstore_id_fk',$data2->frontstore_id_fk)
+							 ->where('product_id_fk',$data_002->product_id_fk)
+							 ->where('type_product','product')
+							 ->get();
+							 $order_product2 = DB::table('db_order_products_list')
+							 ->where('frontstore_id_fk',$data2->frontstore_id_fk)
+							 ->whereIn('promotion_id_fk',$promotions_products_arr)
+							 ->where('type_product','promotion')
+							 ->get();
+							 $sum_want_amt = 0;
+							 foreach($order_product1 as $order_product1_data){
+							   $sum_want_amt+=$order_product1_data->amt;
+							 }
+
+							 foreach($order_product2 as $order_product2_data){
+							   $pro = DB::table('promotions_products')->where('promotion_id_fk',$order_product2_data->promotion_id_fk)->get();
+							   foreach($pro as $p){
+									 if($p->product_id_fk == $data_002->product_id_fk){
+									   $sum_want_amt+=($order_product2_data->amt*$p->product_amt);
+									 }
+							   }
+						   
+							 }
+
+							 $amt_get_data = 0;
+							 $amt_remain_data = 0;
+							 // จำนวนที่ต้องการหักจากที่ได้รับ
+
+							 if($sum_want_amt <= $product_amt_get){
+							   $product_amt_get = $product_amt_get - $sum_want_amt;
+							   $amt_get_data = $sum_want_amt;
+							   $amt_remain_data = 0;
+							 }else{
+							   $amt_get_data = $product_amt_get;
+							   $amt_remain_data = $sum_want_amt - $product_amt_get;
+							   $product_amt_get = 0;
+							 }
+
+								 DB::table('db_pay_requisition_002_item')->insert([
+								   'requisition_002_id' => $data_002->id,
+								   'order_id' => $data2->frontstore_id_fk,
+								   'product_id_fk' => $data_002->product_id_fk,
+								   'amt_need' => $sum_want_amt,
+								   'amt_get' => $amt_get_data,
+								   'amt_remain' => $amt_remain_data,
+								   'created_at' => date('Y:m:d H:i:s'),
+								   'updated_at' => date('Y:m:d H:i:s'),
+								   'delete_status' => 2,
+								 ]);
+
+					   }
+		 }
+
+	}
+
 }
 
 ?>

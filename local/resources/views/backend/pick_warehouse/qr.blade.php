@@ -1328,64 +1328,7 @@ setTimeout(function(){
         $('#scan_modal').modal('show');
     });
 
-        // $(document).on('click','.qr_scan_show',function(){
-        //     alert('ok');
-        // });
-
   </script>
-
-<script>
-  $(document).on('click','.single_modal',function(){
-    var id = "{{$id}}";  //alert(id);
-          var packing_id = "{{$packing_id}}"; //alert(packing_id);
-          var oTable0002;
-          var delivery_id = $(this).attr('delivery_id');
-          $('#delivery_id_single').val(delivery_id);
-          $(function() {
-            $.fn.dataTable.ext.errMode = 'throw';
-              oTable0002 = $('#data-table-scan-single').DataTable({
-               "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                  serverSide: true,
-                  deferRender: true,
-                  scroller: false,
-                  scrollCollapse: false,
-                  scrollX: false,
-                  ordering: false,
-                  ordering: false,
-                  info:     false,
-                  paging:   false,
-                  destroy:true,
-                        ajax: {
-                          url: '{{ url('backend/warehouse_qr_00022/warehouse_qr_00022_single_scan') }}',
-                            method: "POST",
-                            data:{ _token: '{{csrf_token()}}',picking_id:packing_id,id:id},
-                        },
-                  columns: [
-                      // {data: 'column_001', title :'<span style="vertical-align: middle;"> ชุดที่  </span> ', className: 'text-center w70'},
-                      {data: 'column_001', title :'<span style="vertical-align: middle;"> รายการจัดส่งแยกแพ็ค (กรณีแยกบิล) </span> ', className: 'text-left '},
-                      {data: 'column_002', title :'<span style="vertical-align: middle;"><center> รายการสินค้า  </span> ', className: 'text-left '},
-                      {data: 'column_003', title :'<span style="vertical-align: middle;"><center> ข้อมูลอื่นๆ  </span> ', className: 'text-left '},
-                   
-                  ],
-                  rowCallback: function(nRow, aData, dataIndex){
-                     // $(".myloading").hide();
-                     // var info = $(this).DataTable().page.info();
-                     //  $("td:eq(0)", nRow).html("<b>" + (info.start + dataIndex + 1) + "</b>");
-
-                  },
-                  fnDrawCallback : function() {
-                      if ($(this).find('.dataTables_empty').length == 1) {
-                         $(this).parent().hide();
-                      }
-                  }
-              });
-         
-         });
-
-      $('#scan_modal_single').modal('show');
-  });
-</script>
 
 @endsection
 

@@ -1203,7 +1203,7 @@ GROUP BY db_order_products_list.product_id_fk
                   // เพิ่มมา
                   ->groupBy('db_pay_requisition_002_item.product_id_fk')
                  ->get();
-  
+
            if(@$Products){
                 foreach ($Products as $key => $value) {
                   
@@ -1224,6 +1224,7 @@ GROUP BY db_order_products_list.product_id_fk
                    $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
                    ->where('product_id_fk',$value->product_id_fk) 
                    ->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
+                   ->orderBy('time_pay', 'desc')
                    ->first();
                    
                   $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
@@ -1231,20 +1232,23 @@ GROUP BY db_order_products_list.product_id_fk
                   ->where('order_id',$value->order_id)
                   ->where('requisition_002_id',@$db_pay_requisition_002->id)
                   ->first();
+             
                     if($db_pay_requisition_002_item->amt_remain > 0){
                       $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
                     }else{
                       $r_ch_t = '';
                     }
 
-                  $sum_amt += $value->amt_get;
+                  // $sum_amt += $value->amt_get;
+                  $sum_amt += $db_pay_requisition_002_item->amt_get;
+                  $amt_get = $db_pay_requisition_002_item->amt_get;
                   $pn .=     
                   '<div class="divTableRow">
                   <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                   '.@$value->product_name.'</b><br>
                   <font color=red>'.$r_ch_t.'</font>
                     </div>
-                  <div class="divTableCell" style="text-align:center;">'.@$value->amt_get.'</div> 
+                  <div class="divTableCell" style="text-align:center;">'.@$amt_get.'</div> 
                   <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
                   <div class="divTableCell" style="text-align:left;"> ';
   
@@ -1997,7 +2001,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_001', function($row) {
         
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -2020,7 +2024,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_002', function($row) {
         
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -2050,8 +2054,8 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_004', function($row) {
           
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
-
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+      
           $f = [] ;
           $ff = [] ;
           foreach ($d as $key => $v) {
@@ -2076,8 +2080,8 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_005', function($row) {
           
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
-
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+    
           $f = [] ;
           $tx = '';
           foreach ($d as $key => $v) {
@@ -2108,7 +2112,7 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_008', function($row) {
           
-        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by recipient_code asc");
+        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
         $f = [] ;
         $tx = '';
@@ -2141,7 +2145,10 @@ ORDER BY db_pick_pack_packing.id
           // return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
 
           // วุฒิแก้อีกรอบ
-          $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)->get();
+          $DP = DB::table('db_pick_pack_packing')
+          ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
+          ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
+          ->get();
           $pn = '';
           $f = [] ;
           $tx = '';
@@ -2177,12 +2184,12 @@ ORDER BY db_pick_pack_packing.id
         $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
         if($p_code){
             $DP = DB::table('db_pick_pack_packing')
-            ->select('db_pick_pack_packing.*','db_consignments.recipient_code')
-            ->join('db_consignments','db_consignments.delivery_id_fk','db_pick_pack_packing.delivery_id_fk')
+            ->select('db_pick_pack_packing.*')
+            // ->join('db_consignments','db_consignments.delivery_id_fk','db_pick_pack_packing.delivery_id_fk')
             ->where('db_pick_pack_packing.packing_code_id_fk',$p_code->id)
-            ->orderBy('db_consignments.recipient_code','asc')
+            // ->orderBy('db_consignments.recipient_code','asc')
+            ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
             ->get();
-
             if(!empty($DP)){
               $pn = '';
               $arr = [];
