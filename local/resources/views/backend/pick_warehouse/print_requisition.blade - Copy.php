@@ -250,7 +250,7 @@ $orders_id_fk = implode(',', $orders_id_fk);
 
 $Products = DB::select("
 
-(SELECT 
+(SELECT
 
 db_delivery.orders_id_fk,
 db_order_products_list.product_id_fk,
@@ -261,11 +261,11 @@ dataset_product_unit.product_unit,
 db_orders.code_order,
 db_orders.id as orders_id_fk
 
-FROM `db_order_products_list` 
-left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+FROM `db_order_products_list`
+left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id
+left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id
+LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id
 
 WHERE type_product='product' AND db_orders.id in ($orders_id_fk)
 
@@ -275,7 +275,7 @@ GROUP BY db_order_products_list.product_id_fk
 UNION
 
 (
-SELECT 
+SELECT
 
 db_delivery.orders_id_fk,
 db_order_products_list.product_id_fk,
@@ -286,11 +286,11 @@ dataset_product_unit.product_unit,
 db_orders.code_order,
 db_orders.id as orders_id_fk
 
-FROM `db_order_products_list` 
-left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
-left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id 
-left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id 
-LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
+FROM `db_order_products_list`
+left Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
+left Join db_delivery ON db_delivery.orders_id_fk = db_orders.id
+left Join db_delivery_packing ON db_delivery_packing.delivery_id_fk = db_delivery.id
+LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id
 
 WHERE type_product='promotion' AND db_orders.id in ($orders_id_fk)
 
@@ -304,7 +304,7 @@ GROUP BY db_order_products_list.product_id_fk
 // print_r($p1);
 
 if(!empty($Products)){
-                  
+
     $i=1;
     $total = 0;
 
@@ -354,7 +354,7 @@ if(!empty($Products)){
         <td  style="border-left: 1px solid #ccc;"> ผู้เบิกสินค้า
 
         <br>
-        <img src="" width="100" > 
+        <img src="" width="100" >
         <br>
         <br>
            วันที่ .........................................
@@ -363,7 +363,7 @@ if(!empty($Products)){
 
         <td style="border-left: 1px solid #ccc;"> ในนาม บริษัท ไอยรา แพลนเน็ต จำกัด
         <br>
-        <img src="" width="100" > 
+        <img src="" width="100" >
         <br>
         <br>
       ผู้มีอำนาจลงนาม

@@ -20,10 +20,10 @@
                                             <li class="breadcrumb-item active">Colors</li>
                                         </ol>
                                     </div> -->
-                                    
+
                                 </div>
                             </div>
-                        </div>     
+                        </div>
                         <!-- end page title -->
 
                         <!-- start page title -->
@@ -33,7 +33,7 @@
                                     <b><h2 class="mb-0 font-size-20"><i class="bx bx-directions"></i> ฝ่ายขาย</h2></b>
                                 </div>
                             </div>
-                        </div>     
+                        </div>
                         <!-- end page title -->
 
                         <div class="row">
@@ -87,7 +87,7 @@
                                     <b><h2 class="mb-0 font-size-20"><i class="bx bx-directions"></i> ฝ่ายบัญชี</h2></b>
                                 </div>
                             </div>
-                        </div>     
+                        </div>
                         <!-- end page title -->
 
                         <div class="row">
@@ -132,7 +132,7 @@
                                     <b><h2 class="mb-0 font-size-20"><i class="bx bx-directions"></i> คลังสินค้า</h2></b>
                                 </div>
                             </div>
-                        </div>     
+                        </div>
                         <!-- end page title -->
 
                         <div class="row">
@@ -237,8 +237,8 @@
                                     </div>
                                 </div>
                             </div>
-                          
-                            
+
+
                         </div>
                         <!-- end row -->
 
@@ -250,7 +250,7 @@
                                     <b><h2 class="mb-0 font-size-20"><i class="bx bx-directions"></i> บริการลูกค้า</h2></b>
                                 </div>
                             </div>
-                        </div>     
+                        </div>
                         <!-- end page title -->
 
                         <div class="row">
@@ -295,7 +295,7 @@
                                     <b><h2 class="mb-0 font-size-20"><i class="bx bx-directions"></i> Administrator</h2></b>
                                 </div>
                             </div>
-                        </div>     
+                        </div>
                         <!-- end page title -->
 
                         <div class="row">

@@ -241,7 +241,7 @@ Unit Price </td>
 
 <!-- รายการสินค้า -->
 <?php
-$orders = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$data[0]."' 
+$orders = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$data[0]."'
         group by time_pay order By time_pay  ");
 $p_wait  = '';
 if(!empty($orders)){
@@ -251,11 +251,11 @@ foreach ($orders as $key => $value) {
  $Products = DB::select(" SELECT
             db_pay_requisition_002.*,sum(amt_get) as sum_amt_get
             FROM
-            db_pay_requisition_002 
+            db_pay_requisition_002
             WHERE pick_pack_requisition_code_id_fk='".$value->pick_pack_requisition_code_id_fk."' and time_pay=".$value->time_pay." group by time_pay,product_id_fk ORDER BY product_name ");
 
 if(!empty($Products)){
-                  
+
     $i=1;
     $total = 0;
 
@@ -285,7 +285,7 @@ if(!empty($Products)){
           }else{
             // $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ไม่มีสินค้าในคลัง ***</span>';
             $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ค้างสินค้าจากบิลเลขที่  *** '.$bill_remain.' </span>';
-            // 
+            //
             $lot_number = '';
           }
 
@@ -303,11 +303,11 @@ if(!empty($Products)){
           @endif
 
           @if($p->amt_get > 0 && $p->amt_remain > 0)
-          <?php 
-          $i++; 
+          <?php
+          $i++;
           $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ค้างสินค้าจากบิลเลขที่  *** '.$bill_remain.' </span>';
           ?>
-          
+
           {{-- <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > <?=$i?> </td>
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;"> <?=$p->product_name?> </td>
@@ -317,8 +317,8 @@ if(!empty($Products)){
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$sWarehouse?> </td>
           </tr> --}}
 
-          <?php 
-          $p_wait .= 
+          <?php
+          $p_wait .=
           '
           <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > '.$i.' </td>
@@ -333,8 +333,8 @@ if(!empty($Products)){
 
           @elseif($p->zone_id_fk=='')
 
-          <?php 
-          $p_wait .= 
+          <?php
+          $p_wait .=
           '
           <tr>
             <td style="width:5%;border-bottom: 1px solid #ccc;text-align: center;" > '.$i.' </td>
@@ -372,7 +372,7 @@ if(!empty($Products)){
 <?php } ?>
 <?php } ?>
 
-       <?php 
+       <?php
          echo $p_wait;
        ?>
 
@@ -391,7 +391,7 @@ if(!empty($Products)){
         <td  style="border-left: 1px solid #ccc;"> ผู้เบิกสินค้า
 
         <br>
-        <img src="" width="100" > 
+        <img src="" width="100" >
         <br>
         <br>
            วันที่ .........................................
@@ -400,7 +400,7 @@ if(!empty($Products)){
 
         <td style="border-left: 1px solid #ccc;"> ในนาม บริษัท ไอยรา แพลนเน็ต จำกัด
         <br>
-        <img src="" width="100" > 
+        <img src="" width="100" >
         <br>
         <br>
       ผู้มีอำนาจลงนาม

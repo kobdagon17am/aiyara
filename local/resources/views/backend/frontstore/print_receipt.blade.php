@@ -256,7 +256,7 @@ $value = DB::select("
                     Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
                     Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-            
+
                     WHERE
                     db_order_products_list.frontstore_id_fk =
                     ".$data[0]."
@@ -313,21 +313,21 @@ $value = DB::select("
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
                   echo "<b>ชื่อ - ที่อยู่จัดส่ง</b>"."<br>";
-                
+
                       if(@$sRow->delivery_location==0 && @$sRow->purchase_type_id_fk!=6 ){
-                       
-                        $cus = DB::select(" 
+
+                        $cus = DB::select("
                             SELECT
                             customers.user_name,
                             customers.prefix_name,
                             customers.first_name,
                             customers.last_name
                             FROM
-                            db_orders 
+                            db_orders
                             Left Join customers ON db_orders.customers_id_fk = customers.id
                             where db_orders.id = ".$data[0]."
                               ");
-                        
+
                          echo  @$cus[0]->user_name.' : '.@$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name;
                          echo "<br>( รับสินค้าด้วยตัวเอง ) ";
 
@@ -504,7 +504,7 @@ $value = DB::select("
       </td>
       <td style="width:20%;vertical-align: top;font-weight: bold;" >
         เลขที่ / No. <?=@$value->invoice_code?><br>
-        วันที่ / Date <?=ThDate01(@$sRow->action_date)?> 
+        วันที่ / Date <?=ThDate01(@$sRow->action_date)?>
       </td>
       <td style="width:10%;vertical-align: top;" >
           <br>
@@ -559,16 +559,16 @@ Amount </td>
                     customers_detail.road,
                     customers_detail.province_id_fk,
                     customers.id as cus_id
-        
+
 
                     FROM
                     db_order_products_list
                     Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
                     Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-               
+
                     WHERE
-                    db_order_products_list.frontstore_id_fk = 
+                    db_order_products_list.frontstore_id_fk =
                     ".$data[0]."  AND add_from=1
 
      ");
