@@ -132,7 +132,7 @@ class AipocketController extends Controller
             }
           } else {
             if (empty($row->banlance)) {
-              $banlance = '';
+              $banlance = '0';
             } else {
               $banlance = number_format($row->banlance);
             }

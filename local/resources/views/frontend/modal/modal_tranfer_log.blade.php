@@ -31,7 +31,7 @@
                                           src="{{ asset($value->url . '/' . $value->file) }}" alt="Theme-Logo">
                                   </td>
                                   <td>
-                                      <p>{{ $value->note }}</p>
+                                      <p>{{ $value->note2 }}</p>
                                   </td>
                               </tr>
                           @endforeach
