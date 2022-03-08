@@ -36,7 +36,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
       <td>@if(empty($data->date_order_first))
         -
         @else
-        {{ date('d/m/Y',strtotime($data->date_mt_first)) }}
+        {{ date('d/m/Y',strtotime($data->date_order_first)) }}
       @endif </td>
       <td></td>
     </tr>
