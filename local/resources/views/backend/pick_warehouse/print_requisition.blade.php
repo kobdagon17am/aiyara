@@ -244,6 +244,7 @@ Unit Price </td>
 $orders = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$data[0]."' 
         group by time_pay order By time_pay  ");
 $p_wait  = '';
+$arr_time_check = [];
 if(!empty($orders)){
 
 foreach ($orders as $key => $value) {
@@ -258,7 +259,7 @@ if(!empty($Products)){
                   
     $i=1;
     $total = 0;
-
+    // dd($Products);
     foreach ($Products as $key => $p) {
 
           $zone = DB::select(" select * from zone where id=".$p->zone_id_fk." ");
@@ -274,9 +275,23 @@ if(!empty($Products)){
           ->get();
           $bill_remain = '';
           foreach($item_amt_remain as $item){
-            if($item->amt_remain>0){
+            if(!isset($arr_time_check[$item->order_id][$item->product_id_fk])){
+              if($item->amt_remain>0){
+                $arr_time_check[$item->order_id][$item->product_id_fk] = [
+                  'requisition_002_id' => $item->requisition_002_id,
+                  'code_order' => $item->code_order,
+                ];
               $bill_remain .= $item->code_order.'<br>';
             }
+            }else{
+              if($arr_time_check[$item->order_id][$item->product_id_fk] <  $item->requisition_002_id){
+                $arr_time_check[$item->order_id][$item->product_id_fk] = $item->requisition_002_id;
+                if($item->amt_remain>0){
+                    $bill_remain .= $item->code_order.'<br>';
+                  }
+              }
+            }
+          
           }
 
           if($p->zone_id_fk!=''){

@@ -257,33 +257,61 @@ class Pick_warehouse_fifoController extends Controller
               // กรณี promotion
 
               if(@$arr_promotion){
-                  $r_promo_product = DB::select(" SELECT product_id_fk,sum(product_amt) as product_amt,product_unit FROM `promotions_products` where promotion_id_fk in ($arr_promotion) GROUP BY product_id_fk  ");
-                  if(@$r_promo_product){
-                      foreach ($r_promo_product as $key => $v) {
 
-                          $Products = DB::select("
-                              SELECT products.id as product_id,
-                                products.product_code,
-                                (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
-                                products_cost.member_price,
-                                products_cost.pv
-                                FROM
-                                products_details
-                                Left Join products ON products_details.product_id_fk = products.id
-                                LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                                WHERE lang_id=1 AND products.id= ".$v->product_id_fk."
+                  // $r_promo_product = DB::select(" SELECT product_id_fk,sum(product_amt) as product_amt,product_unit FROM `promotions_products` where promotion_id_fk in ($arr_promotion) GROUP BY product_id_fk  ");
+                   // if(@$r_promo_product){
+                  //     foreach ($r_promo_product as $key => $v) {
 
-                         ");
+                  //         $Products = DB::select("
+                  //             SELECT products.id as product_id,
+                  //               products.product_code,
+                  //               (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
+                  //               products_cost.member_price,
+                  //               products_cost.pv
+                  //               FROM
+                  //               products_details
+                  //               Left Join products ON products_details.product_id_fk = products.id
+                  //               LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                  //               WHERE lang_id=1 AND products.id= ".$v->product_id_fk."
 
-                          $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+                  //        ");
 
-                          DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) values ($lastInsertId01, $v->product_id_fk,'$pn', $v->product_amt, $v->product_unit)
-                           ");
+                  //         $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+                  //         DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) values ($lastInsertId01, $v->product_id_fk,'$pn', $v->product_amt, $v->product_unit)
+                  //          ");
+                      
+                  //     }
+                  // }
+
+                  // วุฒิเพิ่มมานับจำนวนโปร
+                  $Pro_amt = DB::table($temp_ppp_002)->select('*',DB::raw('SUM(amt) AS sum_amt'))->whereIn('promotion_id_fk',[$arr_promotion])->groupBy('promotion_id_fk')->get();
+                  foreach($Pro_amt as $pro){
+                      $r_pro = DB::table('promotions_products')->where('promotion_id_fk',$pro->promotion_id_fk)->get();
+                      foreach($r_pro as $r){
+                        $sum_amt = 0;
+                        $sum_amt = $pro->sum_amt*$r->product_amt;
+                        $Products = DB::select("
+                        SELECT products.id as product_id,
+                          products.product_code,
+                          (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
+                          products_cost.member_price,
+                          products_cost.pv
+                          FROM
+                          products_details
+                          Left Join products ON products_details.product_id_fk = products.id
+                          LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                          WHERE lang_id=1 AND products.id= ".$r->product_id_fk."
+
+                   ");
+
+                    $pn = @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+                        DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) values ($lastInsertId01, $r->product_id_fk,'$pn', $sum_amt, $r->product_unit) ");
                       }
                   }
+                 
                 }
-        
-              // return $temp_ppp_002;
 
              // ต้องมีอีกตารางนึง เก็บ สถานะการอนุมัติ และ ที่อยู่การจัดส่งสินค้า > $temp_ppp_003
                 DB::select(" DROP TABLE IF EXISTS $temp_ppp_003; ");
@@ -1883,6 +1911,7 @@ class Pick_warehouse_fifoController extends Controller
           ->where('pick_pack_requisition_code_id_fk',$row->pick_pack_requisition_code_id_fk)
           ->where('amt_remain','!=',0)
           ->where('status_cancel',0)
+          ->orderby('time_pay','desc')
           ->first();
 
           $Products = DB::select("
@@ -1915,8 +1944,7 @@ class Pick_warehouse_fifoController extends Controller
          DB::select(" DROP TABLE IF EXISTS temp_001; ");
          // TEMPORARY
          DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-                         
-
+               
           foreach ($Products as $key => $value) {
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
