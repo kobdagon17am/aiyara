@@ -68,6 +68,7 @@ class Payment extends Model
     public static function ai_cash($rs)
     {
 
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
           $business_location_id = 1;
