@@ -242,6 +242,7 @@ public static function check_line($username){
 	if(!empty($data_user)){
 
 		$user_name = Auth::guard('c_user')->user()->user_name;
+    $user_name_c = Auth::guard('c_user')->user()->user_name;//ของผู้เซิท
 
 		if( $data_user->user_name == $user_name){
 
@@ -254,15 +255,14 @@ public static function check_line($username){
 		for ($i=1; $i <= $j ; $i++){
 			if($i == 1){
 				$data = DB::table('customers')
-				->select('*')
+				->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 				->where('user_name','=',$username)
 			//->where('upline_id','=',$use_id)
 				->first();
 			}
 
 			if($data){
-
-				if($data->user_name == $username || $data->upline_id == $username ){
+				if($data->user_name == $user_name_c || $data->upline_id == $user_name_c){
 					$resule = ['status'=>'success','message'=>'Under line','data'=>$data_user];
 					$j =0;
 
@@ -285,6 +285,8 @@ public static function check_line($username){
 				$j =0;
 			}
 		}
+
+    dd($resule);
 		return $resule;
 
 	}else{

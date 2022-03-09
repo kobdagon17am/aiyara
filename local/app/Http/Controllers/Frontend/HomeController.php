@@ -33,6 +33,7 @@ class HomeController extends Controller
   }
 
   public function search(Request $request){
+
     $data = LineModel::line_all($request->home_search_id);
     return view('frontend/home',compact('data'));
   }
