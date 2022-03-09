@@ -453,11 +453,32 @@ if(@$Products){
      $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
   // Check ว่ามี status=2 ? (ค้างจ่าย)
      $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
-     if(count($r_ch02)>0){
-        $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
-     }else{
-       $r_ch_t = '';
-     }
+    //  if(count($r_ch02)>0){
+    //     $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+    //  }else{
+    //    $r_ch_t = '';
+    //  }
+
+
+      //  วุฒิเพิ่มมา
+      $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
+                   ->where('product_id_fk',$value->product_id_fk) 
+                   ->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
+                   ->orderBy('time_pay', 'desc')
+                   ->first();
+                   
+                  $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                  ->where('product_id_fk',$value->product_id_fk)
+                  ->where('order_id',$value->order_id)
+                  ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                  ->first();
+             
+                    if($db_pay_requisition_002_item->amt_remain > 0){
+                      $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
+                    }else{
+                      $r_ch_t = '';
+                    }
+
 
      $amt_get = DB::table('db_pay_requisition_002')
                 ->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')

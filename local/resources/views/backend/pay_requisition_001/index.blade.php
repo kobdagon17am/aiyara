@@ -518,7 +518,7 @@
                           }else if(aData['status']==5){
 
                               $('td:last-child', nRow).html(''
-                              // วุฒิเปลี่ยน
+                              // // วุฒิเปลี่ยน
                                  + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/cancel" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="left" title="ยกเลิก" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                              
                                 + '<a href="{{ url('backend/pick_warehouse') }}/'+aData['id']+'/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
@@ -526,7 +526,6 @@
                                  + '<a href="backend/pick_warehouse/print_requisition/'+aData['id']+'" class="btn btn-sm btn-primary" target=_blank data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเบิกสินค้า" > <i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a>'
 
                               ).addClass('input');
-
 
                           }else if(aData['status']==6){ // ยกเลิกใบเบิก
 

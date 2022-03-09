@@ -1631,6 +1631,7 @@ class General {
 					   ->where('type_product','promotion')
 					   ->whereIn('promotion_id_fk',$promotions_products_arr)
 					   ->union($db_order_products_list_data1)
+					   ->orderBy('frontstore_id_fk','asc')
 					   ->get();
 					   foreach($db_order_products_list_data2 as $data2){
 							 $order_product1 = DB::table('db_order_products_list')
