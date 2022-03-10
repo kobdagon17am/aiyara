@@ -903,7 +903,7 @@
                                     </td>
 
                                     <td align="right"><strong class="text-primary gv_remove_price">
-                                            {{ $data->gift_voucher_cost }}</strong>
+                                            {{ number_format($data->gift_voucher_cost,2) }}</strong>
                                     </td>
                                 </tr>
 
@@ -1058,9 +1058,18 @@
 
 
                 var ai_cash = '{{ Auth::guard('c_user')->user()->ai_cash }}';
-                var price_total = {{ $data->total_price }};
+                var purchase_type_id_fk = {{$data->purchase_type_id_fk}};
+                if(purchase_type_id_fk == 5){
+                  var total_price = {{$data->total_price}};
+                  var gift_voucher_cost = {{$data->gift_voucher_cost}};
+                  var price_total = total_price - gift_voucher_cost;
+
+                }else{
+                  var price_total = {{ $data->total_price }};
+                }
 
                 if (ai_cash < price_total) {
+
                     document.getElementById("ai_cash_submit").style.display = "none";
                     $('#error_aicash').html(
                         '<label class="label label-inverse-danger text-right">Ai-Cash ไม่พอสำหรับการชำระเงิน</label>');
