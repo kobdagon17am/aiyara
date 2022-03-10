@@ -223,7 +223,7 @@ class Runpv_AiStockis extends Model
 
                 }
                 if ($resule['status'] == 'success') {
-
+                  $update_to_customer->date_order_first = date('Y-m-d h:i:s');
                   $strtotime_date_now_30 = strtotime("+30 minutes");
                   $strtotime_date_now_23 = strtotime(date('Y-m-d 23:00:00'));
 
