@@ -14,7 +14,6 @@ class PaymentSentAddressOrder extends Model
     public static function update_order_and_address($rs, $code_order, $customer_id, $business_location_id, $orderstatus_id, $gv, $price_remove_gv,$quantity)
     {
 
-
         try {
             DB::BeginTransaction();
             $insert_db_orders = new Db_Orders();

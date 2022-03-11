@@ -253,7 +253,9 @@ class HistoryController extends Controller
 
             ->addColumn('status', function ($row) {
                 if ($row->delivery_location_frontend == 'sent_office' and $row->order_status_id_fk == 4) {
-                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode(' . $row->id . ')" ><i class="fa fa-qrcode"></i> <b style="color: #000">' . $row->detail . '</b></button>';
+                   $name = HistoryController::get_name_branchs($row->branch_id_fk);
+
+                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode('.$row->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$row->detail.' '.$name->b_name.'</b></button>';
                 } else {
                   if($row->order_status_id_fk == 1 ){
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')" > <b style="color: #000">' . $row->detail . '</b></button>';
@@ -655,13 +657,13 @@ class HistoryController extends Controller
       return view('frontend/modal/modal_tranfer_log', compact('customer','file_slip','order'));
     }
 
-    public function get_name_major($branch_id){
+    public function get_name_branchs($branch_id){
       if($branch_id){
-        $branchs =  DB::table('branchs')
+        $branch =  DB::table('branchs')
         ->where('id','=',$branch_id)
         ->first();
-        if($branchs){
-
+        if($branch){
+          return $branch;
         }else{
           return '';
         }
