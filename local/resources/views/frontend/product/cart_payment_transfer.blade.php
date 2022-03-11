@@ -7,6 +7,10 @@
     <link rel="stylesheet" type="text/css"
         href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
 
+           <!-- jquery file upload Frame work -->
+    <link href="{{ asset('frontend/assets/pages/jquery.filer/css/jquery.filer.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('frontend/assets/pages/jquery.filer/css/themes/jquery.filer-dragdropbox-theme.css') }}" type="text/css" rel="stylesheet" />
+
 
 @endsection
 @section('conten')
@@ -190,11 +194,11 @@
 
                                                     <div class="form-group row">
                                                         <div class="col-sm-6">
-                                                            <label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">(
-                                                                    JPG,PNG )</b>
+                                                            <label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">( JPG,PNG )</b>
                                                             </label>
-                                                            <input type="file" id="upload" name="file_slip"
-                                                                class="form-control">
+                                                            {{-- <input type="file" id="upload" name="file_slip"
+                                                                class="form-control"> --}}
+                                                                <input type="file" name="files[]" id="filer_input" multiple="multiple">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -988,6 +992,10 @@
 
 @endsection
 @section('js')
+  <!-- jquery file upload js -->
+  <script src="{{ asset('frontend/assets/pages/jquery.filer/js/jquery.filer.min.js')}}"></script>
+  <script src="{{ asset('frontend/assets/pages/filer/custom-filer.js')}}" ></script>
+  <script src="{{ asset('frontend/assets/pages/filer/jquery.fileuploads.init.js')}}" ></script>
 
     @if ($data->total_price > 0 and $data->purchase_type_id_fk == 5)
         <script type="text/javascript">
@@ -1039,8 +1047,8 @@
 
                 document.getElementById("submit_upload").disabled = true;
                 document.getElementById("submit_upload").className = "btn btn-success";
-                $('#upload').change(function() {
-                    var fileExtension = ['jpg', 'png'];
+                $('#filer_input').change(function() {
+                    var fileExtension = ['jpg', 'png','jpeg','tif','eps'];
                     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
                         alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
                         this.value = '';
@@ -1098,8 +1106,8 @@
 
 
 
-        $('#upload').change(function() {
-            var fileExtension = ['jpg', 'png'];
+        $('#filer_input').change(function() {
+            var fileExtension = ['jpg', 'png','jpeg','tif','eps'];
             if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
                 alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
                 this.value = '';
@@ -1112,4 +1120,5 @@
     </script>
 
     <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
+
 @endsection
