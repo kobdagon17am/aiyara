@@ -2939,9 +2939,6 @@
                         'selectRow': true
                     }
                 }],
-                // 'select': {
-                //    'style': 'multi'
-                // },
                 rowCallback: function(nRow, aData, dataIndex) {
 
                     var info = $(this).DataTable().page.info();
@@ -2955,12 +2952,6 @@
                     if (aData['type_product'] == 'course') {
                         $("td:eq(4)", nRow).html("คอร์ส");
                     }
-
-                    //  console.log(frontstore_id_fk);
-                    // console.log(aData['pay_type']);
-                    // console.log(aData['check_press_save']);
-
-                    // if(aData['pay_type'] !== "" && aData['pay_type'] !== 0){
                     if (aData['check_press_save'] == "2") {
 
                         $('td:last-child', nRow).html('-');
@@ -2973,15 +2964,10 @@
                             aData['frontstore_id_fk'] +
                             '" class="btn btn-sm btn-danger cCancel "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                         ).addClass('input');
-
                     }
-
-
-
                 }
             });
             $.fn.dataTable.ext.errMode = 'throw';
-
         });
 
         // วุฒิเพิ่มมาเช็คสเตตัส
@@ -2993,31 +2979,21 @@
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
-                 
             }else{
                 fnShippingCalculate(0);
             }
         }
 
         $(document).ready(function() {
-
             $(document).on('click', '.btnSaveChangePurchaseType', function(event) {
                 var orders_id_fk = "{{ @$sRow->id }}";
                 var purchase_type_id_fk = $("#purchase_type_id_fk").val();
                 var aistockist = $("input[name=aistockist]").val();
                 var agency = $("input[name=agency]").val();
-
-                // console.log(orders_id_fk);
-                // console.log(purchase_type_id_fk);
-                // console.log(aistockist);
-                // console.log(agency);
                 if (purchase_type_id_fk == "") {
                     $("#purchase_type_id_fk").select2('open');
                     return false;
                 }
-
-                // return false;
-
                 Swal.fire({
                     title: 'ยืนยัน ? การแก้ไขข้อมูล ',
                     type: 'question',
@@ -3039,9 +3015,6 @@
                                 agency: agency,
                             },
                             success: function(data) {
-
-                                // console.log(data);
-
                                 setTimeout(function() {
                                     $(".myloading").hide();
                                     location.reload();
@@ -3052,16 +3025,11 @@
                         $(".myloading").hide();
                     }
                 });
-
             });
 
-
-
             $(document).on('click', '.cCancel', function(event) {
-
                 var id = $(this).data('id');
                 var frontstore_id_fk = $(this).attr('frontstore_id_fk');
-
                 if (!confirm("ยืนยัน ? เพื่อลบรายการ ")) {
                     return false;
                 } else {
@@ -3075,8 +3043,6 @@
                             frontstore_id_fk: frontstore_id_fk,
                         },
                         success: function(data) {
-                            // console.log(data);
-                            // return false;
                             var frontstore_id_fk = $("#frontstore_id_fk").val();
                             $.ajax({
                                 type: 'POST',
@@ -3088,29 +3054,15 @@
                                 success: function(data) {},
                                 error: function(jqXHR, textStatus, errorThrown) {}
                             });
-
                             location.reload();
-
                         }
                     });
-
                 }
-
-
             });
-
         });
     </script>
 
-    </script>
-
-
-
-
-
     <script type="text/javascript">
-        // xxxxxxxxxxxx
-
 
         var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
         var order_type = "{{ @$sRow->purchase_type_id_fk }}";
@@ -3230,14 +3182,8 @@
             $.fn.dataTable.ext.errMode = 'throw';
         });
     </script>
-
-
     <script type="text/javascript">
         $(document).ready(function() {
-
-            //fnGetDBfrontstore();
-            // $('#modalAddFromPromotion').modal('show');
-
             $(document).on('click', '.btnAddFromPromotion', function(event) {
                 event.preventDefault();
                 $('#modalAddFromPromotion').modal('show');
@@ -3249,12 +3195,7 @@
 
                 var frontstore_id_fk = $("#frontstore_id_fk").val();
                 var order_type = $("#purchase_type_id_fk").val();
-                // var order_type = "{{ @$sRow->purchase_type_id_fk }}";
-                // alert(frontstore_id_fk);
-                // alert(order_type);
-
                 $('.myloading').show();
-
                 var oTable;
                 $(function() {
                     $.fn.dataTable.ext.errMode = 'throw';
@@ -3405,9 +3346,7 @@
 
 
             $('#modalAddFromProductsList,#modalAddList').on('hidden.bs.modal', function() {
-                // $('.myloading').show();
                 $('.myloading').hide();
-
                 setTimeout(function() {
                     window.location.reload(true);
                 }, 500);
@@ -3420,33 +3359,21 @@
                     $(".myloading").show();
                     localStorage.setItem("myloading", 'true');
                 }
-
-
             });
-
             $('#modalDelivery').on('hidden.bs.modal', function() {
                 $('.myloading').show();
                 setTimeout(function() {
                     location.reload();
                 }, 500);
-
             });
-
-
             $('#modalAddFromPromotion').on('hidden.bs.modal', function() {
-                // $('.myloading').show();
                 setTimeout(function() {
                     $("#addr_00").trigger('click');
                 }, 500);
-
             });
-
-
         });
 
-
         $(document).ready(function() {
-
             jQuery(window).on('load', function() {
                 if (localStorage.getItem("myloading") == 'true') {
                     $(".myloading").show();
@@ -3456,20 +3383,15 @@
                     $(".myloading").hide();
                 }
             });
-
-
             $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
                 e.preventDefault();
-
                 var v = $(e.target).closest('.input-group').find('input.quantity').val();
                 var limited_amt_person = $(this).attr('limited_amt_person');
-                // alert(v+":"+limited_amt_person);
                 if (limited_amt_person > 0) {
                     if (v >= limited_amt_person) {
                         alert("Promotion นี้ กำหนดจำนวนจำกัดต่อคน ไว้เท่ากับ " + limited_amt_person);
                         $(e.target).closest('.input-group').find('input.quantity').val(limited_amt_person);
                     }
-
                     $(e.target).closest('.input-group').find('input.quantity').attr('max',
                         limited_amt_person);
                 }
@@ -3480,10 +3402,7 @@
                 if (input.is('input')) {
                     input[0][isNegative ? 'stepDown' : 'stepUp']()
                 }
-
-
             })
-
 
             $(document).on('click', '.btn-plus-pro, .btn-minus-pro', function(e) {
                 e.preventDefault();
@@ -3494,37 +3413,25 @@
                 }
             })
 
-
             $(document).on('click', '.btn-plus, .btn-minus', function(e) {
-
                 e.preventDefault();
                 const isNegative = $(e.target).closest('.btn-minus').is('.btn-minus');
                 const input = $(e.target).closest('.input-group').find('input');
                 if (input.is('input')) {
                     input[0][isNegative ? 'stepDown' : 'stepUp']()
                 }
-
             })
 
             $(document).on('change', '#branch_id_fk', function(event) {
                 event.preventDefault();
                 var id = $(this).val();
-                // localStorage.setItem('branch_id_fk', id);
             });
-
-
-
-            // if(localStorage.getItem('aicash_remain')){
-            //   $('#aicash_remain').val(localStorage.getItem('aicash_remain'));
-            // }
-
 
             if ($("#aicash_remain").val() > 0) {
                 $(".btnCalAddAicash").show();
             } else {
                 $(".btnCalAddAicash").hide();
             }
-
 
             $(document).on('change', '#gift_voucher_id', function(event) {
                 var id = $(this).val();
@@ -3536,52 +3443,40 @@
                         id: id
                     },
                     success: function(data) {
-                        //  console.log(data);
                         $.each(data, function(key, value) {
-                            // $(".label_money_cash").html("ยอด"+value.pay_type+" :");
                             $("#gift_voucher_cost").val(value.banlance);
                         });
                         $('.myloading').hide();
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        //  console.log(JSON.stringify(jqXHR));
-                        //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         $('.myloading').hide();
                     }
                 });
-
             });
-
-
 
             $(document).on('change', '#branch_id_fk', function(event) {
                 $("#addr_00").prop("checked", true);
             });
 
-
             // รับสินค้าด้วยตัวเอง
             $(document).on('click', '#addr_00', function(event) {
                 var v = $(this).val();
-                // / // console.log(v);
                 $("#addr_05").prop("disabled", true);
             });
             // ที่อยู่ตามบัตร ปชช.
             $(document).on('click', '#addr_01', function(event) {
                 var v = $(this).val();
-                // / // console.log(v);
                 $("#addr_05").prop("disabled", false);
             });
             // ที่อยู่จัดส่งไปรษณีย์
             $(document).on('click', '#addr_02', function(event) {
                 var v = $(this).val();
-                // / // console.log(v);
                 $("#addr_05").prop("disabled", false);
             });
 
             // ที่อยู่การจัดส่ง (กำหนดเอง)
             $(document).on('click', '#addr_03', function(event) {
                 var v = $(this).val();
-                // / // console.log(v);
                 if (v == 3) {
                     $('#modalDelivery').modal('show');
                 }
@@ -3590,8 +3485,6 @@
             // จัดส่งพร้อมบิลอื่น
             $(document).on('click', '#addr_04', function(event) {
                 var v = $(this).val();
-
-                // / // console.log(v);
                 $("#addr_05").prop("disabled", true);
             });
             // ส่งแบบพิเศษ / Premium
@@ -3609,15 +3502,6 @@
                 }
             });
 
-
-            // $('#note').change(function() {
-            //     localStorage.setItem('note', this.value);
-            // });
-
-            // if(localStorage.getItem('note')){
-            //   $('#note').val(localStorage.getItem('note'));
-            // }
-
             $(document).on('keyup', '.xxx', function(e) {
                 e.preventDefault();
                 var v = parseInt($(this).val() - 1);
@@ -3627,34 +3511,21 @@
                 return false;
             });
 
-
-
             $(document).on('click', '.btn-plus', function(e) {
-                // event.preventDefault();
-
                 const input = $(e.target).closest('.input-group').find('input');
                 if (input.is('input')) {
-                    // alert(input.val());
-                    // frmFrontstorelist
-                    // $("#frmFrontstorelist").submit();
-                    // var d =  $("#frmFrontstorelist").serialize();
                     var d = $(".frmFrontstorelist").serialize();
                     var product_id_fk_this = $(this).data('product_id_fk');
 
                     var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
                     var purchase_type_id_fk =
                         "{{ @$sRow->purchase_type_id_fk }}"; ////alert(frontstore_id_fk);
-                    // alert(purchase_type_id_fk);
-                    // return false;
                     $.ajax({
                         type: 'POST',
                         url: " {{ url('backend/frontstorelist/plus') }} ",
-                        // data:{ d:d , _token: '{{ csrf_token() }}' },
                         data: $(".frmFrontstorelist").serialize() + "&product_id_fk_this=" +
                             product_id_fk_this + "&purchase_type_id_fk=" + purchase_type_id_fk,
                         success: function(response) { // What to do if we succeed
-                            // console.log(response);
-                            //  console.log(frontstore_id_fk);
                             return false;
                             var oTable;
 
@@ -3671,7 +3542,6 @@
                                     "info": false,
                                     "paging": false,
                                     destroy: true,
-                                    // scrollY: ''+($(window).height()-370)+'px',
                                     iDisplayLength: 5,
                                     ajax: {
                                         url: '{{ route('backend.frontstorelist.datatable') }}',
@@ -3795,9 +3665,6 @@
                                             aData['id'] +
                                             '" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                         ).addClass('input');
-
-
-                                        //fnGetDBfrontstore();
                                         setTimeout(function() {
                                             $(".ShippingCalculate02")
                                                 .trigger('click');
@@ -3817,8 +3684,7 @@
 
                         },
                         error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                            //  console.log(JSON.stringify(jqXHR));
-                            //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+
                         }
                     });
 
@@ -3830,21 +3696,14 @@
 
 
             $(document).on('click', '.btn-minus', function(e) {
-                // event.preventDefault();
-
                 const input = $(e.target).closest('.input-group').find('input');
                 if (input.is('input')) {
-                    // alert(input.val());
-                    // frmFrontstorelist
-                    // $("#frmFrontstorelist").submit();
                     var d = $(".frmFrontstorelist").serialize();
                     var product_id_fk_this = $(this).data('product_id_fk');
 
                     var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
                     var purchase_type_id_fk =
                         "{{ @$sRow->purchase_type_id_fk }}"; ////alert(frontstore_id_fk);
-
-                    // alert(product_id_fk_this);
 
                     $.ajax({
                         type: 'POST',
@@ -3853,8 +3712,6 @@
                         data: $(".frmFrontstorelist").serialize() + "&product_id_fk_this=" +
                             product_id_fk_this + "&purchase_type_id_fk=" + purchase_type_id_fk,
                         success: function(response) { // What to do if we succeed
-                            //  console.log(response);
-
                             var oTable;
                             $(function() {
                                 $.fn.dataTable.ext.errMode = 'throw';
@@ -3869,7 +3726,6 @@
                                     "info": false,
                                     "paging": false,
                                     destroy: true,
-                                    // scrollY: ''+($(window).height()-370)+'px',
                                     iDisplayLength: 5,
                                     ajax: {
                                         url: '{{ route('backend.frontstorelist.datatable') }}',
@@ -3992,9 +3848,6 @@
                                             aData['id'] +
                                             '" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                         ).addClass('input');
-
-
-                                        //fnGetDBfrontstore();
                                         setTimeout(function() {
                                             $(".ShippingCalculate02")
                                                 .trigger('click');
@@ -4008,59 +3861,34 @@
                                     function(e) {
                                         oTable.draw();
                                     });
-
                             });
-
-
                         },
                         error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                            //  console.log(JSON.stringify(jqXHR));
-                            //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         }
                     });
-
                 }
-
-
 
             });
 
 
 
             $(document).on('click', '.btn-plus-product-pro', function(e) {
-                // event.preventDefault();
                 $.fn.dataTable.ext.errMode = 'throw';
-
                 const input = $(e.target).closest('.input-group').find('input');
                 if (input.is('input')) {
-                    // alert(input.val());
-                    // frmFrontstorelist
-                    // $("#frmFrontstorelist").submit();
-                    // var d =  $("#frmFrontstorelist").serialize();
                     var d = $(".frmFrontstorelistPro").serialize();
                     var promotion_id_fk_this = $(this).attr('promotion_id_fk');
 
                     var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
                     var purchase_type_id_fk =
                         "{{ @$sRow->purchase_type_id_fk }}"; ////alert(frontstore_id_fk);
-
-                    // alert(product_id_fk_this);
-
-                    // return false;
-
                     $.ajax({
                         type: 'POST',
                         url: " {{ url('backend/frontstorelist/plusPromotion') }} ",
-                        // data:{ d:d , _token: '{{ csrf_token() }}' },
                         data: $(".frmFrontstorelistPro").serialize() + "&promotion_id_fk_this=" +
                             promotion_id_fk_this + "&purchase_type_id_fk=" + purchase_type_id_fk,
                         success: function(response) { // What to do if we succeed
-                            // console.log(response);
-                            //  console.log(frontstore_id_fk);
-                            // return false;
-
                             var oTable;
-
                             $(function() {
                                 $.fn.dataTable.ext.errMode = 'throw';
                                 oTable = $('#data-table-list').DataTable({
@@ -4074,7 +3902,6 @@
                                     "info": false,
                                     "paging": false,
                                     destroy: true,
-                                    // scrollY: ''+($(window).height()-370)+'px',
                                     iDisplayLength: 5,
                                     ajax: {
                                         url: '{{ route('backend.frontstorelist.datatable') }}',
@@ -4198,11 +4025,6 @@
                                             '" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                         ).addClass('input');
 
-                                        //fnGetDBfrontstore();
-                                        // setTimeout(function(){
-                                        //   $(".ShippingCalculate02").trigger('click');
-                                        // }, 1000);
-
                                     }
                                 });
                                 $('.myWhere,.myLike,.myCustom,#onlyTrashed').on(
@@ -4216,8 +4038,7 @@
 
                         },
                         error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                            //  console.log(JSON.stringify(jqXHR));
-                            //  console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                            
                         }
                     });
 
