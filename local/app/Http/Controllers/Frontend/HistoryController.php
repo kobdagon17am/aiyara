@@ -655,5 +655,21 @@ class HistoryController extends Controller
       return view('frontend/modal/modal_tranfer_log', compact('customer','file_slip','order'));
     }
 
+    public function get_name_major($branch_id){
+      if($branch_id){
+        $branchs =  DB::table('db_orders')
+        ->select('transfer_bill_note')
+        ->where('id','=',$rs->order_id)
+        ->first();
+        if($branchs){
+
+        }else{
+          return '';
+        }
+      }else{
+        return '';
+      }
+    }
+
 
 }
