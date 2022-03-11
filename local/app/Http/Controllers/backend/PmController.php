@@ -94,6 +94,16 @@ class PmController extends Controller
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
+          DB::table('pm_answers')->insert([
+            'pm_id_fk' => $sRow->id,
+            'customers_id_fk' => request('customers_id_fk'),
+            'operator' => request('operator'),
+            'txt_answers' => request('txt_answers'),
+            'type' => 'admin',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+          ]);
+
 
           \DB::commit();
 
