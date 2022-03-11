@@ -108,6 +108,13 @@ class PaymentSentAddressOrder extends Model
                     $insert_db_orders->shipping_free = 1;
                 }
 
+                $update_tel= DB::table('customers_detail')
+                ->where('customer_id',$customer_id)
+                ->update([
+                    'tel_mobile' => $rs->tel_mobile,
+                ]);
+
+
                 $insert_db_orders->shipping_price = $shipping;
                 $insert_db_orders->shipping_cost_id_fk = $data_shipping['data']->shipping_type_id;
                 $insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;
@@ -134,6 +141,13 @@ class PaymentSentAddressOrder extends Model
                 if ($data_shipping['data']->shipping_type_id == 1) {
                     $insert_db_orders->shipping_free = 1;
                 }
+
+                $update_tel_card = DB::table('customers_address_card')
+                ->where('customer_id',$customer_id)
+                ->update([
+                    'tel' => $rs->tel_mobile,
+                ]);
+
                 $insert_db_orders->shipping_price = $shipping;
                 $insert_db_orders->shipping_cost_id_fk = $data_shipping['data']->shipping_type_id;
                 $insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;
