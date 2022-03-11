@@ -334,9 +334,9 @@
 
               <?php //}?>
 
-							<center>
+							{{-- <center>
 							<a class="btn btn-primary btn-sm waves-effect font-size-18 " href="{{ url("backend/pick_pack") }}">ไปหน้า สร้างใบเบิก ></a>
-							</center>
+							</center> --}}
 
                           </div>
                         </div>

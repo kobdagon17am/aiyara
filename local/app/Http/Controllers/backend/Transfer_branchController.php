@@ -815,6 +815,7 @@ class Transfer_branchController extends Controller
           return $requisition->approved_at->format('d/m/Y H:i:s');
         })
         ->addColumn('actions', function ($requisition) {
+          // dd($requisition->requisition_details);
           return 
             "<button type='button' class='btn btn-primary btn-sm waves-effect waves-light' data-toggle='modal' data-target='.modal-requisition-details' data-details='$requisition->requisition_details' data-to_branch_id='$requisition->to_branch_id' data-from_branch_id='$requisition->from_branch_id'>
               <i class='fas fa-edit'></i>

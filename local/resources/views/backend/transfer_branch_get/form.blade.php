@@ -545,7 +545,7 @@
                     scrollX: true,
                     ordering: false,
                     scrollY: ''+($(window).height()-370)+'px',
-                    iDisplayLength: 5,
+                    iDisplayLength: 100,
                     ajax: {
                             url: '{{ route('backend.transfer_branch_get_products.datatable') }}',
                             data: function ( d ) {
@@ -624,7 +624,7 @@
                     scrollX: true,
                     ordering: false,
                     scrollY: ''+($(window).height()-370)+'px',
-                    iDisplayLength: 5,
+                    iDisplayLength: 100,
                     ajax: {
                         url: '{{ route('backend.transfer_branch_get_products_receive.datatable') }}',
                         data :{

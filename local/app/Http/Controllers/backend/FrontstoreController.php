@@ -1775,7 +1775,6 @@ class FrontstoreController extends Controller
                                  ");
           }
 
-
           DB::select("
 
                               UPDATE db_orders SET
