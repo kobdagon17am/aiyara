@@ -2141,6 +2141,23 @@ class AjaxController extends Controller
             $cash_pay = @$sum_price - @$aicash_price;
              DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
         }
+
+        if($pay_type_id_fk==14){
+            $aicash_price = str_replace(',','',@$request->aicash_price);
+            $aicash_remain = str_replace(',','',@$request->aicash_remain);
+            // if(!empty($aicash_remain)){
+            //     $aicash_price = $aicash_remain ;
+            //     $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
+            // }else{
+            //     $aicash_price = $aicash_price > $sum_price ? $sum_price : $aicash_price ;
+            // }
+            if($aicash_remain<$aicash_price){
+                $aicash_price = $aicash_remain;
+            }
+            $cash_pay = @$sum_price - @$aicash_price;
+             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
+        }
+
       if($pay_type_id_fk==9){
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
             $sum_credit_price = str_replace(',','',@$request->sum_credit_price);
@@ -3117,16 +3134,10 @@ class AjaxController extends Controller
 
    public function ajaxCalGiftVoucherPrice(Request $request)
     {
-        // return $request;
-        // dd();
-      // return ($request->purchase_type_id_fk);
-
     if($request->purchase_type_id_fk!=5){
 
     }else{
-
         // Gift Voucher
-
             /*
                 $pay_type_id_fk
                   1 เงินสด
@@ -3137,17 +3148,13 @@ class AjaxController extends Controller
                   6 เงินโอน + เงินสด
                   7 เงินโอน + Ai-Cash
             */
-
             $pay_type_id_fk = $request->pay_type_id_fk;
             $frontstore_id =  $request->frontstore_id ;
             $sum_price = str_replace(',','',$request->sum_price);
             $shipping_price = str_replace(',','',$request->shipping_price);
-
             $sum_price = ($sum_price+$shipping_price) ;
-
             $gift_voucher_cost = str_replace(',','',$request->gift_voucher_cost);   // ที่มีอยู่
             $gift_voucher_price = str_replace(',','',$request->gift_voucher_price); // ที่กรอก
-
             if($pay_type_id_fk==19){
                 if($gift_voucher_price==''){
                     $gift_voucher_price = 0;
@@ -3157,17 +3164,6 @@ class AjaxController extends Controller
                 $gift_voucher_price = $gift_voucher_price>$sum_price?$sum_price:$gift_voucher_price;
                 $sum_price = $sum_price-$gift_voucher_price;
             }
-
-
-
-            // return ($sum_price);
-            // return ($gift_voucher_cost);
-
-            // $sRow = \App\Models\Backend\Frontstore::find($frontstore_id);
-            // $ThisCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
-            // $data_gv = \App\Helpers\Frontend::get_gitfvoucher(@$ThisCustomer[0]->user_name);
-            // $gv = @$data_gv->sum_gv;
-
 
             if($gift_voucher_price>0){
                 // Gift Voucher + เงินโอน
@@ -3184,18 +3180,22 @@ class AjaxController extends Controller
                     DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price'  WHERE id=$frontstore_id ");
                     DB::select(" UPDATE db_orders SET cash_price=(0),cash_pay=($sum_price-$gift_voucher_price),total_price=($sum_price-$gift_voucher_price) WHERE id=$frontstore_id ");
                 }
+                else
+                // Gift Voucher + Ai-Cash
+                if($pay_type_id_fk==14){
+                    DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price'  WHERE id=$frontstore_id ");
+                    // DB::select(" UPDATE db_orders SET cash_price=(0),cash_pay=($sum_price-$gift_voucher_price),total_price=($sum_price-$gift_voucher_price) WHERE id=$frontstore_id ");
+          
+                }
                 else{
                     DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
                 }
             }else{
                 DB::select(" UPDATE db_orders SET gift_voucher_cost='0',gift_voucher_price='0' WHERE id=$frontstore_id ");
             }
-
         }
-
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         return response()->json($rs);
-
     }
 
 

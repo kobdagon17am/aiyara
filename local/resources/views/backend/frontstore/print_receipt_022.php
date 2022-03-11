@@ -122,11 +122,6 @@ $arr_promotion_id = implode(',', $arr_promotion_id_fk);
 // echo $arr_promotion_id;
 $arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
 $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
-// echo $cnt01[0]->cnt;
-// echo $cnt02[0]->cnt;
-// echo $cnt03[0]->cnt;
-// echo $cnt04[0]->cnt;
-// echo $cnt05[0]->cnt;
 
 // $cnt_all = $cnt01[0]->cnt + $cnt02[0]->cnt + $cnt03[0]->cnt + $cnt04[0]->cnt + $cnt05[0]->cnt ;
 // $amt_page = ceil($cnt_all/10);
@@ -538,6 +533,20 @@ if(!empty($db_orders[0]->action_user)){
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$id)->get();
+                //  where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+                // วุฒิเพิ่มมาเช็ค
+                $district_id_fk = DB::table('customers_detail')->select('district_id_fk')->where('customer_id',@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)->first();
+                if($district_id_fk){
+                    $dis = DB::table('dataset_districts')->select('id')->where('id',$district_id_fk->district_id_fk)->first();
+                    if(!$dis){
+                      $dis2 = DB::table('dataset_districts')->select('id')->where('name_th',$district_id_fk->district_id_fk)->first();
+                      if($dis2){
+                        DB::table('customers_detail')->where('customer_id',@$sRow->customers_id_fk)->update([
+                          'district_id_fk' => $dis2->id,
+                        ]);
+                      }
+                    }
+                }
 
                  $cus = DB::select("
                     SELECT
@@ -729,7 +738,6 @@ if(!empty($db_orders[0]->action_user)){
                                     $tel = 'Tel. '. @$addr[0]->tel . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
                                   }
                                 }
-
                         }
 
                         if(@$sRow->delivery_location==3){
@@ -770,7 +778,8 @@ if(!empty($db_orders[0]->action_user)){
                         }
 
                       }
-                      // dd( @$addr[0]);
+
+
    $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 

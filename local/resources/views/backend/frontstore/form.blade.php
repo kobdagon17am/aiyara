@@ -4038,7 +4038,7 @@
 
                         },
                         error: function(jqXHR, textStatus, errorThrown) { // What to do if we fail
-                            
+
                         }
                     });
 
@@ -6495,6 +6495,27 @@
                                 $(".div_pay_with_other_bill").show();
                                 $("#gift_voucher_price").val(parseFloat(total_sum).toFixed(2));
                                 $(".show_div_cash_pay").show();
+                                $('.class_btnSave').addClass(' btnSave ');
+                                $('.class_btnSave').removeAttr("disabled");
+                                $('.class_btnSave').show();
+                            }
+                            else 
+                              // 14 Gift Voucher + Ai-Cash
+                            if(pay_type_id_fk == 14){
+                                $("#aicash_price").val('');
+
+                                $("#gift_voucher_price").val(parseFloat(
+                                    total_sum).toFixed(2));
+                                $(".div_pay_with_other_bill").show();
+                                $('.class_btnSave').addClass(
+                                    ' btnSave ');
+                                $('.class_btnSave').removeAttr(
+                                     "disabled");
+                                $('.class_btnSave').show();
+                           
+                                $(".show_div_aicash_price").show();
+                                $('#member_id_aicash_select').attr('required', true);
+
                                 $('.class_btnSave').addClass(' btnSave ');
                                 $('.class_btnSave').removeAttr("disabled");
                                 $('.class_btnSave').show();
