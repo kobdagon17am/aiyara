@@ -1780,7 +1780,7 @@
                                                                 </div>
 
 
-                                                                <?php $show_div_aicash_price = @$sRow->pay_type_id_fk == 6 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 3 ? '' : 'display: none;'; ?>
+                                                                <?php $show_div_aicash_price = @$sRow->pay_type_id_fk == 6 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 3 || @$sRow->pay_type_id_fk == 14 ? '' : 'display: none;'; ?>
 
                                                                 <div class="divTableRow show_div_aicash_price "
                                                                     style="<?= $show_div_aicash_price ?>">
@@ -1938,7 +1938,7 @@
                                                             </div>
 
 
-                                                            <?php $show_div_cash_pay = @$sRow->pay_type_id_fk == '' || @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 4 || @$sRow->pay_type_id_fk == 12 || @$sRow->pay_type_id_fk == 13 ? 'display: none;' : ''; ?>
+                                                            <?php $show_div_cash_pay = @$sRow->pay_type_id_fk == '' || @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 4 || @$sRow->pay_type_id_fk == 12 || @$sRow->pay_type_id_fk == 13 || @$sRow->pay_type_id_fk == 14 ? 'display: none;' : ''; ?>
                                                             <div class="divTableRow show_div_cash_pay "
                                                                 style="<?= $show_div_cash_pay ?>">
                                                                 <div class="divTableCell">

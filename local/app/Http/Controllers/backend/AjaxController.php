@@ -1505,9 +1505,9 @@ class AjaxController extends Controller
 10  เงินโอน + เงินสด
 11  เงินโอน + Ai-Cash
 
-          */
+          */ 
           // return $request->pay_type_id_fk;
-        //   dd($request->all());
+        //   dd($request->all()); sum_credit_price
 
         $pay_type_id_fk = $request->pay_type_id_fk;
         $frontstore_id =  $request->frontstore_id ;
@@ -1733,12 +1733,13 @@ class AjaxController extends Controller
             $credit_price = str_replace(',','',$request->credit_price);
             $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
 
-            // return response()->json($credit_price);
+            // return response()->json($credit_price); sum_credit_price
 
 
             DB::select(" UPDATE db_orders SET credit_price=$credit_price,file_slip=NULL WHERE id=$frontstore_id ");
 
             if(!empty($request->fee)){
+
                 $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
                 $fee_type = $fee[0]->fee_type;
                 if($fee_type==1){
@@ -1750,6 +1751,7 @@ class AjaxController extends Controller
                     $fee_amt =  $fee ;
                     $sum_credit_price = $credit_price + $fee_amt ;
                 }
+
            }else{
               $fee_id = 0 ;
               $fee_amt  = 0 ;
@@ -2141,7 +2143,7 @@ class AjaxController extends Controller
             $cash_pay = @$sum_price - @$aicash_price;
              DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
         }
-
+ // Gift Voucher + Ai-Cash
         if($pay_type_id_fk==14){
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
