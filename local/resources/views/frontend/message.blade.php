@@ -44,11 +44,12 @@
 
                     @csrf
                     <div class="form-group">
-                      <input type="text" name="subject" class="form-control" placeholder="Subject" required="">
+                      <input type="text" name="subject" class="form-control" placeholder="หัวข้อ" required="">
+
+
                     </div>
 
-
-                    <textarea name="question"></textarea>
+                    <textarea rows="5" cols="5" class="form-control" name="question" placeholder="รายละเอียด"></textarea>
 
 
 
@@ -56,7 +57,7 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                     @if($canAccess)
-                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Send</button>
                     @endif
                   </div>
 
@@ -91,7 +92,7 @@
 
             <?php
 
-            $answers = strip_tags($value->answers);
+            $answers = strip_tags($value->details_question);
 
             $text = strlen($answers) > 60 ? substr( $answers,0,60)."..." : $answers; ?>
             <tr>
@@ -127,9 +128,9 @@
 
 
 <!-- tinymce js -->
-<script src="{{asset('frontend/assets/pages/wysiwyg-editor/js/tinymce.min.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/pages/wysiwyg-editor/js/tinymce.min.js')}}"></script> --}}
 <!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/wysiwyg-editor/wysiwyg-editor.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/pages/wysiwyg-editor/wysiwyg-editor.js')}}"></script> --}}
 
 <!-- data-table js -->
 <script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
