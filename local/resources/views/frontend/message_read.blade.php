@@ -144,9 +144,7 @@
                   </div>
                   <div class="media-body photo-contant">
 
-                    <h6 class="user-name">{{ Auth::guard('c_user')->user()->user_name }}</h6>
-
-
+                    <h6 class="user-name">{{Auth::guard('c_user')->user()->first_name}}  {{Auth::guard('c_user')->user()->last_name}} ( {{ Auth::guard('c_user')->user()->user_name }} )</h6>
                     {{-- <h6  class="user-mail text-muted">{!! Auth::guard('c_user')->user()->business_name !!}</h6> --}}
 
                     <div class="mt-2">
@@ -168,17 +166,34 @@
                     @endif
 
                     @if($value->type == 'customer')
-                    <img class="img-radius" width="100" src="{{asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img)}}" alt="User-Profile-Image">
+                            @if (Auth::guard('c_user')->user()->profile_img)
+                            <img class="img-radius" width="100" src="{{ asset('local/public/profile_customer/'.Auth::guard('c_user')->user()->profile_img) }}" alt="Member">
+                          @else
+                            <img class="img-radius" width="100" src="{{ asset('local/public/images/ex.png') }}" alt="Member">
+                          @endif
+
                     @endif
 
                   </div>
                   <div class="media-body photo-contant">
                    @if($value->type == 'admin')
-                   <h6 class="user-name text-primary"> น้องใส่ใจ </h6>
+                   <div class="row">
+                    <div class="col-sm-6">
+                      <h6 class="user-name text-primary"> น้องใส่ใจ </h6>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                     <h6 class="">@if($value->created_at){{ date('d/m/Y H:i:s',strtotime($value->created_at)) }}@endif</h6></div>
+                   </div>
+
                    @endif
                    @if($value->type == 'customer')
-                   <h6 class="user-name">{{ Auth::guard('c_user')->user()->user_name }}</h6>
-                   <h6  class="user-mail text-muted">{!! Auth::guard('c_user')->user()->business_name !!}</h6>
+                   <div class="row">
+                     <div class="col-sm-6">
+                      <h6  class="user-mail text-muted">{{Auth::guard('c_user')->user()->first_name}}  {{Auth::guard('c_user')->user()->last_name}} ( {{ Auth::guard('c_user')->user()->user_name }} )</h6>
+                     </div>
+                     <div class="col-sm-6 text-right">
+                      <h6 class="">@if($value->created_at){{ date('d/m/Y H:i:s',strtotime($value->created_at)) }}@endif</h6></div>
+                    </div>
                    @endif
 
                    <div>

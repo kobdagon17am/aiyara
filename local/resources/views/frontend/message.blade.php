@@ -44,7 +44,7 @@
 
                     @csrf
                     <div class="form-group">
-                      <input type="text" name="subject" class="form-control" placeholder="หัวข้อ" required="">
+                      <input type="text" name="subject" class="form-control"  wi placeholder="หัวข้อ" required="">
 
 
                     </div>
@@ -79,11 +79,10 @@
         <table id="simpletable" class="table table-striped table-bordered nowrap">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Title</th>
-
+              <th width="10" >#</th>
+              <th width="30">Title</th>
               <th>Detail</th>
-              <th>Date time</th>
+              <th width="10">View</th>
 
             </tr>
           </thead>
@@ -96,13 +95,21 @@
 
             $text = strlen($answers) > 60 ? substr( $answers,0,60)."..." : $answers; ?>
             <tr>
-             <td>@if($value->see_status == 0)<a href="{{ route('message_read',['id'=>$value->id]) }}">
-              <i class="icofont icofont-star text-primary"></i></a>@endif</td>
+             <td>
+              @if($value->see_status == 0)
+              <a href="{{ route('message_read',['id'=>$value->id]) }}"> <i class="icofont icofont-star text-primary"></i></a>
+              @else
+              <a href="{{ route('message_read',['id'=>$value->id]) }}"> <i class="icofont icofont-star text-warning"></i></a>
+              @endif
+              <a href="{{ route('message_read',['id'=>$value->id]) }}">@if($value->details_question) {!! date('Y/m/d H:i:s',strtotime($value->answers_create)) !!} @endif </a>
+            </td>
+
+
               <td><a href="{{ route('message_read',['id'=>$value->id]) }}">{!! $value->topics_question !!}</a></td>
 
               <td><a href="{{ route('message_read',['id'=>$value->id]) }}">{!! $text !!}</a></td>
+              <td><a class="btn btn-sm btn-primary" href="{{ route('message_read',['id'=>$value->id]) }}"><i class="fa fa-search"></i></a></td>
 
-              <td><a href="{{ route('message_read',['id'=>$value->id]) }}">@if($value->details_question) {!! date('d/m/Y H:i:s',strtotime($value->answers_create)) !!} @endif </a></td>
             </tr>
             @endforeach
 
