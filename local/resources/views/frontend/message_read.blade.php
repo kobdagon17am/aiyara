@@ -39,19 +39,19 @@
 
                     @csrf
                     <div class="form-group">
-                      <input type="text" name="subject" class="form-control" placeholder="Subject" required="">
+                      <input type="text" name="subject" class="form-control" placeholder="หัวข้อ" required="">
                     </div>
 
 
-                    <textarea name="question"></textarea>
 
+                    <textarea rows="5" cols="5" class="form-control" name="question" placeholder="รายละเอียด"></textarea>
 
 
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                     @if($canAccess)
-                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Send</button>
                     @endif
                   </div>
 
@@ -147,9 +147,9 @@
                     <h6 class="user-name">{{ Auth::guard('c_user')->user()->user_name }}</h6>
 
 
-                    <h6  class="user-mail text-muted">{!! Auth::guard('c_user')->user()->business_name !!}</h6>
+                    {{-- <h6  class="user-mail text-muted">{!! Auth::guard('c_user')->user()->business_name !!}</h6> --}}
 
-                    <div>
+                    <div class="mt-2">
                       {{-- <h6 class="email-welcome-txt">Hello Dear...</h6> --}}
                       {!! $pm_data->details_question !!}
 
@@ -240,9 +240,9 @@
 
 
 <!-- tinymce js -->
-<script src="{{asset('frontend/assets/pages/wysiwyg-editor/js/tinymce.min.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/pages/wysiwyg-editor/js/tinymce.min.js')}}"></script> --}}
 <!-- Custom js -->
-<script src="{{asset('frontend/assets/pages/wysiwyg-editor/wysiwyg-editor.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/pages/wysiwyg-editor/wysiwyg-editor.js')}}"></script> --}}
 
 <!-- data-table js -->
 <script src="{{asset('frontend/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
