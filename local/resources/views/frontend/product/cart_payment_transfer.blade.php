@@ -1058,10 +1058,10 @@
 
 
                 var ai_cash = '{{ Auth::guard('c_user')->user()->ai_cash }}';
-                var purchase_type_id_fk = {{$data->purchase_type_id_fk}};
+                var purchase_type_id_fk = '{{$data->purchase_type_id_fk}}';
                 if(purchase_type_id_fk == 5){
-                  var total_price = {{$data->total_price}};
-                  var gift_voucher_cost = {{$data->gift_voucher_cost}};
+                  var total_price = '{{$data->total_price}}';
+                  var gift_voucher_cost = '{{$data->gift_voucher_cost}}';
                   var price_total = total_price - gift_voucher_cost;
 
                 }else{

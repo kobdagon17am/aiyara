@@ -657,9 +657,8 @@ class HistoryController extends Controller
 
     public function get_name_major($branch_id){
       if($branch_id){
-        $branchs =  DB::table('db_orders')
-        ->select('transfer_bill_note')
-        ->where('id','=',$rs->order_id)
+        $branchs =  DB::table('branchs')
+        ->where('id','=',$branch_id)
         ->first();
         if($branchs){
 
