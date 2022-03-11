@@ -2411,7 +2411,6 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
                 <div class="modal-body">
 
 
@@ -2431,7 +2430,7 @@
 
                     @endif
 
-                                      <input {{@$disAfterSave}} type="text" class="form-control ch_Disabled " name="note" placeholder="" value="หมายเหตุ : {{@$slip->note}}" readonly>
+                   <input {{@$disAfterSave}} type="hidden" class="form-control ch_Disabled " name="note" placeholder="" value="หมายเหตุ : {{@$slip->note}}" readonly>
 
                     <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
 

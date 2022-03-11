@@ -62,47 +62,63 @@ class StatusDeliveryController extends Controller
      //  วุฒิเพิ่มมาเช็คว่าใช่ WH ไหม
       $role_group = DB::table('role_group')->select('wh_status')->where('id',@\Auth::user()->role_group_id_fk)->first();
        if(@\Auth::user()->permission==1 || @$role_group->wh_status==1){
-
-           if(!empty( $req->business_location_id_fk) ){
-               $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
-           }else{
-               $business_location_id = "";
-           }
-
-           if(!empty( $req->branch_id_fk) ){
-               $branch_id_fk = " and db_delivery.branch_id_fk = ".$req->branch_id_fk." " ;
-           }else{
-               $branch_id_fk = "";
-           }
-
            $billing_employee = '';
-
        }else{
-
            $business_location_id = " and db_delivery.business_location_id = ".@\Auth::user()->business_location_id_fk." " ;
            $branch_id_fk = " and db_delivery.branch_id_fk = ".@\Auth::user()->branch_id_fk." " ;
            $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
-
        }
+
+         if(!empty($req->receipt)){
+        $receipt = " and db_delivery.receipt =  '".$req->receipt."'" ;
+        }else{
+            $receipt = "";
+        }
+        
+        if(!empty($req->customer_id_fk)){
+          $customer_id_fk = " and db_delivery.customer_id =  '".$req->customer_id_fk."'" ;
+      }else{
+          $customer_id_fk = "";
+      }
+
+      if(!empty($req->bill_sdate) && !empty($req->bill_edate)){
+         $delivery_date = " and date(db_delivery_packing_code.updated_at) BETWEEN '".$req->bill_sdate."' AND '".$req->bill_edate."'  " ;
+      }else{
+         $delivery_date = "";
+      }
+
+        if(!empty( $req->business_location_id_fk) ){
+          $business_location_id = " and db_delivery.business_location_id = ".$req->business_location_id_fk." " ;
+        }else{
+            $business_location_id = "";
+        }
+        if(!empty( $req->branch_id_fk) ){
+          $branch_id_fk = " and db_delivery.branch_id_fk = ".$req->branch_id_fk." " ;
+        }else{
+          $branch_id_fk = "";
+        }
+
        // วุฒิเอา  $branch_id_fk ออก
        // order by db_delivery_packing_code.updated_at desc
       $sTable = DB::select(" 
-         SELECT db_delivery_packing_code.*,db_orders.action_user as action_user_data,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by,db_delivery.status_tracking , MAX(db_orders.shipping_special) AS 'shipping_special' from db_delivery_packing_code  
+         SELECT db_delivery_packing_code.*,db_delivery_packing.packing_code,db_orders.action_user as action_user_data,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_orders.id as db_orders_id,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by,db_delivery.status_tracking , MAX(db_orders.shipping_special) AS 'shipping_special' from db_delivery_packing_code  
          LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
          LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
          LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
-
          $business_location_id
+         $receipt
+         $customer_id_fk
+         $delivery_date
          group by db_delivery_packing_code.id
          order by db_delivery_packing_code.updated_at desc
        ");
-
       //  WHERE db_delivery.status_pick_pack<>1 AND db_delivery.status_delivery<>1
 
      $sQuery = \DataTables::of($sTable);
      return $sQuery
      ->addColumn('status_pick_pack', function($row) {
-        $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+      //  dd($row);
+        $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
         if(@$DP){
              foreach ($DP as $key => $value) {
                $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
@@ -124,7 +140,7 @@ class StatusDeliveryController extends Controller
        return $user_name;
     })  
      ->addColumn('packing_code_desc', function($row) {
-       $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->first();
+       $DP = DB::table('db_delivery_packing')->select('packing_code')->where('packing_code_id_fk',$row->id)->first();
        return $DP->packing_code;
      })      
      ->addColumn('receipt', function($row) {
@@ -146,7 +162,7 @@ class StatusDeliveryController extends Controller
      })
      ->escapeColumns('receipt')
      ->addColumn('customer_name', function($row) {
-         $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+         $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
          $array = array();
          if(@$DP){
            foreach ($DP as $key => $value) {
@@ -170,7 +186,7 @@ class StatusDeliveryController extends Controller
      ->addColumn('addr_to_send', function($row) { 
 
           if($row->id!==""){
-             $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+             $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
              $array = array();
              if(@$DP){
                foreach ($DP as $key => $value) {
@@ -223,6 +239,7 @@ class StatusDeliveryController extends Controller
          $p = '
          <b class="" style="color:green;">ยืนยันแล้ว</b>
          <br> โดย : '.$user_name.'
+         <br> '.$row->updated_at.'
          ';
        }else{
       //    $p = '
@@ -237,14 +254,56 @@ class StatusDeliveryController extends Controller
      ->addColumn('status_tracking', function($row) {
        $p = "";
        if($row->status_tracking==0){
-        $p = 'รอเบิก';
+        $p = '<label>รอเบิก</label>';
        }elseif($row->status_tracking==1){
-        $p = 'เบิกสินค้า';
+        $p = '<label style="color:green;">เบิกสินค้า</label>';
        }elseif($row->status_tracking==2){
-        $p = 'แพ็คสินค้า';
+        $p = '<label style="color:green;">แพ็คสินค้า</label>';
        }elseif($row->status_tracking==3){
-        $p = 'ส่งออกสินค้า';
+        $p = '<label style="color:green;">ส่งออกสินค้า</label>';
        }
+
+       if($row->status_tracking==1 || $row->status_tracking==2 || $row->status_tracking==3){
+        $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
+        if(@$DP){
+          foreach ($DP as $key => $value) {
+            $rs = DB::table('db_delivery')->select('id')->where('id',$value->delivery_id_fk)->first();
+            if($rs){
+                 $db_pick_pack_packing = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->where('delivery_id_fk',$rs->id)->first();
+                 if($db_pick_pack_packing){
+
+                  if($row->status_tracking==1){
+                    $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->select('action_user','updated_at')->where('id',$db_pick_pack_packing->packing_code_id_fk)->first();
+                    if($db_pick_pack_packing_code){
+                      $action_user = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->action_user)->first();
+                      $p .= '<br> โดย : '.@$action_user->name;
+                      $p .= '<br> '.@$db_pick_pack_packing_code->updated_at;
+                      break;
+                    }
+                  }elseif($row->status_tracking==2){
+                    $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->select('approver','aprove_date')->where('id',$db_pick_pack_packing->packing_code_id_fk)->first();
+                    if($db_pick_pack_packing_code){
+                      $approver = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->approver)->first();
+                      $p .= '<br> โดย : '.@$approver->name;
+                      $p .= '<br> '.@$db_pick_pack_packing_code->aprove_date;
+                      break;
+                    }
+                  }elseif($row->status_tracking==3){
+                    $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->select('sender','sent_date')->where('id',$db_pick_pack_packing->packing_code_id_fk)->first();
+                    if($db_pick_pack_packing_code){
+                      $sender = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->sender)->first();
+                      $p .= '<br> โดย : '.@$sender->name;
+                      $p .= '<br> '.@$db_pick_pack_packing_code->sent_date;
+                      break;
+                    }
+                  }
+                 }
+            }
+          }
+        }
+
+       }
+
       return $p;
     })    
      
@@ -253,9 +312,12 @@ class StatusDeliveryController extends Controller
       if($row->status_tracking==3){
         $pcode = DB::table('db_pick_pack_packing')->where('delivery_id_fk',$row->db_delivery_id)->first();
           if($pcode){
-            $data = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->get();
+            $data = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
             foreach($data as $d){
-              $p .= @$d->consignment_no.'<br>';
+              $arr = explode(',',$d->con_arr);
+              foreach($arr as $ar){
+                $p .= @$ar.'<br>';
+              }
             }
           }
        }

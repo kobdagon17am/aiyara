@@ -4830,13 +4830,16 @@ class AjaxController extends Controller
                 $customers = DB::table('customers')->take(15)->get();
             }else{
                 $customers = DB::table('customers')
+                ->select('id','user_name','first_name','last_name','business_name')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
                 ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->take(15)
-                ->orderBy('user_name', 'asc')
+                ->take(500)
+                // ->orderBy('user_name', 'asc')
+                ->orderBy('id', 'asc')
                 ->get();
             }
+            
             $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [

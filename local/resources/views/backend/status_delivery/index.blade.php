@@ -446,252 +446,8 @@ var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
-$(function() {
 
-  $(".myloading").show();
-  
-  $.fn.dataTable.ext.errMode = 'throw';
-
-    oTable = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        scrollY: ''+($(window).height()-370)+'px',
-        iDisplayLength: 1000,
-        // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
-        ajax: {
-          url: '{{ route('backend.delivery.datatable') }}',
-          data: function ( d ) {
-            d.Where={};
-            $('.myWhere').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Where[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Like={};
-            $('.myLike').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Like[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            d.Custom={};
-            $('.myCustom').each(function() {
-              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-              }
-            });
-            oData = d;
-          },
-          method: 'POST'
-        },
-              columns: [
-                  {data: 'id2', title :'ID', className: 'text-center'},
-                  {data: 'id', title :'เลือก', className: 'text-center '},
-                  {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
-                  {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
-                  {data: 'receipt_new', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
-                  {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-left'},
-                  {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-                  {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                  {data: 'orders_id_fk',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
-                      return '<center>'
-                      + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
-                  }},
-                  // {data: 'total_price', title :'<center>รวมเงิน</center>', className: 'text-center'},
-                  {data: 'total_price_not_gv', title :'<center>รวมเงิน</center>', className: 'text-center'},
-                  {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
-                        return d>0?d:'';
-                  }},
-                  {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
-                  	if(d=='1'){
-                        return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-                  	}else{
-                  		  return '-รอเบิกสินค้า-';
-                  	}
-                  }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
-              ],
-              'columnDefs': [
-               {
-                  'targets': 0,
-                  'checkboxes': {
-                     'selectRow': true
-                  }
-               }
-              ],
-              'select': {
-                 'style': 'multi'
-              },
-
-              rowCallback: function(nRow, aData, dataIndex){
-
-                  // $('td:last-child', nRow).html(''
-                  //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                  //     ).addClass('input');
-
-                if(aData['shipping_price'] > 0 ){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
-                      $('td:eq(2)', nRow).html(
-                        '<span class=" badge badge-info font-size-14" data-toggle="tooltip" data-placement="right" title="Shipping"  >S</span>');
-                 }else{
-                      $("td:eq(2)", nRow).html('');
-                 }
-                
-
-                 $("td:eq(1)", nRow).hide();
-                 // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
-
-                 // if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
-                 //      $('td:eq(8)', nRow).html(''
-                 //        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                 //      ).addClass('input');
-                 // }
-                 // else{ //2=db_orders จากการขายหลังบ้าน
-                 //      $('td:eq(8)', nRow).html(''
-                 //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                 //      ).addClass('input');
-                 // }
-
-             //  	 if (aData['status_delivery'] == "1") {
-          			//         $('td', nRow).css('background-color', '#ffd9b3');
-          			//         $("td:eq(0)", nRow).html('');
-          			//         $("td:eq(7)", nRow).html('');
-          			//         $("td:eq(6)", nRow).html('');
-          			//         $("td:eq(10)", nRow).html('');
-          			//         var i;
-             //  					for (i = 0; i < 10 ; i++) {
-             //  					   $("td:eq("+i+")", nRow).prop('disabled',true); 
-             //  					} 
-
-    			      // }else{
-      			    //   	$("td:eq(7)", nRow).prop('disabled',true); 
-      			    //   	$("td:eq(8)", nRow).prop('disabled',true); 
-      			    //   	$("td:eq(10)", nRow).prop('disabled',true); 
-    			      // } 
-
-
-                    // if(aData['status_pick_pack']=='1'){
-                    //     $('td', nRow).css('background-color', '#ffd9b3');
-                    //     var i;
-                    //     for (i = 0; i < 10 ; i++) {
-                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
-                    //     }
-                    //     $('td:last-child', nRow).html('-');
-                    //     $('td:eq(8)', nRow).html(''
-                    //        + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
-                    //      ).addClass('input');
-
-                    // }else{
-                    
-                          if(sU!=''&&sD!=''){
-                              $('td:last-child', nRow).html('-');
-                          }else{ 
-
-                            if (aData['status_delivery'] != "1") {
-
-                                // $('td:last-child', nRow).html(''
-                                //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                  
-                                // ).addClass('input');
-                              }
-
-                              // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-
-                          }
-
-                    // }
-
-                  $(".myloading").hide();
-
-              }
-          });
-              oTable.on( 'draw', function () {
-                $('[data-toggle="tooltip"]').tooltip();
-              });
-          });
-
-
-              setTimeout(function(){
-                 $(".myloading").hide();
-              }, 3000);
-
-
-            $('#data-table').on( 'click', 'tr', function () {
-
-                 $(".myloading").show();
-
-                  $("input[name^=row_id]").remove();
-
-                  setTimeout(function(){
-
-                          var shipping_price = 0;
-                          var total_price = 0;
-                          var shipping_special = 0;
-
-                          var rows_selected = $('#data-table').DataTable().column(0).checkboxes.selected();
-                          $.each(rows_selected, function(index, rowId){
-
-                            var v = rowId.split(':');
-                            console.log(v);
-                            $('#last_form').after(
-                                 $('<input>')
-                                    .attr('type', 'hidden')
-                                    .attr('name', 'row_id[]')
-                                    .attr('id', 'row_id'+v[0])
-                                    .val(v[0])
-                             );
-
-                            total_price+=parseFloat(v[1]); 
-                            shipping_price+=parseFloat(v[2]); 
-                            if(v[3]!=''){
-                              shipping_special+=parseFloat(v[3]); 
-                            }
-
-                          });
-
-                          // var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
-                          // var shipping_price = rows_selected.rows( { selected: true } ).data().pluck( 'shipping_price' ).toArray();
-                          // var total_price = rows_selected.rows( { selected: true } ).data().pluck( 'total_price' ).toArray();
-                          // $(".myloading").hide();
-                          console.log('shipping_special '+shipping_special);
-            					     setTimeout(function(){
-            	            		if($('.select-info').text()!=''){
-            	            			var str = $('.select-info').text();
-                  							var str = str.split(" ");
-       
-                                // วุฒิปรับให้อันเดียวก็ส่งได้
-                                if(parseInt(str[0])>0){
-                              	// if(parseInt(str[0])>1){
-
-                                      if(shipping_price>0 || shipping_special > 0){
-                                             $('.divBtnSave').show();
-                                        }else{
-                                          $('.divBtnSave').hide();
-                                          var shipping_cost = "{{@$shipping_cost}}";
-                                          console.log('xxx : '+ total_price);
-                                          if(total_price>=shipping_cost){
-                                            $('.divBtnSave').show();
-                                          }else{
-                                            $('.divBtnSave').hide();
-                                          }
-                                        }
-                                
-                  							}else{
-                  								$('.divBtnSave').hide();
-                  							}
-            		            	}else{
-            		            		$('.divBtnSave').hide();
-            		            	}
-                              $(".myloading").hide();
-            		            }, 500);
-
-                  }, 500);
-
-            } );
-
+          
           var oTable2;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
@@ -707,7 +463,6 @@ $(function() {
                   iDisplayLength: 25,
                   // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
-                    // url: '{{ route('backend.delivery_packing_code.datatable') }}',
                     url: "{{ url('backend/status_delivery/datatable') }}",
                    
                     data: function ( d ) {
@@ -736,11 +491,6 @@ $(function() {
                   columns: [
                       {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
                       {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          // if(d){
-                          //   return d.replace(/ *, */g, '<br>');
-                          // }else{
-                          //   return '-';
-                          // }
                           return d ;
                       }},
                       {data: 'action_user_data',   title :'<center>ผู้ออกบิล</center>', className: 'text-center ',render: function(d) {
@@ -759,13 +509,6 @@ $(function() {
                       {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
-                      // {data: 'status_delivery',   title :'<center>สถานะ. </center>', className: 'text-center ',render: function(d) {
-  	                  // 	if(d=='1'){
-  	                  //       return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-  	                  // 	}else{
-  	                  // 		return '-รอเบิกสินค้าจากคลัง-';
-  	                  // 	}
-	                    // }},
 
                       {data: 'status_tracking',   title :'<center>สถานะการจัดส่ง </center>', className: 'text-center ',render: function(d) {
                         return d ;
@@ -775,11 +518,10 @@ $(function() {
                         return d ;
                       }},
 
-                      {data: 'approve',   title :'', className: 'text-center ',render: function(d) {
+                      {data: 'approve',   title :'ยืนยันการจัดส่ง', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
 
-                      // {data: 'id', title :'Tools ', className: 'text-center w80'}, 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
                   }
@@ -787,122 +529,113 @@ $(function() {
 
           });
 
+          $(document).ready(function() {
 
-          $(document).on('click','.btnSearchInList',function(){
-                get_data();
-        });
+$(document).on('click', '.btnSearch01', function(event) {
+          event.preventDefault();
+          $('#data-table-packing').DataTable().clear();
+          $(".myloading").show();
+          var business_location_id_fk = $('#business_location_id_fk').val();
+          var branch_id_fk = $('#branch_id_fk').val();
+          var receipt = $('#receipt').val();
+          
+          var customer_id_fk = $('#customer_id_fk').val();
+          var bill_sdate = $('#bill_sdate').val();
+          var bill_edate = $('#bill_edate').val();
 
+          if(business_location_id_fk==''){
+            $('#business_location_id_fk').select2('open');
+            $(".myloading").hide();
+            return false;
+          }
+          ;
+          if(branch_id_fk=='' || branch_id_fk === null ){
+            $('#branch_id_fk').select2('open');
+            $(".myloading").hide();
+            return false;
+          }
 
-$(document).on('click','.select_all',function(){
-  var tbody = $('#data-table').find('tbody');
-  var tr = tbody.find('tr');
-  tr.each(function( index ) {
-      $(this).find('.dt-checkboxes').trigger('click');
-});
-});
-
-$(document).ready(function(){
-  get_data2();
-});
-
-function get_data2() {
-var oTable ;
-
-   $.fn.dataTable.ext.errMode = 'throw';
-  oTable = $('#data-table-packing2').DataTable({
-  "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-  destroy: true,
-      processing: true,
-      serverSide: true,
-      scroller: true,
-      scrollCollapse: true,
-      scrollX: true,
-      iDisplayLength: 25,
-      lengthMenu: [1000],
-      pageLength: 0,
-      ajax: {
-        url: '{{ route('backend.delivery_packing_code.datatable2') }}',
-        data: function ( d ) {
-          d.Where={};
-          $('.myWhere').each(function() {
-            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-              d.Where[$(this).attr('name')] = $.trim($(this).val());
-            }
-          });
-          d.Like={};
-          $('.myLike').each(function() {
-            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-              d.Like[$(this).attr('name')] = $.trim($(this).val());
-            }
-          });
-          d.Custom={};
-          $('.myCustom').each(function() {
-            if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-              d.Custom[$(this).attr('name')] = $.trim($(this).val());
-            }
-          });
-          oData = d;
-        },
-        method: 'POST',
-       data: {
-        "_token": "{{ csrf_token() }}", 
-         },
-      },
-            columns: [
-                {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center '},
-                {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
+            var sU = "{{@$sU}}"; 
+            var sD = "{{@$sD}}";
+            var oTable_001;
+            $(function() {
+              $.fn.dataTable.ext.errMode = 'throw';
+                oTable_001 = $('#data-table-packing').DataTable({
+                  "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    scroller: true,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    ordering: false,
+                    scrollY: ''+($(window).height()-370)+'px',
+                    iDisplayLength: 10,
+                    destroy:true,
+                    ajax: {
+                      url: "{{ url('backend/status_delivery/datatable') }}",
+                        data :{
+                            _token: '{{csrf_token()}}',
+                              business_location_id_fk:business_location_id_fk,
+                              branch_id_fk:branch_id_fk,
+                              receipt:receipt,
+                              customer_id_fk:customer_id_fk,
+                              bill_sdate:bill_sdate,
+                              bill_edate:bill_edate,                                
+                            },
+                          method: 'POST',
+                        },
+                        columns: [
+                      {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
+                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
-                {data: 'customer_name', title :'<center>ชื่อลูกค้าตามใบเสร็จ </center>', className: 'text-center'},
-                {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                      {data: 'action_user_data',   title :'<center>ผู้ออกบิล</center>', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+                      {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                          if(d){
+                            return d.replace(/ *, */g, '<br>');
+                          }else{
+                            return '-';
+                          }
+                      }},
+                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+
+                      {data: 'status_tracking',   title :'<center>สถานะการจัดส่ง </center>', className: 'text-center ',render: function(d) {
                         return d ;
-                    }},
-                // {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-                // {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                {data: 'status_delivery',   title :'<center>สถานะการเบิก </center>', className: 'text-center ',render: function(d) {
-                  return '-รอจัดเบิก-';
-                }},
-                // {data: 'business_location', title :'<center>Tool</center>', className: 'text-center'},
-            ],
+                      }},
 
-            rowCallback: function(nRow, aData, dataIndex){
+                      {data: 'tracking_no',   title :'<center>เลขพัสดุ </center>', className: 'text-center ',render: function(d) {
+                        return d ;
+                      }},
 
-              // ยกเว้นกรณีส่งฟรี 
-              if(aData['check_case_sent_free']=="sent_free"){
+                      {data: 'approve',   title :'ยืนยันการจัดส่ง', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
 
-              }else{
+                  ],
+                        rowCallback: function(nRow, aData, dataIndex){
 
-                    if(aData['status_pack'] != "1" && aData['delivery_location']==4){
-                      //  alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
-                       $("td:eq(0)", nRow).prop('disabled',true); 
-                       $("td:eq(1)", nRow).prop('disabled',true); 
-                       $("td:eq(2)", nRow).prop('disabled',true); 
-                       $("td:eq(3)", nRow).prop('disabled',true); 
-                       $("td:eq(4)", nRow).prop('disabled',true); 
-                       $("td:eq(5)", nRow).prop('disabled',true); 
-                       $("td:eq(6)", nRow).prop('disabled',true); 
-                       $("td:eq(7)", nRow).prop('disabled',true); 
-                       $("td:eq(8)", nRow).prop('disabled',true); 
-                       $("td:eq(9)", nRow).prop('disabled',true); 
-                    }
-              }
-              
+                        }
+                    });
+                        oTable.on( 'draw', function () {
+                          $('[data-toggle="tooltip"]').tooltip();
+                        });
+                    });
 
-              $("td:eq(6)", nRow).prop('disabled',true); 
-              
+        setTimeout(function(){
+           $(".myloading").hide();
+        }, 1500);
 
-              $(".myloading").hide();
+       
+    });
 
-            }
-        });
-        }
-
-          
-</script>
-
-  <script> 
-
-        
+}); 
 
           $(document).ready(function() {
 
@@ -1058,227 +791,6 @@ var oTable ;
 
     <script type="text/javascript">
 
-
-    $(document).ready(function() {
-
-        $(document).on('click', '.btnSearch01', function(event) {
-                  event.preventDefault();
-                  $('#data-table').DataTable().clear();
-
-                  $(".myloading").show();
-
-                  var business_location_id_fk = $('#business_location_id_fk').val();
-                  var branch_id_fk = $('#branch_id_fk').val();
-                  var receipt = $('#receipt').val();
-                  // alert(receipt);
-                  var customer_id_fk = $('#customer_id_fk').val();
-                  var bill_sdate = $('#bill_sdate').val();
-                  var bill_edate = $('#bill_edate').val();
-                  // var status_sent = $('#status_sent').val();
-
-                  // var startPayDate = $('#startPayDate').val();
-                  // var endPayDate = $('#endPayDate').val();
-                  // var btnSearch03 = $('#btnSearch03').val();
-                  // var action_user = $('#action_user').val();
-
-                  // console.log(business_location_id_fk);
-                  // console.log(branch_id_fk);
-                  // console.log(customer_id_fk);
-                  // console.log(startDate);
-                  // console.log(endDate);
-                  // console.log(status_sent);
-
-                  // return false;
-
-                  if(business_location_id_fk==''){
-                    $('#business_location_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-                  // alert(branch_id_fk);
-                  if(branch_id_fk=='' || branch_id_fk === null ){
-                    $('#branch_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
-
-                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                    var sU = "{{@$sU}}"; 
-                    var sD = "{{@$sD}}";
-                    var oTable_001;
-                    $(function() {
-                      $.fn.dataTable.ext.errMode = 'throw';
-                        oTable_001 = $('#data-table').DataTable({
-                          "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                            processing: true,
-                            serverSide: true,
-                            scroller: true,
-                            scrollCollapse: true,
-                            scrollX: true,
-                            ordering: false,
-                            scrollY: ''+($(window).height()-370)+'px',
-                            iDisplayLength: 10,
-                            destroy:true,
-                            ajax: {
-                                url: '{{ route('backend.delivery.datatable') }}',
-                                data :{
-                                    _token: '{{csrf_token()}}',
-                                      business_location_id_fk:business_location_id_fk,
-                                      branch_id_fk:branch_id_fk,
-                                      receipt:receipt,
-                                      customer_id_fk:customer_id_fk,
-                                      bill_sdate:bill_sdate,
-                                      bill_edate:bill_edate,
-                                      // startPayDate:startPayDate,
-                                      // endDate:endDate,
-                                      // endPayDate:endPayDate,
-                                      // status_sent:status_sent,                                 
-                                      // txtSearch_001:txtSearch_001,                                  
-                                      // btnSearch03:btnSearch03,                                  
-                                      // action_user:action_user,                                  
-                                    },
-                                  method: 'POST',
-                                },
-                            columns: [
-                                    {data: 'id', title :'ID', className: 'text-center'},
-                                    {data: 'id', title :'เลือก', className: 'text-center '},
-                                    {data: 'shipping_price', title :'<center> </center>', className: 'text-center '},
-                                    {data: 'delivery_date', title :'<center>วันเวลาที่ออกบิล </center>', className: 'text-center w100 '},
-                                    {data: 'receipt', title :'<center>ใบเสร็จ </center>', className: 'text-center'},
-                                    {data: 'customer_name', title :'<center>ชื่อลูกค้า </center>', className: 'text-center'},
-                                    {data: 'billing_employee', title :'<center>พนักงานที่ออกบิล </center>', className: 'text-center'},
-                                    {data: 'business_location', title :'<center>Business location</center>', className: 'text-center'},
-                                    {data: 'orders_id_fk',   title :'ใบเสร็จ', className: 'text-center w50 ',render: function(d) {
-                                        return '<center>'
-                                        + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
-                                    }},
-                                    {data: 'total_price', title :'<center>รวมเงิน</center>', className: 'text-center'},
-                                    {data: 'shipping_price',   title :'<center>ค่าขนส่ง</center>', className: 'text-center ',render: function(d) {
-                                          return d>0?d:'';
-                                    }},
-                                    {data: 'status_delivery',   title :'<center>สถานะ</center>', className: 'text-center ',render: function(d) {
-                                      if(d=='1'){
-                                          return '<span style="color:red">อยู่ระหว่างการเบิกสินค้า</span>';
-                                      }else{
-                                          return '-รอเบิกสินค้า-';
-                                      }
-                                    }},
-                                    // {data: 'id', title :'Tools', className: 'text-center w80'}, 
-                                ],
-                                'columnDefs': [
-                                 {
-                                    'targets': 0,
-                                    'checkboxes': {
-                                       'selectRow': true
-                                    }
-                                 }
-                                ],
-                                'select': {
-                                   'style': 'multi'
-                                },
-
-                                rowCallback: function(nRow, aData, dataIndex){
-
-                                    // $('td:last-child', nRow).html(''
-                                    //         + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                    //     ).addClass('input');
-
-                                  if(aData['shipping_price'] > 0 ){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
-                                        $('td:eq(2)', nRow).html(
-                                          '<span class=" badge badge-info font-size-14" data-toggle="tooltip" data-placement="right" title="Shipping"  >S</span>');
-                                   }else{
-                                        $("td:eq(2)", nRow).html('');
-                                   }
-                                  
-
-                                   $("td:eq(1)", nRow).hide();
-                                   // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
-
-                                   // if(aData['list_type'] == "1"){ // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
-                                   //      $('td:eq(8)', nRow).html(''
-                                   //        + '<center><a href="{{ URL::to('backend/delivery/print_receipt01') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                                   //      ).addClass('input');
-                                   // }
-                                   // else{ //2=db_orders จากการขายหลังบ้าน
-                                   //      $('td:eq(8)', nRow).html(''
-                                   //        + '<center><a href="{{ URL::to('backend/frontstore/print_receipt') }}/'+aData['id']+'" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center> '
-                                   //      ).addClass('input');
-                                   // }
-
-                                  //  if (aData['status_delivery'] == "1") {
-                                  //         $('td', nRow).css('background-color', '#ffd9b3');
-                                  //         $("td:eq(0)", nRow).html('');
-                                  //         $("td:eq(7)", nRow).html('');
-                                  //         $("td:eq(6)", nRow).html('');
-                                  //         $("td:eq(10)", nRow).html('');
-                                  //         var i;
-                                  //         for (i = 0; i < 10 ; i++) {
-                                  //            $("td:eq("+i+")", nRow).prop('disabled',true); 
-                                  //         } 
-
-                                  // }else{
-                                  //     $("td:eq(7)", nRow).prop('disabled',true); 
-                                  //     $("td:eq(8)", nRow).prop('disabled',true); 
-                                  //     $("td:eq(10)", nRow).prop('disabled',true); 
-                                  // } 
-
-
-                                  //     if(aData['status_pick_pack']=='1'){
-                                  //         $('td', nRow).css('background-color', '#ffd9b3');
-                                  //         var i;
-                                  //         for (i = 0; i < 10 ; i++) {
-                                  //            $("td:eq("+i+")", nRow).prop('disabled',true); 
-                                  //         }
-                                  //         $('td:last-child', nRow).html('-');
-                                  //         $('td:eq(8)', nRow).html(''
-                                  //            + '<center><i class="bx bx-printer " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></center> '
-                                  //          ).addClass('input');
-
-                                  //     }else{
-                                      
-                                            if(sU!=''&&sD!=''){
-                                                $('td:last-child', nRow).html('-');
-                                            }else{ 
-
-                                              if (aData['status_delivery'] != "1") {
-
-                                                  // $('td:last-child', nRow).html(''
-                                                  //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                                    
-                                                  // ).addClass('input');
-                                                }
-
-                                                // + '<a href="javascript: void(0);" data-url="{{ route('backend.delivery.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
-
-                                            }
-
-                                      // }
-
-
-
-                                }
-                            });
-                                oTable.on( 'draw', function () {
-                                  $('[data-toggle="tooltip"]').tooltip();
-                                });
-                            });
-                   
-                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                                  
-                    // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-               
-
-                setTimeout(function(){
-                   $(".myloading").hide();
-                }, 1500);
-
-               
-            });
-
-        }); 
-
-
-
    $('#business_location_id_fk').change(function(){
 
           var business_location_id_fk = this.value;
@@ -1358,132 +870,13 @@ var oTable ;
 
               var id = $(this).data('id');
 
-              // console.log(id);
-
               setTimeout(function(){
                  window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
                  $(".myloading").hide();
               }, 500);
-
-         
-        
-              // $.ajax({
-              //     url: " {{ url('backend/ajaxCancelOrderBackend') }} ", 
-              //     method: "post",
-              //     data: {
-              //       "_token": "{{ csrf_token() }}", id:id,
-              //     },
-              //     success:function(data)
-              //     { 
-              //       // console.log(data);
-              //       return false;
-              //     }
-              //   });
-
-              
             });
                 
       });
-
-
-      // ที่อยู่การจัดส่ง (กำหนดเอง)
-       $(document).on('click', '.class_add_address', function(event) {
-              var id = $(this).data('id');
-              // console.log(id);
-              if(id){
-                // ส่ง ajax ไปเอา orders_id_fk
-                $.ajax({
-                        url: " {{ url('backend/ajaxGetOrdersIDtoDeliveryAddr') }} ",
-                        method: "post",
-                        dataType: "json", 
-                        data: {
-                          id:id,
-                          "_token": "{{ csrf_token() }}",
-                        },
-                        success:function(data)
-                        {
-                            console.log(data);
-                            if(data=='0'){
-                              alert("Invalid ! รายการข้อมูลไม่ถูกต้อง กรุณาติดต่อ Admin");
-                              return false;
-                            }
-                            $.each(data, function( index, value ) {
-                                  $('#customers_addr_frontstore_id').val(value.frontstore_id_fk);
-                                  $('#customer_id').val(value.customer_id);
-
-                                  $('#delivery_cusname').val(value.recipient_name);
-                                  $('#delivery_addr').val(value.addr_no);
-                                  $('#delivery_province').val(value.province_id_fk).select2();
-                                  // $('#delivery_amphur').val(value.amphur_code).select2();
-                                  // $('#delivery_tambon').val(value.tambon_code).select2();
-                                  $('#delivery_zipcode').val(value.zip_code);
-                                  $('#delivery_tel').val(value.tel);
-                                  $('#delivery_tel_home').val(value.tel_home);
-
-                                   if(value.province_id_fk != '' && typeof value.province_id_fk !== "undefined" ){
-                                         $.ajax({
-                                               url: " {{ url('backend/ajaxGetAmphur') }} ",
-                                              method: "post",
-                                              data: {
-                                                province_id:value.province_id_fk,
-                                                "_token": "{{ csrf_token() }}",
-                                              },
-                                              success:function(data2)
-                                              {
-                                                // console.log(value.amphur_code);
-                                                // console.log(data2);
-                                                $.each(data2, function( index2, value2 ) {
-                                                  if(value2.id==value.amphur_code){
-                                                       $('#delivery_amphur').html('<option value='+value.id+' selected >'+value2.amphur_name+'</option>');
-                                                  }
-                                                  
-                                                });
-                                              }
-                                            })
-                                       }
-
-                                      // alert(value.amphur_code);
-
-                                     if(value.amphur_code != '' &&  typeof value.amphur_code !== "undefined" ){
-                                           $.ajax({
-                                                 url: " {{ url('backend/ajaxGetTambon') }} ",
-                                                method: "post",
-                                                data: {
-                                                  amphur_id:value.amphur_code,
-                                                  "_token": "{{ csrf_token() }}",
-                                                },
-                                                success:function(data2)
-                                                {
-
-                                                 // console.log(value.tambon_code);
-                                                 // console.log(data2);
-
-                                                 $.each(data2, function( index2, value2 ) {
-                                                  if(value2.id==value.tambon_code){
-                                                       $('#delivery_tambon').html('<option value='+value.id+' selected >'+value2.tambon_name+'</option>');
-                                                  }
-                                                  
-                                                });
-
-                                                }
-                                              })
-                                         }
-
-                                 
-                            });
-
-                             $('#modalDelivery').modal('show');
-
-
-                        }
-                      })
-
-                   
-              }
-        });
-
-
-
 
                $('#delivery_province').change(function(){
 
@@ -1518,7 +911,6 @@ var oTable ;
                  }
 
             });
-
 
              $('#delivery_amphur').change(function(){
 

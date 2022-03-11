@@ -1189,6 +1189,7 @@ GROUP BY db_order_products_list.product_id_fk
                   }
                  $fid_arr = explode(',',$receipt); 
                  $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
+                //  dd( $order_arr);
                  $Products = DB::table('db_pay_requisition_002')
                  ->select('db_pay_requisition_002.product_name',
                  'db_pay_requisition_002.product_unit',
@@ -1203,7 +1204,7 @@ GROUP BY db_order_products_list.product_id_fk
                   // เพิ่มมา
                   ->groupBy('db_pay_requisition_002_item.product_id_fk')
                  ->get();
-
+                  // dd(@$Products);
            if(@$Products){
                 foreach ($Products as $key => $value) {
                   
@@ -1228,11 +1229,14 @@ GROUP BY db_order_products_list.product_id_fk
                    ->first();
                    
                   $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                  ->select(DB::raw('SUM(amt_get) AS amt_get'),DB::raw('SUM(amt_remain) AS amt_remain'))
                   ->where('product_id_fk',$value->product_id_fk)
-                  ->where('order_id',$value->order_id)
+                  // ->where('order_id',$value->order_id)
+                  ->whereIn('order_id',$order_arr)
                   ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                  ->groupBy('product_id_fk')
                   ->first();
-             
+
                     if($db_pay_requisition_002_item->amt_remain > 0){
                       $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
                     }else{
