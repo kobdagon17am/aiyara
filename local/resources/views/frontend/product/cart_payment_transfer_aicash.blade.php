@@ -1,6 +1,5 @@
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
-
     <link rel="stylesheet" href="{{ asset('frontend/bower_components/select2/css/select2.min.css') }}" />
     <!-- Multi Select css -->
     <link rel="stylesheet" type="text/css"
@@ -8,10 +7,13 @@
     <link rel="stylesheet" type="text/css"
         href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
 
-
+    <!-- jquery file upload Frame work -->
+    <link href="{{ asset('frontend/assets/pages/jquery.filer/css/jquery.filer.css') }}" type="text/css"
+        rel="stylesheet" />
+    <link href="{{ asset('frontend/assets/pages/jquery.filer/css/themes/jquery.filer-dragdropbox-theme.css') }}"
+        type="text/css" rel="stylesheet" />
 @endsection
 @section('conten')
-
     <div class="row">
         <div class="col-md-8 col-sm-12">
             <form action="{{ route('cart_payment_transfer_aicash_submit') }}" method="POST" enctype="multipart/form-data">
@@ -23,7 +25,7 @@
                 <div class="card card-border-success">
                     <div class="card-header p-3">
 
-                            <h5>เติม Ai Cash</h5>
+                        <h5>เติม Ai Cash</h5>
 
                         {{-- <div class="card-header-right"></div> --}}
                     </div>
@@ -76,47 +78,49 @@
                                         </div>
                                     </div>
 
-                                    <div class="row" id="cart_payment_tranfer">
-
-                                        <div class="row col-md-12 col-lg-12">
+                                    <div id="cart_payment_tranfer">
+                                        <div class="row">
                                             <div class="col-md-6 col-lg-6">
                                                 <div class="card">
                                                     <div class="card-block text-center">
                                                         {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
                                                         <img src="{{ asset('frontend/assets/images/scb.png') }}"
                                                             class="img-fluid" alt="Responsive image" width="80">
-                                                            <h5 class="m-t-20"><span
-                                                              class="text-c-blue">401-110-1843</span></h5>
-                                                      <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>บริษัท ไอยรา แพลนเน็ต จำกัด</p>
+                                                        <h5 class="m-t-20"><span
+                                                                class="text-c-blue">401-110-1843</span></h5>
+                                                        <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>บริษัท ไอยรา แพลนเน็ต
+                                                            จำกัด</p>
                                                         {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
 
-                                        <div class="row col-md-12 col-lg-12">
-                                            <div class="col-md-6 col-lg-6">
-                                                <div class="form-group row">
+                                        <div class="row">
+                                          <div class="col-12 col-md-6 col-lg-6">
+                                            <div class="form-group ">
 
-                                                    <label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">(
-                                                            JPG,PNG )</b>
-                                                    </label>
-                                                    <input type="file" id="upload" name="file_slip" class="form-control">
-
+                                                    <label>อัพโหลดหลักฐานการชำระเงิน <b class="text-danger">(JPG,PNG )</b></label>
+                                                    {{-- <input type="file" id="upload" name="file_slip" class="form-control"> --}}
+                                                    <input type="file" name="files[]" id="filer_input" multiple="multiple">
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="form-group row">
-
-                                            <div class="col-xs-6 p-1">
-                                              @if($canAccess)
-                                                <button class="btn btn-success btn-block" type="submit" name="submit"
-                                                    id="submit_upload" value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
-                                              @endif
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <div class="col-xs-6 p-1">
+                                                    @if ($canAccess)
+                                                        <button class="btn btn-success btn-block" type="submit"
+                                                            name="submit" id="submit_upload"
+                                                            value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
+                                                    @endif
+                                                </div>
+                                                <div class="col-xs-6 p-1">
+                                                </div>
                                             </div>
                                         </div>
+
 
                                     </div>
 
@@ -153,10 +157,10 @@
                                                                         <button type="button"
                                                                             class="btn btn-default waves-effect "
                                                                             data-dismiss="modal">Close</button>
-                                                                        @if($canAccess)
-                                                                        <button class="btn btn-success md-auto"
-                                                                            name="submit" value="PromptPay"
-                                                                            type="submit">Confirm</button>
+                                                                        @if ($canAccess)
+                                                                            <button class="btn btn-success md-auto"
+                                                                                name="submit" value="PromptPay"
+                                                                                type="submit">Confirm</button>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -199,10 +203,10 @@
                                                                         <button type="button"
                                                                             class="btn btn-default waves-effect "
                                                                             data-dismiss="modal">Close</button>
-                                                                        @if($canAccess)
-                                                                        <button class="btn btn-success md-auto"
-                                                                            name="submit" value="TrueMoney"
-                                                                            type="submit">Confirm</button>
+                                                                        @if ($canAccess)
+                                                                            <button class="btn btn-success md-auto"
+                                                                                name="submit" value="TrueMoney"
+                                                                                type="submit">Confirm</button>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -214,48 +218,49 @@
                                             </div>
 
                                             <div class="col-md-6 col-lg-6">
-                                              <div class="card">
-                                                  <div class="card-block text-center">
-                                                      <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
-                                                          class="img-fluid" alt="credit">
-                                                      <a class="btn btn-primary btn-md mt-2"
-                                                          class="btn btn-primary btn-md mt-2" data-toggle="modal"
-                                                          style="color: aliceblue" data-target="#confirm_credit">
-                                                          ชำระด้วย Credit/Debit </a>
+                                                <div class="card">
+                                                    <div class="card-block text-center">
+                                                        <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
+                                                            class="img-fluid" alt="credit">
+                                                        <a class="btn btn-primary btn-md mt-2"
+                                                            class="btn btn-primary btn-md mt-2" data-toggle="modal"
+                                                            style="color: aliceblue" data-target="#confirm_credit">
+                                                            ชำระด้วย Credit/Debit </a>
 
-                                                      <div class="modal fade" id="confirm_credit" tabindex="-1"
-                                                          role="dialog">
-                                                          <div class="modal-dialog" role="document">
-                                                              <div class="modal-content">
-                                                                  <div class="modal-header">
-                                                                      <h4 class="modal-title">ยืนยันการชำระเงินด้วย
-                                                                        Credit/Debit</h4>
-                                                                      <button type="button" class="close"
-                                                                          data-dismiss="modal" aria-label="Close">
-                                                                          <span aria-hidden="true">&times;</span>
-                                                                      </button>
-                                                                  </div>
-                                                                  <div class="modal-body">
-                                                                      {{-- <h5>Static Modal</h5> --}}
-                                                                      <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
-                                                                          class="img-fluid" alt="ชำระด้วย Credit/Debit">
+                                                        <div class="modal fade" id="confirm_credit" tabindex="-1"
+                                                            role="dialog">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h4 class="modal-title">ยืนยันการชำระเงินด้วย
+                                                                            Credit/Debit</h4>
+                                                                        <button type="button" class="close"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        {{-- <h5>Static Modal</h5> --}}
+                                                                        <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
+                                                                            class="img-fluid"
+                                                                            alt="ชำระด้วย Credit/Debit">
 
-                                                                  </div>
-                                                                  <div class="modal-footer">
-                                                                      <button type="button"
-                                                                          class="btn btn-default waves-effect "
-                                                                          data-dismiss="modal">Close</button>
-                                                                      <button class="btn btn-success md-auto"
-                                                                          name="submit" value="Credit"
-                                                                          type="submit">Confirm</button>
-                                                                  </div>
-                                                              </div>
-                                                          </div>
-                                                      </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button"
+                                                                            class="btn btn-default waves-effect "
+                                                                            data-dismiss="modal">Close</button>
+                                                                        <button class="btn btn-success md-auto"
+                                                                            name="submit" value="Credit"
+                                                                            type="submit">Confirm</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-                                                  </div>
-                                              </div>
-                                          </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -339,10 +344,11 @@
             </div>
         </div>
     </div>
-
-
 @endsection
 @section('js')
+    <script src="{{ asset('frontend/assets/pages/jquery.filer/js/jquery.filer.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/filer/custom-filer.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/filer/jquery.fileuploads.init.js') }}"></script>
 
     <script type="text/javascript">
         document.getElementById("submit_upload").disabled = true;
@@ -350,8 +356,6 @@
     </script>
 
     <script type="text/javascript">
-
-
         function open_input(data) {
             var conten_4 = '<button class="btn btn-success btn-block" type="submit">ชำระเงิน</button>';
 
@@ -362,7 +366,7 @@
                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
 
 
-                $('#upload').change(function() {
+                $('#filer_input').change(function() {
                     var fileExtension = ['jpg', 'png'];
                     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
                         alert("This is not an allowed file type. Only JPG and PNG files are allowed.");
@@ -378,7 +382,7 @@
                 document.getElementById("cart_payment_tranfer").style.display = "none";
                 // document.getElementById("cart_payment_credit_card").style.display = "block";
                 document.getElementById("cart_payment_mobile_banking").style.display = "none";
-            }  else if (data == '4') {
+            } else if (data == '4') {
                 document.getElementById("cart_payment_tranfer").style.display = "none";
                 // document.getElementById("cart_payment_credit_card").style.display = "none";
                 document.getElementById("cart_payment_mobile_banking").style.display = "block";
@@ -390,7 +394,7 @@
 
 
 
-        $('#upload').change(function() {
+        $('#filer_input').change(function() {
             var fileExtension = ['jpg', 'png'];
             if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
                 alert("This is not an allowed file type. Only JPG and PNG files are allowed.");

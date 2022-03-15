@@ -27,14 +27,15 @@ class Payment extends Model
         // ปีเดือน[รันเลข]
         // 2020110 00001
         try {
-            $file_slip = $rs->file_slip;
+            $file_slip = $rs->file('files');
             $orderstatus_id = 2;
-
-            if (isset($file_slip)) {
+            if (count($file_slip)>0) {
                 $url = 'local/public/files_slip/' . date('Ym');
-
-                $f_name = date('YmdHis') . '_' . $customer_id . '.' . $file_slip->getClientOriginalExtension();
-                if ($file_slip->move($url, $f_name)) {
+                $i=0;
+                foreach($file_slip as $value){
+                  $i++;
+                  $f_name = date('YmdHis_').''.$i.'_'.$customer_id.'.'.$value->getClientOriginalExtension();
+                  if ($value->move($url, $f_name)) {
                     DB::table('payment_slip')
                         ->insert(['customer_id' => $customer_id, 'url' => $url, 'file' => $f_name,'code_order' => $rs->code_order, 'order_id' => $rs->id]);
 
@@ -43,6 +44,8 @@ class Payment extends Model
                         ->update(['order_status_id_fk' => $orderstatus_id,'approve_status'=>1,'transfer_price'=>$rs->total_price,'pay_type_id_fk'=>'1']);
                         $resule = ['status' => 'success', 'message' => 'ชำระเงินแบบโอนชำระสำเร็จ'];
                 }
+                }
+
             }
 
             if ($resule['status'] == 'success') {

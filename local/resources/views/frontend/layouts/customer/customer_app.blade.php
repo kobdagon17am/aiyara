@@ -719,6 +719,9 @@
 <script  src="{{asset('frontend/bower_components/sweetalert/js/sweetalert.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+
+
+
 @include('frontend.layouts.flash-message')
 @yield('js')
 </body>
