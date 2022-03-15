@@ -335,6 +335,7 @@
                         return '-รอจัดเบิก-';
                       }
                     }},
+                    // {data: 'print', title :'<center>พิมพ์ใบเสร็จ </center>', className: 'text-center'},
                   ],
               //                   'columnDefs': [
               //  {
@@ -383,6 +384,23 @@
 
           });
 
+          $(document).ready(function() {
+
+$(document).on('click', '.print02', function(event) {
+
+    event.preventDefault();
+    $(".myloading").show();
+
+    var id = $(this).data('id');
+    // console.log(id);
+    setTimeout(function(){
+       window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id+"/");
+       $(".myloading").hide();
+    }, 500);
+    
+  });
+      
+});
 
         $(document).ready(function() {
 

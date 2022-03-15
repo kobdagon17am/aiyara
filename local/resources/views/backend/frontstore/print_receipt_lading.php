@@ -100,29 +100,36 @@
 <?php
     require(app_path().'/Models/MyFunction.php');
 
-
-if(substr($data[0],0,1)=="O"){
-    $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' "); 
-    $arr_orders_id = [];
-    foreach ($d1 as $key => $v) {
-        array_push($arr_orders_id,$v->id);
+    $arr_order_id = [];
+    $arr_all_order = \App\Models\Backend\Pick_packPackingCode::where('id',$data[0])->first();
+    if($arr_all_order){
+      $arr_order_id = explode(',',$arr_all_order->orders_id_fk);
     }
-}else{
 
-        $id = intval(substr($data[0],2));
+    $arr_orders_id = $arr_order_id;
 
-        $d1 = DB::select(" SELECT orders_id_fk FROM `db_delivery` WHERE `packing_code`='".$id."' "); 
+// if(substr($data[0],0,1)=="O"){
+//     $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' "); 
+//     $arr_orders_id = [];
+//     foreach ($d1 as $key => $v) {
+//         array_push($arr_orders_id,$v->id);
+//     }
+// }else{
 
-        if($d1){
+//         $id = intval(substr($data[0],2));
 
-           $arr_orders_id = [];
-            foreach ($d1 as $key => $v) {
-                array_push($arr_orders_id,$v->orders_id_fk);
-            }
+//         $d1 = DB::select(" SELECT orders_id_fk FROM `db_delivery` WHERE `packing_code`='".$id."' "); 
+
+//         if($d1){
+
+//            $arr_orders_id = [];
+//             foreach ($d1 as $key => $v) {
+//                 array_push($arr_orders_id,$v->orders_id_fk);
+//             }
           
-        }
+//         }
 
-}
+// }
 
 
 
@@ -281,38 +288,8 @@ foreach ($sTable as $key => $row) {
                   $product_name = iconv_substr($product_name,0,100, "UTF-8")."...";
                  }
                  DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".@$row->total_price."'); ");
-
-                // หา max time_pay ก่อน 
-                 $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$row->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$data[1]." order by time_pay desc limit 1  ");
-        
-                 if(isset($r_ch01[0])){
-                  $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$row->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$data[1]." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
-                  //  if(count($r_ch02)>0){
-  
-                     $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
-                     ->where('product_id_fk',$row->product_id_fk) 
-                     ->where('pick_pack_requisition_code_id_fk',$data[1])
-                     ->orderBy('time_pay', 'desc')
-                     ->first();
-                    $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
-                    ->where('product_id_fk',$row->product_id_fk)
-                    ->where('order_id',$sRow->id)
-                    ->where('requisition_002_id',@$db_pay_requisition_002->id)
-                    ->first();
-                    
-                      if(@$db_pay_requisition_002_item->amt_remain > 0){
-                        $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
-                        DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
-                      }else{
-                        $r_ch_t = '';
-                      }
-                  //  }else{
-                  //    $r_ch_t = '';
-                  //  }
-                 }
-                 // Check ว่ามี status=2 ? (ค้างจ่าย)
-              
-
+                  
+                      $r_ch_t = '';
 
             }else{
 
@@ -354,31 +331,11 @@ foreach ($sTable as $key => $row) {
                           $product_name_pro = $value->product_name;
                          }
 
-                          //  วุฒิเพิ่มมา
-                          $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
-                          ->where('product_id_fk',$value->product_id_fk) 
-                          ->where('pick_pack_requisition_code_id_fk',$data[1])
-                          ->first();
-                   
-                         $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
-                         ->where('product_id_fk',$value->product_id_fk)
-                         ->where('order_id',$sRow->id)
-                         ->where('requisition_002_id',@$db_pay_requisition_002->id)
-                         ->first();
-                         
-                           if(@$db_pay_requisition_002_item->amt_remain > 0){
-                             $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
-                             // DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
-                           }else{
-                             $r_ch_t = '';
-                           }
-
                          $product_name = 
                             '[Pro'.$value->product_code.'] '.$product_name_pro.'
                             '.$value->product_amt.' x '.$row->amt.' = 
                             '.($value->product_amt*$row->amt).'
-                            '.$value->product_unit.'
-                            '.'<br>'.$r_ch_t;
+                            '.$value->product_unit;
                               
                              DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
                        }
@@ -397,31 +354,11 @@ foreach ($sTable as $key => $row) {
                           $product_name_pro = $value->product_name;
                          }
 
-                             //  วุฒิเพิ่มมา
-                             $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
-                             ->where('product_id_fk',$value->product_id_fk) 
-                             ->where('pick_pack_requisition_code_id_fk',$data[1])
-                             ->first();
-                      
-                            $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
-                            ->where('product_id_fk',$value->product_id_fk)
-                            ->where('order_id',$sRow->id)
-                            ->where('requisition_002_id',@$db_pay_requisition_002->id)
-                            ->first();
-                            
-                              if(@$db_pay_requisition_002_item->amt_remain > 0){
-                                $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
-                                // DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
-                              }else{
-                                $r_ch_t = '';
-                              }
-
                        $product_name = 
                             '[Pro'.$value->product_code.'] '.$product_name_pro.'
                             '.$value->product_amt.' x '.$row->amt.' = 
                             '.($value->product_amt*$row->amt).'
-                            '.$value->product_unit.'
-                            '.'<br>'.$r_ch_t;
+                            '.$value->product_unit;
                        
                              DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
                        }

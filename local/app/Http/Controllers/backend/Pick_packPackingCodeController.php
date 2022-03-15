@@ -124,6 +124,14 @@ class Pick_packPackingCodeController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+      ->addColumn('new_bill', function($row) {
+        $ref_bill_id = DB::table('db_pick_pack_packing')->select('packing_code')->where('packing_code_id_fk',$row->ref_bill_id)->first();
+        $p = '';
+        if($ref_bill_id){
+          $p = $ref_bill_id->packing_code;
+        }
+        return $p;
+      })
       ->make(true);
     }
 
@@ -192,7 +200,7 @@ class Pick_packPackingCodeController extends Controller
         $w04
         $w05
 
-        ORDER BY updated_at DESC
+        ORDER BY id DESC
 
         ");
 
@@ -295,13 +303,14 @@ class Pick_packPackingCodeController extends Controller
       ->escapeColumns('status_desc')
 
       ->addColumn('status_amt_remain', function($row) {
+        $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->ref_bill_id)->first();
         // หา max time_pay ก่อน 
            $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." order by time_pay desc limit 1  ");
         // Check ว่ามี status=2 ? (ค้างจ่าย)
            if(@$r_ch01){
            $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
            if(count($r_ch02)>0){
-               return '<font color=red> * มีค้างจ่าย</font>';
+               return '<font color=red> มีค้างจ่าย <br> '.@$DP->packing_code.' </font>';
            }else{
              return '';
            }
@@ -351,6 +360,35 @@ class Pick_packPackingCodeController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+
+    //   ->addColumn('print', function($row) {
+
+    //     $arr_order = explode(',',$row->orders_id_fk);
+    //     $f = [] ;
+    //     $tx = '';
+
+    //     $order = DB::table('db_orders')->whereIn('id',$arr_order)->orderBy('id','asc')->get();
+
+    //     foreach ($order as $key => $v) {
+
+    //         $tx = '<center> 
+
+    //           <a href="javascript: void(0);" target=_blank data-id="'.$v->id.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > '.$v->code_order.' <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
+
+    //            </center>' ;
+
+    //        array_push($f,@$tx);
+    //     }
+        
+    //     $web_all = "";
+    //     foreach($f as $value){
+    //       $web_all .=$value.'<br>';
+    //     }
+
+    //     return $web_all;
+
+    // })
+    // ->escapeColumns('print')
       ->make(true);
     }
 

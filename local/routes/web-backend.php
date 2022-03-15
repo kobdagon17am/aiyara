@@ -442,6 +442,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pick_warehouse', 'Pick_warehouseController');
     Route::post('pick_warehouse/datatable', 'Pick_warehouseController@Datatable')->name('pick_warehouse.datatable');
     Route::post('pick_warehouse_scan_save', 'Pick_warehouseController@pick_warehouse_scan_save');
+    Route::post('pick_warehouse_save_new_bill', 'Pick_warehouseController@pick_warehouse_save_new_bill');
 
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
     // หน้าแรก
@@ -573,6 +574,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('frontstore/print_receipt_packing/{id}', 'AjaxController@createPDFReceiptPacking');
 
     Route::get('frontstore/print_receipt_022/{id}', 'PrintController@frontstore_print_receipt_022');
+    Route::get('frontstore/print_receipt_lading/{id}', 'PrintController@print_receipt_lading');
     Route::get('frontstore/print_receipt_023/{id}', 'PrintController@frontstore_print_receipt_023');
     Route::get('frontstore/print_receipt_023/{id}/{pick_pack_packing_code_id_fk}', 'PrintController@frontstore_print_receipt_023');
 

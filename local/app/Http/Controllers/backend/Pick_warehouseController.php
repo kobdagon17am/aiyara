@@ -286,9 +286,9 @@ class Pick_warehouseController extends Controller
     {
           // return $id;
       $r = DB::select("SELECT * FROM db_pay_requisition_001 where id in($id) ");
-      // $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
+
       $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
-      // dd($sRow);
+
 //   SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
         $addr_sent =  DB::select(" 
         
@@ -343,10 +343,30 @@ class Pick_warehouseController extends Controller
             Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
             where db_pay_requisition_001.pick_pack_requisition_code_id_fk in ($id)
         ");
+
+      // วุฒิเพิ่มมา เบิกจ่ายสินค้าใบเบิกใหม่
+      $remain_status = DB::table('db_pay_requisition_002')->select('id','amt_remain','product_id_fk')->where('pick_pack_requisition_code_id_fk',$id)->orderBy('time_pay','desc')->get();
+      $arr_remain = [];
+      foreach($remain_status as $rem){
+          if(!isset($arr_remain[$rem->product_id_fk])){
+            $arr_remain[$rem->product_id_fk] = $rem->amt_remain;
+          }
+      }
+      $remain_check = 0;
+      foreach($arr_remain as $in => $rem){
+        $remain_check += $rem;
+      }
+      if($remain_check>0){
+        $remain_status = 1;
+      }else{
+        $remain_status = 0;
+      }
+      // ---
+       
       return View('backend.pick_warehouse.cancel')->with(
         array(
            // 'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
-           'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
+           'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id, 'sRow' => $sRow, 'remain_status' => $remain_status,
         ) );
 
     }
@@ -1952,6 +1972,15 @@ ORDER BY db_pick_pack_packing.id
   public function warehouse_address_sent(Request $reg){
     // return $reg->id;
     if(!empty($reg->packing_id)){
+
+      // วุฒิเพิ่มมา
+      $remain_id = DB::table('db_pick_pack_packing_code')->where('id',$reg->packing_id)->first();
+      // if($remain_id){
+      //   if($remain_id->bill_remain_status==1){
+      //     $reg->packing_id = $remain_id->ref_bill_id;
+      //   }
+      // } 
+
         $d1 = DB::select(" SELECT * FROM `db_pay_requisition_001` WHERE `pick_pack_requisition_code_id_fk`=".$reg->packing_id." "); 
         // return $d1;
         if($d1){
@@ -1960,7 +1989,7 @@ ORDER BY db_pick_pack_packing.id
           $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             // $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             // return $d2[0]->receipts;
-            // dd($db_pick_pack_requisition_code);
+
             $arr1 = []; 
             if($d2){
               foreach ($d2 as $key => $v) {
@@ -1972,11 +2001,22 @@ ORDER BY db_pick_pack_packing.id
               $arr2 = implode(',', $arr1);
 
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");
+         
               if(!empty($d3)){
-
                      foreach ($d3 as $key => $v3) {
+                       
                        $recipient_code = $v3->packing_code!=0?"P1".sprintf("%05d",$v3->packing_code):$v3->receipt;
-                       DB::select(" INSERT IGNORE INTO `db_consignments` 
+
+                      //  if($remain_id->bill_remain_status==1){
+                      //   $recipient_code_real = $recipient_code;
+                      //   $recipient_code = 'C'.$recipient_code;
+                      //  }else{
+                      //   $recipient_code_real = null;
+                      //  }
+                        
+                      $check = DB::table('db_consignments')->where('recipient_code',$recipient_code)->where('pick_pack_requisition_code_id_fk',$reg->packing_id)->first();
+                      if(!$check){
+                        DB::select(" INSERT IGNORE INTO `db_consignments` 
                         SET 
                         `pick_pack_requisition_code_id_fk`='$reg->packing_id' ,
                         `recipient_code`='$recipient_code' ,
@@ -1987,8 +2027,9 @@ ORDER BY db_pick_pack_packing.id
                         `phone_no`='$v3->tel_home' ,
                         `delivery_id_fk`='$v3->id' ,
                         `created_at`=now() 
-
                         ");
+                      }
+
                     }
               }
 
@@ -1997,8 +2038,8 @@ ORDER BY db_pick_pack_packing.id
         }
   
       }
-
       $sTable = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk='$reg->packing_id' group by pick_pack_requisition_code_id_fk order by recipient_code asc");
+
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
@@ -2243,6 +2284,108 @@ ORDER BY db_pick_pack_packing.id
         // 'product' => $product,
       ]);
     }
+
+    function pick_warehouse_save_new_bill(Request $r){  
+
+      $DeliveryPackingCode = \App\Models\Backend\Pick_packPackingCode::where('id',$r->pick_pack_packing_code_id_fk)->first();
+      if($DeliveryPackingCode){
+
+        $orders_id_fk = "";
+        $receipt = "";
+        $arr_order = [];
+        $pay_item_arr = [];
+        $pay_requisition_002_item = "";
+      // วุฒิเพิ่มมา เบิกจ่ายสินค้าใบเบิกใหม่ 1
+      $remain_status = DB::table('db_pay_requisition_002')->select('id','amt_remain','product_id_fk')->where('pick_pack_requisition_code_id_fk',$DeliveryPackingCode->id)->orderBy('time_pay','desc')->get();
+      $arr_remain = [];
+      foreach($remain_status as $rem){
+          if(!isset($arr_remain[$rem->product_id_fk])){
+            $arr_remain[$rem->product_id_fk] = $rem;
+          }
+      }
+
+      foreach($arr_remain as $rem){
+        $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+        ->where('requisition_002_id',$rem->id)
+        ->where('product_id_fk',$rem->product_id_fk)
+        ->where('amt_remain', '>', 0)
+        ->get();
+
+        foreach( $db_pay_requisition_002_item as $item){
+          $order = DB::table('db_orders')->where('id',$item->order_id)->first();
+          if($order){
+            if(!isset($arr_order[$item->order_id])){
+              $arr_order[$item->order_id] = $item;
+            }
+          }
+          if(!isset($pay_item_arr[$item->id])){
+            $pay_item_arr[$item->id] = $item;
+          }
+        }
+      }
+
+      $i = 0;
+      foreach($arr_order as $key => $rem){
+        $i++;
+        if($i==count($arr_order)){
+          $orders_id_fk .= $order->id;
+          $receipt .= $order->code_order;  
+        }else{
+          $orders_id_fk .= $order->id.',';
+          $receipt .= $order->code_order.',';  
+        }
+       
+      }
+
+      $i = 0;
+      foreach($pay_item_arr as $key => $rem){
+        $i++;
+        if($i==count($pay_item_arr)){
+          $pay_requisition_002_item .= $rem->id;  
+        }else{
+          $pay_requisition_002_item .= $rem->id.',';  
+        }
+       
+      }
+      
+          $DeliveryPackingCode2 = new \App\Models\Backend\Pick_packPackingCode;
+          $DeliveryPackingCode2->business_location_id = $DeliveryPackingCode->business_location_id;
+          $DeliveryPackingCode2->branch_id_fk =  $DeliveryPackingCode->branch_id_fk;
+          $DeliveryPackingCode2->orders_id_fk =  $orders_id_fk;
+          $DeliveryPackingCode2->receipt = $receipt;
+          $DeliveryPackingCode2->status_picked = 1 ;
+          $DeliveryPackingCode2->action_user = (\Auth::user()->id);
+          $DeliveryPackingCode2->created_at = date('Y-m-d H:i:s');
+          $DeliveryPackingCode2->updated_at = date('Y-m-d H:i:s');
+          $DeliveryPackingCode2->bill_remain_status = 1;
+          $DeliveryPackingCode2->ref_bill_id = $DeliveryPackingCode->id;
+          $DeliveryPackingCode2->pay_requisition_002_item = $pay_requisition_002_item;
+          $DeliveryPackingCode2->save();
+
+          // DB::select(" UPDATE customers_addr_sent SET packing_code=".$DeliveryPackingCode->id.",receipt_no='".$rsDelivery[0]->receipt."' WHERE (invoice_code='".$rsDelivery[0]->receipt."'); ");
+          $DeliveryPackingCode->bill_remain_status = 2;
+          $DeliveryPackingCode->ref_bill_id = $DeliveryPackingCode2->id;
+          $DeliveryPackingCode->save();
+    }
+
+    $DeliveryPacking = \App\Models\Backend\Pick_packPacking::where('packing_code_id_fk',$r->pick_pack_packing_code_id_fk)->get();
+
+    foreach ($DeliveryPacking as $key => $value) {
+      $DeliveryPacking = new \App\Models\Backend\Pick_packPacking;
+      $DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode2->id;
+      $DeliveryPacking->packing_code = "P2".sprintf("%05d",$DeliveryPackingCode2->id) ;
+      $DeliveryPacking->delivery_id_fk = $value->delivery_id_fk;
+      $DeliveryPacking->created_at = date('Y-m-d H:i:s');
+      $DeliveryPacking->save();
+      // DB::update(" UPDATE db_delivery SET status_pick_pack='1' , status_tracking='1' WHERE packing_code<>0 and packing_code in (".@$value->packing_code.")  ");
+      // DB::select(" UPDATE customers_addr_sent SET packing_code=".$DeliveryPackingCode->id." WHERE (receipt_no='".$value->receipt."'); ");
+      // DB::select(" UPDATE db_orders SET status_delivery=1 WHERE (invoice_code='".$value->receipt."'); ");
+
+   }
+
+    return true;
+    
+  }
 
 
 }

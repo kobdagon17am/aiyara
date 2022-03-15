@@ -99,7 +99,6 @@ class Pick_warehouse_fifoController extends Controller
           $orders_id_fk = array_filter($arr_00);
           $orders_id_fk = implode(",",$orders_id_fk);
           // return $orders_id_fk;
-          // dd();
 
           $r_db_order_products_list = DB::select(" SELECT * FROM db_order_products_list WHERE frontstore_id_fk in ($orders_id_fk) "); 
           // return $r_db_order_products_list;
@@ -200,7 +199,7 @@ class Pick_warehouse_fifoController extends Controller
       // return $temp_db_stocks_check;
       // dd();
 
-    // return $request;
+    // return $request; 
     // หาในตาราง db_orders ว่ามีมั๊ย
     // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0 
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
@@ -347,6 +346,11 @@ class Pick_warehouse_fifoController extends Controller
                 }
 
 
+                // วุฒิเพิ่มมา เบิกจ่ายสินค้าใบเบิกใหม่ 2
+                $DeliveryPackingCode = \App\Models\Backend\Pick_packPackingCode::where('id',$picking)->first();
+                $arr_item = explode(',',$DeliveryPackingCode->pay_requisition_002_item);
+                $item_pro = DB::table('db_pay_requisition_002_item')->whereIn('id',$arr_item)->pluck('product_id_fk')->toArray();
+                DB::table($temp_ppp_0022)->whereNotIn('product_id_fk',$item_pro)->delete();
 
           // $lastInsertId = DB::getPdo()->lastInsertId();
 
@@ -1842,7 +1846,6 @@ class Pick_warehouse_fifoController extends Controller
 
 
 // /backend/pick_warehouse/1/edit (กรณีที่ยังไม่มีการยกเลิกการจ่าย status_cancel==0)
-// %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable0003(Request $req){
      
       $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -1905,7 +1908,6 @@ class Pick_warehouse_fifoController extends Controller
           $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
           $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
           $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-// dd($row->pick_pack_requisition_code_id_fk);
           $max_time_pay = DB::table('db_pay_requisition_002')
           ->select('time_pay')
           ->where('pick_pack_requisition_code_id_fk',$row->pick_pack_requisition_code_id_fk)
@@ -2343,25 +2345,24 @@ class Pick_warehouse_fifoController extends Controller
                     
 
                    // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
-                   $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-                   if(count($temp_db_stocks_02)==0){
-                    $temp_db_stocks_02 = DB::table($temp_ppp_002)
-                    ->select(
-                      $temp_ppp_002.'.created_at',
-                      'promotions_products.product_unit as product_unit_id_fk',
-                      'promotions_products.product_id_fk as product_id_fk',
-                      DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                      'promotions_products.product_amt as amt', 
-                    )
-                    ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                    ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                    ->join('products','products.id','promotions_products.product_id_fk')  
-                    ->where($temp_ppp_002.'.type_product','promotion')
-                    ->where('promotions_products.product_id_fk',$value->product_id_fk)
-                    ->groupBy('promotions_products.product_id_fk')
-                    ->get();
-                  }
-                  
+                  //  $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
+                  //  if(count($temp_db_stocks_02)==0){
+                  //   $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                  //   ->select(
+                  //     $temp_ppp_002.'.created_at',
+                  //     'promotions_products.product_unit as product_unit_id_fk',
+                  //     'promotions_products.product_id_fk as product_id_fk',
+                  //     DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                  //     'promotions_products.product_amt as amt', 
+                  //   )
+                  //   ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                  //   ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
+                  //   ->join('products','products.id','promotions_products.product_id_fk')  
+                  //   ->where($temp_ppp_002.'.type_product','promotion')
+                  //   ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                  //   ->groupBy('promotions_products.product_id_fk')
+                  //   ->get();
+                  // }
                       $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
 

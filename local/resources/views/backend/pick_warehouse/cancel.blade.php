@@ -251,7 +251,16 @@
     </div> <!-- end col -->
 </div> <!-- end row -->
 
-
+@if($sRow->status == 4 || $sRow->status == 5)
+@if($remain_status == 1 && $sRow->bill_remain_status != 2)
+<div class="col-md-12 text-center" >
+  <br>
+  <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btn_save_new_bill " >
+  <i class="bx bx-save font-size-16 align-middle mr-1"></i> เบิกจ่ายสินค้าใบเบิกใหม่
+  </button>
+</div>
+@endif
+@endif
 
 @endsection
 
@@ -260,6 +269,36 @@
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 
+<script>
+     $(document).on('click', '.btn_save_new_bill', function(e) {
+                $(".myloading").show();
+                var pick_pack_packing_code_id_fk = "{{$id}}";
+                                                      $(".myloading").hide();
+                                                      Swal.fire({
+                                                            title: 'ยืนยัน ! การทำรายการ ',
+                                                            type: 'question',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#556ee6',
+                                                            cancelButtonColor: "#f46a6a"
+                                                            }).then(function (result) {
+                                                                if (result.value) {
+                                                                    $(".myloading").show();
+                                                                      $.ajax({
+                                                                        type:'POST',
+                                                                        url: " {{ url('backend/pick_warehouse_save_new_bill') }} ",
+                                                                        data:{ _token: '{{csrf_token()}}',pick_pack_packing_code_id_fk:pick_pack_packing_code_id_fk },
+                                                                          success:function(d2){
+                                                                              location.reload();
+                                                                            $(".myloading").hide();
+                                                                          },
+                                                                        error: function(jqXHR, textStatus, errorThrown) {
+                                                                            $(".myloading").hide();
+                                                                        }
+                                                                    });
+                                                                }
+                                                          });
+                }); 
+</script>
   
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
@@ -359,6 +398,7 @@
                           }
                       }},
                       {data: 'action_user_name', title :'<center>พนักงานที่ดำเนินการ </center>', className: 'text-center'},
+                      {data: 'new_bill', title :'<center>ใบเบิกใหม่ค้างจ่าย </center>', className: 'text-center'},
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
