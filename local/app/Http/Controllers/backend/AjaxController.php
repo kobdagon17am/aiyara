@@ -3828,11 +3828,14 @@ class AjaxController extends Controller
             // ->get();
             // if($value->count() == 0){
             // }else{
+                
                 DB::table('db_pick_pack_boxsize')
                 ->where('id',$request->box_id)
                 ->update(array(
                   'p_weight' => $request->p_weight,
                 ));
+                // dd(DB::table('db_pick_pack_boxsize')
+                // ->where('id',$request->box_id)->first());
             // }
 
       }

@@ -1224,21 +1224,23 @@ setTimeout(function(){
              data:{ _token: '{{csrf_token()}}',id:id },
               success:function(data){
                    $(".myloading").hide();
+                  //  console.log('p_size '+ data.box_id);
                   row.find('.p_size').removeAttr('data-id');
                   row.find('.p_size').attr('data-id',id);
                   row.find('.p_size').removeAttr('box-id');
                   row.find('.p_size').attr('box-id',data.box_id);
                   row.find('.p_size').val('');
-                  // row.find('.p_weight').removeAttr('data-id');
-                  // row.find('.p_weight').attr('data-id',id);
-                  // row.find('.p_weight').removeAttr('box-id');
-                  // row.find('.p_weight').attr('box-id',data.box_id);
-                  // row.find('.p_weight').val('');
-                  row.find('.p_amt_box').removeAttr('data-id');
-                  row.find('.p_amt_box').attr('data-id',id);
-                  row.find('.p_amt_box').removeAttr('box-id');
-                  row.find('.p_amt_box').attr('box-id',data.box_id);
-                  row.find('.p_amt_box').val('');
+                  row.find('.p_weight').removeAttr('data-id');
+                  row.find('.p_weight').attr('data-id',id);
+                  row.find('.p_weight').removeAttr('box-id');
+                  row.find('.p_weight').attr('box-id',data.box_id);
+                  row.find('.p_weight').val('');
+                  // console.log('p_amt_box '+ data.box_id);
+                  // row.find('.p_amt_box').removeAttr('data-id');
+                  // row.find('.p_amt_box').attr('data-id',id);
+                  // row.find('.p_amt_box').removeAttr('box-id');
+                  // row.find('.p_amt_box').attr('box-id',data.box_id);
+                  // row.find('.p_amt_box').val('');
                   div.after(row);
                 },
               error: function(jqXHR, textStatus, errorThrown) {
