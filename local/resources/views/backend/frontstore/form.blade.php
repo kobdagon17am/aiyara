@@ -2996,9 +2996,12 @@
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
                 $('.lock_input_row').show();
-                $('#lock_input').prop("disabled", false);
             }else{
-                fnShippingCalculate(0);
+                if(status!=2){
+                    fnShippingCalculate(0);
+                }else{
+                    $('#lock_input').prop("disabled", false);
+                }
             }
         }
 
