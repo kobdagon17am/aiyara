@@ -805,7 +805,7 @@ if(!empty($db_orders[0]->action_user)){
                                 @$address .= ",". @$addr[0]->ampname;
                                 @$address .= ",". @$addr[0]->provname;
                                 @$address .= ",". @$addr[0]->zip_code;
-                                // @$address .= " ". @$addr[0]->tel ? '<br>Tel. '. @$addr[0]->tel:'' ;
+                                // @$address .= " ". @$addr[0]->tel_mobile ? '<br>Tel. '. @$addr[0]->tel_mobile:'' ;
                                 // @$address .= " ". @$addr[0]->tel_home?', '.@$addr[0]->tel_home:'' ;
 
                                 if(!empty(@$addr[0]->tamname) && !empty(@$addr[0]->ampname) && !empty(@$addr[0]->provname)){
@@ -814,8 +814,8 @@ if(!empty($db_orders[0]->action_user)){
                                 }
 
                                 // echo @$address;
-                                if(!empty(@$addr[0]->tel)){
-                                     $tel = 'Tel. '. @$addr[0]->tel . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                if(!empty(@$addr[0]->tel_mobile)){
+                                     $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
                                 }
 
                         }

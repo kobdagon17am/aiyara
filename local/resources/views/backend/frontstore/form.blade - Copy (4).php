@@ -962,7 +962,7 @@
                               @$address .= " อ. ". @$addr[0]->ampname;
                               @$address .= " จ. ". @$addr[0]->provname;
                               @$address .= " ". @$addr[0]->zip_code ;
-                              @$address .= " ". @$addr[0]->tel ? '<br>Tel. '. @$addr[0]->tel:'' ;
+                              @$address .= " ". @$addr[0]->tel_mobile ? '<br>Tel. '. @$addr[0]->tel_mobile:'' ;
                               @$address .= " ". @$addr[0]->tel_home?', '.@$addr[0]->tel_home:'' ;
 
                           }else{
