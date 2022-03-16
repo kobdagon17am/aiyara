@@ -115,7 +115,7 @@
                         <div class="form-group row">
                           <label for="note" class="col-md-3 col-form-label"><i class="bx bx-play"></i>หมายเหตุ (ถ้ามี) :</label>
                           <div class="col-md-9">
-                            <textarea class="form-control" rows="3" id="note" name="note" required minlength="5" >{{ @$sRow->note }}</textarea>
+                            <textarea class="form-control" rows="3" id="note" name="note" minlength="5" >{{ @$sRow->note }}</textarea>
                           </div>
                         </div>
 

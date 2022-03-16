@@ -540,7 +540,7 @@ class Products_borrowController extends Controller
             $move->note = 'รับคืนจากการ(เบิก/ยืม)('.$product_borrow_code->note.')';
             $move->action_user =  @\Auth::user()->id;
             $move->action_date = date('Y-m-d H:i:s');
-            $move->approver = 1;
+            $move->approver = @\Auth::user()->id;
             $move->approve_date = date('Y-m-d H:i:s');
             $move->save();
           }
