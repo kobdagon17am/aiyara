@@ -203,14 +203,13 @@ class Pick_packPackingCodeController extends Controller
         ORDER BY id DESC
 
         ");
-
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
       ->addColumn('packing_code_02', function($row) {
         // return "P2".sprintf("%05d",$row->id);
            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
-           return $DP->packing_code;
+           return @$DP->packing_code;
       })      
       ->addColumn('customer_name', function($row) {
           $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();

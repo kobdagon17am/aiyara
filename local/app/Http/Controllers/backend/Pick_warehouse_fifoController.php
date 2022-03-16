@@ -348,9 +348,11 @@ class Pick_warehouse_fifoController extends Controller
 
                 // วุฒิเพิ่มมา เบิกจ่ายสินค้าใบเบิกใหม่ 2
                 $DeliveryPackingCode = \App\Models\Backend\Pick_packPackingCode::where('id',$picking)->first();
-                $arr_item = explode(',',$DeliveryPackingCode->pay_requisition_002_item);
-                $item_pro = DB::table('db_pay_requisition_002_item')->whereIn('id',$arr_item)->pluck('product_id_fk')->toArray();
-                DB::table($temp_ppp_0022)->whereNotIn('product_id_fk',$item_pro)->delete();
+                if($DeliveryPackingCode->bill_remain_status==1){
+                  $arr_item = explode(',',$DeliveryPackingCode->pay_requisition_002_item);
+                  $item_pro = DB::table('db_pay_requisition_002_item')->whereIn('id',$arr_item)->pluck('product_id_fk')->toArray();
+                  DB::table($temp_ppp_0022)->whereNotIn('product_id_fk',$item_pro)->delete();
+                }
 
           // $lastInsertId = DB::getPdo()->lastInsertId();
 
