@@ -197,7 +197,7 @@ class FrontstoreController extends Controller
 
 
     $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
-    // dd($r_invoice_code);
+    // dd($r_invoice_code); 
 
 
     return View('backend.frontstore.index')->with(
@@ -364,7 +364,8 @@ class FrontstoreController extends Controller
       }
 
     $sRow = \App\Models\Backend\Frontstore::find($id);
-    if ($sRow->approve_status == 9 || $sRow->approve_status == 2) {
+    // || $sRow->approve_status == 2
+    if ($sRow->approve_status == 9 ) {
       $ch_Disabled = 1;
     }
 

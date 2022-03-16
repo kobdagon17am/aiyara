@@ -2974,12 +2974,15 @@
         function checkStatus() {
             var status = "{{ @$sRow->approve_status }}";
             var distribution_channel_id_fk = "{{ @$sRow->distribution_channel_id_fk }}";
-            // && status != 2
-            if (status != 1  && status != 6 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
+            console.log('status '+status);
+            // && status != 2 เราไปล็อคที่ controller ด้วย
+            if (status != 1  && status != 6 && status != 0 && status != '' && status != 2 || distribution_channel_id_fk == 3) {
+                console.log('status3 '+status);
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
             }else{
+                console.log('status4 '+status);
                 fnShippingCalculate(0);
             }
         }

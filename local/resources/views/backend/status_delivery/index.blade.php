@@ -198,15 +198,20 @@
                   <div class="form-group row">
                     <label for="receipt" class="col-md-3 col-form-label"> รหัสใบเสร็จ : </label>
                     <div class="col-md-9">
-                        <select id="receipt" name="receipt" class="form-control select2-templating " required >
+                        <select id="receipt" name="receipt" class="form-control order_id_select2 " required multiple="multiple">
                         <option value="">-Select-</option>
 
                          @if(@$receipt)
-                          @foreach(@$receipt AS $r)
+                          {{-- @foreach(@$receipt AS $r)
                             <option value="{{$r->receipt}}" >
                               {{$r->receipt}} 
                             </option>
-                          @endforeach
+                          @endforeach --}}
+                          @foreach(@$receipt AS $r)
+                          <option value="{{$r->code_order}}" >
+                            {{$r->code_order}} 
+                          </option>
+                        @endforeach
                         @endif
 
                       </select>
@@ -530,6 +535,8 @@ var oTable;
           });
 
           $(document).ready(function() {
+
+            $('.order_id_select2').select2();
 
 $(document).on('click', '.btnSearch01', function(event) {
           event.preventDefault();

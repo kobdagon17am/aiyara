@@ -16,7 +16,8 @@ class StatusDeliveryController extends Controller
     {
       // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
       // $receipt = \App\Models\Backend\Delivery::where('approver','NULL')->get();
-        $receipt = DB::select(" select receipt from `db_delivery` where approver is null ; ");
+        // $receipt = DB::select(" select receipt from `db_delivery` where approver is null ; ");
+        $receipt = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
         // dd($sDelivery);
         $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
 
@@ -69,11 +70,33 @@ class StatusDeliveryController extends Controller
            $billing_employee = " and db_delivery.billing_employee = ".@\Auth::user()->id." " ;
        }
 
-         if(!empty($req->receipt)){
-        $receipt = " and db_delivery.receipt =  '".$req->receipt."'" ;
-        }else{
-            $receipt = "";
+
+       if (!empty($req->receipt)) {
+        if(count($req->receipt) > 0){
+            $or_str = "";
+            foreach($req->receipt as $key => $or){
+              if($key+1 == count($req->receipt)){
+                $or_str.= "'".$or."'";
+              }else{
+                $or_str.= "'".$or."'".',';
+              }
+  
+            }
+            $receipt = " AND db_delivery.receipt IN (".$or_str.") ";
+          // $receipt = " AND code_order = '" . $req->receipt . "' ";
+          // wut เพิ่ม
+          $action_user_01 = "";
+          $action_user_011 = "";
         }
+      } else {
+        $receipt = "";
+      }
+
+        //  if(!empty($req->receipt)){
+        // $receipt = " and db_delivery.receipt =  '".$req->receipt."'" ;
+        // }else{
+        //     $receipt = "";
+        // }
         
         if(!empty($req->customer_id_fk)){
           $customer_id_fk = " and db_delivery.customer_id =  '".$req->customer_id_fk."'" ;
@@ -100,11 +123,13 @@ class StatusDeliveryController extends Controller
 
        // วุฒิเอา  $branch_id_fk ออก
        // order by db_delivery_packing_code.updated_at desc
+      //  dd($receipt);
       $sTable = DB::select(" 
          SELECT db_delivery_packing_code.*,db_delivery_packing.packing_code,db_orders.action_user as action_user_data,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_orders.id as db_orders_id,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by,db_delivery.status_tracking , MAX(db_orders.shipping_special) AS 'shipping_special' from db_delivery_packing_code  
          LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
          LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
          LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
+         where db_delivery_packing_code.id <> 0
          $business_location_id
          $receipt
          $customer_id_fk
@@ -117,6 +142,7 @@ class StatusDeliveryController extends Controller
      $sQuery = \DataTables::of($sTable);
      return $sQuery
      ->addColumn('status_pick_pack', function($row) {
+
       //  dd($row);
         $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
         if(@$DP){

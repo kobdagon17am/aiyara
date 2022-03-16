@@ -335,9 +335,9 @@
                                   </div>
 
                                   <div class="form-group row">
-                                    <label for="note" class="col-md-4 col-form-label required_star_red ">หมายเหตุ :</label>
+                                    <label for="note" class="col-md-4 col-form-label ">หมายเหตุ :</label>
                                     <div class="col-md-8">
-                                      <textarea class="form-control" rows="3" id="note" name="note" minlength="5" required >{{ @$sRow->note }}</textarea>
+                                      <textarea class="form-control" rows="3" id="note" name="note" minlength="5" >{{ @$sRow->note }}</textarea>
                                     </div>
                                   </div>
                       @IF(@$sRow->approve_status >= 2)
