@@ -634,6 +634,8 @@ if(!empty($db_orders[0]->action_user)){
                                     customers_address_card.card_moo,
                                     customers_address_card.card_zipcode,
                                     customers_address_card.card_soi,
+                                    customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
                                     -- customers_detail.amphures_id_fk,
                                     -- customers_detail.district_id_fk,
                                     -- customers_detail.road,
@@ -676,6 +678,16 @@ if(!empty($db_orders[0]->action_user)){
                                 @$address = null;
                               }
 
+                              if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                                if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                  $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                }
+                              }else{
+                                if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                  $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                }
+                              }
+
 
                         }
 
@@ -694,6 +706,8 @@ if(!empty($db_orders[0]->action_user)){
                                       -- customers_detail.district_id_fk,
                                       -- customers_detail.road,
                                       -- customers_detail.province_id_fk,
+                                      customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
                                       customers.prefix_name,
                                       customers.first_name,
                                       customers.last_name,
@@ -721,6 +735,21 @@ if(!empty($db_orders[0]->action_user)){
                                     @$address = null;
                                 }
 
+                                
+                                if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                                
+                                  if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                    $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                  }
+
+                                }else{
+
+                                  if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                    $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                  }
+                                }
+                            
+
                         }
 
 
@@ -729,6 +758,8 @@ if(!empty($db_orders[0]->action_user)){
                         if(@$sRow->delivery_location==3){
 
                                 @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+                                customers_detail.tel_mobile,
+                                customers_detail.tel_home,
                                       dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
                                       from customers_addr_frontstore
                                       Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
@@ -751,9 +782,16 @@ if(!empty($db_orders[0]->action_user)){
                                 }
 
                                 // echo @$address;
-                                if(!empty(@$addr[0]->tel_mobile)){
-                                     $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                                  if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                    $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                  }
+                                }else{
+                                  if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                    $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                  }
                                 }
+
 
                         }
 

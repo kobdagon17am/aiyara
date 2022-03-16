@@ -2094,6 +2094,19 @@
                                                             </div>
 
 
+                                                            <div class="divTableRow lock_input_row" style="display: none;">
+                                                            <div class="divTableCell">&nbsp; </div>
+                                                            <div class="divTH">
+                                                                <label style="color:red;" for=""> ปลดล็อคเพื่อแก้ไข </label>
+                                                            </div>
+                                                            <div class="divTableCell">
+                                                                <select id="lock_input" class="form-control">
+                                                                    <option value="1">ล็อคข้อมูลทั้งหมด</option>
+                                                                    <option value="2">ปลดล็อคเพื่อแก้ไข</option>
+                                                                </select>
+                                                            </div>
+                                                            </div>
+
 
                                                             <div class="divTableRow">
                                                                 <div class="divTableCell">
@@ -2113,6 +2126,8 @@
                                                                     <label class=""> </label>
                                                                 </div>
                                                                 <div class="divTableCell">
+
+
                                                                     <!--
                                       <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;"  >
                                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
@@ -2128,11 +2143,11 @@
 
                     ?>
 
+                                                                
+
                                                                         <input type="hidden" id="pay_type_transfer_slip"
                                                                             name="pay_type_transfer_slip" value="1">
-
-
-
+                                                                        
                                                                         @if (!empty(@$PaymentSlip))
 
                                                                             <button type="button"
@@ -2974,18 +2989,36 @@
         function checkStatus() {
             var status = "{{ @$sRow->approve_status }}";
             var distribution_channel_id_fk = "{{ @$sRow->distribution_channel_id_fk }}";
-            console.log('status '+status);
             // && status != 2 เราไปล็อคที่ controller ด้วย
-            if (status != 1  && status != 6 && status != 0 && status != '' && status != 2 || distribution_channel_id_fk == 3) {
+            if (status != 1  && status != 6 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
                 console.log('status3 '+status);
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
+                $('.lock_input_row').show();
+                $('#lock_input').prop("disabled", false);
             }else{
-                console.log('status4 '+status);
                 fnShippingCalculate(0);
             }
         }
+
+        $(document).on('change','#lock_input',function(){
+            var status = $(this).val();
+            if(status==1){
+                $(".card-body input").prop("disabled", true);
+                $(".card-body select").prop("disabled", true);
+                $(".card-body button").prop("disabled", true);
+                $('.lock_input_row').show();
+                $('#lock_input').prop("disabled", false);
+            }else{
+                $(".card-body input").prop("disabled", false);
+                $(".card-body select").prop("disabled", false);
+                $(".card-body button").prop("disabled", false);
+                $('.lock_input_row').show();
+                $('#lock_input').prop("disabled", false);
+                fnShippingCalculate(0);
+            }
+        });
 
         $(document).ready(function() {
             $(document).on('click', '.btnSaveChangePurchaseType', function(event) {
