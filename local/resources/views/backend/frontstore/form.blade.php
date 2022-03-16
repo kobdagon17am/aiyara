@@ -2995,13 +2995,13 @@
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
-                $('.lock_input_row').show();
-            }else{
-                if(status!=2){
-                    fnShippingCalculate(0);
-                }else{
-                    $('#lock_input').prop("disabled", false);
+                if(status==2){
+                    $('.lock_input_row').show();
+                $('#lock_input').prop("disabled", false);
                 }
+        
+            }else{
+                fnShippingCalculate(0);
             }
         }
 
