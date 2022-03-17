@@ -1926,12 +1926,13 @@ class AjaxController extends Controller
             if($fee_type==1){
                 $fee = $fee[0]->txt_value;
                 $fee_amt    = $credit_price * (@$fee/100) ;
-                $sum_credit_price = $credit_price + $fee_amt ;
             }else{
                 $fee = $fee[0]->txt_fixed_rate;
                 $fee_amt =  $fee ;
-                $sum_credit_price = $credit_price + $fee_amt ;
             }
+         
+                $sum_credit_price = $credit_price;
+            
        }else{
           $fee_id = 0 ;
           $fee_amt  = 0 ;
@@ -1943,18 +1944,16 @@ class AjaxController extends Controller
             $fee_id = $request->fee?$request->fee:0;
             $charger_type = $request->charger_type;
 
-    // dd($sum_price);
-            if($charger_type==1){
-                // dd('ok2');
+            // if($charger_type==1){
+                if($charger_type==2){
                 if($credit_price==$sum_price){
                     DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,gift_voucher_cost=$gift_voucher_cost,gift_voucher_price=0 WHERE id=$frontstore_id ");
                 }else{
+                 
                     DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,gift_voucher_cost=($gift_voucher_cost),gift_voucher_price=($gift_voucher_price) WHERE id=$frontstore_id ");
                     // DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price) WHERE id=$frontstore_id ");
                 }
-
             }else{
-                // dd('ok1');
                 DB::select(" UPDATE db_orders SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price+$fee_amt,gift_voucher_cost=($gift_voucher_cost),gift_voucher_price=($gift_voucher_price) WHERE id=$frontstore_id ");
 
             }
