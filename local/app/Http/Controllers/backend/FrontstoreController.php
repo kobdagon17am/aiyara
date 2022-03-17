@@ -987,7 +987,6 @@ class FrontstoreController extends Controller
 
     // dd($request->transfer_money_datetime." : AAAA");
     // db_delivery
-    // dd($request->all());
 
     if (isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip == '1') {
     if(isset($request->note_bill_id)){
@@ -1766,7 +1765,7 @@ class FrontstoreController extends Controller
                                   recipient_name = '" . @$recipient_name . "',
                                   addr_send = '" . @$address . "',
                                   postcode = '" . @$v->zipcode . "',
-                                  mobile = '" . (@$v->tel ? $v->tel : '') . "',
+                                  mobile = '" . (@$v->tel_mobile ? $v->tel_mobile : '') . "',
                                   tel_home = '" . (@$v->tel_home ? $v->tel_home : '') . "',
                                   province_id_fk = '" . @$v->province_id_fk . "',
                                   province_name = '" . @$v->provname . "',
@@ -1788,7 +1787,7 @@ class FrontstoreController extends Controller
                               district_id_fk='" . (@$v->tam_id ? @$v->tam_id : 0) . "',
                               province_id_fk='" . (@$v->province_id ? @$v->province_id : 0) . "',
                               zipcode='" . @$v->zipcode . "',
-                              tel='" . @$v->tel . "',
+                              tel='" . @$v->tel_mobile . "',
                               tel_home='" . @$v->tel_home . "',
                               name='" . @$recipient_name . "'
                               WHERE (id='" . $id . "')");
@@ -2010,7 +2009,7 @@ class FrontstoreController extends Controller
                                   recipient_name = '" . @$recipient_name . "',
                                   addr_send = '" . @$address . "',
                                   postcode = '" . @$v->zipcode . "',
-                                  mobile = '" . (@$v->tel ? $v->tel : '') . "',
+                                  mobile = '" . (@$v->tel_mobile ? $v->tel_mobile : '') . "',
                                   tel_home = '" . (@$v->tel_home ? $v->tel_home : '') . "',
                                   province_id_fk = '" . @$v->province_id_fk . "',
                                   province_name = '" . @$v->provname . "',
@@ -2032,7 +2031,7 @@ class FrontstoreController extends Controller
                                   district_id_fk='" . (@$v->tam_id ? @$v->tam_id : 0) . "',
                                   province_id_fk='" . (@$v->province_id ? @$v->province_id : 0) . "',
                                   zipcode='" . @$v->zipcode . "',
-                                  tel='" . @$v->tel . "',
+                                  tel='" . @$v->tel_mobile . "',
                                   tel_home='" . @$v->tel_home . "',
                                   name='" . @$recipient_name . "'
                                   WHERE (id='" . $id . "')");

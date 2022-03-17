@@ -2995,11 +2995,12 @@
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
+                
                 if(status==2){
                     $('.lock_input_row').show();
                 $('#lock_input').prop("disabled", false);
                 }
-        
+                $("input[name=_method]").prop("disabled", false);
             }else{
                 fnShippingCalculate(0);
             }
@@ -3013,12 +3014,14 @@
                 $(".card-body button").prop("disabled", true);
                 $('.lock_input_row').show();
                 $('#lock_input').prop("disabled", false);
+                $("input[name=_method]").prop("disabled", false);
             }else{
                 $(".card-body input").prop("disabled", false);
                 $(".card-body select").prop("disabled", false);
                 $(".card-body button").prop("disabled", false);
                 $('.lock_input_row').show();
                 $('#lock_input').prop("disabled", false);
+                $("input[name=_method]").prop("disabled", false);
                 fnShippingCalculate(0);
             }
         });
@@ -7438,6 +7441,16 @@
 
                 }
 
+            }
+
+            var status2 = $('#lock_input').val();
+            var status1 = "{{ @$sRow->approve_status }}";
+            var distribution_channel_id_fk2 = "{{ @$sRow->distribution_channel_id_fk }}";
+            if(status1 != 1  && status1 != 6 && status1 != 0 && status1 != '' || distribution_channel_id_fk2 == 3){
+                if(status2==1){
+                    alert('กรุณาปลดล็อคเพื่อแก้ไขข้อมูลก่อน');
+                    return false;
+                }
             }
 
             // alert($('#sentto_branch_id').val());

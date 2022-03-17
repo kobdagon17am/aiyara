@@ -137,6 +137,7 @@ $limit = 10;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
 
+
 $cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
 $cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
 $cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
@@ -661,6 +662,8 @@ if(!empty($db_orders[0]->action_user)){
                                       customers.prefix_name,
                                       customers.first_name,
                                       customers.last_name
+                                      customers_address_card.tel as tel_mobile,
+                                      customers_address_card.tel_home as tel_home,
                                       FROM
                                       customers_address_card
                                       Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
@@ -687,6 +690,16 @@ if(!empty($db_orders[0]->action_user)){
                                  @$address = null;
                               }
 
+                              if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                                if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                  $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                }
+                              }else{
+                                if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                  $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                }
+                              }
+
                           }else{
 
                                 $addr = DB::select(" SELECT
@@ -697,6 +710,8 @@ if(!empty($db_orders[0]->action_user)){
                                     customers_address_card.card_moo,
                                     customers_address_card.card_zipcode,
                                     customers_address_card.card_soi,
+                                    customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
                                     -- customers_detail.amphures_id_fk,
                                     -- customers_detail.district_id_fk,
                                     -- customers_detail.road,
@@ -737,6 +752,16 @@ if(!empty($db_orders[0]->action_user)){
                                   }
                               }else{
                                 @$address = null;
+                              }
+
+                              if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                                if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                  $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                }
+                              }else{
+                                if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                  $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                }
                               }
 
 
