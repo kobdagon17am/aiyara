@@ -181,6 +181,12 @@ class DeliveryPackingCodeController extends Controller
                 $arr = implode(',', $array);
               }
             }
+
+            // foreach($rs as $rr){
+              // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($rr->orders_id_fk);
+              // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($rr->orders_id_fk);
+            // }
+          
             
             $addr = DB::select(" SELECT
                   db_delivery.set_addr_send_this,
@@ -188,6 +194,7 @@ class DeliveryPackingCodeController extends Controller
                   db_delivery.addr_send,
                   db_delivery.postcode,
                   db_delivery.mobile,
+                  db_delivery.tel_home,
                   db_delivery.total_price,
                   db_delivery_packing_code.id AS db_delivery_packing_code_id,
                   db_delivery.receipt
@@ -197,6 +204,7 @@ class DeliveryPackingCodeController extends Controller
                   Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
                   WHERE 
                   db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
+                  // dd($addr);
             if($addr){
               if($row->status_to_wh==0){
                 return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";

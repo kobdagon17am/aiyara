@@ -586,8 +586,8 @@ if(!empty($db_orders[0]->action_user)){
                                       customers.prefix_name,
                                       customers.first_name,
                                       customers.last_name
-                                      customers_detail.tel_mobile,
-                                      customers_detail.tel_home,
+                                      customers_address_card.tel as tel_mobile,
+                                      customers_address_card.tel_home as tel_home,
                                       FROM
                                       customers_address_card
                                       Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
@@ -752,8 +752,6 @@ if(!empty($db_orders[0]->action_user)){
                         if(@$sRow->delivery_location==3){
 
                                 @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                                customers_detail.tel_mobile,
-                                customers_detail.tel_home,
                                       dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
                                       from customers_addr_frontstore
                                       Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
