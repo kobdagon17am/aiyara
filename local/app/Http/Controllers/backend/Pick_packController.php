@@ -436,7 +436,7 @@ class Pick_packController extends Controller
    ->addColumn('addr_to_send', function($row) { 
 
         if(@$row->set_addr_send_this==1){
-               return @$row->recipient_name."<br>".@$row->addr_send."<br>".@$row->postcode." ".@$row->mobile."<br>";
+               return @$row->recipient_name."<br>".@$row->addr_send."<br>".@$row->postcode." "." Tel.".@$row->mobile." ,".@$row->tel_home."<br>"."";
               //  ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [เปลี่ยนที่อยู่] </span> ";
         }else{
 
@@ -491,6 +491,7 @@ class Pick_packController extends Controller
                     db_delivery.addr_send,
                     db_delivery.postcode,
                     db_delivery.mobile,
+                    db_delivery.tel_home,
                     db_delivery.total_price,
                     db_delivery_packing_code.id AS db_delivery_packing_code_id,
                     db_delivery.receipt
@@ -502,7 +503,7 @@ class Pick_packController extends Controller
                     db_delivery_packing_code.id = ".$row->packing_code." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
               if($addr){
                     // return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-                    return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."";
+                    return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." Tel.".@$addr[0]->mobile." ,".@$addr[0]->tel_home."<br>"."";
               }else{
 
                     if(@$addr2[0]->delivery_location==1 || @$addr2[0]->delivery_location==2){
@@ -543,7 +544,7 @@ class Pick_packController extends Controller
 
                                   // return "<b>* ".@$d[0]->txt_desc."</b>";
                                 //  return @$addr2[0]->recipient_name."<br>".@$addr2[0]->addr_send."<br>".@$addr2[0]->postcode." ".@$addr2[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-                                return @$addr2[0]->recipient_name."<br>".@$addr2[0]->addr_send."<br>".@$addr2[0]->postcode." ".@$addr2[0]->mobile."<br>"." ";
+                                return @$addr2[0]->recipient_name."<br>".@$addr2[0]->addr_send."<br>".@$addr2[0]->postcode." Tel.".@$addr2[0]->mobile." ,".@$addr[0]->tel_home."<br>"." ";
 
                                }
 

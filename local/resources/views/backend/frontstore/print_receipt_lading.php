@@ -591,6 +591,8 @@ if(!empty($db_orders[0]->action_user)){
                                       -- customers_detail.road,
                                       -- customers_detail.province_id_fk,
                                       customers_address_card.created_at,
+                                        customers_detail.tel_mobile AS tel_mobile,
+                                      customers_detail.tel_home AS tel_home
                                       customers_address_card.updated_at,
                                       dataset_provinces.name_th AS provname,
                                       dataset_amphures.name_th AS ampname,
@@ -601,6 +603,7 @@ if(!empty($db_orders[0]->action_user)){
                                       FROM
                                       customers_address_card
                                       Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                                        Left Join customers_detail ON customers_detail.customer_id = customers_address_card.customer_id
                                       Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
                                       Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
                                       Left Join customers ON customers_address_card.customer_id = customers.id
@@ -623,6 +626,8 @@ if(!empty($db_orders[0]->action_user)){
                               }else{
                                  @$address = null;
                               }
+
+                              $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
 
                           }else{
 
@@ -678,15 +683,15 @@ if(!empty($db_orders[0]->action_user)){
                                 @$address = null;
                               }
 
-                              if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
-                                if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
-                                  $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
-                                }
-                              }else{
-                                if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                              // if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                              //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                              //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                              //   }
+                              // }else{
+                              //   if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
                                   $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
-                                }
-                              }
+                              //   }
+                              // }
 
 
                         }
@@ -736,18 +741,18 @@ if(!empty($db_orders[0]->action_user)){
                                 }
 
                                 
-                                if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                                // if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
                                 
-                                  if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
-                                    $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
-                                  }
+                                //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                //   }
 
-                                }else{
+                                // }else{
 
-                                  if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                //   if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
                                     $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
-                                  }
-                                }
+                                //   }
+                                // }
                             
 
                         }
@@ -781,15 +786,15 @@ if(!empty($db_orders[0]->action_user)){
                                 }
 
                                 // echo @$address;
-                                if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
-                                  if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
-                                    $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
-                                  }
-                                }else{
-                                  if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
-                                    $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
-                                  }
-                                }
+                                // if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                                //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                //   }
+                                // }else{
+                                  // if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                    $tel = 'Tel. '. @$addr[0]->tel . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                //   }
+                                // }
 
 
                         }

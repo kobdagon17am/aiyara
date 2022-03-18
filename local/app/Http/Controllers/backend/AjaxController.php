@@ -392,6 +392,17 @@ class AjaxController extends Controller
 
     }
 
+    public function createPDFRequisitionDetailReal($packing_code_id)
+    {
+       // dd($id);
+       $data = [$packing_code_id];
+       // $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
+       $pdf = PDF::loadView('backend.pick_warehouse.print_requisition_detail_real',compact('data'));
+       // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+       return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+   }
+
     public function createPDFReceipt03($id)
      {
         // dd($id);

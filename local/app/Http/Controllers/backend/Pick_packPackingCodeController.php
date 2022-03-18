@@ -207,6 +207,7 @@ class Pick_packPackingCodeController extends Controller
 
       return $sQuery
       ->addColumn('packing_code_02', function($row) {
+        // dd($row);
         // return "P2".sprintf("%05d",$row->id);
            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
            return @$DP->packing_code;
