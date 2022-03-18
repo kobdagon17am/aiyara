@@ -241,7 +241,7 @@ public static function check_line($username){
 
 	if(!empty($data_user)){
 
-		$user_name = Auth::guard('c_user')->user()->user_name;
+	$user_name = Auth::guard('c_user')->user()->user_name;
     $user_name_c = Auth::guard('c_user')->user()->user_name;//ของผู้เซิท
 
 		if( $data_user->user_name == $user_name){
@@ -286,7 +286,7 @@ public static function check_line($username){
 			}
 		}
 
-    dd($resule);
+   
 		return $resule;
 
 	}else{
