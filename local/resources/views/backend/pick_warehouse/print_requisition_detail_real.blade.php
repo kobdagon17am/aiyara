@@ -207,6 +207,7 @@ tr.border_bottom td {
 </style>
 <?php 
 $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$data[0])->orderBy('delivery_id_fk','asc')->get();  
+
 ?>
 
 @foreach($db_pick_pack_packing_data as $index => $pick_pack_packing_data)
@@ -261,7 +262,7 @@ E-MAIL : info@aiyara.co.th
               FROM
               db_delivery
               WHERE 
-              db_delivery.id = ".@$data[0]." AND set_addr_send_this=1 ");
+              db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." AND set_addr_send_this=1 ");
 
               $recipient_name = @$delivery[0]->recipient_name?@$delivery[0]->recipient_name:'';
               $addr_send = @$delivery[0]->addr_send." ".@$delivery[0]->postcode;
@@ -281,6 +282,7 @@ E-MAIL : info@aiyara.co.th
             }else{
                   $receipt = @$delivery[0]->receipt;
             }
+        
 
 // dd($receipt);
     ?>
@@ -330,81 +332,6 @@ E-MAIL : info@aiyara.co.th
 
   <?php
 
-    // // วุฒิเพิ่มมา เอาไว้ตรวจว่าสินค้าไหนจ่ายแล้วของบิลไหน
-    // $db_pay_requisition_002_datas = DB::table('db_pay_requisition_002')
-    //               ->where('pick_pack_requisition_code_id_fk',@$data[1])->get();
-    //               foreach($db_pay_requisition_002_datas as $data_002){
-    //                             $product_amt_get = $data_002->amt_get;
-    //                             $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->select('id','orders_id_fk')->where('id',@$data[1])->first();
-    //                             $arr_order = explode(',',$db_pick_pack_packing_code_data->orders_id_fk);
-    //                             $promotions_products_arr = DB::table('promotions_products')->select('promotion_id_fk')
-    //                             ->where('product_id_fk',$data_002->product_id_fk)->pluck('promotion_id_fk')->toArray();
-    //                             $db_order_products_list_data1 = DB::table('db_order_products_list')
-    //                             ->select('frontstore_id_fk')
-    //                             ->whereIn('frontstore_id_fk',$arr_order)
-    //                             ->where('type_product','product')
-    //                             ->where('product_id_fk',$data_002->product_id_fk);
-    //                             $db_order_products_list_data2 = DB::table('db_order_products_list')
-    //                             ->select('frontstore_id_fk')
-    //                             ->whereIn('frontstore_id_fk',$arr_order)
-    //                             ->where('type_product','promotion')
-    //                             ->whereIn('promotion_id_fk',$promotions_products_arr)
-    //                             ->union($db_order_products_list_data1)
-    //                             ->get();
-    //                             foreach($db_order_products_list_data2 as $data2){
-    //                                   $order_product1 = DB::table('db_order_products_list')
-    //                                   ->where('frontstore_id_fk',$data2->frontstore_id_fk)
-    //                                   ->where('product_id_fk',$data_002->product_id_fk)
-    //                                   ->where('type_product','product')
-    //                                   ->get();
-    //                                   $order_product2 = DB::table('db_order_products_list')
-    //                                   ->where('frontstore_id_fk',$data2->frontstore_id_fk)
-    //                                   ->whereIn('promotion_id_fk',$promotions_products_arr)
-    //                                   ->where('type_product','promotion')
-    //                                   ->get();
-    //                                   $sum_want_amt = 0;
-    //                                   foreach($order_product1 as $order_product1_data){
-    //                                     $sum_want_amt+=$order_product1_data->amt;
-    //                                   }
-    //                                   foreach($order_product2 as $order_product2_data){
-    //                                     $pro = DB::table('promotions_products')->where('promotion_id_fk',$order_product2_data->promotion_id_fk)->first();
-    //                                     $sum_want_amt+=($order_product2_data->amt*$pro->product_amt);
-    //                                   }
-
-    //                                    $amt_get_data = 0;
-    //                                    $amt_remain_data = 0;
-    //                                   // จำนวนที่ต้องการหักจากที่ได้รับ
-    //                                   if($sum_want_amt <= $product_amt_get){
-    //                                     $product_amt_get = $product_amt_get - $sum_want_amt;
-    //                                     $amt_get_data = $sum_want_amt;
-    //                                     $amt_remain_data = 0;
-    //                                   }else{
-    //                                      $amt_get_data = $product_amt_get;
-    //                                      $amt_remain_data = $sum_want_amt - $product_amt_get;
-    //                                      $product_amt_get = 0;
-    //                                   }
-
-    //                                   //  if($data2->frontstore_id_fk==5){
-
-    //                                   //   dd($sum_want_amt);
-                                        
-    //                                       DB::table('db_pay_requisition_002_item')->insert([
-    //                                         'requisition_002_id' => $data_002->id,
-    //                                         'order_id' => $data2->frontstore_id_fk,
-    //                                         'product_id_fk' => $data_002->product_id_fk,
-    //                                         'amt_need' => $sum_want_amt,
-    //                                         'amt_get' => $amt_get_data,
-    //                                         'amt_remain' => $amt_remain_data,
-    //                                         'created_at' => date('Y:m:d H:i:s'),
-    //                                         'updated_at' => date('Y:m:d H:i:s'),
-    //                                         'delete_status' => 1,
-    //                                       ]);
-
-    //                                   //  }
-
-    //                             }
-    //               }
-
 // วุฒิเพิ่มมา
 $sTable = DB::select(" 
 
@@ -440,13 +367,8 @@ $sum_amt = 0 ;
   $r_ch_t = '';
   $fid_arr = explode(',',$receipt); 
   $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
-  $Products = DB::table('db_pay_requisition_002')
-  ->select('db_pay_requisition_002.product_name','db_pay_requisition_002.product_unit','db_pay_requisition_002_item.*')
-  ->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
-  ->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$data[0])
-  ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
-  ->groupBy('product_id_fk')
-  ->get();
+
+  $Products = App\Models\Backend\Orders::getAllProduct($order_arr);
 
 if(@$Products){
 
@@ -454,56 +376,16 @@ if(@$Products){
 
     if(!empty($value->product_id_fk)){
 
-    // หา max time_pay ก่อน 
-     $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
-  // Check ว่ามี status=2 ? (ค้างจ่าย)
-     $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
-    //  if(count($r_ch02)>0){
-    //     $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
-    //  }else{
-    //    $r_ch_t = '';
-    //  }
-
-
-      //  วุฒิเพิ่มมา
-      $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
-                   ->where('product_id_fk',$value->product_id_fk) 
-                   ->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
-                   ->orderBy('time_pay', 'desc')
-                   ->first();
-                   
-                  $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
-                  ->where('product_id_fk',$value->product_id_fk)
-                  ->where('order_id',$value->order_id)
-                  ->where('requisition_002_id',@$db_pay_requisition_002->id)
-                  ->first();
-             
-                    if($db_pay_requisition_002_item->amt_remain > 0){
-                      $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
-                    }else{
-                      $r_ch_t = '';
-                    }
-
-
-     $amt_get = DB::table('db_pay_requisition_002')
-                ->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
-                ->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$data[0])
-                ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
-                ->where('db_pay_requisition_002_item.product_id_fk',$value->product_id_fk)
-                ->sum('db_pay_requisition_002_item.amt_get');
-
-    $sum_amt += $amt_get;
     $pn .=     
     '<div class="divTableRow">
     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-    '.@$value->product_name.'</b><br>
-    <font color=red>'.$r_ch_t.'</font>
+    '.@$value->product_code.' : '.@$value->product_name.'</b>
     </div>
-    <div class="divTableCell" style="text-align:center;">'.@$amt_get.'</div> 
+    <div class="divTableCell" style="text-align:center;">'.@$value->amt_sum.'</div> 
     <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
     ';
     $pn .= '</div>';  
-  
+    @$sum_amt += @$value->amt_sum;
   }
   }
 

@@ -592,7 +592,7 @@ if(!empty($db_orders[0]->action_user)){
                                       -- customers_detail.province_id_fk,
                                       customers_address_card.created_at,
                                         customers_detail.tel_mobile AS tel_mobile,
-                                      customers_detail.tel_home AS tel_home
+                                      customers_detail.tel_home AS tel_home,
                                       customers_address_card.updated_at,
                                       dataset_provinces.name_th AS provname,
                                       dataset_amphures.name_th AS ampname,

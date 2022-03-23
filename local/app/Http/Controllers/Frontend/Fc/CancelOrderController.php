@@ -289,8 +289,11 @@ class CancelOrderController extends Controller
         DB::commit();
         return $resule;
       }
-
-
+      // วุฒิเพิ่มมาแก้ error 
+      if(!isset($resule)){
+        $resule = ['status' => 'success', 'message' => 'ทำรายการสำเร็จ'];
+      }
+      // 
       if ($resule['status'] == 'success') {
 
         if ($type_id == 4) {
@@ -417,6 +420,8 @@ class CancelOrderController extends Controller
 
         $order_data->save();
         $customer_user->save();
+
+ 
         DB::commit();
         return $resule;
       } else {

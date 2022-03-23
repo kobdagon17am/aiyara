@@ -497,7 +497,9 @@ class Products_borrowController extends Controller
         } else if ($row->is_returned) {
           return "<span class='badge badge-success'>คืนสินค้าแล้ว</span>";
         } else {
-          return "<button class='btn btn-primary btn-sm btn-returned' data-id='$row->id'>คืนสินค้า</button>";
+          if ($product_borrow_code->approve_status == 1) {
+            return "<button class='btn btn-primary btn-sm btn-returned' data-id='$row->id'>คืนสินค้า</button>";
+          }
         }
       })
       ->rawColumns(['action'])

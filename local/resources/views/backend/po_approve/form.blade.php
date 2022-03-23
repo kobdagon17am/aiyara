@@ -157,7 +157,7 @@
                         @endif
 
                                 <form action="{{ route('backend.po_approve.update', @$sRow->id) }}" method="POST"
-                                    enctype="multipart/form-data" autocomplete="off">
+                                    enctype="multipart/form-data" autocomplete="off" id="form_approve_con">
                                     <input name="_method" type="hidden" value="PUT">
                                     <input name="id" value="{{ $sRow->id }}" type="hidden">
 
@@ -202,9 +202,9 @@
                                                          <?php  $transfer_price = $sRow->transfer_price;
                                                           $transfer_price = number_format($transfer_price, 2);
                                                          ?>
-                                                          <input class="form-control" type="text" value="{{$transfer_price}}" readonly >
+                                                          <input class="form-control" type="text" id="total_price_sum" value="{{$transfer_price}}" readonly >
                                                         @else
-                                                        <input class="form-control" type="text" value="{{@$price}}" readonly >
+                                                        <input class="form-control" type="text" id="total_price_sum" value="{{@$price}}" readonly >
                                                         @endif
 
 
@@ -229,7 +229,7 @@
                                                         </div>
                                                         <div class="col-md-6 text-left">
                                                             <h5 class="font-size-14 required_star_red">ยอดอนุมัติ (กรอกยืนยันอีกครั้ง)</h5>
-                                                               <input class="form-control NumberOnly " type="text" name="approval_amount_transfer" value="{{@$approval_amount_transfer}}" required="" >
+                                                               <input class="form-control NumberOnly " type="text" name="approval_amount_transfer" id="approval_amount_transfer" value="{{@$approval_amount_transfer}}" required="" >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -320,8 +320,10 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">Close</button>
-                                                    <button type="submit" type="submit" name="approved" value='approved'
-                                                        class="btn btn-primary">อนุมัติ</button>
+                                                    {{-- <button type="submit" name="approved" value='approved'
+                                                        class="btn btn-primary">อนุมัติ</button> --}}
+                                                        <button type="button" name="approved" value='approved'
+                                                        class="btn btn-primary btn_approve_con">อนุมัติ</button>
                                                 </div>
 
 
@@ -516,6 +518,21 @@ $(function() {
           datepicker: true,
           weeks: false,
           // minDate: 0,
+      });
+
+
+      $(document).on('click','.btn_approve_con',function(){
+       var approval_amount_transfer = $('#approval_amount_transfer').val();
+       var total_price_sum = $('#total_price_sum').val();
+            total_price_sum = total_price_sum.replace(",", "");
+            approval_amount_transfer = parseFloat(approval_amount_transfer);
+            total_price_sum = parseFloat(total_price_sum);
+       if(approval_amount_transfer == total_price_sum || approval_amount_transfer > total_price_sum){
+                $('#form_approve_con').submit();
+       }else{
+           alert('กรุณาระบุยอดเงินให้ตรงกัน');
+       }
+
       });
 
              function showPreview_01(ele)
