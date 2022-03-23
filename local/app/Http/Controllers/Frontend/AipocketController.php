@@ -368,6 +368,27 @@ class AipocketController extends Controller
     $type = $request->type;
     $pv = str_replace(',', '', $request->pv);
     $to_customer_user = $request->username;
+    $check_register = DB::table('customers')
+    ->where('user_name', '=', $to_customer_user)
+    ->first();
+
+    if($check_register){
+      $check_register =  DB::table('customers')
+      ->where('user_name','=',$to_customer_user)
+      ->where('regis_doc1_status','=','1')
+      ->where('regis_doc2_status','=','1')
+      ->where('regis_doc3_status','=','1')
+      ->where('regis_doc4_status','=','1')
+      ->where('regis_date_doc','!=',null)
+      ->count();
+
+      if($check_register == 0 ){
+        return redirect('ai-stockist')->withError($to_customer_user.' ยังไม่ผ่านการตรวจเอกสาร ไม่สามารถโอนคะแนนได้');
+      }
+
+    }else{
+      return redirect('ai-stockist')->withError('ไม่พบข้อมูลผู้ในระบบ กรุณาตรวจสอบข้อมูล UserName');
+    }
 
     if ($pv > Auth::guard('c_user')->user()->pv_aistockist) {
       return redirect('ai-stockist')->withError('PV Ai-Stockist ของคุณมีไม่เพียงพอ ');
