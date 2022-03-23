@@ -367,7 +367,7 @@
                             <div class="form-group row">
                               <label for="cash_price" class="col-md-4 col-form-label"> Comment : </label>
                               <div class="col-md-8 ">
-                                  <textarea class="form-control" name="note" placeholder="รายละเอียดการได้รับ Ai-Cash" required>{{@$sRow->note}}</textarea>
+                                  <textarea class="form-control" name="note" placeholder="รายละเอียดการได้รับ Ai-Cash">{{@$sRow->note}}</textarea>
                               </div>
                           </div>
 
@@ -387,7 +387,11 @@
 
                                         @if (!empty($sRow))
                                             <input type="hidden" name="save_update" value="1">
-                                            <button type="submit" class="btn btn-primary btn-sm waves-effect">
+                                            <button type="submit" class="btn btn-primary btn-sm waves-effect btn_submit_real" style="display:none;">
+                                                <i class="bx bx-save font-size-18 align-middle mr-2"></i><span
+                                                    style="font-size: 14px;">บันทึกข้อมูล</span>
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-sm waves-effect btn_submit">
                                                 <i class="bx bx-save font-size-18 align-middle mr-2"></i><span
                                                     style="font-size: 14px;">บันทึกข้อมูล</span>
                                             </button>
@@ -521,6 +525,37 @@
 
         <script>
             $(document).ready(function() {
+
+                $(document).on('click','.btn_submit',function(){
+                if (confirm("ยืนยันการทำรายการ!") == true) {
+                              var transfer_price = $('#transfer_price').val();
+                              var aicash_amt = $('#aicash_amt').val();
+                              var pay_type_id_fk = $('#pay_type_id_fk').val();
+
+                              transfer_price = transfer_price.replace(",", "");
+                              aicash_amt = aicash_amt.replace(",", "");
+
+                              transfer_price = parseFloat(transfer_price);
+                              aicash_amt = parseFloat(aicash_amt);
+
+                              if(pay_type_id_fk==1){
+                                if(transfer_price == aicash_amt || transfer_price > aicash_amt){
+                                    // $('#frm-main').submit();
+                                    $('.btn_submit_real').trigger('click');
+                                }else{
+                                    alert('กรุณาระบุยอดเงินให้ตรงกัน');
+                                }
+                              }else{
+                                $('.btn_submit_real').trigger('click');
+                              }
+
+                        } else {
+                           
+                        }
+
+
+                        //      
+                });
 
                 var fromAddAiCash = "<?= @$_REQUEST['fromAddAiCash'] ?>";
                 // alert(fromAddAiCash);

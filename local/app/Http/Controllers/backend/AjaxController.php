@@ -2146,6 +2146,7 @@ class AjaxController extends Controller
         $cash_pay = @$sum_price - @$aicash_price ;
          DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
     }
+    // เงินสด + Ai-Cash
         if($pay_type_id_fk==6){
             $aicash_price = str_replace(',','',@$request->aicash_price);
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
@@ -2177,7 +2178,7 @@ class AjaxController extends Controller
             $cash_pay = @$sum_price - @$aicash_price;
              DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$aicash_price.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
         }
-
+        // เครดิต + Ai-Cash
       if($pay_type_id_fk==9){
             $aicash_remain = str_replace(',','',@$request->aicash_remain);
             $sum_credit_price = str_replace(',','',@$request->sum_credit_price);
@@ -2190,8 +2191,7 @@ class AjaxController extends Controller
             if(@$request->charger_type==2){
                 $cash_pay = @$sum_price - (@$sum_credit_price-@$request->fee_amt);
             }
-// dd($cash_pay);
-             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$cash_pay.", cash_price=".$cash_pay.", cash_pay=".$cash_pay.",total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
+             DB::select(" UPDATE db_orders SET member_id_aicash=".@$request->member_id_aicash.",aicash_price=".$cash_pay.", cash_price=0, cash_pay=0,total_price=(".$sum_price.") WHERE id=".$frontstore_id." ");
         }
 
 

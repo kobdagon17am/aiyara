@@ -3644,19 +3644,10 @@ ORDER BY created_at DESC
       })
       ->addColumn('total_price', function ($row) {
         $total_price = 0;
-
-        // if (@$row->cash_price != 0) {
-        //   $total_price = $row->cash_price;
-        // } elseif (@$row->cash_pay != 0) {
+        
           $total_price += $row->cash_pay;
-        // }
 
         if (@$row->sum_credit_price != 0) {
-          // if (@$row->charger_type == 1) {
-          //   $total_price += $row->credit_price + $row->fee_amt;
-          // } else {
-          //   $total_price += $row->credit_price;
-          // }
           $total_price += $row->sum_credit_price;
         }
 
