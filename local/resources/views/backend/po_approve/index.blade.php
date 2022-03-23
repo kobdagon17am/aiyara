@@ -502,7 +502,7 @@ $(function() {
         setTimeout(function(){
                   //  $(".myloading").hide();
                   location.reload();
-                }, 120000);
+                }, 135000);
       });
     </script>
 

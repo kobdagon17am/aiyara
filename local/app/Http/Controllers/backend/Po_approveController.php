@@ -92,123 +92,145 @@ class Po_approveController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request->all());
 
         \DB::beginTransaction();
         try {
 
-            if ($id) {
-                $sRow = \App\Models\Backend\Orders::find($id);
-            } else {
+            // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
+            $data_id = DB::table('db_orders')->where('id',$id)->first();
+            if($data_id){
+                $sRow = \App\Models\Backend\Orders::find($data_id->id);
+                $sRow->approver = \Auth::user()->id;
+                $sRow->updated_at = now();
+                if (@request('approved') != null) {
+                    $sRow->status_slip = 'true';
+                    $sRow->order_status_id_fk = '5';
+                    $sRow->approve_status  = 2;
+                    $sRow->transfer_bill_status  = 2;
+                    if(!empty($request->slip_ids)){
+                        for ($i=0; $i < count($request->slip_ids) ; $i++) {
+                          DB::table('payment_slip')->where('id',$request->slip_ids[$i])->update([
+                              'note' => $request->slip_note[$i],
+                              'code_order' => $sRow->code_order,
+                              'status' => 2,
+                              'transfer_bill_date' => $request->transfer_bill_date[$i],
+                          ]);
+                        }
+                    }
+                    $sRow->approval_amount_transfer = $request->approval_amount_transfer;
+                    $sRow->account_bank_name_customer = $request->account_bank;
+                    $sRow->transfer_amount_approver = \Auth::user()->id;
+                    $sRow->transfer_bill_date  = $request->transfer_bill_date;
+                    $sRow->transfer_bill_approvedate = date("Y-m-d H:i:s");
+                    DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+                }
+    
+                if (@request('no_approved') != null) {
+                    $sRow->status_slip = 'false';
+                    $sRow->order_status_id_fk = '3';
+                    $sRow->approve_status  = 1;
+                    // note
+                    $sRow->transfer_bill_status = 1;
+                    $sRow->status_slip = 'true';
+                    $sRow->approval_amount_transfer = 0 ;
+                    $sRow->account_bank_name_customer = 0;
+                    $sRow->transfer_amount_approver =  \Auth::user()->id;
+                    $sRow->transfer_bill_date  = NULL;
+                    $sRow->transfer_bill_approvedate = NULL;
+                    $sRow->transfer_bill_note = @request('detail');
+                    DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+                    $sRow->approve_status = 6;
+                }
+    
+    
+                if (@request('approved') != null) {
+                    if ($sRow->order_channel == 'VIP') {
+                      $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
+                    } else {
+                      $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+                    }
+                }
+    
+                $sRow->save();
+                if($sRow->approve_status==2){
+                    $this->fncUpdateDeliveryAddress($sRow->id);
+                    $this->fncUpdateDeliveryAddressDefault($sRow->id);
+                }
+
+                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note',$data_id->code_order)->get();
+
+                foreach($other_bill as $b){
+                    $sRow2 = \App\Models\Backend\Orders::find($b->id);
+                    $sRow2->approver = \Auth::user()->id;
+                    $sRow2->updated_at = now();
+                    if (@request('approved') != null) {
+                        $sRow2->status_slip = 'true';
+                        $sRow2->order_status_id_fk = '5';
+                        $sRow2->approve_status  = 2;
+                        $sRow2->transfer_bill_status  = 2;
+                        if(!empty($request->slip_ids)){
+                            for ($i=0; $i < count($request->slip_ids) ; $i++) {
+                              DB::table('payment_slip')->where('id',$request->slip_ids[$i])->update([
+                                  'note' => $request->slip_note[$i],
+                                  'code_order' => $sRow2->code_order,
+                                  'status' => 2,
+                                  'transfer_bill_date' => $request->transfer_bill_date[$i],
+                              ]);
+                            }
+                        }
+                        $sRow2->approval_amount_transfer = $request->approval_amount_transfer;
+                        $sRow2->account_bank_name_customer = $request->account_bank;
+                        $sRow2->transfer_amount_approver = \Auth::user()->id;
+                        $sRow2->transfer_bill_date  = $request->transfer_bill_date;
+                        $sRow2->transfer_bill_approvedate = date("Y-m-d H:i:s");
+                        DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+                    }
+        
+                    if (@request('no_approved') != null) {
+                        $sRow2->status_slip = 'false';
+                        $sRow2->order_status_id_fk = '3';
+                        $sRow2->approve_status  = 1;
+                        // note
+                        $sRow2->transfer_bill_status = 1;
+                        $sRow2->status_slip = 'true';
+                        $sRow2->approval_amount_transfer = 0 ;
+                        $sRow2->account_bank_name_customer = 0;
+                        $sRow2->transfer_amount_approver =  \Auth::user()->id;
+                        $sRow2->transfer_bill_date  = NULL;
+                        $sRow2->transfer_bill_approvedate = NULL;
+                        $sRow2->transfer_bill_note = @request('detail');
+                        DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+                        $sRow2->approve_status = 6;
+                    }
+        
+        
+                    if (@request('approved') != null) {
+                        if ($sRow2->order_channel == 'VIP') {
+                          $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
+                        } else {
+                          $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+                        }
+                    }
+        
+                    $sRow2->save();
+                    if($sRow2->approve_status==2){
+                        $this->fncUpdateDeliveryAddress($sRow2->id);
+                        $this->fncUpdateDeliveryAddressDefault($sRow2->id);
+                    }
+                }
+
+            }else{
                 return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
             }
 
-            $sRow->approver = \Auth::user()->id;
-            $sRow->updated_at = now();
-
-            if (@request('approved') != null) {
-                $sRow->status_slip = 'true';
-                $sRow->order_status_id_fk = '5';
-                $sRow->approve_status  = 2;
-                $sRow->transfer_bill_status  = 2;
-
-                // return $request->slip_ids;
-
-                if(!empty($request->slip_ids)){
-                    for ($i=0; $i < count($request->slip_ids) ; $i++) {
-                        // DB::select(" UPDATE `payment_slip` SET `note`='".$request->slip_note[$i]."',`code_order`='".$sRow->code_order."',`status`='2',transfer_bill_date='".$request->transfer_bill_date[$i]."' WHERE (`id`='".$request->slip_ids[$i]."') ");
-                      DB::table('payment_slip')->where('id',$request->slip_ids[$i])->update([
-                          'note' => $request->slip_note[$i],
-                          'code_order' => $sRow->code_order,
-                          'status' => 2,
-                          'transfer_bill_date' => $request->transfer_bill_date[$i],
-                      ]);
-                    //   $t = DB::table('payment_slip')->where('id',$request->slip_ids[$i])->first();
-
-                    }
-
-                }
-
-                $sRow->approval_amount_transfer = $request->approval_amount_transfer;
-                $sRow->account_bank_name_customer = $request->account_bank;
-                $sRow->transfer_amount_approver = \Auth::user()->id;
-                $sRow->transfer_bill_date  = $request->transfer_bill_date;
-                $sRow->transfer_bill_approvedate = date("Y-m-d H:i:s");
-
-                DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
-
-
-            }
-
-            if (@request('no_approved') != null) {
-                $sRow->status_slip = 'false';
-                $sRow->order_status_id_fk = '3';
-                $sRow->approve_status  = 1;
-
-                //  if ($request->hasFile('image01')) {
-
-
-                //   $r = DB::select(" SELECT url,file FROM `payment_slip` where `code_order`='".$sRow->code_order."' ; ");
-                //   @UNLINK(@$r[0]->url.@$r[0]->file);
-
-                //   DB::select(" DELETE FROM `payment_slip` WHERE `code_order`='".$sRow->code_order."'; ");
-
-                //   $this->validate($request, [
-                //     'image01' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
-                //   ]);
-                //   $image = $request->file('image01');
-                //   $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
-                //   $image_path = 'local/public/files_slip/'.date('Ym').'/';
-                //   $image->move($image_path, $name);
-                //   $sRow->file_slip = $image_path.$name;
-                //   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`,status)
-                //    VALUES
-                //    ('".$sRow->customers_id_fk."', '$id', '".$sRow->code_order."', '$image_path', '$name', now(), now() ,1  )");
-
-                // }
-
-                // note
-                $sRow->transfer_bill_status = 1;
-                $sRow->status_slip = 'true';
-
-                $sRow->approval_amount_transfer = 0 ;
-                $sRow->account_bank_name_customer = 0;
-                $sRow->transfer_amount_approver =  \Auth::user()->id;
-                $sRow->transfer_bill_date  = NULL;
-                $sRow->transfer_bill_approvedate = NULL;
-                $sRow->transfer_bill_note = @request('detail');
-       
-
-                DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
-                $sRow->approve_status = 6;
-
-            }
-
-
-            if (@request('approved') != null) {
-                if ($sRow->order_channel == 'VIP') {
-                  $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
-                } else {
-                  $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
-                }
-            }
-
-
-
-            $sRow->save();
-
-            if($sRow->approve_status==2){
-                $this->fncUpdateDeliveryAddress($sRow->id);
-                $this->fncUpdateDeliveryAddressDefault($sRow->id);
-            }
-  
             \DB::commit();
-// dd($t);
+
             return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg('success')]);
 
         } catch (\Exception $e) {
             echo $e->getMessage();
             \DB::rollback();
+            // dd($e->getMessage());
             return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::e($e)]);
         }
     }
@@ -1113,7 +1135,118 @@ ORDER BY updated_at DESC
             ->make(true);
     }
 
+    public function DatatableEditOther(Request $req)
+    {
 
+        if(!empty($req->id)){
+            $w01 = $req->id;
+            $con01 = "=";
+
+            $order_id = DB::table('db_orders')->where('id',$req->id)->first();
+
+        }else{
+            $w01 = "";
+            $con01 = "!=";
+        }
+
+        $sTable = DB::table('db_orders')
+            ->select('db_orders.*', 'db_orders.id as orders_id', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
+            ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+            ->where('dataset_order_status.lang_id', '=', '1')
+            ->where(function ($query) {
+              $query->where('dataset_orders_type.lang_id', '=', '1')
+                ->orWhereNull('dataset_orders_type.lang_id');
+            })
+            // ->where('dataset_orders_type.lang_id', '=', '1')
+            // ->where('db_orders.purchase_type_id_fk', '!=', '6')
+            // ->where('db_orders.order_status_id_fk', '=', '2')
+            // ->where('db_orders.id', $con01, $w01)
+            ->where('db_orders.pay_with_other_bill',1)
+            ->where('db_orders.pay_with_other_bill_note',@$order_id->code_order)
+            ->get();
+            // ->toSql();
+        $sQuery = \DataTables::of($sTable);
+        return $sQuery
+            ->addColumn('price', function ($row) {
+                if (@$row->purchase_type_id_fk == 7) {
+                    return number_format($row->sum_price, 2);
+                } else if (@$row->purchase_type_id_fk == 5) {
+                    $total_price =  $total_price = $row->transfer_price;
+                    return number_format($total_price, 2);
+                } else {
+                    return number_format(@$row->sum_price + $row->shipping_price, 2);
+                }
+
+            })
+            // ->addColumn('date', function ($row) {
+            //     return date('d/m/Y H:i:s', strtotime($row->created_at));
+            // })
+             ->addColumn('customer_name', function($row) {
+                if(!empty($row->customers_id_fk)){
+                @$Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
+                return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.$Customer[0]->first_name." ".@$Customer[0]->last_name;
+                    }
+              })
+
+             ->addColumn('note_fullpayonetime', function($row) {
+                $n = '';
+                $n .= $row->note_fullpayonetime_02."<br>";
+                $n .= $row->note_fullpayonetime_03."<br>";
+                return $row->note_fullpayonetime."<br>".$n;
+              })
+             ->escapeColumns('note_fullpayonetime')
+
+             ->addColumn('transfer_money_datetime', function($row) {
+                $n = '';
+                $n .= !empty($row->transfer_money_datetime_02)?$row->transfer_money_datetime_02."<br>":'';
+                $n .= !empty($row->transfer_money_datetime_03)?$row->transfer_money_datetime_03."<br>":'';
+                return $row->transfer_money_datetime."<br>".$n;
+              })
+             ->escapeColumns('transfer_money_datetime')
+
+             ->addColumn('approval_amount_transfer', function($row) {
+                if(@$row->approval_amount_transfer>0){
+                    return number_format($row->approval_amount_transfer,2);
+                }else{
+                    return "-";
+                }
+
+              })
+             ->escapeColumns('approval_amount_transfer')
+             ->addColumn('transfer_amount_approver', function($row) {
+                if(@$row->transfer_amount_approver>0 && @$row->transfer_amount_approver!=""){
+
+                    $sD = DB::select(" select * from ck_users_admin where id=".$row->transfer_amount_approver." ");
+                    return @$sD[0]->name;
+
+                }else{
+                    return "-";
+                }
+
+              })
+             ->escapeColumns('transfer_amount_approver')
+            ->addColumn('transfer_bill_status', function ($row) {
+                if(!empty($row->transfer_bill_status)){
+
+                    if($row->transfer_bill_status==1){
+                        return "รออนุมัติ";
+                    }else if($row->transfer_bill_status==2){
+                        return "อนุมัติแล้ว";
+                    }else if($row->transfer_bill_status==3){
+                        return "ไม่อนุมัติ";
+                    }else{
+                        return '-';
+                    }
+
+                }
+                // return    $str = "<label style='color:".$row->color.";'>".$row->txt_desc."</label>";
+            })
+            ->escapeColumns('transfer_bill_status')
+
+            ->make(true);
+    }
 
 
 }

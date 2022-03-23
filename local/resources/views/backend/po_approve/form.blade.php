@@ -46,6 +46,25 @@
       </div> <!-- end row -->
 </div>
 
+<div class="myBorder">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                      <div class="col-8">
+                      </div>
+                    </div>
+                    <label>บิลที่ชำระพร้อมบิลนี้</label>
+                    <table id="data-table_other" class="table table-bordered dt-responsive" style="width: 100%;">
+                    </table>
+
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div>
+
                     <div class="myBorder">
 
                          <h5 class=" col-5 mb-0 "><i class="bx bx-play"></i> Slip File : </h5><br>
@@ -320,8 +339,8 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">Close</button>
-                                                    {{-- <button type="submit" name="approved" value='approved'
-                                                        class="btn btn-primary">อนุมัติ</button> --}}
+                                                    <button type="submit" name="approved" style="display: none;" value='approved'
+                                                        class="btn btn-primary btn_approve_con_real">อนุมัติ</button>
                                                         <button type="button" name="approved" value='approved'
                                                         class="btn btn-primary btn_approve_con">อนุมัติ</button>
                                                 </div>
@@ -432,68 +451,132 @@
     <script src="{{ asset('asset/lity/lity.min.js') }}"></script>
 
 <script>
-var id = "{{@$sRow->id}}"; // alert(id);
-var oTable;
-$(function() {
-    oTable = $('#data-table').DataTable({
-    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-        processing: true,
-        serverSide: true,
-        scroller: true,
-        scrollCollapse: true,
-        scrollX: true,
-        ordering: false,
-        // scrollY: ''+($(window).height()-370)+'px',
-        // iDisplayLength: 25,
-        ajax: {
-            url: '{{ route('backend.po_approve_edit.datatable') }}',
-            data :{
-                  id:id,
-                },
-              method: 'POST',
-            },
+    $(document).ready(function(){
+                var id = "{{@$sRow->id}}"; // alert(id);
+        var oTable;
+        $(function() {
+            oTable = $('#data-table').DataTable({
+            "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                scrollCollapse: true,
+                scrollX: true,
+                ordering: false,
+                // scrollY: ''+($(window).height()-370)+'px',
+                // iDisplayLength: 25,
+                ajax: {
+                    url: '{{ route('backend.po_approve_edit.datatable') }}',
+                    data :{
+                        id:id,
+                        },
+                    method: 'POST',
+                    },
 
-        columns: [
-            {data: 'id', title :'ID', className: 'text-center w50'},
-            {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
-            {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
-            {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
-            {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
-            {data: 'approval_amount_transfer',   title :'<center>ยอดโอน</center>', className: 'text-center',render: function(d) {
-              if(d){
-                  return d;
-              }else{
-                  return '-';
-              }
-            }},
-            // {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
-            // {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
-            {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
-              if(d){
-                  return d;
-              }else{
-                  return '-';
-              }
-            }},
+                columns: [
+                    {data: 'id', title :'ID', className: 'text-center w50'},
+                    {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+                    {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
+                    {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
+                    {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
+                    {data: 'approval_amount_transfer',   title :'<center>ยอดโอน</center>', className: 'text-center',render: function(d) {
+                    if(d){
+                        return d;
+                    }else{
+                        return '-';
+                    }
+                    }},
+                    // {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+                    // {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
+                    {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
+                    if(d){
+                        return d;
+                    }else{
+                        return '-';
+                    }
+                    }},
 
-            {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
-            {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
-            {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
-              if(d=='true'){
-                  return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
-              }else{
-                  return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
-              }
-            }},
+                    {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
+                    {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+                    {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
+                    if(d=='true'){
+                        return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
+                    }else{
+                        return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
+                    }
+                    }},
 
-        ],
-        rowCallback: function(nRow, aData, dataIndex){
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
 
-        }
+                }
 
+            });
+
+        });
+
+        var oTable;
+        $(function() {
+            oTable = $('#data-table_other').DataTable({
+            "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                scrollCollapse: true,
+                scrollX: true,
+                ordering: false,
+                // scrollY: ''+($(window).height()-370)+'px',
+                // iDisplayLength: 25,
+                ajax: {
+                    url: '{{ route('backend.po_approve_edit_other.datatable') }}',
+                    data :{
+                        id:id,
+                        },
+                    method: 'POST',
+                    },
+
+                columns: [
+                    {data: 'id', title :'ID', className: 'text-center w50'},
+                    {data: 'created_at', title :'<center>วันที่สั่งซื้อ </center>', className: 'text-center'},
+                    {data: 'customer_name', title :'<center>รหัส:ชื่อลูกค้า </center>', className: 'text-left w100 '},
+                    {data: 'code_order', title :'<center>เลขใบสั่งซื้อ </center>', className: 'text-center'},
+                    {data: 'price', title :'<center>ยอดชำระ </center>', className: 'text-center'},
+                    {data: 'approval_amount_transfer',   title :'<center>ยอดโอน</center>', className: 'text-center',render: function(d) {
+                    if(d){
+                        return d;
+                    }else{
+                        return '-';
+                    }
+                    }},
+                    // {data: 'updated_at', title :'<center>วันเวลาที่โอน </center>', className: 'text-center'},
+                    // {data: 'pay_with_other_bill_note', title :'<center>ชำระร่วม </center>', className: 'text-center'},
+                    {data: 'pay_with_other_bill_note',   title :'<center>ชำระร่วม</center>', className: 'text-center',render: function(d) {
+                    if(d){
+                        return d;
+                    }else{
+                        return '-';
+                    }
+                    }},
+
+                    {data: 'transfer_bill_status', title :'<center>สถานะ </center>', className: 'text-center'},
+                    {data: 'transfer_amount_approver', title :'<center>ผู้อนุมัติ</center>', className: 'text-center'},
+                    {data: 'status_slip',   title :'<center>Status Slip</center>', className: 'text-center',render: function(d) {
+                    if(d=='true'){
+                        return '<span class="badge badge-pill badge-soft-success font-size-16">T</span>';
+                    }else{
+                        return '<span class="badge badge-pill badge-soft-danger font-size-16">F</span>';
+                    }
+                    }},
+
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
+
+                }
+
+            });
+
+        });
     });
-
-});
 </script>
 
 
@@ -528,7 +611,7 @@ $(function() {
             approval_amount_transfer = parseFloat(approval_amount_transfer);
             total_price_sum = parseFloat(total_price_sum);
        if(approval_amount_transfer == total_price_sum || approval_amount_transfer > total_price_sum){
-                $('#form_approve_con').submit();
+                $('.btn_approve_con_real').trigger('click');
        }else{
            alert('กรุณาระบุยอดเงินให้ตรงกัน');
        }
