@@ -463,11 +463,25 @@
                                                             value="{{ old('bank_no') }}">
                                                     </div>
 
-                                                    <div class="col-sm-3">
-                                                        <label>ธนาคาร</label>
-                                                        <input type="text" class="form-control" placeholder="ธนาคาร"
-                                                            name="bank_name" value="{{ old('bank_name') }}">
-                                                    </div>
+                                                  <div class="col-sm-3">
+                                                      <label>ธนาคาร <font class="text-danger">*</font></label>
+                                                      <select class="js-example-basic-single col-sm-12" name="bank_name" required>
+                                                          <option value=""> เลือกธนาคาร </option>
+                                                          <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
+                                                          <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif> ธนาคารกรุงไทย </option>
+                                                          <option value="ธนาคารกรุงศรีอยุธยา" @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif> ธนาคารกรุงศรีอยุธยา </option>
+                                                          <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
+                                                          <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif> ธนาคารทหารไทยธนชาต </option>
+                                                          <option value="ธนาคารไทยพาณิชย์" @if ('ธนาคารไทยพาณิชย์' == old('bank_name')) selected="" @endif> ธนาคารไทยพาณิชย์ </option>
+
+                                                          <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
+                                                          <option value="ธนาคารอิสลาม" @if ('ธนาคารอิสลาม' == old('bank_name')) selected="" @endif> ธนาคารอิสลาม </option>
+                                                          <option value="ACLEDA fo cambodian" @if ('ACLEDA fo cambodian' == old('bank_name')) selected="" @endif> ACLEDA fo cambodian </option>
+                                                          <option value="ABA fo cambodian" @if ('ABA fo cambodian' == old('bank_name')) selected="" @endif> ABA fo cambodian </option>
+                                                      </select>
+                                                  </div>
+
+
 
                                                     <div class="col-sm-3">
                                                         <label>สาขา</label>

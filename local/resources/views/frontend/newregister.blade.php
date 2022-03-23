@@ -358,10 +358,22 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>ธนาคาร</label>
-                         <input type="text" class="form-control" placeholder="ธนาคาร" name="bank_name"
-                             value="{{ old('bank_name') }}">
-                     </div>
+                      <label>ธนาคาร <font class="text-danger">*</font></label>
+                      <select class="form-control select2-templating select2-district select2-hidden-accessible" name="bank_name" required>
+                          <option value=""> เลือกธนาคาร </option>
+                          <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
+                          <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
+                          <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif> ธนาคารกรุงไทย </option>
+                          <option value="ธนาคารไทยพาณิชย์" @if ('ธนาคารไทยพาณิชย์' == old('bank_name')) selected="" @endif> ธนาคารไทยพาณิชย์ </option>
+                          <option value="ธนาคารกรุงศรีอยุธยา" @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif> ธนาคารกรุงศรีอยุธยา </option>
+                          <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif> ธนาคารทหารไทยธนชาต </option>
+                          <option value="ธนาคารออมสิน" @if ('ธนาคารออมสิน' == old('bank_name')) selected="" @endif> ธนาคารออมสิน </option>
+                          <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส." @if ('ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส.' == old('bank_name')) selected="" @endif>
+                              ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส. </option>
+                          <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
+                      </select>
+                  </div>
+
 
                      <div class="col-sm-3">
                          <label>สาขา</label>
