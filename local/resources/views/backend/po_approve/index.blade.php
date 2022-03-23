@@ -375,11 +375,16 @@ $(function() {
               $(nRow).addClass('table-success')
             }
 
-             $('td:last-child', nRow).html(''
+            if(aData['pay_with_other_bill']!=1){
+              $('td:last-child', nRow).html(''
               + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
               + ''
             ).addClass('input');
 
+            }else{
+              $('td:last-child', nRow).html('' + '').addClass('input');
+            }
+          
 
             if(aData['price']<=0){
                      $('td:last-child', nRow).html('-');
@@ -689,10 +694,14 @@ $(function() {
                                               ],
 
                                                rowCallback: function ( nRow, aData, start, end, display ) {
-                                                   $('td:last-child', nRow).html(''
+                                                if(aData['pay_with_other_bill']!=1){
+                                                  $('td:last-child', nRow).html(''
                                                     + '<a href="{{ route('backend.po_approve.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                                                     + ''
                                                   ).addClass('input');
+                                                }else{
+                                                  $('td:last-child', nRow).html('' + '').addClass('input');
+                                                }
                                               },
                                     });
                                 });

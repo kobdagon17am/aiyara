@@ -826,12 +826,8 @@ class Po_approveController extends Controller
 
     public function Datatable(Request $req)
     {
-
-
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
-
-
 
         if(@\Auth::user()->permission==1){
 
