@@ -498,6 +498,15 @@ $(function() {
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
     <script>
+      $(document).ready(function(){
+        setTimeout(function(){
+                  //  $(".myloading").hide();
+                  location.reload();
+                }, 120000);
+      });
+    </script>
+
+    <script>
       var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
       $('#bill_sdate').datepicker({
           // format: 'dd/mm/yyyy',

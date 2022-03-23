@@ -154,7 +154,7 @@ class Pick_warehouse_fifoController extends Controller
 
           $TABLES = DB::select(" SHOW TABLES ");
           // return $TABLES;
-          // dd();
+          // dd(); temp_ppp_0022
 
           // return $temp_db_stocks;
           
@@ -283,8 +283,11 @@ class Pick_warehouse_fifoController extends Controller
                   //     }
                   // }
 
+                  $new_arr_promotion = explode(',',$arr_promotion);
+
                   // วุฒิเพิ่มมานับจำนวนโปร
-                  $Pro_amt = DB::table($temp_ppp_002)->select('*',DB::raw('SUM(amt) AS sum_amt'))->whereIn('promotion_id_fk',[$arr_promotion])->groupBy('promotion_id_fk')->get();
+                  $Pro_amt = DB::table($temp_ppp_002)->select('*',DB::raw('SUM(amt) AS sum_amt'))->whereIn('promotion_id_fk',$new_arr_promotion)->groupBy('promotion_id_fk')->get();
+                  
                   foreach($Pro_amt as $pro){
                       $r_pro = DB::table('promotions_products')->where('promotion_id_fk',$pro->promotion_id_fk)->get();
                       foreach($r_pro as $r){
@@ -990,6 +993,7 @@ class Pick_warehouse_fifoController extends Controller
             product_unit_id_fk from $temp_ppp_0022 GROUP BY product_id_fk
 
           ");
+
 
             $arr_pick_pack_packing_code_id_fk = explode(',',$row->pick_pack_packing_code_id_fk);
 

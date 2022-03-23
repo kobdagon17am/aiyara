@@ -596,9 +596,9 @@
                         return d ;
                       }},
 
-                      {data: 'column_007',   title :'<span style="vertical-align: middle;"><center> รายละเอียดลูกค้า </span> ', className: 'text-center w80 ',render: function(d) {
-                        return d ;
-                      }},
+                      // {data: 'column_007',   title :'<span style="vertical-align: middle;"><center> รายละเอียดลูกค้า </span> ', className: 'text-center w80 ',render: function(d) {
+                      //   return d ;
+                      // }},
 
                       {data: 'column_008',   title :'<span style="vertical-align: middle;"><center> ใบเสร็จ </span> ', className: 'text-center w80 ',render: function(d) {
                         return d ;

@@ -70,7 +70,7 @@ class Promotion_cus_productsController extends Controller
               LEFT JOIN products on products.id = promotions_products.product_id_fk
               WHERE 
               promotion_code='".$req->txtSearchPro."' 
-              
+              AND pro_status='1' LIMIT 1
    
         ");
       }else{
@@ -78,6 +78,7 @@ class Promotion_cus_productsController extends Controller
       }
       
       $sQuery = \DataTables::of($sTable);
+      // dd($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
           return @$row->product_code.' : '.@$row->product_name;

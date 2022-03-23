@@ -807,7 +807,7 @@ class FrontstorelistController extends Controller
                   $Customers = \App\Models\Backend\Customers::find($dbOrder->customers_id_fk);
   
                   DB::select(" UPDATE `db_orders` SET `pv_total`='".$sRow->total_pv."' WHERE (`id`='".$request->frontstore_id."') ");
-                  DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') ");
+                  DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') AND (`pro_status`='1') LIMIT 1");
   
              $id =   @$request->frontstore_id;
   

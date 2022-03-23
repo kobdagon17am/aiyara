@@ -2225,35 +2225,35 @@ ORDER BY db_pick_pack_packing.id
 
       ->escapeColumns('column_006')  
 
-      ->addColumn('column_007', function($row) {
-        $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
-        if($p_code){
-            $DP = DB::table('db_pick_pack_packing')
-            ->select('db_pick_pack_packing.*')
-            // ->join('db_consignments','db_consignments.delivery_id_fk','db_pick_pack_packing.delivery_id_fk')
-            ->where('db_pick_pack_packing.packing_code_id_fk',$p_code->id)
-            // ->orderBy('db_consignments.recipient_code','asc')
-            ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
-            ->get();
-            if(!empty($DP)){
-              $pn = '';
-              $arr = [];
-              foreach ($DP as $key => $value) {
-                  $pn .=     
-                    '<div class="col-md-12" style="height: 70px;">
-                    <center> 
-                    <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
-                    </center>
-                    </div><br>';
-              } 
-               return $pn;
-            }else{
-              return '-';
-            }
-        }else{
-          return '-';
-        }
-        })
+      // ->addColumn('column_007', function($row) {
+      //   $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
+      //   if($p_code){
+      //       $DP = DB::table('db_pick_pack_packing')
+      //       ->select('db_pick_pack_packing.*')
+      //       // ->join('db_consignments','db_consignments.delivery_id_fk','db_pick_pack_packing.delivery_id_fk')
+      //       ->where('db_pick_pack_packing.packing_code_id_fk',$p_code->id)
+      //       // ->orderBy('db_consignments.recipient_code','asc')
+      //       ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
+      //       ->get();
+      //       if(!empty($DP)){
+      //         $pn = '';
+      //         $arr = [];
+      //         foreach ($DP as $key => $value) {
+      //             $pn .=     
+      //               '<div class="col-md-12" style="height: 70px;">
+      //               <center> 
+      //               <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
+      //               </center>
+      //               </div><br>';
+      //         } 
+      //          return $pn;
+      //       }else{
+      //         return '-';
+      //       }
+      //   }else{
+      //     return '-';
+      //   }
+      //   })
 
       ->make(true);
     }
