@@ -335,6 +335,73 @@ class PvPayment extends Model
 
                     // dd($resule);
 
+                    if ($customer_update->status_pv_mt == 'first') {//คุณไก่ขอเพิ่มทุกเงื่อนไข
+
+                      // if($strtime_user < $strtime){
+                      //     //$contract_date = strtotime(date('Y-m',$strtime_user));
+                      //     //$caltime = strtotime("+1 Month",$contract_date);
+                      //     //$start_month = date("Y-m", $caltime);
+                      //     $start_month = date("Y-m");
+
+                      // }else{
+
+                      //     $start_month = date("Y-m");
+                      // }
+
+                      $start_month = date('Y-m');
+
+                      $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
+                          ->select('*')
+                          ->where('code', '=', 'pv_mt')
+                          ->first();
+
+                      $pro_mt = $promotion_mt->pv;
+                      $pv_mt = $customer_update->pv_mt;
+                      $pv_mt_all = $pv + $pv_mt;
+
+
+                      if ($pv_mt_all >= $pro_mt) {
+                          //dd('หักลบค่อยอัพเดท');
+                          //หักลบค่อยอัพเดท
+                          $mt_mount = $pv_mt_all / $pro_mt;
+                          $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
+
+                          $pv_mt_total = $pv_mt_all % $pro_mt; //ค่า pv ที่ต้องเอาไปอัพเดท DB
+
+                          $mt_mount_new = $mt_mount+2;//กำหนดให้เป็นวันที่ 1 ของสองเดือนหน้า
+
+                          $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
+
+                          $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
+
+
+                          $customer_update->pv_mt = $pv_mt_total;
+                          $customer_update->pv_mt_active = $mt_active;
+                          $customer_update->status_pv_mt = 'not';
+
+                          $customer_update->date_mt_first = date('Y-m-d h:i:s');
+
+                          $order_update->pv_banlance = $pv_mt_total;
+
+                          $order_update->active_mt_date =  $mt_active;
+
+                      } else {
+                          //dd('อัพเดท');
+
+                          $customer_update->pv_mt = $pv_mt_all;
+                          $mt_mount_new = strtotime("+2 Month", strtotime($start_month));
+
+                          //dd(date('Y-m-1',$mt_mount_new));
+                          $customer_update->pv_mt_active = date('Y-m-1',$mt_mount_new);
+                          $customer_update->status_pv_mt = 'not';
+                          $customer_update->date_mt_first = date('Y-m-d h:i:s');
+
+                          $order_update->pv_banlance = $pv_mt_all;
+                          $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
+                      }
+
+                  }
+
                 } elseif ($type_id == 2) { //รักษาคุณสมบัติรายเดือน
 
                   if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
@@ -562,6 +629,65 @@ class PvPayment extends Model
                       $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
                     }
 
+
+                    if ($customer_update->status_pv_mt == 'first') {//คุณไก่ขอเพิ่มทุกเงื่อนไข
+
+
+                      $start_month = date('Y-m');
+
+                      $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
+                          ->select('*')
+                          ->where('code', '=', 'pv_mt')
+                          ->first();
+
+                      $pro_mt = $promotion_mt->pv;
+                      $pv_mt = $customer_update->pv_mt;
+                      $pv_mt_all = $pv + $pv_mt;
+
+
+                      if ($pv_mt_all >= $pro_mt) {
+                          //dd('หักลบค่อยอัพเดท');
+                          //หักลบค่อยอัพเดท
+                          $mt_mount = $pv_mt_all / $pro_mt;
+                          $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
+
+                          $pv_mt_total = $pv_mt_all % $pro_mt; //ค่า pv ที่ต้องเอาไปอัพเดท DB
+
+                          $mt_mount_new = $mt_mount+2;//กำหนดให้เป็นวันที่ 1 ของสองเดือนหน้า
+
+                          $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
+
+                          $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
+
+
+                          $customer_update->pv_mt = $pv_mt_total;
+                          $customer_update->pv_mt_active = $mt_active;
+                          $customer_update->status_pv_mt = 'not';
+
+                          $customer_update->date_mt_first = date('Y-m-d h:i:s');
+
+                          $order_update->pv_banlance = $pv_mt_total;
+
+                          $order_update->active_mt_date =  $mt_active;
+
+                      } else {
+                          //dd('อัพเดท');
+
+                          $customer_update->pv_mt = $pv_mt_all;
+                          $mt_mount_new = strtotime("+2 Month", strtotime($start_month));
+
+                          //dd(date('Y-m-1',$mt_mount_new));
+                          $customer_update->pv_mt_active = date('Y-m-1',$mt_mount_new);
+                          $customer_update->status_pv_mt = 'not';
+                          $customer_update->date_mt_first = date('Y-m-d h:i:s');
+
+                          $order_update->pv_banlance = $pv_mt_all;
+                          $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
+                      }
+
+                  }
+
+
                 } elseif ($type_id == 4) { //เติม Ai Stockist
 
                   if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
@@ -606,6 +732,62 @@ class PvPayment extends Model
                           $customer_update->aistockist_status = '1';
                           $customer_update->aistockist_date = date('Y-m-d h:i:s');
                       }
+
+
+                      if ($customer_update->status_pv_mt == 'first') {//คุณไก่ขอเพิ่มทุกเงื่อนไข
+                        $start_month = date('Y-m');
+
+                        $promotion_mt = DB::table('dataset_mt_tv') //อัพ Pv ของตัวเอง
+                            ->select('*')
+                            ->where('code', '=', 'pv_mt')
+                            ->first();
+
+                        $pro_mt = $promotion_mt->pv;
+                        $pv_mt = $customer_update->pv_mt;
+                        $pv_mt_all = $pv + $pv_mt;
+
+
+                        if ($pv_mt_all >= $pro_mt) {
+                            //dd('หักลบค่อยอัพเดท');
+                            //หักลบค่อยอัพเดท
+                            $mt_mount = $pv_mt_all / $pro_mt;
+                            $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม
+
+                            $pv_mt_total = $pv_mt_all % $pro_mt; //ค่า pv ที่ต้องเอาไปอัพเดท DB
+
+                            $mt_mount_new = $mt_mount+2;//กำหนดให้เป็นวันที่ 1 ของสองเดือนหน้า
+
+                            $mt_active = strtotime("+$mt_mount_new Month", strtotime($start_month));
+
+                            $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
+
+
+                            $customer_update->pv_mt = $pv_mt_total;
+                            $customer_update->pv_mt_active = $mt_active;
+                            $customer_update->status_pv_mt = 'not';
+
+                            $customer_update->date_mt_first = date('Y-m-d h:i:s');
+
+                            $order_update->pv_banlance = $pv_mt_total;
+
+                            $order_update->active_mt_date =  $mt_active;
+
+                        } else {
+                            //dd('อัพเดท');
+
+                            $customer_update->pv_mt = $pv_mt_all;
+                            $mt_mount_new = strtotime("+2 Month", strtotime($start_month));
+
+                            //dd(date('Y-m-1',$mt_mount_new));
+                            $customer_update->pv_mt_active = date('Y-m-1',$mt_mount_new);
+                            $customer_update->status_pv_mt = 'not';
+                            $customer_update->date_mt_first = date('Y-m-d h:i:s');
+
+                            $order_update->pv_banlance = $pv_mt_all;
+                            $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
+                        }
+
+                    }
 
                 } elseif ($type_id == 5) { // Ai Voucher
 
