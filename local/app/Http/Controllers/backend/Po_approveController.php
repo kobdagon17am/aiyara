@@ -117,6 +117,7 @@ class Po_approveController extends Controller
                           ]);
                         }
                     }
+                    // approval_amount_transfer
                     $sRow->approval_amount_transfer = $request->approval_amount_transfer;
                     $sRow->account_bank_name_customer = $request->account_bank;
                     $sRow->transfer_amount_approver = \Auth::user()->id;
@@ -178,7 +179,7 @@ class Po_approveController extends Controller
                               ]);
                             }
                         }
-                        $sRow2->approval_amount_transfer = $request->approval_amount_transfer;
+                        $sRow2->approval_amount_transfer = $sRow2->transfer_price;
                         $sRow2->account_bank_name_customer = $request->account_bank;
                         $sRow2->transfer_amount_approver = \Auth::user()->id;
                         $sRow2->transfer_bill_date  = $request->transfer_bill_date;
