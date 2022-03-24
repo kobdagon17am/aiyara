@@ -158,7 +158,7 @@ class Po_approveController extends Controller
                     $this->fncUpdateDeliveryAddressDefault($sRow->id);
                 }
 
-                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note',$data_id->code_order)->get();
+                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')->get();
 
                 foreach($other_bill as $b){
                     $sRow2 = \App\Models\Backend\Orders::find($b->id);
@@ -1161,7 +1161,7 @@ ORDER BY updated_at DESC
             // ->where('db_orders.order_status_id_fk', '=', '2')
             // ->where('db_orders.id', $con01, $w01)
             ->where('db_orders.pay_with_other_bill',1)
-            ->where('db_orders.pay_with_other_bill_note',@$order_id->code_order)
+            ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
             ->get();
             // ->toSql();
         $sQuery = \DataTables::of($sTable);
