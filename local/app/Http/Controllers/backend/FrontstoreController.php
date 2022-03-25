@@ -1559,9 +1559,7 @@ class FrontstoreController extends Controller
 
   public static function fncUpdateDeliveryAddress($id)
   {
-    // dd($id);
     $sRow = \App\Models\Backend\Frontstore::find($id);
-    // dd($sRow);
     // dd($sRow->delivery_location);
     if (@$sRow->delivery_location == 0) {
       DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=" . $sRow->id . ") ");
