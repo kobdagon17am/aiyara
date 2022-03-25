@@ -486,7 +486,33 @@ if(!empty($db_orders[0]->action_user)){
 
        $cus_tax = @$cus[0]->id_card!=""?': '.@$cus[0]->id_card:': เลขผู้เสียภาษี (ไม่ได้ระบุไว้)';
 
-       $address_in_order = DB::select("
+     
+      //  $address_in_order = DB::select("
+      //       SELECT
+      //       house_no,
+      //       house_name,
+      //       moo,
+      //       soi,
+      //       road,
+      //       amphures_id_fk,
+      //       dataset_amphures.name_th AS ampname,
+      //       district_id_fk,
+      //       dataset_districts.name_th AS tamname,
+      //       province_id_fk,
+      //       dataset_provinces.name_th AS provname,
+      //       zipcode,
+      //       tel,
+      //       tel_home
+      //       FROM
+      //       db_orders
+      //       Left Join dataset_provinces ON db_orders.province_id_fk = dataset_provinces.id
+      //       Left Join dataset_amphures ON db_orders.amphures_id_fk = dataset_amphures.id
+      //       Left Join dataset_districts ON db_orders.district_id_fk = dataset_districts.id
+      //       WHERE db_orders.id=".$id."
+      //     ");
+
+       //  วุฒฺิแก้เอาที่อยู่จริงลูกค้ามาใส่
+            $address_in_order = DB::select("
             SELECT
             house_no,
             house_name,
@@ -500,17 +526,16 @@ if(!empty($db_orders[0]->action_user)){
             province_id_fk,
             dataset_provinces.name_th AS provname,
             zipcode,
-            tel,
-            tel_home
+            tel_mobile AS tel,
+            tel_home AS tel_home
             FROM
-            db_orders
-            Left Join dataset_provinces ON db_orders.province_id_fk = dataset_provinces.id
-            Left Join dataset_amphures ON db_orders.amphures_id_fk = dataset_amphures.id
-            Left Join dataset_districts ON db_orders.district_id_fk = dataset_districts.id
-            WHERE db_orders.id=".$id."
+            customers_detail
+            Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+            Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+            Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+            WHERE customers_detail.customer_id=".@$db_orders[0]->customers_id_fk."
           ");
-
-            // print_r(@$address_in_order);
+          // 
 
            if(!empty(@$address_in_order[0]->provname)){
               @$cus_address = @$address_in_order[0]->house_no." ". @$address_in_order[0]->house_name." ". @$address_in_order[0]->moo."";
@@ -1195,7 +1220,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 <div class="NameAndAddress " >
     <table >
       <tr>
-        <td style="width: 60% ;margin-left:35px !important;">
+        <td style="width: 60% ;margin-left:35px !important;">sadsad
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
