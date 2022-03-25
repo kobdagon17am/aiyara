@@ -211,6 +211,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 
     Route::resource('pm', 'PmController');
+    Route::get('pm/{id}/anser', 'PmController@anser');
+    Route::post('pm_anser_save', 'PmController@pm_anser_save');
     Route::post('pm/datatable', 'PmController@Datatable')->name('pm.datatable');
 
     Route::resource('pm_broadcast', 'Pm_broadcastController');

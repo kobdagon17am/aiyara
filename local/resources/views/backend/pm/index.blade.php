@@ -138,7 +138,7 @@ $(function() {
             {data: 'status',   title :'<center>Status</center>', className: 'text-center',render: function(d) {
                return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
             }},
-            {data: 'id', title :'Tools', className: 'text-center w80'}, 
+            {data: 'id', title :'Tools', className: 'text-center w120'}, 
         ],
         rowCallback: function(nRow, aData, dataIndex){
           if(sU!=''&&sD!=''){
@@ -146,7 +146,8 @@ $(function() {
           }else{ 
 
               $('td:last-child', nRow).html(''
-                + '<a href="{{ route('backend.pm.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="{{ route('backend.pm.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" title="รายละเอียด" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                + '<a href="{{ route('backend.pm.index') }}/'+aData['id']+'/anser?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-success" title="ตอบคำถามเพิ่มเติม" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
                 + '<a href="javascript: void(0);" data-url="{{ route('backend.pm.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete" style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
               ).addClass('input');
 

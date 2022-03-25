@@ -57,8 +57,52 @@ class PmController extends Controller
       }
     
        $sMainGroup = DB::select(" select * from role_group where id<>1 ");
+       $ans_more = DB::table('pm_answers')->where('pm_id_fk',$sRow->id)->orderBy('created_at','asc')->get();
   
-       return View('backend.pm.form')->with(array('sRow'=>$sRow, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
+       return View('backend.pm.form')->with(array('sRow'=>$sRow,'ans_more'=>$ans_more, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
+    }
+
+    public function anser($id)
+    {
+       $sRow = \App\Models\Backend\Pm::find($id);
+       $sUser = \App\Models\Backend\Permission\Admin::where('id', $sRow->subject_recipient)->first();
+        if($sUser){
+          $subject_recipient = $sUser->name;
+        }else{
+          $subject_recipient = '';
+        }
+       $operator_name = \App\Models\Backend\Permission\Admin::where('id', $sRow->operator)->first();
+
+       if($sUser){
+        $operator_name = $operator_name->name;
+      }else{
+        $operator_name = '';
+      }
+      
+
+      if($sRow->customers_id_fk!=0){
+        $Customer = DB::table('customers')->where('id',$sRow->customers_id_fk)->get();
+      }else{
+       $Customer = DB::select(" select * from customers limit 100 ");
+      }
+    
+       $sMainGroup = DB::select(" select * from role_group where id<>1 ");
+       $ans_more = DB::table('pm_answers')->where('pm_id_fk',$sRow->id)->orderBy('created_at','asc')->get();
+  
+       return View('backend.pm.anser')->with(array('sRow'=>$sRow,'ans_more'=>$ans_more, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
+    }
+
+    public function pm_anser_save(Request $request)
+    {
+       DB::table('pm_answers')->insert([
+         'pm_id_fk' => $request->pm_id,
+         'customers_id_fk' => $request->customers_id_fk,
+         'txt_answers' => $request->txt_answers,
+         'type' => 'admin',
+         'created_at' => date('Y-m-d H:i:s'),
+         'updated_at' => date('Y-m-d H:i:s')
+       ]);
+       return redirect()->back();
     }
 
     public function update(Request $request, $id)
