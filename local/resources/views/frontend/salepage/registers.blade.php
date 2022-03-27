@@ -207,7 +207,7 @@
                                                             </label>
                                                         <input class="form-control" type="text"
                                                             placeholder="เลขที่บัตรประชาชน" name="id_card"
-                                                            value="{{ old('id_card') }}" required="">
+                                                            value="{{ old('id_card') }}" maxlength="13" minlength="13" required="">
                                                     </div>
 
 
@@ -231,13 +231,13 @@
                                                         <label>โทรศัพท์มือถือ <b class="text-danger">*</b></label>
                                                         <input type="text" class="form-control"
                                                             placeholder="โทรศัพท์มือถือ" name="tel_mobile"
-                                                            value="{{ old('tel_mobile') }}" required="">
+                                                            value="{{ old('tel_mobile') }}" maxlength="10" minlength="10" required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
                                                         <label>โทรศัพท์บ้าน</label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="โทรศัพท์บ้าน" name="tel_home"
+                                                            placeholder="โทรศัพท์บ้าน" maxlength="10" minlength="10" name="tel_home"
                                                             value="{{ old('tel_home') }}">
                                                     </div>
 
@@ -460,7 +460,7 @@
                                                         <label>เลขที่บัญชี</label>
                                                         <input type="text" class="form-control"
                                                             placeholder="เลขที่บัญชี" name="bank_no"
-                                                            value="{{ old('bank_no') }}">
+                                                            value="{{ old('bank_no') }}" maxlength="10" minlength="10">
                                                     </div>
 
                                                   <div class="col-sm-3">
