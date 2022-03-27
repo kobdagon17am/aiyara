@@ -42,6 +42,35 @@ class Frontend{
 		return $customer;
 	}
 
+  public static function check_cradit($business_location){
+    if(empty($business_location)){
+      $business_location =1;
+    }
+
+      $fee =  DB::table('dataset_fee')
+      ->where('business_location_id_fk','=',$business_location)
+      ->where('id','=',[4,5])
+      ->first();
+
+
+      if(empty($fee)){
+        $html = 'ไม่มีข้อมูลค่าธรรมเนียมบัตรเครดิต';
+        $data = ['html'=>$html,'fee_rate'=>0,'type'=>''];
+        return $data;
+      }
+      $html = '<label class="label label-inverse-warning mt-2"><font   style="color: #000">'.$fee->txt_desc.' </font></label>';
+
+      if($fee->fee_type == 1){
+        $fee_rate = $fee->txt_value;
+      }else{
+        $fee_rate = $fee->txt_fixed_rate;
+      }
+
+      $data = ['html'=>$html,'fee_rate'=>$fee_rate,'type'=>$fee->fee_type];//type 1 = % 2= จำนวนเต็ม
+    return $data;
+  }
+
+
   public static function check_kyc($user_customer){
 		$customer =  DB::table('customers')
 		->select('*')

@@ -1,3 +1,8 @@
+<?php
+ use App\Helpers\Frontend;
+ $check_cradit = Frontend::check_cradit(Auth::guard('c_user')->user()->business_location_id);
+
+?>
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
     <link rel="stylesheet" href="{{ asset('frontend/bower_components/select2/css/select2.min.css') }}" />
@@ -316,7 +321,8 @@
                                                           <a class="btn btn-primary btn-md mt-2"
                                                               class="btn btn-primary btn-md mt-2" data-toggle="modal"
                                                               style="color: aliceblue" data-target="#confirm_credit">
-                                                              ชำระด้วย Credit/Debit </a>
+                                                              ชำระด้วย Credit/Debit </a><br>
+                                                              {!! $check_cradit['html'] !!}
 
                                                           <div class="modal fade" id="confirm_credit" tabindex="-1"
                                                               role="dialog">
@@ -334,6 +340,47 @@
                                                                           {{-- <h5>Static Modal</h5> --}}
                                                                           <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
                                                                               class="img-fluid" alt="ชำระด้วย Credit/Debit">
+
+                                                                              <div class="table-responsive p-3">
+                                                                                <table class="table">
+                                                                                    <tbody>
+                                                                                      <tr>
+                                                                                        <td align="left"><strong>ยอด</strong></td>
+                                                                                        <td align="left"> {{ number_format($data->total_price, 2) }}  </td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                          <td align="left">
+                                                                                              {!! $check_cradit['html'] !!}
+                                                                                         </td>
+
+                                                                                         <td align="left">
+                                                                                          <?php
+
+                                                                                          if( $check_cradit['type'] == 1){
+                                                                                            $fee_rate = $data->total_price * ($check_cradit['fee_rate']/100);
+                                                                                          }else{
+                                                                                            $fee_rate = $check_cradit['fee_rate'];
+                                                                                          }
+
+                                                                                          ?>
+                                                                                         {{number_format($fee_rate,2)}}
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                            <td align="left"><strong>ยอดที่ต้องชำระ</strong></td>
+
+                                                                                            <td align="left"><u><strong> </strong></u>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                </tbody></table>
+                                                                                <hr m-t-2="">
+
+
+                                                                            </div>
+
 
                                                                       </div>
                                                                       <div class="modal-footer">
@@ -383,6 +430,7 @@
                                                                 value="credit_card"
                                                                 type="submit">ชำระเงินด้วยบัตรเครดิต</button>
                                                         </div>
+
 
                                                         <!-- end of card-footer -->
                                                     </div>
