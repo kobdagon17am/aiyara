@@ -1,4 +1,5 @@
  <?php
+
  use App\Helpers\Frontend;
  $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
  ?>
@@ -359,7 +360,7 @@
 
                      <div class="col-sm-3">
                       <label>ธนาคาร <font class="text-danger">*</font></label>
-                      <select class="form-control select2-templating select2-district select2-hidden-accessible" name="bank_name" required>
+                      <select class="form-control" name="bank_name" required>
                           <option value=""> เลือกธนาคาร </option>
                           <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
                           <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
