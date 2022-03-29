@@ -499,9 +499,17 @@ class AiCashController extends Controller
       }
     } elseif ($request->submit == 'Credit') {
 
+      $check_cradit = \App\Helpers\Frontend::check_cradit(Auth::guard('c_user')->user()->business_location_id);
+      if( $check_cradit['type'] == 1){
+        $fee_rate = $ai_cash->total_amt * ($check_cradit['fee_rate']/100);
+      }else{
+        $fee_rate = $check_cradit['fee_rate'];
+      }
+
+      $total_price = $ai_cash->total_amt+$fee_rate;
       $gateway_pay_data = array(
         'mch_order_no' => $ai_cash->code_order,
-        "total_fee" => $ai_cash->total_amt,
+        "total_fee" =>  $total_price,
         "fee_type" => 'THB',
         "channel_list" => 'ktbcard',
         'mch_code' => $ai_cash->code_order,
@@ -514,7 +522,7 @@ class AiCashController extends Controller
 
         $update_order = DB::table('db_add_ai_cash')
           ->where('id', $ai_cash->id)
-          ->update(['pay_type_id_fk' => '2']);
+          ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','fee_amt'=>$fee_rate]);
 
         return redirect($data['url']);
       } else {
