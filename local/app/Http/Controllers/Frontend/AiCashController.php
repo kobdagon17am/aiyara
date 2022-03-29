@@ -522,7 +522,7 @@ class AiCashController extends Controller
 
         $update_order = DB::table('db_add_ai_cash')
           ->where('id', $ai_cash->id)
-          ->update(['pay_type_id_fk' => '2']);
+          ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','fee_amt'=>$fee_rate]);
 
         return redirect($data['url']);
       } else {
