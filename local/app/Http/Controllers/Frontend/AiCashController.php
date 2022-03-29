@@ -499,6 +499,14 @@ class AiCashController extends Controller
       }
     } elseif ($request->submit == 'Credit') {
 
+      $check_cradit = \App\Helpers\Frontend::check_cradit(Auth::guard('c_user')->user()->business_location_id);
+      if( $check_cradit['type'] == 1){
+        $fee_rate = $ai_cash->total_amt * ($check_cradit['fee_rate']/100);
+      }else{
+        $fee_rate = $check_cradit['fee_rate'];
+      }
+
+      $total_price = $ai_cash->total_amt+$fee_rate;
       $gateway_pay_data = array(
         'mch_order_no' => $ai_cash->code_order,
         "total_fee" => $ai_cash->total_amt,

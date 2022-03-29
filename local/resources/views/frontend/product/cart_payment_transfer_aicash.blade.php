@@ -1,3 +1,8 @@
+<?php
+ use App\Helpers\Frontend;
+ $check_cradit = Frontend::check_cradit(Auth::guard('c_user')->user()->business_location_id);
+
+?>
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
     <link rel="stylesheet" href="{{ asset('frontend/bower_components/select2/css/select2.min.css') }}" />
@@ -227,6 +232,9 @@
                                                             style="color: aliceblue" data-target="#confirm_credit">
                                                             ชำระด้วย Credit/Debit </a>
 
+                                                            {!! $check_cradit['html'] !!}
+
+
                                                         <div class="modal fade" id="confirm_credit" tabindex="-1"
                                                             role="dialog">
                                                             <div class="modal-dialog" role="document">
@@ -244,6 +252,48 @@
                                                                         <img src="{{ asset('frontend/assets/images/credit-logo.png') }}"
                                                                             class="img-fluid"
                                                                             alt="ชำระด้วย Credit/Debit">
+
+                                                                            <div class="table-responsive p-3">
+                                                                              <table class="table">
+                                                                                  <tbody>
+                                                                                    <tr>
+                                                                                      <td align="left"><strong>ยอด</strong></td>
+                                                                                      <td align="left"> {{ number_format($ai_cash->total_amt, 2) }}  </td>
+                                                                                  </tr>
+
+                                                                                  <tr>
+                                                                                        <td align="left">
+                                                                                            {!! $check_cradit['html'] !!}
+                                                                                       </td>
+
+                                                                                       <td align="left">
+                                                                                        <?php
+
+                                                                                        if( $check_cradit['type'] == 1){
+                                                                                          $fee_rate = $ai_cash->total_amt * ($check_cradit['fee_rate']/100);
+                                                                                        }else{
+                                                                                          $fee_rate = $check_cradit['fee_rate'];
+                                                                                        }
+
+                                                                                        $cradit_total= $ai_cash->total_amt+$fee_rate;
+
+                                                                                        ?>
+                                                                                       {{number_format($fee_rate,2)}}
+                                                                                      </td>
+                                                                                  </tr>
+
+                                                                                  <tr>
+                                                                                          <td align="left"><strong>ยอดที่ต้องชำระ</strong></td>
+
+                                                                                          <td align="left"><u><strong> {{number_format($cradit_total,2)}} </strong></u>
+                                                                                          </td>
+                                                                                      </tr>
+
+                                                                              </tbody></table>
+                                                                              <hr m-t-2="">
+
+
+                                                                          </div>
 
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -279,7 +329,7 @@
 
                                                                 <div class="col-md-4 col-sx-4 col-4">
                                                                     <h3 class="text-right">
-                                                                        <u><span> {{ $data->total_price }} </span></u>
+                                                                        <u><span> {{ $ai_cash->total_amt }} </span></u>
                                                                     </h3>
                                                                 </div>
                                                             </div>
