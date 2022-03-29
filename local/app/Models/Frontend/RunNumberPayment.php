@@ -30,7 +30,6 @@ class RunNumberPayment extends Model
 
     // dd($id);
 
-
     if (@$id->code_order) {
       $last_code = $id->code_order;
       $code = substr($last_code, -5);
@@ -43,9 +42,32 @@ class RunNumberPayment extends Model
       $num_code = substr("00000" . $last_code, -5);
       $code_order = 'O' . $business_location_id_fk . date('ymd') . '' . $num_code;
     }
-
-    return  $code_order;
+    do {
+      $rs = RunNumberPayment::check_number_order($code_order);
+    }while ($rs['status']=='fail');
+    return  $rs['code_order'];
   }
+
+  public static function check_number_order($code_order)
+  {
+      $check_number_order = Db_Orders::where('code_order', '=',$code_order)
+      ->count();
+
+    if ($check_number_order > 0) {
+      $last_code = $code_order;
+      $code = substr($last_code, -5);
+      $last_code = $code + 1;
+      $data = ['status'=>'fail','code_order'=>$last_code];
+
+    } else {
+      $data = ['status'=>'success','code_order'=>$code_order];
+
+    }
+    return $data;
+  }
+
+
+
   public static function run_number_aicash($business_location_id_fk)
   {
 
