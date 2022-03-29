@@ -507,6 +507,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเบิก @@@@@@@@@@@@@@@@@@@
     // หน้าแรก
     Route::resource('pay_requisition_001', 'Pay_requisition_001Controller');
+    Route::get('pay_requisition_001_remain', 'Pay_requisition_001Controller@pay_requisition_001_remain');
     Route::post('pay_requisition_tb1/datatable', 'Pay_requisition_001Controller@Datatable001')->name('pay_requisition_tb1.datatable');
 
     Route::post('pick_warehouse_tb_0001/datatable', 'Pick_warehouse_fifoController@Datatable0001')->name('pick_warehouse_tb_0001.datatable');
@@ -587,6 +588,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('taxdata', 'TaxdataController');
     Route::post('taxdata/datatable', 'TaxdataController@Datatable')->name('taxdata.datatable');
+    Route::post('taxdata/datatable2', 'TaxdataController@Datatable2')->name('taxdata.datatable2');
     Route::get('taxdata/taxtvi/{id}', 'TaxdataController@createPDFTaxtvi');
 
     Route::resource('ce_regis', 'Ce_regisController');

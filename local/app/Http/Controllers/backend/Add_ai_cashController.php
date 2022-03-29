@@ -614,7 +614,7 @@ class Add_ai_cashController extends Controller
             " . $w05 . "
             " . $w06 . "
             " . $w07 . "
-            ORDER BY db_add_ai_cash.updated_at DESC
+            ORDER BY db_add_ai_cash.created_at DESC
          ");
 
     $sQuery = \DataTables::of($sTable);

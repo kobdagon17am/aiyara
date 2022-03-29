@@ -190,6 +190,13 @@ class Pick_packPackingCodeController extends Controller
         // วุฒิปรับให้ WH ดูได้ทุกสาขา
         $branch_id_fk = "";
 
+        // วุฒิเพิ่มมา
+        if(isset($req->remain)){
+          $re = " and bill_remain_status = 1";
+        }else{
+          $re = " and bill_remain_status <> 1";
+        }
+
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
       $sTable = DB::select(" 
 
@@ -199,7 +206,7 @@ class Pick_packPackingCodeController extends Controller
         $w03
         $w04
         $w05
-
+        $re
         ORDER BY id DESC
 
         ");

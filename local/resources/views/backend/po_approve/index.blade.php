@@ -133,7 +133,7 @@
 
 
               <div class="row" >
-                <div class="col-md-6 " >
+                <div class="col-md-6 " style="display:none;">
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label"> ประเภทบิล : </label>
                     <div class="col-md-9">
@@ -160,11 +160,21 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="" class="col-md-3 col-form-label"> เลขที่เอกสาร :  </label>
+                    <div class="col-md-9">
+                      <select id="customer_id" name="customer_id" class="form-control select2-templating " required="" >
+                        <option value=""> รหัส-ชื่อลูกค้า </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
 
 
             <div class="row" >
-                <div class="col-md-6 " >
+                <div class="col-md-6 " style="display:none;">
                   <div class="form-group row">
                     <label for="customer_id_fk" class="col-md-3 col-form-label"> ผู้อนุมัติ : </label>
                     <div class="col-md-9">
@@ -182,7 +192,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-6 " >
+                <div class="col-md-6 " style="display:none;">
                   <div class="form-group row">
                     <label for="transfer_bill_status" class="col-md-3 col-form-label"> สถานะ :  </label>
                     <div class="col-md-9">
@@ -195,10 +205,11 @@
                     </div>
                   </div>
                 </div>
+                
               </div>
 
 
-              <div class="row" >
+              <div class="row" style="display:none;">
                 <div class="col-md-6 " >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label"> วันที่สั่งซื้อ : </label>
@@ -224,7 +235,7 @@
                 </div>
               </div>
 
-
+              <br>
             <div class="row" >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
                 </div>
@@ -293,6 +304,35 @@
 @section('script')
 
 <script>
+
+
+$(document).ready(function(){
+    $("#customer_id").select2({
+          minimumInputLength: 2,
+          allowClear: true,
+          placeholder: '- รหัส-ชื่อลูกค้า -',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomerForFrontstore') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+            console.log(params);
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+  });
+
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
@@ -624,6 +664,8 @@ $(function() {
                     return false;
                   }
 
+                  var customer_id = $('#customer_id').val();
+
                      // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                         var oTable01;
                         $(function() {
@@ -652,6 +694,7 @@ $(function() {
                                                 transfer_bill_status:transfer_bill_status,
                                                 transfer_bill_approve_sdate:transfer_bill_approve_sdate,
                                                 transfer_bill_approve_edate:transfer_bill_approve_edate,
+                                                customer_id:customer_id,
                                                 // approve_sdate:approve_sdate,
                                                 // approve_edate:approve_edate,
                                               },

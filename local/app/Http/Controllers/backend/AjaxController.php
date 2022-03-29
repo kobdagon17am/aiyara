@@ -3594,14 +3594,26 @@ class AjaxController extends Controller
 
     public function ajaxProcessTaxdata(Request $request)
     {
-        // return $request;
-        // dd();
-        // business_location_id_fk: "1"
-        // end_date: "2021-04-22"
-        // start_date: "2021-04-01"
-        if($request->ajax()){
-               DB::select(" TRUNCATE db_taxdata ");
-               DB::select(' INSERT INTO db_taxdata select * from db_taxdata_test ');
+        if(isset($request->start_date)){
+            if($request->start_date!=''){
+                $taxs = DB::table('db_taxdata')
+                ->where('action_date','>=',$request->start_date)
+                ->where('action_date','<=',$request->end_date)
+                ->orderBy('action_date','desc');
+
+                if(isset($request->business_location_id_fk)){
+                    if($request->business_location_id_fk!=''){
+                        $taxs = $taxs->where('business_location_id_fk',$request->business_location_id_fk);
+                    }
+                }
+              
+                if(isset($request->customer_id)){
+                    if($request->customer_id!=''){
+                        $taxs = $taxs->where('customer_id_fk',$request->customer_id);
+                    }
+                }
+                $taxs = $taxs->get();
+            }
         }
     }
 

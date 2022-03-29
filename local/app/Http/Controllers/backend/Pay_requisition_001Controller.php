@@ -17,22 +17,6 @@ class Pay_requisition_001Controller extends Controller
 
     public function index(Request $request)
     {
-
-      // dd($request);
-      // dd(\Auth::user()->business_location_id_fk);
-      // dd(\Auth::user()->branch_id_fk);
-
-      // $d1 = DB::select("SELECT id FROM db_orders WHERE business_location_id_fk=".\Auth::user()->business_location_id_fk." and branch_id_fk=".\Auth::user()->branch_id_fk."");
-      // // dd($d1);
-      // $arr_orders_id = [];
-      // foreach ($d1 as $key => $value) {
-      //    array_push($arr_orders_id,$value->id);
-      // }
-      // $arr_orders_id = implode(',',$arr_orders_id);
-      // dd($arr_orders_id);
-
-      // $d2 = DB::select("  SELECT * FROM db_pick_pack_packing_code where status_picked=1  ");
-
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
       $customer = DB::select(" SELECT
@@ -52,6 +36,36 @@ class Pay_requisition_001Controller extends Controller
       $sAdmin = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
 
         return View('backend.pay_requisition_001.index')->with(
+        array(
+           'sBusiness_location'=>$sBusiness_location,
+           'sBranchs'=>$sBranchs,
+           'customer'=>$customer,
+           'sPay_requisition_status'=>$sPay_requisition_status,
+           'sAdmin'=>$sAdmin,
+        ) );
+    }
+
+    public function pay_requisition_001_remain(Request $request)
+    {
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+      $sBranchs = \App\Models\Backend\Branchs::get();
+      $customer = DB::select(" SELECT
+              customers.user_name AS cus_code,
+              customers.prefix_name,
+              customers.first_name,
+              customers.last_name,
+              db_pay_product_receipt_001.customer_id_fk
+              FROM
+              db_pay_product_receipt_001
+              left Join customers ON db_pay_product_receipt_001.customer_id_fk = customers.id
+              GROUP BY db_pay_product_receipt_001.customer_id_fk
+              ");
+      // $sPay_requisition_status = \App\Models\Backend\Pay_requisition_status::get();
+      $sPay_requisition_status = DB::select(" select * from dataset_pay_requisition_status_02 ");
+
+      $sAdmin = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
+
+        return View('backend.pay_requisition_001.pay_requisition_001_remain')->with(
         array(
            'sBusiness_location'=>$sBusiness_location,
            'sBranchs'=>$sBranchs,

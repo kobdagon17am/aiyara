@@ -338,6 +338,13 @@ class Po_approveController extends Controller
            $transfer_bill_approvedate = "";
         }
 
+        if(!empty($req->customer_id)){
+            $customer_id = " and db_orders.customers_id_fk =  '".$req->customer_id."' " ;
+        }else{
+            $customer_id = "";
+        }
+        
+
         // if(@\Auth::user()->role_group_id_fk==4){
             $branch_id_fk = "" ;
             $action_user = "" ;
@@ -365,6 +372,8 @@ $transfer_amount_approver
 $transfer_bill_status
 $created_at
 $transfer_bill_approvedate
+$customer_id
+
 or
 pay_type_id_fk in (1,8,10,11,12) and
 `dataset_order_status`.`lang_id` = 1 and
@@ -378,9 +387,9 @@ $transfer_amount_approver
 $transfer_bill_status
 $created_at
 $transfer_bill_approvedate
+$customer_id
 
-
-ORDER BY updated_at DESC
+ORDER BY code_order DESC
 
 
                 ");

@@ -57,7 +57,7 @@
                       <div class="col-md-2 ">
                         <div class="form-group row">
                           <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
-                              <option value="">-Business Location-</option>
+                              <option value="">- Business Location -</option>
                               @if(@$sBusiness_location)
                                 @foreach(@$sBusiness_location AS $r)
                                 <option value="{{$r->id}}" >
@@ -81,6 +81,15 @@
                          <input id="start_date"  autocomplete="off" placeholder="วันเริ่ม"  />
                          <input id="end_date"  autocomplete="off" placeholder="วันสิ้นสุด"  />
                       </div>
+
+                      <div class="col-md-3">
+                        <div class="form-group row">
+                          <select id="customer_id" name="customer_id" class="form-control select2-templating " required="" >
+                              <option value=""> รหัส-ชื่อลูกค้า </option>
+                            </select>
+                        </div>
+                      </div>
+
                       <div class="col-md-2">
                         <div class="form-group row"> &nbsp; &nbsp;
                           <button type="button" class="btn btn-info btn-sm waves-effect btnProcess " style="font-size: 14px !important;" >
@@ -119,6 +128,7 @@
         var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
         $('#start_date').datepicker({
             // format: 'dd/mm/yyyy',
+            // format: 'yyyy-mm-dd',
             format: 'yyyy-mm-dd',
             uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
@@ -144,6 +154,33 @@
   </script>          
 
 <script>
+
+  $(document).ready(function(){
+    $("#customer_id").select2({
+          minimumInputLength: 2,
+          allowClear: true,
+          placeholder: '- รหัส-ชื่อลูกค้า -',
+          ajax: {
+          url: " {{ url('backend/ajaxGetCustomerForFrontstore') }} ",
+          type  : 'POST',
+          dataType : 'json',
+          delay  : 250,
+          cache: false,
+          data: function (params) {
+            console.log(params);
+           return {          
+            term: params.term  || '',   // search term
+            page: params.page  || 1
+           };
+          },
+          processResults: function (data, params) {
+           return {
+            results: data
+           };
+          }
+         }
+        });
+  });
 
 var sU = "{{@$sU}}"; 
 var sD = "{{@$sD}}";  
@@ -229,7 +266,6 @@ $(function() {
        $('#business_location_id_fk').change(function(){
 
           var business_location_id_fk = this.value;
-          // alert(warehouse_id_fk);
 
            if(business_location_id_fk != ''){
              $.ajax({
@@ -267,24 +303,15 @@ $(function() {
           
             $(document).on('click', '.btnProcess', function(event) {
                   event.preventDefault();
-
                   var business_location_id_fk = $('#business_location_id_fk').val();
-                  // var branch_id_fk = $('#branch_id_fk').val();
                   var start_date = $('#start_date').val();
                   var end_date = $('#end_date').val();
-                  // alert(start_date+":"+end_date);
-
+                  var customer_id = $('#customer_id').val();
                    if(business_location_id_fk==''){
                       $("#business_location_id_fk").select2('open');
                       $("#spinner_frame").hide();
                        return false;
                     }
-                   // if(branch_id_fk==''){
-                   //    $("#branch_id_fk").select2('open');
-                   //    $("#spinner_frame").hide();
-                   //     return false;
-                   //  }
-
                     if(start_date==''){
                       $("#start_date").focus();
                       $("#spinner_frame").hide();
@@ -301,29 +328,109 @@ $(function() {
 
                    setTimeout(function(){
                         $(".myloading").hide();
-                        // location.reload();
                     },3000);
 
-                      $.ajax({
-                        url: " {{ url('backend/ajaxProcessTaxdata') }} ", 
-                        method: "post",
-                        data: {
+                      // $.ajax({
+                      //   url: " {{ url('backend/ajaxProcessTaxdata') }} ", 
+                      //   method: "post",
+                        // data: {
+                        //   business_location_id_fk:business_location_id_fk,
+                        //   start_date:start_date,
+                        //   end_date:end_date,
+                        //   customer_id:customer_id,
+                        //   "_token": "{{ csrf_token() }}", 
+                        // },
+                      //   success:function(data)
+                      //   { 
+                      //     console.log(data);
+                      //       location.reload();
+                      //   }
+                      // })
+
+     $('#data-table').DataTable().clear();
+                      var oTable;
+$(function() {
+    oTable = $('#data-table').DataTable({
+    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+    processing: true,
+                            serverSide: true,
+                            scroller: true,
+                            scrollCollapse: true,
+                            scrollX: true,
+                            ordering: false,
+                            scrollY: ''+($(window).height()-370)+'px',
+                            iDisplayLength: 25,
+                            destroy:true,
+        ajax: {
+          url: '{{ route('backend.taxdata.datatable2') }}',
+          data: function ( d ) {
+            d.Where={};
+            $('.myWhere').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Where[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            d.Like={};
+            $('.myLike').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Like[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            d.Custom={};
+            $('.myCustom').each(function() {
+              if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                d.Custom[$(this).attr('name')] = $.trim($(this).val());
+              }
+            });
+            oData = d;
+          },
+          data: {
                           business_location_id_fk:business_location_id_fk,
-                          // branch_id_fk:branch_id_fk,
                           start_date:start_date,
                           end_date:end_date,
+                          customer_id:customer_id,
                           "_token": "{{ csrf_token() }}", 
                         },
-                        success:function(data)
-                        { 
-                          console.log(data);
-                            location.reload();
-                        }
-                      })
+          method: 'POST'
+        },
+     
+        columns: [
+            {data: 'id', title :'ID', className: 'text-center w50'},
+            {data: 'business_location', title :'<center>Business Location </center>', className: 'text-left'},
+            {data: 'customer_name', title :'<center>ลูกค้า </center>', className: 'text-left'},
+            {data: 'commission_cost',   title :'ค่า Commission ', className: 'text-center ',render: function(d) {
+                return (parseFloat(d)>0)?d:'-';
+              }},
+            {data: 'tax_amount',   title :'ยอดภาษี หัก ณ ที่จ่าย ', className: 'text-center ',render: function(d) {
+                return (parseFloat(d)>0)?d:'-';
+              }},  
+            {data: 'start_date', title :'<center>วันเริ่ม </center>', className: 'text-center'},
+            {data: 'end_date', title :'<center>วันสิ้นสุด </center>', className: 'text-center'},
+            {data: 'tax_year', title :'<center>งวด/ปีภาษี </center>', className: 'text-center'},
+            {data: 'customer_id_fk',   title :'พิมพ์ 50 ทวิ', className: 'text-center ',render: function(d) {
+                  return '<center><a href="{{ URL::to('backend/taxdata/taxtvi') }}/'+d+'" target=_blank ><i class="bx bxs-file-pdf grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a></center>';
+              }},
+            // {data: 'id', title :'Tools', className: 'text-center w60'}, 
+        ],
+        rowCallback: function(nRow, aData, dataIndex){
 
+            //   if(sU!=''&&sD!=''){
+            //       $('td:last-child', nRow).html('-');
+            //   }else{ 
 
+            //   $('td:last-child', nRow).html(''
+            //     + '<a href="{{ route('backend.taxdata.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+            //     + '<a href="javascript: void(0);" data-url="{{ route('backend.taxdata.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  style="'+sD+'" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+            //   ).addClass('input');
 
+            // }
 
+        }
+    });
+    $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
+      oTable.draw();
+    });
+});
 
            }); 
 

@@ -95,6 +95,7 @@ return [
     'requisition_between_branch' => 'ขอเบิกระหว่างสาขา',
     'report_data' => 'รายงานต่างๆ',
     'status_delivery' => 'สถานะสินค้าจัดส่ง',
+    'pay_requisition_001_remain' => 'จ่ายสินค้าใบเบิกค้างจ่าย',
 ],
 
 // /backend/index

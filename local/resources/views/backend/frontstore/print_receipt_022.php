@@ -1213,14 +1213,12 @@ else if(@$pay_type[0]->pay_type_id_fk==19){ // 19  Gift Voucher + เงิน�
 ");
 
 for ($j=0; $j < $amt_page ; $j++) {
-
-
  ?>
 
 <div class="NameAndAddress " >
     <table >
       <tr>
-        <td style="width: 60% ;margin-left:35px !important;">sadsad
+        <td style="width: 60% ;margin-left:35px !important;">
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
@@ -1233,21 +1231,24 @@ for ($j=0; $j < $amt_page ; $j++) {
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+7) ; "); ?>
           <?php echo "<span style='font-size:15px;'>".@$cus_tax." </span><br>"; ?>
-
-
       </td>
 
 <!-- THELP  -->
       <td style="vertical-align: top; font-size: 24px;font-weight: bold;" >
+      <?php 
+      if($sRow->approve_status == 5){
+        echo '<b style="color:red;"><u> BILL CANCEL </u></b>';
+      }
+       ?>
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+1) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
+        <?php echo @$DB[0]->a ;
+        ?>
       </td>
-
+     
       <td style="margin-left:25px !important;margin-top:18px !important;width:30%;vertical-align: top;" >
         <br>
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
         <?php echo @$DB[0]->a; ?>
-
         <?php
         if(@$db_orders[0]->invoice_code_id_fk){
           echo '<br>'.@$db_orders[0]->invoice_code_id_fk;
