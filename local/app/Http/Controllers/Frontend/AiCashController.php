@@ -509,7 +509,7 @@ class AiCashController extends Controller
       $total_price = $ai_cash->total_amt+$fee_rate;
       $gateway_pay_data = array(
         'mch_order_no' => $ai_cash->code_order,
-        "total_fee" => $ai_cash->total_amt,
+        "total_fee" =>  $total_price,
         "fee_type" => 'THB',
         "channel_list" => 'ktbcard',
         'mch_code' => $ai_cash->code_order,
