@@ -363,6 +363,8 @@
                                                                                             $fee_rate = $check_cradit['fee_rate'];
                                                                                           }
 
+                                                                                          $cradit_total= $data->total_price+$fee_rate;
+
                                                                                           ?>
                                                                                          {{number_format($fee_rate,2)}}
                                                                                         </td>
@@ -371,7 +373,7 @@
                                                                                     <tr>
                                                                                             <td align="left"><strong>ยอดที่ต้องชำระ</strong></td>
 
-                                                                                            <td align="left"><u><strong> </strong></u>
+                                                                                            <td align="left"><u><strong> {{number_format($cradit_total,2)}} </strong></u>
                                                                                             </td>
                                                                                         </tr>
 
@@ -592,15 +594,15 @@
                             <p><b>{{ $address['name'] }}</b><br>
                               @if ($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
                               @if ($address['email']) Email: {{ $address['email'] }}<br>@endif
-                              @if ($address['house_no']) {{ $address['house_no'] }} @endif
-                              @if ($address['moo'] != '-' and $address['moo'] != '') หมู่.{{ $address['moo'] }} @endif
-                              @if ($address['house_name'] != '-' and $address['house_name'] != '') {{ $address['house_name'] }} @endif
-                              @if ($address['soi'] != '-' and $address['soi'] != '') {{ $address['soi'] }} @endif
+                              @if ($address['house_no']) {{ $address['house_no'] }}, @endif
+                              @if ($address['moo'] != '-' and $address['moo'] != '') หมู่.{{ $address['moo'] }}, @endif
+                              @if ($address['house_name'] != '-' and $address['house_name'] != '') {{ $address['house_name'] }}, @endif
+                              @if ($address['soi'] != '-' and $address['soi'] != '') {{ $address['soi'] }}, @endif
                               @if ($address['road'] != '-' and $address['road'] != '') ถนน.{{ $address['road'] }} @endif
 
-                              @if ($address['district_name'] != '-' and $address['district_name'] != '')<br>{{ $address['district_name'] }} @endif
-                              @if ($address['amphures_name'] != '-' and $address['amphures_name'] != ''){{ $address['amphures_name'] }} @endif
-                              @if ($address['provinces_name'] != '-' and $address['provinces_name'] != ''){{ $address['provinces_name'] }} @endif
+                              @if ($address['district_name'] != '-' and $address['district_name'] != '')<br>{{ $address['district_name'] }}, @endif
+                              @if ($address['amphures_name'] != '-' and $address['amphures_name'] != ''){{ $address['amphures_name'] }}, @endif
+                              @if ($address['provinces_name'] != '-' and $address['provinces_name'] != ''){{ $address['provinces_name'] }}, @endif
                               @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
                           </p>
                             @else
