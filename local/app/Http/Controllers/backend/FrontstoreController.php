@@ -197,7 +197,7 @@ class FrontstoreController extends Controller
 
 
     $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
-    // dd($r_invoice_code); 
+    // dd($r_invoice_code);
 
 
     return View('backend.frontstore.index')->with(
@@ -350,6 +350,7 @@ class FrontstoreController extends Controller
 
   public function edit($id)
   {
+
 
     // กำลังเบิกสินค้า ไม่ให้แก้บิล
     $ch_Disabled = 0;
@@ -520,7 +521,7 @@ class FrontstoreController extends Controller
     $rs = DB::select(" SELECT count(*) as cnt FROM db_order_products_list WHERE frontstore_id_fk=$id ");
 
     $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
- 
+
     if ($sFrontstoreDataTotal) {
       $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total) / 1.07);
       $vat = $vat > 0 ? $vat : 0;
@@ -533,7 +534,7 @@ class FrontstoreController extends Controller
     }
 
     $sAccount_bank = \App\Models\Backend\Account_bank::get();
-  
+
     // $type = $sRow->purchase_type_id_fk;
     $pv_total = $sRow->pv_total;
     // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
@@ -983,6 +984,7 @@ class FrontstoreController extends Controller
 
   public function update(Request $request, $id)
   {
+   // dd($request->all());
 
 
     // dd($request->transfer_money_datetime." : AAAA");
@@ -3379,7 +3381,7 @@ $endDate1
     } else {
       $action_user_011 = " AND action_user = $user_login_id ";
     }
-    
+
     if ($sPermission == 1) {
 
       $action_user_01 = "";
@@ -3388,7 +3390,7 @@ $endDate1
     } else {
       $action_user_01 = " AND action_user = $user_login_id ";
     }
-    
+
     $role_check = DB::table('role_group')->select('acc_status')->where('id',\Auth::user()->role_group_id_fk)->first();
     if(@$role_check->acc_status==1){
       $action_user_01 = "";
@@ -3642,7 +3644,7 @@ ORDER BY created_at DESC
       })
       ->addColumn('total_price', function ($row) {
         $total_price = 0;
-        
+
           $total_price += $row->cash_pay;
 
         if (@$row->sum_credit_price != 0) {
