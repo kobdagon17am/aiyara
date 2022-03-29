@@ -994,7 +994,6 @@ class Pick_warehouse_fifoController extends Controller
 
           ");
 
-
             $arr_pick_pack_packing_code_id_fk = explode(',',$row->pick_pack_packing_code_id_fk);
 
             $sTable1 = DB::select(" SELECT * FROM $temp_ppp_001 WHERE `pick_pack_packing_code_id_fk` in(".$row->pick_pack_packing_code_id_fk.") ");
@@ -1046,6 +1045,8 @@ class Pick_warehouse_fifoController extends Controller
             WHERE db_orders.id in  (".$orders_id_fk.")
             GROUP BY db_order_products_list.product_id_fk
             ORDER BY db_order_products_list.product_id_fk ");
+
+            // dd($Products);
 
           $z = 1;
           foreach ($Products as $key => $value) {
