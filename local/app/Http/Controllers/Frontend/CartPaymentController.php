@@ -555,6 +555,15 @@ class CartPaymentController extends Controller
 
         } elseif ($request->submit == 'Credit') {
 
+          $check_cradit = \App\Helpers\Frontend::check_cradit(Auth::guard('c_user')->user()->business_location_id);
+          if( $check_cradit['type'] == 1){
+            $fee_rate =$total_price * ($check_cradit['fee_rate']/100);
+          }else{
+            $fee_rate = $check_cradit['fee_rate'];
+          }
+
+          $total_price = $total_price+$fee_rate;
+
           $request['pay_type'] = 2;
             $gateway_pay_data = array(
                 'mch_order_no' => $order_data->code_order,
@@ -571,7 +580,7 @@ class CartPaymentController extends Controller
                 if ($order_data->purchase_type_id_fk == 5) {
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '2','approve_status'=>1]);
+                        ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','fee_amt'=>$fee_rate,'approve_status'=>1]);
                 }
                 return redirect($data['url']);
             } else {

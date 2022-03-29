@@ -55,7 +55,7 @@ class Frontend{
 
       if(empty($fee)){
         $html = 'ไม่มีข้อมูลค่าธรรมเนียมบัตรเครดิต';
-        $data = ['html'=>$html,'fee_rate'=>0,'type'=>''];
+        $data = ['html'=>$html,'fee_rate'=>0,'type'=>'',,'dataset_fee_id_fk'=>''];
         return $data;
       }
       $html = '<label class="label label-inverse-warning mt-2"><font   style="color: #000">'.$fee->txt_desc.' </font></label>';
@@ -66,7 +66,7 @@ class Frontend{
         $fee_rate = $fee->txt_fixed_rate;
       }
 
-      $data = ['html'=>$html,'fee_rate'=>$fee_rate,'type'=>$fee->fee_type];//type 1 = % 2= จำนวนเต็ม
+      $data = ['html'=>$html,'fee_rate'=>$fee_rate,'type'=>$fee->fee_type,'dataset_fee_id_fk'=>$fee->id];//type 1 = % 2= จำนวนเต็ม
     return $data;
   }
 
