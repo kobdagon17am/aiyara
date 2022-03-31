@@ -2446,7 +2446,9 @@ class FrontstoreController extends Controller
 
       foreach (@$sDBFrontstoreSumCostActionUser as $r) {
         @$cnt_row1 += 1;
-
+        if($r->action_user_name == ''){
+          $r->action_user_name = 'V3';
+        }
         $show .= '
                     <tr>
                       <td>' . $r->action_user_name . '</td>
@@ -2581,6 +2583,9 @@ class FrontstoreController extends Controller
         @$sum_cnt += $r->cnt;
         @$sum_sum += $r->sum;
 
+        if($r->name == ''){
+          $r->name = 'V3';
+        }
 
         $show .= '
                     <tr>

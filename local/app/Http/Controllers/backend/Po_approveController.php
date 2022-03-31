@@ -635,7 +635,7 @@ ORDER BY code_order DESC
                 if (@$row->purchase_type_id_fk == 7) {
                     return number_format($row->sum_price, 2);
                 } else if (@$row->purchase_type_id_fk == 5) {
-                    $total_price =  $total_price = $row->transfer_price;
+                    $total_price = $row->transfer_price;
                     return number_format($total_price, 2);
                 } else {
                     return number_format(@$row->sum_price + $row->shipping_price, 2);
@@ -669,6 +669,7 @@ ORDER BY code_order DESC
              ->escapeColumns('transfer_money_datetime')
 
              ->addColumn('approval_amount_transfer', function($row) {
+
                 if(@$row->approval_amount_transfer>0){
                     return number_format($row->approval_amount_transfer,2);
                 }else{
@@ -710,6 +711,59 @@ ORDER BY code_order DESC
             ->make(true);
     }
 
+    public function DatatableEditOtherSum(Request $req)
+    {
+
+        if(!empty($req->id)){
+            $w01 = $req->id;
+            $con01 = "=";
+
+            $order_id = DB::table('db_orders')->where('id',$req->id)->first();
+
+        }else{
+            $w01 = "";
+            $con01 = "!=";
+        }
+
+        $sTable = DB::table('db_orders')
+            ->select('db_orders.*', 'db_orders.id as orders_id', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
+            ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+            ->where('dataset_order_status.lang_id', '=', '1')
+            ->where(function ($query) {
+              $query->where('dataset_orders_type.lang_id', '=', '1')
+                ->orWhereNull('dataset_orders_type.lang_id');
+            })
+            ->where('db_orders.pay_with_other_bill',1)
+            ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
+            ->get();
+
+            $sum = 0;
+            foreach($sTable as $row){
+                if (@$row->purchase_type_id_fk == 7) {
+                    $sum += $row->sum_price;
+                } else if (@$row->purchase_type_id_fk == 5) {
+                    $total_price = $row->transfer_price;
+                    $sum += $total_price;
+                } else {
+                    $sum += @$row->sum_price + $row->shipping_price;
+                }
+            }
+
+            if (@$order_id->purchase_type_id_fk == 7) {
+                $sum += $order_id->sum_price;
+            } else if (@$order_id->purchase_type_id_fk == 5) {
+                $total_price = $order_id->transfer_price;
+                $sum += $total_price;
+            } else {
+                $sum += @$order_id->sum_price + $order_id->shipping_price;
+            }
+
+           return number_format($sum, 2);
+
+      
+    }
 
 }
 

@@ -59,6 +59,15 @@
                     <table id="data-table_other" class="table table-bordered dt-responsive" style="width: 100%;">
                     </table>
 
+                    <hr>
+                 
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <br>
+                            <h4><u>ยอดรวมทั้งสิ้น</u></h4> <h4 style="color:red;"><b  id="data-table_sum">  </b></h4>
+                        </div>
+                      </div>
+
                 </div>
             </div>
         </div> <!-- end col -->
@@ -519,11 +528,11 @@
         $(function() {
             oTable = $('#data-table_other').DataTable({
             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                scroller: true,
-                scrollCollapse: true,
-                scrollX: true,
+                processing: false,
+                serverSide: false,
+                scroller: false,
+                scrollCollapse: false,
+                scrollX: false,
                 ordering: false,
                 // scrollY: ''+($(window).height()-370)+'px',
                 // iDisplayLength: 25,
@@ -570,12 +579,26 @@
 
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
-
+                    
                 }
 
             });
 
         });
+
+        $(function() {
+            $.ajax({
+                          type: "POST",
+                          url: " {{ url('backend/po_approve_edit_other/datatable_sum') }} ",
+                           data:{ _token: '{{csrf_token()}}',id:id },
+                          success: function(data){
+                            $('#data-table_sum').html(data);
+                          }
+                      });
+        });
+
+                    
+
     });
 </script>
 
@@ -602,6 +625,8 @@
           weeks: false,
           // minDate: 0,
       });
+
+
 
 
       $(document).on('click','.btn_approve_con',function(){
