@@ -3,8 +3,8 @@ namespace App\Helpers;
 use DB;
 use Auth;
 class Frontend{
+  //App\Helpers\Frontend::get_customer_id();
 	public static function get_gitfvoucher($user_name){
-
 		$data_gv = DB::table('db_giftvoucher_cus')
 		->selectRaw('sum(giftvoucher_banlance) as sum_gv')
 		->where('customer_username','=',$user_name)

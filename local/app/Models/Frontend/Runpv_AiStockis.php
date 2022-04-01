@@ -124,9 +124,6 @@ class Runpv_AiStockis extends Model
               $pv_mt = $to_customer->pv_mt;
               $pv_mt_all = $pv + $pv_mt;
 
-
-
-
               if ($strtime_user > $strtime) {
 
                 // $contract_date = strtotime(date('Y-m',$strtime_user));
@@ -141,11 +138,7 @@ class Runpv_AiStockis extends Model
                 $start_month = date('Y-m', $strtime_user);
               }
 
-
-
               if ($pv_mt_all >= $pro_mt) {
-
-
                 //หักลบค่อยอัพเดท
                 $mt_mount = $pv_mt_all / $pro_mt;
                 $mt_mount = floor($mt_mount); //จำนวนเต์มเดือนที่นำไปบวกเพิ่ม

@@ -137,6 +137,14 @@
                  Paid by : <u>@if($order->pay_type_name)
                      {{ $order->pay_type_name }} @endif</u>
              </p>
+
+             @if($order->aistockist)
+             <?php
+              $aistockis = App\Helpers\Frontend::get_customer_id($order->aistockist);
+
+             ?>
+              <p><b class="m-b-20">ซื้อผ่าน Ai-Stockist </b><br> <span> {{$aistockis->first_name}} {{$aistockis->last_name}} ( {{$aistockis->user_name}} ) </span></p>
+            @endif
          </th>
 
      </table>
