@@ -20,8 +20,7 @@ function data_direct_confirm(sent_to_customer_username) {
             console.log(data['data']);
             if (data['status'] == 'success') {
 
-                document.getElementById("c_text_username").innerHTML = data['data']['data']['business_name'] +
-                    ' (' + data['data']['data']['user_name'] + ')';
+                document.getElementById("c_text_username").innerHTML = data['data']['data']['business_name'] + ' (' + data['data']['data']['user_name'] + ')';
                 document.getElementById("c_name").innerHTML = data['data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
                 document.getElementById("c_text_pv").innerHTML = data['data']['data']['pv'] + ' PV';
                 $("#input_username").val(data['data']['data']['user_name']);
