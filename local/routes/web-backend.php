@@ -611,6 +611,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('pick_warehouse/print_requisition/{id}', 'AjaxController@createPDFRequisition');
     Route::get('pick_warehouse/print_requisition_detail/{id}/{packing_code_id}', 'AjaxController@createPDFRequisitionDetail');
     Route::get('pick_warehouse/print_requisition_detail_real/{packing_code_id}', 'AjaxController@createPDFRequisitionDetailReal');
+    Route::get('pick_warehouse/print_requisition_detail_real_remain/{packing_code_id}', 'AjaxController@createPDFRequisitionDetailRealRemain');
 
 
     Route::resource('product_in_cause', 'Product_in_causeController');

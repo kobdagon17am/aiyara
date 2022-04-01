@@ -207,7 +207,8 @@ tr.border_bottom td {
 </style>
 <?php 
 $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$data[0])->orderBy('delivery_id_fk','asc')->get();  
-
+$db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$data[0])->first();
+$all_order = explode(',',$db_pick_pack_packing_code->receipt);
 ?>
 
 @foreach($db_pick_pack_packing_data as $index => $pick_pack_packing_data)
@@ -243,7 +244,7 @@ E-MAIL : info@aiyara.co.th
     <?php 
         $packing = DB::select(" SELECT * FROM db_pick_pack_packing WHERE delivery_id_fk=".$pick_pack_packing_data->delivery_id_fk." and packing_code_id_fk=".$data[0]."  GROUP BY packing_code ");
         // $packing = DB::select(" SELECT * FROM db_pick_pack_packing WHERE id = $pick_pack_packing_data->id ");
-       
+         
         $recipient_name = '';
 
         // foreach ($p1 as $key => $value) {
@@ -275,7 +276,9 @@ E-MAIL : info@aiyara.co.th
                   $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
                   $arr1 = [];
                   foreach ($d2 as $key => $v) {
-                    array_push( $arr1 ,$v->receipt);
+                    if (in_array($v->receipt, $all_order)) {
+                      array_push( $arr1 ,$v->receipt);
+                      }
                   }
                   $receipt = implode(',',$arr1);
           
@@ -283,9 +286,7 @@ E-MAIL : info@aiyara.co.th
                   $receipt = @$delivery[0]->receipt;
             }
 
-        //     if($index==1){
-        //   dd($fid_arr);
-        // }
+    
         
     ?>
 
@@ -370,24 +371,61 @@ $sum_amt = 0 ;
   $fid_arr = explode(',',$receipt); 
   $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
 
-  $Products = App\Models\Backend\Orders::getAllProduct($order_arr);
-      
-if(@$Products){
+  // $Products = App\Models\Backend\Orders::getAllProduct($order_arr);
+  $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
+  ->where('pick_pack_requisition_code_id_fk',$db_pick_pack_packing_code->ref_bill_id)
+  ->where('amt_remain','>',0)
+  ->orderBy('time_pay','desc')
+  ->get();
+  $arr_002 = [];
+  foreach($db_pay_requisition_002 as $data_002){
+      if(!isset($arr_002[$data_002->product_id_fk])){
+        $arr_002[$data_002->product_id_fk] = $data_002->id;
+      }
+  }
 
-  foreach ($Products as $key => $value) {
+  $db_pay_requisition_002_items = DB::table('db_pay_requisition_002_item')
+  ->select('db_pay_requisition_002_item.*'
+  // ,'products_details.product_name as product_name','products.product_code as product_code','dataset_product_unit.product_unit as product_unit'
+  )
+  // ->join('products','products.id','db_pay_requisition_002_item.product_id_fk')
+  // ->join('products_details','products_details.product_id_fk','db_pay_requisition_002_item.product_id_fk')
+  // ->join('products_units','products_units.product_id_fk','db_pay_requisition_002_item.product_id_fk')
+  // ->join('dataset_product_unit','dataset_product_unit.id','products_units.product_unit_id_fk')
+  ->whereIn('db_pay_requisition_002_item.requisition_002_id',$arr_002)
+  ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+  ->where('db_pay_requisition_002_item.amt_remain','>',0)
+  ->orderBy('db_pay_requisition_002_item.requisition_002_id','desc')
+  // ->groupBy('product_id_fk')
+  ->get();
 
+  $arr_002_item2 = [];
+  foreach($db_pay_requisition_002_items as $data_002_item2){
+      if(!isset($arr_002_item2[$data_002_item2->product_id_fk])){
+        $arr_002_item2[$data_002_item2->product_id_fk] = $data_002_item2;
+      }
+  }
+
+if(@$arr_002_item2){
+  foreach ($arr_002_item2 as $key => $value) {
     if(!empty($value->product_id_fk)){
+
+      $product_code = DB::table('products')->select('product_code')->where('id',$value->product_id_fk)->first();
+      $product_name = DB::table('products_details')->select('product_name')->where('product_id_fk',$value->product_id_fk)->first();
+      $product_unit_id = DB::table('products_units')->select('product_unit_id_fk')->where('product_id_fk',$value->product_id_fk)->first();
+      $product_unit = DB::table('dataset_product_unit')->select('product_unit')->where('id',$product_unit_id->product_unit_id_fk)->first();
+
 
     $pn .=     
     '<div class="divTableRow">
     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-    '.@$value->product_code.' : '.@$value->product_name.'</b>
+    '.@$product_code->product_code.' : '.@$product_name->product_name.'</b>
     </div>
-    <div class="divTableCell" style="text-align:center;">'.@$value->amt_sum.'</div> 
-    <div class="divTableCell" style="text-align:center;">'.@$value->product_unit.'</div> 
+    <div class="divTableCell" style="text-align:center;">'.@$value->amt_remain.'</div> 
+    <div class="divTableCell" style="text-align:center;">'.@$product_unit->product_unit.'</div> 
     ';
     $pn .= '</div>';  
-    @$sum_amt += @$value->amt_sum;
+    @$sum_amt += @$value->amt_remain;
   }
   }
 
