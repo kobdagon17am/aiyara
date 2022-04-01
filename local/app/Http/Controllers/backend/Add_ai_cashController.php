@@ -222,9 +222,9 @@ class Add_ai_cashController extends Controller
       } else {
         $sRow = new \App\Models\Backend\Add_ai_cash;
       }
-
+  
       $sRow->type_create = 'admin';
-// approved
+// approved total_amt
       // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status 
       if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11) {
         $sRow->approve_status = 1;
@@ -240,7 +240,7 @@ class Add_ai_cashController extends Controller
           $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
           $date_setting_code = date('ym');
 
-          $delete = DB::table('db_add_ai_cash') //update บิล
+          $delete = DB::table('db_add_ai_cash') //update บิล 
             ->where('id', $sRow->id)
             ->update([
               'code_order' => $code_order,
@@ -281,7 +281,19 @@ class Add_ai_cashController extends Controller
       $sRow->action_user    = @\Auth::user()->id;
       $sRow->pay_type_id_fk    = request('pay_type_id_fk');
       $sRow->fee_amt    = request('fee_amt') ? str_replace(',', '', request('fee_amt')) : 0;
-      $sRow->total_amt    = str_replace(',', '', request('aicash_amt')) + request('fee_amt') ? str_replace(',', '', request('fee_amt')) : 0;
+
+      $charger_type = @request('charger_type');
+      // วุฒิเพิ่มมาเช็ค
+      if($charger_type!=''){
+          if($charger_type==1){
+            $sRow->total_amt    = str_replace(',', '', request('aicash_amt')) + request('fee_amt') ? str_replace(',', '', request('fee_amt')) : 0;
+          }else{
+            $sRow->total_amt    = str_replace(',', '', request('aicash_amt')) ? str_replace(',', '', request('fee_amt')) : 0;
+          }
+      }else{
+        $sRow->total_amt    = str_replace(',', '', request('aicash_amt')) + request('fee_amt') ? str_replace(',', '', request('fee_amt')) : 0;
+      }
+    
 
       if (!empty(request('account_bank_id'))) {
         $sRow->account_bank_id = request('account_bank_id');
@@ -310,7 +322,17 @@ class Add_ai_cashController extends Controller
       }
       $sRow->save();
 
-      DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
+         if($charger_type!=''){
+          if($charger_type==1){
+            DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
+          }else{
+            DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price ) WHERE (id='".$sRow->id."') ");
+          }
+        }else{
+            DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
+          }
+
+    
       \DB::commit();
 
       if (request('fromAddAiCash') == 1) {

@@ -2284,7 +2284,7 @@ ORDER BY db_pick_pack_packing.id
         // 'product' => $product,
       ]);
     }
-
+    // db_pick_pack_packing_code
     function pick_warehouse_save_new_bill(Request $r){  
 
       $DeliveryPackingCode = \App\Models\Backend\Pick_packPackingCode::where('id',$r->pick_pack_packing_code_id_fk)->first();
@@ -2325,7 +2325,9 @@ ORDER BY db_pick_pack_packing.id
       }
 
       $i = 0;
+
       foreach($arr_order as $key => $rem){
+        $order = DB::table('db_orders')->where('id',$rem->order_id)->first();
         $i++;
         if($i==count($arr_order)){
           $orders_id_fk .= $order->id;
@@ -2336,7 +2338,7 @@ ORDER BY db_pick_pack_packing.id
         }
        
       }
-
+      
       $i = 0;
       foreach($pay_item_arr as $key => $rem){
         $i++;
@@ -2361,7 +2363,7 @@ ORDER BY db_pick_pack_packing.id
           $DeliveryPackingCode2->ref_bill_id = $DeliveryPackingCode->id;
           $DeliveryPackingCode2->pay_requisition_002_item = $pay_requisition_002_item;
           $DeliveryPackingCode2->save();
-
+          // receipt
           // DB::select(" UPDATE customers_addr_sent SET packing_code=".$DeliveryPackingCode->id.",receipt_no='".$rsDelivery[0]->receipt."' WHERE (invoice_code='".$rsDelivery[0]->receipt."'); ");
           $DeliveryPackingCode->bill_remain_status = 2;
           $DeliveryPackingCode->ref_bill_id = $DeliveryPackingCode2->id;

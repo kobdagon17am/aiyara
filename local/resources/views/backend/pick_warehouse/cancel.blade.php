@@ -140,9 +140,15 @@
             </div>
 
            <div class="col-2" style="margin-left: 3%;">
+            @if(isset($_GET["remain"]))
+            <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/pay_requisition_001_remain") }}">
+              <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
+            </a>
+            @else
             <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/pay_requisition_001") }}">
               <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
             </a>
+            @endif
           </div>
 
         </div>

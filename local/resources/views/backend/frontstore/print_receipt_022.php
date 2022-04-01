@@ -1448,14 +1448,14 @@ for ($j=0; $j < $amt_page ; $j++) {
     </tr>
 
 
-    <tr>
+    <!-- <tr>
       <td colspan="3" style="font-size: 14px !important;margin-left: 5% !important;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+21) ; "); ?>
-        <?php echo @$DB[0]->a ; ?> &nbsp;
+        <php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+21) ; "); ?>
+        <php echo @$DB[0]->a ; ?> &nbsp;
       </td>
       <td style="text-align: right;">
       </td>
-    </tr>
+    </tr> -->
 
   </table>
 </div>

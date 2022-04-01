@@ -2446,7 +2446,9 @@ class FrontstoreController extends Controller
 
       foreach (@$sDBFrontstoreSumCostActionUser as $r) {
         @$cnt_row1 += 1;
-
+        if($r->action_user_name == ''){
+          $r->action_user_name = 'V3';
+        }
         $show .= '
                     <tr>
                       <td>' . $r->action_user_name . '</td>
@@ -2477,10 +2479,10 @@ class FrontstoreController extends Controller
                 SUM(
                 (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
                 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+                 /* (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) + */
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
-                (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+                (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */
+                /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
                 ) as total_price,
 
                 SUM(
@@ -2490,6 +2492,7 @@ class FrontstoreController extends Controller
                 FROM
                 db_orders
                 WHERE 1
+                AND approve_status <> 5
                 $action_user_011
                 $startDate1
                 $endDate1
@@ -2503,6 +2506,8 @@ class FrontstoreController extends Controller
                 $viewcondition_01
 
         ");
+
+   
 
       $show .= '
                     <tr>
@@ -2581,6 +2586,9 @@ class FrontstoreController extends Controller
         @$sum_cnt += $r->cnt;
         @$sum_sum += $r->sum;
 
+        if($r->name == ''){
+          $r->name = 'V3';
+        }
 
         $show .= '
                     <tr>

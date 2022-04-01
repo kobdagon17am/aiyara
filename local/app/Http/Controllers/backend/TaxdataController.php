@@ -107,7 +107,7 @@ class TaxdataController extends Controller
       ->addColumn('customer_name', function($row) {
       	if(@$row->customer_id_fk!=''){
          	$Customer = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
-        	return @$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+        	return @$Customer[0]->user_name ." : ". @$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
       	}else{
       		return '';
       	}
