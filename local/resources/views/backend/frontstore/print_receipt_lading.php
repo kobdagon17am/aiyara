@@ -827,7 +827,7 @@ if(!empty($db_orders[0]->action_user)){
                         }
 
                       }
-   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address : NULL;
+   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("

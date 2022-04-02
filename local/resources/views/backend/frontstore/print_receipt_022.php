@@ -806,7 +806,7 @@ if(!empty($db_orders[0]->action_user)){
                                 //   }
                                 // }else{
                                   // if(!empty(@$addr[0]->tel) || !empty(@$addr[0]->tel_home)){
-                                    $tel = 'Tel. '. @$addr[0]->tel . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                    $tel = 'Tel. '. @$addr[0]->tel . ' / '.@$addr[0]->tel_home;
                                   // }
                                 // }
 
@@ -815,7 +815,7 @@ if(!empty($db_orders[0]->action_user)){
                       }
 
 
-   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address : NULL;
+   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address  . ' ' . $tel : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("
