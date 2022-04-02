@@ -110,9 +110,17 @@
                                 {{ $order->order_payment_code }} </span> @endif
                     </h6>
 
-                    <h6 class="m-b-20 ">Paid by : @if ($order->pay_type_name)<span class="text-success">
+                    {{-- <h6 class="m-b-20 ">Paid by : @if ($order->pay_type_name)<span class="text-success">
                                 {{ $order->pay_type_name }} </span> @endif
-                    </h6>
+                    </h6> --}}
+
+                    @if($order->aistockist)
+                    <?php
+                     $aistockis = App\Helpers\Frontend::get_customer_id($order->aistockist);
+
+                    ?>
+                     <b class="m-b-20">ซื้อผ่าน Ai-Stockist </b><br> <span> {{$aistockis->first_name}} {{$aistockis->last_name}} ( {{$aistockis->user_name}} ) </span></b>
+                   @endif
 
                     {{-- <table class="table table-responsive invoice-table invoice-order table-borderless">
                <tbody>

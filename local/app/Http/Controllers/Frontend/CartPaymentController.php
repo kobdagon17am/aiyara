@@ -280,6 +280,7 @@ class CartPaymentController extends Controller
 
     public function payment_address(Request $rs)
     {
+
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
@@ -367,6 +368,7 @@ class CartPaymentController extends Controller
 
     public function cart_payment_transfer($code_order)
     {
+
 
         if ($code_order) {
 

@@ -363,6 +363,46 @@ class AipocketController extends Controller
     return $data;
   }
 
+  public function check_customer_aistockis(Request $request)
+  {
+
+    $user_name = Auth::guard('c_user')->user()->user_name;
+    if($user_name == $request->user_name || strtolower($user_name) ==  strtolower($request->user_name)){
+      $resule['message'] = 'ไม่สามารถใช้ User ตัวเองในการซื้อผ่าน Aistockist ได้';
+      $resule['status'] = 'fail';
+      $data = array('status' => 'fail', 'data' => $resule);
+      return $data;
+    }
+    $resule = LineModel::check_line_backend($user_name, $request->user_name);
+    if ($resule['status'] == 'success') {
+
+     if( $resule['data']->aistockist_status== 0){
+      $resule['message'] = 'User นี้ไม่เป็น Aistockist';
+      $resule['status'] = 'fail';
+      $data = array('status' => 'fail', 'data' => $resule);
+      return $data;
+     }
+      if (empty($resule['data']->pv_mt_active) || (strtotime($resule['data']->pv_mt_active) < strtotime(date('Ymd')))) {
+        $pv_mt_active = '<span class="label label-danger"  data-toggle="tooltip" data-placement="right" data-original-title="' . date('d/m/Y', strtotime($resule['data']->pv_mt_active)) . '"  style="font-size: 14px">Not Active </span>  ';
+      } else {
+        $pv_mt_active = '<span class="label label-info" style="font-size: 12px">Active ถึง ' . date('d/m/Y', strtotime($resule['data']->pv_mt_active)) . '</span>';
+      }
+
+      if (empty($resule['data']->pv_tv_active) || (strtotime($resule['data']->pv_tv_active) < strtotime(date('Ymd')))) {
+        $pv_tv_active = '<span class="label label-danger"  data-toggle="tooltip" data-placement="right" data-original-title="' . date('d/m/Y', strtotime($resule['data']->pv_tv_active)) . '"  style="font-size: 14px">Not Active </span>  ';
+      } else {
+        $pv_tv_active = '<span class="label label-info" style="font-size: 12px">Active ถึง ' . date('d/m/Y', strtotime($resule['data']->pv_tv_active)) . '</span>';
+      }
+      $data = array('status' => 'success', 'data' => $resule, 'pv_tv_active' => $pv_tv_active, 'pv_mt_active' => $pv_mt_active);
+    } else {
+      $data = array('status' => 'fail', 'data' => $resule);
+    }
+
+    //$data = ['status'=>'fail'];
+
+    return $data;
+  }
+
   public function use_aipocket(Request $request)
   {
     $type = $request->type;
