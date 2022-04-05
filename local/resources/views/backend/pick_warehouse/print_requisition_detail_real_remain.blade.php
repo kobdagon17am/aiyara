@@ -209,6 +209,133 @@ tr.border_bottom td {
 $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$data[0])->orderBy('delivery_id_fk','asc')->get();  
 $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$data[0])->first();
 $all_order = explode(',',$db_pick_pack_packing_code->receipt);
+$arr_has_db_pick_pack_packing_data = [];
+
+// วนเช็ค
+
+foreach($db_pick_pack_packing_data as $index => $pick_pack_packing_data){
+
+  $packing = DB::select(" SELECT * FROM db_pick_pack_packing WHERE delivery_id_fk=".$pick_pack_packing_data->delivery_id_fk." and packing_code_id_fk=".$data[0]."  GROUP BY packing_code ");
+        $recipient_name = '';
+            $delivery = DB::select(" SELECT
+              db_delivery.set_addr_send_this,
+              db_delivery.recipient_name,
+              db_delivery.addr_send,
+              db_delivery.postcode,
+              db_delivery.mobile,
+              db_delivery.tel_home,
+              db_delivery.status_pack,
+              db_delivery.receipt,
+              db_delivery.id as delivery_id_fk,
+              db_delivery.orders_id_fk
+              FROM
+              db_delivery
+              WHERE 
+              db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." AND set_addr_send_this=1 ");
+              $recipient_name = @$delivery[0]->recipient_name?@$delivery[0]->recipient_name:'';
+              $addr_send = @$delivery[0]->addr_send." ".@$delivery[0]->postcode;
+              $tel = @$delivery[0]->mobile." ".@$delivery[0]->tel_home;
+              $receipt = '';
+            if(@$delivery[0]->status_pack==1){
+                  $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$delivery[0]->delivery_id_fk."");
+                  $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+                  $arr1 = [];
+                  foreach ($d2 as $key => $v) {
+                    if (in_array($v->receipt, $all_order)) {
+                      array_push( $arr1 ,$v->receipt);
+                      }
+                  }
+                  $receipt = implode(',',$arr1);
+          
+            }else{
+                  $receipt = @$delivery[0]->receipt;
+            }
+
+            $sTable = DB::select(" 
+
+SELECT 
+db_pick_pack_packing.id,
+db_pick_pack_packing.p_size,
+db_pick_pack_packing.p_weight,
+db_pick_pack_packing.p_amt_box,
+db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+db_pick_pack_packing.packing_code as packing_code,
+db_delivery.id as db_delivery_id,
+db_delivery.packing_code as db_delivery_packing_code
+FROM `db_pick_pack_packing` 
+LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+WHERE 
+db_pick_pack_packing.packing_code_id_fk =".$data[0]." 
+AND db_pick_pack_packing.delivery_id_fk = ".$pick_pack_packing_data->delivery_id_fk."
+ORDER BY db_pick_pack_packing.id
+");
+
+foreach ($sTable as $key => $row) {
+
+  $sum_amt = 0 ;
+  $r_ch_t = '';
+  $fid_arr = explode(',',$receipt); 
+  $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
+  $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
+  ->where('pick_pack_requisition_code_id_fk',$db_pick_pack_packing_code->ref_bill_id)
+  ->where('amt_remain','>',0)
+  ->orderBy('time_pay','desc')
+  ->get();
+  $arr_002 = [];
+  foreach($db_pay_requisition_002 as $data_002){
+      if(!isset($arr_002[$data_002->product_id_fk])){
+        $arr_002[$data_002->product_id_fk] = $data_002->id;
+      }
+  }
+
+  $db_pay_requisition_002_items = DB::table('db_pay_requisition_002_item')
+  ->select('db_pay_requisition_002_item.*')
+  ->whereIn('db_pay_requisition_002_item.requisition_002_id',$arr_002)
+  ->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+  ->where('db_pay_requisition_002_item.amt_remain','>',0)
+  ->orderBy('db_pay_requisition_002_item.requisition_002_id','desc')
+  ->get();
+
+  $arr_002_item2 = [];
+  foreach($db_pay_requisition_002_items as $data_002_item2){
+      if(!isset($arr_002_item2[$data_002_item2->product_id_fk])){
+        $arr_002_item2[$data_002_item2->product_id_fk] = $data_002_item2;
+      }
+  }
+
+if(@$arr_002_item2){
+  foreach ($arr_002_item2 as $key => $value) {
+    if(!empty($value->product_id_fk)){
+      // true
+      $arr_has_db_pick_pack_packing_data[$pick_pack_packing_data->id] = $pick_pack_packing_data->id;
+}
+
+}
+    
+}
+
+}
+
+}
+
+
+// วนแสดง
+
+foreach($db_pick_pack_packing_data as $no_data){
+  if (in_array($no_data->id, $arr_has_db_pick_pack_packing_data)) {
+      // true
+  }else{
+    DB::table('db_pick_pack_packing')->where('id',$no_data->id)->update([
+      'no_product' => 1,
+    ]);
+  }
+}  
+
+$db_pick_pack_packing_data = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$data[0])->whereIn('id',$arr_has_db_pick_pack_packing_data)->orderBy('delivery_id_fk','asc')->get();
+
+$db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$data[0])->first();
+$all_order = explode(',',$db_pick_pack_packing_code->receipt);
+
 ?>
 
 @foreach($db_pick_pack_packing_data as $index => $pick_pack_packing_data)

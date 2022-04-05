@@ -723,9 +723,13 @@ class Pick_warehouseController extends Controller
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
-
-        $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
-    
+        if($row->bill_remain_status==1){
+          $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->where('no_product',0)->get();
+        }else{
+          $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->get();
+        }
+ 
+        $order_code_arr = explode(',',$row->receipt);
         if(!empty($DP)){
         
           $pn = '<div class="divTable"><div class="divTableBody">';
@@ -749,7 +753,9 @@ class Pick_warehouseController extends Controller
               $d2 = DB::select(" SELECT * FROM `db_delivery` where id in (".$rs1.")  ");
               $arr2 = [];
               foreach ($d2 as $key => $v2) {
-                array_push( $arr2 ,$v2->receipt);
+              
+                    array_push( $arr2 ,$v2->receipt);
+               
               }
               $rs2 = implode(',',$arr2);
               $pn .=     
@@ -2189,11 +2195,24 @@ ORDER BY db_pick_pack_packing.id
       ->addColumn('column_006', function($row) {
           // return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
 
+          $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')
+          ->where('id',$row->pick_pack_requisition_code_id_fk)->first();
+
           // วุฒิแก้อีกรอบ
-          $DP = DB::table('db_pick_pack_packing')
-          ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
-          ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
-          ->get();
+          if($db_pick_pack_packing_code->bill_remain_status==1){
+            $DP = DB::table('db_pick_pack_packing')
+            ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
+            ->where('no_product',0)
+            ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
+            ->get();
+          }else{
+            $DP = DB::table('db_pick_pack_packing')
+            ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
+            ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
+            ->get();
+          }
+     
+         
           $pn = '';
           $f = [] ;
           $tx = '';

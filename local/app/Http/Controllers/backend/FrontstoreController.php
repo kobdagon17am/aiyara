@@ -2466,7 +2466,7 @@ class FrontstoreController extends Controller
 
     if (@$cnt_row1 > 1) {
 
-
+// วุฒิบวกค่าธรรมเนียม
       $sDBFrontstoreTOTAL = DB::select("
                 SELECT
                 SUM(CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) AS credit_price,
@@ -2479,7 +2479,7 @@ class FrontstoreController extends Controller
                 SUM(
                 (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
                 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                 /* (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) + */
+                (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) + 
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
                 (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */
                 /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
@@ -2507,7 +2507,7 @@ class FrontstoreController extends Controller
 
         ");
 
-   
+  //  วุฒิเพิ่มมา + $sDBFrontstoreTOTAL[0]->fee_amt วุฒิบวกค่าธรรมเนียม
 
       $show .= '
                     <tr>
@@ -2515,7 +2515,7 @@ class FrontstoreController extends Controller
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->cash_pay, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->aicash_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->transfer_price, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->credit_price, 2) . ' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->credit_price+$sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->total_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->shipping_price, 2) . ' </th>
