@@ -19,6 +19,7 @@ class CouponCodeController extends Controller
 
    public static function coupon(Request $request){
 
+
     $cartCollection = Cart::session($request->type)->getContent();
     $data = $cartCollection->toArray();
 
@@ -37,7 +38,7 @@ class CouponCodeController extends Controller
         ->select('db_promotion_code.promotion_id_fk','db_promotion_code.id','db_promotion_code.pro_sdate','db_promotion_code.pro_edate','db_promotion_cus.promotion_code','promotions.name_thai','promotions.name_eng','promotions.name_laos','promotions.name_burma','promotions.name_cambodia','db_promotion_cus.pro_status')
        ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
-       ->where('promotions.orders_type_id','LIKE','%'.$request->type.'%')
+      //  ->where('promotions.orders_type_id','LIKE','%'.$request->type.'%')
        ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
        ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
        ->wheredate('promotions.promotion_coupon_status','=',1)//คูปองเท่านั้น
@@ -48,7 +49,8 @@ class CouponCodeController extends Controller
        ->where('db_promotion_cus.promotion_code','=',$request->coupon_code)
        ->first();
 
-
+      //  dd($coupon);
+      //  dd('B1FXHGFC3');
 
        if($coupon){
           if($coupon->pro_status == 2){
