@@ -389,7 +389,7 @@ $created_at
 $transfer_bill_approvedate
 $customer_id
 
-ORDER BY code_order ASC
+ORDER BY code_order DESC
 
 
                 ");

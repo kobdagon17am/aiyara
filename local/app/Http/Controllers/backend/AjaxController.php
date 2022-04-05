@@ -1942,11 +1942,14 @@ class AjaxController extends Controller
         $gift_voucher_price = str_replace(',','',$request->gift_voucher_price);
         $gift_voucher_cost = str_replace(',','',$request->gift_voucher_cost);
         // $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
-        if($credit_price>$sum_price){
-            $credit_price = $credit_price;
-        }else{
+
+        // วุฒิปรับให้จ่ายเกินไม่ได้ 5/4/2022
+        // if($credit_price>$sum_price){
+        //     $credit_price = $credit_price;
+        // }else{
             $credit_price = $sum_price;
-        }
+        // }
+
         // gift_voucher_price
         DB::select(" UPDATE db_orders SET credit_price=$credit_price WHERE id=$frontstore_id ");
 
