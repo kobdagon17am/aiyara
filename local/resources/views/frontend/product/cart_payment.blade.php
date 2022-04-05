@@ -98,6 +98,7 @@
                                      </div>
 
                                      <div class="row">
+                                       @if($bill['type'] != 4)
                                          <div class="col-md-6">
                                              <div class="card-block" style="padding: 10px;">
                                                  <h6>ซื้อผ่าน AiStockist</h6>
@@ -119,6 +120,7 @@
 
                                              </div>
                                          </div>
+                                         @endif
 
                                          <div class="col-md-6 col-lg-6 col-xl-6" id="data_useraistockis"
                                          style="display: none">

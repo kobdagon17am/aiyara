@@ -397,7 +397,7 @@ class Product extends Model
             ->where('promotions.business_location', '=', $business_location_id)
             ->where('promotions_cost.business_location_id', '=', $business_location_id)
             // ->where('promotions.promotion_coupon_status', '=', 0)// 0 ทั่วไป 1 ผู้มีคูปองเท่านั้น
-            ->where('promotions.status', '=', 0)// 0 ใช้ได้
+            // ->where('promotions.status', '=', 0)// 0 ใช้ได้
             ->where('promotions.id', '=', $promotion_id)
             ->orderby('id', 'DESC')
             ->first();
