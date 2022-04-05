@@ -41,8 +41,8 @@ class CouponCodeController extends Controller
       //  ->where('promotions.orders_type_id','LIKE','%'.$request->type.'%')
        ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
        ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
-       ->wheredate('promotions.promotion_coupon_status','=',1)//คูปองเท่านั้น
-       ->wheredate('promotions.status','=',1)//แสดงผล
+      //  ->wheredate('promotions.promotion_coupon_status','=',1)//คูปองเท่านั้น
+      //  ->wheredate('promotions.status','=',1)//แสดงผล
        ->wheredate('db_promotion_code.pro_sdate','<=',date('Y-m-d'))
        ->wheredate('db_promotion_code.pro_edate','>=',date('Y-m-d'))
        ->where('db_promotion_cus.pro_status','=',1)//อนุมัติ code นี้ใช้ได้
