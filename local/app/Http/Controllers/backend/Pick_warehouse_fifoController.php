@@ -80,7 +80,8 @@ class Pick_warehouse_fifoController extends Controller
       
       // return gettype($row_id);
       // return $arr_picking_id;
-      // dd();
+      // dd(); db_pick_pack_requisition_code
+
       if(!empty($picking)){
 
           $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in ($picking) ; ");
@@ -222,7 +223,7 @@ class Pick_warehouse_fifoController extends Controller
               DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
               DB::select(" CREATE TABLE $temp_db_pick_pack_requisition_code LIKE db_pick_pack_requisition_code ");
               DB::select(" INSERT INTO $temp_db_pick_pack_requisition_code select * from db_pick_pack_requisition_code ");
-
+ 
               DB::select(" INSERT IGNORE INTO $temp_db_pick_pack_requisition_code(pick_pack_packing_code_id_fk,pick_pack_packing_code,action_user,receipts) VALUES ('$picking','$picking',".(\Auth::user()->id).",'".$receipts."') ");
               $lastInsertId01 = DB::getPdo()->lastInsertId();
 

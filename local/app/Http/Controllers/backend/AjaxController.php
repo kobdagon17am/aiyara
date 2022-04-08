@@ -1388,10 +1388,13 @@ class AjaxController extends Controller
         $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
         $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$sFrontstore->business_location_id_fk."' AND shipping_type_id=1 ");
 
-        if($sum_price>=$shipping[0]->purchase_amt){
-            DB::select(" UPDATE db_orders SET  shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
-            $shipping_price = 0 ;
+        if(isset($shipping[0]->purchase_amt)){
+            if($sum_price>=$shipping[0]->purchase_amt){
+                DB::select(" UPDATE db_orders SET  shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
+                $shipping_price = 0 ;
+            }
         }
+       
 
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
@@ -1942,11 +1945,14 @@ class AjaxController extends Controller
         $gift_voucher_price = str_replace(',','',$request->gift_voucher_price);
         $gift_voucher_cost = str_replace(',','',$request->gift_voucher_cost);
         // $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
-        if($credit_price>$sum_price){
-            $credit_price = $credit_price;
-        }else{
+
+        // วุฒิปรับให้จ่ายเกินไม่ได้ 5/4/2022
+        // if($credit_price>$sum_price){
+        //     $credit_price = $credit_price;
+        // }else{
             $credit_price = $sum_price;
-        }
+        // }
+
         // gift_voucher_price
         DB::select(" UPDATE db_orders SET credit_price=$credit_price WHERE id=$frontstore_id ");
 

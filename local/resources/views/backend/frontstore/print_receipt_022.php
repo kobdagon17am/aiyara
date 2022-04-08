@@ -787,9 +787,9 @@ if(!empty($db_orders[0]->action_user)){
                                 // print_r(@$addr[0]->recipient_name);
                                 @$address = @$addr[0]->recipient_name;
                                 @$address .= ' '.@$addr[0]->addr_no;
-                                @$address .= ",". @$addr[0]->tamname. " ";
-                                @$address .= ",". @$addr[0]->ampname;
-                                @$address .= ",". @$addr[0]->provname;
+                                @$address .= ", ต.". @$addr[0]->tamname. " ";
+                                @$address .= ", อ.". @$addr[0]->ampname;
+                                @$address .= ", จ.". @$addr[0]->provname;
                                 @$address .= ",". @$addr[0]->zip_code;
                                 // @$address .= " ". @$addr[0]->tel_mobile ? '<br>Tel. '. @$addr[0]->tel_mobile:'' ;
                                 // @$address .= " ". @$addr[0]->tel_home?', '.@$addr[0]->tel_home:'' ;

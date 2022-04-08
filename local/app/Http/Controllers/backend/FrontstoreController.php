@@ -2464,9 +2464,10 @@ class FrontstoreController extends Controller
       }
     }
 
-    if (@$cnt_row1 > 1) {
+    // if (@$cnt_row1 > 1) {
 
-// วุฒิบวกค่าธรรมเนียม
+// วุฒิบวกค่าธรรมเนียม 
+// วุฒิเพิ่มค่าธรรมเนียมไว้หักล้าง
       $sDBFrontstoreTOTAL = DB::select("
                 SELECT
                 SUM(CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) AS credit_price,
@@ -2476,12 +2477,19 @@ class FrontstoreController extends Controller
                 SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
                 SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
 
+                SUM(CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) AS fee_amt_charger_in,
+
+                db_orders.code_order,
+
                 SUM(
                 (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
                 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) + 
+                /*  (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +  */
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */
+                (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
+
+                (CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) 
+                
                 /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
                 ) as total_price,
 
@@ -2489,10 +2497,13 @@ class FrontstoreController extends Controller
                  CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
+                
+
                 FROM
                 db_orders
                 WHERE 1
                 AND approve_status <> 5
+                AND approve_status <> 0
                 $action_user_011
                 $startDate1
                 $endDate1
@@ -2506,6 +2517,32 @@ class FrontstoreController extends Controller
                 $viewcondition_01
 
         ");
+//       $sDBFrontstoreTOTAL = DB::select("
+//       SELECT
+
+//       db_orders.code_order
+
+      
+
+//       FROM
+//       db_orders
+//       WHERE 1
+//       AND approve_status <> 5
+//       AND approve_status <> 0
+//       $action_user_011
+//       $startDate1
+//       $endDate1
+//       $invoice_code
+//       $purchase_type_id_fk
+//       $customer_username
+//       $customer_name
+//       $action_user_02
+//       $status_sent_money
+//       $approve_status
+//       $viewcondition_01
+
+// ");
+        // dd($sDBFrontstoreTOTAL[0]->fee_amt_charger_in);
 
   //  วุฒิเพิ่มมา + $sDBFrontstoreTOTAL[0]->fee_amt วุฒิบวกค่าธรรมเนียม
 
@@ -2515,12 +2552,12 @@ class FrontstoreController extends Controller
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->cash_pay, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->aicash_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->transfer_price, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->credit_price+$sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->credit_price+ $sDBFrontstoreTOTAL[0]->fee_amt_charger_in, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->total_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->shipping_price, 2) . ' </th>
                     </tr>';
-    }
+    // }
 
     $show .= '
                      </tbody>
@@ -3622,7 +3659,10 @@ ORDER BY created_at DESC
         // if (@$row->cash_price != 0) {
         //   $tootip_price = ' เงินสด: ' . $row->cash_price;
         // } elseif (@$row->cash_pay != 0) {
-          $tootip_price = ' เงินสด: ' . $row->cash_pay;
+          if($row->cash_pay!=0){
+            $tootip_price = ' เงินสด: ' . $row->cash_pay;
+          }
+
         // }
 
         if (@$row->sum_credit_price != 0) {
