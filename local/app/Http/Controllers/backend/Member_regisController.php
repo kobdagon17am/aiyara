@@ -148,6 +148,12 @@ class Member_regisController extends Controller
 //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
 
               $Customers = \App\Models\Backend\Customers::find($sRow->customer_id);
+              // วุฒิเพิ่มมาเช็คว่าหากเอกสาร อนุมัติครบ 4 แล้วห้ามแก้ไข
+              if($Customers->regis_doc1_status==1 && $Customers->regis_doc2_status==1 && $Customers->regis_doc3_status==1 && $Customers->regis_doc4_status==1){
+                  return redirect()->back()->with(['alert'=>\App\Models\Alert::Msg('error','เอกสารอนุมัติครบ ไม่สามารถแก้ไขได้แล้ว')]);
+              }
+
+
               if(request('type')==1){
                  $Customers->regis_doc1_status = request('regis_status');
               }

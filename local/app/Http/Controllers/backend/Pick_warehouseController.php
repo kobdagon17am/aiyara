@@ -2035,13 +2035,15 @@ ORDER BY db_pick_pack_packing.id
               $arr2 = implode(',', $arr1);
 
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=1 ;");
+              $d0 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=0 ;");
 
               // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
-              if(empty($d3)){
+              if(!empty($d0)){
                 $d3_arr = [];
                 $data_d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2);");
                 foreach($data_d3 as $data){
                   if($data->set_addr_send_this==0){
+                    // dd($data->orders_id_fk);
                     $order_this = DB::table('db_orders')->where('id',$data->orders_id_fk)->first();
                     if($order_this){
                       $order_send = DB::table('db_orders')->where('code_order','like','%'.$order_this->pay_with_other_bill_note.'%')->first();
@@ -2061,7 +2063,8 @@ ORDER BY db_pick_pack_packing.id
                 }
               }
               
-              $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=0 ;");
+              // $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=0 ;");
+              $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2);");
 
               if(!empty($d3)){
                      foreach ($d3 as $key => $v3) {
@@ -2076,7 +2079,7 @@ ORDER BY db_pick_pack_packing.id
                       //  }
                         
                       $check = DB::table('db_consignments')->where('recipient_code',$recipient_code)->where('pick_pack_requisition_code_id_fk',$reg->packing_id)->first();
-                  
+                      
                       if(!$check){
                         DB::select(" INSERT IGNORE INTO `db_consignments` 
                         SET 

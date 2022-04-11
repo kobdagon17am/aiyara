@@ -2203,7 +2203,7 @@ class FrontstoreController extends Controller
   public function getSumCostActionUser(Request $req)
   {
 
-    // return $request;
+    // return $request; action_user
     $user_login_id = \Auth::user()->id;
     $sPermission = \Auth::user()->permission;
     if ($sPermission == 1) {
@@ -2311,8 +2311,14 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->action_user)) {
-      $action_user_02 = " AND db_orders.action_user = '" . $req->action_user . "' ";
-      $action_user_022 = " AND db_add_ai_cash.action_user = '" . $req->action_user . "' ";
+      if($req->action_user=='v3'){
+        $action_user_02 = " AND db_orders.action_user = '" . 0 . "' ";
+        $action_user_022 = " AND db_add_ai_cash.action_user = '" . 0 . "' ";
+      }else{
+        $action_user_02 = " AND db_orders.action_user = '" . $req->action_user . "' ";
+        $action_user_022 = " AND db_add_ai_cash.action_user = '" . $req->action_user . "' ";
+      }
+
     } else {
       $action_user_02 = "";
       $action_user_022 = "";
@@ -2488,7 +2494,7 @@ class FrontstoreController extends Controller
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
                 (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
 
-                (CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) 
+                (CASE WHEN db_orders.charger_type = 2 THEN 0 WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END)
                 
                 /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
                 ) as total_price,
@@ -2517,6 +2523,8 @@ class FrontstoreController extends Controller
                 $viewcondition_01
 
         ");
+
+
 //       $sDBFrontstoreTOTAL = DB::select("
 //       SELECT
 

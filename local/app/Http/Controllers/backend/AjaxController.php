@@ -1388,12 +1388,10 @@ class AjaxController extends Controller
         $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
         $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$sFrontstore->business_location_id_fk."' AND shipping_type_id=1 ");
 
-        if(isset($shipping[0]->purchase_amt)){
             if($sum_price>=$shipping[0]->purchase_amt){
                 DB::select(" UPDATE db_orders SET  shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
                 $shipping_price = 0 ;
             }
-        }
        
 
 

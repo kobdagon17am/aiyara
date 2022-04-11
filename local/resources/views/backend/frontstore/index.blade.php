@@ -209,6 +209,9 @@
               <div class="divTableCell" style="width: 15%">
                 <select id="action_user" name="action_user" class="form-control select2-templating "  >
                   <option value="">Select</option>
+                  <option value="v3"  >
+                    V3
+                  </option>
                   @if(@$sUser)
                     @foreach(@$sUser AS $r)
                       <option value="{{$r->id}}"  >
