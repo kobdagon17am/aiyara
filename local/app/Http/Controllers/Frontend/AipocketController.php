@@ -367,12 +367,12 @@ class AipocketController extends Controller
   {
 
     $user_name = Auth::guard('c_user')->user()->user_name;
-    if($user_name == $request->user_name || strtolower($user_name) ==  strtolower($request->user_name)){
-      $resule['message'] = 'ไม่สามารถใช้ User ตัวเองในการซื้อผ่าน Aistockist ได้';
-      $resule['status'] = 'fail';
-      $data = array('status' => 'fail', 'data' => $resule);
-      return $data;
-    }
+    // if($user_name == $request->user_name || strtolower($user_name) ==  strtolower($request->user_name)){
+    //   $resule['message'] = 'ไม่สามารถใช้ User ตัวเองในการซื้อผ่าน Aistockist ได้';
+    //   $resule['status'] = 'fail';
+    //   $data = array('status' => 'fail', 'data' => $resule);
+    //   return $data;
+    // }
     $resule = LineModel::check_line_backend($user_name, $request->user_name);
     if ($resule['status'] == 'success') {
 
