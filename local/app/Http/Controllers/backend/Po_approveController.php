@@ -329,7 +329,10 @@ class Po_approveController extends Controller
         if(!empty($req->bill_sdate) && !empty($req->bill_edate)){
            $created_at = " and date(db_orders.created_at) BETWEEN '".$req->bill_sdate."' AND '".$req->bill_edate."'  " ;
         }else{
-           $created_at = "";
+        //    $created_at = "";
+        $req->bill_sdate = date('Y-m-d');
+        $req->bill_edate = date('Y-m-d');
+        $created_at = " and date(db_orders.created_at) BETWEEN '".$req->bill_sdate."' AND '".$req->bill_edate."'  " ;
         }
 
         if(!empty($req->transfer_bill_approve_sdate) && !empty($req->transfer_bill_approve_edate)){

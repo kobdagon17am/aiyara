@@ -609,8 +609,12 @@ class Add_ai_cashController extends Controller
     if (!empty($req->bill_sdate) && !empty($req->bill_edate)) {
       $w05 = " and date(db_add_ai_cash.created_at) BETWEEN '" . $req->bill_sdate . "' AND '" . $req->bill_edate . "'  ";
     } else {
-      $w05 = "";
+      // $w05 = "";
+      $req->bill_sdate = date('Y-m-d');
+      $req->bill_edate = date('Y-m-d');
+      $w05 = " and date(db_add_ai_cash.created_at) BETWEEN '" . $req->bill_sdate . "' AND '" . $req->bill_edate . "'  ";
     }
+
 
     if (!empty($req->approve_sdate) && !empty($req->approve_edate)) {
       $w06 = " and date(db_add_ai_cash.approve_date) BETWEEN '" . $req->approve_sdate . "' AND '" . $req->approve_edate . "'  ";
@@ -638,7 +642,7 @@ class Add_ai_cashController extends Controller
             " . $w07 . "
             ORDER BY db_add_ai_cash.created_at DESC
          ");
-
+         
     $sQuery = \DataTables::of($sTable);
     return $sQuery
       ->addColumn('customer_name', function ($row) {

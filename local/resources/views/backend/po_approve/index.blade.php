@@ -224,7 +224,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-6 " >
+                <div class="col-md-6 " style="display: none;">
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label"> วันที่อนุมัติ :  </label>
                     <div class="col-md-9 d-flex">
@@ -626,10 +626,11 @@ $(function() {
                   event.preventDefault();
 
                   $('#data-table').DataTable().clear();
+                  $('#data-table-02').DataTable().clear();
 
                   $(".myloading").show();
                   $(".div_datatable_01").show();
-                  $(".div_datatable_02").hide();
+                  $(".div_datatable_02").show();
 
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
@@ -652,11 +653,11 @@ $(function() {
                     return false;
                   }
                   // alert(branch_id_fk);
-                  if(branch_id_fk=='' || branch_id_fk === null ){
-                    $('#branch_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                  }
+                  // if(branch_id_fk=='' || branch_id_fk === null ){
+                  //   $('#branch_id_fk').select2('open');
+                  //   $(".myloading").hide();
+                  //   return false;
+                  // }
 
                    if(bill_type=='' || bill_type === null ){
                     $('#bill_type').select2('open');
@@ -781,27 +782,27 @@ $(function() {
                                                 // approve_edate:approve_edate,
                                               },
 
-                                              data: function ( d ) {
-                                                d.Where={};
-                                                $('.myWhere').each(function() {
-                                                  if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                    d.Where[$(this).attr('name')] = $.trim($(this).val());
-                                                  }
-                                                });
-                                                d.Like={};
-                                                $('.myLike').each(function() {
-                                                  if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                    d.Like[$(this).attr('name')] = $.trim($(this).val());
-                                                  }
-                                                });
-                                                d.Custom={};
-                                                $('.myCustom').each(function() {
-                                                  if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                                                    d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                                                  }
-                                                });
-                                                oData = d;
-                                              },
+                                              // data: function ( d ) {
+                                              //   d.Where={};
+                                              //   $('.myWhere').each(function() {
+                                              //     if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                              //       d.Where[$(this).attr('name')] = $.trim($(this).val());
+                                              //     }
+                                              //   });
+                                              //   d.Like={};
+                                              //   $('.myLike').each(function() {
+                                              //     if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                              //       d.Like[$(this).attr('name')] = $.trim($(this).val());
+                                              //     }
+                                              //   });
+                                              //   d.Custom={};
+                                              //   $('.myCustom').each(function() {
+                                              //     if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
+                                              //       d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                                              //     }
+                                              //   });
+                                              //   oData = d;
+                                              // },
                                               method: 'POST'
                                             },
 
@@ -821,7 +822,7 @@ $(function() {
             {data: 'id', title :'Tools', className: 'text-center w60'},
         ],
         rowCallback: function(nRow, aData, dataIndex){
-
+console.log(aData);
           if(aData['transfer_bill_status']==5){
             for (var i = 0; i < 6; i++) {
               $('td:eq( '+i+')', nRow).html(aData[i]).css({'color':'#d9d9d9','text-decoration':'line-through','font-style':'italic'});
