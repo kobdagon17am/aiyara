@@ -164,7 +164,7 @@ class Pick_warehouseController extends Controller
       return View('backend.pick_warehouse.form')->with(
         array(
            // 'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
-           'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
+           'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,'sRow'=> $sRow,
         ) );
     }
 

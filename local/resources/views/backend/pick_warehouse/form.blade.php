@@ -242,6 +242,26 @@
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการจ่ายสินค้า
                           </button>
                         </div>
+
+                        <?php 
+                        // if($sUser[0]->status_sent<6){ 
+                          // วุฒิเพิ่มมา
+                          if($sRow->status<6){ 
+                          ?>        
+                          <div class="col-md-12 text-center  "  >
+                                      <br>
+                                      <button type="submit" class="btn btn-danger btn-sm waves-effect font-size-16 btnCancelBill " >
+                                      x ยกเลิกใบเสร็จใบนี้
+                                      </button>
+                                    </div>
+                       <?php }else{ ?>     
+            
+                            <div class="col-md-12 text-center  " style="color: red;font-weight: bold;font-size: 18px;" >
+                                      <br>
+                                  * หมายเหตุ บิลนี้มีสถานะ ยกเลิกใบเบิก *
+                                    </div>
+            
+                       <?php } ?>     
                         
 
 
@@ -267,6 +287,57 @@
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 
+<script type="text/javascript">
+     
+  $(document).ready(function() {
+
+         $(document).on('click', '.btnCancelBill', function(){
+      
+          var id = "{{$id}}"; 
+
+                  Swal.fire({
+                    title: 'ยืนยัน ! ยกเลิก ใบเสร็จใบนี้ ',
+                    // text: 'You clicked the button!',
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#556ee6',
+                    cancelButtonColor: "#f46a6a"
+                    }).then(function (result) {
+                        if (result.value) {
+                          $(".myloading").show();
+                           $.ajax({
+                              url: " {{ url('backend/cancelBill') }} ", 
+                              method: "post",
+                              data: {
+                                id:id,
+                                "_token": "{{ csrf_token() }}", 
+                              },
+                              success:function(data)
+                              { 
+                                // console.log(data);
+                                // return false;
+                                    // Swal.fire({
+                                    //   type: 'success',
+                                    //   title: 'ทำการยกเลิกการจ่ายครั้งนี้เรียบร้อยแล้ว',
+                                    //   showConfirmButton: false,
+                                    //   timer: 2000
+                                    // });
+
+                                    setTimeout(function () {
+                                        location.replace("{{ url('backend/pay_requisition_001') }}");
+                                    }, 1000);
+                              }
+                            })
+                          
+                        }else{
+                          $(".myloading").hide();
+                        }
+                  });
+
+           });   
+
+  });
+ </script>
   
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
