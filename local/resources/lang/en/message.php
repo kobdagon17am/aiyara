@@ -94,6 +94,7 @@ return [
     'report_data' => 'Reports',
     'status_delivery' => 'Delevery Status',
     'pay_requisition_001_remain' => 'Pay by Bill of landing remain',
+    'pay_requisition_001_report' => 'Delivery report',
     ],
 
 // /backend/index

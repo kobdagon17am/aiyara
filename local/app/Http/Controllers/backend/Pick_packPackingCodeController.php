@@ -329,6 +329,253 @@ class Pick_packPackingCodeController extends Controller
       ->make(true);
     }
 
+    public function packing_list_for_fifo_report(Request $req){    
+
+      if(isset($req->startDate) && isset($req->endDate)){
+        $startDate = $req->startDate;
+        $endDate = $req->endDate;
+      }else{
+        $startDate = date('Y-m-d');
+      }
+
+      $pick_code = DB::table('db_pick_pack_packing_code')->whereIn('status',[4,5])
+      // ->where('sent_date','>=',$startDate)
+      ->pluck('id')->toArray();
+      $sTable = DB::table('db_consignments')->whereIn('pick_pack_requisition_code_id_fk',$pick_code)->orderBy('recipient_code','asc')->get();
+      // $sTable = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk='$reg->packing_id' group by pick_pack_requisition_code_id_fk order by recipient_code asc");
+      $sQuery = \DataTables::of($sTable);
+
+      return $sQuery
+
+      ->addColumn('column_001', function($row) {
+        
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+
+          $f = [] ;
+          foreach ($d as $key => $v) {
+             array_push($f,@$v->recipient_code);
+          }
+          // $f = implode('<br><br><br>',$f);
+            $web_all = "";
+          foreach($f as $value){
+            $web = "<div class='col-md-12' style='height: 70px;'>";
+            $web .=$value;
+            $web .= "</div>";
+            $web_all .=$web.'<br>';
+          }
+     
+          // return $f;
+          return $web_all;
+      })
+      ->escapeColumns('column_001') 
+
+
+      ->addColumn('column_002', function($row) {
+        
+         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+
+          $f = [] ;
+          foreach ($d as $key => $v) {
+             array_push($f,@$v->recipient_name." > ".@$v->address ." ".@$v->postcode.(@$v->mobile?" Tel.".@$v->mobile:"").(@$v->phone_no?", ".@$v->phone_no:"") );
+          }
+
+          $web_all = "";
+          foreach($f as $value){
+            $web = "<div class='col-md-12'style='height: 70px;'>";
+            $web .=$value;
+            $web .= "</div>";
+            $web_all .=$web.'<br>';
+          }
+
+          return $web_all;
+          // $f = implode('<br><br>',$f);
+          // return $f;
+
+
+      })
+      ->escapeColumns('column_002')  
+
+      ->addColumn('column_003', function($row) {
+          return "<input type='button' class=\"btn btn-primary btnExportElsx \" data-id='".$row->pick_pack_requisition_code_id_fk."' value='Export Excel' >";
+      })
+      ->escapeColumns('column_003')  
+
+      ->addColumn('column_004', function($row) {
+          
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+      
+          $f = [] ;
+          $ff = [] ;
+          foreach ($d as $key => $v) {
+             array_push($f,@$v->consignment_no);
+             array_push($ff,@$v->con_arr);
+          }
+          // $f = implode('<br><br><br>',$f);
+          // return $f;
+
+          $web_all = "";
+          foreach($f as $key => $value){
+            $web = "<div class='col-md-12'style='height: 70px;'><a href='javascript:;' class='con_arr_data_show' con_arr=' ".$ff[$key]."' >";
+            $web .=$value;
+            $web .= "</a></div>";
+            $web_all .=$web.'<br>';
+          }
+
+          return $web_all;
+
+      })
+      ->escapeColumns('column_004')  
+
+      ->addColumn('column_005', function($row) {
+          
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+    
+          $f = [] ;
+          $tx = '';
+          foreach ($d as $key => $v) {
+
+              $tx = '<center> 
+                 
+                <a href="backend/pick_warehouse/print_envelope/'.$v->recipient_code.'" target=_blank ><i class="bx bx-printer grow " data-toggle="tooltip" data-placement="left" title="ใบปะหน้ากล่อง" style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> 
+
+                 </center>' ;
+
+             array_push($f,@$tx);
+          }
+          // $f = implode('<br><br>',$f);
+          // return $f;
+
+          $web_all = "";
+          foreach($f as $value){
+            $web = "<div class='col-md-12'style='height: 70px;'>";
+            $web .=$value;
+            $web .= "</div>";
+            $web_all .=$web.'<br>';
+          }
+
+          return $web_all;
+
+      })
+      ->escapeColumns('column_005')
+
+      ->addColumn('column_008', function($row) {
+          
+        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+
+        $f = [] ;
+        $tx = '';
+        foreach ($d as $key => $v) {
+
+            $tx = '<center> 
+
+              <a href="javascript: void(0);" target=_blank data-id="'.$v->recipient_code.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
+
+               </center>' ;
+
+           array_push($f,@$tx);
+        }
+        // $f = implode('<br><br>',$f);
+        // return $f;
+        $web_all = "";
+        foreach($f as $value){
+          $web = "<div class='col-md-12'style='height: 70px;'>";
+          $web .=$value;
+          $web .= "</div>";
+          $web_all .=$web.'<br>';
+        }
+
+        return $web_all;
+
+    })
+    ->escapeColumns('column_008')
+
+      ->addColumn('column_006', function($row) {
+          // return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
+
+          $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')
+          ->where('id',$row->pick_pack_requisition_code_id_fk)->first();
+
+          // วุฒิแก้อีกรอบ
+          if($db_pick_pack_packing_code->bill_remain_status==1){
+            $DP = DB::table('db_pick_pack_packing')
+            ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
+            ->where('no_product',0)
+            ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
+            ->get();
+          }else{
+            $DP = DB::table('db_pick_pack_packing')
+            ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
+            ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
+            ->get();
+          }
+     
+         
+          $pn = '';
+          $f = [] ;
+          $tx = '';
+
+          if(!empty($DP)){
+            foreach ($DP as $key => $value) {
+              if($value->p_amt_box==null){
+                DB::table('db_pick_pack_packing')->where('id',$value->id)->update([
+                  'p_amt_box' => 1,
+                ]);
+                $value->p_amt_box = 1;
+              }
+              // $pn = '<input type="number" class="p_amt_box form-control" data-id="'.@$value->id.'" box-id="0"  type="text" value="'.@$value->p_amt_box.'">';
+              $pn = @$value->p_amt_box;
+              array_push($f,@$pn);
+            }
+          }
+
+          $web_all = "";
+          foreach($f as $value){
+            $web = "<div class='col-md-12'style='height: 70px;'>";
+            $web .=$value;
+            $web .= "</div>";
+            $web_all .=$web.'<br>';
+          }
+
+          return $web_all;
+      
+        })
+
+      ->escapeColumns('column_006')  
+
+      ->addColumn('column_007', function($row) {
+        $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
+        if($p_code){
+            $DP = DB::table('db_pick_pack_packing')
+            ->select('db_pick_pack_packing.*')
+            // ->join('db_consignments','db_consignments.delivery_id_fk','db_pick_pack_packing.delivery_id_fk')
+            ->where('db_pick_pack_packing.packing_code_id_fk',$p_code->id)
+            // ->orderBy('db_consignments.recipient_code','asc')
+            ->where('no_product',0)
+            ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
+            ->get();
+            if(!empty($DP)){
+              $pn = '';
+              $arr = [];
+              foreach ($DP as $key => $value) {
+                  $pn .=     
+                    '<div class="col-md-12" style="height: 70px;">
+                    <center> 
+                    <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
+                    </center>
+                    </div><br>';
+              } 
+               return $pn;
+            }else{
+              return '-';
+            }
+        }else{
+          return '-';
+        }
+        })
+
+      ->make(true);
+   }
+
  public function packing_list_for_fifo_02(Request $request){     
       // if(!empty($request->packing_id)){
           $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->id)->search();

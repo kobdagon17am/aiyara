@@ -45,6 +45,12 @@ class Pay_requisition_001Controller extends Controller
         ) );
     }
 
+    public function pay_requisition_001_report(Request $request)
+    {
+
+        return View('backend.pay_requisition_001.pay_requisition_001_report');
+    }
+
     public function pay_requisition_001_remain(Request $request)
     {
       $sBusiness_location = \App\Models\Backend\Business_location::get();

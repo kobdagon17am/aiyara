@@ -438,6 +438,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('packing_list/datatable', 'Pick_packPackingCodeController@packing_list')->name('packing_list.datatable');
     Route::post('packing_list_for_fifo/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo')->name('packing_list_for_fifo.datatable');
+    Route::post('packing_list_for_fifo/datatable_report', 'Pick_packPackingCodeController@packing_list_for_fifo_report')->name('packing_list_for_fifo.datatable_report');
     Route::post('packing_list_for_fifo_02/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo_02')->name('packing_list_for_fifo_02.datatable');
 
 
@@ -509,6 +510,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('pay_requisition_001', 'Pay_requisition_001Controller');
     Route::get('pay_requisition_001_remain', 'Pay_requisition_001Controller@pay_requisition_001_remain');
     Route::post('pay_requisition_tb1/datatable', 'Pay_requisition_001Controller@Datatable001')->name('pay_requisition_tb1.datatable');
+    Route::get('pay_requisition_001_report', 'Pay_requisition_001Controller@pay_requisition_001_report');
 
     Route::post('pick_warehouse_tb_0001/datatable', 'Pick_warehouse_fifoController@Datatable0001')->name('pick_warehouse_tb_0001.datatable');
 
