@@ -417,27 +417,63 @@ class FrontstoreController extends Controller
 
     $shipping_special = DB::select(" select * from dataset_shipping_cost where business_location_id_fk=" . $sRow->business_location_id_fk . " AND shipping_type_id=4 ");
 
+    // วุฒิเพิ่มมาเช็คว่า business location มีราคาสินค้านั้นๆไหม
+    $products_cost = DB::table('products_cost')->where('business_location_id',$sBranchs[0]->business_location_id_fk)->pluck('product_id_fk')->toArray();
+    $arr_cost = "";
+    foreach($products_cost as $key => $cost){
+      if($key+1 != count($products_cost)){
+        $arr_cost .= $cost.',';
+      }else{
+        $arr_cost .= $cost;
+      }
+    
+    }
+
     $Products = DB::select("
 
-        SELECT products.id as product_id,
-        products.product_code,
-        (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
-        FROM
-        products_details
-        Left Join products ON products_details.product_id_fk = products.id
-        WHERE lang_id=1
-        AND
-            (
-              " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
-              " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
-              " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
-              " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
-              " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
-            )
+    SELECT products.id as product_id,
+    products.product_code,
+    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+    FROM
+    products_details
+    Left Join products ON products_details.product_id_fk = products.id
+    WHERE lang_id=1
+    AND
+        (
+          " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
+          " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
+          " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
+          " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
+          " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
+        )
 
-        order by products.product_code
+    AND products.id IN (".$arr_cost.")
 
-      ");
+    order by products.product_code
+
+  ");
+
+    // $Products = DB::select("
+
+    //     SELECT products.id as product_id,
+    //     products.product_code,
+    //     (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+    //     FROM
+    //     products_details
+    //     Left Join products ON products_details.product_id_fk = products.id
+    //     WHERE lang_id=1
+    //     AND
+    //         (
+    //           " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
+    //           " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 2), ',', -1) OR
+    //           " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 3), ',', -1) OR
+    //           " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 4), ',', -1) OR
+    //           " . $sRow->purchase_type_id_fk . " = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
+    //         )
+
+    //     order by products.product_code
+
+    //   ");
 
     // dd($Products);
 

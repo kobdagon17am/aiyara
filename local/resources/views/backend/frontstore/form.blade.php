@@ -2612,6 +2612,7 @@
                             <input class="frontstore_id" name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
                             <input name="product_plus" type="hidden" value="1">
                             <input name="product_plus_addlist" type="hidden" value="1">
+                            <input name="branch_id_fk" type="hidden" value="{{ $sRow->branch_id_fk }}">
                             {{ csrf_field() }}
 
 
@@ -3562,6 +3563,9 @@
                     var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
                     var purchase_type_id_fk =
                         "{{ @$sRow->purchase_type_id_fk }}"; ////alert(frontstore_id_fk);
+
+                        var branch_id_fk = "{{ $sRow->branch_id_fk }}";
+
                     $.ajax({
                         type: 'POST',
                         url: " {{ url('backend/frontstorelist/plus') }} ",
@@ -3589,6 +3593,7 @@
                                         url: '{{ route('backend.frontstorelist.datatable') }}',
                                         data: {
                                             frontstore_id_fk: frontstore_id_fk,
+                                            branch_id_fk: branch_id_fk,
                                         },
                                         method: 'POST',
                                     },
@@ -4846,6 +4851,8 @@
                 event.preventDefault();
                 var product_id_fk = $(this).val();
                 var frontstore_id = $(".frontstore_id").val();
+                var frontstore_id = $(".frontstore_id").val();
+                var branch_id_fk = "{{ $sRow->branch_id_fk }}";
                 // alert(frontstore_id);
                 // return false;
                 $(".product_id_fk_this").val(product_id_fk);
@@ -4856,7 +4863,8 @@
                     data: {
                         _token: '{{ csrf_token() }}',
                         product_id_fk: product_id_fk,
-                        frontstore_id: frontstore_id
+                        frontstore_id: frontstore_id,
+                        branch_id_fk: branch_id_fk
                     },
                     success: function(data) {
                         //  console.log(data);
@@ -4922,7 +4930,7 @@
                 e.preventDefault(e);
 
                 var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
-
+                var branch_id_fk = "{{ $sRow->branch_id_fk }}";
                 $.ajax({
                     type: 'POST',
                     url: " {{ url('backend/frontstorelist/plus') }} ",
@@ -4952,6 +4960,7 @@
                                     data: {
                                         frontstore_id_fk: frontstore_id_fk,
                                         frontstore_id: frontstore_id_fk,
+                                        branch_id_fk: branch_id_fk,
                                     },
                                     method: 'POST',
                                 },

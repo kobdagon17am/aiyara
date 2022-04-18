@@ -312,7 +312,7 @@ class FrontstorelistController extends Controller
       if(isset($request->product_plus)){
 
         $this->fnManageGiveaway(@$request->frontstore_id);
-
+        $sBranchs = DB::select(" select * from branchs where id=" . $request->branch_id_fk . " ");
         for ($i=0; $i < count($request->product_id_fk) ; $i++) {
             // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;
@@ -340,7 +340,7 @@ class FrontstorelistController extends Controller
                 products
                 LEFT JOIN categories on products.category_id=categories.id
                 LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1
+                WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = ".$sBranchs[0]->business_location_id_fk."
             ");
               // echo ($sProducts[0]->product_unit);
 

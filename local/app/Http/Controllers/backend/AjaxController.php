@@ -810,6 +810,9 @@ class AjaxController extends Controller
    public function ajaxGetProduct(Request $request)
     {
         // echo $request->product_id_fk;
+// dd($request->all());
+
+        $sBranchs = DB::select(" select * from branchs where id=" . $request->branch_id_fk . " ");
 
           $Products = DB::select("
                 SELECT products.id as product_id,
@@ -821,7 +824,7 @@ class AjaxController extends Controller
                   products_details
                   Left Join products ON products_details.product_id_fk = products.id
                   LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                  WHERE lang_id=1 AND products.id= ".$request->product_id_fk."
+                  WHERE lang_id=1 AND products.id= ".$request->product_id_fk." AND products_cost.business_location_id = ".$sBranchs[0]->business_location_id_fk."
 
            ");
 
