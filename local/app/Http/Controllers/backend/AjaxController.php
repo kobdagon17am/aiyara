@@ -4452,29 +4452,43 @@ class AjaxController extends Controller
       // return($request);
 
       if($request->ajax()){
-
       //    DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
-
           DB::select(" UPDATE `db_pay_requisition_001` SET action_user=".(\Auth::user()->id).",action_date=now(),status_sent=6 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET who_cancel=".(\Auth::user()->id).",cancel_date=now(),status=6 WHERE id='".$request->id."' ");
-          DB::select(" UPDATE
+        //   DB::select(" UPDATE
+        //     db_pay_requisition_002
+        //     SET
+        //     status_cancel=1
+        //     WHERE pick_pack_requisition_code_id_fk='".$request->id."'
+        //     ORDER BY time_pay DESC LIMIT 1 ");  
+        DB::select(" UPDATE
             db_pay_requisition_002
             SET
             status_cancel=1
-            WHERE pick_pack_requisition_code_id_fk='".$request->id."'
-            ORDER BY time_pay DESC LIMIT 1 ");
-
+            WHERE pick_pack_requisition_code_id_fk='".$request->id."'");  
           // เอาสินค้าคืนคลัง
-          $r = DB::select("
+        //   $r = DB::select("
+        //     SELECT
+        //     time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now()
+        //     FROM db_pay_requisition_002
+        //     WHERE pick_pack_requisition_code_id_fk='".$request->id."'
+        //     ORDER BY time_pay DESC LIMIT 1 ; ");
+        $r = DB::select("
+        SELECT
+        time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now()
+        FROM db_pay_requisition_002
+        WHERE pick_pack_requisition_code_id_fk='".$request->id."'
+        ORDER BY time_pay DESC; ");
 
-            SELECT
-            time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now()
-            FROM db_pay_requisition_002
-            WHERE pick_pack_requisition_code_id_fk='".$request->id."'
-            ORDER BY time_pay DESC LIMIT 1 ; ");
+            $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$request->id)->first();
+            $db_pick_pack_packing = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$request->id)->first();
+            $arr_order = explode(',',$db_pick_pack_packing_code->orders_id_fk);
+            DB::table('db_delivery')->whereIn('orders_id_fk',$arr_order)->update([
+                'status_pick_pack' => 0,
+            ]);
 
-          if($r){
-
+        //   if($r){
+            if(count($r)>0){
             foreach ($r as $key => $v) {
                    $_choose=DB::table("db_stocks_return")
                       ->where('time_pay', $v->time_pay)
@@ -4492,35 +4506,55 @@ class AjaxController extends Controller
                       ->where('pick_pack_requisition_code_id_fk', $request->id)
                       ->get();
                       if($_choose->count() == 0){
+                            //  DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, pick_pack_requisition_code_id_fk, created_at, updated_at,status_cancel)
+                            // SELECT
+                            // time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now(),1
+                            //  FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND time_pay='".$v->time_pay."' ; ");
+                            $db_pay_requisition_002s = DB::table('db_pay_requisition_002')
+                            ->where('pick_pack_requisition_code_id_fk',$request->id)
+                            ->where('time_pay',$v->time_pay)
+                            ->where('product_unit_id_fk', $v->product_unit_id_fk)
+                            ->get();
+                            
+                            foreach($db_pay_requisition_002s as $data_002){
+                                    DB::table('db_stocks_return')->insert([
+                                        'time_pay' => $data_002->time_pay,
+                                        'business_location_id_fk' => $data_002->business_location_id_fk,
+                                        'branch_id_fk' => $data_002->branch_id_fk,
+                                        'product_id_fk' => $data_002->product_id_fk,
+                                        'lot_number' => $data_002->lot_number,
+                                        'lot_expired_date' => $data_002->lot_expired_date,
+                                        'amt' => $data_002->amt_get,
+                                        'product_unit_id_fk' => $data_002->product_unit_id_fk,
+                                        'warehouse_id_fk' => $data_002->warehouse_id_fk,
+                                        'zone_id_fk' => $data_002->zone_id_fk,
+                                        'shelf_id_fk' => $data_002->shelf_id_fk,
+                                        'shelf_floor' => $data_002->shelf_floor,
+                                        'pick_pack_requisition_code_id_fk' => $data_002->pick_pack_requisition_code_id_fk,
+                                        'created_at' => $data_002->created_at,
+                                        'updated_at' => now(),
+                                        'status_cancel' => 1,
+                                        'invoice_code' => $db_pick_pack_packing->packing_code,
+                                    ]);
 
-                             DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, pick_pack_requisition_code_id_fk, created_at, updated_at,status_cancel)
-                            SELECT
-                            time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now(),1
-                             FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND time_pay='".$v->time_pay."' ; ");
+                                    DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$data_002->amt_get.")
+                                    WHERE
+                                    business_location_id_fk= ".$data_002->business_location_id_fk." AND
+                                    branch_id_fk= ".$data_002->branch_id_fk." AND
+                                    product_id_fk= ".$data_002->product_id_fk." AND
+                                    lot_number= '".$data_002->lot_number."' AND
+                                    lot_expired_date= '".$data_002->lot_expired_date."' AND
+                                    warehouse_id_fk= ".$data_002->warehouse_id_fk." AND
+                                    zone_id_fk= ".$data_002->zone_id_fk." AND
+                                    shelf_id_fk= ".$data_002->shelf_id_fk." AND
+                                    shelf_floor= ".$data_002->shelf_floor."
+                                ");
+                            }
 
                        }
-
-
-                         DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")
-                                  WHERE
-                                  business_location_id_fk= ".$v->business_location_id_fk." AND
-                                  branch_id_fk= ".$v->branch_id_fk." AND
-                                  product_id_fk= ".$v->product_id_fk." AND
-                                  lot_number= '".$v->lot_number."' AND
-                                  lot_expired_date= '".$v->lot_expired_date."' AND
-                                  warehouse_id_fk= ".$v->warehouse_id_fk." AND
-                                  zone_id_fk= ".$v->zone_id_fk." AND
-                                  shelf_id_fk= ".$v->shelf_id_fk." AND
-                                  shelf_floor= ".$v->shelf_floor."
-                              ");
-
-
                }
 
-
-
                              $insertStockMovement = new  AjaxController();
-
                               // รับคืนจากการยกเลิกใบเบิก db_stocks_return
                               $Data = DB::select("
                                       SELECT
@@ -4543,7 +4577,7 @@ class AjaxController extends Controller
                                       LEFT JOIN db_pick_pack_requisition_code on db_pick_pack_requisition_code.id=db_stocks_return.pick_pack_requisition_code_id_fk
                                       WHERE
                                       db_stocks_return.status_cancel=1
-
+                                      AND db_stocks_return.invoice_code = '".$db_pick_pack_packing->packing_code."'
                                 ");
 
                               if(@$Data){
@@ -4580,15 +4614,56 @@ class AjaxController extends Controller
 
                                     }
 
-                                    DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+                                    // DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
+                                    $tmp = DB::table('db_stock_movement_tmp')->where('doc_no',$db_pick_pack_packing->packing_code)->where('warehouse_id_fk','!=',0)->orderBy('updated_at','desc')->groupBy('product_id_fk')->get();
+                            
+                                    foreach($tmp as $t){
+                                      DB::table('db_stock_movement')->insertOrignore(array(
+                                        // ไม่เหมือน tmp
+                                        "stock_type_id_fk" =>  0,
+                                        "stock_id_fk" =>  0,
+                                        "ref_table" =>  0,
+                                        "ref_table_id" =>  0,
+                                        "ref_doc" =>  $t->doc_no,
+                                        //
+                                        'doc_no' => $t->doc_no,
+                                        "doc_date" =>  $t->doc_date,
+                                        "business_location_id_fk" =>  $t->business_location_id_fk,
+                                        "branch_id_fk" =>  $t->branch_id_fk,
+                                        "product_id_fk" =>  $t->product_id_fk,
+                                        "lot_number" =>  $t->lot_number,
+                                        "lot_expired_date" =>  $t->lot_expired_date,
+                                        "amt" => $t->amt,
+                                        "in_out" =>  $t->in_out,
+                                        "product_unit_id_fk" => $t->product_unit_id_fk,
+                                        "warehouse_id_fk" =>  $t->warehouse_id_fk,
+                                        "zone_id_fk" =>  $t->zone_id_fk,
+                                        "shelf_id_fk" => $t->shelf_id_fk,
+                                        "shelf_floor" =>  $t->shelf_floor,
+                                        "status" => $t->status,
+                                        "note" =>  $t->note,
+                                        "note2" => $t->note2,
+                                        "action_user" => \Auth::user()->id,
+                                        "action_date" =>  $t->updated_at,
+                                        "approver" =>  \Auth::user()->id,
+                                        "approve_date" =>  $t->updated_at,
+                                        "created_at" =>$t->created_at,
+                                        'sender' => $t->sender,
+                                        'sent_date' => $t->sent_date,
+                                        'sender' => $t->who_cancel,
+                                        'cancel_date' => $t->cancel_date,
+                                    ));
+                                    }
 
                                }
 
 
           }
 
-          $r2 = DB::select("
-            SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND status_cancel=1 ORDER BY time_pay DESC LIMIT 1 ; ");
+        //   $r2 = DB::select("
+        //     SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND status_cancel=1 ORDER BY time_pay DESC LIMIT 1 ; ");
+        $r2 = DB::select("
+        SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND status_cancel=1 ORDER BY time_pay DESC; ");
 
              foreach ($r2 as $key => $v) {
                    $_choose=DB::table("db_pay_requisition_002_cancel_log")
@@ -4611,25 +4686,15 @@ class AjaxController extends Controller
                       ->where('shelf_floor', $v->shelf_floor)
                       ->get();
                       if($_choose->count() == 0){
-
                               DB::select(" INSERT IGNORE INTO db_pay_requisition_002_cancel_log (time_pay, business_location_id_fk, branch_id_fk, customers_id_fk, pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt_need, amt_get, amt_lot, amt_remain, product_unit_id_fk, product_unit, lot_number, lot_expired_date, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor, status_cancel, created_at)
                                 VALUES
                                (".$v->time_pay.", ".$v->business_location_id_fk.", ".$v->branch_id_fk.", ".$v->customers_id_fk.", '".$v->pick_pack_requisition_code_id_fk."', ".$v->product_id_fk.", '".$v->product_name."', ".$v->amt_get.", 0 , 0, ".$v->amt_get.", ".$v->product_unit_id_fk.", '".$v->product_unit."', '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->warehouse_id_fk.", ".$v->zone_id_fk.", ".$v->shelf_id_fk.", ".$v->shelf_floor.", ".$v->status_cancel.", '".$v->created_at."') ");
-
                        }
-
-
                }
-
-
                  // $ch_status_cancel = DB::select(" SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->id."' AND status_cancel in (0) ");
                  // if(count(@$ch_status_cancel)==0 || empty(@$ch_status_cancel)){
                  //    DB::select(" UPDATE db_pay_requisition_001 SET status_sent=1 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
                  // }
-
-
-
-
       }
 
     }
