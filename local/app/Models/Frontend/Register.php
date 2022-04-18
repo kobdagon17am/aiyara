@@ -145,8 +145,8 @@ class Register extends Model
           DB::BeginTransaction();
   //ฟรีแอคทีม 2 เดือนปฏิทินหลังจากกการสมัคร
           $strtime = strtotime(date('Y-m-t'));
-          $caltime=strtotime("+1 Month",$strtime);
-          $two_month = date("Y-m-t", $caltime);
+          $caltime=strtotime("+2 Month",$strtime);
+          $two_month = date("Y-m-1", $caltime);
 
           $data_customer = [
              'business_location_id'=>$business_location,

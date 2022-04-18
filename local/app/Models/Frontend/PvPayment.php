@@ -610,14 +610,14 @@ class PvPayment extends Model
 
 
 
-                     if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
-                      $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
-                      if($resule['status'] == 'success'){
-                        $order_update->status_run_pv = 'success';
-                      }
-                    }else{
-                      $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
-                    }
+                    //  if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
+                    //   $resule = RunPvController::Runpv($customer_update->user_name, $pv, $type_id,$order_data->code_order);
+                    //   if($resule['status'] == 'success'){
+                    //     $order_update->status_run_pv = 'success';
+                    //   }
+                    // }else{
+                    //   $resule =  ['status' => 'success','message' => 'บิลนี้ถูก Run PV ไปเเล้วไม่สามารถทำซ้ำได้'];
+                    // }
 
                       //ถ้าบิลนี้มียอดเกิน 10000 บาทให้เปลี่ยนสถานะเป็น Aistockis
                         if ($order_data->pv_total >= 10000) {
