@@ -370,8 +370,9 @@ $sum_amt = 0 ;
   $fid_arr = explode(',',$receipt); 
   $order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
 
-  $Products = App\Models\Backend\Orders::getAllProduct($order_arr);
-      
+  // if($pick_pack_packing_data->id == 29){
+    $Products = App\Models\Backend\Orders::getAllProduct($order_arr);
+  // }
 if(@$Products){
 
   foreach ($Products as $key => $value) {

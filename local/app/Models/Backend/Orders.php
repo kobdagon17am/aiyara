@@ -12,16 +12,60 @@ class Orders extends InitModel
 
     static function getAllProduct($arr_order){
         // product
-        $Products = DB::table('db_order_products_list')
-        ->select('db_order_products_list.amt as amt_sum','db_order_products_list.product_id_fk as product_id_fk','products_details.product_name as product_name','products.product_code as product_code','dataset_product_unit.product_unit as product_unit')
-        ->join('products','products.id','db_order_products_list.product_id_fk')
-        ->join('products_details','products_details.product_id_fk','db_order_products_list.product_id_fk')
-        ->join('products_units','products_units.product_id_fk','db_order_products_list.product_id_fk')
-        ->join('dataset_product_unit','dataset_product_unit.id','products_units.product_unit_id_fk')
+        $Products_old = DB::table('db_order_products_list')
+        // ->select('db_order_products_list.amt as amt_sum','db_order_products_list.product_id_fk as product_id_fk','products_details.product_name as product_name','products.product_code as product_code','dataset_product_unit.product_unit as product_unit')
+        ->select('db_order_products_list.amt as amt_sum','db_order_products_list.product_id_fk as product_id_fk')
+        // ->join('products','products.id','db_order_products_list.product_id_fk')
+        // ->join('products_details','products_details.product_id_fk','db_order_products_list.product_id_fk')
+        // ->join('products_units','products_units.product_id_fk','db_order_products_list.product_id_fk')
+        // ->join('dataset_product_unit','dataset_product_unit.id','products_units.product_unit_id_fk')
         ->whereIn('db_order_products_list.frontstore_id_fk',$arr_order)
         ->where('db_order_products_list.type_product','product')
-        ->groupBy('db_order_products_list.product_id_fk')
+        // ->groupBy('db_order_products_list.product_id_fk')
+        // ->whereIn('db_order_products_list.product_id_fk',[17,23])
         ->get();
+
+        $Products = new Collection();
+        $arr_check = [];
+        foreach($Products_old as $p){
+
+            $products_data = DB::table('products')->select('products.product_code as product_code')->where('id',$p->product_id_fk)->first();
+            $products_details = DB::table('products_details')->select('products_details.product_name as product_name')->where('product_id_fk',$p->product_id_fk)->first();
+            $products_units = DB::table('products_units')->select('product_unit_id_fk')->where('product_id_fk',$p->product_id_fk)->first();
+            $dataset_product_unit = DB::table('dataset_product_unit')->select('dataset_product_unit.product_unit as product_unit')->where('id',$products_units->product_unit_id_fk)->first();
+          
+            if(isset($arr_check[$p->product_id_fk])){
+                $filtered = $Products->filter(function ($value, $key) use($p) {
+                    return $value->product_id_fk == $p->product_id_fk;
+                });
+                $filtered = $filtered->first();
+    
+                $Products = $Products->reject(function ($value, $key) use($p) {
+                    return $value->product_id_fk == $p->product_id_fk;
+                });
+    
+                $Products->push((object)[
+                    'amt_sum'=> $p->amt_sum+$filtered->amt_sum,
+                    'product_id_fk'=> $p->product_id_fk,
+                    'product_name'=> $products_details->product_name,
+                    'product_code'=> $products_data->product_code,
+                    'product_unit'=> $dataset_product_unit->product_unit,
+                     ]);
+            }else{
+              
+                $Products->push((object)[
+                    'amt_sum'=> $p->amt_sum,
+                    'product_id_fk'=> $p->product_id_fk,
+                    'product_name'=> $products_details->product_name,
+                    'product_code'=> $products_data->product_code,
+                    'product_unit'=> $dataset_product_unit->product_unit,
+                     ]);
+                     $arr_check[$p->product_id_fk] = true;
+             }
+
+          
+        }
+     
 
         // promotion
         // $Products = DB::table('db_order_products_list')
