@@ -147,7 +147,7 @@ class CancelOrderController extends Controller
               ->where('id', $customer_user_aicash->id)
               ->update(['ai_cash' => $update_icash]);
           }
-
+          
           if ($type_id == 1) {
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
@@ -244,80 +244,10 @@ class CancelOrderController extends Controller
             }
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
-          } elseif ($type_id == 6) { // Course
-            $update_couse = DB::table('course_event_regis')
-              ->where('order_id_fk', $order_id)
-              ->update(['status_register' => '3']);
+          
+          } elseif ($type_id == 5) { 
 
-            $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
-          } else {
-            DB::rollback();
-            $log = [
-              'customer_user_name' => $customer_user->user_name,
-              'admin_user_name' => '',
-              'code_order' => $order_data->code_order,
-              'error_detail' => 'Type Id is null Type=' . $type_id,
-              'function' => 'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
-              'type' => '', //'admin','customer'
-              'order_type' => $type_id,
-            ];
-
-            $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
-
-
-            $resule = ['status' => 'fail', 'message' => 'Type Id is null'];
-            DB::commit();
-            return $resule;
-          }
-        } else {
-          $resule = ['status' => 'success', 'message' => 'pv ของบิลนี้มีค่าเป็น 0 ปรับสถานะบิลเป็น Cancel อย่างเดียว'];
-        }
-      } else {
-        DB::rollback();
-        $log = [
-          'customer_user_name' => $customer_user->user_name,
-          'admin_user_name' => '',
-          'code_order' => $order_data->code_order,
-          'error_detail' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง approve_status=' . $order_data->approve_status,
-          'function' => 'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
-          'type' => '', //'admin','customer'
-          'order_type' => $type_id,
-        ];
-
-        $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
-        $resule = ['status' => 'fail', 'message' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง'];
-        DB::commit();
-        return $resule;
-      }
-      // วุฒิเพิ่มมาแก้ error 
-      if(!isset($resule)){
-        $resule = ['status' => 'success', 'message' => 'ทำรายการสำเร็จ'];
-      }
-      // 
-      if ($resule['status'] == 'success') {
-
-        if ($type_id == 4) {
-          $update_ai_stockist->save();
-        }
-
-
-        $update_products_lis = DB::table('db_order_products_list')
-          ->where('frontstore_id_fk', $order_id)
-          ->update([
-            'approve_status' => 2,
-            'approve_date' => date('Y-m-d H:i:s'),
-          ]);
-
-        $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
-          ->where('order_id_fk', $order_id)
-          ->update([
-            'approve_status' => 2,
-            'approve_date' => date('Y-m-d H:i:s'),
-          ]);
-
-
-
-        $giv_log = DB::table('log_gift_voucher')
+            $giv_log = DB::table('log_gift_voucher')
           ->where('code_order', '=', $order_data->code_order)
           ->get();
 
@@ -417,6 +347,82 @@ class CancelOrderController extends Controller
             $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
           }
         }
+          
+            
+          } elseif ($type_id == 6) { // Course
+            $update_couse = DB::table('course_event_regis')
+              ->where('order_id_fk', $order_id)
+              ->update(['status_register' => '3']);
+
+            $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
+          } else {
+            DB::rollback();
+            $log = [
+              'customer_user_name' => $customer_user->user_name,
+              'admin_user_name' => '',
+              'code_order' => $order_data->code_order,
+              'error_detail' => 'Type Id is null Type=' . $type_id,
+              'function' => 'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
+              'type' => '', //'admin','customer'
+              'order_type' => $type_id,
+            ];
+
+            $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
+
+
+            $resule = ['status' => 'fail', 'message' => 'Type Id is null'];
+            DB::commit();
+            return $resule;
+          }
+        } else {
+          $resule = ['status' => 'success', 'message' => 'pv ของบิลนี้มีค่าเป็น 0 ปรับสถานะบิลเป็น Cancel อย่างเดียว'];
+        }
+      } else {
+        DB::rollback();
+        $log = [
+          'customer_user_name' => $customer_user->user_name,
+          'admin_user_name' => '',
+          'code_order' => $order_data->code_order,
+          'error_detail' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง approve_status=' . $order_data->approve_status,
+          'function' => 'App\Http\Controllers\Frontend\Fc\CancelOrderController::cancel_order()',
+          'type' => '', //'admin','customer'
+          'order_type' => $type_id,
+        ];
+
+        $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
+        $resule = ['status' => 'fail', 'message' => 'บิลนี้ไม่สามารถยกเลิกได้เนื่องจากไม่อยู่ในสถานะที่ถูกต้อง'];
+        DB::commit();
+        return $resule;
+      }
+      // วุฒิเพิ่มมาแก้ error 
+      if(!isset($resule)){
+        $resule = ['status' => 'success', 'message' => 'ทำรายการสำเร็จ'];
+      }
+      // 
+      if ($resule['status'] == 'success') {
+
+        if ($type_id == 4) {
+          $update_ai_stockist->save();
+        }
+
+
+        $update_products_lis = DB::table('db_order_products_list')
+          ->where('frontstore_id_fk', $order_id)
+          ->update([
+            'approve_status' => 2,
+            'approve_date' => date('Y-m-d H:i:s'),
+          ]);
+
+        $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
+          ->where('order_id_fk', $order_id)
+          ->update([
+            'approve_status' => 2,
+            'approve_date' => date('Y-m-d H:i:s'),
+          ]);
+
+
+
+        
 
         $order_data->save();
         $customer_user->save();

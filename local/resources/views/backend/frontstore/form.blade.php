@@ -2097,12 +2097,14 @@
                                                             <div class="divTableRow lock_input_row" style="display: none;">
                                                             <div class="divTableCell">&nbsp; </div>
                                                             <div class="divTH">
-                                                                <label style="color:red;" for=""> ปลดล็อคเพื่อแก้ไข </label>
+                                                                <label style="color:red;" for=""> ปลดล็อคเพื่อแก้ไข (Gift Voucher ไม่สามารถแก้ไขได้จำเป็นต้องยกเลิก) </label>
                                                             </div>
                                                             <div class="divTableCell">
                                                                 <select id="lock_input" class="form-control">
                                                                     <option value="1">ล็อคข้อมูลทั้งหมด</option>
+                                                                    @if(@$sRow->purchase_type_id_fk!=5)
                                                                     <option value="2">ปลดล็อคเพื่อแก้ไข</option>
+                                                                    @endif
                                                                 </select>
                                                             </div>
                                                             </div>

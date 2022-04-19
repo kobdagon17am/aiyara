@@ -159,6 +159,7 @@
                             &nbsp; --}}
 
                         {{-- @IF(@$sRow->transfer_bill_status==2) --}}
+                        <?php //dd($sRow->approve_status); ?>
                         @IF(@$sRow->approve_status==1 || @$sRow->approve_status==2 || @$sRow->approve_status==0 || @$sRow->approve_status==6)
                         <div class="div_confirm_transfer_slip">
                             <button type="button" class="btn btn-primary waves-effect waves-light"

@@ -2065,7 +2065,7 @@ ORDER BY db_pick_pack_packing.id
               
               // $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=0 ;");
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2);");
-
+// dd($d3);
               if(!empty($d3)){
                      foreach ($d3 as $key => $v3) {
                        

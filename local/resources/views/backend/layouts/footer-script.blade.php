@@ -128,6 +128,12 @@
                 var can_approve = sessionStorage.getItem("can_approve");
               }
 
+              if(menu_id == null){
+                var menu_id = "{{Session::get('menu_id')}}";
+                var sC = "{{Session::get('sC')}}";
+                var can_approve = "{{Session::get('can_approve')}}";
+              }
+
               
               console.log('menu_id : '+menu_id);
               // console.log('sPermission : '+sPermission);

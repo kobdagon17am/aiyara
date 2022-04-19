@@ -47,7 +47,7 @@ class AjaxController extends Controller
         }else{
             $role_group_id = \Auth::user()->role_group_id_fk;
             $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-
+       
             $sC = @$menu_permit->c;
             $sU = @$menu_permit->u;
             $sD = @$menu_permit->d;
@@ -5416,12 +5416,11 @@ class AjaxController extends Controller
 
 
       if($Orders[0]->approve_status==0){
-
-     
+         
         $resule = \App\Http\Controllers\Frontend\Fc\DeleteOrderController::delete_order($request->id);
 
        }else{
-  
+            
           //DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
           $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
       }

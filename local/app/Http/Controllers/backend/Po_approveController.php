@@ -61,10 +61,25 @@ class Po_approveController extends Controller
     {
         $sRow = \App\Models\Backend\Orders::find($id);
 
-
+        // วุฒิสร้าง session
         $menus = DB::table('ck_backend_menu')->select('id')->where('id',41)->first();
         Session::put('session_menu_id', $menus->id);
-        
+        Session::put('menu_id', $menus->id);
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',@$role_group_id)->where('menu_id_fk',@$menus->id)->first();
+        $sC = @$menu_permit->c;
+        $sU = @$menu_permit->u;
+        $sD = @$menu_permit->d;
+        Session::put('sC', $sC);
+        Session::put('sU', $sU);
+        Session::put('sD', $sD);
+        $can_cancel_bill = @$menu_permit->can_cancel_bill;
+        $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
+        $can_approve = @$menu_permit->can_approve;
+        Session::put('can_cancel_bill', $can_cancel_bill);
+        Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
+        Session::put('can_approve', $can_approve);
+
 
         // $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'asc')->get();
         $slip = DB::table('payment_slip')->where('code_order', '=', $sRow->code_order)->orderby('id', 'asc')->get();
