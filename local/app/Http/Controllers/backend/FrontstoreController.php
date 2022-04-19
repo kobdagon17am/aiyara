@@ -350,7 +350,7 @@ class FrontstoreController extends Controller
 
   public function edit($id)
   {
-
+    // sBranchs
 
     // กำลังเบิกสินค้า ไม่ให้แก้บิล
     $ch_Disabled = 0;
@@ -512,8 +512,8 @@ class FrontstoreController extends Controller
     $sFee = \App\Models\Backend\Fee::get();
 
     $User_branch_id = \Auth::user()->branch_id_fk;
-    // dd($User_branch_id);
-    $sBranchs = DB::select(" select * from branchs where province_id_fk <> 0  ");
+    // $sBranchs = DB::select(" select * from branchs where province_id_fk <> 0  ");
+    $sBranchs = DB::select(" select * from branchs where business_location_id_fk = ".$sBranchs[0]->business_location_id_fk."  ");
     // dd($sBranchs);
 
     $ThisCustomer = DB::select(" select * from customers where id=" . $sRow->customers_id_fk . " ");

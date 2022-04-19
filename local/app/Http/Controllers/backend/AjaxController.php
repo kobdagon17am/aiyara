@@ -847,8 +847,11 @@ class AjaxController extends Controller
               db_order_products_list
               WHERE product_id_fk = ".$request->product_id_fk." AND frontstore_id_fk=".$request->frontstore_id." ");
             $p_amt =  @$p_amt[0]->amt;
-
-            $v = "รหัส : ชื่อสินค้า : ".$pn." \rหน่วย : ".$unit." \rPV : ".$pv." \rราคาขาย (บาท) : ".$member_price." ";
+            $curr = "USD";
+            if($sBranchs[0]->business_location_id_fk == 1){
+                $curr = "บาท";
+            }
+            $v = "รหัส : ชื่อสินค้า : ".$pn." \rหน่วย : ".$unit." \rPV : ".$pv." \rราคาขาย (".$curr.") : ".$member_price." ";
 
             $tb = '<textarea class="form-control" rows="5" disabled style="text-align: left !important;background: #f2f2f2;" >'.trim($v).'</textarea>
             <input type="hidden" id="p_amt" value="'.$p_amt.'">';

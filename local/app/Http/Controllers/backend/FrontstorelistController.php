@@ -313,6 +313,9 @@ class FrontstorelistController extends Controller
 
         $this->fnManageGiveaway(@$request->frontstore_id);
         $sBranchs = DB::select(" select * from branchs where id=" . $request->branch_id_fk . " ");
+        // if(!isset($sBranchs[0]->business_location_id_fk)){
+        //   $sBranchs[0]->business_location_id_fk = 
+        // }
         for ($i=0; $i < count($request->product_id_fk) ; $i++) {
             // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;

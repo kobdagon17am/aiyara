@@ -2374,6 +2374,8 @@
                                         enctype="multipart/form-data" autocomplete="off">
                                         <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
                                         <input name="product_plus" type="hidden" value="1">
+                                        <input name="branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
+                                        
                                         {{ csrf_field() }}
                                         <table id="data-table-products-list" class="table table-bordered dt-responsive"
                                             style="width: 100%;">
@@ -2384,6 +2386,7 @@
                                         action="{{ route('backend.frontstorelist.store') }}" method="POST"
                                         enctype="multipart/form-data" autocomplete="off">
                                         <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
+                                        <input name="branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
                                         {{ csrf_field() }}
                                         <div class="form-group row div-data-table-list-pro " style="display: none;">
                                             <div class="col-md-12">
@@ -2612,7 +2615,7 @@
                             <input class="frontstore_id" name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
                             <input name="product_plus" type="hidden" value="1">
                             <input name="product_plus_addlist" type="hidden" value="1">
-                            <input name="branch_id_fk" type="hidden" value="{{ $sRow->branch_id_fk }}">
+                            <input name="branch_id_fk" type="hidden" value="{{ @$sRow->branch_id_fk }}">
                             {{ csrf_field() }}
 
 
@@ -3238,6 +3241,7 @@
 
                 var frontstore_id_fk = $("#frontstore_id_fk").val();
                 var order_type = $("#purchase_type_id_fk").val();
+                var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
                 $('.myloading').show();
                 var oTable;
                 $(function() {
@@ -3259,6 +3263,7 @@
                                 frontstore_id_fk: frontstore_id_fk,
                                 category_id: '',
                                 order_type: order_type,
+                                branch_id_fk: branch_id_fk,
                             },
                             method: 'POST',
                         },
@@ -3289,7 +3294,8 @@
                                 title: '<center>ราคา</center>',
                                 className: 'text-center',
                                 render: function(d) {
-                                    return d + "&#3647";
+                                    // return d + "&#3647";
+                                    return d;
                                 }
                             },
                             {
@@ -3564,7 +3570,7 @@
                     var purchase_type_id_fk =
                         "{{ @$sRow->purchase_type_id_fk }}"; ////alert(frontstore_id_fk);
 
-                        var branch_id_fk = "{{ $sRow->branch_id_fk }}";
+                        var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
 
                     $.ajax({
                         type: 'POST',
@@ -4315,6 +4321,8 @@
 
                     var frontstore_id_fk = $("#frontstore_id_fk").val();
                     var order_type = $("#purchase_type_id_fk").val();
+                    var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
+
                     // alert(order_type);
 
                     /*
@@ -4348,6 +4356,7 @@
                                     frontstore_id_fk: frontstore_id_fk,
                                     category_id: category_id,
                                     order_type: order_type,
+                                    branch_id_fk: branch_id_fk,
                                 },
                                 method: 'POST',
                             },
@@ -4378,7 +4387,8 @@
                                     title: '<center>ราคา</center>',
                                     className: 'text-center',
                                     render: function(d) {
-                                        return d + "&#3647";
+                                        // return d + "&#3647";
+                                        return d;
                                     }
                                 },
                                 {
@@ -4852,7 +4862,7 @@
                 var product_id_fk = $(this).val();
                 var frontstore_id = $(".frontstore_id").val();
                 var frontstore_id = $(".frontstore_id").val();
-                var branch_id_fk = "{{ $sRow->branch_id_fk }}";
+                var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
                 // alert(frontstore_id);
                 // return false;
                 $(".product_id_fk_this").val(product_id_fk);
@@ -4930,7 +4940,7 @@
                 e.preventDefault(e);
 
                 var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
-                var branch_id_fk = "{{ $sRow->branch_id_fk }}";
+                var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
                 $.ajax({
                     type: 'POST',
                     url: " {{ url('backend/frontstorelist/plus') }} ",
