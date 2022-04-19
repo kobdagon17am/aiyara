@@ -20,9 +20,14 @@ class ProductController extends Controller
 
     public function product_list($type)
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if (empty($business_location_id)) {
+            $business_location_id = 1;
+        }
+
 
         $categories = DB::table('categories')
-            ->where('lang_id', '=', 2)
+            ->where('lang_id', '=', $business_location_id)
             ->where('status', '=', 1)
             ->orderby('order')
             ->get();
@@ -52,6 +57,7 @@ class ProductController extends Controller
 
     public function product_list_select(Request $request)
     {
+
         $type = $request->type;
         if (empty($request->category_id)) {
             $c_id = 1;

@@ -27,10 +27,15 @@ class HistoryController extends Controller
 
     public function index()
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
 
         $orders_type = DB::table('dataset_orders_type')
             ->where('status', '=', '1')
-            ->where('lang_id', '=', '1')
+            ->where('lang_id', '=', $business_location_id)
             ->orderby('order')
             ->get();
 
@@ -59,6 +64,11 @@ class HistoryController extends Controller
 
     public function export_pdf_history($code_order)
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
 
       $order = DB::table('db_orders')
         ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
@@ -73,8 +83,8 @@ class HistoryController extends Controller
         ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
         ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
 
-        ->where('dataset_order_status.lang_id', '=', '1')
-        ->where('dataset_orders_type.lang_id', '=', '1')
+        ->where('dataset_order_status.lang_id', '=', $business_location_id)
+        ->where('dataset_orders_type.lang_id', '=', $business_location_id)
         ->where('db_orders.code_order', '=', $code_order)
         ->first();
 
@@ -461,6 +471,10 @@ class HistoryController extends Controller
 
     public function cart_payment_history($code_order)
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
 
         $order = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
@@ -488,8 +502,8 @@ class HistoryController extends Controller
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
 
-            ->where('dataset_order_status.lang_id', '=', '1')
-            ->where('dataset_orders_type.lang_id', '=', '1')
+            ->where('dataset_order_status.lang_id', '=', $business_location_id)
+            ->where('dataset_orders_type.lang_id', '=', $business_location_id)
             ->where('db_orders.code_order', '=', $code_order)
             ->first();
 

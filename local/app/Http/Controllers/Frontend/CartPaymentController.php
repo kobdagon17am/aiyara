@@ -368,7 +368,10 @@ class CartPaymentController extends Controller
 
     public function cart_payment_transfer($code_order)
     {
-
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
 
         if ($code_order) {
 
@@ -398,8 +401,8 @@ class CartPaymentController extends Controller
                 ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
                 ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
 
-                ->where('dataset_order_status.lang_id', '=', '1')
-                ->where('dataset_orders_type.lang_id', '=', '1')
+                ->where('dataset_order_status.lang_id', '=', $business_location_id)
+                ->where('dataset_orders_type.lang_id', '=', $business_location_id)
                 ->where('db_orders.code_order', '=', $code_order)
                 ->first();
 
@@ -459,7 +462,14 @@ class CartPaymentController extends Controller
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
           $business_location_id = 1;
+          $fee_type = 'THB';
         }
+        if($business_location_id == 1){
+          $fee_type = 'THB';
+        }else{
+          $fee_type = 'USD';
+        }
+
 
         $order_data = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_orders_type.orders_type as type', 'dataset_pay_type.detail as pay_type_name')
@@ -490,8 +500,6 @@ class CartPaymentController extends Controller
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
                         ->update(['pay_type_id_fk' => '12', 'transfer_price' => $total_price]);
-
-
                 }
                 DB::commit();
                 return redirect('product-history')->withSuccess($resule['message']);
@@ -509,7 +517,7 @@ class CartPaymentController extends Controller
             $gateway_pay_data = array(
                 'mch_order_no' => $order_data->code_order,
                 "total_fee" => $total_price,
-                "fee_type" => 'THB',
+                "fee_type" => $fee_type,
                 "channel_list" => 'promptpay',
                 'mch_code' => $order_data->code_order,
                 'product_name' => $order_data->type,
@@ -536,7 +544,7 @@ class CartPaymentController extends Controller
             $gateway_pay_data = array(
                 'mch_order_no' => $order_data->code_order,
                 "total_fee" => $total_price,
-                "fee_type" => 'THB',
+                "fee_type" => $fee_type,
                 "channel_list" => 'truemoney',
                 'mch_code' => $order_data->code_order,
                 'product_name' => $order_data->type,
@@ -570,7 +578,7 @@ class CartPaymentController extends Controller
             $gateway_pay_data = array(
                 'mch_order_no' => $order_data->code_order,
                 "total_fee" => $total_price,
-                "fee_type" => 'THB',
+                "fee_type" => $fee_type,
                 "channel_list" => 'ktbcard',
                 'mch_code' => $order_data->code_order,
                 'product_name' => $order_data->type,
