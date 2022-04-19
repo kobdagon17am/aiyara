@@ -135,6 +135,7 @@ use App\Models\Frontend\CourseCheckRegis;
 
                                     <div class="row" id="cart_payment_mobile_banking" style="display: none">
                                         <div class="row col-md-12 col-lg-12">
+                                          @if(Auth::guard('c_user')->user()->business_location_id != 3)
                                             <div class="col-md-6 col-lg-6">
                                                 <div class="card">
                                                     <div class="card-block text-center">
@@ -180,6 +181,7 @@ use App\Models\Frontend\CourseCheckRegis;
                                                     </div>
                                                 </div>
                                             </div>
+                                            @endif
                                             <div class="col-md-6 col-lg-6">
                                                 <div class="card">
                                                     <div class="card-block text-center">

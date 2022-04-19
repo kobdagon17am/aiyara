@@ -47,11 +47,11 @@ class Frontend{
       $business_location =1;
     }
 
+
       $fee =  DB::table('dataset_fee')
       ->where('business_location_id_fk','=',$business_location)
-      ->where('id','=',[4,5])
+      ->whereIn('id',['4','5'])
       ->first();
-
 
       if(empty($fee)){
         $html = 'ไม่มีข้อมูลค่าธรรมเนียมบัตรเครดิต';

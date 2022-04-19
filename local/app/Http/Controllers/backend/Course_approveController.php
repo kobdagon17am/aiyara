@@ -97,7 +97,13 @@ public function destroy($id)
 
 public function Datatable(Request $request){
 
+
+
+
   $business_location_id_fk = $request->business_location_id_fk;
+  if (empty($business_location_id_fk)) {
+    $business_location_id_fk = 1;
+}
   $branch_id_fk = $request->branch_id_fk;
   $orderStatus = $request->orderStatus;
   $codeOrder = $request->codeOrder;
@@ -110,8 +116,8 @@ public function Datatable(Request $request){
  ->leftjoin('dataset_order_status','dataset_order_status.orderstatus_id','=','db_orders.order_status_id_fk')
  ->leftjoin('dataset_orders_type','dataset_orders_type.group_id','=','db_orders.purchase_type_id_fk')
  ->leftjoin('dataset_pay_type','dataset_pay_type.id','=','db_orders.pay_type_id_fk')
- ->where('dataset_order_status.lang_id','=','1')
- ->where('dataset_orders_type.lang_id','=','1')
+ ->where('dataset_order_status.lang_id','=',$business_location_id_fk)
+ ->where('dataset_orders_type.lang_id','=',$business_location_id_fk)
 //  ->where('db_orders.purchase_type_id_fk','=','6')
  ->where('db_orders.order_status_id_fk','=','2')
  ->when(auth()->user()->permission !== 1, function ($query) {

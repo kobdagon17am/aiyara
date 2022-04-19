@@ -11,9 +11,13 @@ class Product extends Model
 {
     public static function product_list($type)
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
 
         $data_type = DB::table('dataset_orders_type')
-            ->where('lang_id', '=', 1)
+            ->where('lang_id', '=',  $business_location_id)
             ->where('group_id', '=', $type)
 
         //->orderby('order')
@@ -33,8 +37,8 @@ class Product extends Model
             ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
             ->where('products.orders_type_id', 'LIKE', '%' . $type . '%')
             ->where('products_images.image_default', '=', 1)
-            ->where('products_details.lang_id', '=', 1)
-            ->where('products_cost.business_location_id', '=', 1)
+            ->where('products_details.lang_id', '=', $business_location_id)
+            ->where('products_cost.business_location_id', '=',  $business_location_id)
             ->orderby('products.id')
             ->get();
         //->Paginate(4);
@@ -49,6 +53,11 @@ class Product extends Model
 
     public static function product_list_select($c_id, $type)
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
         // $ev_objective = DB::table('categories')
         //       ->where('lang_id', '=', 1)
         //       ->orderby('order')
@@ -71,8 +80,8 @@ class Product extends Model
             ->whereRaw(('case WHEN ' . $c_id . ' != 1 THEN products.category_id = ' . $c_id . ' else products.category_id != ' . $c_id . ' END'))
         // ->where('products.category_id', '=',$c_id)
             ->where('products_images.image_default', '=', 1)
-            ->where('products_details.lang_id', '=', 1)
-            ->where('products_cost.business_location_id', '=', 1)
+            ->where('products_details.lang_id', '=', $business_location_id)
+            ->where('products_cost.business_location_id', '=', $business_location_id)
             ->orderby('products.id')
             ->get();
         //->Paginate(4);
@@ -99,6 +108,10 @@ class Product extends Model
         }
 
         $business_location_id = $data_customers->business_location_id;
+
+        if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
 
         $promotions = DB::table('promotions')
             ->select('promotions.*', 'promotions_images.img_url', 'promotions_images.promotion_img', 'promotions_cost.selling_price', 'promotions_cost.pv')
@@ -237,6 +250,9 @@ class Product extends Model
         }
 
         $business_location_id = $data_customers->business_location_id;
+        if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
 
         $promotions = DB::table('promotions')
             ->select('promotions.*', 'promotions_images.img_url', 'promotions_images.promotion_img', 'promotions_cost.selling_price', 'promotions_cost.pv')
