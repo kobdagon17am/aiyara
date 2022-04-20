@@ -47,7 +47,7 @@ class AjaxController extends Controller
         }else{
             $role_group_id = \Auth::user()->role_group_id_fk;
             $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-       
+
             $sC = @$menu_permit->c;
             $sU = @$menu_permit->u;
             $sD = @$menu_permit->d;
@@ -1198,11 +1198,11 @@ class AjaxController extends Controller
             ]);
         }
 
-        
-     
+
+
     }
 
-    
+
 
 
    public function ajaxClearAfterAddAiCash(Request $request)
@@ -1398,7 +1398,7 @@ class AjaxController extends Controller
                 DB::select(" UPDATE db_orders SET  shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
                 $shipping_price = 0 ;
             }
-       
+
 
 
         $rs = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
@@ -1534,7 +1534,7 @@ class AjaxController extends Controller
 10  เงินโอน + เงินสด
 11  เงินโอน + Ai-Cash
 
-          */ 
+          */
           // return $request->pay_type_id_fk;
         //   dd($request->all()); sum_credit_price
 
@@ -1970,9 +1970,9 @@ class AjaxController extends Controller
                 $fee = $fee[0]->txt_fixed_rate;
                 $fee_amt =  $fee ;
             }
-         
+
                 $sum_credit_price = $credit_price;
-            
+
        }else{
           $fee_id = 0 ;
           $fee_amt  = 0 ;
@@ -1989,7 +1989,7 @@ class AjaxController extends Controller
                 if($credit_price==$sum_price){
                     DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,gift_voucher_cost=$gift_voucher_cost,gift_voucher_price=0 WHERE id=$frontstore_id ");
                 }else{
-                 
+
                     DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,gift_voucher_cost=($gift_voucher_cost),gift_voucher_price=($gift_voucher_price) WHERE id=$frontstore_id ");
                     // DB::select(" UPDATE db_orders SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price) WHERE id=$frontstore_id ");
                 }
@@ -3237,7 +3237,7 @@ class AjaxController extends Controller
                 if($pay_type_id_fk==14){
                     DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price'  WHERE id=$frontstore_id ");
                     // DB::select(" UPDATE db_orders SET cash_price=(0),cash_pay=($sum_price-$gift_voucher_price),total_price=($sum_price-$gift_voucher_price) WHERE id=$frontstore_id ");
-          
+
                 }
                 else{
                     DB::select(" UPDATE db_orders SET gift_voucher_cost='$gift_voucher_cost',gift_voucher_price='$gift_voucher_price' WHERE id=$frontstore_id ");
@@ -3627,7 +3627,7 @@ class AjaxController extends Controller
                         $taxs = $taxs->where('business_location_id_fk',$request->business_location_id_fk);
                     }
                 }
-              
+
                 if(isset($request->customer_id)){
                     if($request->customer_id!=''){
                         $taxs = $taxs->where('customer_id_fk',$request->customer_id);
@@ -3890,7 +3890,7 @@ class AjaxController extends Controller
             // ->get();
             // if($value->count() == 0){
             // }else{
-                
+
                 DB::table('db_pick_pack_boxsize')
                 ->where('id',$request->box_id)
                 ->update(array(
@@ -4466,12 +4466,12 @@ class AjaxController extends Controller
         //     SET
         //     status_cancel=1
         //     WHERE pick_pack_requisition_code_id_fk='".$request->id."'
-        //     ORDER BY time_pay DESC LIMIT 1 ");  
+        //     ORDER BY time_pay DESC LIMIT 1 ");
         DB::select(" UPDATE
             db_pay_requisition_002
             SET
             status_cancel=1
-            WHERE pick_pack_requisition_code_id_fk='".$request->id."'");  
+            WHERE pick_pack_requisition_code_id_fk='".$request->id."'");
           // เอาสินค้าคืนคลัง
         //   $r = DB::select("
         //     SELECT
@@ -4521,7 +4521,7 @@ class AjaxController extends Controller
                             ->where('time_pay',$v->time_pay)
                             ->where('product_unit_id_fk', $v->product_unit_id_fk)
                             ->get();
-                            
+
                             foreach($db_pay_requisition_002s as $data_002){
                                     DB::table('db_stocks_return')->insert([
                                         'time_pay' => $data_002->time_pay,
@@ -4622,7 +4622,7 @@ class AjaxController extends Controller
 
                                     // DB::select(" INSERT IGNORE INTO db_stock_movement SELECT * FROM db_stock_movement_tmp ORDER BY doc_date asc ");
                                     $tmp = DB::table('db_stock_movement_tmp')->where('doc_no',$db_pick_pack_packing->packing_code)->where('warehouse_id_fk','!=',0)->orderBy('updated_at','desc')->groupBy('product_id_fk')->get();
-                            
+
                                     foreach($tmp as $t){
                                       DB::table('db_stock_movement')->insertOrignore(array(
                                         // ไม่เหมือน tmp
@@ -4971,7 +4971,7 @@ class AjaxController extends Controller
                 ->orderBy('id', 'asc')
                 ->get();
             }
-            
+
             $json_result = [];
             foreach($customers as $k => $v){
                 $json_result[] = [
@@ -5416,13 +5416,14 @@ class AjaxController extends Controller
 
 
       if($Orders[0]->approve_status==0){
-         
+
         $resule = \App\Http\Controllers\Frontend\Fc\DeleteOrderController::delete_order($request->id);
 
        }else{
-            
+
           //DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
           $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+          dd($resule);
       }
 
       if($resule['status'] == 'success' ){
