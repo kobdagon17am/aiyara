@@ -511,7 +511,9 @@ if(!empty($db_orders[0]->action_user)){
         Left Join customers ON db_orders.customers_id_fk = customers.id
         where db_orders.id = ".$id."
           ");
-
+          if(@$cus[0]->prefix_name == '0'){
+            @$cus[0]->prefix_name = '';
+           }
        $cus_user_name = @$cus[0]->user_name;
        $cus_name = @$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name;
 

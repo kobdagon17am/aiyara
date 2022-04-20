@@ -215,7 +215,9 @@ for ($j=1; $j <= $amt_page ; $j++) {
                     Left Join customers ON db_orders.customers_id_fk = customers.id
                     where db_orders.id = ".$data[0]."
                       ");
-                
+                      if(@$cus[0]->prefix_name == '0'){
+            @$cus[0]->prefix_name = '';
+           }
                   echo "<span style='font-size:24px;'>".@$cus[0]->user_name." <br> ".@$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name."</span><br>";
 
 
