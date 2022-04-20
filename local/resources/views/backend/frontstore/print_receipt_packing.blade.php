@@ -335,7 +335,7 @@ $value = DB::select("
                  $sRow = \App\Models\Backend\Frontstore::find($front_db->id);
                  $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$front_db->id)->get();
-                 if(@$value[0]->prefix_name == 0){
+                 if(@$value[0]->prefix_name == '0'){
         @$value[0]->prefix_name = '';
        }
                 echo "<b>ที่อยู่จัดส่ง</b>"."<br>";
