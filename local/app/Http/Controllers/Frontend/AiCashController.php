@@ -27,17 +27,21 @@ class AiCashController extends Controller
 
     // $rs= AicashConfirmeController::aicash_confirme($aicash_id='41',$customer_or_admin_id='99',$type_user_confirme='admin');//$type_user_confirme = "'customer','admin'"
     // dd($rs);
+    $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+    if (empty($business_location_id)) {
+        $business_location_id = 1;
+    }
 
     $type = DB::table('dataset_orders_type')
       ->where('status', '=', 1)
-      ->where('lang_id', '=', 1)
+      ->where('lang_id', '=', $business_location_id)
       ->whereRaw('(group_id = 1 || group_id = 2 || group_id = 3)')
       ->orderby('order')
       ->get();
 
     $orders_type = DB::table('dataset_orders_type')
       ->where('status', '=', '1')
-      ->where('lang_id', '=', '1')
+      ->where('lang_id', '=',  $business_location_id)
       ->orderby('order')
       ->get();
 
@@ -112,9 +116,12 @@ class AiCashController extends Controller
       ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_add_ai_cash.order_status_id_fk')
       ->where('db_add_ai_cash.deleted_status', '!=', 1)
       ->where('db_add_ai_cash.code_order', '!=', null)
+      ->where('dataset_order_status.lang_id', '=', $business_location_id)
       ->where('db_add_ai_cash.customer_id_fk', '=', $customer_id)
+      ->whereRaw("(db_add_ai_cash.type_create != 'admin' and db_add_ai_cash.order_status_id_fk != '8')")
       ->orderby('db_add_ai_cash.created_at', 'desc')
       ->get();
+
 
     $sQuery = Datatables::of($ai_cash);
     return $sQuery
@@ -195,6 +202,7 @@ class AiCashController extends Controller
 
   public function datatable_order_aicash(Request $request)
   {
+
     $customer_id = Auth::guard('c_user')->user()->id;
     $business_location_id = Auth::guard('c_user')->user()->business_location_id;
     if (empty($business_location_id)) {
@@ -210,8 +218,10 @@ class AiCashController extends Controller
       )
       ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_movement_ai_cash.pay_type_id_fk')
       ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_movement_ai_cash.order_type_id_fk')
+      ->leftjoin('db_add_ai_cash', 'db_add_ai_cash.id', '=', 'db_movement_ai_cash.add_ai_cash_id_fk')
       ->where('dataset_orders_type.lang_id', '=', $business_location_id)
       ->where('db_movement_ai_cash.customer_id_fk', '=', $customer_id)
+      ->whereRaw("(db_add_ai_cash.type_create != 'admin' and db_add_ai_cash.order_status_id_fk != '8')")
       ->orderby('db_movement_ai_cash.created_at', 'desc')
       ->get();
 
