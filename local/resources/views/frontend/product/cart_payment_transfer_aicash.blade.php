@@ -243,7 +243,7 @@
                                                         <a class="btn btn-primary btn-md mt-2"
                                                             class="btn btn-primary btn-md mt-2" data-toggle="modal"
                                                             style="color: aliceblue" data-target="#confirm_credit">
-                                                            ชำระด้วย Credit/Debit </a>
+                                                            ชำระด้วย Credit/Debit </a><br>
 
                                                             {!! $check_cradit['html'] !!}
 
