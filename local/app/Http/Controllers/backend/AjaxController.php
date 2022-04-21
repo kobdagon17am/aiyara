@@ -5423,7 +5423,7 @@ class AjaxController extends Controller
 
           //DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
           $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
-          dd($resule);
+
       }
 
       if($resule['status'] == 'success' ){

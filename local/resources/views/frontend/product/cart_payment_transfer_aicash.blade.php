@@ -86,18 +86,29 @@
                                     <div id="cart_payment_tranfer">
                                         <div class="row">
                                             <div class="col-md-6 col-lg-6">
-                                                <div class="card">
-                                                    <div class="card-block text-center">
-                                                        {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
-                                                        <img src="{{ asset('frontend/assets/images/scb.png') }}"
-                                                            class="img-fluid" alt="Responsive image" width="80">
-                                                        <h5 class="m-t-20"><span
-                                                                class="text-c-blue">401-110-1843</span></h5>
-                                                        <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>บริษัท ไอยรา แพลนเน็ต
-                                                            จำกัด</p>
-                                                        {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
-                                                    </div>
-                                                </div>
+                                              <div class="card">
+                                                @if(Auth::guard('c_user')->user()->business_location_id == 1 || empty(Auth::guard('c_user')->user()->business_location_id))
+                                                  <div class="card-block text-center">
+                                                      {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
+                                                      <img src="{{ asset('frontend/assets/images/scb.png') }}"
+                                                          class="img-fluid" alt="Responsive image" width="80">
+                                                      <h5 class="m-t-20"><span
+                                                              class="text-c-blue">401-110-1843</span></h5>
+                                                      <p class="m-b-2 m-t-5">ธนาคารไทยพาณิชย์ <br>บริษัท ไอยรา แพลนเน็ต จำกัด</p>
+                                                      {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
+                                                  </div>
+                                                @else
+                                                <div class="card-block text-center">
+                                                  {{-- <i class="fa fa-envelope-open text-c-blue d-block f-40"></i> --}}
+                                                  <img src="{{ asset('frontend/assets/images/ABA_Logo.png') }}"
+                                                      class="img-fluid" alt="Responsive image" width="80">
+                                                  <h5 class="m-t-20"><span
+                                                          class="text-c-blue">000-383-969</span></h5>
+                                                  <p class="m-b-2 m-t-5">Aiyara Cambodia co.ltd</p>
+                                                  {{-- <button class="btn btn-primary btn-sm btn-round">Manage List</button> --}}
+                                              </div>
+                                                @endif
+                                              </div>
                                             </div>
                                         </div>
 

@@ -33,12 +33,15 @@ class ProfileController extends Controller
       }
         $data = DB::table('customers')
             ->select('customers.*', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
-                'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name', 'customers.team_active_a', 'customers.team_active_b', 'customers.team_active_c')
+                'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name',
+                 'customers.team_active_a', 'customers.team_active_b', 'customers.team_active_c','dataset_business_location.txt_desc')
             ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
             ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
+            ->leftjoin('dataset_business_location','dataset_business_location.id', '=', 'customers.business_location_id')
             ->where('customers.user_name', '=', Auth::guard('c_user')->user()->user_name)
             ->first();
+
 
         $details = DB::table('customers_detail')
             ->select('customers_detail.*', 'dataset_districts.name_th as district', 'dataset_amphures.name_th as amphure', 'dataset_provinces.name_th as province')

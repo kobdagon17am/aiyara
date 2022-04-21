@@ -226,8 +226,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   <span>เลขบัตรปชช : {{ $data->id_card }}</span>
                 </div>
                 <div class="col-sm-6">
-
                   <span>โทรศัพท์มือถือ : {{ @$details->tel_mobile  }}</span>
+                </div>
+                <div class="col-sm-6">
+                  <span>ประเทศ : @if($data->txt_desc){{ @$data->txt_desc  }}@else THAI @endif</span>
                 </div>
                 <div class="col-sm-6">
                   <span>อีเมลล์ : {{ $data->email }}</span>
