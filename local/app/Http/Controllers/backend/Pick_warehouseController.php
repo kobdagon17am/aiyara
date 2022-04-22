@@ -2050,13 +2050,16 @@ ORDER BY db_pick_pack_packing.id
                       if($order_send){
                           // $d3_arr[$data->id] = $order_send->code_order;
                           $d_send = DB::table('db_delivery')->where('orders_id_fk',$order_send->id)->first();
-                          DB::table('db_delivery')->where('id',$data->id)->update([
-                            'recipient_name' => $d_send->recipient_name,
-                            'addr_send' => $d_send->addr_send,
-                            'postcode' => $d_send->postcode,
-                            'mobile' => $d_send->mobile,
-                            'tel_home' => $d_send->tel_home,
-                          ]);
+                          if($d_send){
+                            DB::table('db_delivery')->where('id',$data->id)->update([
+                              'recipient_name' => $d_send->recipient_name,
+                              'addr_send' => $d_send->addr_send,
+                              'postcode' => $d_send->postcode,
+                              'mobile' => $d_send->mobile,
+                              'tel_home' => $d_send->tel_home,
+                            ]);
+                          }
+                         
                       }
                     }
                   }
