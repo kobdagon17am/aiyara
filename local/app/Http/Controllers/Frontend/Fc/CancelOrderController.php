@@ -15,12 +15,9 @@ class CancelOrderController extends Controller
   public static function cancel_order($order_id, $customer_or_admin, $type_user_cancel, $action_type)
   {
 
-
     DB::BeginTransaction();
 
     $order_data  = Order::find($order_id);
-
-
 
     if ($order_data->status_payment_sent_other == 1) {
       $customer_id = $order_data->customers_sent_id_fk;
@@ -147,7 +144,7 @@ class CancelOrderController extends Controller
               ->where('id', $customer_user_aicash->id)
               ->update(['ai_cash' => $update_icash]);
           }
-          
+
           if ($type_id == 1) {
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
@@ -244,111 +241,110 @@ class CancelOrderController extends Controller
             }
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
-          
-          } elseif ($type_id == 5) { 
+          } elseif ($type_id == 5) {
+
+
 
             $giv_log = DB::table('log_gift_voucher')
-          ->where('code_order', '=', $order_data->code_order)
-          ->get();
+              ->where('code_order', '=', $order_data->code_order)
+              ->get();
 
-        if ($giv_log) { //GivtVoucher
+            if ($giv_log) { //GivtVoucher
 
-          if ($type_id == 5) {
+              if ($type_id == 5) {
 
-            foreach ($giv_log as $value) {
+                foreach ($giv_log as $value) {
 
-              $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order->user_name);
+                  $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order->user_name);
 
-              $gv_banlance = $gv->sum_gv + $value->giftvoucher_value_use;
+                  $gv_banlance = $gv->sum_gv + $value->giftvoucher_value_use;
 
-              $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
-                'customer_id_fk' =>  $order_data->customers_id_fk,
-                'order_id_fk' => $order_id,
-                'code_order' => $order_data->code_order,
-                'giftvoucher_cus_code_order' => $value->giftvoucher_cus_code_order,
-                'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
-                'type_action_giftvoucher' => 1, //เกิดจากกาสั่งซื้อ
-                'giftvoucher_value_old' => $gv->sum_gv,
-                'giftvoucher_value_use' => $value->giftvoucher_value_use,
-                'giftvoucher_value_banlance' => $gv_banlance,
-                'detail' => 'ยกเลิกรายการ' . $value->detail,
-                'status' => 'cancle',
-                'type' => 'Add',
-                'status' => 'cancel',
-                'action_user_id_fk' => $customer_or_admin,
-                'action_type' => $action_type,
-                'cancel_date' => date('Y-m-d H:i:s'),
-              ]);
+                  $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                    'customer_id_fk' =>  $order_data->customers_id_fk,
+                    'order_id_fk' => $order_id,
+                    'code_order' => $order_data->code_order,
+                    'giftvoucher_cus_code_order' => $value->giftvoucher_cus_code_order,
+                    'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
+                    'type_action_giftvoucher' => 1, //เกิดจากกาสั่งซื้อ
+                    'giftvoucher_value_old' => $gv->sum_gv,
+                    'giftvoucher_value_use' => $value->giftvoucher_value_use,
+                    'giftvoucher_value_banlance' => $gv_banlance,
+                    'detail' => 'ยกเลิกรายการ' . $value->detail,
+                    'status' => 'cancle',
+                    'type' => 'Add',
+                    'status' => 'cancel',
+                    'action_user_id_fk' => $customer_or_admin,
+                    'action_type' => $action_type,
+                    'cancel_date' => date('Y-m-d H:i:s'),
+                  ]);
 
-              $db_giftvoucher_cus = DB::table('db_giftvoucher_cus')
-                ->select('giftvoucher_banlance')
-                ->where('id', $value->giftvoucher_cus_id_fk)
-                ->first();
+                  $db_giftvoucher_cus = DB::table('db_giftvoucher_cus')
+                    ->select('giftvoucher_banlance')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->first();
 
-              if (empty($db_giftvoucher_cus)) {
-                $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
-                //DB::commit();
-                DB::rollback();
-                return $resule;
+                  if (empty($db_giftvoucher_cus)) {
+                    $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
+                    //DB::commit();
+                    DB::rollback();
+                    return $resule;
+                  }
+
+
+                  $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance + $value->giftvoucher_value_use;
+
+                  $update_giftvoucher = DB::table('db_giftvoucher_cus')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->update(['giftvoucher_banlance' => $giftvoucher_banlance]);
+                }
+                $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
+              } else { //ได้จากการแถมสินค้า
+
+                foreach ($giv_log as $value) {
+
+                  $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order);
+                  $gv_banlance = $gv->sum_gv - $value->giftvoucher_value_use;
+
+                  $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                    'customer_id_fk' =>  $order_data->customers_id_fk,
+                    'order_id_fk' => $order_id,
+                    'code_order' => $order_data->code_order,
+                    'giftvoucher_cus_code_order' => $value->giftvoucher_cus_code_order,
+                    'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
+                    'type_action_giftvoucher' => 1, //เกิดจากกาสั่งซื้อ
+                    'giftvoucher_value_old' => $gv->sum_gv,
+                    'giftvoucher_value_use' => $value->giftvoucher_value_use,
+                    'giftvoucher_value_banlance' => $gv_banlance,
+                    'detail' => 'ยกเลิกรายการ' . $value->detail,
+                    'status' => 'cancle',
+                    'type' => 'Remove',
+                    'status' => 'cancel',
+                    'action_user_id_fk' => $customer_or_admin,
+                    'action_type' => $action_type,
+                    'cancel_date' => date('Y-m-d H:i:s'),
+                  ]);
+
+                  $db_giftvoucher_cus = DB::table('db_giftvoucher_cus')
+                    ->select('giftvoucher_banlance')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->first();
+
+                  if (empty($db_giftvoucher_cus)) {
+                    $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
+                    //DB::commit();
+                    DB::rollback();
+                    return $resule;
+                  }
+
+                  $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance - $value->giftvoucher_value_use;
+
+                  $update_giftvoucher = DB::table('db_giftvoucher_cus')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->update(['giftvoucher_banlance' => $giftvoucher_banlance]);
+                }
+                $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
               }
-
-
-              $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance + $value->giftvoucher_value_use;
-
-              $update_giftvoucher = DB::table('db_giftvoucher_cus')
-                ->where('id', $value->giftvoucher_cus_id_fk)
-                ->update(['giftvoucher_banlance' => $giftvoucher_banlance]);
             }
-            $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
-          } else { //ได้จากการแถมสินค้า
-
-            foreach ($giv_log as $value) {
-
-              $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order);
-              $gv_banlance = $gv->sum_gv - $value->giftvoucher_value_use;
-
-              $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
-                'customer_id_fk' =>  $order_data->customers_id_fk,
-                'order_id_fk' => $order_id,
-                'code_order' => $order_data->code_order,
-                'giftvoucher_cus_code_order' => $value->giftvoucher_cus_code_order,
-                'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
-                'type_action_giftvoucher' => 1, //เกิดจากกาสั่งซื้อ
-                'giftvoucher_value_old' => $gv->sum_gv,
-                'giftvoucher_value_use' => $value->giftvoucher_value_use,
-                'giftvoucher_value_banlance' => $gv_banlance,
-                'detail' => 'ยกเลิกรายการ' . $value->detail,
-                'status' => 'cancle',
-                'type' => 'Remove',
-                'status' => 'cancel',
-                'action_user_id_fk' => $customer_or_admin,
-                'action_type' => $action_type,
-                'cancel_date' => date('Y-m-d H:i:s'),
-              ]);
-
-              $db_giftvoucher_cus = DB::table('db_giftvoucher_cus')
-                ->select('giftvoucher_banlance')
-                ->where('id', $value->giftvoucher_cus_id_fk)
-                ->first();
-
-              if (empty($db_giftvoucher_cus)) {
-                $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
-                //DB::commit();
-                DB::rollback();
-                return $resule;
-              }
-
-              $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance - $value->giftvoucher_value_use;
-
-              $update_giftvoucher = DB::table('db_giftvoucher_cus')
-                ->where('id', $value->giftvoucher_cus_id_fk)
-                ->update(['giftvoucher_banlance' => $giftvoucher_banlance]);
-            }
-            $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
-          }
-        }
-          
-            
           } elseif ($type_id == 6) { // Course
             $update_couse = DB::table('course_event_regis')
               ->where('order_id_fk', $order_id)
@@ -374,7 +370,112 @@ class CancelOrderController extends Controller
             DB::commit();
             return $resule;
           }
-        } else {
+        } else{
+
+          if ($type_id == 5) {
+
+            $giv_log = DB::table('log_gift_voucher')
+              ->where('code_order', '=', $order_data->code_order)
+              ->get();
+
+            if ($giv_log) { //GivtVoucher
+
+              if ($type_id == 5) {
+
+                foreach ($giv_log as $value) {
+
+                  $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order->user_name);
+
+                  $gv_banlance = $gv->sum_gv + $value->giftvoucher_value_use;
+
+                  $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                    'customer_id_fk' =>  $order_data->customers_id_fk,
+                    'order_id_fk' => $order_id,
+                    'code_order' => $order_data->code_order,
+                    'giftvoucher_cus_code_order' => $value->giftvoucher_cus_code_order,
+                    'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
+                    'type_action_giftvoucher' => 1, //เกิดจากกาสั่งซื้อ
+                    'giftvoucher_value_old' => $gv->sum_gv,
+                    'giftvoucher_value_use' => $value->giftvoucher_value_use,
+                    'giftvoucher_value_banlance' => $gv_banlance,
+                    'detail' => 'ยกเลิกรายการ' . $value->detail,
+                    'status' => 'cancle',
+                    'type' => 'Add',
+                    'status' => 'cancel',
+                    'action_user_id_fk' => $customer_or_admin,
+                    'action_type' => $action_type,
+                    'cancel_date' => date('Y-m-d H:i:s'),
+                  ]);
+
+                  $db_giftvoucher_cus = DB::table('db_giftvoucher_cus')
+                    ->select('giftvoucher_banlance')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->first();
+
+                  if (empty($db_giftvoucher_cus)) {
+                    $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
+                    //DB::commit();
+                    DB::rollback();
+                    return $resule;
+                  }
+
+
+                  $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance + $value->giftvoucher_value_use;
+
+                  $update_giftvoucher = DB::table('db_giftvoucher_cus')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->update(['giftvoucher_banlance' => $giftvoucher_banlance]);
+                }
+                $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
+              } else { //ได้จากการแถมสินค้า
+
+                foreach ($giv_log as $value) {
+
+                  $gv = \App\Helpers\Frontend::get_gitfvoucher($customer_order);
+                  $gv_banlance = $gv->sum_gv - $value->giftvoucher_value_use;
+
+                  $insert_log_gift_voucher = DB::table('log_gift_voucher')->insert([
+                    'customer_id_fk' =>  $order_data->customers_id_fk,
+                    'order_id_fk' => $order_id,
+                    'code_order' => $order_data->code_order,
+                    'giftvoucher_cus_code_order' => $value->giftvoucher_cus_code_order,
+                    'giftvoucher_cus_id_fk' => $value->giftvoucher_cus_id_fk,
+                    'type_action_giftvoucher' => 1, //เกิดจากกาสั่งซื้อ
+                    'giftvoucher_value_old' => $gv->sum_gv,
+                    'giftvoucher_value_use' => $value->giftvoucher_value_use,
+                    'giftvoucher_value_banlance' => $gv_banlance,
+                    'detail' => 'ยกเลิกรายการ' . $value->detail,
+                    'status' => 'cancle',
+                    'type' => 'Remove',
+                    'status' => 'cancel',
+                    'action_user_id_fk' => $customer_or_admin,
+                    'action_type' => $action_type,
+                    'cancel_date' => date('Y-m-d H:i:s'),
+                  ]);
+
+                  $db_giftvoucher_cus = DB::table('db_giftvoucher_cus')
+                    ->select('giftvoucher_banlance')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->first();
+
+                  if (empty($db_giftvoucher_cus)) {
+                    $resule = ['status' => 'fail', 'message' => 'ข้อมูลไม่ถูกต้อง'];
+                    //DB::commit();
+                    DB::rollback();
+                    return $resule;
+                  }
+
+                  $giftvoucher_banlance = $db_giftvoucher_cus->giftvoucher_banlance - $value->giftvoucher_value_use;
+
+                  $update_giftvoucher = DB::table('db_giftvoucher_cus')
+                    ->where('id', $value->giftvoucher_cus_id_fk)
+                    ->update(['giftvoucher_banlance' => $giftvoucher_banlance]);
+                }
+                $resule = ['status' => 'success', 'message' => 'Cancel Oder GiftVoucher Success'];
+              }
+            }
+          }
+
           $resule = ['status' => 'success', 'message' => 'pv ของบิลนี้มีค่าเป็น 0 ปรับสถานะบิลเป็น Cancel อย่างเดียว'];
         }
       } else {
@@ -394,11 +495,11 @@ class CancelOrderController extends Controller
         DB::commit();
         return $resule;
       }
-      // วุฒิเพิ่มมาแก้ error 
-      if(!isset($resule)){
+      // วุฒิเพิ่มมาแก้ error
+      if (!isset($resule)) {
         $resule = ['status' => 'success', 'message' => 'ทำรายการสำเร็จ'];
       }
-      // 
+      //
       if ($resule['status'] == 'success') {
 
         if ($type_id == 4) {
@@ -422,12 +523,12 @@ class CancelOrderController extends Controller
 
 
 
-        
+
 
         $order_data->save();
         $customer_user->save();
 
- 
+
         DB::commit();
         return $resule;
       } else {

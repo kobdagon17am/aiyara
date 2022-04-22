@@ -17,7 +17,7 @@
                 <div class="card-block">
                     <i class="fa fa-money st-icon bg-success"></i>
                     <div class="text-left">
-                        <h3 class="d-inline-block text-success">฿
+                        <h3 class="d-inline-block text-success"> @if(Auth::guard('c_user')->user()->business_location_id == 1 || empty(Auth::guard('c_user')->user()->business_location_id)) ฿ @else <i class="icofont icofont-cur-dollar"></i> @endif
                             {{ number_format(Auth::guard('c_user')->user()->ai_cash) }}</h3>
                     </div>
                 </div>
