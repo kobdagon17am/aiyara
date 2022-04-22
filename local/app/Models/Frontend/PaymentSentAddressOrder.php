@@ -236,7 +236,7 @@ class PaymentSentAddressOrder extends Model
                    '".@$rs->other_district."',
                    '".@$rs->other_zipcode."',
                    '".@$rs->other_tel_mobile."',
-               '".@$rs->other_tel_mobile."',
+                    '".@$rs->other_tel_mobile."',
                    now()
                 )
               ");
