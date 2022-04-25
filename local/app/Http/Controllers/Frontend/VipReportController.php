@@ -45,6 +45,7 @@ class VipReportController extends Controller
             ->leftJoin('users', 'users.id', 'db_orders.user_id_fk')
             ->leftJoin('dataset_pay_type', 'dataset_pay_type.id', 'pay_type_id_fk')
             ->leftJoin('dataset_order_status', 'dataset_order_status.orderstatus_id', 'db_orders.order_status_id_fk')
+            ->where('dataset_order_status.lang_id', '=', 1)
             ->where('users.user_recommend', auth('c_user')->user()->user_name)
             ->orderBy('db_orders.created_at', 'desc')
             ->get();

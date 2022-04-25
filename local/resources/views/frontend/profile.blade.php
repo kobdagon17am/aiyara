@@ -126,7 +126,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
       <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
       <?php $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
       <div class="row">
-        <div class="col-md-6 col-5"><h4><span>{{ number_format($gv->sum_gv) }} </span></h4></div>
+        <div class="col-md-6 col-5"><h4><span>{{ number_format($gv->sum_gv) }} @if(Auth::guard('c_user')->user()->business_location_id == 1 || empty(Auth::guard('c_user')->user()->business_location_id)) ฿ @else <i class="icofont icofont-cur-dollar"></i> @endif </span></h4></div>
         <?php $count_expli = Frontend::check_count_expri_giv(Auth::guard('c_user')->user()->user_name); ?>
         <div class="col-md-6 col-7 text-right">
           @if($count_expli>0)
@@ -150,7 +150,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
    <div class="panel-body">
     <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
 
-    <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->ai_cash) }} </span></h4>
+    <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->ai_cash) }} @if(Auth::guard('c_user')->user()->business_location_id == 1 || empty(Auth::guard('c_user')->user()->business_location_id)) ฿ @else <i class="icofont icofont-cur-dollar"></i> @endif </span></h4>
   </div>
   <div class="panel-footer">
     {{-- Panel Footer --}}
