@@ -569,8 +569,8 @@ class FrontstoreController extends Controller
       DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
     }
 
-    $sAccount_bank = \App\Models\Backend\Account_bank::get();
-
+    $sAccount_bank = \App\Models\Backend\Account_bank::where('business_location_id_fk', $sBranchs[0]->business_location_id_fk)->get();
+   
     // $type = $sRow->purchase_type_id_fk;
     $pv_total = $sRow->pv_total;
     // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;

@@ -123,7 +123,7 @@ $(function() {
         scroller: true,
         scrollCollapse: true,
         scrollX: true,
-        ordering: true,
+        ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {

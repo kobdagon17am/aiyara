@@ -3114,7 +3114,7 @@
 
         var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
         var order_type = "{{ @$sRow->purchase_type_id_fk }}";
-
+        var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
         $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
             $('#data-table-list-pro').DataTable({
@@ -3126,6 +3126,7 @@
                     data: {
                         frontstore_id_fk: frontstore_id_fk,
                         order_type: order_type,
+                        branch_id_fk: branch_id_fk,
                     },
                     method: 'POST',
                 },
@@ -4480,7 +4481,7 @@
                 var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
                 var order_type = $("#purchase_type_id_fk").val();
                 // alert(order_type);
-
+                var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
                 var oTablefrontstorelistPro;
 
                 $(function() {
@@ -4495,6 +4496,7 @@
                             data: {
                                 frontstore_id_fk: frontstore_id_fk,
                                 order_type: order_type,
+                                branch_id_fk: branch_id_fk,
                             },
                             method: 'POST',
                         },

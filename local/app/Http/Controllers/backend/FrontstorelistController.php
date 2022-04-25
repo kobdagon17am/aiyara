@@ -1177,6 +1177,7 @@ class FrontstorelistController extends Controller
 
     public function DatatablePro(Request $req){
 
+      $branchs = DB::select("SELECT * FROM branchs WHERE id=".($req->branch_id_fk)." ");
 // เอา รหัสคนซื้อ มาตรวจสอบกับเงื่อนไขของ promotions ทุกกรณีที่ระบุไว้ใน  /backend/promotions/1/edit
 
        $sTable = DB::select("
@@ -1200,8 +1201,11 @@ class FrontstorelistController extends Controller
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 7), ',', -1)
             )
             AND curdate() BETWEEN promotions.show_startdate and promotions.show_enddate
+             AND business_location = ".@$branchs[0]->business_location_id_fk."
             
       ");
+
+
 // AND promotions.all_available_purchase > 0 
       $sQuery = \DataTables::of($sTable);
       return $sQuery

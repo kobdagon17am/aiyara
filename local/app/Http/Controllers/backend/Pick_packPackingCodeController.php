@@ -349,18 +349,27 @@ class Pick_packPackingCodeController extends Controller
       return $sQuery
 
       ->addColumn('column_001', function($row) {
-        
+        $pcode = DB::table('db_pick_pack_packing_code')->select('receipt')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
+        $order = explode(',',$pcode->receipt);
          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
+          $packing_code = [] ;
+          $delivery_packing = [] ;
           foreach ($d as $key => $v) {
-             array_push($f,@$v->recipient_code);
+            $ppack = DB::table('db_pick_pack_packing')->select('packing_code')->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$v->delivery_id_fk)->first();
+            $dv = DB::table('db_delivery_packing')->select('packing_code_id_fk')->where('packing_code',@$v->recipient_code)->first();
+         
+            array_push($f,@$v->recipient_code);
+             array_push($packing_code,@$ppack->packing_code);
+             array_push($delivery_packing,@$dv->packing_code_id_fk);
           }
           // $f = implode('<br><br><br>',$f);
             $web_all = "";
-          foreach($f as $value){
+          foreach($f as $key => $value){
             $web = "<div class='col-md-12' style='height: 70px;'>";
-            $web .=$value;
+            // $web .="<a href='".url('backend/qr_show/'.@$order[0].'/'.$packing_code[$key].'/1/'.$value.'%'.$delivery_packing[$key].'(packing)')."' target='blank'>".$value."</a>";
+            $web .="<a href='".url('backend/qr_show/'.@$order[0].'/'.$packing_code[$key].'/1/'.$value.'%20(packing)')."' target='blank'>".$value."</a>";
             $web .= "</div>";
             $web_all .=$web.'<br>';
           }
