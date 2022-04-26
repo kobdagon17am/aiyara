@@ -344,7 +344,7 @@ $(function() {
         "info":     false,
         scrollX: true,
         ordering: false,
-        // scrollY: ''+($(window).height()-370)+'px',
+        scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
 
         ajax: {
@@ -682,7 +682,7 @@ $(function() {
                                 ordering: false,
                                 "info":     false,
                                 iDisplayLength: 25,
-
+                                scrollY: ''+($(window).height()-370)+'px',
                                          ajax: {
                                           url: '{{ route('backend.po_approve.datatable') }}',
                                           data :{
@@ -763,6 +763,7 @@ $(function() {
                                         destroy:true,
                                         ordering: false,
                                         "info":     false,
+                                        scrollY: ''+($(window).height()-370)+'px',
                                             // scrollY: ''+($(window).height()-370)+'px',
                                             iDisplayLength: 25,
                                             ajax: {
@@ -930,6 +931,7 @@ console.log(aData);
                                 scroller: true,
                                 destroy:true,
                                 ordering: false,
+                                scrollY: ''+($(window).height()-370)+'px',
                                 ajax: {
                                           url: '{{ route('backend.add_ai_cash_02.datatable') }}',
                                           data :{

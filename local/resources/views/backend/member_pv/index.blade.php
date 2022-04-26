@@ -225,12 +225,21 @@ var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        // processing: true,
+        // serverSide: true,
+        // scroller: true,
+        destroy: true,
+        // ordering: false,
+        // iDisplayLength: 15,
         processing: true,
         serverSide: true,
-        scroller: true,
-        destroy: true,
+        // scroller: true,
+        // scrollCollapse: true,
+        "info":     false,
+        scrollX: true,
         ordering: false,
-        iDisplayLength: 15,
+        scrollY: ''+($(window).height()-370)+'px',
+        iDisplayLength: 25,
         ajax: {
           url: '{{ route('backend.member_pv.datatable') }}',
           data: function ( d ) {
