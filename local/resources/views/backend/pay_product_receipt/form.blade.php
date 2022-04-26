@@ -262,15 +262,15 @@
                         </div>
 
 
-                   <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                   <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                   <table id="data-table-0001" class="table table-bordered " style="width: 100%;" ></table>
+                   <table id="data-table-0002" class="table table-bordered " style="width: 100%;" ></table>
 
                         <div class=" div_datatables_003 " style="display: none;" >
-                           <table id="data-table-0003" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                           <table id="data-table-0003" class="table table-bordered " style="width: 100%;" ></table>
                         </div>     
 
                         <div class=" div_datatables_004 " style="display: none;" >
-                           <table id="data-table-0004" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                           <table id="data-table-0004" class="table table-bordered " style="width: 100%;" ></table>
                         </div>  
                 
                         <div class="col-md-12 text-center div_btn_save " style="display: none;" >

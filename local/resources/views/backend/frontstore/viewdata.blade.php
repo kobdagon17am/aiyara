@@ -532,7 +532,7 @@
 
           <div class="form-group row ">
             <div class="col-md-12">
-              <table id="data-table-list" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-list" class="table table-bordered " style="width: 100%;">
               </table>
             </div>
           </div>
@@ -1378,10 +1378,10 @@
                 <input id="pro_name" type="text" readonly="" style="border: 0px solid transparent;width: 100%;font-weight: bold;font-size: 18px;display: none;">
                 </div>
 
-                <table id="data-table-promotion" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-promotion" class="table table-bordered " style="width: 100%;">
                 </table>
 
-                <table id="data-table-promotions-cost" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-promotions-cost" class="table table-bordered " style="width: 100%;">
                 </table>
 
                 <br>
@@ -1455,7 +1455,7 @@
                   <input name="frontstore_id" type="hidden" value="{{@$sRow->id}}">
                   <input name="product_plus" type="hidden" value="1">
                   {{ csrf_field() }}
-                  <table id="data-table-products-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                  <table id="data-table-products-list" class="table table-bordered " style="width: 100%;">
                   </table>
                 </form>
 

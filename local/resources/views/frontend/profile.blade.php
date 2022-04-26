@@ -325,7 +325,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         </div>
       </div>
       <div class="card-block">
-        <div class="table-responsive dt-responsive">
+        <div class="table-responsive ">
 
           <table id="dt_coupon_code" class="table table-striped table-bordered nowrap">
             {{-- <thead>

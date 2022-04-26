@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="card-block">
-                    <div class="table-responsive dt-responsive">
+                    <div class="table-responsive ">
                         <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
 
 
@@ -188,7 +188,7 @@
                     <h5>ประวัติการชำระด้วย Ai-Cash</h5>
                 </div>
                 <div class="card-block">
-                    <div class="table-responsive dt-responsive">
+                    <div class="table-responsive ">
                         <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
                         </table>
 

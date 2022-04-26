@@ -6,7 +6,7 @@
         <div class="card card-body">
             <h4 class="mb-4">VIP Report</h4>
 
-            <div class="dt-responsive table-responsive">
+            <div class=" table-responsive">
                 <table id="vip-datatable" class="table table-striped table-bordered w-100">
                     <thead>
                         <tr>
@@ -26,7 +26,7 @@
         <div class="card card-body">
             <h4 class="mb-4">Orders VIP Shop [ Drop Ship bonus : <span class="text-primary">{{ number_format(Auth::guard('c_user')->user()->drop_ship_bonus) }} </span> ]</h4>
 
-            <div class="dt-responsive table-responsive">
+            <div class=" table-responsive">
                 <table id="orders-datatable" class="table table-striped table-bordered w-100">
                     <thead>
                         <tr>

@@ -347,7 +347,7 @@
                 </div>
 
 
-                <table id="data-table-to-transfer" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-to-transfer" class="table table-bordered " style="width: 100%;">
                  </table>
 
                  <?php //echo count($sTransfer_choose)."xxxxxxxxxxxxxxxxxxxxxxxxxxx" ?>
@@ -378,7 +378,7 @@
                     </div>
                   </div>
 
-                  <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                  <table id="data-table-transfer-list" class="table table-bordered " style="width: 100%;">
                   </table>
                 </div>
 
@@ -416,7 +416,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-                <table id="data-table-choose" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-choose" class="table table-bordered " style="width: 100%;">
                          </table>
               </div>
             </div>

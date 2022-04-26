@@ -127,7 +127,7 @@
                           </div>
                         </div>
                       </div>
-                      <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                      <table id="data-table" class="table table-bordered " style="width: 100%;">
                       </table>
                       <div class="col-md-6 text-right divBtnSave " style="display: none;">
                         <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
@@ -147,7 +147,7 @@
                     </div>
                     <div class="form-group row">
                       <div class="col-md-12">
-                        <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;">
+                        <table id="data-table-packing" class="table table-bordered " style="width: 100%;">
                         </table>
                       </div>
                     </div>

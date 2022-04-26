@@ -27,7 +27,7 @@ $count_sponser = 0;
                 </div>
                 <div class="card-block">
 
-                    <div class="dt-responsive table-responsive">
+                    <div class=" table-responsive">
                         <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr class="info" style='text-align:center;'>
@@ -75,7 +75,7 @@ $count_sponser = 0;
             </div>
             <div class="card-block">
 
-                <div class="dt-responsive table-responsive">
+                <div class=" table-responsive">
                     <table id="setting-default" class="table table-striped table-bordered nowrap">
 
                         <thead>

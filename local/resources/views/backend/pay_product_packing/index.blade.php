@@ -225,8 +225,8 @@
                         </div>
 
                         
-                       <!-- <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
-                       <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                       <!-- <table id="data-table-0002" class="table table-bordered " style="width: 100%;" ></table> -->
+                       <table id="data-table-0001" class="table table-bordered " style="width: 100%;" ></table>
 
 
                       <div class="form-group row div_btn_save " style="display: none;" >
@@ -254,7 +254,7 @@
                     </div>
                     <div class="form-group row">
                       <div class="col-md-12">
-                      <table id="" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                      <table id="" class="table table-bordered " style="width: 100%;" ></table>
 
                       <!-- <center><input type='button' class="btn btn-primary btnGentoExport " value='แจงลงตาราง Export ให้ KERRY' >  -->
 
@@ -302,7 +302,7 @@
                   @endif
                   
                 </form>
-              <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
+              <table id="data-table-import" class="table table-bordered " style="width: 100%;background-color: white;"></table>
               <center><input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code' >
             </div>
             </div>
@@ -314,7 +314,7 @@
             </div>
             <div class="form-group row">
               <div class="col-md-12">
-              <table id="data-table-map-consignments" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+              <table id="data-table-map-consignments" class="table table-bordered " style="width: 100%;" ></table>
             </div>
             </div>
             </div>

@@ -70,7 +70,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                 </div>
                 <div class="card-block">
-                  <div class="dt-responsive table-responsive">
+                  <div class=" table-responsive">
                       <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
 
                       </table>
@@ -91,7 +91,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
               </div>
               <div class="card-block">
-                <div class="dt-responsive table-responsive">
+                <div class=" table-responsive">
                     <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
 
                     </table>

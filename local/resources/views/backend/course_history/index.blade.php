@@ -27,7 +27,7 @@
                     <!--  <h4 class="mb-0 font-size-18"> ประวัติการลงทะเบียน Course/Event (รายกลุ่ม) </h4> -->
                   </div>
                 </div>
-                <table id="data-table-001" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-001" class="table table-bordered " style="width: 100%;">
                 </table>
             </div>
         </div>

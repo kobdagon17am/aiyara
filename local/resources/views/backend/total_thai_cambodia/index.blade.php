@@ -115,7 +115,7 @@
 
 
                     <div class="table-responsive">
-                        <table id="thai_cambodia" class="table table-bordered dt-responsive thai_cambodia"
+                        <table id="thai_cambodia" class="table table-bordered  thai_cambodia"
                             style="width: 100%;">
                             <tfoot>
                                 <tr>
@@ -154,7 +154,7 @@
                         </div>
                     </div>
 
-                    <table id="data-table-thai" class="table table-bordered dt-responsive mt-0"
+                    <table id="data-table-thai" class="table table-bordered  mt-0"
                         style="width: 100%;">
                         <tfoot>
                             <tr>
@@ -169,7 +169,7 @@
                         </tfoot>
                     </table>
                     <br>
-                    <table id="data-table-cambodia" class="table table-bordered dt-responsive mt-0"
+                    <table id="data-table-cambodia" class="table table-bordered  mt-0"
                         style="width: 100%;">
                         <tfoot>
                             <tr>

@@ -116,7 +116,7 @@
       </div>
       <div class="modal-body">
         <input type="hidden" value="0" name="delivery_id" id="delivery_id_more">
-        <table id="data-table-scan" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+        <table id="data-table-scan" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table>
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary" onclick="return confirm('ยืนยันการทำรายการ');">Save Complete</button>
@@ -140,7 +140,7 @@
       </div>
       <div class="modal-body">
         <input type="hidden" value="0" name="delivery_id" id="delivery_id_single">
-        <table id="data-table-scan-single" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+        <table id="data-table-scan-single" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table>
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary" onclick="return confirm('ยืนยันการทำรายการ');">Save Complete</button>
@@ -256,7 +256,7 @@
 
                   <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการเลขพัสดุบริษัทขนส่ง </span>
   
-                  <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                  <table id="warehouse_address_sent" class="table table-bordered " style="width: 100%;" ></table>
                   <br>
                   
             <div class="col-md-12 ">
@@ -305,7 +305,7 @@
           </div>
 
                   <br>
-                  <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+                  <table id="data-table-0001" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table>
                   
               </div>
             </div>
@@ -319,8 +319,8 @@
             <div class="form-group row  " >
               <div class="col-md-12 ">
                 {{-- วุฒิปิดไว้ --}}
-                {{-- <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> --}}
-                {{-- <table id="data-table-00022" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> --}}
+                {{-- <table id="data-table-0002" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table> --}}
+                {{-- <table id="data-table-00022" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table> --}}
               </div>
             </div>
           </div>
@@ -332,7 +332,7 @@
 
                  <!-- <span style="font-weight: bold;color: red;">*** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>   -->
 
-                <table id="order_wait_table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                <table id="order_wait_table" class="table table-bordered " style="width: 100%;" ></table>
               <input type='button' class="btn btn-primary btnExportElsx " data-id="{{$id}}" value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
             </div>
           </div>
@@ -343,7 +343,7 @@
               <div class="col-md-12 ">
                 <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> แจ้งสถานะการจัดส่ง </span>
 
-                <!-- <table id="note" class="table table-bordered dt-responsive" style="width: 60%;" ></table> -->
+                <!-- <table id="note" class="table table-bordered " style="width: 60%;" ></table> -->
                 
             </div>
           </div>

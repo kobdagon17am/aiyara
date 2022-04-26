@@ -14,7 +14,7 @@
                         {{-- <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม AIPocket</span> --}}
                     </div>
                     <div class="card-block">
-                        <div class="dt-responsive table-responsive">
+                        <div class=" table-responsive">
                             <table id="simpletable" class="table table-striped table-bordered nowrap">
                                 <thead>
                                     <tr>

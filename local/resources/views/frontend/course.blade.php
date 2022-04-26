@@ -27,7 +27,7 @@
     </div>
 </div> --}}
 <div class="card-block">
-    <div class="table-responsive dt-responsive">
+    <div class="table-responsive ">
         <table id="history" class="table table-striped table-bordered nowrap">
             <thead>
                 <tr>

@@ -15,7 +15,7 @@
                     <div class="card-block">
 
 
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        <table id="datatable" class="table table-bordered  nowrap"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr role="row">

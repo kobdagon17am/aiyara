@@ -140,7 +140,7 @@
                     <input type="text" class="form-control float-left text-center w130 myLike" placeholder="ค้น : Remark" name="remark" style="margin-left: 1%;" >
                 </div>
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table" class="table table-bordered " style="width: 100%;">
                 </table>
 
             </div>

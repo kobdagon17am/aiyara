@@ -49,7 +49,7 @@
             <div class="card-block">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="dt-responsive table-responsive">
+                        <div class=" table-responsive">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>

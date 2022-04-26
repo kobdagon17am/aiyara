@@ -175,8 +175,8 @@
           <div class="col-12">
             <div class="form-group row  " >
               <div class="col-md-12 ">
-                <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
-                <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table>
+                <table id="data-table-0001" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table>
+                <table id="data-table-0002" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@
 
                  <!-- <span style="font-weight: bold;color: red;">*** ตารางนี้อยู่ระหว่างการปรับปรุง *** </span>   -->
 
-                <table id="warehouse_address_sent" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                <table id="warehouse_address_sent" class="table table-bordered " style="width: 100%;" ></table>
                 <center><input type='button' class="btn btn-primary btnExportElsx " value='ส่งออกไฟล์ Excel (.xlsx) ให้ KERRY' >
             </div>
           </div>
@@ -232,7 +232,7 @@
                   @endif
                   
                 </form>
-              <table id="data-table-import" class="table table-bordered dt-responsive" style="width: 100%;background-color: white;"></table>
+              <table id="data-table-import" class="table table-bordered " style="width: 100%;background-color: white;"></table>
               <center><input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code' >
             </div>
           </div>
@@ -240,7 +240,7 @@
 
        <div class="form-group row">
               <div class="col-md-12">
-              <table id="data-table-map-consignments" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+              <table id="data-table-map-consignments" class="table table-bordered " style="width: 100%;" ></table>
             </div>
             </div>
 

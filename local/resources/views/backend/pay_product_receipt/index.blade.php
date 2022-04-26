@@ -261,8 +261,8 @@
                         </div>
 
                     <div class="div_datatables " style="display: none;" >
-                       <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                       <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                       <table id="data-table-0001" class="table table-bordered " style="width: 100%;" ></table>
+                       <table id="data-table-0002" class="table table-bordered " style="width: 100%;" ></table>
                     </div>
 
                       <div class="form-group row div_btn_save " style="display: none;" >

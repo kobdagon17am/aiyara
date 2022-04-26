@@ -15,7 +15,7 @@
                     </div>
                     <div class="card-block">
 
-                          <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                          <table id="data-table" class="table table-bordered " style="width: 100%;">
                                 <thead>
                                     <tr role="row">
                                         <th>Date</th>

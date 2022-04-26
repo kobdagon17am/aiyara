@@ -239,11 +239,11 @@
 
               <?php //if($can_packing_list=='1'){ ?>
 
-                    <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                    <table id="data-table" class="table table-bordered " style="width: 100%;" ></table>
 
               <?php //}else{ ?>
 
-                    <!-- <table id="data-table-no-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
+                    <!-- <table id="data-table-no-packing" class="table table-bordered " style="width: 100%;" ></table> -->
               
               <?php //}?>
 
@@ -279,11 +279,11 @@
 
                           <?php //if($can_payproduct=='1'){ ?>
 
-                                <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                                <table id="data-table-packing" class="table table-bordered " style="width: 100%;"></table>
 
                           <?php //}else{ ?>
 
-                                 <!-- <table id="data-table-no-payproduct" class="table table-bordered dt-responsive" style="width: 100%;"></table> -->
+                                 <!-- <table id="data-table-no-payproduct" class="table table-bordered " style="width: 100%;"></table> -->
                           
                           <?php //} ?>
 

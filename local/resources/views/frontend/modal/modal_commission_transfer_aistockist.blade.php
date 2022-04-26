@@ -13,7 +13,7 @@
                 <div class="card">
 
                     <div class="card-block">
-                        <div class="dt-responsive table-responsive">
+                        <div class=" table-responsive">
                             <table id="simpletable" class="table table-striped table-bordered nowrap">
                                 <thead>
                                     <tr role="row">

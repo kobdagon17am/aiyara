@@ -50,7 +50,7 @@
 
                 </div>
 
-                <table id="data-table-001" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-001" class="table table-bordered " style="width: 100%;">
                 </table>
 
             </div>
@@ -77,7 +77,7 @@
 
                 </div>
 
-                <table id="data-table-002" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-002" class="table table-bordered " style="width: 100%;">
                 </table>
 
             </div>

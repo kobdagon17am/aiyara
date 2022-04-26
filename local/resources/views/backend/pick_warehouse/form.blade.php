@@ -168,7 +168,7 @@
           
           <div class="form-group row  " >
             <div class="col-md-12 ">
-            <!-- <table id="data-table-0000" class="table table-bordered dt-responsive" style="width: 100%;" ></table> -->
+            <!-- <table id="data-table-0000" class="table table-bordered " style="width: 100%;" ></table> -->
                
                     @IF(@$sUser[0]->status_sent!=3)
                           <div style="background-color:#ffeecc;padding-top: 10px;display: none;">
@@ -220,19 +220,19 @@
                           </div>
                         </div>
 
-          <!-- <table id="data-table-0000" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> -->
-          <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
-          <!-- <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;margin-bottom: 0%;" ></table> -->
-          <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;"> </table>
+          <!-- <table id="data-table-0000" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table> -->
+          <table id="data-table-packing" class="table table-bordered " style="width: 100%;"></table>
+          <!-- <table id="data-table-0001" class="table table-bordered " style="width: 100%;margin-bottom: 0%;" ></table> -->
+          <table id="data-table-0002" class="table table-bordered " style="width: 100%;"> </table>
 
                 
                        <div class=" div_datatables_003 " style="" >
-                           <table id="data-table-0003" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                           <table id="data-table-0003" class="table table-bordered " style="width: 100%;" ></table>
                         </div>     
 
                         {{-- วุฒิปิดไว้ --}}
                         {{-- <div class=" div_datatables_004 " style="" >
-                           <table id="data-table-0004" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                           <table id="data-table-0004" class="table table-bordered " style="width: 100%;" ></table>
                         </div>   --}}
                 
                 

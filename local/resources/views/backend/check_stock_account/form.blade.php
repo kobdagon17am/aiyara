@@ -349,7 +349,7 @@
 
             {{ csrf_field() }}
 
-                <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-02" class="table table-bordered " style="width: 100%;">
                 </table>
 
                   <div class="row div_btnCreate " style="display: none;" >
@@ -366,7 +366,7 @@
 
           @IF(!empty(@$sRow))
           
-                <table id="data-table-check" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-check" class="table table-bordered " style="width: 100%;">
                 </table>
                        
                          <div class="row  " style="" >

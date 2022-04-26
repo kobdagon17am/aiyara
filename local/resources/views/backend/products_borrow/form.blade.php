@@ -48,12 +48,12 @@
 
 
             <div class="myBorder">
-              <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-transfer-list" class="table table-bordered " style="width: 100%;">
                   </table>
             </div>
 
             <div class="myBorder">
-              <table id="data-table-to-transfer" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-to-transfer" class="table table-bordered " style="width: 100%;">
                  </table>
             </div>
 

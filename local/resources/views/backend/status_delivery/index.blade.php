@@ -275,7 +275,7 @@
 
               <?php //if($can_payproduct=='1'){ ?>
 
-                    <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                    <table id="data-table-packing" class="table table-bordered " style="width: 100%;"></table>
 
                     <br>
                     

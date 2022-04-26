@@ -154,18 +154,18 @@
 
                   <div class="myBorder">
                     <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการส่งเงินรายวัน </span>
-                    <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;">
+                    <table id="data-table-0001" class="table table-bordered " style="width: 100%;">
                     </table>
                     <br>
                     <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash รายวัน  </span>
-                    <table id="data-table-0001_ai" class="table table-bordered dt-responsive" style="width: 100%;">
+                    <table id="data-table-0001_ai" class="table table-bordered " style="width: 100%;">
                     </table>
                   </div>
 
           
                   <div class="myBorder">
                     <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย </span>
-                    <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 84%;">
+                    <table id="data-table-0002" class="table table-bordered " style="width: 84%;">
                     </table>
                   </div>
 

@@ -38,7 +38,7 @@
                                             the construction function: <code>$().DataTable();</code>.
                                         </p>
         
-                                        <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <table id="datatable" class="table table-bordered  nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr>
                                                 <th>Name</th>
@@ -528,7 +528,7 @@
                                             provides the based framework upon which plug-ins can built.
                                         </p>
         
-                                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <table id="datatable-buttons" class="table table-striped table-bordered  nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr>
                                                 <th>Name</th>

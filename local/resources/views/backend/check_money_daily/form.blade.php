@@ -59,7 +59,7 @@
             <div class="card-body">
 
             <div class="myBorder">
-              <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-0001" class="table table-bordered " style="width: 100%;">
                   </table>
                   @IF($sRow->status_cancel==0)
                   <center> รวมเงินทั้งสิ้น : <input type="text" name="sum_total_price" id="sum_total_price" style="text-align: center;" readonly=""></center>
@@ -67,7 +67,7 @@
             </div>
 
             <div class="myBorder">
-              <table id="data-table-0001_ai" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-0001_ai" class="table table-bordered " style="width: 100%;">
                   </table>
                   @IF($sRow->status_cancel==0)
                   <center> รวมเงินทั้งสิ้น : <input type="text" name="sum_total_price_ai" id="sum_total_price_ai" style="text-align: center;" readonly=""></center>
@@ -302,7 +302,7 @@
 
 
             <div class="myBorder">
-              <table id="data-table-aicash" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-aicash" class="table table-bordered " style="width: 100%;">
                   </table>
             </div>
 

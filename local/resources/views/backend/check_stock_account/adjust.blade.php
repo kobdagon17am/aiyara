@@ -90,7 +90,7 @@
             <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionNoChoose')}} </span>
 
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table" class="table table-bordered " style="width: 100%;">
                 </table>
 
             </div>

@@ -67,6 +67,11 @@
 }
 
 
+.text-wrap{
+    white-space:normal;
+}
+
+
 </style>
 @endsection
 
@@ -332,8 +337,10 @@
             </div>
           </div>
         </div>
-        <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+       
+        <table id="data-table" class="table table-bordered" style="width: 100%;">
         </table>
+      
         <b>หมายเหตุ</b> รายการ <font color=red>* รอดำเนินการต่อ </font> หมายถึง รายการบิล ที่ยังไม่ทำการกดปุ่ม save ขั้นตอนการชำระเงิน สำหรับบิลนี้สามารถทำการยกเลิกได้หรือเข้าไปทำการบันทึกอีกครั้งได้
         <div class="row">
           <div class="col-lg-5">
@@ -446,17 +453,14 @@ $(function() {
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
+   
         processing: true,
         serverSide: true,
         scroller: true,
         scrollCollapse: true,
         scrollX: true,
-        ordering: false,
         paging:   true,
-        searching: false,
-        bLengthChange: false ,
         iDisplayLength: 25,
-        // iDisplayLength: 35,
         ajax: {
           url: '{{ route('backend.frontstore.datatable') }}',
           data: function ( d ) {
@@ -528,13 +532,13 @@ $(function() {
                 + ' <a href="javascript: void(0);" target=_blank data-id="'+d+'" class="print02" > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#669999;"></i></a> </center>';
             }},
 
-            {data: 'id',title :'Tools', className: 'text-center w80'},
+            {data: 'id',title :'Tools', className: 'text-center w80 '},
         ],
-           "columnDefs": [ {
-              // "targets": [0,2,6,7,8,9] ,
-              "targets": [0,11,12] ,
-              "orderable": false
-          } ],
+          //  "columnDefs": [ {
+          //     // "targets": [0,2,6,7,8,9] ,
+          //     "targets": [0,11,12] ,
+          //     "orderable": false
+          // } ],
        rowCallback: function(nRow, aData, dataIndex){
 
            // var info = $(this).DataTable().page.info();
@@ -958,7 +962,7 @@ $(document).ready(function() {
                                                   scroller: true,
                                                   scrollCollapse: true,
                                                   scrollX: true,
-                                                  ordering: false,
+                                                  ordering: true,
                                                   paging:   true,
                                                   searching: false,
                                                   bLengthChange: false ,
@@ -1325,7 +1329,7 @@ $(document).ready(function() {
           					        scroller: true,
           					        scrollCollapse: true,
           					        scrollX: true,
-          					        ordering: false,
+          					        ordering: true,
           					        paging:   true,
           					        searching: false,
           					        bLengthChange: false ,

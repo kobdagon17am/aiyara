@@ -70,7 +70,7 @@
                     </div>
                   </div>
 
-                <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+                <table id="data-table" class="table table-bordered " style="width: 100%;"></table>
 
          <!--        <div class="row" >
                   <div class="col-11 "></div>

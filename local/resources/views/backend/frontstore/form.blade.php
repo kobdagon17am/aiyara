@@ -817,7 +817,7 @@
                                 <div class="form-group row ">
                                     <div class="col-md-12">
 
-                                        <table id="data-table-list" class="table table-bordered dt-responsive"
+                                        <table id="data-table-list" class="table table-bordered "
                                             style="width: 100%;"></table>
 
                                     </div>
@@ -2282,12 +2282,12 @@
                                                 style="border: 0px solid transparent;width: 100%;font-weight: bold;font-size: 18px;display: none;">
                                         </div>
 
-                                        <table id="data-table-promotion" class="table table-bordered dt-responsive"
+                                        <table id="data-table-promotion" class="table table-bordered "
                                             style="width: 100%;">
                                         </table>
                                         <div id='divTablePromotionsCost'>
                                             <table id="data-table-promotions-cost"
-                                                class="table table-bordered dt-responsive" style="width: 100%;">
+                                                class="table table-bordered " style="width: 100%;">
                                             </table>
                                         </div>
                                         <br>
@@ -2379,7 +2379,7 @@
                                         <input name="branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
                                         
                                         {{ csrf_field() }}
-                                        <table id="data-table-products-list" class="table table-bordered dt-responsive"
+                                        <table id="data-table-products-list" class="table table-bordered "
                                             style="width: 100%;">
                                         </table>
                                     </form>
@@ -2738,7 +2738,7 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <table id="data-table-choose-course" class="table table-bordered dt-responsive"
+                                <table id="data-table-choose-course" class="table table-bordered "
                                     style="width: 100%;"></table>
                             </div>
                         </div>

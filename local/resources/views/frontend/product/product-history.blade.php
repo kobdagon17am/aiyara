@@ -57,7 +57,7 @@
 
                 </div>
                 <div class="card-block">
-                    <div class="table-responsive dt-responsive">
+                    <div class="table-responsive ">
                         <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr>
@@ -268,7 +268,7 @@
               </div>
 
               <div class="card-block">
-                  <div class="table-responsive dt-responsive">
+                  <div class="table-responsive ">
                       <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
 
 

@@ -177,8 +177,8 @@
                     <div class="form-group row div_data_table ">
                       <div class="col-md-12">
 
-                       <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
-                       <table id="data-table-0001" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                       <table id="data-table-0002" class="table table-bordered " style="width: 100%;" ></table>
+                       <table id="data-table-0001" class="table table-bordered " style="width: 100%;" ></table>
 
                     </div>
                   </div>

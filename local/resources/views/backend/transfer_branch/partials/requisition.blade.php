@@ -4,7 +4,7 @@
       <div class="page-title-box d-flex align-items-center justify-content-between">
         <h4 class="mb-0 font-size-18"><i class="bx bx-play"></i> รายการใบเบิกระหว่างสาขา </h4>
       </div>
-      <table id="dt-requisition" class="table table-bordered dt-responsive" style="width: 100%;">
+      <table id="dt-requisition" class="table table-bordered " style="width: 100%;">
       </table>
     </div>
   </div>

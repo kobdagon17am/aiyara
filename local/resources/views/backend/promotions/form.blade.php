@@ -380,7 +380,7 @@
                           </div>
                           <div class="form-group row">
                               <div class="col-md-12">
-                                  <table id="data-table" class="table table-bordered dt-responsive" style="width: 100%;">
+                                  <table id="data-table" class="table table-bordered " style="width: 100%;">
                                   </table>
                               </div>
                           </div>
@@ -410,7 +410,7 @@
                         </div>
                         <div class="form-group row">
                           <div class="col-md-12">
-                            <table id="data-table-promotions-cost" class="table table-bordered dt-responsive" style="width: 100%;">
+                            <table id="data-table-promotions-cost" class="table table-bordered " style="width: 100%;">
                             </table>
                           </div>
                         </div>
@@ -439,7 +439,7 @@
                         </div>
                         <div class="form-group row">
                           <div class="col-md-12">
-                            <table id="data-table-promotion-images" class="table table-bordered dt-responsive" style="width: 100%;">
+                            <table id="data-table-promotion-images" class="table table-bordered " style="width: 100%;">
                             </table>
                           </div>
                         </div>

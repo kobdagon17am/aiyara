@@ -149,7 +149,7 @@
                 </div>
 
 
-                <table id="data-table-to-transfer" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-to-transfer" class="table table-bordered " style="width: 100%;">
                  </table>
                   <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)!=0 && count($sTransfer_choose)==0){ ?>
                   <div class="row" style="" >
@@ -228,7 +228,7 @@
                     </div>
                   </div>
 
-                  <table id="data-table-transfer-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                  <table id="data-table-transfer-list" class="table table-bordered " style="width: 100%;">
                   </table>
 
           </div>
@@ -260,7 +260,7 @@
 					<div class="col-12">
 						<div class="card">
 							<div class="card-body">
-								<table id="data-table-choose" class="table table-bordered dt-responsive" style="width: 100%;"></table>
+								<table id="data-table-choose" class="table table-bordered " style="width: 100%;"></table>
 							</div>
 						</div>
 					</div>

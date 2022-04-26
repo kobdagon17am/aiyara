@@ -45,7 +45,7 @@
           </div>
 
           <div class="card-block">
-              <div class="dt-responsive table-responsive">
+              <div class=" table-responsive">
                   <table id="log_gv" class="table table-striped table-bordered nowrap">
                   </table>
               </div>

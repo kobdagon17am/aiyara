@@ -187,7 +187,7 @@
 
                 </div>
 
-                    <table id="data-table-packing" class="table table-bordered dt-responsive" style="width: 100%;" ></table>
+                    <table id="data-table-packing" class="table table-bordered " style="width: 100%;" ></table>
       
                 <div class=" divCreatePackBill " style="display: none;">
                   <center>
@@ -218,7 +218,7 @@
 
           <div class="form-group row  " >
             <div class="col-md-12 ">
-              <table id="data-table-0002" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-0002" class="table table-bordered " style="width: 100%;">
               </table>
 
 

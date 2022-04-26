@@ -401,7 +401,7 @@ use App\Models\Frontend\CourseCheckRegis;
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="dt-responsive table-responsive">
+                            <div class=" table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>

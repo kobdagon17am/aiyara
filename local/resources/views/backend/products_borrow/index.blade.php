@@ -182,7 +182,7 @@
                 </div>
 
 
-                <table id="data-table-to-borrow" class="table table-bordered dt-responsive" style="width: 100%;">
+                <table id="data-table-to-borrow" class="table table-bordered " style="width: 100%;">
                  </table>
                   <?php if(!empty(@$sProducts_borrow_chooseAll) && count($sProducts_borrow_chooseAll) != 0 ){ ?>
                   <div class="row" style="" >
@@ -258,7 +258,7 @@
                     </div>
                   </div>
 
-                  <table id="data-table-products_borrow-list" class="table table-bordered dt-responsive" style="width: 100%;">
+                  <table id="data-table-products_borrow-list" class="table table-bordered " style="width: 100%;">
                   </table>
 
           </div>
@@ -290,7 +290,7 @@
 					<div class="col-12">
 						<div class="card">
 							<div class="card-body">
-								<table id="data-table-choose" class="table table-bordered dt-responsive" style="width: 100%;">
+								<table id="data-table-choose" class="table table-bordered " style="width: 100%;">
                  				 </table>
 							</div>
 						</div>

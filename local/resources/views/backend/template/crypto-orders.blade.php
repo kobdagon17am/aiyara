@@ -106,7 +106,7 @@
                                                 </form>
 
                                                 <div class="table-responsive mt-5">
-                                                    <table class="table table-hover datatable dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                    <table class="table table-hover datatable  nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">Date</th>
@@ -258,7 +258,7 @@
                                             <div class="tab-pane" id="processing" role="tabpanel">
                                                 <div>
                                                     <div class="table-responsive mt-4">
-                                                        <table class="table table-hover datatable dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                        <table class="table table-hover datatable  nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">Date</th>

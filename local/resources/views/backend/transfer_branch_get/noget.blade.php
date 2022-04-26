@@ -115,7 +115,7 @@
           </div>
           <div class="form-group row">
             <div class="col-md-12">
-              <table id="data-table-01" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-01" class="table table-bordered " style="width: 100%;">
               </table>
             </div>
           </div>
@@ -146,7 +146,7 @@
           </div>
           <div class="form-group row">
             <div class="col-md-12">
-              <table id="data-table-02" class="table table-bordered dt-responsive" style="width: 100%;">
+              <table id="data-table-02" class="table table-bordered " style="width: 100%;">
               </table>
             </div>
           </div>

@@ -297,7 +297,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                    <table id="data-table-bangkok_vicinity" class="table table-bordered dt-responsive" style="width: 100%" ></table>
+                                    <table id="data-table-bangkok_vicinity" class="table table-bordered " style="width: 100%" ></table>
                                     </div>
                                </div>
 
