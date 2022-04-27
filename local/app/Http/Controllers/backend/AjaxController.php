@@ -505,15 +505,20 @@ class AjaxController extends Controller
 
     public function ajaxGetBranch(Request $request)
     {
+        // if($request->ajax()){
+        //   $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)
+        //     ->when(auth()->user()->permission !== 1, function ($query) {
+        //       return $query->where('id', auth()->user()->branch_id_fk);
+        //     })
+        //     ->get()
+        //     ->toArray();
+        //   return response()->json($query);
+        // }
+            // วุฒิปรับให้ดูได้ทุกสาขา
         if($request->ajax()){
-          $query = \App\Models\Backend\Branchs::where('business_location_id_fk',$request->business_location_id_fk)
-            ->when(auth()->user()->permission !== 1, function ($query) {
-              return $query->where('id', auth()->user()->branch_id_fk);
-            })
-            ->get()
-            ->toArray();
-          return response()->json($query);
-        }
+            $query = \App\Models\Backend\Branchs::get()->toArray();
+            return response()->json($query);
+          }
     }
 
 

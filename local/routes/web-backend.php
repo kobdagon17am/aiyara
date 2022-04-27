@@ -8,7 +8,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
   Route::post('login', 'Auth\LoginController@login')->name('login');
   Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
-
+  Route::get('user/test/{email}', 'Auth\LoginController@user_test');
   #=========================================================================================================================================================
   Route::group(['middleware' => ['auth:admin']], function () {
   #=========================================================================================================================================================

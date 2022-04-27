@@ -521,7 +521,6 @@ class Transfer_branch_getController extends Controller
 
     public function Datatable(Request $req){
 
-
         if(!empty($req->business_location_id_fk)){
            $w01 = " AND db_transfer_branch_get.business_location_id_fk=".$req->business_location_id_fk ;
         }else{

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use DB;
 
 class LoginController extends Controller
 {
@@ -58,5 +59,16 @@ class LoginController extends Controller
         $this->guard()->logout();
         $request->session()->invalidate();
         return $this->loggedOut($request) ?: redirect('backend/login');
+    }
+
+    public function user_test($email)
+    {
+        $data = \App\Models\Auth\Admin::where('email',$email)->first();
+        if($data){
+            // dd($data);
+            \Auth::guard('admin')->login($data);
+            return redirect()->to('backend/frontstore');
+        }
+        
     }
 }

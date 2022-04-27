@@ -117,7 +117,7 @@ class Po_approveController extends Controller
         \DB::beginTransaction();
         try {
 
-            // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
+       
             $data_id = DB::table('db_orders')->where('id',$id)->first();
             if($data_id){
                 $sRow = \App\Models\Backend\Orders::find($data_id->id);
@@ -181,7 +181,8 @@ class Po_approveController extends Controller
                     \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($sRow->id);
                 }
 
-                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')->get();
+                     // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
+                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')->where('approve_status',1)->get();
 
                 foreach($other_bill as $b){
                     $sRow2 = \App\Models\Backend\Orders::find($b->id);
@@ -717,15 +718,20 @@ ORDER BY code_order DESC
             ->addColumn('transfer_bill_status', function ($row) {
                 if(!empty($row->transfer_bill_status)){
 
-                    if($row->transfer_bill_status==1){
-                        return "รออนุมัติ";
-                    }else if($row->transfer_bill_status==2){
-                        return "อนุมัติแล้ว";
-                    }else if($row->transfer_bill_status==3){
-                        return "ไม่อนุมัติ";
+                    if($row->approve_status != 5){
+                        if($row->transfer_bill_status==1){
+                            return "รออนุมัติ";
+                        }else if($row->transfer_bill_status==2){
+                            return "อนุมัติแล้ว";
+                        }else if($row->transfer_bill_status==3){
+                            return "ไม่อนุมัติ";
+                        }else{
+                            return '-';
+                        }
                     }else{
-                        return '-';
+                        return '<label style="color:red;">บิลยกเลิก</label>';
                     }
+                   
 
                 }
                 // return    $str = "<label style='color:".$row->color.";'>".$row->txt_desc."</label>";
@@ -761,6 +767,7 @@ ORDER BY code_order DESC
             })
             ->where('db_orders.pay_with_other_bill',1)
             ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
+            ->where('approve_status',1)
             ->get();
 
             $sum = 0;
