@@ -767,7 +767,7 @@ ORDER BY code_order DESC
             })
             ->where('db_orders.pay_with_other_bill',1)
             ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
-            ->where('approve_status',1)
+            ->where('db_orders.approve_status','!=',5)
             ->get();
 
             $sum = 0;
