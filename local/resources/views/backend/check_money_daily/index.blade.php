@@ -576,6 +576,9 @@ $(function() {
             $(document).on('click', '.btnSearch', function(event) {
                   event.preventDefault();
 
+                  $('#data-table-0001').DataTable().clear();
+                  $('#data-table-0002').DataTable().clear();
+
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var seller = $('#seller').val();
