@@ -583,8 +583,104 @@ class Pick_packPackingCodeController extends Controller
         }
         })
 
+        ->addColumn('tracking_status', function($row) {
+          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+          $f = [] ;
+          $ff = [] ;
+          foreach ($d as $key => $v) {
+             array_push($f,@$v->tracking_status);
+             array_push($ff,@$v->con_arr);
+          }
+          $web_all = "";
+          foreach($f as $key => $value){
+            if($value == 1){
+              $status = "สำเร็จ";
+              $color = "style='color:green;'";
+            }elseif($value == 2){
+                $status = "ไม่สำเร็จ";
+                $color = "style='color:red;'";
+            }else{
+              $status = "รอยืนยัน";
+              $color = "";
+            }
+
+            $web = "<div class='col-md-12'style='height: 70px;'><label ".$color.">";
+            $web .= $status;
+            $web .= "</div>";
+            $web_all .=$web.'</label><br>';
+          }
+          return $web_all;
+      })
+      ->escapeColumns('tracking_status')   
+
+      ->addColumn('tracking_approve', function($row) {
+        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+        $f = [] ;
+        $ff = [] ;
+        foreach ($d as $key => $v) {
+           array_push($f,@$v->tracking_status);
+           array_push($ff,@$v->id);
+        }
+        $web_all = "";
+        foreach($f as $key => $value){
+          if($value == 0){
+            $btn = "
+              <a class='btn btn-success btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/1/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งสำเร็จ!\");' >จัดส่งสำเร็จ</a> &nbsp; 
+              <a class='btn btn-danger btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/2/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งไม่สำเร็จ!\");' >ไม่สำเร็จ</a>
+            ";
+          }else{
+            $btn = "-";
+          }
+
+          $web = "<div class='col-md-12'style='height: 70px;' >";
+          $web .= $btn;
+          $web .= "</div>";
+          $web_all .=$web.'<br>';
+        }
+        return $web_all;
+      })
+      ->escapeColumns('tracking_approve') 
+
+      ->addColumn('tracking_remark', function($row) {
+        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+        $f = [] ;
+        $ff = [] ;
+        foreach ($d as $key => $v) {
+           array_push($f,@$v->tracking_remark);
+           array_push($ff,@$v->id);
+        }
+        $web_all = "";
+        foreach($f as $key => $value){
+
+          $input = "<input class='form-control tracking_remark' con_id='".$ff[$key]."' value='".$value."' >";
+
+          $web = "<div class='col-md-12'style='height: 70px;' >";
+          $web .= $input;
+          $web .= "</div>";
+          $web_all .=$web.'<br>';
+        }
+        return $web_all;
+      })
+      ->escapeColumns('tracking_remark') 
+
       ->make(true);
    }
+
+   public function consignments_approve($approve_id , $con_id){     
+          DB::table('db_consignments')->where('id',$con_id)->update([
+            'tracking_status' => $approve_id,
+          ]);
+          return redirect()->back()->with('success','ทำรายการสำเร็จ');
+   }
+   
+
+   public function consignments_remark(Request $request){     
+    DB::table('db_consignments')->where('id',$request->con_id)->update([
+      'tracking_remark' => $request->remark,
+    ]);
+    return redirect()->back()->with('success','ทำรายการสำเร็จ');
+}
+
 
  public function packing_list_for_fifo_02(Request $request){     
       // if(!empty($request->packing_id)){

@@ -98,17 +98,54 @@
 </style>
 
 <?php
-    require(app_path().'/Models/MyFunction.php');
 
+    require(app_path().'/Models/MyFunction.php');
     $arr_order_id = [];
-    $arr_all_order = \App\Models\Backend\Pick_packPackingCode::where('id',$data[0])->first();
-    if($arr_all_order){
-      $arr_order_id = explode(',',$arr_all_order->orders_id_fk);
+    $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$data[0])->orderBy('delivery_id_fk','asc')->get();  
+    foreach( $db_pick_pack_packing_data as $pick_pack_packing_data){
+      $delivery = DB::select(" SELECT
+      db_delivery.set_addr_send_this,
+      db_delivery.recipient_name,
+      db_delivery.addr_send,
+      db_delivery.postcode,
+      db_delivery.mobile,
+      db_delivery.tel_home,
+      db_delivery.status_pack,
+      db_delivery.receipt,
+      db_delivery.id as delivery_id_fk,
+      db_delivery.orders_id_fk
+      FROM
+      db_delivery
+      WHERE 
+      db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." AND set_addr_send_this=1 ");
+        $receipt = '';
+      if(@$delivery[0]->status_pack==1){
+
+        $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$delivery[0]->delivery_id_fk."");
+        $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+        $arr1 = [];
+        foreach ($d2 as $key => $v) {
+          array_push( $arr1 ,$v->receipt);
+          array_push( $arr_order_id ,$v->orders_id_fk);
+        }
+        $receipt = implode(',',$arr1);
+
+      }else{
+        $receipt = @$delivery[0]->receipt;
+      }
     }
 
-    $arr_orders_id = $arr_order_id;
-    sort($arr_orders_id);
+    // $arr_order_id = [];
+    // $arr_all_order = \App\Models\Backend\Pick_packPackingCode::where('id',$data[0])->first();
+    // if($arr_all_order){
+    //   $arr_order_id = explode(',',$arr_all_order->orders_id_fk);
+    // }
 
+    $arr_orders_id = $arr_order_id;
+    // sort($arr_orders_id);
+
+
+//////////////
 // if(substr($data[0],0,1)=="O"){
 //     $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' "); 
 //     $arr_orders_id = [];
@@ -131,7 +168,7 @@
 //         }
 
 // }
-
+//////////////
 
 
 // echo count($arr3);

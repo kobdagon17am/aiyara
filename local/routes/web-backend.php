@@ -441,6 +441,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('packing_list_for_fifo/datatable_report', 'Pick_packPackingCodeController@packing_list_for_fifo_report')->name('packing_list_for_fifo.datatable_report');
     Route::post('packing_list_for_fifo_02/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo_02')->name('packing_list_for_fifo_02.datatable');
 
+    Route::get('pay_requisition_001_report/consignments_approve/{approve_id}/{con_id}', 'Pick_packPackingCodeController@consignments_approve');
+    Route::post('pay_requisition_001_report/consignments_remark/', 'Pick_packPackingCodeController@consignments_remark');
 
     Route::resource('pick_warehouse', 'Pick_warehouseController');
     Route::post('pick_warehouse/datatable', 'Pick_warehouseController@Datatable')->name('pick_warehouse.datatable');

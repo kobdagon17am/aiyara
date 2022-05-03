@@ -434,8 +434,6 @@
 
 @section('script')
 
-
-
 <script>
     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -501,6 +499,20 @@
                       {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> จำนวนกล่อง  </span> ', className: 'text-center w100 ',render: function(d) {
                         return d ;
                       }},
+                      
+                      {data: 'tracking_status',   title :'<span style="vertical-align: middle;"><center> สถานะการจัดส่ง  </span> ', className: 'text-center w100 ',render: function(d) {
+                        return d ;
+                      }},
+
+                      {data: 'tracking_remark',   title :'<span style="vertical-align: middle;"><center> หมายเหตุ  </span> ', className: 'text-center w200 ',render: function(d) {
+                        return d ;
+                      }},
+
+                      {data: 'tracking_approve',   title :'<span style="vertical-align: middle;"><center> ยืนยันสถานะ  </span> ', className: 'text-center w100 ',render: function(d) {
+                        return d ;
+                      }},
+
+                    
 
                     
                       // {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง </span> ', className: 'text-center w80 ',render: function(d) {
@@ -560,6 +572,31 @@
 
 
     $(document).ready(function() {
+
+
+      $(document).on('change','.tracking_remark',function(){
+          var remark = $(this).val();
+          var con_id = $(this).attr('con_id');
+
+          $(".myloading").show();
+             $.ajax({
+                 type:'POST',
+                 url: " {{ url('backend/pay_requisition_001_report/consignments_remark') }} ",
+                 data:{ _token: '{{csrf_token()}}',
+                 con_id:con_id,
+                 remark:remark
+                },
+                  success:function(data){
+                       // console.log(data);
+                       $(".myloading").hide();
+                    },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                      $(".myloading").hide();
+                  }
+              });
+
+      });
+      
 
       $(document).on('click','.con_arr_data_show',function(){
         var arr = $(this).attr('con_arr');
@@ -771,6 +808,20 @@
                       {data: 'column_006',   title :'<span style="vertical-align: middle;"><center> จำนวนกล่อง  </span> ', className: 'text-center w100 ',render: function(d) {
                         return d ;
                       }},
+
+                      {data: 'tracking_status',   title :'<span style="vertical-align: middle;"><center> สถานะการจัดส่ง  </span> ', className: 'text-center w100 ',render: function(d) {
+                        return d ;
+                      }},
+
+                      {data: 'tracking_remark',   title :'<span style="vertical-align: middle;"><center> หมายเหตุ  </span> ', className: 'text-center w200 ',render: function(d) {
+                        return d ;
+                      }},
+
+                      {data: 'tracking_approve',   title :'<span style="vertical-align: middle;"><center> ยืนยันสถานะ  </span> ', className: 'text-center w100 ',render: function(d) {
+                        return d ;
+                      }},
+
+                    
 
                     
                       // {data: 'column_005',   title :'<span style="vertical-align: middle;"><center> ใบปะหน้ากล่อง </span> ', className: 'text-center w80 ',render: function(d) {

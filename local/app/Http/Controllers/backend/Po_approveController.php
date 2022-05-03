@@ -87,14 +87,16 @@ class Po_approveController extends Controller
         $slip_not_approve = DB::table('payment_slip')->where('code_order', '=', $sRow->code_order)->whereIn('status',[3])->orderby('id', 'asc')->get();
 
         $price = 0;
-        if ($sRow->purchase_type_id_fk == 7) {
-            $price = number_format($sRow->sum_price, 2);
-        } else if ($sRow->purchase_type_id_fk == 5) {
-            $total_price = $sRow->total_price - $sRow->gift_voucher_price;
-            $price = number_format($total_price, 2);
-        } else {
-            $price = number_format($sRow->sum_price + $sRow->shipping_price, 2);
-        }
+          // วุฒิเปลี่ยนเป็นยอดที่ต้องโอน
+        // if ($sRow->purchase_type_id_fk == 7) {
+        //     $price = number_format($sRow->sum_price, 2);
+        // } else if ($sRow->purchase_type_id_fk == 5) {
+        //     $total_price = $sRow->total_price - $sRow->gift_voucher_price;
+        //     $price = number_format($total_price, 2);
+        // } else {
+        //     $price = number_format($sRow->sum_price + $sRow->shipping_price, 2);
+        // }
+        $price =  number_format($sRow->transfer_price, 2);
 
         // $TransferBank = \App\Models\Backend\TransferBank::get();
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
@@ -425,15 +427,17 @@ ORDER BY code_order DESC
               return $row->created_at .'<br>'. '('.$row->b_name.')';
             })
             ->addColumn('price', function ($row) {
-                if (@$row->purchase_type_id_fk == 7) {
-                    return number_format($row->sum_price, 2);
-                } else if (@$row->purchase_type_id_fk == 5) {
-                    $total_price = $row->transfer_price;
-                    return number_format($total_price, 2);
-                } else {
-                    return number_format(@$row->sum_price + $row->shipping_price, 2);
-                }
-
+                // วุฒิเปลี่ยนเป็นยอดที่ต้องโอน
+                // if (@$row->purchase_type_id_fk == 7) {
+                //     return number_format($row->sum_price, 2);
+                // } else if (@$row->purchase_type_id_fk == 5) {
+                //     $total_price = $row->transfer_price;
+                //     return number_format($total_price, 2);
+                // } else {
+                //     return number_format(@$row->sum_price + $row->shipping_price, 2);
+                // }
+                
+                return number_format(@$row->transfer_price, 2);
             })
             // ->addColumn('date', function ($row) {
             //     return date('d/m/Y H:i:s', strtotime($row->created_at));
@@ -544,15 +548,16 @@ ORDER BY code_order DESC
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('price', function ($row) {
-                if (@$row->purchase_type_id_fk == 7) {
-                    return number_format($row->sum_price, 2);
-                } else if (@$row->purchase_type_id_fk == 5) {
-                    $total_price =  $total_price = $row->transfer_price;
-                    return number_format($total_price, 2);
-                } else {
-                    return number_format(@$row->sum_price + $row->shipping_price, 2);
-                }
-
+                       // วุฒิเปลี่ยนเป็นยอดที่ต้องโอน
+                // if (@$row->purchase_type_id_fk == 7) {
+                //     return number_format($row->sum_price, 2);
+                // } else if (@$row->purchase_type_id_fk == 5) {
+                //     $total_price =  $total_price = $row->transfer_price;
+                //     return number_format($total_price, 2);
+                // } else {
+                //     return number_format(@$row->sum_price + $row->shipping_price, 2);
+                // }
+                return number_format(@$row->transfer_price, 2);
             })
             // ->addColumn('date', function ($row) {
             //     return date('d/m/Y H:i:s', strtotime($row->created_at));
@@ -657,15 +662,16 @@ ORDER BY code_order DESC
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('price', function ($row) {
-                if (@$row->purchase_type_id_fk == 7) {
-                    return number_format($row->sum_price, 2);
-                } else if (@$row->purchase_type_id_fk == 5) {
-                    $total_price = $row->transfer_price;
-                    return number_format($total_price, 2);
-                } else {
-                    return number_format(@$row->sum_price + $row->shipping_price, 2);
-                }
-
+                        // วุฒิเปลี่ยนเป็นยอดที่ต้องโอน
+                // if (@$row->purchase_type_id_fk == 7) {
+                //     return number_format($row->sum_price, 2);
+                // } else if (@$row->purchase_type_id_fk == 5) {
+                //     $total_price = $row->transfer_price;
+                //     return number_format($total_price, 2);
+                // } else {
+                //     return number_format(@$row->sum_price + $row->shipping_price, 2);
+                // }
+                return number_format(@$row->transfer_price, 2);
             })
             // ->addColumn('date', function ($row) {
             //     return date('d/m/Y H:i:s', strtotime($row->created_at));
@@ -772,24 +778,29 @@ ORDER BY code_order DESC
 
             $sum = 0;
             foreach($sTable as $row){
-                if (@$row->purchase_type_id_fk == 7) {
-                    $sum += $row->sum_price;
-                } else if (@$row->purchase_type_id_fk == 5) {
-                    $total_price = $row->transfer_price;
-                    $sum += $total_price;
-                } else {
-                    $sum += @$row->sum_price + $row->shipping_price;
-                }
+            
+                // if (@$row->purchase_type_id_fk == 7) {
+                //     $sum += $row->sum_price;
+                // } else if (@$row->purchase_type_id_fk == 5) {
+                //     $total_price = $row->transfer_price;
+                //     $sum += $total_price;
+                // } else {
+                //     $sum += @$row->sum_price + $row->shipping_price;
+                // }
+
+                $sum += $row->transfer_price;
             }
 
-            if (@$order_id->purchase_type_id_fk == 7) {
-                $sum += $order_id->sum_price;
-            } else if (@$order_id->purchase_type_id_fk == 5) {
-                $total_price = $order_id->transfer_price;
-                $sum += $total_price;
-            } else {
-                $sum += @$order_id->sum_price + $order_id->shipping_price;
-            }
+            // if (@$order_id->purchase_type_id_fk == 7) {
+            //     $sum += $order_id->sum_price;
+            // } else if (@$order_id->purchase_type_id_fk == 5) {
+            //     $total_price = $order_id->transfer_price;
+            //     $sum += $total_price;
+            // } else {
+            //     $sum += @$order_id->sum_price + $order_id->shipping_price;
+            // }
+
+            $sum += @$order_id->transfer_price;
 
            return number_format($sum, 2);
 

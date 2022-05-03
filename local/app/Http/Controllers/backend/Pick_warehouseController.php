@@ -1122,6 +1122,7 @@ GROUP BY db_order_products_list.product_id_fk
   db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
   db_pick_pack_packing.packing_code as packing_code,
   db_delivery.user_scan,
+  db_delivery.status_scan_wh,
   CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
   CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
   db_delivery.id as db_delivery_id,
@@ -1139,7 +1140,7 @@ GROUP BY db_order_products_list.product_id_fk
   ORDER BY db_pick_pack_packing.id
   
   ");
-        
+  
         $r_delivery_id = $reg->delivery_id;
         // dd($sTable);
         $sQuery = \DataTables::of($sTable);
@@ -1303,9 +1304,9 @@ GROUP BY db_order_products_list.product_id_fk
                                     $pn .= 
                                     '
                                       <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" packing_list="'.$row->lists.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;" value="" > 
-                                      <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
+                                    
                                     ';
-
+                                    // <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i> 
                                   
                                     //  วุฒิเพิ่มมา
                                     $pn .= 
@@ -1354,14 +1355,21 @@ GROUP BY db_order_products_list.product_id_fk
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
             }
+
+            if($row->status_scan_wh == 1){
+              $readonly = "readonly";
+            }else{
+              $readonly = "";
+            }
+
             $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
             foreach($sBox as $key1 => $box){
               $pn .= '<div class="divTableRow row_0002" data-bill-type="warehouse_qr_0002">
               <div class="divTableCell" style="text-align:left;"> 
                <b>ขนาด <br> 
-               <input class="p_size" data-id="'.@$row->id.'" box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
+               <input class="p_size" data-id="'.@$row->id.'" '.$readonly.' box-id="'.@$box->id.'" type="text" value="'.@$box->p_size.'"><br>
                น้ำหนัก <br>
-                <input class="p_weight" data-id="'.@$row->id.'" box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
+                <input class="p_weight" data-id="'.@$row->id.'" '.$readonly.' box-id="'.@$box->id.'"  type="text" value="'.@$box->p_weight.'"><br>
             
                <button type="button" class="btn btn-primary btn-sm btn_0002_add" data-bill-type="warehouse_qr_0002">+ เพิ่มกล่อง</button>
                <button type="button" class="btn btn-danger btn-sm btn_0002_remove" data-bill-type="warehouse_qr_0002">- ลบกล่อง</button>
