@@ -341,8 +341,9 @@
                                     </div>
                                   </div>
                       @IF(@$sRow->approve_status >= 2)
-
+              
                       @ELSE
+                  
                                   <div class="form-group row" style="padding: 1%;">
                                     <div class="col-md-4">
                                       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_approve") }}">

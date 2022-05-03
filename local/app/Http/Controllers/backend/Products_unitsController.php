@@ -105,11 +105,13 @@ class Products_unitsController extends Controller
 
     public function destroy($id)
     {
+      // dd($id);
       $sRow = \App\Models\Backend\Products_units::find($id);
       if( $sRow ){
         $sRow->forceDelete();
       }
-      return response()->json(\App\Models\Alert::Msg('success'));
+      // return response()->json(\App\Models\Alert::Msg('success'));
+      return redirect()->back()->with('success','success');
     }
 
     public function Datatable(){

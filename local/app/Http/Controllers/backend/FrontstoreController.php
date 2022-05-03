@@ -557,14 +557,28 @@ class FrontstoreController extends Controller
     $rs = DB::select(" SELECT count(*) as cnt FROM db_order_products_list WHERE frontstore_id_fk=$id ");
 
     $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=$id GROUP BY frontstore_id_fk ");
-
+    $vat_b = DB::table('dataset_vat')
+    ->where('business_location_id_fk', '=', $sBranchs[0]->business_location_id_fk)
+    ->first();
+    $vat_b = $vat_b->vat;
     if ($sFrontstoreDataTotal) {
-      $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total) / 1.07);
+      // $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total) / 1.07);
+      $vat_data = DB::table('dataset_vat')
+      ->where('business_location_id_fk', '=', $sBranchs[0]->business_location_id_fk)
+      ->first();
+      $vat_data = $vat_data->vat;
+      //vatใน 7%
+      $vat = floatval(@$sFrontstoreDataTotal[0]->total) * ($vat_data / (100 + $vat_data));
+      //มูลค่าสินค้า
+      // $price_vat = floatval(@$sFrontstoreDataTotal[0]->total) - $p_vat;
+      // $price_total = $price + $shipping;
+
+      // dd( $vat);
       $vat = $vat > 0 ? $vat : 0;
       $product_value = str_replace(",", "", floatval(@$sFrontstoreDataTotal[0]->total) - $vat);
       $product_value = $product_value > 0 ? $product_value : 0;
       $total = @$sFrontstoreDataTotal[0]->total > 0 ? @$sFrontstoreDataTotal[0]->total : 0;
-      DB::select(" UPDATE db_orders SET product_value=" . ($product_value) . ",tax=" . ($vat) . ",sum_price=" . ($total) . " WHERE id=$id ");
+      DB::select(" UPDATE db_orders SET product_value=" . ($product_value) . ",tax=" . ($vat). ",vat=" . ($vat_b).",sum_price=" . ($total) . " WHERE id=$id ");
     } else {
       DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
     }
@@ -692,6 +706,7 @@ class FrontstoreController extends Controller
         'cnt_slip' => @$cnt_slip,
         'ch_Disabled' => @$ch_Disabled,
         'gitfvoucher' => @$gv,
+        'vat_b' => @$vat_b,
       )
     );
   }
@@ -702,6 +717,7 @@ class FrontstoreController extends Controller
     // dd($id);
 
     $sRow = \App\Models\Backend\Frontstore::find($id);
+
     if (!$sRow) {
       return redirect()->to(url("backend/frontstore"));
     }
@@ -834,6 +850,19 @@ class FrontstoreController extends Controller
     // dd($sFrontstoreDataTotal);
     if ($sFrontstoreDataTotal) {
       $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total) / 1.07);
+     
+      // $vat_data = DB::table('dataset_vat')
+      // ->where('business_location_id_fk', '=', $sBranchs[0]->business_location_id_fk)
+      // ->first();
+      // $vat_data = $vat_data->vat;
+      // //vatใน 7%
+      // $vat = floatval(@$sFrontstoreDataTotal[0]->total) * ($vat_data / (100 + $vat_data));
+      //มูลค่าสินค้า
+      // $price_vat = floatval(@$sFrontstoreDataTotal[0]->total) - $p_vat;
+      // $price_total = $price + $shipping;
+
+      // dd( $vat);
+
       $vat = $vat > 0 ? $vat : 0;
       $product_value = str_replace(",", "", floatval(@$sFrontstoreDataTotal[0]->total) - $vat);
       $product_value = $product_value > 0 ? $product_value : 0;

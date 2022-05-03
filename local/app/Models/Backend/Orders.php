@@ -32,8 +32,9 @@ class Orders extends InitModel
             $products_data = DB::table('products')->select('products.product_code as product_code')->where('id',$p->product_id_fk)->first();
             $products_details = DB::table('products_details')->select('products_details.product_name as product_name')->where('product_id_fk',$p->product_id_fk)->first();
             $products_units = DB::table('products_units')->select('product_unit_id_fk')->where('product_id_fk',$p->product_id_fk)->first();
+     
             $dataset_product_unit = DB::table('dataset_product_unit')->select('dataset_product_unit.product_unit as product_unit')->where('id',$products_units->product_unit_id_fk)->first();
-          
+        //   dd($dataset_product_unit);
             if(isset($arr_check[$p->product_id_fk])){
                 $filtered = $Products->filter(function ($value, $key) use($p) {
                     return $value->product_id_fk == $p->product_id_fk;
@@ -49,7 +50,7 @@ class Orders extends InitModel
                     'product_id_fk'=> $p->product_id_fk,
                     'product_name'=> $products_details->product_name,
                     'product_code'=> $products_data->product_code,
-                    'product_unit'=> $dataset_product_unit->product_unit,
+                    'product_unit'=> @$dataset_product_unit->product_unit,
                      ]);
             }else{
               
@@ -58,7 +59,7 @@ class Orders extends InitModel
                     'product_id_fk'=> $p->product_id_fk,
                     'product_name'=> $products_details->product_name,
                     'product_code'=> $products_data->product_code,
-                    'product_unit'=> $dataset_product_unit->product_unit,
+                    'product_unit'=> @$dataset_product_unit->product_unit,
                      ]);
                      $arr_check[$p->product_id_fk] = true;
              }

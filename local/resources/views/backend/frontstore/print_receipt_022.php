@@ -214,14 +214,15 @@ if(!empty($gift_voucher)){
     }else{
 
           $total_price = str_replace(',','',$total_price) - str_replace(',','',$gift_voucher[0]->gift_voucher_price) ;
-          $vat = intval($total_price) - (intval($total_price)/1.07) ;
+          // $vat = intval($total_price) - (intval($total_price)/1.07) ;
+          $vat = $sRow->tax;
     }
 
 
 }else{
 
-    $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-
+    // $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+    $vat = $sRow->tax;
 }
 
 

@@ -163,6 +163,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_units', 'Products_unitsController');
     Route::post('products_units/datatable', 'Products_unitsController@Datatable')->name('products_units.datatable');
     Route::get('products_units/create/{id}', 'Products_unitsController@create');
+    Route::get('products_units/delete/{id}', 'Products_unitsController@destroy');
 
     #=======================================================================================================================================================
     // Route::group(['prefix' => 'permission','namespace' => 'Permission',  'as' => 'permission.'], function() {

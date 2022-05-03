@@ -1391,7 +1391,7 @@
                                                                 <div class="divTableRow">
                                                                     <div class="divTableCell">&nbsp; </div>
                                                                     <div class="divTH">
-                                                                        <label for="">ภาษีมูลค่าเพิ่ม (7%) : </label>
+                                                                        <label for="">ภาษีมูลค่าเพิ่ม ({{$vat_b}}%) : </label>
                                                                     </div>
                                                                     <div class="divTableCell">
                                                                         <input id="tax" name="tax"
