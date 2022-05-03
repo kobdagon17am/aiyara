@@ -1236,6 +1236,12 @@ class Check_money_dailyController extends Controller
          $w05 = " AND date(db_orders.updated_at)=CURDATE() ";
       }
 
+      if(isset($req->business_location)){
+         $w_b =  " AND db_orders.business_location_id_fk=".$req->business_location;
+      }else{
+         $w_b = "";
+      }
+
       $sTable = DB::select("  
 
             SELECT
@@ -1257,6 +1263,7 @@ class Check_money_dailyController extends Controller
             $w03
             $w04
             $w05
+            $w_b
             UNION ALL 
             SELECT
             db_orders.*,
@@ -1277,6 +1284,7 @@ class Check_money_dailyController extends Controller
             $w03
             $w04
             $w05
+            $w_b
           ");
 
       $sQuery = \DataTables::of($sTable);

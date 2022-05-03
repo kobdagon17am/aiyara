@@ -164,8 +164,14 @@
 
           
                   <div class="myBorder">
-                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย </span>
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขายไทย </span>
                     <table id="data-table-0002" class="table table-bordered " style="width: 84%;">
+                    </table>
+                  </div>
+
+                  <div class="myBorder">
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขายกัมพูชา </span>
+                    <table id="data-table-0002_2" class="table table-bordered " style="width: 84%;">
                     </table>
                   </div>
 
@@ -309,7 +315,49 @@
                       ajax: {
                           url: '{{ route('backend.check_money_daily02.datatable') }}',
                           type: "POST",
-                           data:{ _token: '{{csrf_token()}}', },
+                           data:{ _token: '{{csrf_token()}}', business_location:1},
+                      },
+                columns: [
+                    {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
+                    {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
+                    {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
+                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
+                  
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
+
+                  if(aData['remark']==2){
+                    for (var i = 0; i < 3; i++) {
+                          $('td:eq( '+i+')', nRow).html("");
+                    }
+                    if(aData['total_money']){
+                      $('td:eq(3)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </span>');
+                      $('td:eq(4)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;">'+aData['total_money']+'</span>');
+                    }
+                  }
+
+                }
+            });
+       
+        });
+
+        $.fn.dataTable.ext.errMode = 'throw';
+        var oTable0002;
+        $(function() {
+            oTable0002 = $('#data-table-0002_2').DataTable({
+             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                ordering: false,
+                "info":   false,
+                "paging": false,
+                destroy:true,
+                      ajax: {
+                          url: '{{ route('backend.check_money_daily02.datatable') }}',
+                          type: "POST",
+                           data:{ _token: '{{csrf_token()}}', business_location:3},
                       },
                 columns: [
                     {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
