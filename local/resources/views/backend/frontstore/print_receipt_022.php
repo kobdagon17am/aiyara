@@ -1346,38 +1346,107 @@ for ($j=0; $j < $amt_page ; $j++) {
 
       $total_fee_amt = 0;
       $total_shipping_price = 0;
-  ?>
-    <?php if($shipping[0]->fee_amt > 0){
-      if($shipping[0]->fee_amt!=null){
-        $total_fee_amt += $shipping[0]->fee_amt;
-      }
-        $text1 =  '
-        <tr style="vertical-align: top;line-height: 12px !important;">
-        <td style="width:2.6%;text-align: left;">  </td>
-        <td style="width:18%;text-align: left;"> ค่าบริการบัตรเครดิต </td>
-        <td style="width:10%;text-align: left;"> </td>
-        <td style="width:6%;text-align: right;"> </td>
-        <td style="width:5%;text-align: right;"> </td>
-        <td style="width:4%;text-align: right;"> </td>
-        <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
-        </tr> ';
-        echo $text1;
-    } ?>
+      // dd($cnt_all[0]->cnt);
+      // dd($amt_page);
+      $str = "";
+      $n = 22;
+      $limit = 10;
 
-<?php if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
-      $total_shipping_price += $shipping[0]->shipping_price;
-        $text2 =  '
-        <tr style="vertical-align: top;line-height: 12px !important;">
-        <td style="width:2.6%;text-align: left;">  </td>
-        <td style="width:18%;text-align: left;"> ค่าบริการจัดส่งสินค้า </td>
-        <td style="width:10%;text-align: left;"> </td>
-        <td style="width:6%;text-align: right;"> </td>
-        <td style="width:5%;text-align: right;"> </td>
-        <td style="width:4%;text-align: right;"> </td>
-        <td style="width:11%;text-align: right;"> '.number_format($total_shipping_price, 2).' </td>
-        </tr> ';
-        echo $text2;
-    } ?>
+              for($z =0; $z <= $amt_page; $z++){
+                $DB1 = DB::select(" SELECT * FROM $TABLE where id = ($z*$n)+22; ");
+                if(isset($DB1[0])){
+                  $DB2 = DB::select(" SELECT * FROM $TABLE where id = ($z*$n)+22; ");
+                  $str.= $DB2[0]->g;
+                }
+                // else{
+                //   break;
+                // }
+              }
+
+      // dd($DB[0]->g);
+      // dd($DB[0]->g = "(หน้า ".$amt_page.'/'.$amt_page);
+      // $page_cn = $cnt_all[0]->cnt/10;
+      // $page_string = "(หน้า ".$amt_page.'/'.$amt_page;
+      $page_string = "(หน้า ".($j+1)."/".$amt_page;
+
+      // $cnt_all = DB::select(" SELECT count(*) as cnt FROM $TABLE_tmp ");
+      // $amt_page = ceil($cnt_all[0]->cnt/$limit);
+      // dd($page_string);
+  ?>
+  <?php 
+  // dd($page_string);
+  //  dd($DB[0]->g);
+    // if ( strstr( $DB[0]->g,  $page_string) ) {
+      if($j+1 == $amt_page){
+
+      if($shipping[0]->fee_amt > 0){
+        if($shipping[0]->fee_amt!=null){
+          $total_fee_amt += $shipping[0]->fee_amt;
+        }
+          $text1 =  '
+          <tr style="vertical-align: top;line-height: 12px !important;">
+          <td style="width:2.6%;text-align: left;">  </td>
+          <td style="width:18%;text-align: left;"> ค่าบริการบัตรเครดิต </td>
+          <td style="width:10%;text-align: left;"> </td>
+          <td style="width:6%;text-align: right;"> </td>
+          <td style="width:5%;text-align: right;"> </td>
+          <td style="width:4%;text-align: right;"> </td>
+          <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
+          </tr> ';
+          echo $text1;
+      } 
+      if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
+        $total_shipping_price += $shipping[0]->shipping_price;
+          $text2 =  '
+          <tr style="vertical-align: top;line-height: 12px !important;">
+          <td style="width:2.6%;text-align: left;">  </td>
+          <td style="width:18%;text-align: left;"> ค่าบริการจัดส่งสินค้า </td>
+          <td style="width:10%;text-align: left;"> </td>
+          <td style="width:6%;text-align: right;"> </td>
+          <td style="width:5%;text-align: right;"> </td>
+          <td style="width:4%;text-align: right;"> </td>
+          <td style="width:11%;text-align: right;"> '.number_format($total_shipping_price, 2).' </td>
+          </tr> ';
+          echo $text2;
+    }
+  }
+
+  ?>
+    <?php 
+    // if($shipping[0]->fee_amt > 0){
+    //   if($shipping[0]->fee_amt!=null){
+    //     $total_fee_amt += $shipping[0]->fee_amt;
+    //   }
+    //     $text1 =  '
+    //     <tr style="vertical-align: top;line-height: 12px !important;">
+    //     <td style="width:2.6%;text-align: left;">  </td>
+    //     <td style="width:18%;text-align: left;"> ค่าบริการบัตรเครดิต </td>
+    //     <td style="width:10%;text-align: left;"> </td>
+    //     <td style="width:6%;text-align: right;"> </td>
+    //     <td style="width:5%;text-align: right;"> </td>
+    //     <td style="width:4%;text-align: right;"> </td>
+    //     <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
+    //     </tr> ';
+    //     echo $text1;
+    // } 
+    ?>
+
+<?php 
+// if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
+//       $total_shipping_price += $shipping[0]->shipping_price;
+//         $text2 =  '
+//         <tr style="vertical-align: top;line-height: 12px !important;">
+//         <td style="width:2.6%;text-align: left;">  </td>
+//         <td style="width:18%;text-align: left;"> ค่าบริการจัดส่งสินค้า </td>
+//         <td style="width:10%;text-align: left;"> </td>
+//         <td style="width:6%;text-align: right;"> </td>
+//         <td style="width:5%;text-align: right;"> </td>
+//         <td style="width:4%;text-align: right;"> </td>
+//         <td style="width:11%;text-align: right;"> '.number_format($total_shipping_price, 2).' </td>
+//         </tr> ';
+//         echo $text2;
+//     } 
+    ?>
 
     </table>
 
