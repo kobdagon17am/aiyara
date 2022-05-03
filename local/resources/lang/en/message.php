@@ -52,6 +52,7 @@ return [
     'po_approve' => 'PO Pending Approval',
     'check_stock_account' => 'Stock Check (Accounting)',
     'check_money_daily' => 'Daily Cash Check',
+    'check_money_daily_report' => 'Daily Cash Check Report',
     'taxdata' => 'Annual Tax List',
     'commission_transfer' => 'Commission Payment List',
     'commission_aistockist' => 'Ai-Stockist Commission',

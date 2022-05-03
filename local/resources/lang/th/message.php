@@ -53,6 +53,7 @@ return [
     'po_approve' => 'ใบสั่งซื้อรออนุมัติ',
     'check_stock_account' => 'เช็คสต๊อค (บัญชี)',
     'check_money_daily' => 'ตรวจรับเงินรายวัน',
+    'check_money_daily_report' => 'สรุปรายการรับเงินรายวัน',
     'taxdata' => 'รายการภาษีหักประจำปี',
     'commission_transfer' => 'รายการโอนค่าคอมมิชชั่น',
     'commission_aistockist' => 'ค่าคอมมิชชั่น Ai-Stockist',

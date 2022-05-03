@@ -33,6 +33,23 @@ class Check_money_dailyController extends Controller
       ) );
     }
 
+    public function check_money_daily_report(Request $request)
+    {
+      //   $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+      //       return $query->where('id', auth()->user()->business_location_id_fk);
+      //   })->get();
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
+        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+            return $query->where('id', auth()->user()->branch_id);
+        })->get();
+        $sSeller = DB::select(" select id,name as seller_name from  ck_users_admin ");
+       return View('backend.check_money_daily.check_money_daily_report')->with(array(
+        'sBusiness_location'=>$sBusiness_location,
+        'sBranchs'=>$sBranchs,
+           'sSeller'=>$sSeller,
+      ) );
+    }
+
    public function create()
     {
       return View('backend.check_money_daily.form');
@@ -1320,7 +1337,160 @@ class Check_money_dailyController extends Controller
     }
 
 
+    public function DatatableTotal_report(Request $req){
 
+      // if(!empty($req->business_location_id_fk)){
+      //    $w01 = " AND db_orders.business_location_id_fk=".$req->business_location_id_fk ;
+      // }else{
+      //    $w01 = "";
+      // }
+      // if(!empty($req->branch_id_fk)){
+      //    $w02 = " AND db_orders.branch_id_fk=".$req->branch_id_fk ;
+      // }else{
+      //    $w02 = "";
+      // }
+
+      if(!empty($req->seller)){
+         $w03 = " AND db_sent_money_daily.approver=".$req->seller ;
+      }else{
+         $w03 = "";
+      }
+
+      // if(!empty($req->status_search)){
+      //    $s = $req->status_search==1?"2":"1";
+      //    $w04 = " AND db_orders.status_sent_money=".$s."" ;
+      // }else{
+      //    $w04 = "";
+      // }
+
+      if(!empty($req->startDate) && !empty($req->endDate)){
+         $w05 = " AND date(db_sent_money_daily.updated_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+      }else{
+         $w05 = " AND date(db_sent_money_daily.updated_at)=CURDATE() ";
+      }
+
+      // if(isset($req->business_location)){
+      //    $w_b =  " AND business_location=".$req->business_location;
+      // }else{
+         // $w_b = "";
+      // }
+
+      // $sTable = DB::table('db_sent_money_daily')->where('status_cancel',0)->where('status_approve',1)->orderBy('created_at','desc')->get();
+
+      $sTable = DB::select("  
+              SELECT db_sent_money_daily.*,1 as remark,remark as detail
+              ,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location 
+              ,(SELECT branch_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as branch_name 
+              ,'' as ttp
+              FROM db_sent_money_daily WHERE db_sent_money_daily.status_cancel=0 AND db_sent_money_daily.status_approve=1
+              $w03
+              $w05
+              UNION ALL
+              SELECT db_sent_money_daily.*,2 as remark,remark as detail
+              ,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location 
+              ,(SELECT branch_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as branch_name 
+              ,sum(db_sent_money_daily.total_money) as ttp
+              FROM db_sent_money_daily WHERE db_sent_money_daily.status_cancel=0 AND db_sent_money_daily.status_approve=1
+              $w03
+              $w05
+          ");
+
+           //   $w01 
+            //   $w02
+            //   $w03
+            //   $w04
+            //   $w05
+            
+      // $sTable = DB::select("  
+
+      //       SELECT
+      //       db_orders.*,
+      //       dataset_business_location.txt_desc AS business_location,
+      //       branchs.b_name AS branch_name,
+      //       ck_users_admin.`name` as action_user,
+      //       '' as ttp,
+      //       1 as remark 
+      //       FROM
+      //       db_orders
+      //       Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
+      //       Left Join branchs ON db_orders.branch_id_fk = branchs.id
+      //       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+      //       WHERE
+      //       DATE(db_orders.created_at)=CURDATE() AND db_orders.invoice_code!=''
+      //       $w01
+      //       $w02
+      //       $w03
+      //       $w04
+      //       $w05
+      //       $w_b
+      //       UNION ALL 
+      //       SELECT
+      //       db_orders.*,
+      //       dataset_business_location.txt_desc AS business_location,
+      //       branchs.b_name AS branch_name,
+      //       ck_users_admin.`name` as action_user , 
+      //       sum(sum_price) as ttp,
+      //       2 as remark 
+      //       FROM
+      //       db_orders
+      //       Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
+      //       Left Join branchs ON db_orders.branch_id_fk = branchs.id
+      //       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+      //       WHERE
+      //       DATE(db_orders.created_at)=CURDATE() AND db_orders.invoice_code!=''
+      //       $w01
+      //       $w02
+      //       $w03
+      //       $w04
+      //       $w05
+      //       $w_b
+      //     ");
+
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+
+
+      ->addColumn('business_location', function($row) {
+         $data = DB::table('dataset_business_location')->where('id',$row->business_location)->first();
+         return @$data->txt_desc;
+      }) 
+      ->escapeColumns('business_location')
+
+      ->addColumn('branch_name', function($row) {
+         $data = DB::table('branchs')->where('id',$row->branch_name)->first();
+         return @$data->b_name;
+      }) 
+      ->escapeColumns('branch_name')
+
+      ->addColumn('action_user', function($row) {
+         $data = DB::table('ck_users_admin')->where('id',$row->sender_id)->first();
+         return @$data->name;
+      }) 
+      ->escapeColumns('action_user')
+
+      ->addColumn('approve_user', function($row) {
+         $data = DB::table('ck_users_admin')->where('id',$row->approver)->first();
+         return @$data->name;
+      }) 
+      ->escapeColumns('approve_user')
+
+      ->addColumn('total_money', function($row) {
+
+         if($row->remark==1){
+
+            if($row->total_money)
+            return "<b>".number_format($row->total_money,2)."</b>";
+
+         }else{
+           if($row->ttp)
+           return "<b>".number_format($row->ttp,2)."</b>";
+
+         }
+      }) 
+      ->escapeColumns('total_money')
+
+      ->make(true);
+    }
 
 
 }
