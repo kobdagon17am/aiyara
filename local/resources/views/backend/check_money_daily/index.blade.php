@@ -247,7 +247,8 @@
                    {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},
                    {data: 'detail', title :'<span style="vertical-align: middle;">หมายเหตุ </span> ', className: 'text-center'},
                    {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
-                        return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                            var show = '<a style="'+d+'" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' + d + '" > ยกเลิก </a>';
+                        return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '+show;
                     }},
                 ],
                  rowCallback: function(nRow, aData, dataIndex){
@@ -777,6 +778,51 @@ $(function() {
                   },2000);
 
             });
+            $(document).on('click', '.btnCancelSentMoney', function(e) {
+
+        var id = $(this).attr('send_id');
+
+                Swal.fire({
+                    title: 'ยืนยัน ! ยกเลิกการส่งเงิน ',
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#556ee6',
+                    cancelButtonColor: "#f46a6a"
+                    }).then(function (result) {
+                        if (result.value) {
+
+                            $.ajax({
+                              url: " {{ url('backend/ajaxCancelSentMoney') }} ",
+                              method: "post",
+                              data: {
+                                "_token": "{{ csrf_token() }}", id:id
+                              },
+                              success:function(data)
+                              {
+                                // // // // console.log(data);
+                                // return false;
+                                    Swal.fire({
+                                      type: 'success',
+                                      title: 'ทำการยกเลิกการส่งเงินเรียบร้อยแล้ว',
+                                      showConfirmButton: false,
+                                      timer: 2000
+                                    });
+
+                                    setTimeout(function () {
+                                        // $("#tb_sent_money").load(location.href + " #tb_sent_money");
+                                        // $('#data-table').DataTable().clear().draw();
+                                        location.reload();
+                                    }, 1000);
+                              }
+                            })
+                        }else{
+                            $(".myloading").hide();
+                        }
+                  });
+
+
+  }); // ปิด $(document).on('click', '.btnSave'
+
 
         });
     </script>
