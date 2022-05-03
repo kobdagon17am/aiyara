@@ -3822,6 +3822,23 @@ class AjaxController extends Controller
                               ));
                         }
                     }
+
+                    $qrs = DB::table('db_pick_warehouse_qrcode')
+                    ->select('qr_code')
+                    // ->where('invoice_code',$oid)
+                    // ->where('product_id_fk',$proid)
+                    ->where('packing_code',$request->packing_code)
+                    ->where('packing_list',$request->packing_list)
+                    ->orderBy('item_id','desc')
+                    ->limit(6)
+                    ->get();
+
+                    $qr = "";
+                    foreach($qrs as $q){
+                        $qr .= $q->qr_code."<br>";
+                    }
+                    
+                    return response()->json($qr);
       }
 
     }

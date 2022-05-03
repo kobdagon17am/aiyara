@@ -1313,6 +1313,7 @@ GROUP BY db_order_products_list.product_id_fk
                                     '  <a href="'.url('backend/qr_show/'.$value->code_order.'/'.$row->packing_code.'/'.$value->product_id_fk.'/'.$row->lists).'" target="bank" class="qr_scan_show" data-item_id="'.@$item_id.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'"><u>แสดง</u></a>
                                     <br>
                                     ';
+                                    $pn .= '<label class="last_scan" style="color:red;"></label>';
                                   // }
 
                                 //     @$item_id++;

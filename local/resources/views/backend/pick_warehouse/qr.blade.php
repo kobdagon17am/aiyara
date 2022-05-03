@@ -805,11 +805,12 @@ setTimeout(function(){
                   },
                   success:function(data){
                        // console.log(data);
-                       $.each(data,function(key,value){
+                      //  $.each(data,function(key,value){
 
-                       });
+                      //  });
                        $(".myloading").hide();
                        $('.btnDeleteQrcodeProduct').trigger('click');
+                       $('.last_scan').html(data);
                       // $(this).prev().val('');
                     },
                   error: function(jqXHR, textStatus, errorThrown) {
