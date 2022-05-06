@@ -282,3 +282,51 @@ return [
 ],
 'answer' => 'Answer',
 ];
+
+
+//frontend
+//NavMenu
+'myprofile' => 'Personal Infomation',
+'jobstructure' => 'Job Structure',
+'directsponsor' => 'Direct Sponsor',
+'commission' => 'Commission',
+'order' => 'Order',
+'Ai-Cash' => 'Ai-Cash',
+'Ai-Voucher' => 'Ai-Voucher',
+'Ai-Stockist' => 'Ai-Stockist',
+'courseevent' => 'Course/Event',
+'history' => 'History',
+'benefits' => 'Benefits',
+'salepage' => 'Sale Page',
+'newsactivity' => 'News/Activity',
+'contactquestion' => 'Contact Us'
+
+// commissionmenu
+'commission_bonus' => 'Bonus Payment Report',
+'scoreandbonus' => 'Score And Bonus',
+'commission_ai-stockist' => 'Ai-Stockist Commission Report',
+'commission_af' => 'AF Commission Report',
+'commission_legal-person' => 'Legal Person Commission Report'ม
+'withholdingtax' => 'Withholding Tax Certificate'
+
+//ordermenu
+'qualification' => 'Qualification',
+'qualificationpermonth' => 'Qualification Per Month',
+'qualificationtravel' => 'Qualification Travel',
+'aistockistrefill' => 'Ai-Stockist Refill'
+'aivoucher' => "Ai Voucher",
+'course' => 'Training Course'
+
+//benefitmenu
+'award' => 'Award',
+'travelpromotion' => 'Travel Promotion'
+
+//salepagemenu
+'aiyara' => 'Aiyara',
+'aimmura' => 'Aimmura',
+'Cashewy' => 'Cashewy Drink',
+'aifacad' => 'Aifacad',
+'ailada' => 'Ailada',
+'trimMax' => 'TrimMax',
+'setting' => 'Settings',
+'vipreport' => 'VIP Report'
