@@ -655,7 +655,7 @@
 			<li class="{{ (request()->is('message/*')) ? 'active' : '' }}">
 			<a href="{{route('message')}}">
 				<span class="pcoded-micon"><i class="fa fa-send text-success"></i><b> @lang('message.contactquestion')</b></span>
-				<span class="pcoded-mtext"> @lang('message.contactquestion') }}</span>
+				<span class="pcoded-mtext"> @lang('message.contactquestion')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
