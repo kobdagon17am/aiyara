@@ -329,5 +329,10 @@ return [
 'trimMax' => 'TrimMax',
 'setting' => 'ตั้งค่า',
 'vipreport' => 'รายงาน VIP',
+
+//frontend 
+//profile page
+'remaining' : 'คงเหลือ',
+'totalscore' : 'คะแนนสะสม'
 ];
 

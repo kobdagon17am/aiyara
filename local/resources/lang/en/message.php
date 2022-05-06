@@ -327,6 +327,11 @@ return [
 'trimMax' => 'TrimMax',
 'setting' => 'Settings',
 'vipreport' => 'VIP Report',
+
+//frontend 
+//profile page
+'remaining' : 'Remaining',
+'totalscore' : 'Total Score'
 ];
 
 
