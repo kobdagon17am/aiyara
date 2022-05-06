@@ -282,15 +282,13 @@ return [
   'open' => 'เปิดใช้งาน',
   'close' => 'ปิด',
 ],
-'answer' => 'คำตอบ'
-];
-
+'answer' => 'คำตอบ',
 //frontend
 //Personal Information Page
 'myprofile' => 'ข้อมูลส่วนตัว',
 'jobstructure' => 'โครงสร้างสายงาน',
 'directsponsor' => 'ผู้สนับสนุน',
-'commission' => 'ค่าคอมมิชชั่น'
+'commission' => 'ค่าคอมมิชชั่น',
 'order' => 'สั่งซื้อสินค้า',
 'Ai-Cash' => 'Ai-Cash',
 'Ai-Voucher' => 'Ai-Voucher',
@@ -300,7 +298,7 @@ return [
 'benefits' => 'สิทธิประโยชน์',
 'salepage' => 'เพจซื้อขาย',
 'newsactivity' => 'รวมข่าวสาร/กิจกรรม',
-'contactus' => 'ติดต่อ/สอบถาม'
+'contactus' => 'ติดต่อ/สอบถาม',
 
 // commissionmenu
 'commission_bonus' => 'รายงานการจ่ายโบนัส',
@@ -308,19 +306,19 @@ return [
 'commission_ai-stockist' => 'รายงานการโอนค่าคอมมิชชั่น Ai-Stockist',
 'commission_af' => 'รายงานการโอนค่าคอมมิชชั่น AF',
 'commission_legal-person' => 'รายงานการโอนค่าคอมมิชชั่นสมาชิกนิติบุคคล',
-'withholdingtax' => 'หนังสือรับรองการหักภาษี ณ ที่จ่าย'
+'withholdingtax' => 'หนังสือรับรองการหักภาษี ณ ที่จ่าย',
 
 //ordermenu
 'qualification' => 'ทำคุณสมบัติ',
 'qualificationpermonth' => 'รักษาคุณสมบัติรายเดือน',
 'qualificationtravel' => 'รักษาคุณสมบัติท่องเที่ยว',
-'aistockistrefill' => 'เติม Ai-Stockist'
+'aistockistrefill' => 'เติม Ai-Stockist',
 'aivoucher' => "Ai Voucher",
-'course' => 'คอร์สอบรม'
+'course' => 'คอร์สอบรม',
 
 //benefitmenu
 'award' => 'รางวัลเกียรติยศ',
-'travelpromotion' => 'โปรโมชั่นท่องเที่ยว'
+'travelpromotion' => 'โปรโมชั่นท่องเที่ยว',
 
 //salepagemenu
 'aiyara' => 'Aiyara',
@@ -330,5 +328,6 @@ return [
 'ailada' => 'Ailada',
 'trimMax' => 'TrimMax',
 'setting' => 'ตั้งค่า',
-'vipreport' => 'รายงาน VIP'
+'vipreport' => 'รายงาน VIP',
+];
 

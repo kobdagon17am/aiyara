@@ -281,9 +281,6 @@ return [
   'close' => 'Closed',
 ],
 'answer' => 'Answer',
-];
-
-
 //frontend
 //NavMenu
 'myprofile' => 'Personal Infomation',
@@ -299,27 +296,27 @@ return [
 'benefits' => 'Benefits',
 'salepage' => 'Sale Page',
 'newsactivity' => 'News/Activity',
-'contactquestion' => 'Contact Us'
+'contactquestion' => 'Contact Us',
 
 // commissionmenu
 'commission_bonus' => 'Bonus Payment Report',
 'scoreandbonus' => 'Score And Bonus',
 'commission_ai-stockist' => 'Ai-Stockist Commission Report',
 'commission_af' => 'AF Commission Report',
-'commission_legal-person' => 'Legal Person Commission Report'ม
-'withholdingtax' => 'Withholding Tax Certificate'
+'commission_legal-person' => 'Legal Person Commission Report',
+'withholdingtax' => 'Withholding Tax Certificate',
 
 //ordermenu
 'qualification' => 'Qualification',
 'qualificationpermonth' => 'Qualification Per Month',
 'qualificationtravel' => 'Qualification Travel',
-'aistockistrefill' => 'Ai-Stockist Refill'
+'aistockistrefill' => 'Ai-Stockist Refill',
 'aivoucher' => "Ai Voucher",
-'course' => 'Training Course'
+'course' => 'Training Course',
 
 //benefitmenu
 'award' => 'Award',
-'travelpromotion' => 'Travel Promotion'
+'travelpromotion' => 'Travel Promotion',
 
 //salepagemenu
 'aiyara' => 'Aiyara',
@@ -329,4 +326,8 @@ return [
 'ailada' => 'Ailada',
 'trimMax' => 'TrimMax',
 'setting' => 'Settings',
-'vipreport' => 'VIP Report'
+'vipreport' => 'VIP Report',
+];
+
+
+

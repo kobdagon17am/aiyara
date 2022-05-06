@@ -27,7 +27,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         {!! $check_kyc['html'] !!}
       @endif
 
-        <h4><i class="fa fa-user"></i> @lang('message.PERSONALINFORMATION ') </h4>
+        <h4><i class="fa fa-user"></i> @lang('message.PERSONALINFORMATION') </h4>
 
       </div>
       <div class="card-block panels-wells">
