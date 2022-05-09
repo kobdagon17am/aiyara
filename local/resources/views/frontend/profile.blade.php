@@ -27,7 +27,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         {!! $check_kyc['html'] !!}
       @endif
 
-        <h4><i class="fa fa-user"></i> @lang('message.PERSONALINFORMATION ') </h4>
+        <h4><i class="fa fa-user"></i> @lang('message.PERSONALINFORMATION') </h4>
 
       </div>
       <div class="card-block panels-wells">
@@ -35,10 +35,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
           <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
             <div class="panel panel-success">
               <div class="panel-heading bg-success">
-                <b>ทำคุณสมบัติ</b>
+                <b>@lang('message.qualification')</b>
               </div>
               <div class="panel-body">
-                <h5 class="m-b-10 text-" style="color: #000">คะแนนสะสม</h5>
+                <h5 class="m-b-10 text-" style="color: #000">@lang('message.totalscore')</h5>
                 <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv) }} PV</span></h4>
               </div>
               <div class="panel-footer text-success ">
@@ -50,10 +50,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
           <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
             <div class="panel panel-info">
               <div class="panel-heading bg-info">
-                <b>รักษาคุณสมบัติรายเดือน</b>
+                <b>@lang('message.qualificationpermonth')</b>
               </div>
               <div class="panel-body">
-                <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
+                <h5 class="m-b-10" style="color: #000">@lang('message.remaining')</h5>
                 <h4 style="color: #000">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_mt) }} PV</span></h4>
               </div>
               <div class="panel-footer text-info">
@@ -71,10 +71,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
           <div class="panel panel-primary">
             <div class="panel-heading bg-primary">
-              <b>รักษาคุณสมบัติท่องเที่ยว</b>
+              <b>@lang('message.qualificationtravel')</b>
             </div>
             <div class="panel-body">
-             <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
+             <h5 class="m-b-10" style="color: #000">@lang('message.remaining')</h5>
              <h4 style="color: #000">{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_tv) }} PV</span></h4>
 
            </div>
@@ -106,7 +106,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             <b>Ai-Stockist</b>
           </div>
           <div class="panel-body">
-            <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
+            <h5 class="m-b-10" style="color: #000">@lang('message.remaining')</h5>
             <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv_aistockist) }} PV</span></h4>
           </div>
           <div class="panel-footer text-warning">
@@ -123,7 +123,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
        <b> Ai Voucher</b>
      </div>
      <div class="panel-body">
-      <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
+      <h5 class="m-b-10" style="color: #000">@lang('message.remaining')</h5>
       <?php $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name); ?>
       <div class="row">
         <div class="col-md-6 col-5"><h4><span>{{ number_format($gv->sum_gv) }} @if(Auth::guard('c_user')->user()->business_location_id == 1 || empty(Auth::guard('c_user')->user()->business_location_id)) ฿ @else <i class="icofont icofont-cur-dollar"></i> @endif </span></h4></div>
@@ -148,7 +148,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
      <b>Ai-Cash</b>
    </div>
    <div class="panel-body">
-    <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
+    <h5 class="m-b-10" style="color: #000">@lang('message.remaining')</h5>
 
     <h4 style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->ai_cash) }} @if(Auth::guard('c_user')->user()->business_location_id == 1 || empty(Auth::guard('c_user')->user()->business_location_id)) ฿ @else <i class="icofont icofont-cur-dollar"></i> @endif </span></h4>
   </div>

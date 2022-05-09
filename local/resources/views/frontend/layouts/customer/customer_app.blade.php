@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -316,24 +317,25 @@
 
     <li class="{{ (request()->is('profile')) ? 'active' : '' }}">
 			<a href="{{route('profile')}}">
-				<span class="pcoded-micon"><i class="fa fa-wpforms text-success"></i><b>ข้อมูลส่วนตัว</b></span>
-				<span class="pcoded-mtext">ข้อมูลส่วนตัว</span>
+				<span class="pcoded-micon"><i class="fa fa-wpforms text-success"></i><b></b></span>
+				<span class="pcoded-mtext">@lang('message.myprofile')</span>
+
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
 
 		<li class="{{ (request()->is('tree_view')) ? 'active' : '' }}">
 			<a href="{{route('tree_view')}}">
-				<span class="pcoded-micon"><i class="fa fa-sitemap text-success"></i><b>โครงสร้างสายงาน</b></span>
-				<span class="pcoded-mtext">โครงสร้างสายงาน</span>
+				<span class="pcoded-micon"><i class="fa fa-sitemap text-success"></i><b> @lang('message.jobstructure')</b></span>
+				<span class="pcoded-mtext"> @lang('message.jobstructure')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
 
 		<li class="{{ (request()->is('direct-sponsor')) ? 'active' : '' }}">
 			<a href="{{route('direct-sponsor')}}">
-				<span class="pcoded-micon"><i class="fa fa-group text-success"></i><b>Direct Sponsor</b></span>
-				<span class="pcoded-mtext">Direct Sponsor</span>
+				<span class="pcoded-micon"><i class="fa fa-group text-success"></i><b> @lang('message.directsponsor')</b></span>
+				<span class="pcoded-mtext"> @lang('message.directsponsor')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
@@ -342,8 +344,8 @@
       || request()->is('commission_faststart*') || request()->is('commission_matching*') || request()->is('taxdata')
       ||  request()->is('commission_bonus_transfer_aistockist') ||  request()->is('commission_bonus_transfer_af') ||  request()->is('commission_bonus_transfer_member'))  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
         <a href="javascript:void(0)">
-          <span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>Commission</b></span>
-          <span class="pcoded-mtext">Commission</span>
+          <span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b> @lang('message.commission')</b></span>
+          <span class="pcoded-mtext"> @lang('message.commission')</span>
           <span class="pcoded-mcaret"></span>
         </a>
 
@@ -351,7 +353,7 @@
           <li class="{{ (request()->is('commission_bonus_transfer')) ? 'active' : '' }}">
             <a href="{{route('commission_bonus_transfer')}}">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-              <span class="pcoded-mtext">รายงานการจ่ายโบนัส</span>
+              <span class="pcoded-mtext"> @lang('message.commission_bonus')</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
@@ -359,7 +361,7 @@
           <li class="{{ (request()->is('commission-per-day') || request()->is('commission_faststart*') || request()->is('commission_matching*') ) ? 'active' : '' }}">
             <a href="{{route('commission-per-day')}}">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-              <span class="pcoded-mtext">ความเคลื่อนไหวคะแนน และโบนัสรายวัน</span>
+              <span class="pcoded-mtext"> @lang('message.scoreandbonus')</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
@@ -367,7 +369,7 @@
           <li class="{{ (request()->is('commission_bonus_transfer_aistockist')) ? 'active' : '' }}">
             <a href="{{route('commission_bonus_transfer_aistockist')}}">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-              <span class="pcoded-mtext">รายงานการโอนค่าคอมมิชชั่น Ai-Stockist</span>
+              <span class="pcoded-mtext"> @lang('message.commission_ai-stockist')</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
@@ -375,7 +377,7 @@
           <li class="{{ (request()->is('commission_bonus_transfer_af')) ? 'active' : '' }}">
             <a href="{{route('commission_bonus_transfer_af')}}">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-              <span class="pcoded-mtext">รายงานการโอนค่าคอมมิชชั่น AF</span>
+              <span class="pcoded-mtext"> @lang('message.commission_af')</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
@@ -383,7 +385,7 @@
           <li class="{{ (request()->is('commission_bonus_transfer_member')) ? 'active' : '' }}">
             <a href="{{route('commission_bonus_transfer_member')}}">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-              <span class="pcoded-mtext">รายการโอนค่าคอมมิชชั่นสมาชิกนิติบุคคล</span>
+              <span class="pcoded-mtext"> @lang('message.commission_legal-person')</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
@@ -391,7 +393,7 @@
       <li class="{{ (request()->is('taxdata')) ? 'active' : '' }}">
             <a href="{{route('taxdata')}}">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-              <span class="pcoded-mtext">หนังสือรับรองการหักภาษี ณ ที่จ่าย</span>
+              <span class="pcoded-mtext"> @lang('message.withholdingtax')</span>
               <span class="pcoded-mcaret"></span>
             </a>
           </li>
@@ -403,8 +405,8 @@
     @if($canAccess)
 		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('cart_payment/*') ) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="fa fa-shopping-cart text-success"></i><b>สั่งซื้อสินค้า</b></span>
-				<span class="pcoded-mtext">สั่งซื้อสินค้า</span>
+				<span class="pcoded-micon"><i class="fa fa-shopping-cart text-success"></i><b> @lang('message.order')</b></span>
+				<span class="pcoded-mtext"> @lang('message.order')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 			<ul class="pcoded-submenu">
@@ -416,7 +418,7 @@
 				<li class="{{ (request()->is('cart/1') || request()->is('product-list/1') || request()->is('product-detail/1/*') || request()->is('cart_payment/1') )  ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>1])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">ทำคุณสมบัติ</span>
+						<span class="pcoded-mtext"> @lang('message.qualification')</span>
 						@if(Cart::session(1)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_1" style="top:1px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(1)->getTotalQuantity() }}</span>
 						@endif
@@ -427,7 +429,7 @@
 				<li class="{{ (request()->is('cart/2') || request()->is('product-list/2') || request()->is('product-detail/2/*') || request()->is('cart_payment/2') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>2])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">รักษาคุณสมบัติรายเดือน</span>
+						<span class="pcoded-mtext"> @lang('message.qualificationpermonth')</span>
 						@if(Cart::session(2)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_2" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(2)->getTotalQuantity() }}</span>
 						@endif
@@ -438,7 +440,7 @@
 				<li class="{{ (request()->is('cart/3') || request()->is('product-list/3') || request()->is('product-detail/3/*') || request()->is('cart_payment/3') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>3])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext" style="font-size: 13px">รักษาคุณสมบัติท่องเที่ยว</span>
+						<span class="pcoded-mtext" style="font-size: 13px"> @lang('message.qualificationtravel')</span>
 						@if(Cart::session(3)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_3" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(3)->getTotalQuantity() }}</span>
 						@endif
@@ -449,7 +451,7 @@
 				<li class="{{ (request()->is('cart/4') || request()->is('product-list/4') || request()->is('product-detail/4/*') || request()->is('cart_payment/4') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>4])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">เติม Ai-Stockist</span>
+						<span class="pcoded-mtext"> @lang('message.aistockistrefill')</span>
 						@if(Cart::session(4)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_4" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(4)->getTotalQuantity() }}</span>
 						@endif
@@ -460,7 +462,7 @@
 				<li class="{{ (request()->is('cart/5') || request()->is('product-list/5') || request()->is('product-detail/5/*') || request()->is('cart_payment/5') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>5])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Ai Voucher</span>
+						<span class="pcoded-mtext"> @lang('message.aivoucher')</span>
 						@if(Cart::session(5)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_5" style="top:8px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(5)->getTotalQuantity() }}</span>
 						@endif
@@ -471,7 +473,7 @@
 				<li class="{{ (request()->is('cart/6') || request()->is('product-list/6') || request()->is('product-detail/6/*') || request()->is('cart_payment/6') ) ? 'active' : '' }}">
 					<a href="{{route('product-list',['type'=>6])}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">คอร์สอบรม</span>
+						<span class="pcoded-mtext"> @lang('message.course')</span>
 						@if(Cart::session(6)->getTotalQuantity() != 0)
 						<span class="pcoded-badge label label-info" id="count_cart_6" style="top:7px;font-size: 83%;"><i class="fa fa-shopping-cart"></i> {{ Cart::session(6)->getTotalQuantity() }}</span>
 						@endif
@@ -485,40 +487,40 @@
 
     <li class="{{ (request()->is('ai-cash')) ? 'active' : '' }}">
       <a href="{{route('ai-cash')}}">
-        <span class="pcoded-micon"><i class="fa fa-money text-success"></i><b>Ai-Cash</b></span>
-        <span class="pcoded-mtext">Ai-Cash</span>
+        <span class="pcoded-micon"><i class="fa fa-money text-success"></i><b> @lang('message.Ai-Cash')</b></span>
+        <span class="pcoded-mtext"> @lang('message.Ai-Cash')</span>
         <span class="pcoded-mcaret"></span>
       </a>
     </li>
 
     <li class="{{ (request()->is('giftvoucher_history')) ? 'active' : '' }}">
       <a href="{{route('giftvoucher_history')}}">
-        <span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>Ai Voucher</b></span>
-        <span class="pcoded-mtext">Ai Voucher</span>
+        <span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b> @lang('message.Ai-Voucher')</b></span>
+        <span class="pcoded-mtext"> @lang('message.Ai-Voucher')</span>
         <span class="pcoded-mcaret"></span>
       </a>
     </li>
 
 		<li class="{{ (request()->is('ai-stockist')) ? 'active' : '' }}">
 			<a href="{{route('ai-stockist')}}">
-				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b>Ai-Stockist</b></span>
-				<span class="pcoded-mtext">Ai-Stockist</span>
+				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b> @lang('message.Ai-Stockist')</b></span>
+				<span class="pcoded-mtext"> @lang('message.Ai-Stockist')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
 
     <li class="{{ (request()->is('course'))  ? 'active' : '' }}">
 			<a href="{{route('course')}}">
-				<span class="pcoded-micon"><i class="fa fa-black-tie text-success"></i><b>Course/Event</b></span>
-				<span class="pcoded-mtext">Course/Event</span>
+				<span class="pcoded-micon"><i class="fa fa-black-tie text-success"></i><b> @lang('message.courseevent')</b></span>
+				<span class="pcoded-mtext"> @lang('message.courseevent')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
 
 		<li class="{{ (request()->is('product-history') || request()->is('product-history/*') || request()->is('cart-payment-history/*'))  ? 'active' : '' }}">
 			<a href="{{route('product-history')}}">
-				<span class="pcoded-micon"><i class="ti-receipt text-success"></i><b>ประวัติการสั่งซื้อ</b></span>
-				<span class="pcoded-mtext">ประวัติการสั่งซื้อ</span>
+				<span class="pcoded-micon"><i class="ti-receipt text-success"></i><b> @lang('message.history')</b></span>
+				<span class="pcoded-mtext"> @lang('message.history')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
@@ -526,8 +528,8 @@
 
 	{{-- 	<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
 			<a href="{{route('comission')}}">
-				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b>รายงานคอมมิชชั่น</b></span>
-				<span class="pcoded-mtext">รายงานคอมมิชชั่น</span>
+				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b> @lang('message.history')</b></span>
+				<span class="pcoded-mtext"> @lang('message.history')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li> --}}
@@ -535,15 +537,15 @@
 
 		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') || request()->is('travel*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b>สิทธิประโยชน์</b></span>
-				<span class="pcoded-mtext">สิทธิประโยชน์</span>
+				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b> @lang('message.benefits')</b></span>
+				<span class="pcoded-mtext"> @lang('message.benefits')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 			<ul class="pcoded-submenu">
 				<li class="{{ (request()->is('reward-history')) ? 'active' : '' }}">
 					<a href="{{route('reward-history')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">รางวัลเกียรติยศ</span>
+						<span class="pcoded-mtext"> @lang('message.award')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -551,7 +553,7 @@
 				<li class="{{ (request()->is('travel*')) ? 'active' : '' }}">
 					<a href="{{route('travel')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">โปรโมชั่นท่องเที่ยวท่องเที่ยว</span>
+						<span class="pcoded-mtext"> @lang('message.travelpromotion')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -561,8 +563,8 @@
 
     <li class="pcoded-hasmenu {{ (request()->is('salepage/*') || request()->is('s*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
-				<span class="pcoded-micon"><i class="fa fa-chrome text-success"></i><b>Sale page</b></span>
-				<span class="pcoded-mtext">Sale page</span>
+				<span class="pcoded-micon"><i class="fa fa-chrome text-success"></i><b> @lang('message.salepage')</b></span>
+				<span class="pcoded-mtext"> @lang('message.salepage')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 
@@ -572,7 +574,7 @@
         <li class="">
 					<a href="{{url($user_name.'/1')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Aiyara</span>
+						<span class="pcoded-mtext"> @lang('message.aiyara')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -580,7 +582,7 @@
 				<li class="">
 					<a href="{{url($user_name.'/2')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Aimmura</span>
+						<span class="pcoded-mtext"> @lang('message.aimmura')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -588,7 +590,7 @@
 				<li class="">
 					<a href="{{url($user_name.'/3')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Cashewy Drink</span>
+						<span class="pcoded-mtext"> @lang('message.Cashewy')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -596,7 +598,7 @@
         <li class="">
 					<a href="{{url($user_name.'/4')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Aifacad</span>
+						<span class="pcoded-mtext"> @lang('message.aifacad')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -604,7 +606,7 @@
 				<li class="">
 					<a href="{{url($user_name.'/5')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Ailada</span>
+						<span class="pcoded-mtext"> @lang('message.ailada')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -613,7 +615,7 @@
 				<li class="">
 					<a href="{{url($user_name.'/6')}}" target="_blank">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">TrimMax</span>
+						<span class="pcoded-mtext"> @lang('message.trimMax')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -622,7 +624,7 @@
 				<li class="{{ (request()->is('salepage/setting')) ? 'active' : '' }}">
 					<a href="{{route('salepage/setting')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">Setting</span>
+						<span class="pcoded-mtext"> @lang('message.setting')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -630,7 +632,7 @@
 				<li class="{{ (request()->is('salepage/vip-report')) ? 'active' : '' }}">
 					<a href="{{route('salepage.vip-report')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
-						<span class="pcoded-mtext">VIP Report</span>
+						<span class="pcoded-mtext"> @lang('message.vipreport')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
 				</li>
@@ -641,8 +643,8 @@
 
 		<li class="{{ (request()->is('news') || request()->is('news_detail/*')) ? 'active' : '' }}">
 			<a href="{{route('news')}}">
-				<span class="pcoded-micon"><i class="fa fa-newspaper-o text-success"></i><b>รวมข่าวสาร/กิจกรรม</b></span>
-				<span class="pcoded-mtext">รวมข่าวสาร/กิจกรรม</span>
+				<span class="pcoded-micon"><i class="fa fa-newspaper-o text-success"></i><b> @lang('message.newsactivity')</b></span>
+				<span class="pcoded-mtext"> @lang('message.newsactivity')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
@@ -652,8 +654,8 @@
 
 			<li class="{{ (request()->is('message/*')) ? 'active' : '' }}">
 			<a href="{{route('message')}}">
-				<span class="pcoded-micon"><i class="fa fa-send text-success"></i><b>ติดต่อ/สอบถาม</b></span>
-				<span class="pcoded-mtext">ติดต่อ/สอบถาม</span>
+				<span class="pcoded-micon"><i class="fa fa-send text-success"></i><b> @lang('message.contactquestion')</b></span>
+				<span class="pcoded-mtext"> @lang('message.contactquestion')</span>
 				<span class="pcoded-mcaret"></span>
 			</a>
 		</li>
