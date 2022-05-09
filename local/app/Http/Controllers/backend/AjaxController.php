@@ -3882,6 +3882,21 @@ class AjaxController extends Controller
 
     }
 
+    public function ajaxScanQrcodeProductPackingDeleteAll(Request $request)
+    {
+
+      if($request->ajax()){
+
+                        DB::table('db_pick_warehouse_qrcode')
+                        ->where('packing_code', $request->pid) 
+                        // ->where('product_id_fk', $request->product_id_fk)
+                        // ->where('invoice_code', $request->invoice_code)
+                        ->where('invoice_code', $request->oid)
+                        ->delete();
+      }
+
+    }
+
 
     public function ajaxProductPackingSize(Request $request)
     {

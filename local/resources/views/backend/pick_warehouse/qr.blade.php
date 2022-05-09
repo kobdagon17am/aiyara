@@ -782,6 +782,7 @@ setTimeout(function(){
       $(document).on('change', '.qr_scan', function(e) {
 
           var v = $(this).val();
+          var this_data = $(this);
           // var item_id = $(this).data('item_id');
           var packing_code = $(this).data('packing_code');
           var product_id_fk = $(this).data('product_id_fk');
@@ -811,6 +812,7 @@ setTimeout(function(){
                        $(".myloading").hide();
                        $('.btnDeleteQrcodeProduct').trigger('click');
                        $('.last_scan').html(data);
+                       this_data.val('');
                       // $(this).prev().val('');
                     },
                   error: function(jqXHR, textStatus, errorThrown) {
