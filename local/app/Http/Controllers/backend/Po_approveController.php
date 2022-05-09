@@ -96,12 +96,31 @@ class Po_approveController extends Controller
         // } else {
         //     $price = number_format($sRow->sum_price + $sRow->shipping_price, 2);
         // }
-        $price =  number_format($sRow->transfer_price, 2);
+
+        $sum_price = $sRow->transfer_price;
+        $p_bill = "บิล : ".$sRow->code_order.'<br> ยอดชำระ : <label style="color:red;">'.$sRow->transfer_price.' </label><br>';
+
+             // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
+             $other_bill = DB::table('db_orders')
+             ->where('pay_with_other_bill',1)
+             ->where('pay_with_other_bill_note','like','%'.$sRow->code_order.'%')
+             ->where('approve_status',1)
+             ->get();
+
+             foreach($other_bill as $ot){
+                $sum_price += $ot->transfer_price;
+                $p_bill .= "บิล : ".$ot->code_order.'<br> ยอดชำระ : <label style="color:red;"> '.$ot->transfer_price.' </label><br>';
+             }
+
+             $price =  number_format($sum_price, 2);
 
         // $TransferBank = \App\Models\Backend\TransferBank::get();
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
+
+        
         return view('backend.po_approve.form')->with([
             'sRow' => $sRow,
+            'p_bill' => $p_bill,
             'id' => $id,
             'slip' => $slip,
             'slip_approve' => $slip_approve,
