@@ -194,15 +194,15 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
             <div class="row f-14 text-left">
                 <div class="col-sm-6">
-                  ทำคุณสมบัติ : {{ $data->pv }} PV <br>
-                  รักษาคุณสมบัติรายเดือน : {{ $data->pv_mt }} PV <br>
-                  รักษาคุณสมบัติท่องเที่ยว : {{ $data->pv_tv }} PV
+                @lang('message.qualification') : {{ $data->pv }} PV <br>
+                @lang('message.qualificationpermonth') : {{ $data->pv_mt }} PV <br>
+                @lang('message.qualificationtravel') : {{ $data->pv_tv }} PV
                 </div>
                 <div class="col-sm-6">
 
                   Ai-Stockist : {{ $data->aistockist_status ? 'เป็น' : 'ไม่เป็น' }}<br>
-                  ตำแหน่ง : {{ $data->q_name }}<br>
-                  Package : {{ $data->dt_package }}
+                  @lang('message.position') : {{ $data->q_name }}<br>
+                  @lang('message.package') : {{ $data->dt_package }}
                 </div>
             </div>
             <!-- <p class="text-muted">PV {{number_format($data->pv)}} | {{$data->q_name}} </p>
@@ -211,94 +211,94 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             <hr>
 
             <div class="text-left">
-              <p class="f-w-600 mb-2">ข้อมูลพื้นฐาน</p>
+              <p class="f-w-600 mb-2">@lang('message.information')</p>
               <div class="row f-14">
                 <div class="col-sm-6">
-                  <span>รหัสสมาชิก : {{ $data->user_name }}</span>
+                  <span>@lang('message.memberid') : {{ $data->user_name }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ชื่อ-นามสกุล : {{ Str::of($data->prefix_name)->append($data->first_name .' '. $data->last_name) }}</span>
+                  <span>@lang('message.namesurname') : {{ Str::of($data->prefix_name)->append($data->first_name .' '. $data->last_name) }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>วันเดือนปีเกิด : {{ date('d/m/Y', strtotime($data->birth_day)) }}</span>
+                  <span>@lang('message.birthdate') : {{ date('d/m/Y', strtotime($data->birth_day)) }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>เลขบัตรปชช : {{ $data->id_card }}</span>
+                  <span>@lang('message.idcardnumber') : {{ $data->id_card }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>โทรศัพท์มือถือ : {{ @$details->tel_mobile  }}</span>
+                  <span>@lang('message.telephone') : {{ @$details->tel_mobile  }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ประเทศ : @if($data->txt_desc){{ @$data->txt_desc  }}@else THAI @endif</span>
+                  <span>@lang('message.country') : @if($data->txt_desc){{ @$data->txt_desc  }}@else THAI @endif</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>อีเมลล์ : {{ $data->email }}</span>
+                  <span>@lang('message.email') : {{ $data->email }}</span>
                 </div>
               </div>
               <hr>
 
-              <p class="f-w-600 mb-2">บัญชีธนาคาร</p>
+              <p class="f-w-600 mb-2">@lang('message.bankingaccount')</p>
               <div class="row f-14">
                 <div class="col-sm-6">
-                  <span>ธนาคาร : {{ @$details->bank_name }}</span>
+                  <span>@lang('message.bank') : {{ @$details->bank_name }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>สาขา : {{ @$details->bank_branch }}</span>
+                  <span>@lang('message.branch') : {{ @$details->bank_branch }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ชื่อบัญชี : {{ @$details->bank_account }}</span>
+                  <span>@lang('message.accountname') : {{ @$details->bank_account }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>เลขบัญชี : {{ @$details->bank_no }}</span>
+                  <span>@lang('message.accountno') : {{ @$details->bank_no }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ชนิดบัญชี : {{ @$details->bank_type }}</span>
+                  <span>@lang('message.accounttype') : {{ @$details->bank_type }}</span>
                 </div>
               </div>
               <hr>
 
-              <p class="f-w-600 mb-2">ที่อยู่สำหรับการจัดส่งเอกสาร / สินค้า</p>
+              <p class="f-w-600 mb-2">@lang('message.address')</p>
               <div class="row f-14">
                 <div class="col-sm-6">
-                  <span>เลขที่ : {{ @$details->house_no }}</span>
+                  <span>@lang('message.no') : {{ @$details->house_no }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>อาคาร : {{ @$details->house_name }}</span>
+                  <span>@lang('message.building') : {{ @$details->house_name }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>หมู่ : {{ @$details->moo }}</span>
+                  <span>@lang('message.villageno') : {{ @$details->moo }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ซอย : {{ @$details->soi }}</span>
+                  <span>@lang('message.lane') : {{ @$details->soi }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ถนน : {{ @$details->road }}</span>
+                  <span>@lang('message.road') : {{ @$details->road }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>แขวง/ตำบล : {{ @$details->district }}</span>
+                  <span>@lang('message.sub-district/sub-area') : {{ @$details->district }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>เขต/อำเภอ : {{ @$details->amphure }}</span>
+                  <span>@lang('message.district/area') : {{ @$details->amphure }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>จังหวัด : {{ @$details->province }}</span>
+                  <span>@lang('message.province') : {{ @$details->province }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>รหัสไปรษณีย์ : {{ @$details->zipcode }}</span>
+                  <span>@lang('message.zipcode') : {{ @$details->zipcode }}</span>
                 </div>
               </div>
               <hr>
 
-              <p class="f-w-600 mb-2">การสืบทอดผลประโยชน์</p>
+              <p class="f-w-600 mb-2">@lang('message.benefitinheritance')</p>
               <div class="row f-14">
                 <div class="col-sm-6">
-                  <span>ผู้สืบทอดผลประโยชน์ : {{ @$details->benefit_name }}</span>
+                  <span>@lang('message.successor') : {{ @$details->benefit_name }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>เลขบัตรปชช : {{ @$details->benefit_id_card }}</span>
+                  <span>@lang('message.idcardnumber') : {{ @$details->benefit_id_card }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>ความสัมพันธ์ : {{ @$details->benefit_relation }}</span>
+                  <span>@lang('message.relationship') : {{ @$details->benefit_relation }}</span>
                 </div>
               </div>
             </div>
@@ -310,15 +310,14 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
     <div class="card">
 
       <div class="card-header">
-       <h4>Coupon Code</h4>
+       <h4>@lang('message.couponcode')</h4>
         <div class="row">
           <div class="col-md-4">
            <select class="form-control" id="status" >
-
-              <option value="1">ใช้งานได้</option>
-              <option value="2">ถูกใช้แล้ว</option>
-              <option value="expiry_date">หมดอายุ</option>
-              {{-- <option value="">ทั้งหมด</option> --}}
+              <option value="1">@lang('message.notused')</option>
+              <option value="2">@lang('message.used')</option>
+              <option value="expiry_date">@lang('message.expirydate')</option>
+              {{-- <option value="">@lang('message.all')</option> --}}
             </select>
           </div>
 
@@ -339,7 +338,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
           </table>
         </div>
 
- <span class="text-danger">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม Ai-Stockist</span>
+ <span class="text-danger">@lang('message.coupondetail')</span>
       </div>
 
 
