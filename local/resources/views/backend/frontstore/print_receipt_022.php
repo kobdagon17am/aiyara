@@ -105,6 +105,11 @@ $n = 22;
 $limit = 10;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
+if(@$sRow->business_location_id_fk == 1){
+  $curr = 'บาท';
+}else{
+  $curr = 'ดอลล่าร์';
+}
 
 $cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
 $cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
@@ -396,9 +401,7 @@ $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_gi
 
                         $product_name =
                         ' &nbsp;&nbsp;&nbsp; - AiVoucher =
-                        '.($v->gv_free*$v->free).'
-                         บาท
-                        ';
+                        '.($v->gv_free*$v->free).' '.$curr;
 
                          DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
 

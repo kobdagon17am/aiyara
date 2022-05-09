@@ -2806,20 +2806,32 @@ class FrontstoreController extends Controller
                                     order by db_sent_money_daily.time_sent
                               ");
 
-      foreach (@$sDBSentMoneyDaily as $r) {
+      foreach (@$sDBSentMoneyDaily as $key1 => $r) {
+        // $order_ex = explode(',',$r->orders_ids);
+        $order_ex = $r->orders_ids;
+        // วุฒิแก้ให้มันแสดงแยกครั้งส่งไปเลย
+        // $sOrders = DB::select("
+        //                   SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
+        //                               FROM
+        //                               db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
+        //                               where db_orders.id in (" . (@$sDBSentMoneyDaily02[0]->orders_ids ? @$sDBSentMoneyDaily02[0]->orders_ids : 0) . ") AND code_order<>'' AND action_user='$user_login_id' ;
+        //                   ");
 
         $sOrders = DB::select("
+        SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
+                    FROM
+                    db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
+                    where db_orders.id in (" . $order_ex . ") AND code_order<>'' AND action_user='$user_login_id' ;
+        ");
 
-                          SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
-                                      FROM
-                                      db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-                                      where db_orders.id in (" . (@$sDBSentMoneyDaily02[0]->orders_ids ? @$sDBSentMoneyDaily02[0]->orders_ids : 0) . ") AND code_order<>'' AND action_user='$user_login_id' ;
 
-                                      ");
         // AND code_order<>'' AND action_user='$user_login_id'
         $show .= '
                         <tr>
                           <td class="text-center">' . $tt . '</td>';
+                          // if($key1==1){
+                          //   dd($sDBSentMoneyDaily02[0]->orders_ids);
+                          // }
 
         if (@$r->status_cancel == 0) {
 

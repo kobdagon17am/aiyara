@@ -157,23 +157,23 @@
                     <table id="data-table-0001" class="table table-bordered " style="width: 100%;">
                     </table>
                     <br>
-                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash รายวัน  </span>
+                    {{-- <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash รายวัน  </span>
                     <table id="data-table-0001_ai" class="table table-bordered " style="width: 100%;">
-                    </table>
+                    </table> --}}
                   </div>
 
           
                   <div class="myBorder">
-                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขายไทย </span>
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย </span>
                     <table id="data-table-0002" class="table table-bordered " style="width: 84%;">
                     </table>
                   </div>
 
-                  <div class="myBorder">
+                  {{-- <div class="myBorder">
                     <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขายกัมพูชา </span>
                     <table id="data-table-0002_2" class="table table-bordered " style="width: 84%;">
                     </table>
-                  </div>
+                  </div> --}}
 
             </div>
         </div>
@@ -241,7 +241,8 @@
                     {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
                     {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ (คลิกเพื่อดูบิลเพิ่มเติม) </span> ', className: 'text-center'},
                     {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
-                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                    // {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมเงินสด </span> ', className: 'text-center'},
                    {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
                    {data: 'approver', title :'<span style="vertical-align: middle;">ผู้รับเงิน </span> ', className: 'text-center'},
                    {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},

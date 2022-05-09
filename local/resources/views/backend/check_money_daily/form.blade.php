@@ -66,13 +66,13 @@
                   @ENDIF
             </div>
 
-            <div class="myBorder">
+            {{-- <div class="myBorder">
               <table id="data-table-0001_ai" class="table table-bordered " style="width: 100%;">
                   </table>
                   @IF($sRow->status_cancel==0)
                   <center> รวมเงินทั้งสิ้น : <input type="text" name="sum_total_price_ai" id="sum_total_price_ai" style="text-align: center;" readonly=""></center>
                   @ENDIF
-            </div>
+            </div> --}}
 
 
         @IF($sRow->status_cancel==0 && $sRow->status_approve==0)
@@ -84,7 +84,7 @@
               <form action="{{ route('backend.check_money_daily.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" name="id" value="{{@$sRow->id}}">
                 <input type="hidden" name="sum_total_price2"  class="sum_total_price2">
-                   <input type="hidden" name="sum_total_price2_ai"  class="sum_total_price2_ai">
+                <input type="hidden" name="sum_total_price2_ai"  class="sum_total_price2_ai">
                 <input type="hidden" name="sum_total_price78" value="78">
               @else
               <form action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -120,13 +120,13 @@
                        <select id="sent_money_type" name="sent_money_type" class="form-control select2-templating " required >
                            <option value="">Select</option>
                             <option value="1" {{$selected_str}} {{@$sRowCheck_money_daily[0]->sent_money_type==1?'selected':''}} >เงินสด</option>
-                            <option value="2" {{@$sRowCheck_money_daily[0]->sent_money_type==2?'selected':''}} >เงินโอน</option>
+                            {{-- <option value="2" {{@$sRowCheck_money_daily[0]->sent_money_type==2?'selected':''}} >เงินโอน</option> --}}
                        </select>
 
                     </div>
                   </div>
 
-                  <div class="form-group row">
+                  <div class="form-group row" style="display: none;">
                     <label for="bank" class="col-md-3 col-form-label"> ถ้าเป็นประเภทการโอน :</label>
                     <div class="col-md-6">
                       <input class="form-control" id="bank" name="bank" type="text" value="{{@$sRowCheck_money_daily[0]->bank}}"  placeholder=" กรอก บัญชีธนาคาร และ เลขที่บัญชีฯ " >
@@ -180,9 +180,8 @@
           </div>
 
      @ENDIF
-
      @if( !empty(@$sRowCheck_money_daily[0]->id) )
-
+            
               <form id="frm" action="{{ route('backend.check_money_daily.update', @$sRowCheck_money_daily[0]->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
@@ -337,13 +336,13 @@
                        <select id="sent_money_type" name="sent_money_type" class="form-control select2-templating " required >
                            <option value="">Select</option>
                             <option value="1" {{@$sRowCheck_money_daily_AiCash[0]->sent_money_type==1?'selected':''}} >เงินสด</option>
-                            <option value="2" {{@$sRowCheck_money_daily_AiCash[0]->sent_money_type==2?'selected':''}} >เงินโอน</option>
+                            {{-- <option value="2" {{@$sRowCheck_money_daily_AiCash[0]->sent_money_type==2?'selected':''}} >เงินโอน</option> --}}
                        </select>
 
                     </div>
                   </div>
 
-                  <div class="form-group row">
+                  <div class="form-group row" style="display: none;">
                     <label for="bank" class="col-md-3 col-form-label"> ถ้าเป็นประเภทการโอน :</label>
                     <div class="col-md-6">
                       <input class="form-control" id="bank" name="bank" type="text" value="{{@$sRowCheck_money_daily_AiCash[0]->bank}}"  placeholder=" กรอก บัญชีธนาคาร และ เลขที่บัญชีฯ " >
@@ -547,14 +546,32 @@
                           },
                         },
 
+                // columns: [
+                //     {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
+                //     {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
+                //     {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ </span> ', className: 'text-center'},
+                //     {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
+                //     {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+             
+                // ],
+
                 columns: [
                     {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
                     {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
-                    {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ </span> ', className: 'text-center'},
+                    {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ (คลิกเพื่อดูบิลเพิ่มเติม) </span> ', className: 'text-center'},
                     {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
-                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
-             
+                    // {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมเงินสด </span> ', className: 'text-center'},
+                   {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
+                   {data: 'approver', title :'<span style="vertical-align: middle;">ผู้รับเงิน </span> ', className: 'text-center'},
+                   {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},
+                   {data: 'detail', title :'<span style="vertical-align: middle;">หมายเหตุ </span> ', className: 'text-center'},
+                   {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
+                            var show = '<a style="'+d+'" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' + d + '" > ยกเลิก </a>';
+                        return show;
+                    }},
                 ],
+
                 rowCallback: function(nRow, aData, dataIndex){
 
                   $("#sum_total_price").val(aData['sum_total_price']);
@@ -573,51 +590,51 @@
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
         
-$.fn.dataTable.ext.errMode = 'throw';
-        var oTable0001;
+// $.fn.dataTable.ext.errMode = 'throw';
+//         var oTable0001;
 
-        var idsss = "{{$sRow->id}}"; //alert(id);
+//         var idsss = "{{$sRow->id}}"; //alert(id);
 
-        $(function() {
-            oTable0001 = $('#data-table-0001_ai').DataTable({
-             "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                scroller: true,
-                ordering: false,
-                "info":   false,
-                "paging": false,
-                destroy:true,
+//         $(function() {
+//             oTable0001 = $('#data-table-0001_ai').DataTable({
+//              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+//                 processing: true,
+//                 serverSide: true,
+//                 scroller: true,
+//                 ordering: false,
+//                 "info":   false,
+//                 "paging": false,
+//                 destroy:true,
 
-                 ajax: {
-                            url: '{{ route('backend.check_money_daily.datatable_ai') }}',
-                            method: "POST",
-                            data:{ _token: '{{csrf_token()}}',
-                            id:idsss,
-                          },
-                        },
+//                  ajax: {
+//                             url: '{{ route('backend.check_money_daily.datatable_ai') }}',
+//                             method: "POST",
+//                             data:{ _token: '{{csrf_token()}}',
+//                             id:idsss,
+//                           },
+//                         },
 
-                columns: [
-                    {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
-                    {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
-                    {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ </span> ', className: 'text-center'},
-                    {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
-                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+//                 columns: [
+//                     {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
+//                     {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
+//                     {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ </span> ', className: 'text-center'},
+//                     {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
+//                     {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
              
-                ],
-                rowCallback: function(nRow, aData, dataIndex){
+//                 ],
+//                 rowCallback: function(nRow, aData, dataIndex){
 
-                  $("#sum_total_price_ai").val(aData['sum_total_price']);
+//                   $("#sum_total_price_ai").val(aData['sum_total_price']);
 
-                    let str = $("#sum_total_price_ai").val();
-                    let newStr = str.replace(',','');
-                    let v2 = parseFloat(newStr); 
-                    $(".sum_total_price2_ai").val(v2);
+//                     let str = $("#sum_total_price_ai").val();
+//                     let newStr = str.replace(',','');
+//                     let v2 = parseFloat(newStr); 
+//                     $(".sum_total_price2_ai").val(v2);
   
-                }
-            });
+//                 }
+//             });
        
-        });
+//         });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
 /*
@@ -760,12 +777,12 @@ $.fn.dataTable.ext.errMode = 'throw';
                     let newStr = str.replace(',','');
                     let v2 = parseFloat(newStr); 
 
-                    let str_ai = $("#sum_total_price_ai").val();
-                      if (str_ai == undefined){
-                        str_ai = 0;
-                      }
-                      let newStr_ai = str_ai.replace(',','');
-                      let v2_ai = parseFloat(newStr_ai); 
+                    // let str_ai = $("#sum_total_price_ai").val();
+                    //   if (str_ai == undefined){
+                    //     str_ai = 0;
+                    //   }
+                    //   let newStr_ai = str_ai.replace(',','');
+                    //   let v2_ai = parseFloat(newStr_ai); 
 
 
                     // alert(v1+":"+v2);
@@ -818,12 +835,12 @@ $.fn.dataTable.ext.errMode = 'throw';
             let newStr = str.replace(',','');
             let v2 = parseFloat(newStr); 
 
-            let str_ai = $("#sum_total_price_ai").val();
-            if (str_ai == undefined){
-              str_ai = 0;
-            }
-            let newStr_ai = str_ai.replace(',','');
-            let v2_ai = parseFloat(newStr_ai); 
+            // let str_ai = $("#sum_total_price_ai").val();
+            // if (str_ai == undefined){
+            //   str_ai = 0;
+            // }
+            // let newStr_ai = str_ai.replace(',','');
+            // let v2_ai = parseFloat(newStr_ai); 
 
             // alert(v1+":"+v2);
             if(v1!=v2){
