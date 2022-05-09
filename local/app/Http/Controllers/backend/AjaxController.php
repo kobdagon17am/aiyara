@@ -4373,7 +4373,12 @@ class AjaxController extends Controller
             // }else{
 
                 // วุฒิเพิ่ม ครั้งที่ส่งด้วย จาก 1
-                $time_sent = $r1[0]->time_sent + 1 ;
+                if($r1){
+                    $time_sent = $r1[0]->time_sent + 1 ;
+                }else{
+                    $time_sent = 1;
+                }
+               
 
                   $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id = DB::getPdo()->lastInsertId();
@@ -4408,7 +4413,14 @@ class AjaxController extends Controller
             //       // return $id;
 
             // }else{
-                  $time_sent = $r1[0]->time_sent + 1 ;
+
+                if($r1){
+                    $time_sent = $r1[0]->time_sent + 1 ;
+                }else{
+                    $time_sent = 1;
+                }
+
+                
                   $r2 = DB::select(" INSERT INTO db_sent_money_daily_ai(time_sent,sender_id,add_ai_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id_ai = DB::getPdo()->lastInsertId();
 

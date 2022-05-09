@@ -330,8 +330,8 @@ return [
 
 //frontend 
 //profile page
-'remaining' : 'Remaining',
-'totalscore' : 'Total Score'
+'remaining' => 'Remaining',
+'totalscore' => 'Total Score'
 ];
 
 

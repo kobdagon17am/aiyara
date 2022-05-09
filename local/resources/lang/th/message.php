@@ -332,7 +332,7 @@ return [
 
 //frontend 
 //profile page
-'remaining' : 'คงเหลือ',
-'totalscore' : 'คะแนนสะสม'
+'remaining' => 'คงเหลือ',
+'totalscore' => 'คะแนนสะสม'
 ];
 

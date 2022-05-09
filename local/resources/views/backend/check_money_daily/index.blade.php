@@ -320,11 +320,14 @@
                            data:{ _token: '{{csrf_token()}}', business_location:1},
                       },
                 columns: [
-                    {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    // {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    {data: 'created_date', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
                     {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
                     {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
                     {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
-                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
+                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ', className: 'text-right'},
+                    {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ', className: 'text-right'},
+                    {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน</span> ', className: 'text-right'},
                   
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
@@ -593,11 +596,11 @@ $(function() {
                       $("#spinner_frame").hide();
                        return false;
                     }
-                   if(branch_id_fk==''){
-                      $("#branch_id_fk").select2('open');
-                      $("#spinner_frame").hide();
-                       return false;
-                    }
+                  //  if(branch_id_fk==''){
+                  //     $("#branch_id_fk").select2('open');
+                  //     $("#spinner_frame").hide();
+                  //      return false;
+                  //   }
 
                   // if(startDate==''){
                   //     $("#startDate").focus();
@@ -648,19 +651,21 @@ $(function() {
                                             },
                                           },
                                           columns: [
-                            {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
-                            {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
-                            {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ (คลิกเพื่อดูบิลเพิ่มเติม) </span> ', className: 'text-center'},
-                            {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
-                            {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
-                          {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
-                          {data: 'approver', title :'<span style="vertical-align: middle;">ผู้รับเงิน </span> ', className: 'text-center'},
-                          {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},
-                          {data: 'detail', title :'<span style="vertical-align: middle;">หมายเหตุ </span> ', className: 'text-center'},
-                          {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
-                                return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                            }},
-                        ],
+                    {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
+                    {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ (คลิกเพื่อดูบิลเพิ่มเติม) </span> ', className: 'text-center'},
+                    {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
+                    // {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมเงินสด </span> ', className: 'text-center'},
+                   {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
+                   {data: 'approver', title :'<span style="vertical-align: middle;">ผู้รับเงิน </span> ', className: 'text-center'},
+                   {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},
+                   {data: 'detail', title :'<span style="vertical-align: middle;">หมายเหตุ </span> ', className: 'text-center'},
+                   {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
+                            var show = '<a style="'+d+'" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' + d + '" > ยกเลิก </a>';
+                        return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '+show;
+                    }},
+                ],
                                      rowCallback: function(nRow, aData, dataIndex){
                                         $(".myloading").hide();
                                     }
@@ -695,27 +700,30 @@ $(function() {
                                               business_location:1,
                                             },
                                         },
-                                  columns: [
-                                      {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
-                                      {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
-                                      {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
-                                      {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
-                                      {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
-                                    
-                                  ],
-                                  rowCallback: function(nRow, aData, dataIndex){
+                                        columns: [
+                    // {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    {data: 'created_date', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
+                    {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
+                    {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
+                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ', className: 'text-right'},
+                    {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ', className: 'text-right'},
+                    {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน</span> ', className: 'text-right'},
+                  
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
 
-                                    if(aData['remark']==2){
-                                      for (var i = 0; i < 3; i++) {
-                                            $('td:eq( '+i+')', nRow).html("");
-                                      }
-                                      if(aData['total_money']){
-                                        $('td:eq(3)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </span>');
-                                        $('td:eq(4)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;">'+aData['total_money']+'</span>');
-                                      }
-                                    }
+                              if(aData['remark']==2){
+                                for (var i = 0; i < 3; i++) {
+                                      $('td:eq( '+i+')', nRow).html("");
+                                }
+                                if(aData['total_money']){
+                                  $('td:eq(3)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </span>');
+                                  $('td:eq(4)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;">'+aData['total_money']+'</span>');
+                                }
+                              }
 
-                                  }
+                              }
                               });
                          
                           });
@@ -745,27 +753,27 @@ $(function() {
                                                business_location:3,
                                             },
                                         },
-                                  columns: [
-                                      {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
-                                      {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
-                                      {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
-                                      {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
-                                      {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
-                                    
-                                  ],
-                                  rowCallback: function(nRow, aData, dataIndex){
+                                        columns: [
+                    {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
+                    {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
+                    {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
+                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
+                  
+                ],
+                rowCallback: function(nRow, aData, dataIndex){
 
-                                    if(aData['remark']==2){
-                                      for (var i = 0; i < 3; i++) {
-                                            $('td:eq( '+i+')', nRow).html("");
-                                      }
-                                      if(aData['total_money']){
-                                        $('td:eq(3)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </span>');
-                                        $('td:eq(4)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;">'+aData['total_money']+'</span>');
-                                      }
-                                    }
+                        if(aData['remark']==2){
+                          for (var i = 0; i < 3; i++) {
+                                $('td:eq( '+i+')', nRow).html("");
+                          }
+                          if(aData['total_money']){
+                            $('td:eq(3)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;"> รวมทั้งสิ้น </span>');
+                            $('td:eq(4)', nRow).html('<span class="text-right" style="color:black;font-size:16px;font-weight:bold;">'+aData['total_money']+'</span>');
+                          }
+                        }
 
-                                  }
+                        }
                               });
                          
                           });
