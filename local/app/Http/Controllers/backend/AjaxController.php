@@ -3835,7 +3835,7 @@ class AjaxController extends Controller
 
                     $qr = "";
                     foreach($qrs as $q){
-                        $qr .= $q->qr_code."<br>";
+                        $qr .= "QR : ".$q->qr_code."<br>";
                     }
                     
                     return response()->json($qr);
