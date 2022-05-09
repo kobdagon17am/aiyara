@@ -199,9 +199,11 @@ class FrontstoreController extends Controller
     $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
     // dd($r_invoice_code);
 
+      $sBusiness_location = \App\Models\Backend\Business_location::get();
 
     return View('backend.frontstore.index')->with(
       array(
+        'sBusiness_location' => $sBusiness_location,
         'sUser' => $sUser,
         'sApproveStatus' => $sApproveStatus,
         'sPurchase_type' => $sPurchase_type,
@@ -2433,6 +2435,15 @@ class FrontstoreController extends Controller
       $viewcondition_02 = '';
     }
 
+    if (!empty($req->business_location_id_fk)) {
+      $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $req->business_location_id_fk . " ";
+      $business_location_id_fk_ai = " AND db_add_ai_cash.business_location_id_fk = " . $req->business_location_id_fk . " ";
+    }else{
+      $business_location_id_fk = " AND db_orders.business_location_id_fk = '" . (\Auth::user()->business_location_id_fk) . "' ";
+      $business_location_id_fk_ai = " AND db_add_ai_cash.business_location_id_fk = '" . (\Auth::user()->business_location_id_fk) . "' ";
+    }
+
+
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     // วุฒิเปลี่ยน db_orders.credit_price เป็น db_orders.sum_credit_price
@@ -2480,6 +2491,7 @@ class FrontstoreController extends Controller
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+                $business_location_id_fk
 
                 GROUP BY action_user
         ");
@@ -2586,6 +2598,7 @@ class FrontstoreController extends Controller
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+                $business_location_id_fk
 
         ");
 
@@ -2682,6 +2695,7 @@ class FrontstoreController extends Controller
               $status_sent_money_02
               $approve_status_02
               $viewcondition_02
+              $business_location_id_fk_ai
 
               GROUP BY action_user
 
@@ -3070,6 +3084,13 @@ class FrontstoreController extends Controller
       $viewcondition_02 = '';
     }
 
+    if (!empty($req->business_location_id_fk)) {
+      $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $req->business_location_id_fk . " ";
+    }else{
+      $business_location_id_fk = " AND db_orders.business_location_id_fk = '" . (\Auth::user()->business_location_id_fk) . "' ";
+    }
+
+
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // wut edit
     // SUM(
@@ -3110,6 +3131,7 @@ class FrontstoreController extends Controller
                     $status_sent_money
                     $approve_status
                     $viewcondition_01
+                    $business_location_id_fk
                     ");
 
     $cnt_01 = $d1[0]->cnt;
@@ -3181,6 +3203,7 @@ $endDate1
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+                $business_location_id_fk
 ");
 
     $cnt_02 = $d3[0]->cnt;
@@ -3254,6 +3277,7 @@ $endDate1
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+                $business_location_id_fk
 
 ");
 
@@ -3326,6 +3350,7 @@ $endDate1
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+                $business_location_id_fk
 
 ");
 
@@ -3397,6 +3422,7 @@ $endDate1
                 $status_sent_money
                 $approve_status
                 $viewcondition_01
+                $business_location_id_fk
 
 ");
 
@@ -3513,7 +3539,6 @@ $endDate1
     }
 
     if ($sPermission == 1) {
-
       $action_user_01 = "";
       $action_user_011 = "";
       // $action_user_011 =  " AND db_orders.branch_id_fk = '".(\Auth::user()->branch_id_fk)."' " ;
@@ -3525,12 +3550,14 @@ $endDate1
     if(@$role_check->acc_status==1){
       $action_user_01 = "";
       $action_user_011 = "";
+      // $action_user_011 = " AND db_orders.branch_id_fk = '" . (\Auth::user()->branch_id_fk) . "' ";
     }
 
     // วุฒิเพิ่มมา
     if (\Auth::user()->position_level == '3' || \Auth::user()->position_level == '4') {
       $action_user_01 = "";
       $action_user_011 = "";
+      // $action_user_011 = " AND db_orders.branch_id_fk = '" . (\Auth::user()->branch_id_fk) . "' ";
     }
 
     if (!empty($req->startDate)) {
@@ -3547,6 +3574,12 @@ $endDate1
     } else {
       $endDate = "";
       $endDate2 = "";
+    }
+   
+    if (!empty($req->business_location_id_fk)) {
+      $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $req->business_location_id_fk . " ";
+    }else{
+      $business_location_id_fk = " AND db_orders.business_location_id_fk = '" . (\Auth::user()->business_location_id_fk) . "' ";
     }
 
     // $startDate = "";
@@ -3656,9 +3689,8 @@ $endDate1
 
     // $action_user_02 บรรทัด ต่อจากinvoice_code
     $sTable = DB::select("
-
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
-                db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,
+                db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
                 status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,
                 db_orders.shipping_free
@@ -3677,10 +3709,10 @@ $endDate1
                 $approve_status
                 $viewcondition_01
                 $action_user_02
+                $business_location_id_fk
                 ORDER BY created_at DESC
 
               ");
-
 
     /*
 SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user  FROM db_orders  Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id  WHERE 1
