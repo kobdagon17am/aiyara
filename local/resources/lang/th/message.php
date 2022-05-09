@@ -332,7 +332,42 @@ return [
 
 //frontend 
 //profile page
-'remaining' => 'คงเหลือ',
-'totalscore' => 'คะแนนสะสม'
+'remaining' : 'คงเหลือ',
+'totalscore' : 'คะแนนสะสม',
+'position' : 'ตำแหน่ง',
+'package' : 'แพ็คเกจ',
+'information' : 'ข้อมูลพื้นฐาน',
+'memberid' : 'รหัสสมาชิก',
+'namesurname' : 'ชื่อ-นามสกุล',
+'birthdate' : 'วันเดือนปีเกิด',
+'idcardnumber' : 'หมายเลขบัตรประชาชน',
+'telephone' : 'หมายเลขโทรศัพท์',
+'country' : 'ประเทศ',
+'email': 'อีเมลล์',
+'bankingaccount' : 'บัญชีธนาคาร',
+'bank' : 'ธนาคาร',
+'branch' : 'สาขา',
+'accountname' : 'ชื่อบัญชี',
+'accountno' : 'เลขบัญชี',
+'accounttype' : 'ชนิดบัญชี',
+'address' : 'ที่อยู่สำหรับการจัดส่งเอกสาร / สินค้า'
+'no' : 'เลขที่',
+'building' : 'อาคาร',
+'villageno' : 'หมู่',
+'lane' : 'ซอย',
+'road' : 'ถนน',
+'sub-district/sub-area' : 'แขวง/ตำบล',
+'district/area' : 'เขต/อำเภอ',
+'province' : 'จังหวัด',
+'zipcode' : 'รหัสไปรษณีย์',
+'benefitinheritance' : 'การสืบทอดผลประโยชน์',
+'successor' : 'ผู้สืบทอดผลประโยชน์',
+'relationship' : 'ความสัมพันธ์',
+'couponcode' : 'โค้ดคูปอง',
+'notused':'ใช้งานได้',
+'used' : 'ถูกใช้แล้ว',
+'expirydate' : 'หมดอายุ',
+'all' : 'ทั้งหมด',
+'coupondetail' : '*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม Ai-Stockist'
 ];
 

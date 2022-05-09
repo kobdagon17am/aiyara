@@ -330,8 +330,43 @@ return [
 
 //frontend 
 //profile page
-'remaining' => 'Remaining',
-'totalscore' => 'Total Score'
+'remaining' : 'Remaining',
+'totalscore' : 'Total Score',
+'position' : 'Position',
+'package' : 'Package',
+'information' : 'Information',
+'memberid' : 'Member ID',
+'namesurname' : 'Name',
+'birthdate' : 'Birth Date',
+'idcardnumber' : 'ID card number',
+'telephone' : 'Tel.',
+'country' : 'Country',
+'email': 'E-mail',
+'bankingaccount' : 'Banking Account',
+'bank' : 'Bank',
+'branch' : 'Branch',
+'accountname' : 'Account Name',
+'accountno' : 'Account No.',
+'accounttype' : 'Account Type',
+'address' : 'Address',
+'no' : 'No.',
+'building' : 'Building',
+'villageno' : 'Village No.',
+'lane' : 'Lane',
+'road' : 'Road',
+'sub-district/sub-area' : 'Sub-district/Sub-area',
+'district/area' : 'District/Area',
+'province' : 'Province',
+'zipcode' : 'Zip Code',
+'benefitinheritance' : 'Benefit Inheritance',
+'successor' : 'Successor',
+'relationship' : 'Relationship',
+'couponcode' : 'Coupon Code',
+'notused':'Not Used',
+'used' : 'Used',
+'expirydate' : 'Expiry Date',
+'all' : 'All',
+'coupondetail' : "*You can send pro to the other per 1 time / you can't use this pro or another pro and add Ai-Stockist"
 ];
 
 
