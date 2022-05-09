@@ -235,8 +235,8 @@
                                                         @else
                                                         <input class="form-control" type="text" id="total_price_sum" value="{{@$price}}" readonly >
                                                         @endif
-
-
+                                                        <br>
+                                                        {!!$p_bill!!}
                                                         </div>
                                                     </div>
                                                 </div>

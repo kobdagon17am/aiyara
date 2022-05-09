@@ -101,6 +101,27 @@
         <div class="divTable">
           <div class="divTableBody">
             <div class="divTableRow">
+              
+
+              <div class="divTH">
+                <label for="" >Business Location : </label>
+              </div>
+              <div class="divTableCell" style="width: 15%">
+                <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " >
+                  <option value="">Business Location</option>
+                   @if(@$sBusiness_location)
+                  @foreach(@$sBusiness_location AS $r)
+                  <option value="{{$r->id}}">{{$r->txt_desc}}</option>
+                  @endforeach
+                  @endif
+                </select>
+              </div>
+              <div class="divTableCell">
+                <button type="button" class="btn btn-primary btnSearchSub " data-attr="business_location_id_fk" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+              </div>
+            </div>
+
+              <div class="divTableRow">
               <div class="divTH">
                 <label for="startDate" >{{ __('message.create_date') }} : </label>
               </div>
@@ -936,7 +957,7 @@ $(document).ready(function() {
                   var action_user = $('#action_user').val();
                   var status_sent_money = $('#status_sent_money').val();
                   var approve_status = $('#approve_status').val();
-
+                  var business_location_id_fk = $('#business_location_id_fk').val();
 
                   var viewcondition = $(this).data('id');
                   // // console.log(viewcondition);
@@ -984,6 +1005,7 @@ $(document).ready(function() {
                                                             status_sent_money:status_sent_money,
                                                             approve_status:approve_status,
                                                             viewcondition:viewcondition,
+                                                            business_location_id_fk:business_location_id_fk,
                                                           },
                                                         method: 'POST',
                                                       },
@@ -1217,6 +1239,7 @@ $(document).ready(function() {
                                             status_sent_money:status_sent_money,
                                             approve_status:approve_status,
                                             viewcondition:viewcondition,
+                                            business_location_id_fk:business_location_id_fk,
                                           },
                                           success:function(data)
                                           {
@@ -1241,6 +1264,7 @@ $(document).ready(function() {
                                             status_sent_money:status_sent_money,
                                             approve_status:approve_status,
                                             viewcondition:viewcondition,
+                                            business_location_id_fk:business_location_id_fk,
                                           },
                                           success:function(data)
                                           {
@@ -1312,6 +1336,7 @@ $(document).ready(function() {
                   var action_user = $('#action_user').val();
                   var status_sent_money = $('#status_sent_money').val();
                   var approve_status = $('#approve_status').val();
+                  var business_location_id_fk = $('#business_location_id_fk').val();
 
                   console.log(startDate+" : "+endDate);
                   console.log(purchase_type_id_fk);
@@ -1344,6 +1369,7 @@ $(document).ready(function() {
           		                        data :{
           		                              startDate:startDate,
           		                              endDate:endDate,
+                                            business_location_id_fk:business_location_id_fk,
           		                              purchase_type_id_fk:purchase_type_id_fk,
           		                              customer_username:customer_username,
           		                              customer_name:customer_name,
@@ -1583,6 +1609,7 @@ $(document).ready(function() {
                               action_user:action_user,
                               status_sent_money:status_sent_money,
                               approve_status:approve_status,
+                              business_location_id_fk:business_location_id_fk,
                             },
                             success:function(data)
                             {
@@ -1606,6 +1633,7 @@ $(document).ready(function() {
                               action_user:action_user,
                               status_sent_money:status_sent_money,
                               approve_status:approve_status,
+                              business_location_id_fk:business_location_id_fk,
                             },
                             success:function(data)
                             {

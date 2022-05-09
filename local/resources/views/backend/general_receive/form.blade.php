@@ -244,7 +244,7 @@
               </div>
 
               <div class="form-group row">
-                <label for="lot_expired_date" class="col-md-3 col-form-label">วันหมดอายุ : * </label>
+                <label for="lot_expired_date" class="col-md-3 col-form-label">วันหมดอายุ : * <br>(หากมีแค่เดือนกับปี ให้ใส่วันที่ 30 หรือ 31 ของเดือน)</label>
                 <div class="col-md-3">
                   @IF(!empty(@$sRow->lot_expired_date))
                   <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date"

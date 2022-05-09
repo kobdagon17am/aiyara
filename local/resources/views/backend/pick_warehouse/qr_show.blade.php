@@ -106,7 +106,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            รายการ QR CODE 
+            รายการ QR CODE  <a href="javascript:;"  class="qr_scan_delete_all" oid="{{@$oid}}" pid="{{@$pid}}" style="color:red;"> <u> Remove All </u> </a>
             {{-- สินค้า {{$product->product_code}} : {{$product->product_name}} --}}
             <br><br>
             @foreach($qrs as $qr)
@@ -236,6 +236,43 @@
                         $(".myloading").hide();
                     }
                 });
+            });
+
+            $(document).on('click', '.qr_scan_delete_all', function(e) {
+
+              if (confirm("ยืนยันการลบทั้งหมด") == true) {
+
+                var oid = $(this).attr('oid');
+            var pid = $(this).attr('pid');
+            // alert(v+":"+invoice_code+":"+product_id_fk);
+            if($(this).val()!=''){
+            $(this).css({ 'background-color' : '', 'opacity' : '' });
+            }
+
+            $(".myloading").show();
+
+            $.ajax({
+                type:'POST',
+                url: " {{ url('backend/ajaxScanQrcodeProductPackingDeleteAll') }} ",
+                data:{ _token: '{{csrf_token()}}',
+                 oid:oid,
+                 pid:pid
+              },
+                    success:function(data){
+                        // console.log(data);
+                        // $.each(data,function(key,value){
+                        // });
+                        location.reload();
+                        $(".myloading").hide();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $(".myloading").hide();
+                    }
+                });
+                } else {
+                  return false;
+                }
+
             });
 </script>
 

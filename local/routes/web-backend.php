@@ -390,6 +390,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxScanQrcodeProductPacking', 'AjaxController@ajaxScanQrcodeProductPacking');
     Route::post('ajaxScanQrcodeProductPackingRemark', 'AjaxController@ajaxScanQrcodeProductPackingRemark');
     Route::post('ajaxScanQrcodeProductPackingDelete', 'AjaxController@ajaxScanQrcodeProductPackingDelete');
+    Route::post('ajaxScanQrcodeProductPackingDeleteAll', 'AjaxController@ajaxScanQrcodeProductPackingDeleteAll');
     Route::post('ajaxDeleteQrcodeProductPacking', 'AjaxController@ajaxDeleteQrcodeProductPacking');
 
     Route::post('ajaxProductPackingSize', 'AjaxController@ajaxProductPackingSize');

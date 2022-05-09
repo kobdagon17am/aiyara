@@ -2371,7 +2371,8 @@ ORDER BY db_pick_pack_packing.id
         // ->first();
       return view('backend.pick_warehouse.qr_show',[
         'qrs' => $qrs,
-        // 'product' => $product,
+        'oid' => $oid,
+        'pid' => $pid,
       ]);
     }
     // db_pick_pack_packing_code
