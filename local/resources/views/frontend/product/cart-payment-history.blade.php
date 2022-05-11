@@ -350,9 +350,17 @@
                                 <td> {{ number_format($order->tax, 2) }}</td>
                             </tr>
                             <tr>
-                                <th>รวม : </th>
-                                <td> {{ number_format($order->sum_price, 2) }}</td>
+                              <th>รวมค่าสินค้า : </th>
+                              <td> {{ number_format($order->sum_price, 2) }}</td>
                             </tr>
+
+                          @if($order->fee_amt)
+                            <tr>
+                              <th>ค่าบริการบัตรเครดิต : </th>
+                              <td> {{ number_format($order->fee_amt, 2) }}</td>
+                           </tr>
+                          @endif
+
                             @if ($order->purchase_type_id_fk != 6 and $order->purchase_type_id_fk != 7)
 
                                 <tr>

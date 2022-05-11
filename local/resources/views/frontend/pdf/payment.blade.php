@@ -246,12 +246,20 @@
          </tr>
          <tr>
              <th style="text-align: right;font-size: 16px"> VAT({{ $order->vat }}%) : </th>
-             <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format(@$price_vat,2) }}</th>
+             <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format($order->tax, 2) }}</th>
          </tr>
+
          <tr>
-             <th style="text-align: right;font-size: 16px">รวม : </th>
-             <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format($order->sum_price,2) }}</th>
-         </tr>
+          <th style="text-align: right;font-size: 16px">รวมค่าสินค้า : </th>
+          <th style="text-align: left;padding-left:10px;font-size: 16px"> {{ number_format($order->sum_price,2) }}</th>
+        </tr>
+
+        @if($order->fee_amt)
+        <tr>
+          <th>ค่าบริการบัตรเครดิต : </th>
+          <td  style="text-align: left;padding-left:10px;font-size: 16px;"> {{ number_format($order->fee_amt, 2) }}</td>
+       </tr>
+      @endif
          @if($order->purchase_type_id_fk != 6 and $order->purchase_type_id_fk != 7)
 
          <tr>
