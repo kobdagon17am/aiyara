@@ -25,7 +25,6 @@ class Transfer_branch_get_productsController extends Controller
          // dd($request->all());
         if(isset($request->save_set_to_warehouse)){
             // dd($request->all());
-
         DB::select(" INSERT INTO `db_transfer_branch_get_products_receive`  (
                       `transfer_branch_get_id_fk`,
                       `transfer_branch_get_products`,
@@ -63,20 +62,24 @@ class Transfer_branch_get_productsController extends Controller
                     WHERE id=".$request->transfer_branch_get_products_id_fk." ;
                 ");
 
-              DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt=product_amt_receive; ");
+                // วุฒิเพิ่มมา
+                $db_transfer_branch_get_products = DB::table('db_transfer_branch_get_products')->where('id',$request->transfer_branch_get_products_id_fk)->first();
+                $amt_balance = 0;
+                $amt_balance += $db_transfer_branch_get_products->product_amt_receive+$db_transfer_branch_get_products->defective;
 
-              DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt<product_amt_receive ; ");
-
+              // DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt=product_amt_receive; ");
+              // DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt<product_amt_receive ; ");
+              DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt=".$amt_balance."; ");
+              DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt<".$amt_balance." ; ");
 
               DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt_receive`='0' WHERE `product_amt_receive` is null ; ");
               DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt`='0' WHERE `product_amt` is null ; ");
 
               $ch1 = DB::select("SELECT sum(product_amt) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
-
-              $ch2 = DB::select("SELECT sum(product_amt_receive) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
-
-
-              if($ch1[0]->r == $ch2[0]->r){
+          //  วุฒิเพิ่ม + defective
+              $ch2 = DB::select("SELECT sum(product_amt_receive + defective) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
+                     //  วุฒิเพิ่ม || $ch1[0]->r < $ch2[0]->r
+              if($ch1[0]->r == $ch2[0]->r || $ch1[0]->r < $ch2[0]->r){
               
                   DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=4 where id=".$request->transfer_branch_get_id_fk." ");
 
@@ -89,13 +92,9 @@ class Transfer_branch_get_productsController extends Controller
       
               }
 
-
-
               return redirect()->to(url("backend/transfer_branch_get/".$request->transfer_branch_get_id_fk."/edit"));
 
         }elseif(isset($request->save_set_to_warehouse_fromnoget)){
-
-          // dd($request->all());
 
                  DB::select(" INSERT INTO `db_transfer_branch_get_products_receive`  (
                       `transfer_branch_get_id_fk`,
@@ -133,20 +132,16 @@ class Transfer_branch_get_productsController extends Controller
                   UPDATE db_transfer_branch_get_products SET product_amt_receive=(SELECT sum(amt_get) as sum_amt FROM `db_transfer_branch_get_products_receive` WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." AND transfer_branch_get_products=".$request->transfer_branch_get_products_id_fk." AND product_id_fk=".$request->product_id_fk.")
                   WHERE id=".$request->transfer_branch_get_products_id_fk." ;
               ");
-
                 // DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt=product_amt_receive; ");
-
                 // DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt<product_amt_receive ; ");
-
               DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt_receive`='0' WHERE `product_amt_receive` is null ; ");
               DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt`='0' WHERE `product_amt` is null ; ");
 
-              $ch1 = DB::select("SELECT sum(product_amt) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
-
-              $ch2 = DB::select("SELECT sum(product_amt_receive) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
-
-
-              if($ch1[0]->r == $ch2[0]->r){
+               $ch1 = DB::select("SELECT sum(product_amt) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
+               //  วุฒิเพิ่ม + defective
+                   $ch2 = DB::select("SELECT sum(product_amt_receive + defective) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
+                         //  วุฒิเพิ่ม || $ch1[0]->r < $ch2[0]->r
+                   if($ch1[0]->r == $ch2[0]->r || $ch1[0]->r < $ch2[0]->r){
               
               // รออนุมัติก่อน
               // $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
@@ -167,6 +162,47 @@ class Transfer_branch_get_productsController extends Controller
 
         }else{
             return $this->form();
+        }
+      // 
+    }
+
+    public function transfer_branch_get_products_defective(Request $request)
+    {
+        //  dd($request->all());
+        if(isset($request->save_set_to_warehouse)){
+            // db_transfer_branch_get_products
+            $db_transfer_branch_get_products = DB::table('db_transfer_branch_get_products')->where('id',$request->transfer_branch_get_products_id_fk)->first();
+               DB::select("
+                    UPDATE db_transfer_branch_get_products SET defective=".($request->amt_get+$db_transfer_branch_get_products->defective)." , defective_remark='".$request->remark_repair."'
+                    WHERE id=".$request->transfer_branch_get_products_id_fk." ;
+                ");
+              $db_transfer_branch_get_products = DB::table('db_transfer_branch_get_products')->where('id',$request->transfer_branch_get_products_id_fk)->first();
+              $amt_balance = 0;
+              $amt_balance += $db_transfer_branch_get_products->product_amt_receive+$db_transfer_branch_get_products->defective;
+     
+              DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt=".$amt_balance."; ");
+              DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt<".$amt_balance." ; ");
+              DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt_receive`='0' WHERE `product_amt_receive` is null ; ");
+              DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt`='0' WHERE `product_amt` is null ; ");
+
+              $ch1 = DB::select("SELECT sum(product_amt) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
+              $ch2 = DB::select("SELECT sum(product_amt_receive + defective) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
+
+
+              if($ch1[0]->r == $ch2[0]->r || $ch1[0]->r < $ch2[0]->r){
+              
+                  DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=4 where id=".$request->transfer_branch_get_id_fk." ");
+
+                  $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
+                 DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from=4 where tr_number='".$r[0]->tr_number."' ");
+              
+              }else{
+                      DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=3 where id=".$request->transfer_branch_get_id_fk." ");
+                 DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
+      
+              }
+              return redirect()->to(url("backend/transfer_branch_get/".$request->transfer_branch_get_id_fk."/edit"));
+
         }
       // 
     }

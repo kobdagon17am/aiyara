@@ -457,7 +457,95 @@
 
          <div class="row">
           <div class="col-md-12 text-center  "  >
-             <button type="submit" class="btn btn-primary" style="width: 10%;" >Save</button>
+             <button type="submit" class="btn btn-primary" style="width: 10%;" onclick="return confirm('ยืนยันการทำรายการ');">Save</button>
+             <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: 1%;">Close</button>
+          </div>
+        </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="product_repair" tabindex="-1" role="dialog" aria-labelledby="product_repairTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg " role="document" style="max-width: 800px !important;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="product_repairTitle"><b><i class="bx bx-play"></i>บันทึกสินค้าชำรุด </b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form action="{{ url('backend/transfer_branch_get_products_defective') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" name="save_set_to_warehouse" value="1" >
+            <input type="hidden" id="this_id2" name="id" >
+            <input type="hidden" id="transfer_branch_get_products_id_fk2" name="transfer_branch_get_products_id_fk" >
+            <input type="hidden" id="transfer_branch_get_id_fk2" name="transfer_branch_get_id_fk" value="{{@$sRow->id}}">
+            <input type="hidden" id="product_id_fk2" name="product_id_fk" >
+            {{ csrf_field() }}
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+               
+
+              <div class="row" >
+                <div class="col-md-12" style="font-size: 18px;" >
+                  <div class="form-group row">
+                    <label for="div_show_product" class="col-md-3 " style="vertical-align: top;"> สินค้า : </label>
+                    <div class="col-md-9">
+                      <div id="div_show_product2" style="vertical-align: top;color: black;"></div>
+
+                       <input type="hidden" class="form-control" id="lot_number2" name="lot_number" readonly >
+                       <input type="hidden" class="form-control" id="lot_expired_date2" name="lot_expired_date" readonly >
+                       <input type="hidden" class="form-control" id="product_unit_id_fk2" name="product_unit_id_fk" readonly >
+                       <input type="hidden" class="form-control" id="branch_id_fk_c2" name="branch_id_fk_c" readonly >
+                       <!-- บอกสถานะว่า มีการปฏิเสธการรับ จากฝั่งรับ  -->
+                       <!-- <input type="text"  id="tr_status_get" name="tr_status_get" readonly > -->
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr>
+
+               <div class="row" >
+                    <div class="col-md-5 " >
+                      <div class="form-group row">
+                        <label for="" class="col-md-5 col-form-label required_star_red "> จำนวนที่ชำรุด : </label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control  " name="amt_get" id="amt_get2" required >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 " >
+                      <div class="form-group row">
+                        <label for="" class="col-md-5 col-form-label">หมายเหตุ : </label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" id="remark_repair" name="remark_repair">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+<br>
+
+         <div class="row">
+          <div class="col-md-12 text-center  "  >
+             <button type="submit" class="btn btn-primary" style="width: 10%;" onclick="return confirm('ยืนยันการทำรายการ');">Save</button>
              <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: 1%;">Close</button>
           </div>
         </div>
@@ -561,9 +649,11 @@
                         {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
                         {data: 'product_amt', title :'จำนวนตามใบโอน', className: 'text-center'},
                         {data: 'product_amt_receive', title :'จำนวนที่รับมาแล้ว', className: 'text-center'},
+                        {data: 'defective', title :'จำนวนที่ชำรุด', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'get_status', title :'สถานะ', className: 'text-center'},
-                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                        {data: 'defective_remark', title :'หมายเหตุ', className: 'text-center'},
+                        {data: 'id', title :'Tools', className: 'text-center w180'}, 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
@@ -584,6 +674,7 @@
 
                           $('td:last-child', nRow).html(''
                             + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_name']+'" branch_id_this="'+aData['branch_id_this']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '
+                            + '<a href="#" class="btn btn-sm btn-danger btnSetToWarehouse_repair " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'" product_details="'+aData['product_details']+'" branch_name="'+aData['branch_name']+'" branch_id_this="'+aData['branch_id_this']+'" lot_number="'+aData['lot_number']+'" lot_expired_date="'+aData['lot_expired_date']+'" product_unit_id_fk="'+aData['product_unit_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> สินค้าชำรุด </a> '
                           ).addClass('input');
                         }
 
@@ -766,6 +857,75 @@
 
         });
 
+        $(document).on('click', '.btnSetToWarehouse_repair', function(event) {
+          event.preventDefault();
+              var id = $(this).data('id');
+              var product_name = $(this).attr('product_name');
+              var product_id_fk = $(this).attr('product_id_fk');
+              var transfer_branch_get_products_id_fk = $(this).data('id');
+              var product_details = $(this).attr('product_details');
+              var branch_name = $(this).attr('branch_name');
+              var branch_id_this = $(this).attr('branch_id_this');
+              var product_unit_id_fk = $(this).attr('product_unit_id_fk');
+              var lot_expired_date = $(this).attr('lot_expired_date');
+              var lot_number = $(this).attr('lot_number');
+              // console.log(product_id_fk);
+              // console.log(product_name);
+              // console.log(product_name);
+              // var branch_id_fk = $("#branch_id_fk").val();
+              $('#product_name2').val(product_name);
+              $('#product_id_fk2').val(product_id_fk);
+              $('#transfer_branch_get_products_id_fk2').val(transfer_branch_get_products_id_fk);
+              $('#this_id2').val(transfer_branch_get_products_id_fk);
+
+              $('#branch_id_fk_c2').val(branch_id_this);
+              $('#product_unit_id_fk2').val(product_unit_id_fk);
+              $('#lot_expired_date2').val(lot_expired_date);
+              $('#lot_number2').val(lot_number);
+
+
+              $('#div_show_product2').html(product_details);
+              $('#branch_name2').val(branch_name);
+            
+             setTimeout(function(){
+                 $('#amt_get2').focus();
+             }, 500);
+
+             if(branch_id_this != ''){
+               $.ajax({
+                     url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                    method: "post",
+                    data: {
+                      branch_id_fk:branch_id_this,
+                      "_token": "{{ csrf_token() }}", 
+                    },
+                    success:function(data)
+                    { 
+                     if(data == ''){
+                         alert('ไม่พบข้อมูลคลัง !!.');
+                     }else{
+                         var layout = '<option value="" selected>- เลือกคลัง -</option>';
+                         $.each(data,function(key,value){
+                          layout += '<option value='+value.id+'>'+value.w_name+'</option>';
+                         });
+                         $('#warehouse_id_fk_c2').html(layout);
+                         $('#zone_id_fk_c2').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+                         $('#shelf_id_fk_c2').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+                     }
+                    }
+                  })
+             }else{
+                $('#warehouse_id_fk_c2').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
+                $('#zone_id_fk_c2').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+                $('#shelf_id_fk_c2').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+             }
+
+            
+             $('#product_repair').modal('show');
+
+        });
+
+
 
        $('#warehouse_id_fk_c').change(function(){
           $('.myloading').show();
@@ -886,6 +1046,43 @@
              });
        
            });
+
+           $(document).on('change', '#amt_get2', function(event) {
+
+                $(".myloading").show();
+
+                var amt_get = $(this).val();
+                var transfer_branch_get_id_fk = $('#transfer_branch_get_id_fk2').val();
+                var product_id_fk = $('#product_id_fk2').val();
+                // console.log(amt_get);
+                // console.log(transfer_branch_get_id_fk);
+                // console.log(product_id_fk);
+                // return false;
+                $.ajax({
+                  url: " {{ url('backend/ajaxCheckAmt_get_transfer_branch_get_products') }} ", 
+                  method: "post",
+                  data: {
+                  amt_get:amt_get,
+                  transfer_branch_get_id_fk:transfer_branch_get_id_fk,
+                  product_id_fk:product_id_fk,
+                    "_token": "{{ csrf_token() }}", 
+                  },
+                success:function(data){
+                    console.log(data);
+                    if(data==1){
+                      alert("! กรอกข้อมูลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+                      $('#amt_get2').val('');
+                      $('#amt_get2').focus();
+                      $(".myloading").hide();
+                      return false;
+                    }else{
+                    $(".myloading").hide();
+                    }
+                  }
+
+                });
+
+                });
 
 
             $(document).on('click', '.cDelete', function(event) {

@@ -4840,10 +4840,11 @@ class AjaxController extends Controller
 
       if($request->ajax()){
 
-           $r1 = DB::select("  SELECT db_transfer_branch_get_products.*,product_amt-product_amt_receive as remain FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk='".$request->transfer_branch_get_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
-           // return $request->product_id_fk;
+           $r1 = DB::select("  SELECT db_transfer_branch_get_products.*,product_amt-product_amt_receive-defective as remain FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk='".$request->transfer_branch_get_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
+      
            if($r1){
                 if($r1[0]->remain > 0){
+                  
                     if($request->amt_get > $r1[0]->remain){
                         return 1;
                     }else{
