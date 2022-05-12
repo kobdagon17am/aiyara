@@ -88,7 +88,7 @@ class Transfer_branch_get_productsController extends Controller
               
               }else{
                       DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=3 where id=".$request->transfer_branch_get_id_fk." ");
-                 DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
+                //  DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
       
               }
 
@@ -154,7 +154,7 @@ class Transfer_branch_get_productsController extends Controller
                 $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
                 DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='5' where tr_number='".$r[0]->tr_number."' ");
 
-                DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
+                // DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
               }
 
 
@@ -190,15 +190,16 @@ class Transfer_branch_get_productsController extends Controller
 
 
               if($ch1[0]->r == $ch2[0]->r || $ch1[0]->r < $ch2[0]->r){
-              
+               // dd($request->transfer_branch_get_id_fk.' ok'.' '.$ch1[0]->r.' < '.$ch2[0]->r);
                   DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=4 where id=".$request->transfer_branch_get_id_fk." ");
 
                   $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
                  DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from=4 where tr_number='".$r[0]->tr_number."' ");
               
               }else{
-                      DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=3 where id=".$request->transfer_branch_get_id_fk." ");
-                 DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
+                // dd($request->transfer_branch_get_id_fk.' ok2'.' '.$ch1[0]->r.' < '.$ch2[0]->r);
+                 DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=3 where id=".$request->transfer_branch_get_id_fk." ");
+                //  DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
       
               }
               return redirect()->to(url("backend/transfer_branch_get/".$request->transfer_branch_get_id_fk."/edit"));
@@ -308,8 +309,10 @@ class Transfer_branch_get_productsController extends Controller
           return @$sP->product_unit;
       })
       ->addColumn('get_status', function($row) {
-        if($row->product_amt==$row->product_amt_receive) @$get_status=1;
-        if($row->product_amt>$row->product_amt_receive) @$get_status=2;
+        // วุฒิแก้
+        // if($row->product_amt==$row->product_amt_receive) @$get_status=1;
+        // if($row->product_amt>$row->product_amt_receive) @$get_status=2;
+        $get_status = $row->get_status;
         if(@$get_status==1){
           return '<font color=green>ได้รับสินค้าครบแล้ว</font>';
         }else if(@$get_status==2){
