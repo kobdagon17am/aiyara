@@ -9,7 +9,7 @@ const card_ids = {
     card_district: 'card_district',
 }
 
-const ids = { 
+const ids = {
     province: 'province',
     amphures: 'amphures',
     district: 'district',
@@ -43,10 +43,13 @@ $(`${card_amphures}, ${amphures}`).on('change', getDistricts)
 $(`${card_district}, ${district}`).on('change', getZipcode)
 $('#copy_card_address').on('change', copyCardAddress)
 
-checkIdIsMatch()
+checkIdIsMatch();
+getProvinces();
 
 function getProvinces() {
-    const businessLocation = $(this).val();
+    // const businessLocation = $(this).val();
+    const businessLocation = $('#business_location').val();
+
 
     // if (businessLocation == 3) {
     //     $(`${card_zipcode}, ${zipcode}`).parent().hide();
@@ -62,11 +65,11 @@ function getProvinces() {
             business_location: businessLocation,
             query: 'provinces',
         },
-        success: function (response) {
+        success: function(response) {
             $(`${card_province}, ${province}`).html(response);
             clearValue()
         },
-        error: function (error) {
+        error: function(error) {
             console.log(error);
         }
     })
@@ -75,7 +78,7 @@ function getProvinces() {
 function getAmphures() {
     const inputId = $(this).attr('id');
     const provinceId = $(this).val();
- 
+
     $.ajax({
         url: routeGetLocation,
         method: 'POST',
@@ -85,7 +88,7 @@ function getAmphures() {
             query: 'amphures',
             id: provinceId
         },
-        success: function (response) {
+        success: function(response) {
             if (card_ids.hasOwnProperty(inputId)) {
                 $(`${card_amphures}`).html(response);
             } else {
@@ -96,7 +99,7 @@ function getAmphures() {
                 }
             }
         },
-        error: function (error) {
+        error: function(error) {
             console.log(error);
         }
     })
@@ -105,7 +108,7 @@ function getAmphures() {
 function getDistricts() {
     const inputId = $(this).attr('id');
     const amphureId = $(this).val();
-   
+
     $.ajax({
         url: routeGetLocation,
         method: 'POST',
@@ -115,7 +118,7 @@ function getDistricts() {
             query: 'districts',
             id: amphureId
         },
-        success: function (response) {
+        success: function(response) {
             if (card_ids.hasOwnProperty(inputId)) {
                 $(`${card_district}`).html(response);
             } else {
@@ -126,7 +129,7 @@ function getDistricts() {
                 }
             }
         },
-        error: function (error) {
+        error: function(error) {
             console.log(error);
         }
     })
@@ -140,7 +143,7 @@ function getZipcode() {
 
     const inputId = $(this).attr('id');
     const districtId = $(this).val();
-    
+
     $.ajax({
         url: routeGetLocation,
         method: 'POST',
@@ -150,14 +153,14 @@ function getZipcode() {
             query: 'zip_code',
             id: districtId
         },
-        success: function (response) {
+        success: function(response) {
             if (card_ids.hasOwnProperty(inputId)) {
                 $(`${card_zipcode}`).val(response);
             } else {
                 $(`${zipcode}`).val(response);
             }
         },
-        error: function (error) {
+        error: function(error) {
             console.log(error);
         }
     })
@@ -193,7 +196,7 @@ function clearValue() {
 
 function checkIdIsMatch() {
 
-    $('.js-example-basic-single').each(function (idx, el) {
+    $('.js-example-basic-single').each(function(idx, el) {
         const attr = $(el).attr('id')
         if (typeof attr !== 'undefined') {
             if (!card_ids.hasOwnProperty(attr) && !ids.hasOwnProperty(attr)) {

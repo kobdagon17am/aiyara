@@ -38,12 +38,13 @@
 
         <div class="col-sm-3">
 					<label>เบอร์โทรศัพท์</label>
-					<input type="text" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}">
+          <input type="text" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_mobile }}">
+					{{-- <input type="" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}"> --}}
 				</div>
 
 				<div class="col-sm-3">
 					<label>อีเมลล์</label>
-					<input type="text" class="form-control" autocomplete="off" placeholder="อีเมลล์" id="email" name="email" value="{{ @$customer->email }}">
+					<input type="email" class="form-control" autocomplete="off" placeholder="อีเมลล์" id="email" name="email" value="{{ @$customer->email }}">
 				</div>
  			</div>
 
@@ -161,7 +162,7 @@
  										<span class="input-group-addon">
  											<i class="fa fa-lock"></i>
  										</span>
- 										<input type="password" name="password" class="form-control" autocomplete="off" placeholder="Password" required="">
+ 										<input type="password" name="password" class="form-control" autocomplete="off"  required="">
  									</div>
  								</div>
  								<div class="col-sm-2">
@@ -194,6 +195,13 @@
 <script  src="{{asset('frontend/assets/js/jquery.quicksearch.js')}}"></script>
 <!-- Custom js -->
 <script  src="{{asset('frontend/assets/pages/advance-elements/select2-custom.js')}}"></script>
+
+  <!-- Masking js -->
+  <script src="{{asset('frontend/assets/pages/form-masking/inputmask.js')}}"></script>
+  <script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
+  <script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
+  <script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
+
 <script type="text/javascript">
   $('#province').change(function() {
     var province = $(this).val();

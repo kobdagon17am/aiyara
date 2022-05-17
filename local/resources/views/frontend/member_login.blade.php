@@ -80,9 +80,9 @@
 												<span class="text-inverse">Remember me</span>
 											</label>
 										</div>
-										<div class="forgot-phone text-right f-right">
+										{{-- <div class="forgot-phone text-right f-right">
 											<a href="" class="text-right f-w-600 text-inverse"> Forgot Password?</a>
-										</div>
+										</div> --}}
 									</div>
 								</div>
 								<div class="row m-t-30">

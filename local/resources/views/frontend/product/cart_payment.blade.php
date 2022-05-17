@@ -342,8 +342,7 @@
                                                  </div>
                                                  <div class="col-md-6 col-sm-6 col-6">
                                                      <label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
-                                                     <input type="text" class="form-control form-control-bold"
-                                                         placeholder="เบอร์โทรศัพท์" name="tel_mobile"
+                                                     <input type="text" class="form-control form-control-bold us_telephone" data-mask="999-999-9999" name="tel_mobile"
                                                          value="{{ $address->tel_mobile }}">
                                                  </div>
                                              </div>
@@ -571,8 +570,7 @@
                                              </div>
                                              <div class="col-md-6 col-sm-6 col-6">
                                                  <label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
-                                                 <input type="text" class="form-control form-control-bold"
-                                                     placeholder="เบอร์โทรศัพท์" id="office_tel_mobile"
+                                                 <input type="text" class="form-control form-control-bold us_telephone" data-mask="999-999-9999" id="office_tel_mobile"
                                                      name="receive_tel_mobile" value="">
                                              </div>
                                          </div>
@@ -600,9 +598,8 @@
                                              <div class="col-md-6 col-sm-6 col-6">
                                                  <label>เบอร์โทรศัพท์ <b class="text-danger">*</b></label>
                                                  <input type="text"
-                                                     class="form-control form-control-bold sent_address_other"
-                                                     placeholder="เบอร์โทรศัพท์" name="other_tel_mobile"
-                                                     id="other_tel_mobile">
+                                                     class="form-control form-control-bold sent_address_other us_telephone" data-mask="999-999-9999" name="other_tel_mobile"
+                                                     id="other_tel_mobile" required>
                                              </div>
                                          </div>
                                          <div class="row m-t-5">
@@ -1036,6 +1033,12 @@
      <script src="{{ asset('frontend/assets/js/jquery.quicksearch.js') }}"></script>
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
+
+       <!-- Masking js -->
+    <script src="{{asset('frontend/assets/pages/form-masking/inputmask.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
 
 
      <script type="text/javascript">
@@ -1488,19 +1491,19 @@
                  if (other_name == '') {
                      Swal.fire({
                          icon: 'error',
-                         title: 'Name is Null',
+                         title: 'กรุณาใส่ชื่อผู้รับ',
                      })
 
                  } else if (other_tel_mobile == '') {
                      Swal.fire({
                          icon: 'error',
-                         title: 'Mobile is Null',
+                         title: 'กรุณาใส่เบอโทรศัพท์',
                      })
 
                  } else if (other_house_no == '') {
                      Swal.fire({
                          icon: 'error',
-                         title: 'House No. is Null',
+                         title: 'กรุณาใส่เบอร์โทรศัพท์',
                      })
 
                  } else if (other_house_name == '') {

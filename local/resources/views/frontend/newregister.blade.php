@@ -23,7 +23,7 @@
  @section('conten')
      <div class="card">
          <div class="card-header">
-             <h4>กรอกข้อมูลลงทะเบียนสมาชิกใหม่</h4>
+             <h4>@lang('message.register')</h4>
          </div>
 
          <div class="card-block">
@@ -73,7 +73,7 @@
                      </div>
                      <div class="col-sm-3">
                          <label><b> Business Location </b></label>
-                         <select name="business_location" class="form-control">
+                         <select name="business_location" id="business_location" class="form-control">
                              @foreach ($data['business_location'] as $business_location_value)
                                  <option value="{{ $business_location_value->id }}" @if ($business_location_value->id == $data['data']->business_location_id) selected="" @endif>
                                      {{ $business_location_value->txt_desc }}</option>
@@ -84,33 +84,31 @@
                  </div>
                  <div class="form-group row">
                      <div class="col-sm-2">
-                         <label>คำนำหน้าชื่อ </label>
+                         <label> @lang('message.name_prefix')  </label>
                          <select class="form-control" name="name_prefix">
-                             <option value="คุณ">คุณ</option>
-                             <option value="นาย">นาย</option>
-                             <option value="นาง">นาง</option>
-                             <option value="นางสาว">นางสาว</option>
+                             <option value="@lang('message.mr')">@lang('message.mr')</option>
+                             <option value="@lang('message.mrs')">@lang('message.mrs')</option>
+                             <option value="@lang('message.ms')">@lang('message.ms')</option>
                          </select>
-
                      </div>
 
                      <div class="col-sm-3">
-                         <label>ชื่อ <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="ชื่อ" name="name_first"
+                         <label>@lang('message.name_first') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.name_first')" name="name_first"
                              value="{{ old('name_first') }}" required="">
 
                      </div>
 
                      <div class="col-sm-3">
-                         <label>นามสกุล <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="นามสกุล" name="name_last"
+                         <label>@lang('message.name_last') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.name_last')" name="name_last"
                              value="{{ old('name_last') }}" required="">
                      </div>
 
 
                      <div class="col-sm-4">
-                         <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">* กรณีไม่มีชื่อให้ใส่(-)</font></label>
-                         <input type="text" class="form-control" placeholder="ชื่อที่ใช้ในธุรกิจ" name="name_business"
+                         <label>@lang('message.name_business') <font class="text-danger">@lang('message.name_business_a')</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.name_business') " name="name_business"
                              value="{{ old('name_business') }}" required="">
                      </div>
                  </div>
@@ -132,8 +130,8 @@
 
                      <div class="col-sm-3">
                          <label>เลขที่บัตรประชาชน (13 หลัก) <font class="text-danger">*</font></label>
-                         <input class="form-control" type="text" placeholder="เลขที่บัตรประชาชน" name="id_card"
-                             value="{{ old('id_card') }}" maxlength="13" minlength="13" required="">
+                         <input class="form-control card" data-mask="99999-99999-999" type="text" name="id_card"
+                             value="{{ old('id_card') }}" required="">
                      </div>
 
 
@@ -153,19 +151,19 @@
                  <div class="form-group row">
                      <div class="col-sm-3">
                          <label>โทรศัพท์มือถือ <b class="text-danger">*</b></label>
-                         <input type="text" class="form-control" placeholder="โทรศัพท์มือถือ" name="tel_mobile"
-                             value="{{ old('tel_mobile') }}"  maxlength="10" minlength="10" required="">
+                         <input type="text" class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" name="tel_mobile"
+                         value="{{ old('tel_mobile') }}" >
                      </div>
 
                      <div class="col-sm-3">
                          <label>โทรศัพท์บ้าน</label>
-                         <input type="text" class="form-control" placeholder="โทรศัพท์บ้าน" name="tel_home"
-                             value="{{ old('tel_home') }}" maxlength="10" minlength="10">
+                         <input type="text" class="form-control us_telephone" autocomplete="off"
+                          data-mask="999-999-9999" name="tel_home" value="{{ old('tel_home') }}" >
                      </div>
 
                      <div class="col-sm-3">
                          <label>Email <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="Email" name="email"
+                         <input type="email" class="form-control" autocomplete="off" placeholder="Email@email.com" name="email"
                              value="{{ old('email') }}" required="">
                      </div>
                  </div>
@@ -427,8 +425,8 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>บัตรประชาชนเลขที่ </label>
-                         <input type="text" class="form-control" placeholder="บัตรประชาชนเลขที่" name="benefit_id"
+                         <label>เลขที่บัตรประชาชน (13 หลัก) </label>
+                         <input type="text" class="form-control card" data-mask="99999-99999-999" name="benefit_id"
                              value="{{ old('benefit_id') }}">
                      </div>
 
@@ -498,7 +496,7 @@
                          <div class="form-group row text-right">
                              <label class="col-sm-2"></label>
                              <div class="col-sm-10">
-                                 <button type="submit" class="btn btn-primary m-b-0">Submit</button>
+                                 <button type="submit" class="btn btn-primary m-b-0">@lang('message.register_submit')</button>
                              </div>
                          </div>
 
@@ -523,50 +521,13 @@
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
+        <!-- Masking js -->
+    <script src="{{asset('frontend/assets/pages/form-masking/inputmask.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
+
      <script type="text/javascript">
-        //  function copy_address() {
-        //      var ckeck_address = document.getElementById("copy_card_address");
-
-        //      if (ckeck_address.checked == true) {
-
-        //          card_house_no = $('#card_house_no').val();
-        //          card_house_name = $('#card_house_name').val();
-        //          card_moo = $('#card_moo').val();
-        //          card_soi = $('#card_soi').val();
-        //          card_amphures = $('#card_amphures').val();
-        //          card_district = $('#card_district').val();
-        //          card_province = $('#card_province').val();
-        //          card_road = $('#card_road').val();
-        //          card_zipcode = $('#card_zipcode').val();
-
-        //          house_no = $('#house_no').val(card_house_no);
-        //          house_name = $('#house_name').val(card_house_name);
-        //          moo = $('#moo').val(card_moo);
-        //          soi = $('#soi').val(card_soi);
-        //          road = $('#road').val(card_road);
-        //          zipcode = $('#zipcode').val(card_zipcode);
-
-        //          // amphures = $('#amphures').val(amphures);
-        //          // district = $('#district').val(card_district);
-        //          // province = $('#province').val(card_province);
-
-
-        //          var card_province = $('#card_province').val();
-        //          $('#province').val(card_province).change();
-
-        //      } else {
-        //          house_no = $('#house_no').val('');
-        //          house_name = $('#house_name').val('');
-        //          moo = $('#moo').val('');
-        //          soi = $('#soi').val('');
-        //          amphures = $('#amphures').val('');
-        //          district = $('#district').val('');
-        //          province = $('#province').val('');
-        //          road = $('#road').val('');
-        //          zipcode = $('#zipcode').val('');
-        //      }
-        //  }
-
 
          function check_user() {
              var user_name = $('#introduce').val();
@@ -662,174 +623,6 @@
         const token = "{{ csrf_token() }}";
     </script>
     <script src="{{ asset('frontend/address.js') }}"></script>
-     {{-- <script type="text/javascript">
-         $('#card_province').change(function() {
-             var id_province = $(this).val();
-             $.ajax({
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: id_province,
-                     function: 'provinces'
-                 },
-                 success: function(data) {
-                     $('#card_amphures').html(data);
-                     $('#card_district').val('');
-                     $('#card_zipcode').val('');
-                 }
-             });
-         });
-
-         $('#card_amphures').change(function() {
-             var amphures = $(this).val();
-             $.ajax({
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: amphures,
-                     function: 'amphures'
-                 },
-                 success: function(data) {
-                     $('#card_district').html(data);
-
-                 }
-             });
-         });
 
 
-         $('#card_district').change(function() {
-             var district = $(this).val();
-             $.ajax({
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: district,
-                     function: 'district'
-                 },
-                 success: function(data) {
-                     $('#card_zipcode').val(data);
-                 }
-             });
-
-         });
-
-         $('#province').change(function() {
-             var id_province = $(this).val();
-             var ckeck_address = document.getElementById("copy_card_address");
-             $.ajax({
-                 async: false,
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: id_province,
-                     function: 'provinces'
-                 },
-                 success: function(data) {
-                     $('#amphures').html(data);
-                     $('#district').val('');
-                     // $('#zipcode').val('');
-                 }
-             });
-             if (ckeck_address.checked == true) {
-                 var card_amphures = $('#card_amphures').val();
-                 $('#amphures').val(card_amphures).change();
-             }
-         });
-
-         $('#amphures').change(function() {
-             var amphures = $(this).val();
-             var ckeck_address = document.getElementById("copy_card_address");
-             $.ajax({
-                 async: false,
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: amphures,
-                     function: 'amphures'
-                 },
-                 success: function(data) {
-                     $('#district').html(data);
-                 }
-             });
-
-             if (ckeck_address.checked == true) {
-                 var card_district = $('#card_district').val();
-                 $('#district').val(card_district).change();
-             }
-         });
-
-
-         $('#district').change(function() {
-             var district = $(this).val();
-             $.ajax({
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: district,
-                     function: 'district'
-                 },
-                 success: function(data) {
-                     $('#zipcode').val(data);
-                 }
-             });
-
-         });
-
-         getOldAddress()
-
-         function getOldAddress() {
-             const province = "{{ old('card_province') }}"
-             const amphures = "{{ old('card_amphures') }}"
-             const district = "{{ old('card_district') }}"
-             const copyAddress = "{{ old('copy_card_address') }}"
-
-             if (province) {
-                 $.ajax({
-                     type: "get",
-                     url: "{{ route('location') }}",
-                     data: {
-                         id: province,
-                         function: 'provinces',
-                         amphuresId: amphures
-                     },
-                     success: function(data) {
-                         $('#card_amphures').html(data)
-                     }
-                 })
-             }
-
-             if (amphures) {
-                 $.ajax({
-                     type: "get",
-                     url: "{{ route('location') }}",
-                     data: {
-                         id: amphures,
-                         function: 'amphures',
-                         districtId: district
-                     },
-                     success: function(data) {
-                         $('#card_district').html(data)
-                     }
-                 })
-             }
-
-             if (district) {
-                 $.ajax({
-                     type: "get",
-                     url: "{{ route('location') }}",
-                     data: {
-                         id: district,
-                         function: 'district'
-                     },
-                     success: function(data) {
-                         $('#card_zipcode').val(data);
-                     }
-                 });
-             }
-
-             if (copyAddress) {
-                 $('#copy_card_address').attr('checked', true)
-             }
-         }
-     </script> --}}
  @endsection

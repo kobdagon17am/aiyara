@@ -366,7 +366,20 @@ return [
 'used' => 'Used',
 'expirydate' => 'Expiry Date',
 'all' => 'All',
-'coupondetail' => "*You can send pro to the other per 1 time / you can't use this pro or another pro and add Ai-Stockist"
+'coupondetail' => "*You can send pro to the other per 1 time / you can't use this pro or another pro and add Ai-Stockist",
+
+// frontend/newregister
+'register' => 'Register',
+'name_first' => 'First Name',
+'name_last' => 'Last Name',
+'mr'=> 'Mr.',
+'mrs'=> 'Mrs.',
+'ms'=> 'Ms.',
+'name_prefix'=> 'Name Prefix',
+'name_business'=> 'Business Name',
+'name_business_a'=> '* If there is no business name, enter (-)',
+'register_submit'=> 'Register',
+
 ];
 
 
