@@ -151,37 +151,36 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="col-sm-2">
-                                                        <label>คำนำหน้าชื่อ </label>
-                                                        <select class="form-control" name="name_prefix">
-                                                            <option value="คุณ">คุณ</option>
-                                                            <option value="นาย">นาย</option>
-                                                            <option value="นาง">นาง</option>
-                                                            <option value="นางสาว">นางสาว</option>
-                                                        </select>
+                                                      <label> @lang('message.name_prefix')  </label>
+                                                      <select class="form-control" name="name_prefix">
+                                                          <option value="@lang('message.mr')">@lang('message.mr')</option>
+                                                          <option value="@lang('message.mrs')">@lang('message.mrs')</option>
+                                                          <option value="@lang('message.ms')">@lang('message.ms')</option>
+                                                      </select>
 
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>ชื่อ <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="ชื่อ"
+                                                        <label>@lang('message.name_first') <font class="text-danger">*</font></label>
+                                                        <input type="text" class="form-control" placeholder="@lang('message.name_first')"
                                                             name="name_first" value="{{ old('name_first') }}"
                                                             required="">
 
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>นามสกุล <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="นามสกุล"
+                                                        <label>@lang('message.name_last') <font class="text-danger">*</font></label>
+                                                        <input type="text" class="form-control" placeholder="@lang('message.name_last')"
                                                             name="name_last" value="{{ old('name_last') }}"
                                                             required="">
                                                     </div>
 
 
                                                     <div class="col-sm-4">
-                                                        <label>ชื่อที่ใช้ในธุรกิจ <font class="text-danger">* กรณีไม่มีชื่อให้ใส่(-)</font>
+                                                        <label>@lang('message.name_business') <font class="text-danger">@lang('message.name_business_a')</font>
                                                             </label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="ชื่อที่ใช้ในธุรกิจ" name="name_business"
+                                                            placeholder="@lang('message.name_business')" name="name_business"
                                                             value="{{ old('name_business') }}" required="">
                                                     </div>
                                                 </div>
@@ -203,11 +202,10 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>เลขที่บัตรประชาชน <font class="text-danger">*</font>
+                                                        <label>เลขที่บัตรประชาชน (13 หลัก) <font class="text-danger">*</font>
                                                             </label>
-                                                        <input class="form-control" type="text"
-                                                            placeholder="เลขที่บัตรประชาชน" name="id_card"
-                                                            value="{{ old('id_card') }}" maxlength="13" minlength="13" required="">
+                                                        <input class="form-control card" data-mask="99999-99999-999" type="text" name="id_card"
+                                                            value="{{ old('id_card') }}"   required="">
                                                     </div>
 
 
@@ -229,22 +227,20 @@
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
                                                         <label>โทรศัพท์มือถือ <b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="โทรศัพท์มือถือ" name="tel_mobile"
-                                                            value="{{ old('tel_mobile') }}" maxlength="10" minlength="10" required="">
+                                                        <input type="text" class="form-control  us_telephone" autocomplete="off"
+                                                        data-mask="999-999-9999" placeholder="โทรศัพท์มือถือ" name="tel_mobile"
+                                                            value="{{ old('tel_mobile') }}"  required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
                                                         <label>โทรศัพท์บ้าน</label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="โทรศัพท์บ้าน" maxlength="10" minlength="10" name="tel_home"
-                                                            value="{{ old('tel_home') }}">
+                                                        <input type="text" class="form-control  us_telephone" autocomplete="off" data-mask="999-999-9999"
+                                                            placeholder="โทรศัพท์บ้าน" name="tel_home" value="{{ old('tel_home') }}">
                                                     </div>
 
                                                     <div class="col-sm-3">
                                                         <label>Email <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="Email"
-                                                            name="email" value="{{ old('email') }}" required="">
+                                                        <input type="email" class="form-control" placeholder="Email@email.com" name="email" value="{{ old('email') }}" required="">
                                                     </div>
                                                 </div>
 
@@ -539,11 +535,13 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>บัตรประชาชนเลขที่ </label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="บัตรประชาชนเลขที่" name="benefit_id"
+                                                        <label>เลขที่บัตรประชาชน (13 หลัก) </label>
+                                                        <input type="text" class="form-control card" data-mask="99999-99999-999"   name="benefit_id"
                                                             value="{{ old('benefit_id') }}">
                                                     </div>
+
+                                                    <div class="col-sm-3">
+
 
                                                 </div>
 
@@ -680,6 +678,14 @@
     <script src="{{ asset('frontend/assets/js/jquery.quicksearch.js') }}"></script>
     <!-- Custom js -->
     <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
+
+
+    <!-- Masking js -->
+    <script src="{{asset('frontend/assets/pages/form-masking/inputmask.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
+    <script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
+
 
 
     <script type="text/javascript">
