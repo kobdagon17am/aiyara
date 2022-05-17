@@ -41,7 +41,9 @@ class AddressService {
 
   public function getTableName()
   {
-    return static::DB_TABLES[$this->business_location];
+
+    $data =  static::DB_TABLES[$this->business_location];
+    return $data;
   }
 
   public function query($query_table, $query_id = '')
