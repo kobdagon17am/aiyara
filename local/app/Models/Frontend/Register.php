@@ -24,10 +24,44 @@ class Register extends Model
         //->limit('1')
         ->first();
 
-        $customer_code_id =  $customer_code_id->id+1;
-        $c_code = 'A'.$customer_code_id;
+        if($customer_code_id){
+          $customer_code_id =  $customer_code_id->id+1;
+          $c_code = 'A'.$customer_code_id;
+          $username = $c_code;
+          $AUTO_INCREMENT ='';
+        }else{
+          $customer_code_id =DB::table('customers')
+          ->select('id')
+          ->orderby('id','DESC')
+          //->limit('1')
+          ->first();
 
-        $username = $c_code;
+
+          $customer_code_id =  $customer_code_id->id+1;
+          $c_code = 'A'.$customer_code_id;
+          $username = $c_code;
+
+          $AUTO_INCREMENT = "ALTER TABLE customer_code AUTO_INCREMENT = $customer_code_id;";
+          DB::unprepared($AUTO_INCREMENT);
+
+        }
+
+        $check_user_name = DB::table('customers')
+        ->where('user_name','=',$username)
+        ->count();
+
+        if($check_user_name>0){
+
+          $customer_code_id =DB::table('customers')
+          ->select('id')
+          ->orderby('id','DESC')
+          //->limit('1')
+          ->first();
+          $AUTO_INCREMENT = "ALTER TABLE customer_code AUTO_INCREMENT = $customer_code_id->id;";
+          $customer_code_id =  $customer_code_id->id+1;
+          $c_code = 'A'.$customer_code_id;
+          $username = $c_code;
+        }
 
         $alphabet = 'abcdefghjkmnopqrstuvwxyz23456789';
         $pass = array(); //remember to declare $pass as an array
@@ -170,6 +204,7 @@ class Register extends Model
 
              $data_customer_detail = ['house_no'=>$house_no,
              'house_name'=>$house_name,
+             'user_name'=>$username,
              'moo'=>$moo,
              'soi'=>$soi,
              'road'=>$road,
@@ -191,6 +226,7 @@ class Register extends Model
        //dd($data_customer_detail);
              DB::table('customers_detail')->insert($data_customer_detail);
              $customer_address_card = [
+              'user_name'=>$username,
                 'card_house_no'=>$card_house_no,
                 'card_house_name'=>$card_house_name,
                 'card_moo'=>$card_moo,
@@ -202,6 +238,7 @@ class Register extends Model
                 'card_zipcode'=>$card_zipcode,
                 'customer_id'=>$id];
                 DB::table('customers_address_card')->insert($customer_address_card);
+
 
 
 

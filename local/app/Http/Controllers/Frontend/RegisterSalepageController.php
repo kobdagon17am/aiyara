@@ -91,6 +91,7 @@ class RegisterSalepageController extends Controller
 
    public function getLocation(Request $request)
    {
+
       $addressService = new AddressService($request->business_location);
 
       return $addressService->query($request->input('query'), $request->input('id'))->renderOptions();

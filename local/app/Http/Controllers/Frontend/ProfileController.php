@@ -84,6 +84,7 @@ class ProfileController extends Controller
 
     public function edit_address(Request $request)
     {
+      // dd($request->all());
         $checkpass = DB::table('customers')
             ->where('id', '=', Auth::guard('c_user')->user()->id)
             ->where('password', '=', md5($request->password))

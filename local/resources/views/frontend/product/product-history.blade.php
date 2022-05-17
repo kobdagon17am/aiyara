@@ -114,7 +114,7 @@
                                         </div>
 
                                         <div class="col-sm-12">
-                                          <h5>Note</h5>
+                                          {{-- <h5>Note</h5> --}}
                                           <p>
                                             <code id="not"> </code></p>
                                         </div>
