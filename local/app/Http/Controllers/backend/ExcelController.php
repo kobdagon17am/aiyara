@@ -107,28 +107,82 @@
 				$p_i = 0;
 				for ($i=0; $i < count($sRow) ; $i++) {
 					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box')->where('packing_code_id_fk',$sRow[$i]->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
-			
-					if($pick_pack_packing){
+					$delivery_data = DB::table('db_delivery')->where('id',$sRow[$i]->delivery_id_fk)->first();
+					if($delivery_data){
+						if($delivery_data->status_scan_wh==1){
+							if($pick_pack_packing){
 
-						echo 'box number : '.$pick_pack_packing->p_amt_box.'<br>';
-
-						if($pick_pack_packing->p_amt_box != null && $pick_pack_packing->p_amt_box != ''){
-
-							echo 'box : '.$sRow[$i]->id.'<br>';
-
-							$arr_con_box = [];
-							if($sRow[$i]->con_arr!=''){
-								$arr_con_box = 	explode(',',$sRow[$i]->con_arr);
-							}
-						
-							for($p=0; $p < $pick_pack_packing->p_amt_box; $p++){
-					
-								if(isset($arr_con_box[$p])){
-									if($arr_con_box[$p] != ''){
-										$sRow[$i]->consignment_no = $arr_con_box[$p];
+								echo 'box number : '.$pick_pack_packing->p_amt_box.'<br>';
+		
+								if($pick_pack_packing->p_amt_box != null && $pick_pack_packing->p_amt_box != ''){
+		
+									echo 'box : '.$sRow[$i]->id.'<br>';
+		
+									$arr_con_box = [];
+									if($sRow[$i]->con_arr!=''){
+										$arr_con_box = 	explode(',',$sRow[$i]->con_arr);
 									}
+								
+									for($p=0; $p < $pick_pack_packing->p_amt_box; $p++){
+							
+										if(isset($arr_con_box[$p])){
+											if($arr_con_box[$p] != ''){
+												$sRow[$i]->consignment_no = $arr_con_box[$p];
+											}
+										}
+		
+										$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
+										$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
+										$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
+										$sheet->setCellValue('D'.($i+2+$p_i), $sRow[$i]->recipient_code);
+										$sheet->setCellValue('E'.($i+2+$p_i), $sRow[$i]->recipient_name);
+										$sheet->setCellValue('F'.($i+2+$p_i), $sRow[$i]->address);
+										$sheet->setCellValue('G'.($i+2+$p_i), $sRow[$i]->postcode);
+										$sheet->setCellValue('H'.($i+2+$p_i), $sRow[$i]->mobile);
+										// $sheet->setCellValue('I'.($i+2), $sRow[$i]->contact_person);
+										$sheet->setCellValue('I'.($i+2+$p_i), $sRow[$i]->recipient_name);
+										$sheet->setCellValue('J'.($i+2+$p_i), $sRow[$i]->phone_no);
+										$sheet->setCellValue('K'.($i+2+$p_i), $sRow[$i]->email);
+										$sheet->setCellValue('L'.($i+2+$p_i), $sRow[$i]->declare_value);
+										$sheet->setCellValue('M'.($i+2+$p_i), $sRow[$i]->cod_amount);
+										$sheet->setCellValue('N'.($i+2+$p_i), $sRow[$i]->remark);
+										$sheet->setCellValue('O'.($i+2+$p_i), $sRow[$i]->total_box);
+										$sheet->setCellValue('P'.($i+2+$p_i), $sRow[$i]->sat_del);
+										$sheet->setCellValue('Q'.($i+2+$p_i), $sRow[$i]->hrc);
+										$sheet->setCellValue('R'.($i+2+$p_i), $sRow[$i]->invr);
+										// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
+										// $sheet->setCellValue('S'.($i+2), $request->id);
+										$sheet->setCellValue('S'.($i+2+$p_i), '');
+										$p_i++;
+									}
+		
+								}else{
+									echo 'no box : '.$sRow[$i]->id.'<br>';
+									$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
+									$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
+									$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
+									$sheet->setCellValue('D'.($i+2+$p_i), $sRow[$i]->recipient_code);
+									$sheet->setCellValue('E'.($i+2+$p_i), $sRow[$i]->recipient_name);
+									$sheet->setCellValue('F'.($i+2+$p_i), $sRow[$i]->address);
+									$sheet->setCellValue('G'.($i+2+$p_i), $sRow[$i]->postcode);
+									$sheet->setCellValue('H'.($i+2+$p_i), $sRow[$i]->mobile);
+									// $sheet->setCellValue('I'.($i+2), $sRow[$i]->contact_person);
+									$sheet->setCellValue('I'.($i+2+$p_i), $sRow[$i]->recipient_name);
+									$sheet->setCellValue('J'.($i+2+$p_i), $sRow[$i]->phone_no);
+									$sheet->setCellValue('K'.($i+2+$p_i), $sRow[$i]->email);
+									$sheet->setCellValue('L'.($i+2+$p_i), $sRow[$i]->declare_value);
+									$sheet->setCellValue('M'.($i+2+$p_i), $sRow[$i]->cod_amount);
+									$sheet->setCellValue('N'.($i+2+$p_i), $sRow[$i]->remark);
+									$sheet->setCellValue('O'.($i+2+$p_i), $sRow[$i]->total_box);
+									$sheet->setCellValue('P'.($i+2+$p_i), $sRow[$i]->sat_del);
+									$sheet->setCellValue('Q'.($i+2+$p_i), $sRow[$i]->hrc);
+									$sheet->setCellValue('R'.($i+2+$p_i), $sRow[$i]->invr);
+									// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
+									// $sheet->setCellValue('S'.($i+2), $request->id);
+									$sheet->setCellValue('S'.($i+2+$p_i), '');
 								}
-
+								$p_i = $p_i-1;
+							}else{
 								$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
 								$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
 								$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
@@ -151,59 +205,11 @@
 								// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
 								// $sheet->setCellValue('S'.($i+2), $request->id);
 								$sheet->setCellValue('S'.($i+2+$p_i), '');
-								$p_i++;
 							}
-
-						}else{
-							echo 'no box : '.$sRow[$i]->id.'<br>';
-							$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
-							$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
-							$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
-							$sheet->setCellValue('D'.($i+2+$p_i), $sRow[$i]->recipient_code);
-							$sheet->setCellValue('E'.($i+2+$p_i), $sRow[$i]->recipient_name);
-							$sheet->setCellValue('F'.($i+2+$p_i), $sRow[$i]->address);
-							$sheet->setCellValue('G'.($i+2+$p_i), $sRow[$i]->postcode);
-							$sheet->setCellValue('H'.($i+2+$p_i), $sRow[$i]->mobile);
-							// $sheet->setCellValue('I'.($i+2), $sRow[$i]->contact_person);
-							$sheet->setCellValue('I'.($i+2+$p_i), $sRow[$i]->recipient_name);
-							$sheet->setCellValue('J'.($i+2+$p_i), $sRow[$i]->phone_no);
-							$sheet->setCellValue('K'.($i+2+$p_i), $sRow[$i]->email);
-							$sheet->setCellValue('L'.($i+2+$p_i), $sRow[$i]->declare_value);
-							$sheet->setCellValue('M'.($i+2+$p_i), $sRow[$i]->cod_amount);
-							$sheet->setCellValue('N'.($i+2+$p_i), $sRow[$i]->remark);
-							$sheet->setCellValue('O'.($i+2+$p_i), $sRow[$i]->total_box);
-							$sheet->setCellValue('P'.($i+2+$p_i), $sRow[$i]->sat_del);
-							$sheet->setCellValue('Q'.($i+2+$p_i), $sRow[$i]->hrc);
-							$sheet->setCellValue('R'.($i+2+$p_i), $sRow[$i]->invr);
-							// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
-							// $sheet->setCellValue('S'.($i+2), $request->id);
-							$sheet->setCellValue('S'.($i+2+$p_i), '');
 						}
-						$p_i = $p_i-1;
-					}else{
-						$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
-						$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
-						$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
-						$sheet->setCellValue('D'.($i+2+$p_i), $sRow[$i]->recipient_code);
-						$sheet->setCellValue('E'.($i+2+$p_i), $sRow[$i]->recipient_name);
-						$sheet->setCellValue('F'.($i+2+$p_i), $sRow[$i]->address);
-						$sheet->setCellValue('G'.($i+2+$p_i), $sRow[$i]->postcode);
-						$sheet->setCellValue('H'.($i+2+$p_i), $sRow[$i]->mobile);
-						// $sheet->setCellValue('I'.($i+2), $sRow[$i]->contact_person);
-						$sheet->setCellValue('I'.($i+2+$p_i), $sRow[$i]->recipient_name);
-						$sheet->setCellValue('J'.($i+2+$p_i), $sRow[$i]->phone_no);
-						$sheet->setCellValue('K'.($i+2+$p_i), $sRow[$i]->email);
-						$sheet->setCellValue('L'.($i+2+$p_i), $sRow[$i]->declare_value);
-						$sheet->setCellValue('M'.($i+2+$p_i), $sRow[$i]->cod_amount);
-						$sheet->setCellValue('N'.($i+2+$p_i), $sRow[$i]->remark);
-						$sheet->setCellValue('O'.($i+2+$p_i), $sRow[$i]->total_box);
-						$sheet->setCellValue('P'.($i+2+$p_i), $sRow[$i]->sat_del);
-						$sheet->setCellValue('Q'.($i+2+$p_i), $sRow[$i]->hrc);
-						$sheet->setCellValue('R'.($i+2+$p_i), $sRow[$i]->invr);
-						// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
-						// $sheet->setCellValue('S'.($i+2), $request->id);
-						$sheet->setCellValue('S'.($i+2+$p_i), '');
+					
 					}
+					
 					
 				}
 
