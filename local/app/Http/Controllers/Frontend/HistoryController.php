@@ -273,7 +273,7 @@ class HistoryController extends Controller
                     if($row->note){
                       return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')" > <b style="color: #000">' . $row->detail . '</b></button>';
                     }else{
-                      return '<span class="label label-inverse-info-border" ><b style="color:#000"> '.$row->detail.' <b></span>';
+                      return '<span class="label label-inverse-'.$row->css_class.'" ><b style="color:#000"> '.$row->detail.' <b></span>';
                       // return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '"> <b style="color: #000">' . $row->detail . '</b></button>';
                     }
 
@@ -282,8 +282,8 @@ class HistoryController extends Controller
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="modal_logtranfer(' . $row->id . ','.$row->customers_id_fk.')" ><i class="fa fa-search"></i> <b style="color: #000">' . $row->detail . '</b></button>';
 
                   }else {
-                    
-                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '"> <b style="color: #000">' . $row->detail . '</b></button>';
+
+                    return '<span class="label label-inverse-'.$row->css_class.'" ><b style="color:#000"> '.$row->detail.' <b></span>';
                   }
 
 

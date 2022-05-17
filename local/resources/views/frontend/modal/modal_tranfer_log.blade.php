@@ -16,41 +16,34 @@
                   <p><span>เลขใบสั่งซื้อ : {{ $file_slip[0]->code_order }}</span><br>
                     <code>{{  $order->transfer_bill_note }}</code>
                   </p>
-
+                </div>
                   <div class="row">
                     <table class="table table-responsive">
                       <tbody>
                         <tr>
+                          <th> วันที่ </th>
                           <th> บิลใบเสร็จ </th>
                           <th> หมายเหตุ </th>
                         </tr>
                           @foreach ($file_slip as $value)
                               <tr>
                                   <td>
-                                      <p>{{ date('d/m/Y') }}</p><img class="img-fluid"
-                                          src="{{ asset($value->url . '/' . $value->file) }}" alt="Theme-Logo">
+                                      <p>{{ date('d/m/Y') }}</p>
                                   </td>
+                                  <td>
+                                   <img class="img-fluid"
+                                        src="{{ asset($value->url . '/' . $value->file) }}" alt="Theme-Logo">
+                                </td>
                                   <td>
                                       <p>{{ $value->note2 }}</p>
                                   </td>
                               </tr>
                           @endforeach
-
                       </tbody>
                   </table>
-
-
                   </div>
-
-              </div>
                </div>
-
-
-
-
             </div>
-
-
         </div>
     </div>
 </div>
