@@ -241,6 +241,7 @@ class General_takeoutController extends Controller
           DB::select(" UPDATE `db_general_takeout` SET ref_doc='".$ref_doc."' WHERE id=".$sRow->id." ");
 
           DB::table('db_general_takeout_item')->where('general_takeout_id',$sRow->id)->delete();
+
           foreach(request('product_id_fk2') as $key => $pro){
             if($pro!=0){
               DB::table('db_general_takeout_item')->insert([
@@ -398,6 +399,7 @@ class General_takeoutController extends Controller
 
           if(request('approve_status')=='1'){
             $items = DB::table('db_general_takeout_item')->where('general_takeout_id',$sRow->id)->get();
+   
             foreach($items as $item){
 
               DB::select(" UPDATE db_stocks SET amt = (amt - ".$item->amt." ) WHERE id = ".$item->stocks_id_fk." ");
@@ -426,7 +428,7 @@ class General_takeoutController extends Controller
               ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
               ->get();
 
-              if($value->count() == 0){
+              // if($value->count() == 0){
 
                     DB::table('db_stock_movement')->insert(array(
                         "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
@@ -457,9 +459,10 @@ class General_takeoutController extends Controller
                         "created_at" =>@$sRow->created_at?$sRow->created_at:NULL
                     ));
 
-              }
+              // }
 
             }
+            \DB::commit();
 
             return redirect()->to(url("backend/general_takeout"));
         }
