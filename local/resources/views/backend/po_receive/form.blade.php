@@ -500,7 +500,7 @@
 
          <div class="row">
           <div class="col-md-12 text-center  "  >
-             <button type="submit" class="btn btn-primary" style="width: 10%;" >Save</button>
+             <button type="submit" class="btn btn-primary" style="width: 10%;" onclick="return confirm('ยืนยันการทำรายการ');">Save</button>
              <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-left: 1%;">Close</button>
           </div>
         </div>

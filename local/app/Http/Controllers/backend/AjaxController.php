@@ -4013,6 +4013,34 @@ class AjaxController extends Controller
 
     }
 
+    public function ajaxGetProductDetail(Request $request)
+    {
+
+      if($request->ajax()){
+
+        //  // $r= DB::select(" SELECT amt FROM db_stocks where product_id_fk = $request->product_id_fk AND id = $request->id ");
+        //  // return @$r[0]->amt;
+        //   $rs = DB::select("
+        //     SELECT db_stocks.*,dataset_product_unit.product_unit,dataset_product_unit.id as product_unit_id_fk,
+        //     dataset_business_location.txt_desc AS business_location,
+        //     branchs.b_name AS branch,
+        //     warehouse.w_name,warehouse.id as warehouse_id_fk,
+        //     zone.z_name,zone.id as zone_id_fk,
+        //     shelf.s_name,shelf.id as shelf_id_fk,db_stocks.shelf_floor
+        //      FROM db_stocks
+        //     Left Join dataset_product_unit ON db_stocks.product_unit_id_fk = dataset_product_unit.id
+        //     Left Join dataset_business_location ON db_stocks.business_location_id_fk = dataset_business_location.id
+        //     Left Join branchs ON db_stocks.branch_id_fk = branchs.id
+        //     Left Join warehouse ON db_stocks.warehouse_id_fk = warehouse.id
+        //     Left Join zone ON db_stocks.zone_id_fk = zone.id
+        //     Left Join shelf ON db_stocks.shelf_id_fk = shelf.id
+        //     WHERE db_stocks.id=$request->id ");
+        //   return response()->json($rs);
+
+      }
+
+    }
+
 
     public function ajaxGentoExportConsignments(Request $request)
     {

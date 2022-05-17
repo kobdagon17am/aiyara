@@ -400,6 +400,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxProductPackingRemoveBox', 'AjaxController@ajaxProductPackingRemoveBox');
 
     Route::post('ajaxGetAmtInStock', 'AjaxController@ajaxGetAmtInStock');
+    Route::post('ajaxGetProductDetail', 'AjaxController@ajaxGetProductDetail');
 
     Route::post('ajaxSyncStockToNotify', 'AjaxController@ajaxSyncStockToNotify');
 
@@ -911,6 +912,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('general_takeout', 'General_takeoutController');
     Route::post('general_takeout/datatable', 'General_takeoutController@Datatable')->name('general_takeout.datatable');
+    Route::post('general_takeout/delete', 'General_takeoutController@delete');
 
     Route::resource('transfer_warehouses', 'Transfer_warehousesController');
     Route::post('transfer_warehouses/datatable', 'Transfer_warehousesController@Datatable')->name('transfer_warehouses.datatable');
@@ -1031,4 +1033,3 @@ Route::group(['prefix' => 'aboutfile', 'as' => 'aboutfile.'], function() {
         Route::post('excel-import-upload', 'backend\ExcelController@excelExport');
 #===========================================================================
 }); //route group report
-

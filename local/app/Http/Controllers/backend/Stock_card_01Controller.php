@@ -108,6 +108,7 @@ class Stock_card_01Controller extends Controller
       if(!empty($request->stock_id) && !empty($request->start_date) && !empty($request->end_date)){
 
          $Stock = \App\Models\Backend\Check_stock::where('id',$request->stock_id)->get();
+        //  dd($Stock);
 
         // ถ้าวันที่ $request->start_date > ปัจจุบัน ให้เอายอด ใน stock คงเหลือปัจจุบัน เลย
            if($request->start_date > date('Y-m-d') ){
