@@ -17,6 +17,19 @@ class DeleteOrderController extends Controller
       try{
         $order_id  = $delete_order_id;
 
+        // วุฒิเพิ่มมา เอาไว้ลบโปรออกถ้ามีคูปองค้างอยู่
+        $order_wut = DB::table('db_orders')
+        ->where('id','=',$order_id)
+        ->first();
+        if($order_wut){
+          $db_order_products_list = DB::table('db_order_products_list')->select('promotion_code')->where('frontstore_id_fk',$order_wut->id)->where('promotion_code','!=','')->get();
+          foreach($db_order_products_list as $pl){
+            DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$pl->promotion_code."') ");
+          }
+        }
+        //-------------
+
+
 
         $order_data = DB::table('db_orders')
         ->select('code_order','purchase_type_id_fk')

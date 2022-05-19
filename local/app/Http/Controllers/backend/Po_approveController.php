@@ -183,6 +183,7 @@ class Po_approveController extends Controller
                     $sRow->transfer_bill_note = @request('detail');
                     DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                     $sRow->approve_status = 6;
+                    $sRow->status_slip = false;
                 }
     
     
@@ -247,6 +248,7 @@ class Po_approveController extends Controller
                         $sRow2->transfer_bill_note = @request('detail');
                         DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                         $sRow2->approve_status = 6;
+                        $sRow->status_slip = false;
                     }
         
         
@@ -827,5 +829,3 @@ ORDER BY code_order DESC
     }
 
 }
-
-

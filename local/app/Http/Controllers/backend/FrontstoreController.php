@@ -3687,7 +3687,7 @@ $endDate1
       $viewcondition_02 = '';
     }
 
-    // $action_user_02 บรรทัด ต่อจากinvoice_code
+    // $action_user_02 บรรทัด ต่อจากinvoice_code order_status_id_fk
     $sTable = DB::select("
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
@@ -3697,7 +3697,7 @@ $endDate1
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
-                AND db_orders.order_status_id_fk <> 1
+           
                 $action_user_011
                 $startDate
                 $endDate
@@ -3713,7 +3713,7 @@ $endDate1
                 ORDER BY created_at DESC
 
               ");
-
+              // AND db_orders.order_status_id_fk <> 1
     /*
 SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user  FROM db_orders  Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id  WHERE 1
 AND db_orders.branch_id_fk = '1'
