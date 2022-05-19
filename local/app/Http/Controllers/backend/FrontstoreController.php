@@ -2888,6 +2888,10 @@ class FrontstoreController extends Controller
           $status_approve = '<label style="color:black;">รอดำเนินการ</label>';
         }
 
+        if(@$r->status_cancel == 1){
+          $status_approve = '<label style="color:red;">ยกเลิกรายการ</label>';
+        }
+
         $show .= '
                           <td class="text-center">' . @$r->sender . '</td>
                           <td class="text-center">' . @$r->updated_at . '</td>
