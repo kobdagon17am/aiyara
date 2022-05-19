@@ -60,7 +60,7 @@
                     </table>
 
                     <hr>
-                 
+
                     <div class="row">
                         <div class="col-12 text-right">
                             <br>
@@ -105,25 +105,28 @@
                                              <br>
 
                                             @if (!empty(@$r->file))
+                                                @if($rs->order_channel == 'MEMBER')
                                                 <img src="{{ $r->url }}/{{ @$r->file }}" data-lity width="200px" height="200px" class="grow">
-                                                    
+                                                @else
+                                                <img src="https://v3.aiyara.co.th/aiyarashop/{{ $r->url }}/{{ @$r->file }}" data-lity width="200px" height="200px" class="grow">
+                                                @endif
                                                     <br> <br>
                                                      <input  type="text" class="form-control" name="note" placeholder="" readonly value="หมายเหตุ : {{@$r->note}}" >
                                                      <br>
                                                      <input  type="text" class="form-control note2" data-id="{{@$r->id}}" name="note2" placeholder="หมายเหตุ 2 สำหรับพนักงาน" value="{{@$r->note2}}" >
                                             @ELSE
-                                           
+
                                                 <img data-lity src="{{ asset('local/public/images/example_img.png') }}"
                                                     class="grow" width="200px">
                                             @ENDIF
                                             <br>
                                             @if(@$r->status==1)
-                                            <button  type="button" data-id="{{@$r->id}}" class="btn btn-success btn-sm font-size-10 btn_approve" style="vertical-align: bottom;margin-bottom: 5px;">อนุมัติ</button> 
-                                            <button  type="button" data-id="{{@$r->id}}" class="btn btn-warning btn-sm font-size-10 btn_not_approve" style="vertical-align: bottom;margin-bottom: 5px;">ไม่อนุมัติ</button> 
+                                            <button  type="button" data-id="{{@$r->id}}" class="btn btn-success btn-sm font-size-10 btn_approve" style="vertical-align: bottom;margin-bottom: 5px;">อนุมัติ</button>
+                                            <button  type="button" data-id="{{@$r->id}}" class="btn btn-warning btn-sm font-size-10 btn_not_approve" style="vertical-align: bottom;margin-bottom: 5px;">ไม่อนุมัติ</button>
                                             <button  type="button" data-id="{{@$r->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
                                             @endif
-                                        </div>  
-                                        
+                                        </div>
+
                             @php
                             @$i++
                             @endphp
@@ -164,7 +167,7 @@
                         <div class="div_confirm_transfer_slip">
                             <button type="button" class="btn btn-primary waves-effect waves-light"
                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
-                            
+
                             <button type="button" class="btn btn-danger waves-effect waves-light btnNotAprrove" data-toggle="modal" data-target="#cancel" order_id="{{@$sRow->id}}">ไม่อนุมัติ</button>
                         {{-- <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
                             data-toggle="modal" data-target="#cancel">
@@ -263,7 +266,7 @@
                                                     </div>
                                                 </div>
 
-                                             
+
 
 
                                   @IF(!empty(@$sRow->pay_with_other_bill))
@@ -580,7 +583,7 @@
 
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
-                    
+
                 }
 
             });
@@ -598,7 +601,7 @@
                       });
         });
 
-                    
+
 
     });
 </script>
