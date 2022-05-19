@@ -105,7 +105,7 @@
                                              <br>
 
                                             @if (!empty(@$r->file))
-                                                @if($rs->order_channel == 'MEMBER')
+                                                @if($r->order_channel == 'MEMBER')
                                                 <img src="{{ $r->url }}/{{ @$r->file }}" data-lity width="200px" height="200px" class="grow">
                                                 @else
                                                 <img src="https://v3.aiyara.co.th/aiyarashop/{{ $r->url }}/{{ @$r->file }}" data-lity width="200px" height="200px" class="grow">
