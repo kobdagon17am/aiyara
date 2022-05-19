@@ -398,7 +398,7 @@ class HistoryController extends Controller
 
         $file_slip = $request->file_slip;
         if (isset($file_slip)) {
-            $url = 'local/public/files_slip/' . date('Ym');
+            $url = 'local/public/files_slip/' . date('Ym').'/';
 
             $f_name = date('YmdHis') . '_' . Auth::guard('c_user')->user()->id . '.' . $file_slip->getClientOriginalExtension();
             if ($file_slip->move($url, $f_name)) {
