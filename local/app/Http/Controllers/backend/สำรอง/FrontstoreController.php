@@ -872,7 +872,7 @@ class FrontstoreController extends Controller
                   ]);
                   $image = $request->file('image02');
                   $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
-                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image_path = 'local/public/files_slip/'.date('Ym');
                   $image->move($image_path, $name);
                   $sRow->file_slip_02 = $image_path.$name;
                   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -888,7 +888,7 @@ class FrontstoreController extends Controller
                   ]);
                   $image = $request->file('image03');
                   $name = 'S3'.time() . '.' . $image->getClientOriginalExtension();
-                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image_path = 'local/public/files_slip/'.date('Ym');
                   $image->move($image_path, $name);
                   $sRow->file_slip_03 = $image_path.$name;
                   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -991,7 +991,7 @@ class FrontstoreController extends Controller
                   ]);
                   $image = $request->file('image01');
                   $name = 'S'.time() . '.' . $image->getClientOriginalExtension();
-                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image_path = 'local/public/files_slip/'.date('Ym');
                   $image->move($image_path, $name);
                   $sRow->file_slip = $image_path.$name;
 
@@ -1010,7 +1010,7 @@ class FrontstoreController extends Controller
                   ]);
                   $image = $request->file('image02');
                   $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
-                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image_path = 'local/public/files_slip/'.date('Ym');
                   $image->move($image_path, $name);
                   $sRow->file_slip_02 = $image_path.$name;
                   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -1026,7 +1026,7 @@ class FrontstoreController extends Controller
                   ]);
                   $image = $request->file('image03');
                   $name = 'S3'.time() . '.' . $image->getClientOriginalExtension();
-                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image_path = 'local/public/files_slip/'.date('Ym');
                   $image->move($image_path, $name);
                   $sRow->file_slip_03 = $image_path.$name;
                   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)

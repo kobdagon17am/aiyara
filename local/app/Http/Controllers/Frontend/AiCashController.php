@@ -336,7 +336,7 @@ class AiCashController extends Controller
     //ไม่ใช้เเล้ว
     $file_slip = $request->file_slip_aicash;
     if (isset($file_slip)) {
-      $url = 'local/public/files_slip/' . date('Ym').'/';
+      $url = 'local/public/files_slip/' . date('Ym');
 
       $f_name = date('YmdHis') . '_' . Auth::guard('c_user')->user()->id . '.' . $file_slip->getClientOriginalExtension();
       if ($file_slip->move($url, $f_name)) {
@@ -428,7 +428,7 @@ class AiCashController extends Controller
 
       $file_slip = $request->file('files');
       if (count($file_slip) > 0) {
-        $url = 'local/public/files_slip/' . date('Ym').'/';
+        $url = 'local/public/files_slip/' . date('Ym');
         $i = 0;
         foreach ($file_slip as $value) {
           $i++;

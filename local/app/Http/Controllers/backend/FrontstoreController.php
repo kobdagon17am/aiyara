@@ -333,7 +333,7 @@ class FrontstoreController extends Controller
         ]);
         $image = $request->file('image01');
         $name = 'S' . time() . '.' . $image->getClientOriginalExtension();
-        $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+        $image_path = 'local/public/files_slip/' . date('Ym');
         $image->move($image_path, $name);
         $sRow->file_slip = $image_path . $name;
         DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`,transfer_bill_date,note, `create_at`, `update_at`)
@@ -428,7 +428,7 @@ class FrontstoreController extends Controller
       }else{
         $arr_cost .= $cost;
       }
-    
+
     }
 
     $Products = DB::select("
@@ -586,7 +586,7 @@ class FrontstoreController extends Controller
     }
 
     $sAccount_bank = \App\Models\Backend\Account_bank::where('business_location_id_fk', $sBranchs[0]->business_location_id_fk)->get();
-   
+
     // $type = $sRow->purchase_type_id_fk;
     $pv_total = $sRow->pv_total;
     // $customer_pv = \Auth::user()->pv ? \Auth::user()->pv : 0 ;
@@ -852,7 +852,7 @@ class FrontstoreController extends Controller
     // dd($sFrontstoreDataTotal);
     if ($sFrontstoreDataTotal) {
       $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total) / 1.07);
-     
+
       // $vat_data = DB::table('dataset_vat')
       // ->where('business_location_id_fk', '=', $sBranchs[0]->business_location_id_fk)
       // ->first();
@@ -1118,7 +1118,7 @@ class FrontstoreController extends Controller
           ]);
           $image = $request->file('image01');
           $name = 'S2' . time() . '.' . $image->getClientOriginalExtension();
-          $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+          $image_path = 'local/public/files_slip/' . date('Ym');
           $image->move($image_path, $name);
           $sRow->file_slip = $image_path . $name;
           DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -1134,7 +1134,7 @@ class FrontstoreController extends Controller
           ]);
           $image = $request->file('image02');
           $name = 'S2' . time() . '.' . $image->getClientOriginalExtension();
-          $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+          $image_path = 'local/public/files_slip/' . date('Ym');
           $image->move($image_path, $name);
           $sRow->file_slip_02 = $image_path . $name;
           DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -1150,7 +1150,7 @@ class FrontstoreController extends Controller
           ]);
           $image = $request->file('image03');
           $name = 'S3' . time() . '.' . $image->getClientOriginalExtension();
-          $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+          $image_path = 'local/public/files_slip/' . date('Ym');
           $image->move($image_path, $name);
           $sRow->file_slip_03 = $image_path . $name;
           DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -1282,7 +1282,7 @@ class FrontstoreController extends Controller
           ]);
           $image = $request->file('image01');
           $name = 'S' . time() . '.' . $image->getClientOriginalExtension();
-          $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+          $image_path = 'local/public/files_slip/' . date('Ym');
           $image->move($image_path, $name);
           $sRow->file_slip = $image_path . $name;
 
@@ -1300,7 +1300,7 @@ class FrontstoreController extends Controller
           ]);
           $image = $request->file('image02');
           $name = 'S2' . time() . '.' . $image->getClientOriginalExtension();
-          $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+          $image_path = 'local/public/files_slip/' . date('Ym');
           $image->move($image_path, $name);
           $sRow->file_slip_02 = $image_path . $name;
           DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -1316,7 +1316,7 @@ class FrontstoreController extends Controller
           ]);
           $image = $request->file('image03');
           $name = 'S3' . time() . '.' . $image->getClientOriginalExtension();
-          $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+          $image_path = 'local/public/files_slip/' . date('Ym');
           $image->move($image_path, $name);
           $sRow->file_slip_03 = $image_path . $name;
           DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`)
@@ -2549,7 +2549,7 @@ class FrontstoreController extends Controller
 
     // if (@$cnt_row1 > 1) {
 
-// วุฒิบวกค่าธรรมเนียม 
+// วุฒิบวกค่าธรรมเนียม
 // วุฒิเพิ่มค่าธรรมเนียมไว้หักล้าง
       $sDBFrontstoreTOTAL = DB::select("
                 SELECT
@@ -2572,7 +2572,7 @@ class FrontstoreController extends Controller
                 (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
 
                 (CASE WHEN db_orders.charger_type = 2 THEN 0 WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END)
-                
+
                 /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
                 ) as total_price,
 
@@ -2580,7 +2580,7 @@ class FrontstoreController extends Controller
                  CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
                 ) AS shipping_price
 
-                
+
 
                 FROM
                 db_orders
@@ -2608,7 +2608,7 @@ class FrontstoreController extends Controller
 
 //       db_orders.code_order
 
-      
+
 
 //       FROM
 //       db_orders
@@ -3575,7 +3575,7 @@ $endDate1
       $endDate = "";
       $endDate2 = "";
     }
-   
+
     if (!empty($req->business_location_id_fk)) {
       $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $req->business_location_id_fk . " ";
     }else{

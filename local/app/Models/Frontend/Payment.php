@@ -30,7 +30,7 @@ class Payment extends Model
             $file_slip = $rs->file('files');
             $orderstatus_id = 2;
             if (count($file_slip)>0) {
-                $url = 'local/public/files_slip/' . date('Ym').'/';
+                $url = 'local/public/files_slip/' . date('Ym');
                 $i=0;
                 foreach($file_slip as $value){
                   $i++;

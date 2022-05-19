@@ -130,7 +130,7 @@ class Po_approveController extends Controller
                   ]);
                   $image = $request->file('image01');
                   $name = 'S2'.time() . '.' . $image->getClientOriginalExtension();
-                  $image_path = 'local/public/files_slip/'.date('Ym').'/';
+                  $image_path = 'local/public/files_slip/'.date('Ym');
                   $image->move($image_path, $name);
                   $sRow->file_slip = $image_path.$name;
                   DB::select(" INSERT INTO `payment_slip` (`customer_id`, `order_id`, `code_order`, `url`, `file`, `create_at`, `update_at`,status)
@@ -246,7 +246,7 @@ class Po_approveController extends Controller
             }
 
           }else{
-        
+
                 if($User_branch_id){
                      $branch_id_fk = " and db_orders.branch_id_fk =  ".$User_branch_id."" ;
                 }else{
@@ -301,7 +301,7 @@ class Po_approveController extends Controller
             (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
             `db_orders`.`id` != 0
 
-            
+
 
             ORDER BY updated_at DESC
 

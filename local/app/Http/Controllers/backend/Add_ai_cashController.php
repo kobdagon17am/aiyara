@@ -242,10 +242,10 @@ class Add_ai_cashController extends Controller
       } else {
         $sRow = new \App\Models\Backend\Add_ai_cash;
       }
-  
+
       $sRow->type_create = 'admin';
 // approved total_amt
-      // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status 
+      // ประเภทการโอนเงินต้องรอ อนุมัติก่อน  approve_status
       if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11) {
         $sRow->approve_status = 1;
         $sRow->order_status_id_fk = 1;
@@ -260,7 +260,7 @@ class Add_ai_cashController extends Controller
           $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
           $date_setting_code = date('ym');
 
-          $delete = DB::table('db_add_ai_cash') //update บิล 
+          $delete = DB::table('db_add_ai_cash') //update บิล
             ->where('id', $sRow->id)
             ->update([
               'code_order' => $code_order,
@@ -313,7 +313,7 @@ class Add_ai_cashController extends Controller
       }else{
         $sRow->total_amt    = str_replace(',', '', request('aicash_amt')) + request('fee_amt') ? str_replace(',', '', request('fee_amt')) : 0;
       }
-    
+
 
       if (!empty(request('account_bank_id'))) {
         $sRow->account_bank_id = request('account_bank_id');
@@ -331,7 +331,7 @@ class Add_ai_cashController extends Controller
         ]);
         $image = $request->file('image01');
         $name = 'G' . time() . '.' . $image->getClientOriginalExtension();
-        $image_path = 'local/public/files_slip/' . date('Ym') . '/';
+        $image_path = 'local/public/files_slip/' . date('Ym');
         $image->move($image_path, $name);
         $sRow->file_slip = $image_path . $name;
       }
@@ -352,7 +352,7 @@ class Add_ai_cashController extends Controller
             DB::select(" UPDATE db_add_ai_cash SET total_amt=(cash_pay + transfer_price + credit_price + fee_amt ) WHERE (id='".$sRow->id."') ");
           }
 
-    
+
       \DB::commit();
 
       if (request('fromAddAiCash') == 1) {
@@ -662,7 +662,7 @@ class Add_ai_cashController extends Controller
             " . $w07 . "
             ORDER BY db_add_ai_cash.created_at DESC
          ");
-         
+
     $sQuery = \DataTables::of($sTable);
     return $sQuery
       ->addColumn('customer_name', function ($row) {
@@ -732,7 +732,7 @@ class Add_ai_cashController extends Controller
             return "<label style='color:green;'>อนุมัติแล้ว";
           } else {
             // return $approve_status[0]->orders_type;
-            return "<label style='color:".@$approve_status[0]->color.";'>".@$approve_status[0]->txt_desc."</label>";  
+            return "<label style='color:".@$approve_status[0]->color.";'>".@$approve_status[0]->txt_desc."</label>";
             // return @$approve_status[0]->txt_desc;
           }
           // return @$approve_status[0]->txt_desc;
