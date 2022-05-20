@@ -30,8 +30,8 @@
                             <form action="{{ route('backend.transfer_branch_get.store') }}" method="POST"
                                 enctype="multipart/form-data" autocomplete="off">
                             @else
-                                <form action="{{ route('backend.transfer_branch_get.update', @$sRow->id) }}"
-                                    method="POST" enctype="multipart/form-data" autocomplete="off">
+                                <form action="{{ route('backend.transfer_branch_get.update', @$sRow->id) }}" method="POST"
+                                    enctype="multipart/form-data" autocomplete="off">
                                     <input name="_method" type="hidden" value="PUT">
                         @endif
                         {{ csrf_field() }}
@@ -129,17 +129,17 @@
                         </div>
 
                         <!--             <div class="form-group row">
-                                <label for="tr_status" class="col-md-3 col-form-label">สถานะ :</label>
-                                <div class="col-md-6">
-                                   <select id="tr_status" name="tr_status" class="form-control select2-templating " >
-                                    <option value="">-Status-</option>
-                                    <option value="0" {{ 0 == @$sRow->tr_status ? 'selected' : '' }}> อยู่ระหว่างการดำเนินการ </option>
-                                    <option value="1" {{ 1 == @$sRow->tr_status ? 'selected' : '' }}> ได้รับสินค้าครบแล้ว </option>
-                                    <option value="2" {{ 2 == @$sRow->tr_status ? 'selected' : '' }}> ยังค้างรับสินค้า </option>
-                                    <option value="3" {{ 3 == @$sRow->tr_status ? 'selected' : '' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
-                                  </select>
-                                </div>
-                              </div> -->
+                                            <label for="tr_status" class="col-md-3 col-form-label">สถานะ :</label>
+                                            <div class="col-md-6">
+                                               <select id="tr_status" name="tr_status" class="form-control select2-templating " >
+                                                <option value="">-Status-</option>
+                                                <option value="0" {{ 0 == @$sRow->tr_status ? 'selected' : '' }}> อยู่ระหว่างการดำเนินการ </option>
+                                                <option value="1" {{ 1 == @$sRow->tr_status ? 'selected' : '' }}> ได้รับสินค้าครบแล้ว </option>
+                                                <option value="2" {{ 2 == @$sRow->tr_status ? 'selected' : '' }}> ยังค้างรับสินค้า </option>
+                                                <option value="3" {{ 3 == @$sRow->tr_status ? 'selected' : '' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
+                                              </select>
+                                            </div>
+                                          </div> -->
 
                         <div class="form-group row">
                             <label for="note1" class="col-md-3 col-form-label">หมายเหตุ :</label>
@@ -152,18 +152,18 @@
 
 
                         <!--                   <div class="form-group row">
-                                <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ(User Login):</label>
-                                <div class="col-md-6">
-                                  @if (empty($sRow))
+                                            <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ(User Login):</label>
+                                            <div class="col-md-6">
+                                              @if (empty($sRow))
     <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
-                                      <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="action_user" readonly >
+                                                  <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="action_user" readonly >
 @else
     <input class="form-control" type="text" value="{{ @$action_user }}" readonly >
-                                      <input class="form-control" type="hidden" value="{{ @$sRow->action_user }}" name="action_user" >
+                                                  <input class="form-control" type="hidden" value="{{ @$sRow->action_user }}" name="action_user" >
     @endif
-                                </div>
-                           </div>
-                               -->
+                                            </div>
+                                       </div>
+                                           -->
 
                         <div class="form-group mb-0 row">
                             <div class="col-md-6">
@@ -174,8 +174,8 @@
                             </div>
                             <div class="col-md-6 text-right">
                                 <!--         <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                              <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                            </button> -->
+                                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                                        </button> -->
                             </div>
                         </div>
 
@@ -191,12 +191,12 @@
                                     <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i>
                                         รายการรับสินค้าตามใบโอน </span>
                                     <!--
-                  <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get_products.create') }}/{{ @$sRow->id }}" style="float: right;" >
-                    <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
-                  </a> -->
+                              <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get_products.create') }}/{{ @$sRow->id }}" style="float: right;" >
+                                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                              </a> -->
 
                                     <!--       <a href="{{ URL::to('backend/transfer_branch_get_products/print_receipt') }}/{{ @$sRow->id }}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i>
-                   </a> -->
+                               </a> -->
 
                                 </div>
                             </div>
@@ -232,8 +232,8 @@
                                     <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i>
                                         ประวัติการรับสินค้า </span>
                                     <!--   <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get.create') }}/{{ @$sRow->id }}" style="float: right;" >
-                    <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">บันทึกประวัติการรับสินค้า</span>
-                  </a> -->
+                                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">บันทึกประวัติการรับสินค้า</span>
+                              </a> -->
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -301,7 +301,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="note" class="col-md-4 col-form-label required_star_red ">หมายเหตุ :</label>
+                                <label for="note" class="col-md-4 col-form-label ">หมายเหตุ :</label>
                                 <div class="col-md-8">
                                     <textarea class="form-control" rows="3" id="note2" name="note2" required>{{ @$sRow->note2 }}</textarea>
                                 </div>

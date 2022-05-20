@@ -79,7 +79,8 @@ class Check_stock_accountController extends Controller
           $branchs = DB::select("SELECT * FROM branchs where id=".@$db_stocks[0]->business_location_id_fk."");
     
     // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
-          $REF_CODE = DB::select(" SELECT REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
+          // $REF_CODE = DB::select(" SELECT REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
+          $REF_CODE = DB::select(" SELECT ref_code,SUBSTR(ref_code ,4) AS REF_NO FROM db_stocks_account_code ORDER BY ref_code  DESC LIMIT 1 ");
           if($REF_CODE){
               $ref_code = 'ADJ'.sprintf("%05d",intval(@$REF_CODE[0]->REF_NO)+1);
           }else{

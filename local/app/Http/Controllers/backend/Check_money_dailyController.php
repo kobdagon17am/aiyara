@@ -368,12 +368,12 @@ class Check_money_dailyController extends Controller
       }
       $date_check = 0;
       if(!empty($req->startDate) && !empty($req->endDate)){
-         $w05 = " AND date(db_sent_money_daily.updated_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+         $w05 = " AND date(db_sent_money_daily.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
          $date_check = 1;
-         $w05_order = " AND date(db_orders.updated_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+         $w05_order = " AND date(db_orders.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
       }else{
-         $w05 = " AND date(db_sent_money_daily.updated_at)=CURDATE() ";
-         $w05_order = " AND date(db_orders.updated_at)=CURDATE() ";
+         $w05 = " AND date(db_sent_money_daily.created_at)=CURDATE() ";
+         $w05_order = " AND date(db_orders.created_at)<=CURDATE() ";
       }
          $has_id = 0;
       if(isset($req->id)){
@@ -431,7 +431,6 @@ class Check_money_dailyController extends Controller
             ");
 
 */
-
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -639,6 +638,11 @@ class Check_money_dailyController extends Controller
 
              // WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id) AND date(db_orders.created_at)=CURDATE()
           
+            //  if($row->id == 12){
+            //    dd($w05_order);
+            //    dd($sDBFrontstoreSumCostActionUser);
+            //  }
+             
            $pn .=   ' <div class="table-responsive">
                   <table class="table table-sm m-0">
                     <thead>
@@ -821,7 +825,11 @@ class Check_money_dailyController extends Controller
                               AND db_orders.business_location_id_fk in(".$row->business_location.")
                               GROUP BY action_user
                          ");
-        
+
+                        //  if($row->id == 12){
+                        //    dd($id);
+                        //  }
+                        //  $w05_order
                         //  WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id) AND date(db_orders.created_at)=CURDATE()
 
                //    $sDBFrontstoreSumCostActionUser = DB::select("
@@ -846,8 +854,12 @@ class Check_money_dailyController extends Controller
                //        AND db_orders.business_location_id_fk in(".$row->business_location.")
                //        GROUP BY action_user
                //   ");
-
-                      return number_format($sDBFrontstoreSumCostActionUser[0]->total_price,2);
+               // if(!isset($sDBFrontstoreSumCostActionUser[0])){
+               //    return $id.' -';
+               // }else{
+                  return number_format(@$sDBFrontstoreSumCostActionUser[0]->total_price,2);
+               // }
+                     
                     }
 
           }else{
@@ -1317,14 +1329,14 @@ class Check_money_dailyController extends Controller
       }
 
       if(!empty($req->startDate) && !empty($req->endDate)){
-         $w05 = " AND date(db_orders.updated_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+         $w05 = " AND date(db_orders.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
       }else{
-         $w05 = " AND date(db_orders.updated_at)=CURDATE() ";
+         $w05 = " AND date(db_orders.created_at)=CURDATE() ";
       }
 
 
       // วุฒิแก้ รวมข้อมูล groupby
-      $sTable = DB::select("  
+      $sTable = DB::select("
 
       SELECT
       db_orders.*,
@@ -1430,6 +1442,8 @@ class Check_money_dailyController extends Controller
       ->addColumn('total_money', function($row) use($w01,$w02,$w03,$w04,$w05) {
 
         if($row->id){
+         $date=date_create($row->created_at);
+         $created_at = date_format($date,"Y-m-d");
 
          $data = DB::select("
          SELECT
@@ -1444,6 +1458,7 @@ class Check_money_dailyController extends Controller
          $w04
          $w05
          AND db_orders.action_user = ".$row->order_action_user."
+         AND date(db_orders.created_at)='".$created_at."'
        ");
 
        $arr = "";
@@ -1480,9 +1495,11 @@ class Check_money_dailyController extends Controller
       ->escapeColumns('total_money')
 
       ->addColumn('total_money_sent', function($row) use($w01,$w02,$w03,$w04,$w05) {
-
+         
          if($row->id){
- 
+            $date=date_create($row->created_at);
+           $created_at = date_format($date,"Y-m-d");
+       
           $data = DB::select("
           SELECT
           db_orders.id
@@ -1496,6 +1513,7 @@ class Check_money_dailyController extends Controller
           $w04
           $w05
           AND db_orders.action_user = ".$row->order_action_user."
+          AND date(db_orders.created_at)='".$created_at."'
         ");
  
         $arr = "";
@@ -1561,7 +1579,9 @@ class Check_money_dailyController extends Controller
        ->addColumn('total_money_sent_inprocess', function($row) use($w01,$w02,$w03,$w04,$w05) {
 
          if($row->id){
- 
+            $date=date_create($row->created_at);
+            $created_at = date_format($date,"Y-m-d");
+
           $data = DB::select("
           SELECT
           db_orders.id
@@ -1575,6 +1595,7 @@ class Check_money_dailyController extends Controller
           $w04
           $w05
           AND db_orders.action_user = ".$row->order_action_user."
+          AND date(db_orders.created_at)='".$created_at."'
         ");
  
         $arr = "";

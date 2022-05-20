@@ -30,12 +30,30 @@ class Check_stockController extends Controller
 
 
       $User_branch_id = \Auth::user()->branch_id_fk;
-      $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
-        return $query->where('id', auth()->user()->business_location_id_fk);
-      })->get();
-      $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
-        return $query->where('id', auth()->user()->branch_id_fk);
-      })->get();
+      // $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+      //   return $query->where('id', auth()->user()->business_location_id_fk);
+      // })->get();
+
+      if(auth()->user()->permission==1){
+        $sBusiness_location = \App\Models\Backend\Business_location::get();
+      }else{
+        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->business_location_id_fk);
+        })->get();
+      }
+
+      if(auth()->user()->permission==1){
+        $sBranchs = \App\Models\Backend\Branchs::get();
+      }elseif(auth()->user()->position_level !== 5 && auth()->user()->position_level !== 0){
+        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('business_location_id_fk', auth()->user()->business_location_id_fk);
+        })->get();
+      }else{
+        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+          return $query->where('id', auth()->user()->branch_id_fk);
+        })->get();
+      }
+      
       $Warehouse = \App\Models\Backend\Warehouse::get();
       // dd($Warehouse);
       // dd(\Auth::user()->branch_id_fk);

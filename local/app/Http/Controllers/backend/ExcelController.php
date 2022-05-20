@@ -109,7 +109,7 @@
 					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box')->where('packing_code_id_fk',$sRow[$i]->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
 					$delivery_data = DB::table('db_delivery')->where('id',$sRow[$i]->delivery_id_fk)->first();
 					if($delivery_data){
-						if($delivery_data->status_scan_wh==1){
+						// if($delivery_data->status_scan_wh==1){
 							if($pick_pack_packing){
 
 								echo 'box number : '.$pick_pack_packing->p_amt_box.'<br>';
@@ -206,7 +206,7 @@
 								// $sheet->setCellValue('S'.($i+2), $request->id);
 								$sheet->setCellValue('S'.($i+2+$p_i), '');
 							}
-						}
+						// }
 					
 					}
 					

@@ -330,11 +330,40 @@ class Add_ai_cashController extends Controller
           'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $image = $request->file('image01');
-        $name = 'G' . time() . '.' . $image->getClientOriginalExtension();
+        $name = '/G' . time() . '.' . $image->getClientOriginalExtension();
         $image_path = 'local/public/files_slip/' . date('Ym');
         $image->move($image_path, $name);
         $sRow->file_slip = $image_path . $name;
       }
+      // วุฒิเพิ่ม เซฟรูปลงอีกฐานข้อมูล
+
+      // // $file_slip = $request->file('files');
+      // // if (count($file_slip) > 0) {
+      //   if ($request->hasFile('image01') == true) {
+      //   $url = 'local/public/files_slip/' . date('Ym');
+      //   $i = 0;
+      //   $image = $request->file('image01');
+      //   // foreach ($file_slip as $value) {
+      //     $i++;
+      //     $f_name = date('YmdHis_') . '' . $i . '_' . request('customer_id_fk') . '.' . $image->getClientOriginalExtension();
+      //     // $image->move($url, $f_name);
+      //       DB::table('payment_slip')
+      //         ->insert(['customer_id' => request('customer_id_fk'), 'url' => $url, 'file' => $f_name, 'order_id' => $sRow->id, 'code_order' => $sRow->code_order, 'type' => 'ai-cash']);
+      //       $update_aicash = DB::table('db_add_ai_cash')
+      //         ->where('id', $sRow->id)
+      //         ->update([
+      //           'pay_type_id_fk' => 1,
+      //           'transfer_price' => $sRow->total_amt,
+      //           'order_status_id_fk' => 2,
+      //           'file_slip' => $url . '/' . $f_name,
+      //         ]);
+      //       // $resule = ['status' => 'success', 'message' => 'Add Ai-Cash Success'];
+        
+      //   // }
+      // }
+      // }
+  
+      // 
 
       if($sRow->approve_status==0){
         $sRow->action_user    = @\Auth::user()->id;
@@ -372,7 +401,7 @@ class Add_ai_cashController extends Controller
     } catch (\Exception $e) {
       echo $e->getMessage();
       \DB::rollback();
-      // return redirect()->action('backend\Add_ai_cashController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+      return redirect()->action('backend\Add_ai_cashController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
     }
   }
 
