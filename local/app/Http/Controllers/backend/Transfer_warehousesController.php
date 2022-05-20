@@ -20,6 +20,25 @@ class Transfer_warehousesController extends Controller
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
+         // วุฒิสร้าง session
+         $menus = DB::table('ck_backend_menu')->select('id')->where('id',32)->first();
+         Session::put('session_menu_id', $menus->id);
+         Session::put('menu_id', $menus->id);
+         $role_group_id = \Auth::user()->role_group_id_fk;
+         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',@$role_group_id)->where('menu_id_fk',@$menus->id)->first();
+         $sC = @$menu_permit->c;
+         $sU = @$menu_permit->u;
+         $sD = @$menu_permit->d;
+         Session::put('sC', $sC);
+         Session::put('sU', $sU);
+         Session::put('sD', $sD);
+         $can_cancel_bill = @$menu_permit->can_cancel_bill;
+         $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
+         $can_approve = @$menu_permit->can_approve;
+         Session::put('can_cancel_bill', $can_cancel_bill);
+         Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
+         Session::put('can_approve', $can_approve);
+
         // if(@\Auth::user()->permission==1){
 
         //     $Products = DB::select("SELECT products.id as product_id,
@@ -56,16 +75,13 @@ class Transfer_warehousesController extends Controller
       $Shelf = \App\Models\Backend\Shelf::get();
 
       $sTransfer_chooseAll = \App\Models\Backend\Transfer_choose::where('action_user','=',(\Auth::user()->id))->get();
-      // dd(\Auth::user()->id);
-      // dd(count($sTransfer_chooseAll));
+      
         $b_l = \App\Models\Backend\Branchs::where('id',$User_branch_id)->get();
 
         $business_location_id_fk = $b_l[0]->business_location_id_fk;
 
-
-      // dd($sTransfer_chooseAll);
       $sTransfer_choose = \App\Models\Backend\Transfer_choose::where('warehouse_id_fk','=','0')->where('action_user','=',(\Auth::user()->id))->get();
-      // dd($sTransfer_choose);
+      // dd($sTransfer_choose); 
 
         return View('backend.transfer_warehouses.index')->with(
         array(
