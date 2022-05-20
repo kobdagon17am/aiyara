@@ -24,6 +24,130 @@ class General {
         // }
 	}
 
+	static function check_export_excel_customer($id,$packing_code_id)
+    {
+		$check = 0;
+		$packing = DB::select(" SELECT * FROM db_pick_pack_packing WHERE delivery_id_fk=".$id." and packing_code_id_fk=".$packing_code_id."  GROUP BY packing_code ");
+        $recipient_name = '';
+		$delivery = DB::select(" SELECT
+		db_delivery.set_addr_send_this,
+		db_delivery.recipient_name,
+		db_delivery.addr_send,
+		db_delivery.postcode,
+		db_delivery.mobile,
+		db_delivery.tel_home,
+		db_delivery.status_pack,
+		db_delivery.receipt,
+		db_delivery.id as delivery_id_fk,
+		db_delivery.orders_id_fk
+		FROM
+		db_delivery
+		WHERE 
+		db_delivery.id = ".@$id." AND set_addr_send_this=1 ");
+		$recipient_name = @$delivery[0]->recipient_name?@$delivery[0]->recipient_name:'';
+		$addr_send = @$delivery[0]->addr_send." ".@$delivery[0]->postcode;
+		$tel = @$delivery[0]->mobile." ".@$delivery[0]->tel_home;
+		$receipt = '';
+	  if(@$delivery[0]->status_pack==1){
+			$d1 = DB::select(" SELECT * from db_delivery WHERE id=".$delivery[0]->delivery_id_fk."");
+			$d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+			$arr1 = [];
+			foreach ($d2 as $key => $v) {
+			  array_push( $arr1 ,$v->receipt);
+			}
+			$receipt = implode(',',$arr1);
+	  }else{
+			$receipt = @$delivery[0]->receipt;
+	  }
+
+				$sTable = DB::select(" 
+
+			SELECT 
+			db_pick_pack_packing.id,
+			db_pick_pack_packing.p_size,
+			db_pick_pack_packing.p_weight,
+			db_pick_pack_packing.p_amt_box,
+			db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+			db_pick_pack_packing.packing_code as packing_code,
+			db_delivery.id as db_delivery_id,
+			db_delivery.packing_code as db_delivery_packing_code
+			FROM `db_pick_pack_packing` 
+			LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+			WHERE 
+			db_pick_pack_packing.packing_code_id_fk =".$packing_code_id." 
+			AND db_pick_pack_packing.delivery_id_fk = ".$id."
+			ORDER BY db_pick_pack_packing.id
+			");
+
+			foreach ($sTable as $key => $row) {
+
+			$sum_amt = 0 ;
+			$r_ch_t = '';
+			$fid_arr = explode(',',$receipt); 
+			$order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
+			$Products = DB::table('db_pay_requisition_002')
+			->select('db_pay_requisition_002.product_name','db_pay_requisition_002.product_unit','db_pay_requisition_002_item.*')
+			->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
+			->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$packing_code_id)
+			->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+			->groupBy('product_id_fk')
+			->get();
+			
+			if(@$Products){
+
+			foreach ($Products as $key => $value) {
+
+				if(!empty($value->product_id_fk)){
+
+				// หา max time_pay ก่อน 
+				$r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+			// Check ว่ามี status=2 ? (ค้างจ่าย)
+				$r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+				//  if(count($r_ch02)>0){
+				//     $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
+				//  }else{
+				//    $r_ch_t = '';
+				//  }
+				//  วุฒิเพิ่มมา
+				$db_pay_requisition_002 = DB::table('db_pay_requisition_002')
+							->where('product_id_fk',$value->product_id_fk) 
+							->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
+							->orderBy('time_pay', 'desc')
+							->first();
+							
+							$db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+							->where('product_id_fk',$value->product_id_fk)
+							->where('order_id',$value->order_id)
+							->where('requisition_002_id',@$db_pay_requisition_002->id)
+							->first();
+						
+								if($db_pay_requisition_002_item->amt_remain > 0){
+									$check = $check+1;
+								$r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
+								}else{
+								$r_ch_t = '';
+								}
+
+				$amt_get = DB::table('db_pay_requisition_002')
+							->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
+							->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk',$packing_code_id)
+							->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
+							->where('db_pay_requisition_002_item.product_id_fk',$value->product_id_fk)
+							->sum('db_pay_requisition_002_item.amt_get');
+
+				$sum_amt += $amt_get;
+		
+			}
+			}
+
+			}
+
+			}
+
+			return $check;
+   }
+
+
 	static function gen_thai_date($date, $year = '0') {
 		if($date) {
 			$ex     = explode('-', $date);
@@ -1497,12 +1621,12 @@ class General {
 	    curl_close($ch);
 	    if($rawdata) {
 		    $data = explode('bld>', $rawdata);
-		    $data = explode($to_Currency, $data[1]);
+		    $data = explode($to_Currency, $packing_code_id);
 		} else {
 			return General::get_currency($from_Currency, $to_Currency, $amount);
 		}
 
-	    return round($data[0], 2);
+	    return round($id, 2);
 	}
 
 	function get_currency_bbk($from_Currency, $to_Currency, $amount) {

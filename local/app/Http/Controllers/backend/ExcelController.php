@@ -7,6 +7,7 @@
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 	use DB;
 	use File;
+	use App\Helpers\General;
 
 	class ExcelController extends Controller
 	{
@@ -106,9 +107,12 @@
 	
 				$p_i = 0;
 				for ($i=0; $i < count($sRow) ; $i++) {
-					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box')->where('packing_code_id_fk',$sRow[$i]->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
+					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box','delivery_id_fk','packing_code_id_fk')->where('packing_code_id_fk',$sRow[$i]->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
 					$delivery_data = DB::table('db_delivery')->where('id',$sRow[$i]->delivery_id_fk)->first();
 					if($delivery_data){
+						$check_customer = 0;
+						$check_customer = General::check_export_excel_customer($pick_pack_packing->delivery_id_fk,$pick_pack_packing->packing_code_id_fk);
+						if($check_customer==0){
 						// if($delivery_data->status_scan_wh==1){
 							if($pick_pack_packing){
 
@@ -206,7 +210,7 @@
 								// $sheet->setCellValue('S'.($i+2), $request->id);
 								$sheet->setCellValue('S'.($i+2+$p_i), '');
 							}
-						// }
+						}
 					
 					}
 					
