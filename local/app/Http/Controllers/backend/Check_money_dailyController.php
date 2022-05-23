@@ -631,11 +631,12 @@ class Check_money_dailyController extends Controller
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
                 WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id) 
-                $w05_order
+               
                 AND db_orders.business_location_id_fk in(".$row->business_location.")
                 GROUP BY action_user
            ");
-
+         //   วุฒิแก้เอาออกมา
+         //   $w05_order
              // WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id) AND date(db_orders.created_at)=CURDATE()
           
             //  if($row->id == 12){
@@ -655,6 +656,9 @@ class Check_money_dailyController extends Controller
                         <tbody>';
 
                   $cash_pay_total = 0;
+                  // if($row->id == 18){
+                  //    dd($id);
+                  // }
                 foreach(@$sDBFrontstoreSumCostActionUser AS $r){
                   $cash_pay_total+=$r->cash_pay;
                      @$cnt_row1 += 1;
