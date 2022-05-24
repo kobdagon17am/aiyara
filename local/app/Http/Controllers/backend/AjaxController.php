@@ -4364,7 +4364,7 @@ class AjaxController extends Controller
           // return($wh); db_sent_money_daily status_sent_money
 
           $r0 = DB::select(" SELECT * FROM `db_orders`
-            WHERE date(updated_at)<=CURDATE()
+            WHERE date(created_at)<=CURDATE()
             $wh
             AND approve_status in (2,4,9)
             AND approve_status not in (5,6)
@@ -4376,7 +4376,7 @@ class AjaxController extends Controller
     // วุฒิแก้ไข ให้เอาเฉพาะบิลเงินสด
     // AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
             $r0_ai = DB::select(" SELECT * FROM `db_add_ai_cash`
-            WHERE date(updated_at)<=CURDATE()
+            WHERE date(created_at)<=CURDATE()
             $wh_ai
             AND approve_status in (2)
             AND approve_status not in (0,1)
@@ -4403,7 +4403,7 @@ class AjaxController extends Controller
             // dd($arr_orders_id_fk);
 
             // วุฒิปรับให้ insert ใหม่ทุกครั้ง
-            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
+            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
 
             // if($r1){
 
@@ -4443,7 +4443,7 @@ class AjaxController extends Controller
             $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
             // return $arr_orders_id_fk;
 
-            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily_ai`  WHERE date(updated_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
+            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily_ai`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
 
             // return $r1;
             // if($r1){
