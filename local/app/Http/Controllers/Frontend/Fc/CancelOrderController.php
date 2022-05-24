@@ -66,14 +66,19 @@ class CancelOrderController extends Controller
         $order_data->approve_status = 5; //status = Cancel
         $order_data->type_user_cancel = $type_user_cancel; //Customer
         $order_data->cancel_action_date = date('Y-m-d H:i:s');
-
-
         $pv_total = $order_data->pv_total;
 
+        $order_first  = DB::table('db_orders')
+        ->where('customers_id_fk', $customer_id)
+        ->whereIn('approve_status',[2,9,4])
+        ->whereIn('purchase_type_id_fk',[1,2,3,4,5])
+        ->get();
+
+        if(count($order_first) == 1){
+          $customer_user->date_order_first = null;
+        }
+
         if ($pv_total > 0) {
-
-
-
           $pay_type = $order_data->pay_type_id_fk;
           // 1 เงินโอน
           // 2 บัตรเครดิต
