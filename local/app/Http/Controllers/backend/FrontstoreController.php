@@ -2933,6 +2933,60 @@ class FrontstoreController extends Controller
 
            ';
     // btnSentMoney
+
+    // วุฒิเพิ่มมา
+    $order_back = DB::table('db_orders')
+    ->select('db_orders.code_order','db_orders.created_at','db_orders.cash_pay','ck_users_admin.name')
+    ->join('ck_users_admin','ck_users_admin.id','db_orders.action_user')
+    ->where('db_orders.created_at','<',date('Y-m-d H:i:s'))
+    ->whereIn('db_orders.approve_status',[2,4,9])
+    ->whereNotIn('db_orders.approve_status',[5,6])
+    ->where('db_orders.status_sent_money',0)
+    ->where('db_orders.code_order','!=','')
+    ->where(function($query) {
+      $query->where('db_orders.cash_price','>',0)
+            ->orWhere('db_orders.cash_pay', '>', 0);
+  })->orderBy('db_orders.created_at','desc')
+  ->get();
+
+
+  $p = '';
+  foreach($order_back as $ord){
+    $date=date_create($ord->created_at);
+    $date=date_format($date,"d-m-Y");
+      $p .= '<tr>
+      <td class="text-left">'.$ord->name.'</td>
+      <td class="text-left">'.$date.'</td>
+      <td class="text-left">'.$ord->code_order.'</td>
+      <td class="text-right">'.number_format($ord->cash_pay, 2).'</td>
+      <td></td>
+      </tr>';
+  }
+
+    $show .= '<div id="tb_sent_money_back" class="table-responsive" style=' . $show_tb_sent_money . '>
+    <table class="table table-sm m-0">
+    <thead>
+    <tr style="background-color: #f2f2f2;"><th colspan="5">
+    <span class="" > รายการค้างส่งเงินย้อนหลัง (' . trans('message.current_day') . ' : ' . date("d-m-Y") . $user_login_id . ') </span></th>
+    </tr>
+    <tr>
+    <th class="text-left">Seller</th>
+    <th class="text-left">Date</th>
+    <th class="text-left">Code</th>
+    <th class="text-right">Cash</th>
+    <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    '.$p.'
+    </tbody>
+    </table>
+    
+    ';
+   
+
+
+
     return $show;
   }
 
