@@ -37,7 +37,7 @@
   <div class="col-md-12 col-lg-12">
     <div class="page-header card">
       <div class="card-block">
-        โครงสร้างสายงาน
+        <h5>@lang('message.jobstructure')</h5>
         <div class="card-header" style="padding: 0px">
           <div class="row">
             <div class="col-md-8">
@@ -58,7 +58,7 @@
                 @endif
 
                 @if(empty($data['lv2_a']) || empty($data['lv3_a_a']))
-                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา A</button>
+                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> @lang('message.down_a') </button>
 
                 @else
 
@@ -67,14 +67,14 @@
                   @csrf
                   <input type="hidden" name="user_name" value="{{$data['lv3_a_a']->user_name}}">
                   <input type="hidden" name="line_type" value="A">
-                  <button type="submit" class="btn btn-primary btn-sm m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา A</button>
+                  <button type="submit" class="btn btn-primary btn-sm m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> @lang('message.down_a')</button>
                 </form>
 
                 @endif
 
 
                 @if(empty($data['lv2_b']) || empty($data['lv3_b_b']))
-                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> ดิ่งขา B</button>
+                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size: 16px" ><i class="fa fa-sort-down"></i> @lang('message.down_b')</button>
 
                 @else
 
@@ -82,12 +82,12 @@
                   @csrf
                   <input type="hidden" name="user_name" value="{{$data['lv3_b_b']->user_name}}">
                   <input type="hidden" name="line_type" value="B">
-                  <button type="submit" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size: 16px"><i class="fa fa-sort-down"></i> ดิ่งขา B</button>
+                  <button type="submit" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size: 16px"><i class="fa fa-sort-down"></i> @lang('message.down_b')</button>
                 </form>
                 @endif
 
                 @if(empty($data['lv2_c']) || empty($data['lv3_c_c']))
-                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size:16px" disabled=""><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
+                <button class="btn btn-primary btn-sm btn-disabled disabled m-t-5" style="color: #FFF;font-size:16px" disabled=""><i class="fa fa-sort-down"></i> @lang('message.down_c')</button>
 
                 @else
 
@@ -95,7 +95,7 @@
                   @csrf
                   <input type="hidden" name="user_name" value="{{$data['lv3_c_c']->user_name}}">
                   <input type="hidden" name="line_type" value="C">
-                  <button type="submit" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> ดิ่งขา C</button>
+                  <button type="submit" class="btn btn-sm btn-primary m-t-5" style="color: #FFF;font-size:16px"><i class="fa fa-sort-down"></i> @lang('message.down_c')</button>
                 </form>
 
                 @endif
@@ -216,7 +216,7 @@
                             @if($data_lv3)
                             <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_tree('{{ $data_lv3->user_name }}')">@if($data_lv3->business_name and $data_lv3->business_name  != '-'){{ $data_lv3->business_name and $data_lv3->business_name  != '-' }}@else {{$data_lv3->prefix_name.' '.$data_lv3->first_name.' '.$data_lv3->last_name }} @endif</a></li>
                             @else
-                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_add('{{ $data_lv2->user_name }}','{{ $line_lv3 }}')"><b style="color:#28a745">เพิ่ม {{$line_lv3}} (+)</b></a></li>
+                            <li data-jstree='{"type":"file"}'><a href="#" onclick="modal_add('{{ $data_lv2->user_name }}','{{ $line_lv3 }}')"><b style="color:#28a745">@lang('message.add') {{$line_lv3}} (+)</b></a></li>
                             @endif
                             @endfor
 
@@ -224,7 +224,7 @@
                         </li>
                         @else
                         <li data-jstree='{"opened":true}'>
-                          <a href="#" onclick="modal_add('{{ $data['lv1']->user_name }}','{{ $line_lv2 }}')"><b style="color:#28a745"> เพิ่ม {{$line_lv2}} (+) </b></a>
+                          <a href="#" onclick="modal_add('{{ $data['lv1']->user_name }}','{{ $line_lv2 }}')"><b style="color:#28a745"> @lang('message.add') {{$line_lv2}} (+) </b></a>
                           <ul>
                             <li data-jstree='{"type":"file"}'><b> A (+)</b></li>
                             <li data-jstree='{"type":"file"}'><b> B (+)</b></li>
@@ -262,7 +262,7 @@
                                       <img src="{{ asset('local/public/images/ex.png') }}" alt="Member">
                                     @endif
                                     <div class="member-details">
-                                        <h6 class="f-w-600 m-t-15">รหัสสมาชิก : {{$data['lv1']->user_name}} </h6>
+                                        <h6 class="f-w-600 m-t-15">User : {{$data['lv1']->user_name}} </h6>
                                         <p class="text-muted">
                                           @if ($data['lv1']->business_name and $data['lv1']->business_name  != '-')
                                               {{ $data['lv1']->business_name }}
@@ -329,7 +329,7 @@
                                     <div class="member-image">
                                       <img src="{{asset('frontend/assets/icon/add_user.png')}}" alt="img">
                                         <div class="member-details">
-                                          <h6 class="f-w-600 m-t-15 m-b-10 text-success">เพิ่ม {{ $line_lv2 }}</h6>
+                                          <h6 class="f-w-600 m-t-15 m-b-10 text-success">@lang('message.add') {{ $line_lv2 }}</h6>
                                           <p class="text-muted">
                                             ภายใต้ :
                                             @if($data['lv1']->business_name and $data['lv1']->business_name  != '-')
@@ -394,7 +394,7 @@
                                               <div class="member-image">
                                                 <img src="{{ asset('frontend/assets/icon/add_user.png') }}" alt="img" class="img-radius img-60 zoom">
                                                 <div class="member-details">
-                                                  <h6 class="m-t-15 m-b-0 text-success">เพิ่ม {{ $line_lv3 }} </h6>
+                                                  <h6 class="m-t-15 m-b-0 text-success">@lang('message.add') {{ $line_lv3 }} </h6>
                                                 </div>
                                               </div>
                                           </div>
@@ -405,7 +405,7 @@
                                               <div class="member-image">
                                                 <img src="{{ asset('frontend/assets/icon/add_user_not.png') }}" alt="img" class="img-radius img-60">
                                                 <div class="member-details">
-                                                  <h6 class="m-t-15 m-b-0">สาย {{ $line_lv3 }}</h6>
+                                                  <h6 class="m-t-15 m-b-0">@lang('message.add') {{ $line_lv3 }}</h6>
                                                 </div>
                                               </div>
                                           </div>

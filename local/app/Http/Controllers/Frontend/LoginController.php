@@ -29,6 +29,13 @@ class LoginController extends Controller
  if($get_users){
           session()->forget('access_from_admin');
           Auth::guard('c_user')->login($get_users);
+
+          if($get_users->business_location_id == 1){
+            session()->put('locale','th');
+          }else{
+            session()->put('locale','en');
+          }
+
             // session(['id' => $get_users[0]->id,
             //     'line_type' => $get_users[0]->line_type]);
           // dd('ok');

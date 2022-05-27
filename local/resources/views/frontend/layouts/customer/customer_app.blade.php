@@ -267,27 +267,21 @@
 								<ul class="show-notification profile-notification">
 									<li>
 										<a href="{{route('profile_img')}}">
-											<i class="fa fa-image text-success"></i> อัพโหลดรูปโปรไฟล์
+											<i class="fa fa-image text-success"></i>  @lang('message.profile_picture')
 										</a>
 									</li>
 									<li>
-										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o text-success"></i> แก้ไขข้อมูลส่วนตัว </a>
-
+										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o text-success"></i> @lang('message.profile_picture') </a>
 									</li>
-
 									<li>
-										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i> สถานะเอกสารการสมัคร </a>
-
+										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i>  @lang('message.edit_profile') </a>
 									</li>
                   @if($canAccess)
 									<li>
-										<a href="{{route('chage_password')}}"><i class="fa fa-key text-success"></i> แก้ไขรหัสผ่าน Login </a>
-
+										<a href="{{route('chage_password')}}"><i class="fa fa-key text-success"></i> @lang('message.edit_passlogin') </a>
 									</li>
-
                   <li>
-										<a href="{{route('chage_password_aicash')}}"><i class="fa fa-key text-success"></i> แก้ไขรหัสผ่าน Ai-Cash </a>
-
+										<a href="{{route('chage_password_aicash')}}"><i class="fa fa-key text-success"></i> @lang('message.edit_pass_aicash') </a>
 									</li>
                   @endif
 

@@ -38,7 +38,7 @@
   <div class="col-md-12 col-lg-12">
     <div class="page-header card">
       <div class="card-block">
-        โครงสร้างสายงาน
+        @lang('message.jobstructure')
         <div class="card-header" style="padding: 0px">
           <div class="row">
             <div class="col-md-8">

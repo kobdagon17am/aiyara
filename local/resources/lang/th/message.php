@@ -284,7 +284,12 @@ return [
 ],
 'answer' => 'คำตอบ',
 //frontend
-//Personal Information Page
+//NavMenu
+'profile_picture' =>'อัพโหลดรูปโปรไฟล์',
+'edit_profile' =>'แก้ไขข้อมูลส่วนตัว',
+'edit_passlogin' =>'แก้ไขรหัส Login',
+'edit_pass_aicash' =>'แก้ไขรหัสผ่าน Ai-Cash ',
+
 'myprofile' => 'ข้อมูลส่วนตัว',
 'jobstructure' => 'โครงสร้างสายงาน',
 'directsponsor' => 'ผู้สนับสนุน',
@@ -349,12 +354,15 @@ return [
 'branch' => 'สาขา',
 'accountname' => 'ชื่อบัญชี',
 'accountno' => 'เลขบัญชี',
-'accounttype' => 'ชนิดบัญชี',
+'accounttype' => 'ประเภทบัญชี',
+'Savings' => 'ออมทรัพย์',
+'Current_account' => 'กระแสรายวัน',
+
 'address' => 'ที่อยู่สำหรับการจัดส่งเอกสาร / สินค้า',
-'no' => 'เลขที่',
-'building' => 'อาคาร',
-'villageno' => 'หมู่',
-'lane' => 'ซอย',
+'no' => 'บ้านเลขที่',
+'building' => 'ชื่อ หมู่บ้าน/อาคาร',
+'villageno' => 'หมู่ที่',
+'lane' => 'ตรอก/ซอย',
 'road' => 'ถนน',
 'sub-district/sub-area' => 'แขวง/ตำบล',
 'district/area' => 'เขต/อำเภอ',
@@ -381,5 +389,50 @@ return [
 'name_business'=> 'ชื่อที่ใช้ในธุรกิจ',
 'name_business_a'=> '* กรณีไม่มีชื่อให้ใส่(-)',
 'register_submit'=> 'ลงทะเบียน',
+'line_type'=> 'สายงาน',
+'Referral_UserName'=> 'รหัสผู้แนะนำ',
+
+'marital_status'=> 'สถานะภาพ',
+'Single'=> 'โสด',
+'Married'=> 'สมรส',
+'Divorced'=> 'หย่าร้าง',
+'date_of_birth'=> 'วัน/เดือน/ปีเกิด',
+'ID_card_number'=> 'เลขที่บัตรประชาชน (13 หลัก)',
+'Nationality'=> 'สัญชาติ',
+'Mobile_Phone'=> 'โทรศัพท์มือถือ',
+'Home_Phone'=> 'โทรศัพท์บ้าน',
+'address_on_ID_card'=> 'ที่อยู่ตามบัตรประชาชน',
+'Convenient_address'=> 'ที่อยู่ที่สะดวกสำหรับการติดต่อและจัดส่งผลิตภัณฑ์ถึงบ้าน',
+'use_address_on_ID_card'=> 'ใช้ที่อยู่ตามบัตรประชาชน',
+'bank_information'=> 'Bank information',
+'Documents_for_applying'=> 'เอกสารสำหรับการสมัคร',
+'Beneficiaries_name-surname'=>'ผู้สือทอดผลประโยชน์ ชื่อ-นามสกุล',
+'ID_card_photo'=>'ภาพถ่ายบัตรประชาชน',
+'straight_face_photo'=>' ภายถ่ายหน้าตรง',
+
+
+//frontend/tree_view
+'down_a'=> 'ดิ่งขา A',
+'down_b'=> 'ดิ่งขา B',
+'down_c'=> 'ดิ่งขา C',
+//model
+'add'=> 'เพิ่มสาย',
+'under'=> 'ภายใต้',
+
+'Register_Date'=> 'วันที่สมัคร',
+'First_order'=> 'สั่งซื้อครั้งแรก',
+'Personal_Score'=> 'คะแนนส่วนตัว',
+'Monthly_Features_Active_To'=> 'คุณสมบัติรายเดือน Active ถึง',
+'Highest_Qualifications'=> 'คุณวุฒิสูงสุด',
+'Reward_Bonus'=> 'สิทธิ Reward Bonus',
+'Count_qualifications'=> 'นับคุณวุฒิจาก',
+'Middle'=> 'ทีมกลางคือทีม',
+'Remaining'=> 'คะแนนคงเหลือยกมา',
+'Today_score'=> 'คะแนนวันนี้',
+'date_information'=> 'ข้อมูลวันที่',
+'view_line'=> 'ดูสายงาน',
+'close'=> 'ปิด',
+
 ];
+
 

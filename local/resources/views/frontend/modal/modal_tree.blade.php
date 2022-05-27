@@ -27,12 +27,12 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
    <table class="table">
     <tbody>
      <tr class="table-success">
-      <td><strong>วันที่สมัคร </strong></td>
+      <td><strong>@lang('message.Register_Date') </strong></td>
       <td>{{ date('d/m/Y',strtotime($data->created_at)) }}</td>
       <td></td>
     </tr>
     <tr>
-      <td><strong>สั่งซื้อครั้งแรก </strong></td>
+      <td><strong>@lang('message.First_order') </strong></td>
       <td>@if(empty($data->date_order_first) ||  $data->date_order_first == '0000-00-00 00:00:00')
         -
         @else
@@ -41,13 +41,14 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
       <td></td>
     </tr>
     <tr class="table-success">
-      <td><strong>คะแนนส่วนตัว:</strong></td>
+      <td><strong>@lang('message.Personal_Score') :</strong></td>
       <td>{{ number_format($data->pv) }} PV</td>
       <td><b class="text-danger">{{ $data->dt_package }}</b></td>
 
     </tr>
     <tr>
-      <td><strong>คุณสมบัติรายเดือน Active ถึง</strong></td>
+
+      <td><strong>@lang('message.Monthly_Features_Active_To')</strong></td>
       <td>@if(empty($data->pv_mt_active))
         -
         @else
@@ -56,29 +57,29 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
       <td>[เหลือ {{ number_format($data->pv_mt) }} PV]</td>
     </tr>
     <tr class="table-success">
-      <td><strong>คุณวุฒิสูงสุด</strong></td>
+      <td><strong>@lang('message.Highest_Qualifications')</strong></td>
       <td>{{ $data->max_q_name }}</td>
       <td></td>
     </tr>
     <tr>
-      <td><strong>สิทธิ Reward Bonus</strong></td>
+      <td><strong>@lang('message.Reward_Bonus')</strong></td>
       <td>{{ $count_directsponsor['reward_bonus'] }}</td>
       <td></td>
     </tr>
     <tr class="table-success">
-      <td><strong>นับคุณวุฒิจาก</strong></td>
+      <td><strong>@lang('message.Count_qualifications') Count_qualifications</strong></td>
       <td>{{ date('01/m/Y') }} ถึง {{ date('t/m/Y') }}</td>
       <td></td>
     </tr>
     <tr>
-      <td><strong>ทีมกลางคือทีม</strong></td>
+      <td><strong>@lang('message.Middle')</strong></td>
 
     <?php $get_month_pv = MonthPv::get_month_pv($data->user_name); ?>
       <td>
         @if($get_month_pv['data_avg_pv']['pv_month'] <= 0)
         -
         @else
-         <b class="text-danger">{{ $get_month_pv['data_avg_pv']['type'] }}  มีคะแนนสะสม {{ number_format($get_month_pv['data_avg_pv']['pv_month']) }} PV</b>
+         <b class="text-danger">{{ $get_month_pv['data_avg_pv']['type'] }}  @lang('message.add')มีคะแนนสะสม {{ number_format($get_month_pv['data_avg_pv']['pv_month']) }} PV</b>
         @endif
 
       </td>
@@ -90,24 +91,24 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
 </div>
 <div class="b-t-default transection-footer row">
  <div class="col-6  b-r-default">
-  <strong>คะแนนคงเหลือยกมา</strong><br>
+  <strong>@lang('message.Remaining')</strong><br>
   [ A ] <font class="font-red">{{ number_format($data->bl_a) }}</font> [ B ] <font class="font-red">{{ number_format($data->bl_b) }}</font> [ C ] <font class="font-red">{{ number_format($data->bl_c) }}</font>
 </div>
 <div class="col-6">
-  <strong>คะแนนวันนี้</strong><br>
+  <strong>@lang('message.Today_score')</strong><br>
   [ A ] <font class="font-red">{{ number_format($data->pv_a) }}</font> [ B ] <font class="font-red">{{ number_format($data->pv_b) }}</font> [ C ] <font class="font-red">{{ number_format($data->pv_c) }}</font>
 </div>
 </div>
 </div>
 
 <div class="modal-footer">
-  <p class="m-b-0 text-left" style="font-size: 12px"> ข้อมูลวันที่ :{{ date('d/m/Y') }} </p>
-  <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">ปิด</button>
+  <p class="m-b-0 text-left" style="font-size: 12px"> @lang('message.date_information'):{{ date('d/m/Y') }} </p>
+  <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">@lang('message.close')</button>
 
   <form id="line_id_v1" action="{{route('tree_view')}}" method="POST">
     <input type="hidden" name="id" value="{{$data->user_name}}">
     @csrf
-    <button type="submit" class="btn btn-primary waves-effect waves-light ">ดูสายงาน</button>
+    <button type="submit" class="btn btn-primary waves-effect waves-light ">@lang('message.view_line')</button>
   </form>
 
 

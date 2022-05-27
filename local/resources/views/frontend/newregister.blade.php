@@ -38,7 +38,7 @@
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label><b>Uplind ID</b></label>
+                         <label><b>  @lang('message.under') </b></label>
                          <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;">
 
                              <font style="color: #000;"> {{ @$data['data']->business_name }} (
@@ -49,7 +49,7 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label><b>สายงาน</b></label>
+                         <label><b>@lang('message.line_type')</b></label>
                          <span class=" form-control pcoded-badge label label-success"
                              style="font-size: 15px;padding: 9px 9px;">
                              <font style="color: #000;">{{ $data['line_type_back'] }} </font>
@@ -61,11 +61,11 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label><b>รหัสผู้แนะนำ</b></label>
+                         <label><b>@lang('message.Referral_UserName')</b></label>
 
                          <div class="input-group input-group-button">
                              <input type="text" class="form-control" name="introduce" id="introduce"
-                                 placeholder="รหัสผู้แนะนำ" value="{{ Auth::guard('c_user')->user()->user_name }}">
+                                 placeholder="@lang('message.Referral_UserName')" value="{{ Auth::guard('c_user')->user()->user_name }}">
                              <span class="input-group-addon btn btn-primary" id="basic-addon10" onclick="check_user()">
                                  <span class=""><i class=" icofont icofont-check-circled"></i> Check</span>
                              </span>
@@ -115,21 +115,21 @@
 
                  <div class="form-group row">
                      <div class="col-sm-2">
-                         <label>สถานะภาพ</label>
+                         <label>@lang('message.marital_status')</label>
                          <select class="form-control" name="family_status">
-                             <option value="1">โสด</option>
-                             <option value="2">สมรส</option>
-                             <option value="3">หย่าร้าง</option>
+                             <option value="1">@lang('message.Single')</option>
+                             <option value="2">@lang('message.Married')</option>
+                             <option value="3">@lang('message.Divorced')</option>
                          </select>
                      </div>
 
                      <div class="col-sm-3">
-                         <label>วัน/เดือน/ปีเกิด</label>
+                         <label>@lang('message.date_of_birth')</label>
                          <input class="form-control" type="date" name="birth_day" value="{{ old('birth_day') }}">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>เลขที่บัตรประชาชน (13 หลัก) <font class="text-danger">*</font></label>
+                         <label>@lang('message.ID_card_number') <font class="text-danger">*</font></label>
                          <input class="form-control card" data-mask="99999-99999-999" type="text" name="id_card"
                              value="{{ old('id_card') }}" required="">
                      </div>
@@ -137,7 +137,7 @@
 
 
                      <div class="col-sm-3">
-                         <label>สัญชาติ <font class="text-danger">*</font></label>
+                         <label>@lang('message.Nationality') <font class="text-danger">*</font></label>
                          <select class="js-example-basic-single col-sm-12" name="nation_id" required="">
                              <option value="">Select</option>
                              @foreach ($data['country'] as $country_value)
@@ -150,13 +150,13 @@
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>โทรศัพท์มือถือ <b class="text-danger">*</b></label>
+                         <label>@lang('message.Mobile_Phone')  <b class="text-danger">*</b></label>
                          <input type="text" class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" name="tel_mobile"
                          value="{{ old('tel_mobile') }}" >
                      </div>
 
                      <div class="col-sm-3">
-                         <label>โทรศัพท์บ้าน</label>
+                         <label>@lang('message.Home_Phone') </label>
                          <input type="text" class="form-control us_telephone" autocomplete="off"
                           data-mask="999-999-9999" name="tel_home" value="{{ old('tel_home') }}" >
                      </div>
@@ -172,45 +172,45 @@
 
                  <div class="form-group row">
                      <div class="col-sm-12">
-                         <h3 class="sub-title m-t-0" style="color: #000;font-size: 16px">ที่อยู่ตามบัตรประชาชน</h3>
+                         <h3 class="sub-title m-t-0" style="color: #000;font-size: 16px">@lang('message.address_on_ID_card')</h3>
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>บ้านเลขที่ <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="บ้านเลขที่" id="card_house_no"
+                         <label>@lang('message.no') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.no')" id="card_house_no"
                              name="card_house_no" value="{{ old('card_house_no') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>หมู่บ้าน/อาคาร <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="หมู่บ้าน/อาคาร" id="card_house_name"
+                         <label>@lang('message.building') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.building')" id="card_house_name"
                              name="card_house_name" value="{{ old('card_house_name') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>หมู่ที่ <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="หมู่ที่" id="card_moo" name="card_moo"
+                         <label>@lang('message.villageno') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.villageno')" id="card_moo" name="card_moo"
                              value="{{ old('card_moo') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>ตรอก/ซอย <font class="text-danger">*</font></label>
+                         <label>@lang('message.lane')</label>
                          <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="card_soi" name="card_soi"
-                             value="{{ old('card_soi') }}" required="">
+                             value="{{ old('card_soi') }}" >
                      </div>
 
                      <div class="col-sm-3">
-                         <label>ถนน <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="ถนน" id="card_road" name="card_road"
-                             value="{{ old('card_road') }}" required="">
+                         <label>@lang('message.road')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.road')" id="card_road" name="card_road"
+                             value="{{ old('card_road') }}"  >
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>จังหวัด <font class="text-danger">*</font></label>
+                         <label>@lang('message.province') <font class="text-danger">*</font></label>
                          <select class="js-example-basic-single col-sm-12" id="card_province" name="card_province"
                              required="">
                              <option value="">Select</option>
@@ -224,7 +224,7 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>เขต/อำเภอ <font class="text-danger">*</font></label>
+                         <label>@lang('message.district/area')<font class="text-danger">*</font></label>
                          <select class="js-example-basic-single col-sm-12" name="card_amphures" id="card_amphures"
                              required="">
                              <option value="">Select</option>
@@ -232,7 +232,7 @@
                          {{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="card_amphures" name="card_amphures" value="{{ old('card_amphures') }}"> --}}
                      </div>
                      <div class="col-sm-3">
-                         <label>แขวง/ตำบล <font class="text-danger">*</font></label>
+                         <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
                          {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="card_district" name="card_district" value="{{ old('district') }}"> --}}
                          <select class="js-example-basic-single col-sm-12" name="card_district" id="card_district"
                              required="">
@@ -241,8 +241,8 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>รหัสไปรษณีย์</label>
-                         <input type="text" class="form-control" placeholder="รหัสไปรษณีย์" id="card_zipcode"
+                         <label>@lang('message.zipcode')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.zipcode')" id="card_zipcode"
                              name="card_zipcode" value="{{ old('card_zipcode') }}">
                      </div>
                  </div>
@@ -251,7 +251,7 @@
                  <div class="form-group row">
                      <div class="col-sm-12">
                          <h3 class="sub-title" style="color: #000;font-size: 16px">
-                             ที่อยู่ที่สะดวกสำหรับการติดต่อและจัดส่งผลิตภัณฑ์ถึงบ้าน </h3>
+                          @lang('message.Convenient_address') </h3>
                      </div>
                  </div>
 
@@ -263,46 +263,46 @@
                              <span class="cr">
                                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                              </span>
-                             <span>ใช้ที่อยู่ตามบัตรประชาชน</span>
+                             <span> @lang('message.use_address_on_ID_card')</span>
                          </label>
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>บ้านเลขที่ <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="บ้านเลขที่" id="house_no" name="house_no"
+                         <label>@lang('message.no') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.no')" id="house_no" name="house_no"
                              value="{{ old('house_no') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>หมู่บ้าน/อาคาร <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="หมู่บ้าน/อาคาร" id="house_name"
+                         <label>@lang('message.building') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.building')" id="house_name"
                              name="house_name" value="{{ old('house_name') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>หมู่ที่ <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="หมู่ที่" id="moo" name="moo"
+                         <label>@lang('message.villageno') <font class="text-danger">*</font></label>
+                         <input type="text" class="form-control" placeholder="@lang('message.villageno')" id="moo" name="moo"
                              value="{{ old('moo') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>ตรอก/ซอย <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="soi" name="soi"
-                             value="{{ old('soi') }}" required="">
+                         <label>@lang('message.lane') </label>
+                         <input type="text" class="form-control" placeholder="@lang('message.lane')" id="soi" name="soi"
+                             value="{{ old('soi') }}">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>ถนน <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="ถนน" id="road" name="road"
-                             value="{{ old('road') }}" required="">
+                         <label>@lang('message.road')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.road')" id="road" name="road"
+                             value="{{ old('road') }}">
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>จังหวัด <font class="text-danger">*</font></label>
+                         <label>@lang('message.province') <font class="text-danger">*</font></label>
                          <select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
                              <option value="">Select</option>
                              @foreach ($data['provinces'] as $value_provinces)
@@ -314,7 +314,7 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>เขต/อำเภอ <font class="text-danger">*</font></label>
+                         <label>@lang('message.district/area') <font class="text-danger">*</font></label>
                          <select class="js-example-basic-single col-sm-12" name="amphures" id="amphures" required="">
                              <option value="">Select</option>
                          </select>
@@ -322,7 +322,7 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>แขวง/ตำบล <font class="text-danger">*</font></label>
+                         <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
                          <select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
                              <option value="">Select</option>
                              {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district" name="district" value="{{ old('district') }}"> --}}
@@ -330,8 +330,8 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>รหัสไปษณีย์</label>
-                         <input type="text" class="form-control" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode"
+                         <label>@lang('message.zipcode')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.zipcode')" id="zipcode" name="zipcode"
                              value="{{ old('zipcode') }}">
                      </div>
 
@@ -340,26 +340,26 @@
 
                  <div class="form-group row">
                      <div class="col-sm-12">
-                         <h4 class="sub-title" style="color: #000;font-size: 16px">ข้อมูลธนาคาร</h4>
+                         <h4 class="sub-title" style="color: #000;font-size: 16px">@lang('message.bank_information')</h4>
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>ชื่อบัญชี</label>
-                         <input type="text" class="form-control" placeholder="ชื่อบัญชี" name="bank_account"
+                         <label>@lang('message.accountname')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.accountname')" name="bank_account"
                              value="{{ old('bank_account') }}">
                      </div>
                      <div class="col-sm-3">
-                         <label>เลขที่บัญชี</label>
-                         <input type="text" class="form-control" placeholder="เลขที่บัญชี" name="bank_no"
+                         <label> @lang('message.accountno')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.accountno')" name="bank_no"
                              value="{{ old('bank_no') }}" maxlength="10" minlength="10">
                      </div>
 
                      <div class="col-sm-3">
-                      <label>ธนาคาร <font class="text-danger">*</font></label>
+                      <label>@lang('message.bank') <font class="text-danger">*</font></label>
                       <select class="form-control" name="bank_name" required>
-                          <option value=""> เลือกธนาคาร </option>
+                          <option value=""> Select </option>
                           <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
                           <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
                           <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif> ธนาคารกรุงไทย </option>
@@ -375,26 +375,26 @@
 
 
                      <div class="col-sm-3">
-                         <label>สาขา</label>
-                         <input type="text" class="form-control" placeholder="สาขา" name="bank_branch"
+                         <label>@lang('message.branch')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.branch')" name="bank_branch"
                              value="{{ old('bank_branch') }}">
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>ประเภทบัญชี</label>
+                         <label>@lang('message.accounttype')</label>
                          <br>
                          <div class="form-check form-check-inline">
                              <label class="form-check-label">
                                  <input class="form-check-input" type="radio" name="bank_type" id="gender-1"
-                                     value="ออมทรัพย์" checked="checked"> ออมทรัพย์
+                                     value="@lang('message.Savings')" checked="checked"> @lang('message.Savings')
                              </label>
                          </div>
                          <div class="form-check form-check-inline">
                              <label class="form-check-label">
                                  <input class="form-check-input" type="radio" name="bank_type" id="gender-2"
-                                     value="กระแสรายวัน"> กระแสรายวัน
+                                     value="@lang('message.Current_account')"> @lang('message.Current_account')
                              </label>
                          </div>
                          <span class="messages"></span>
@@ -404,28 +404,28 @@
 
                  <div class="form-group row">
                      <div class="col-sm-12">
-                         <h5 class="sub-title" style="color: #000;font-size: 16px">การติดต่อ/ผู้รับผลประโยชน์</h5>
+                         <h5 class="sub-title" style="color: #000;font-size: 16px">@lang('message.successor')</h5>
                      </div>
                  </div>
 
                  <div class="form-group row">
 
                      <div class="col-sm-3">
-                         <label>ผู้สือทอดผลประโยชน์ ชื่อ-นามสกุล</label>
-                         <input type="text" class="form-control" placeholder="ผู้สือทอดผลประโยชน์ ชื่อ-นามสกุล"
+                         <label>@lang('message.Beneficiaries_name-surname')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.Beneficiaries_name-surname')"
                              name="benefit_name" value="{{ old('benefit_name') }}">
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>ความสัมพันธ์</label>
-                         <input type="text" class="form-control" placeholder="ความสัมพันธ์" name="benefit_relation"
+                         <label>@lang('message.relationship')</label>
+                         <input type="text" class="form-control" placeholder="@lang('message.relationship')" name="benefit_relation"
                              value="{{ old('benefit_relation') }}">
                      </div>
 
                      <div class="col-sm-3">
-                         <label>เลขที่บัตรประชาชน (13 หลัก) </label>
+                         <label>@lang('message.ID_card_number')</label>
                          <input type="text" class="form-control card" data-mask="99999-99999-999" name="benefit_id"
                              value="{{ old('benefit_id') }}">
                      </div>
@@ -434,7 +434,7 @@
 
                  <div class="form-group row">
                      <div class="col-sm-12">
-                         <h5 class="sub-title" style="color: #000;font-size: 16px">เอกสารสำหรับการสมัคร</h5>
+                         <h5 class="sub-title" style="color: #000;font-size: 16px"> @lang('message.Documents_for_applying')</h5>
                      </div>
 
 
@@ -446,7 +446,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>ภาพถ่ายบัตรประชาชน <b class="text-danger">*</b></label>
+                                 <label>@lang('message.ID_card_photo') <b class="text-danger">*</b></label>
                                  <input type="file" id="file_1" name="file_1" class="form-control" required>
                              </div>
                          </div>
@@ -457,7 +457,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>ภายถ่ายหน้าตรง <b class="text-danger">*</b></label>
+                                 <label>@lang('message.straight_face_photo')<b class="text-danger">*</b></label>
                                  <input type="file" id="file_2" name="file_2" class="form-control" required>
                              </div>
 
@@ -472,7 +472,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน <b class="text-danger">*</b></label>
+                                 <label>@lang('message.bank_information') ภาพถ่ายหน้าตรงถือบัตรประชาชน <b class="text-danger">*</b></label>
                                  <input type="file" id="file_3" name="file_3" class="form-control" required>
                              </div>
                          </div>
@@ -483,7 +483,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>ภาพถ่ายหน้าบัญชีธนาคาร</label>
+                                 <label>@lang('message.bank_information') ภาพถ่ายหน้าบัญชีธนาคาร</label>
                                  <input type="file" id="file_4" name="file_4" class="form-control">
                              </div>
 
