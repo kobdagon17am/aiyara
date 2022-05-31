@@ -11,12 +11,12 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="sub-title"><i class="fa fa-file-text"></i> เอกสารการลงทะเบียน</h4>
+                <h4 class="sub-title"><i class="fa fa-file-text"></i> @lang('message.registration_documents') </h4>
             </div>
             <div class="card-block table-border-style">
 
                 @if ($check_kyc['status'] == 'fail')
-                    <h4 class="sub-title"><i class="fa fa-upload"></i> ส่งเอกสารเพิ่มเติม</h4>
+                    <h4 class="sub-title"><i class="fa fa-upload"></i> @lang('message.send_additional_documents') </h4>
                     <form action="{{ route('docs_upload') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
@@ -29,7 +29,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <label>ภาพถ่ายบัตรประชาชน</label>
+                                            <label> @lang('message.ID_card_photo')</label>
                                             <input type="file" id="file_1" name="file_1" class="form-control">
                                         </div>
 
@@ -43,15 +43,12 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <label>ภายถ่ายหน้าตรง</label>
+                                            <label>@lang('message.straight_face_photo')</label>
                                             <input type="file" id="file_2" name="file_2"  class="form-control">
                                         </div>
 
                                     </div>
                                 @endif
-
-
-
 
 
                             </div>
@@ -64,7 +61,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน</label>
+                                            <label>@lang('message.holding_an_ID_card')</label>
                                             <input type="file" id="file_3" name="file_3" class="form-control">
                                         </div>
                                     </div>
@@ -78,18 +75,12 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12">
-                                            <label>ภาพถ่ายหน้าบัญชีธนาคาร</label>
+                                            <label>@lang('message.bank_account_photo')</label>
                                             <input type="file" id="file_4" name="file_4" class="form-control">
                                         </div>
-
                                     </div>
                                 @endif
-
-
                             </div>
-
-
-
                         </div>
 
                         <div class="row justify-content-md-center">
@@ -97,14 +88,6 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                           <button type="submit" class="btn btn-primary">Upload File</button>
                           </div>
                         </div>
-
-
-
-
-
-
-
-
                     </form>
 
                 @else
@@ -117,10 +100,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                         <thead>
                             <tr>
                                 {{-- <th width="100">#</th> --}}
-                                <th>เอกสาร</th>
-                                <th width="200">วันที่</th>
-                                <th width="200">สถานะ</th>
-                                <th>รายละเอียด</th>
+                                <th>Docs</th>
+                                <th width="200">Date</th>
+                                <th width="200">Status</th>
+                                <th>Detail</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -129,25 +112,25 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                             @foreach ($data as $value)
                                 <?php $i++;
                                 if ($value->type == 1) {
-                                    $type = 'ภาพถ่ายบัตรประชาชน';
+                                    $type = __('message.ID_card_photo');
                                 } elseif ($value->type == 2) {
-                                    $type = 'ภายถ่ายหน้าตรง';
+                                    $type = __('message.straight_face_photo');
                                 } elseif ($value->type == 3) {
-                                    $type = 'ภาพถ่ายหน้าตรงถือบัตรประชาชน';
+                                    $type = __('message.holding_an_ID_card');
                                 } elseif ($value->type == 4) {
-                                    $type = 'ภาพถ่ายหน้าบัญชีธนาคาร';
+                                    $type =  __('message.bank_account_photo');
                                 } else {
-                                    $type = 'อื่นๆ';
+                                    $type = __('message.other');
                                 }
                                 //0=ส่งมาแล้วรอตรวจสอบ-สีเทา, 1=ผ่าน-เขียว, 2=ไม่ผ่าน-สีแดง, 3=ยังไม่ส่ง-สีส้ม
                                 if ($value->regis_doc_status == '1') {
-                                    $status = "<span class='pcoded-badge label label-success'>ผ่านการอนุมัติ</span>";
+                                    $status = "<span class='pcoded-badge label label-success'>".__('message.approved')."</span>";
                                 } elseif ($value->regis_doc_status == '2') {
-                                    $status = "<span class='pcoded-badge label label-danger'>ไม่ผ่านการอนุมัติ</span>";
+                                    $status = "<span class='pcoded-badge label label-danger'>".__('message.not_approved')."</span>";
                                 } elseif ($value->regis_doc_status == '3') {
-                                    $status = "<span class='pcoded-badge label label-warning'>ยังไม่ส่งเอกสาร</span>"; # code...
+                                    $status = "<span class='pcoded-badge label label-warning'>".__('message.not_submitted_documents')."</span>";
                                 } else {
-                                    $status = "<span class='pcoded-badge label label-warning'>รอการอนุมัติ</span>";
+                                    $status = "<span class='pcoded-badge label label-warning'>".__('message.pending_approval')."</span>";
                                 }
 
                                 ?>
@@ -164,9 +147,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                 </div>
 
                 <hr>
-                <p class="text-danger">*กรณีเอกสารไม่ผ่านการอนุมัติ
-                    สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน
-                    1-2 วันทำการค่ะ </p>
+                <p class="text-danger">* @lang('message.document_case') </p>
 
 
             </div>
@@ -184,7 +165,6 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             this.value = '';
             return false;
         } else {
-
             var reader = new FileReader();
             reader.onload = function(e) {
                 // get loaded data and render thumbnail.
@@ -192,10 +172,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             };
             // read the image file as a data URL.
             reader.readAsDataURL(this.files[0]);
-
         }
-
-
     });
 
     $('#file_2').change(function() {
@@ -213,10 +190,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             };
             // read the image file as a data URL.
             reader.readAsDataURL(this.files[0]);
-
         }
-
-
     });
 
     $('#file_3').change(function() {
@@ -234,10 +208,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             };
             // read the image file as a data URL.
             reader.readAsDataURL(this.files[0]);
-
         }
-
-
     });
 
     $('#file_4').change(function() {

@@ -405,7 +405,29 @@ return [
 'Documents_for_applying'=> 'Documents for applying',
 'Beneficiaries_name-surname'=>'Beneficiaries (Name Surname)',
 'ID_card_photo'=>'ID card photo',
-'straight_face_photo'=>' Straight face photo',
+'straight_face_photo'=>'Straight face photo',
+'holding_an_ID_card'=>'Photo of a straight face holding an ID card',
+'bank_account_photo'=>'Bank account photo',
+'Upload_profile_picture'=>'Upload profile picture',
+
+//profile_img
+'select_img'=>'Select picture',
+'Upload_picture'=>'Upload picture',
+'Edit'=>'Edit',
+'confirm_your_password_address'=>'Please confirm your password to change your address',
+'confirm_your_password'=>'Confirm Password',
+//doc
+'registration_documents'=>'Registration Documents',
+'send_additional_documents'=>'Send additional documents',
+'other'=>'other',
+'approved'=>'Approved',
+'not_approved'=>'Not approved ',
+'not_submitted_documents'=>'Not submitted documents',
+'pending_approval'=>'Pending approval',
+'document_case'=>'In case the document is not approved, additional documents can be sent by attaching the documents in the form below the team will hurry to check for the inside 1-2 business days',
+'not_verified'=>'You cannot do any transaction. If the identity is not verified',
+'success_fully'=> 'Documents have been verified successfully.',
+'Check'=>'Check.',
 
 //frontend/tree_view
 'down_a'=> 'Down A',

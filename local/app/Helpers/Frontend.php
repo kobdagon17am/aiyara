@@ -86,13 +86,13 @@ class Frontend{
       $html = '<div class="alert alert-success background-success">
         <i class="fa fa-check text-white"></i>
       </button>
-      <strong> SUCCESS </strong> <code> เอกสารผ่านการตรวจสอบเรียบร้อย </code>
+      <strong> SUCCESS </strong> <code> '.__('message.success_fully').' </code>
       </div>';
 
       $rs = ['status'=>'success','message'=>'เอกสารผ่านเเล้ว','html'=>$html];
     }else{
       $html = '<div class="alert alert-warning icons-alert">
-       <p><strong>Warning!</strong> <code>คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน</code>  <a href="'.route('docs').'" class="pcoded-badge label label-warning ">ตรวจสอบ</a></p>
+       <p><strong>Warning!</strong> <code>'.__('message.not_verified').'</code>  <a href="'.route('docs').'" class="pcoded-badge label label-warning ">'.__('message.Check').'</a></p>
       </div>';
 
     $rs = ['status'=>'fail','message'=>'คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',

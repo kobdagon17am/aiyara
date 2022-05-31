@@ -22,7 +22,7 @@
 
               <input type="file" name="img" class="input-image" id="img" style="display: none;">
               <input type="hidden" name="imgBase64" value="">
-              <h5>ฮัพโหลดรูปโปรไฟล์</h5>
+              <h5>@lang('message.Upload_profile_picture') </h5>
                 <hr>
              {{--    <h5>abc123@domain.com</h5>
                 <h6>Systems Administrator</h6> --}}
@@ -30,8 +30,8 @@
 
             <div>
               @if($canAccess)
-                <button type="button" onclick="document.getElementById('img').click()" class="btn btn-primary waves-effect waves-light m-r-15"><i class="icofont icofont-plus m-r-5"></i> เลือกรูปภาพ</button>
-                <button type="submit" id="upload" class="btn btn-success waves-effect waves-light"><i class="fa fa-upload m-r-5"></i> อัพโหลดรูปภาพ</button>
+                <button type="button" onclick="document.getElementById('img').click()" class="btn btn-primary waves-effect waves-light m-r-15"><i class="icofont icofont-plus m-r-5"></i> @lang('message.select_img') </button>
+                <button type="submit" id="upload" class="btn btn-success waves-effect waves-light"><i class="fa fa-upload m-r-5"></i> @lang('message.Upload_picture') </button>
                 @endif
             </div>
         </div>
@@ -46,7 +46,7 @@
 
         <div class="row">
             <div class="col-md-12 m-10">
-               <button type="button" class="btn btn-primary waves-effect waves-light crop_image btn-block"><i class="fa fa-image m-r-5"></i> ยืนยัน</button>
+               <button type="button" class="btn btn-primary waves-effect waves-light crop_image btn-block"><i class="fa fa-image m-r-5"></i> Upload </button>
            </div>
 
        </div>

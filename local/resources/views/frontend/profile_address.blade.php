@@ -18,75 +18,75 @@
  					<h4 class="sub-title" >ที่อยู่ที่สะดวกสำหรับการติดต่อและจัดส่งผลิตภัณฑ์ถึงบ้าน (โปรดแจ้งให้บริษัทฯทราบทันทีหากมีการเปลี่ยนแปลงที่อยู่) </h4>
  				</div>
  			</div> --}}
-       <h4 class="sub-title" >ข้อมูลส่วนตัว</h4>
+       <h4 class="sub-title">@lang('message.PERSONALINFORMATION')</h4>
 
        <div class="form-group row">
         <div class="col-sm-3">
-          <label>ชื่อ </label>
+          <label>@lang('message.name_first')</label>
           <input type="text" class="form-control form-control-bold"  value="{{@$customer->first_name}}" disabled>
         </div>
 
         <div class="col-sm-3">
-          <label>นามสกุล </label>
+          <label> @lang('message.name_last') </label>
           <input type="text" class="form-control form-control-bold"  value="{{@$customer->last_name}}" disabled>
         </div>
 
         <div class="col-sm-3">
-          <label>นามแฝง </label>
+          <label> @lang('message.name_business') </label>
           <input type="text" class="form-control form-control-bold"  name="business_name" value="{{@$customer->business_name}}" >
         </div>
 
         <div class="col-sm-3">
-					<label>เบอร์โทรศัพท์</label>
-          <input type="text" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_mobile }}">
+					<label>@lang('message.Mobile_Phone') </label>
+          <input type="text" placeholder="@lang('message.Mobile_Phone')" id="tel_mobile" name="tel_mobile"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_mobile }}">
 					{{-- <input type="" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}"> --}}
 				</div>
 
 				<div class="col-sm-3">
-					<label>อีเมลล์</label>
+					<label>Email</label>
 					<input type="email" class="form-control" autocomplete="off" placeholder="อีเมลล์" id="email" name="email" value="{{ @$customer->email }}">
 				</div>
  			</div>
 
-       <h4 class="sub-title" >ที่อยู่การจัดส่ง</h4>
+       <h4 class="sub-title" >@lang('message.address') </h4>
 
 
  			<div class="form-group row">
  				<div class="col-sm-2">
- 					<label>บ้านเลขที่ <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" name="house_no" value="{{@$customer->house_no}}" required="">
+ 					<label>@lang('message.no') <b class="text-danger">*</b></label>
+ 					<input type="text" class="form-control form-control-bold" placeholder="@lang('message.no')" name="house_no" value="{{@$customer->house_no}}" required="">
  				</div>
 
  				<div class="col-sm-3">
- 					<label>หมู่บ้าน/อาคาร <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" name="house_name" value="{{ @$customer->house_name }}" required="">
+ 					<label>@lang('message.building') <b class="text-danger">*</b></label>
+ 					<input type="text" class="form-control form-control-bold" placeholder="@lang('message.building')" name="house_name" value="{{ @$customer->house_name }}" required="">
  				</div>
 
  				<div class="col-sm-2">
- 					<label>หมู่ที่ <b class="text-danger">*</b></label>
- 					<input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" name="moo" value="{{ @$customer->moo }}" required="">
+ 					<label>@lang('message.villageno') <b class="text-danger">*</b></label>
+ 					<input type="text" class="form-control form-control-bold" placeholder="@lang('message.villageno')" name="moo" value="{{ @$customer->moo }}" required="">
  				</div>
 
  				<div class="col-sm-2">
- 					<label>ตรอก/ซอย </label>
- 					<input type="text" class="form-control" placeholder="ตรอก/ซอย" name="soi" value="{{ @$customer->soi }}" >
+ 					<label>@lang('message.lane')</label>
+ 					<input type="text" class="form-control" placeholder="@lang('message.lane')" name="soi" value="{{ @$customer->soi }}" >
  				</div>
 
 
  				<div class="col-sm-3">
- 					<label>ถนน</label>
- 					<input type="text" class="form-control" placeholder="ถนน" name="road" value="{{ @$customer->road }}">
+ 					<label>@lang('message.road') </label>
+ 					<input type="text" class="form-control" placeholder="@lang('message.road')" name="road" value="{{ @$customer->road }}">
  				</div>
  			</div>
 
  			<div class="form-group row">
  				<div class="col-sm-3">
- 					<label>จังหวัด <font class="text-danger">*</font></label>
+ 					<label>@lang('message.province') <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
              @if(@$customer->provinces_id)
                 <option value="{{ @$customer->provinces_id }}" >{{ @$customer->provinces_name }}</option>
              @else
-             <option value="" > เลือกจังหวัด </option>
+             <option value="" > Select </option>
              @endif
 
  						@foreach($provinces as $value_provinces)
@@ -95,12 +95,12 @@
  					</select>
  				</div>
  				<div class="col-sm-3">
- 					<label>เขต/อำเภอ <font class="text-danger">*</font></label>
+ 					<label>@lang('message.district/area') <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" name="amphures" id="amphures" required="">
             @if(@$customer->amphures_id_fk)
             <option value="{{ @$customer->amphures_id_fk}}" >{{ @$customer->amphures_name }}</option>
             @else
-            <option value="" > เขต/อำเภอ </option>
+            <option value="" > @lang('message.district/area') </option>
             @endif
 
  					</select>
@@ -108,12 +108,12 @@
  				</div>
 
  				<div class="col-sm-3">
- 					<label>แขวง/ตำบล <font class="text-danger">*</font></label>
+ 					<label>@lang('message.sub-district/sub-area')  <font class="text-danger">*</font></label>
  					<select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
             @if(@$customer->district_name)
             <option value="{{ @$customer->district_name}}" >{{ @$customer->district_name }}</option>
             @else
-            <option value="" > แขวง/ตำบล </option>
+            <option value="" >@lang('message.sub-district/sub-area') </option>
             @endif
  					</select>
  				</div>
@@ -125,8 +125,8 @@
 
 
  				<div class="col-sm-3">
- 					<label>รหัสไปรษณีย์</label>
- 					<input type="text" class="form-control" autocomplete="off" placeholder="รหัสไปษณีย์" id="zipcode" name="zipcode" value="{{ @$customer->zipcode }}">
+ 					<label>@lang('message.zipcode') </label>
+ 					<input type="text" class="form-control" autocomplete="off" placeholder="@lang('message.zipcode')" id="zipcode" name="zipcode" value="{{ @$customer->zipcode }}">
  				</div>
 
       </div>
@@ -138,7 +138,7 @@
 
  				<div class="col-sm-12">
           @if($canAccess)
- 					<button type="button" class="btn btn-success m-b-0" data-toggle="modal" data-target="#default-Modal">แก้ไขข้อมูล</button>
+ 					<button type="button" class="btn btn-success m-b-0" data-toggle="modal" data-target="#default-Modal">@lang('message.Edit')</button>
           @endif
  				</div>
 
@@ -148,7 +148,7 @@
  				<div class="modal-dialog" role="document">
  					<div class="modal-content">
  						<div class="modal-header">
- 							<h4 class="modal-title">กรุณายืนยันรหัสผ่านเพื่อเปลี่ยนแปลงที่อยู่</h4>
+ 							<h4 class="modal-title">@lang('message.confirm_your_password_address')</h4>
  							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
  								<span aria-hidden="true">&times;</span>
  							</button>
@@ -172,7 +172,7 @@
  						<div class="modal-footer">
               @if($canAccess)
  							<button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
- 							<button type="submit" class="btn btn-primary waves-effect waves-light ">ยืนยันรหัสผ่าน</button>
+ 							<button type="submit" class="btn btn-primary waves-effect waves-light ">@lang('message.confirm_your_password')</button>
                @endif
  						</div>
  					</div>
