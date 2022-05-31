@@ -252,8 +252,6 @@
                                                 <table id="data-table-0002" class="table table-bordered table-responsive"
                                                     style="width: 100%;">
                                                 </table>
-
-
                                                 <!--   <div class="form-group row div_btn_save " style="display: none;" >
                             <div class="col-md-12 text-center ">
                               <br>
@@ -309,6 +307,18 @@
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
+
+
+    <div id="showOrderModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p>Some text in the Modal..</p>
+        </div>
+      
+      </div>
+
 @endsection
 
 @section('script')

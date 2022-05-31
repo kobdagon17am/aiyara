@@ -225,14 +225,16 @@ class Po_approveController extends Controller
                               ]);
                             }
                         }
-                        $sRow2->approval_amount_transfer = $sRow2->transfer_price;
+                        // วุฒ็เปลี่ยนเป็น 0
+                        // $sRow2->approval_amount_transfer = $sRow2->transfer_price;
+                        $sRow2->approval_amount_transfer = 0;
                         $sRow2->account_bank_name_customer = $request->account_bank;
                         $sRow2->transfer_amount_approver = \Auth::user()->id;
                         $sRow2->transfer_bill_date  = $request->transfer_bill_date;
                         $sRow2->transfer_bill_approvedate = date("Y-m-d H:i:s");
                         DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                     }
-        
+                    
                     if (@request('no_approved') != null) {
                         $sRow2->status_slip = 'false';
                         $sRow2->order_status_id_fk = '3';
@@ -491,12 +493,16 @@ ORDER BY code_order DESC
              ->escapeColumns('transfer_money_datetime')
 
              ->addColumn('approval_amount_transfer', function($row) {
-                if(@$row->approval_amount_transfer>0){
-                    return number_format($row->approval_amount_transfer,2);
+                if($row->pay_with_other_bill_note==''){
+                    if(@$row->approval_amount_transfer>0){
+                        return number_format($row->approval_amount_transfer,2);
+                    }else{
+                        return "-";
+                    }
                 }else{
                     return "-";
                 }
-
+        
               })
              ->escapeColumns('approval_amount_transfer')
              ->addColumn('transfer_amount_approver', function($row) {
@@ -533,6 +539,33 @@ ORDER BY code_order DESC
             ->addColumn('transfer_bill_date', function ($row) {
                 return DB::table('payment_slip')->where('code_order', '=', $row->code_order)->where('status', 2)->orderby('id', 'desc')->value('transfer_bill_date');
             })
+
+            ->addColumn('pay_with_other_bill_note', function ($row) {
+                $str = '';
+                if($row->pay_with_other_bill_note!=''){
+                    $str .= "<label>".$row->pay_with_other_bill_note."</label>";
+                }else{
+
+                    $other_b = DB::table('db_orders')
+                    ->select('db_orders.*')
+                    ->where('db_orders.approve_status','!=',5)
+                    ->where('db_orders.pay_with_other_bill_note','like','%'.$row->code_order.'%')
+                    ->get();
+
+                    if(count($other_b)!=0){
+                        foreach($other_b as $b){
+                            $str .= "<label>".$b->code_order."</label><br>";
+                        }
+                    }else{
+                        $str .= '-';
+                    }
+                }
+                   
+                    return $str;
+
+            })
+            ->escapeColumns('pay_with_other_bill_note')
+
             ->make(true);
     }
 

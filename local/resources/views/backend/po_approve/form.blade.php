@@ -105,7 +105,8 @@
                                     <div class="col-md-3">
                                         <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป {!! $status_str !!} </h5>
                                         <input class="form-control  " type="text"
-                                            value="{{ @$r->transfer_bill_date ? @$r->transfer_bill_date : null }}" readonly="">
+                                            value="{{ @$r->transfer_bill_date ? @$r->transfer_bill_date : null }}"
+                                            readonly="">
                                         <br>
 
                                         @if (!empty(@$r->file))
@@ -246,8 +247,19 @@
 
                                                     <div class="col-md-12 mt-2 mb-2 text-left">
                                                         <div class="row form-group ">
+                                                            <div class="col-md-12 text-left">
+                                                                <h5 class="font-size-14">เลขที่ใบสั่งซื้อทั้งหมด</h5>
+                                                                {!! $p_bill !!}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-12 mt-2 mb-2 text-left">
+                                                        <div class="row form-group ">
                                                             <div class="col-md-6 text-left">
-                                                                <h5 class="font-size-14 ">ยอดชำระในใบสั่งซื้อ </h5>
+                                                                <h5 class="font-size-14 ">ยอดชำระรวม </h5>
 
                                                             </div>
                                                             <div class="col-md-6 text-left">
@@ -256,15 +268,14 @@
                                                                     $transfer_price = number_format($transfer_price, 2);
                                                                     ?>
                                                                     <input class="form-control" type="text"
-                                                                        id="total_price_sum" value="{{ $transfer_price }}"
-                                                                        readonly>
+                                                                        id="total_price_sum"
+                                                                        value="{{ $transfer_price }}" readonly>
                                                                 @else
                                                                     <input class="form-control" type="text"
                                                                         id="total_price_sum" value="{{ @$price }}"
                                                                         readonly>
                                                                 @endif
-                                                                <br>
-                                                                {!! $p_bill !!}
+
                                                             </div>
                                                         </div>
                                                     </div>

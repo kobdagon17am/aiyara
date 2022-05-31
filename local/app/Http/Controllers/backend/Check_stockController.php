@@ -235,12 +235,53 @@ class Check_stockController extends Controller
 
     public function Datatable(Request $req){
 
+      if(isset($req->Where['business_location_id_fk'])){
+        if($req->Where['business_location_id_fk']!=''){
+          $req->business_location_id_fk = $req->Where['business_location_id_fk'];
+        }
+      }
+
+      if(isset($req->Where['branch_id_fk'])){
+        if($req->Where['branch_id_fk']!=''){
+          $req->branch_id_fk = $req->Where['branch_id_fk'];
+        }
+      }
+      if(isset($req->Where['warehouse_id_fk'])){
+        if($req->Where['warehouse_id_fk']!=''){
+          $req->warehouse_id_fk = $req->Where['warehouse_id_fk'];
+        }
+      }
+      if(isset($req->Where['zone_id_fk'])){
+        if($req->Where['zone_id_fk']!=''){
+          $req->zone_id_fk = $req->Where['zone_id_fk'];
+        }
+      }
+      if(isset($req->Where['shelf_id_fk'])){
+        if($req->Where['shelf_id_fk']!=''){
+          $req->shelf_id_fk = $req->Where['shelf_id_fk'];
+        }
+      }
+      if(isset($req->Where['shelf_floor'])){
+        if($req->Where['shelf_floor']!=''){
+          $req->shelf_floor = $req->Where['shelf_floor'];
+        }
+      }
+      if(isset($req->Where['lot_number'])){
+        if($req->Where['lot_number']!=''){
+          $req->lot_number = $req->Where['lot_number'];
+        }
+      }
+      if(isset($req->Where['product'])){
+        if($req->Where['product']!=''){
+          $req->product = $req->Where['product'];
+        }
+      }
+
         if(!empty($req->business_location_id_fk)){
            $w01 = "  AND business_location_id_fk=".$req->business_location_id_fk ;
         }else{
            $w01 = "";
         }
-
         if(!empty($req->branch_id_fk)){
            $w02 = " AND branch_id_fk = ".$req->branch_id_fk." " ;
         }else{
