@@ -47,15 +47,16 @@ checkIdIsMatch();
 getProvinces();
 
 function getProvinces() {
-    // const businessLocation = $(this).val();
+    // const businessLocation = $(this).val(); 
     const businessLocation = $('#business_location').val();
 
-
-    // if (businessLocation == 3) {
-    //     $(`${card_zipcode}, ${zipcode}`).parent().hide();
-    // } else {
-    //     $(`${card_zipcode}, ${zipcode}`).parent().show();
-    // }
+    if (businessLocation == 3) {
+        $('#bank_name_th').hide();
+        $('#bank_name_cam').show();
+    } else {
+        $('#bank_name_cam').hide();
+        $('#bank_name_th').show();
+    }
 
     $.ajax({
         url: routeGetLocation,

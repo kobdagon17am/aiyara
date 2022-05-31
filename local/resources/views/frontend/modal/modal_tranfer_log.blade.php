@@ -15,6 +15,8 @@
                 <div class="row">
                   <p><span>เลขใบสั่งซื้อ : {{ $file_slip[0]->code_order }}</span><br>
                     <code>{{  $order->transfer_bill_note }}</code>
+
+
                   </p>
                 </div>
                   <div class="row">
@@ -29,13 +31,25 @@
                               <tr>
                                   <td>
                                       <p>{{ date('d/m/Y') }}</p>
+
+
                                   </td>
                                   <td>
                                    <img class="img-fluid"
-                                        src="{{ asset($value->url . '/' . $value->file) }}" alt="Theme-Logo">
+                                        src="{{ asset($value->url . '/' . $value->file) }}" alt="Theme-Logo" width="300">
                                 </td>
                                   <td>
-                                      <p>{{ $value->note2 }}</p>
+                                    <?php
+                                    if ($value->status == '2') {
+                                        $status = "<span class='pcoded-badge label label-success p-2'>".__('message.approved')."</span>";
+                                    } elseif ($value->status == '3') {
+                                        $status = "<span class='pcoded-badge label label-danger p-2'>".__('message.not_approved')."</span>";
+                                    }else{
+                                        $status = "<span class='pcoded-badge label label-warning p-2'>".__('message.pending_approval')."</span>";
+                                    }
+                                ?>
+                                {!! $status !!}
+                                      <p class="mt-2">{{ $value->note2 }}</p>
                                   </td>
                               </tr>
                           @endforeach

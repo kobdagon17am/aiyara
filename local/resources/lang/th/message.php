@@ -404,11 +404,37 @@ return [
 'address_on_ID_card'=> 'ที่อยู่ตามบัตรประชาชน',
 'Convenient_address'=> 'ที่อยู่ที่สะดวกสำหรับการติดต่อและจัดส่งผลิตภัณฑ์ถึงบ้าน',
 'use_address_on_ID_card'=> 'ใช้ที่อยู่ตามบัตรประชาชน',
-'bank_information'=> 'Bank information',
+'bank_information'=> 'หน้าบัญชีธนาคาร',
 'Documents_for_applying'=> 'เอกสารสำหรับการสมัคร',
 'Beneficiaries_name-surname'=>'ผู้สือทอดผลประโยชน์ ชื่อ-นามสกุล',
 'ID_card_photo'=>'ภาพถ่ายบัตรประชาชน',
 'straight_face_photo'=>' ภายถ่ายหน้าตรง',
+'holding_an_ID_card'=>'ภาพถ่ายหน้าตรงถือบัตรประชาชน',
+'bank_account_photo'=>'ภาพถ่ายหน้าบัญชีธนาคาร',
+
+//profile_img
+'Upload_profile_picture'=>'ฮัพโหลดรูปโปรไฟล์',
+'select_img'=>'เลือกรูปภาพ',
+'Upload_picture'=>'อัพโหลดรูปภาพ',
+
+//profile_address
+'Edit'=>'แก้ไขข้อมูล',
+'confirm_your_password_address'=>'กรุณายืนยันรหัสผ่านเพื่อเปลี่ยนแปลงที่อยู่',
+'confirm_your_password'=>'ยืนยันรหัสผ่าน',
+
+//doc
+'registration_documents'=>'เอกสารการลงทะเบียน',
+'send_additional_documents'=>'เอกสารการลงทะเบียน',
+'other'=>'อื่นๆ',
+
+'approved'=>'ผ่านการอนุมัติ',
+'not_approved'=>'ไม่ผ่านการอนุมัติ ',
+'not_submitted_documents'=>'ยังไม่ส่งเอกสาร',
+'pending_approval'=>'รอการอนุมัติ',
+'document_case'=>'กรณีเอกสารไม่ผ่านการอนุมัติ สามาถส่งเอกสารเพิ่มเติมได้โดยการแนบไฟล์เอกสารตามฟอร์มด้านล่าง ทางทีมงานจะรีบดำเนินการตรวจสอบให้ภานใน 1-2 วันทำการค่ะ',
+'not_verified'=>'คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
+'success_fully'=>'เอกสารผ่านการตรวจสอบเรียบร้อย',
+'Check'=>'ตรวจสอบ',
 
 
 //frontend/tree_view

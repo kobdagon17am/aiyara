@@ -358,7 +358,7 @@
 
                      <div class="col-sm-3">
                       <label>@lang('message.bank') <font class="text-danger">*</font></label>
-                      <select class="form-control" name="bank_name" required>
+                      <select class="form-control" id="bank_name_th" name="bank_name" required>
                           <option value=""> Select </option>
                           <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
                           <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
@@ -371,6 +371,13 @@
                               ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส. </option>
                           <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
                       </select>
+
+                      <select class="form-control" id="bank_name_cam" name="bank_name" required>
+                        <option value=""> Select </option>
+                        <option value="ABA Bank" @if ('ABA Bank' == old('ABA Bank')) selected="" @endif> ABA Bank </option>
+                        <option value="Acleda Bank" @if ('Acleda Bank' == old('Acleda Bank')) selected="" @endif> Acleda Bank </option>
+                    </select>
+
                   </div>
 
 
@@ -457,7 +464,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>@lang('message.straight_face_photo')<b class="text-danger">*</b></label>
+                                 <label>@lang('message.straight_face_photo') <b class="text-danger">*</b></label>
                                  <input type="file" id="file_2" name="file_2" class="form-control" required>
                              </div>
 
@@ -472,7 +479,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>@lang('message.bank_information') ภาพถ่ายหน้าตรงถือบัตรประชาชน <b class="text-danger">*</b></label>
+                                 <label>@lang('message.holding_an_ID_card')   <b class="text-danger">*</b></label>
                                  <input type="file" id="file_3" name="file_3" class="form-control" required>
                              </div>
                          </div>
@@ -483,7 +490,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>@lang('message.bank_information') ภาพถ่ายหน้าบัญชีธนาคาร</label>
+                                 <label>@lang('message.bank_account_photo')</label>
                                  <input type="file" id="file_4" name="file_4" class="form-control">
                              </div>
 
@@ -498,10 +505,6 @@
                              <div class="col-sm-10">
                                  <button type="submit" class="btn btn-primary m-b-0">@lang('message.register_submit')</button>
                              </div>
-                         </div>
-
-
-
                      @endif
 
              </form>
