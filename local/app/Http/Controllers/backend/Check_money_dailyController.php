@@ -453,6 +453,53 @@ class Check_money_dailyController extends Controller
           }
       })
       ->escapeColumns('column_002')     
+      ->addColumn('date_order', function($row) use($w05) {
+         if($row->remark==1){
+      // วุฒิแก้ให้มันเลือกวันที่ได้
+      $sDBSentMoneyDaily = DB::select("
+            SELECT
+            db_sent_money_daily.*,
+            ck_users_admin.`name` as sender
+            FROM
+            db_sent_money_daily
+            Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
+            WHERE db_sent_money_daily.id=".$row->id."    
+            $w05
+            order by db_sent_money_daily.time_sent
+      ");
+           $pn = '';
+            foreach(@$sDBSentMoneyDaily AS $r){
+                      $sOrders = DB::select("
+                            SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name,date(db_orders.created_at) as date_order
+                            FROM
+                            db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
+                            where sent_money_daily_id_fk in (".$r->id.")
+                            GROUP BY date(db_orders.created_at);
+                        ");
+
+                        $i = 1;
+                        foreach ($sOrders as $key => $value) {
+                            $pn .=     
+                              ' 
+                              <div class="divTableRow invoice_code_list ">
+                              <div class="divTableCell" style="text-align:center;">'.$value->date_order.' </div>
+                              </div>
+                              ';
+                            $i++;
+                           //  if($i==4){
+                           //   break;
+                           //  }
+
+                      }
+                                
+                    }
+                    return $pn;
+          }else{
+             return '';
+          }
+
+      })
+      ->escapeColumns('date_order') 
 
       ->addColumn('column_003', function($row) use($w05) {
          
@@ -483,7 +530,7 @@ class Check_money_dailyController extends Controller
            $pn = '';
             foreach(@$sDBSentMoneyDaily AS $r){
                       $sOrders = DB::select("
-                            SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name
+                            SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name,db_orders.id
                             FROM
                             db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
                             where sent_money_daily_id_fk in (".$r->id.");
@@ -495,13 +542,13 @@ class Check_money_dailyController extends Controller
                             $pn .=     
                               ' 
                               <div class="divTableRow invoice_code_list ">
-                              <div class="divTableCell" style="text-align:center;">'. $value->invoice_code.'</div>
+                              <div class="divTableCell" style="text-align:center;"><a href="'.url('backend/frontstore/print_receipt_022/'.$value->id).'" target="blank">'. $value->invoice_code.'</a></div>
                               </div>
                               ';
                             $i++;
-                            if($i==4){
-                             break;
-                            }
+                           //  if($i==4){
+                           //   break;
+                           //  }
 
                       }
 
@@ -513,13 +560,13 @@ class Check_money_dailyController extends Controller
 
                         
 
-                         if($i>3){
-                          $pn .=     
-                          '<div class="divTableRow  ">
-                          <div class="divTableCell" style="text-align:center;">...</div>
-                          </div>
-                          ';
-                        }
+                        //  if($i>3){
+                        //   $pn .=     
+                        //   '<div class="divTableRow  ">
+                        //   <div class="divTableCell" style="text-align:center;">...</div>
+                        //   </div>
+                        //   ';
+                        // }
 
                          $pn .=     
                           '<input type="hidden" class="arr_inv" value="'.$arr_inv.'">

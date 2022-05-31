@@ -1076,7 +1076,22 @@ class Pick_warehouse_fifoController extends Controller
                   }
                 }
 
-                $invoice_code = implode(",",$arr_inv);
+                // วุฒิเพิ่มมาดักยาวเกิน
+                // $invoice_code = implode(",",$arr_inv);
+                $invoice_code = '<a href="javascript:;">';
+                foreach($arr_inv as $index =>$ai){
+                  $invoice_code .= $ai; 
+                  if($index+1 != count($arr_inv)){
+                    $invoice_code .= ','; 
+                  }
+                  if($index+1 == 3){
+                    if(count($arr_inv)> 3){
+                      $invoice_code .= $ai.',...'; 
+                    }
+                    break;
+                  }
+                }
+                $invoice_code .= '</a>';  
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
                $amt_pay_this = $value->amt; 
