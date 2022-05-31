@@ -607,6 +607,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
     Route::get('frontstore/viewdata/{id}', 'FrontstoreController@viewdata');
 
+    Route::get('upPro', 'FrontstoreController@upPro');
+
     Route::post('getSumCostActionUser', 'FrontstoreController@getSumCostActionUser');
     Route::post('getPV_Amount', 'FrontstoreController@getPV_Amount');
 

@@ -88,7 +88,7 @@ class Transfer_branch_getController extends Controller
 
     public function update(Request $request, $id)
     {
-     // dd($request->all());
+
       if(isset($request->approved_getproduct)){
 
         return $this->form($id);
@@ -103,7 +103,7 @@ class Transfer_branch_getController extends Controller
             return redirect()->to(url("backend/transfer_branch_get/".$id."/edit"));
 
       }elseif(isset($request->approve_getback)){
-         // dd($request->all());
+     
 
             $sRow = \App\Models\Backend\Transfer_branch_get::find($request->id);
             $sRow->approve_status    = $request->approve_status;
@@ -156,9 +156,15 @@ class Transfer_branch_getController extends Controller
 // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
 
                  foreach ($products as $key => $p) {
-
+                          $branch_data = DB::table('branchs')->where('id',$p->branch_id_fk)->first();
+                          if($branch_data){
+                            $business_location_id_fk = $branch_data->business_location_id_fk;
+                          }else{
+                            $business_location_id_fk = 0;
+                          }
+                       
                           $_check=DB::table('db_stocks')
-                          ->where('business_location_id_fk', $sRow->business_location_id_fk)
+                          ->where('business_location_id_fk', $business_location_id_fk)
                           ->where('branch_id_fk', $p->branch_id_fk)
                           ->where('product_id_fk', $p->product_id_fk)
                           ->where('lot_number', $p->lot_number)
@@ -171,7 +177,7 @@ class Transfer_branch_getController extends Controller
                           if($_check->count() == 0){
 
                               $stock = new  \App\Models\Backend\Check_stock;
-                              $stock->business_location_id_fk = $sRow->business_location_id_fk ;
+                              $stock->business_location_id_fk = $business_location_id_fk ;
                               $stock->product_id_fk = $p->product_id_fk ;
                               $stock->lot_number = $p->lot_number ;
                               $stock->lot_expired_date = $p->lot_expired_date ;
@@ -190,7 +196,7 @@ class Transfer_branch_getController extends Controller
                           }else{
 
                                 DB::table('db_stocks')
-                                ->where('business_location_id_fk', $sRow->business_location_id_fk)
+                                ->where('business_location_id_fk', $business_location_id_fk)
                                   ->where('branch_id_fk', $p->branch_id_fk)
                                   ->where('product_id_fk', $p->product_id_fk)
                                   ->where('lot_number', $p->lot_number)
@@ -287,9 +293,14 @@ class Transfer_branch_getController extends Controller
 
           // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
                  foreach ($products as $key => $p) {
-
+                  $branch_data = DB::table('branchs')->where('id',$p->branch_id_fk)->first();
+                  if($branch_data){
+                    $business_location_id_fk = $branch_data->business_location_id_fk;
+                  }else{
+                    $business_location_id_fk = 0;
+                  }
                           $_check=DB::table('db_stocks')
-                          ->where('business_location_id_fk', $sRow->business_location_id_fk)
+                          ->where('business_location_id_fk', $business_location_id_fk)
                           ->where('branch_id_fk', $p->branch_id_fk)
                           ->where('product_id_fk', $p->product_id_fk)
                           ->where('lot_number', $p->lot_number)
@@ -305,7 +316,7 @@ class Transfer_branch_getController extends Controller
                           if($_check->count() == 0){
 
                               $stock = new  \App\Models\Backend\Check_stock;
-                              $stock->business_location_id_fk = $sRow->business_location_id_fk ;
+                              $stock->business_location_id_fk = $business_location_id_fk ;
                               $stock->product_id_fk = $p->product_id_fk ;
                               $stock->lot_number = $p->lot_number ;
                               $stock->lot_expired_date = $p->lot_expired_date ;
@@ -326,8 +337,8 @@ class Transfer_branch_getController extends Controller
 
 
                           }else{
-
                               DB::table('db_stocks')
+                                  ->where('business_location_id_fk', $business_location_id_fk)
                                   ->where('branch_id_fk', $p->branch_id_fk)
                                   ->where('product_id_fk', $p->product_id_fk)
                                   ->where('lot_number', $p->lot_number)
@@ -389,7 +400,7 @@ class Transfer_branch_getController extends Controller
                                         "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
                                         "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
                                         "doc_date" =>  $p->updated_at,
-                                        "business_location_id_fk" =>  @$sRow->business_location_id_fk?$sRow->business_location_id_fk:0,
+                                        "business_location_id_fk" =>  $business_location_id_fk?$business_location_id_fk:0,
                                         "branch_id_fk" =>  @$p->branch_id_fk?$p->branch_id_fk:0,
                                         "product_id_fk" =>  @$p->product_id_fk?$p->product_id_fk:0,
                                         "lot_number" =>  @$p->lot_number?$p->lot_number:NULL,

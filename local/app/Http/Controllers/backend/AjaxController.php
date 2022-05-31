@@ -684,7 +684,22 @@ class AjaxController extends Controller
     {
         if($request->ajax()){
 
-          $query = DB::select(" select *,name_th as amphur_name from dataset_amphures where province_id=".$request->province_id." order by name_th ");
+            // if(isset($request->branch_id_fk)){
+            //         $branch = DB::table('branchs')->where('id',$request->branch_id_fk)->first();
+            //         if($branch){
+            //             if($branch->business_location_id_fk==3){
+            //                 $query = DB::select(" select *,name as amphur_name from cambodia_districts where province_id=".$request->province_id." order by name ");
+            //             }else{
+            //                 $query = DB::select(" select *,name_th as amphur_name from dataset_amphures where province_id=".$request->province_id." order by name_th ");
+            //             }
+            //         }else{
+            //             $query = DB::select(" select *,name_th as amphur_name from dataset_amphures where province_id=".$request->province_id." order by name_th ");
+            //         }
+            // }else{
+                $query = DB::select(" select *,name_th as amphur_name from dataset_amphures where province_id=".$request->province_id." order by name_th ");
+            // }
+
+         
 
           return response()->json($query);
         }
@@ -694,7 +709,23 @@ class AjaxController extends Controller
     {
         if($request->ajax()){
 
-          $query = DB::select(" select *,name_th as tambon_name from dataset_districts where amphure_id=".$request->amphur_id." order by name_th ");
+            // if(isset($request->branch_id_fk)){
+            //     $branch = DB::table('branchs')->where('id',$request->branch_id_fk)->first();
+            //     if($branch){
+            //         if($branch->business_location_id_fk==3){
+            //             $query = DB::select(" select *,name as tambon_name from cambodia_communes where amphure_id=".$request->amphur_id." order by name ");
+            //         }else{
+            //             $query = DB::select(" select *,name_th as tambon_name from dataset_districts where amphure_id=".$request->amphur_id." order by name_th ");
+            //         }
+
+            //     }else{
+            //         $query = DB::select(" select *,name_th as tambon_name from dataset_districts where amphure_id=".$request->amphur_id." order by name_th ");
+            //     }
+            // }else{
+                $query = DB::select(" select *,name_th as tambon_name from dataset_districts where amphure_id=".$request->amphur_id." order by name_th ");
+            // }
+
+     
 
           return response()->json($query);
         }
@@ -1017,6 +1048,7 @@ class AjaxController extends Controller
                             }
 
                         }
+                        dd($shipping_cost[0]->shipping_cost);
 
                 }
 
@@ -1143,6 +1175,7 @@ class AjaxController extends Controller
                             }
 
                         }
+              
 
                 }
 

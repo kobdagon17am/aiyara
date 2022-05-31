@@ -24,6 +24,50 @@ use App\Helpers\General;
 class FrontstoreController extends Controller
 {
 
+  public function upPro(Request $request)
+  {
+    // $pro = DB::table('cambodia_provinces')->get();
+    // foreach($pro as $p){
+    //   DB::table('dataset_provinces')->insert([
+    //     'business_location_id' => 3,
+    //     'code' => $p->id,
+    //     'name_th' => $p->name,
+    //     'name_en' => $p->name,
+    //     'ref_id' => $p->id,
+    //     'status' => 1,
+    //   ]);
+    // }
+
+    // $amp = DB::table('cambodia_districts')->get();
+    // foreach($amp as $a){
+    //   $pro = DB::table('dataset_provinces')->where('ref_id',$a->province_id)->first();
+    //   DB::table('dataset_amphures')->insert([
+    //     'code' => $a->id,
+    //     'name_th' => $a->name,
+    //     'name_en' => $a->name,
+    //     'province_id' => $pro->id,
+    //     'ref_id' => $a->id,
+    //     'status' => 1,
+    //   ]);
+    // }
+
+    // $tam = DB::table('cambodia_communes')->get();
+    // foreach($tam as $t){
+    //   $am = DB::table('dataset_amphures')->where('ref_id',$t->amphure_id)->first();
+    //   DB::table('dataset_districts')->insert([
+    //     'id' => '333'.$t->id,
+    //     'name_th' => $t->name,
+    //     'name_en' => $t->name,
+    //     'amphure_id' => $am->id,
+    //     'ref_id' => $t->id,
+    //     'status' => 1,
+    //   ]);
+    // }
+
+    return 'ok';
+
+  }
+
   public function index(Request $request)
   {
 
@@ -506,9 +550,17 @@ class FrontstoreController extends Controller
     $sDistribution_channel3 = DB::select(" select * from dataset_distribution_channel where id=3 AND status=1  ");
     $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
 
-    $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
-    $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
-    $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
+    // วุฒิดักว่าอยู่ประเทศอะไร
+    // if($sBranchs[0]->business_location_id_fk == 3){
+    //   $sProvince = DB::select(" select *,name as province_name from cambodia_provinces order by name ");
+    //   $sAmphures = DB::select(" select *,name as amphur_name from cambodia_districts order by name ");
+    //   $sTambons = DB::select(" select *,name as tambon_name from cambodia_communes order by name ");
+    // }else{
+      $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces where business_location_id = ".$sBranchs[0]->business_location_id_fk." order by name_th ");
+      $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
+      $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
+    // }
+
     $sBusiness_location = \App\Models\Backend\Business_location::get();
 
     $sFee = \App\Models\Backend\Fee::get();
@@ -624,9 +676,9 @@ class FrontstoreController extends Controller
     $data_gv = \App\Helpers\Frontend::get_gitfvoucher(@$ThisCustomer[0]->user_name);
     // $data_gv = \App\Helpers\Frontend::get_gitfvoucher("A101987");
     // $gv = \App\Helpers\Frontend::get_gitfvoucher("A436875");
-    // $gv = \App\Helpers\Frontend::get_gitfvoucher("A548815");
-    $gv = @$data_gv->sum_gv;
-    // $gitfvoucher = @$gv!=null?$gv:0;
+    // $gv = \App\Helpers\Frontend::get_gitfvoucher("A548815"); CusAddrFrontstore
+    $gv = @$data_gv->sum_gv; 
+    // $gitfvoucher = @$gv!=null?$gv:0; sProvince
     // $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
     $customer_pv = DB::table('customers')
       ->select(

@@ -22,7 +22,7 @@ class Transfer_branch_get_productsController extends Controller
     }
     public function store(Request $request)
     {
-         // dd($request->all());
+        //  dd($request->all());
         if(isset($request->save_set_to_warehouse)){
             // dd($request->all());
         DB::select(" INSERT INTO `db_transfer_branch_get_products_receive`  (

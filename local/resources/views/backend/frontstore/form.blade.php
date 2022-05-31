@@ -1230,14 +1230,15 @@
                                                             </tr>
 
                                                             <?php
+                                                            
                                                             @$addr = DB::select(
                                                                 "select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                                                                                                                                                                                                                    dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
-                                                                                                                                                                                                                    from customers_addr_frontstore
-                                                                                                                                                                                                                    Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
-                                                                                                                                                                                                                    Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
-                                                                                                                                                                                                                    Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
-                                                                                                                                                                                                                    where customers_addr_frontstore.id = " .
+                                                                    dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
+                                                                    from customers_addr_frontstore
+                                                                    Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                                                                    Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                                                                    Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                                                                    where customers_addr_frontstore.id = " .
                                                                     (@$CusAddrFrontstore[0]->id ? $CusAddrFrontstore[0]->id : 0) .
                                                                     ' ',
                                                             );
@@ -2425,8 +2426,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง
-                            (กำหนดเอง) </b></h5>
+                    <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -5276,6 +5276,7 @@
         $('#delivery_province').change(function() {
 
             var province_id = this.value;
+            var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
             // alert(province_id);
 
             if (province_id != '') {
@@ -5284,6 +5285,7 @@
                     method: "post",
                     data: {
                         province_id: province_id,
+                        branch_id_fk: branch_id_fk,
                         "_token": "{{ csrf_token() }}",
                     },
                     success: function(data) {
@@ -5309,6 +5311,7 @@
         $('#delivery_amphur').change(function() {
 
             var amphur_id = this.value;
+                 var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
             // alert(amphur_id);
 
             if (amphur_id != '') {
@@ -5317,6 +5320,7 @@
                     method: "post",
                     data: {
                         amphur_id: amphur_id,
+                            branch_id_fk: branch_id_fk,
                         "_token": "{{ csrf_token() }}",
                     },
                     success: function(data) {
