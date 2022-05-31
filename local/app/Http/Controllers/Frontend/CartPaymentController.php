@@ -36,7 +36,9 @@ class CartPaymentController extends Controller
         if(empty($business_location_id)){
           $business_location_id = 1;
         }
+
         $location = Location::location($business_location_id, $business_location_id);
+       
         $cartCollection = Cart::session($type)->getContent();
         $data = $cartCollection->toArray();
         $quantity = Cart::session($type)->getTotalQuantity();

@@ -9,6 +9,7 @@
  @endsection
  @section('conten')
 
+
      <div class="row">
          <div class="col-md-8 col-sm-12">
              <form action="{{ route('payment_address') }}" id="payment_address" method="POST"
@@ -555,7 +556,7 @@
 
                                                      @foreach ($location as $value)
                                                          <option value="{{ $value->id }}">{{ $value->b_name }}
-                                                             ({{ $value->b_details }})
+                                                             {{-- ({{ $value->b_details }}) --}}
                                                          </option>
                                                      @endforeach
                                                  </select>
@@ -587,6 +588,18 @@
                                      </div>
 
                                      <div id="sent_address_other" style="display: none;">
+                                      <div class="row">
+                                        <div class="col-sm-3">
+                                          <label><b> ประเทศ </b></label>
+                                          <select name="business_location" id="business_location" class="form-control" disabled>
+                                            @if(Auth::guard('c_user')->user()->business_location_id == '' || Auth::guard('c_user')->user()->business_location_id == 1)
+                                            <option value="1"  selected=""> THAI </option>
+                                            @else
+                                            <option value="3"  selected=""> CAMBODIA </option>
+                                            @endif
+                                        </select>
+                                        </div>
+                                      </div>
                                          <div class="row m-t-5">
                                              <div class="col-md-6 col-sm-6 col-6">
                                                  <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
@@ -1246,77 +1259,80 @@
      </script>
 
      <script type="text/javascript">
-         $('#province').change(function() {
-             var province = $(this).val();
-             check_shipping(province, '');
-             $.ajax({
-                 async: false,
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: province,
-                     function: 'provinces'
-                 },
-                 success: function(data) {
-                     $('#amphures').html(data);
-                     $('#district').val('');
-                     // $('#zipcode').val('');
-                 }
-             });
+        //  $('#province').change(function() {
+        //      var province = $(this).val();
+        //      check_shipping(province, '');
+        //      $.ajax({
+        //          async: false,
+        //          type: "get",
+        //          url: "{{ route('location') }}",
+        //          data: {
+        //              id: province,
+        //              function: 'provinces'
+        //          },
+        //          success: function(data) {
+        //              $('#amphures').html(data);
+        //              $('#district').val('');
+        //              // $('#zipcode').val('');
+        //          }
+        //      });
 
-         });
+        //  });
 
 
-         $('#amphures').change(function() {
-             var amphures = $(this).val();
-             $('#province').change(function() {
-                 var province = $(this).val();
+        //  $('#amphures').change(function() {
+        //      var amphures = $(this).val();
+        //      $('#province').change(function() {
+        //          var province = $(this).val();
 
-                 $.ajax({
-                     async: false,
-                     type: "get",
-                     url: "{{ route('location') }}",
-                     data: {
-                         id: province,
-                         function: 'provinces'
-                     },
-                     success: function(data) {
-                         $('#amphures').html(data);
-                         $('#district').val('');
-                         // $('#zipcode').val('');
-                     }
-                 });
+        //          $.ajax({
+        //              async: false,
+        //              type: "get",
+        //              url: "{{ route('location') }}",
+        //              data: {
+        //                  id: province,
+        //                  function: 'provinces'
+        //              },
+        //              success: function(data) {
+        //                  $('#amphures').html(data);
+        //                  $('#district').val('');
+        //                  // $('#zipcode').val('');
+        //              }
+        //          });
 
-             });
-             $.ajax({
-                 async: false,
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: amphures,
-                     function: 'amphures'
-                 },
-                 success: function(data) {
-                     $('#district').html(data);
-                 }
-             });
-         });
+        //      });
+        //      $.ajax({
+        //          async: false,
+        //          type: "get",
+        //          url: "{{ route('location') }}",
+        //          data: {
+        //              id: amphures,
+        //              function: 'amphures'
+        //          },
+        //          success: function(data) {
+        //              $('#district').html(data);
+        //          }
+        //      });
+        //  });
 
-         $('#district').change(function() {
-             var district = $(this).val();
-             $.ajax({
-                 type: "get",
-                 url: "{{ route('location') }}",
-                 data: {
-                     id: district,
-                     function: 'district'
-                 },
-                 success: function(data) {
-                     $('#other_zipcode').val(data);
-                 }
-             });
+        //  $('#district').change(function() {
+        //      var district = $(this).val();
+        //      $.ajax({
+        //          type: "get",
+        //          url: "{{ route('location') }}",
+        //          data: {
+        //              id: district,
+        //              function: 'district'
+        //          },
+        //          success: function(data) {
+        //              $('#other_zipcode').val(data);
+        //          }
+        //      });
 
-         });
+        //  });
+
+
+
 
 
          function check() {
@@ -1572,6 +1588,15 @@
      </script>
      <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
      <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
+
+
+     <script>
+      const routeGetLocation = "{{ route('get-location') }}";
+      const token = "{{ csrf_token() }}";
+     </script>
+
+     <script src="{{ asset('frontend/address.js') }}"></script>
+
      {{-- <script src="{{ asset('frontend/assets/pages/payment-card/card.js') }}"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/jquery.payform.min.js') }}" charset="utf-8"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/e-payment.js') }}"></script> --}}
