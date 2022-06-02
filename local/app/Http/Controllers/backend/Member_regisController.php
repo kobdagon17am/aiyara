@@ -251,8 +251,8 @@ class Member_regisController extends Controller
         // $w05 = "";
         // $w06 = "";
         // $w07 = "";
-      // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');    
-      //  
+      // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');
+      //
       $sTable = DB::select("
 
         SELECT * FROM `register_files`

@@ -12,7 +12,6 @@ class LineModel extends Model
 
 		$data =array();
 
-
       $i =1;
       $j = 2;
 
@@ -96,8 +95,6 @@ class LineModel extends Model
 
       $last_id = $username;
     }
-
-
 
 		if (empty($last_id)) {
 			return null;
@@ -214,7 +211,6 @@ class LineModel extends Model
 				$lv3_c_c = null;
 			}
 
-
 			$data = ['lv1'=>$lv1,
 			'lv2_a'=>$lv2_a,'lv2_b'=>$lv2_b,'lv2_c'=>$lv2_c,
 			'lv3_a_a'=>$lv3_a_a,'lv3_a_b'=>$lv3_a_b,'lv3_a_c'=>$lv3_a_c,
@@ -222,15 +218,10 @@ class LineModel extends Model
 			'lv3_c_a'=>$lv3_c_a,'lv3_c_b'=>$lv3_c_b,'lv3_c_c'=>$lv3_c_c
 		];
 
-
-
 		return $data;
 	}
 
 }
-
-
-
 
 public static function check_line($username){
 
@@ -238,6 +229,13 @@ public static function check_line($username){
 	->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
 	->where('user_name','=',$username)
 	->first();
+
+  if(empty($data_user)){
+    $data_user = DB::table('customers')
+    ->select('id','user_name','business_name','prefix_name','first_name','last_name','profile_img','upline_id')
+    ->orwhere('id_card','=',$username)
+    ->first();
+  }
 
 	if(!empty($data_user)){
 
@@ -276,7 +274,6 @@ public static function check_line($username){
 					->select('upline_id','user_name')
 					->where('user_name','=',$data->upline_id)
 					->first();
-
 					$j = $j+1;
 				}
 
@@ -285,8 +282,6 @@ public static function check_line($username){
 				$j =0;
 			}
 		}
-
-
 		return $resule;
 
 	}else{

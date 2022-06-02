@@ -271,7 +271,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o text-success"></i> @lang('message.profile_picture') </a>
+										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o text-success"></i> @lang('message.edit_profile') </a>
 									</li>
 									<li>
 										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i>  @lang('message.edit_profile') </a>

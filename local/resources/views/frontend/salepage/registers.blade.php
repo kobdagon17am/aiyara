@@ -459,22 +459,28 @@
                                                             value="{{ old('bank_no') }}" maxlength="10" minlength="10">
                                                     </div>
 
-                                                  <div class="col-sm-3">
-                                                      <label>ธนาคาร <font class="text-danger">*</font></label>
-                                                      <select class="js-example-basic-single col-sm-12" name="bank_name" required>
-                                                          <option value=""> เลือกธนาคาร </option>
+                                                    <div class="col-sm-3">
+                                                      <label>@lang('message.bank')</label>
+                                                      <select class="form-control" id="bank_name_th" name="bank_name">
+                                                          <option value=""> Select </option>
                                                           <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
-                                                          <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif> ธนาคารกรุงไทย </option>
-                                                          <option value="ธนาคารกรุงศรีอยุธยา" @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif> ธนาคารกรุงศรีอยุธยา </option>
                                                           <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
-                                                          <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif> ธนาคารทหารไทยธนชาต </option>
+                                                          <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif> ธนาคารกรุงไทย </option>
                                                           <option value="ธนาคารไทยพาณิชย์" @if ('ธนาคารไทยพาณิชย์' == old('bank_name')) selected="" @endif> ธนาคารไทยพาณิชย์ </option>
-
+                                                          <option value="ธนาคารกรุงศรีอยุธยา" @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif> ธนาคารกรุงศรีอยุธยา </option>
+                                                          <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif> ธนาคารทหารไทยธนชาต </option>
+                                                          <option value="ธนาคารออมสิน" @if ('ธนาคารออมสิน' == old('bank_name')) selected="" @endif> ธนาคารออมสิน </option>
+                                                          <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส." @if ('ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส.' == old('bank_name')) selected="" @endif>
+                                                              ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส. </option>
                                                           <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
-                                                          <option value="ธนาคารอิสลาม" @if ('ธนาคารอิสลาม' == old('bank_name')) selected="" @endif> ธนาคารอิสลาม </option>
-                                                          <option value="ACLEDA fo cambodian" @if ('ACLEDA fo cambodian' == old('bank_name')) selected="" @endif> ACLEDA fo cambodian </option>
-                                                          <option value="ABA fo cambodian" @if ('ABA fo cambodian' == old('bank_name')) selected="" @endif> ABA fo cambodian </option>
                                                       </select>
+
+                                                      <select class="form-control" id="bank_name_cam" name="bank_name">
+                                                        <option value=""> Select </option>
+                                                        <option value="ABA Bank" @if ('ABA Bank' == old('bank_name')) selected="" @endif> ABA Bank </option>
+                                                        <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name')) selected="" @endif> Acleda Bank </option>
+                                                    </select>
+
                                                   </div>
 
 
@@ -545,7 +551,7 @@
 
                                                 </div>
 
-                                                <div class="form-group row">
+                                                <div class="form-group col-md-12 row">
                                                     <div class="col-sm-12">
                                                         <h5 class="sub-title" style="color: #000;font-size: 16px">
                                                             เอกสารสำหรับการสมัคร</h5>
@@ -617,14 +623,14 @@
                                                     </div>
                                                 </div>
 
-                                                    <div class="row">
-
-                                                      <div class="col-md-12 text-center">
-                                                        <button type="submit"
-                                                                class="btn btn-success m-b-0">Register</button>
+                                                <div class="col-md-12">
+                                                  <div class="form-group row text-center">
+                                                      <label class="col-sm-2"></label>
+                                                      <div class="col-sm-12">
+                                                          <button type="submit" class="btn btn-primary m-b-0">@lang('message.register_submit')</button>
                                                       </div>
-
-                                                    </div>
+                                                  </div>
+                                              </div>
 
 
                                             </form>

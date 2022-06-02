@@ -103,7 +103,7 @@
               </div>
               <div class="col-md-4">
                <div class="input-group input-group-button mt-2">
-                <input type="text" class="form-control" id="search_username" name="search_username" placeholder="Search ID" value="{{ old('search_username') }}">
+                <input type="text" class="form-control" id="search_username" name="search_username" placeholder="Search UserName or ID Card" value="{{ old('search_username') }}">
                 <span class="input-group-addon btn btn-primary" id="basic-addon10" onclick="search_user()" style="margin-top: 0px;">
                   <span class="">Search</span>
                 </span>

@@ -27,11 +27,18 @@ class AddressService {
       'amphures' => 'dataset_amphures',
       'districts' => 'dataset_districts',
     ],
+    // 3 => [
+    //   'provinces' => 'cambodia_provinces',
+    //   'amphures' => 'cambodia_districts',
+    //   'districts' => 'cambodia_communes',
+    // ]
     3 => [
-      'provinces' => 'cambodia_provinces',
-      'amphures' => 'cambodia_districts',
-      'districts' => 'cambodia_communes',
+      'provinces' => 'dataset_provinces',
+      'amphures' => 'dataset_amphures',
+      'districts' => 'dataset_districts',
     ]
+
+
   ];
 
   public function __construct($business_location)
@@ -54,7 +61,7 @@ class AddressService {
   }
 
   public function getProvinces() {
-    return DB::table($this->getTableName()[static::PROVINCES]);
+    return DB::table($this->getTableName()[static::PROVINCES])->where('business_location_id',$this->business_location);
   }
 
   public function getAmphures() {

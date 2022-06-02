@@ -86,9 +86,9 @@
                      <div class="col-sm-2">
                          <label> @lang('message.name_prefix')  </label>
                          <select class="form-control" name="name_prefix">
-                             <option value="@lang('message.mr')">@lang('message.mr')</option>
-                             <option value="@lang('message.mrs')">@lang('message.mrs')</option>
-                             <option value="@lang('message.ms')">@lang('message.ms')</option>
+                             <option value="@lang('message.mr')"> @lang('message.mr') </option>
+                             <option value="@lang('message.mrs')"> @lang('message.mrs') </option>
+                             <option value="@lang('message.ms')"> @lang('message.ms') </option>
                          </select>
                      </div>
 
@@ -357,8 +357,8 @@
                      </div>
 
                      <div class="col-sm-3">
-                      <label>@lang('message.bank') <font class="text-danger">*</font></label>
-                      <select class="form-control" id="bank_name_th" name="bank_name" required>
+                      <label>@lang('message.bank')</label>
+                      <select class="form-control" id="bank_name_th" name="bank_name">
                           <option value=""> Select </option>
                           <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
                           <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
@@ -372,10 +372,10 @@
                           <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
                       </select>
 
-                      <select class="form-control" id="bank_name_cam" name="bank_name" required>
+                      <select class="form-control" id="bank_name_cam" name="bank_name">
                         <option value=""> Select </option>
-                        <option value="ABA Bank" @if ('ABA Bank' == old('ABA Bank')) selected="" @endif> ABA Bank </option>
-                        <option value="Acleda Bank" @if ('Acleda Bank' == old('Acleda Bank')) selected="" @endif> Acleda Bank </option>
+                        <option value="ABA Bank" @if ('ABA Bank' == old('bank_name')) selected="" @endif> ABA Bank </option>
+                        <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name')) selected="" @endif> Acleda Bank </option>
                     </select>
 
                   </div>
@@ -499,12 +499,14 @@
                      </div>
 
                      @if ($check_kyc['status'] == 'success')
-
-                         <div class="form-group row text-right">
+                     <div class="col-sm-12">
+                         <div class="form-group row text-center">
                              <label class="col-sm-2"></label>
-                             <div class="col-sm-10">
+                             <div class="col-sm-12">
                                  <button type="submit" class="btn btn-primary m-b-0">@lang('message.register_submit')</button>
                              </div>
+                         </div>
+                     </div>
                      @endif
 
              </form>
@@ -604,21 +606,12 @@
          });
 
          $('#file_4').change(function() {
-             var fileExtension = ['jpg', 'png', 'jpeg'];
+            var fileExtension = ['jpg', 'png', 'pdf', 'jpeg'];
              if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
                  alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
                  this.value = '';
                  return false;
-             } else {
-                 var reader = new FileReader();
-                 reader.onload = function(e) {
-                     // get loaded data and render thumbnail.
-                     document.getElementById("preview").src = e.target.result;
-                 };
-                 // read the image file as a data URL.
-                 reader.readAsDataURL(this.files[0]);
              }
-
          });
      </script>
     <script>

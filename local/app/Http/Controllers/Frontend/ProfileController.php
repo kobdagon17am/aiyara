@@ -63,11 +63,8 @@ class ProfileController extends Controller
     public function profile_address()
     {
 
-
-
-
         $customer = DB::table('customers_detail')
-            ->select('customers_detail.*', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id',
+            ->select('customers_detail.*','customers.business_location_id', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id',
             'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name', 'customers.first_name','customers.last_name','customers.business_name')
             ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
@@ -78,7 +75,9 @@ class ProfileController extends Controller
 
         $provinces = DB::table('dataset_provinces')
             ->select('*')
+            ->where('business_location_id','=',$customer->business_location_id)
             ->get();
+
         return view('frontend/profile_address', compact('customer', 'provinces'));
     }
 
