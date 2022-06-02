@@ -1,6 +1,8 @@
 @extends('backend.layouts.master')
 
-@section('title') Aiyara Planet @endsection
+@section('title')
+    Aiyara Planet
+@endsection
 
 @section('css')
     <style>
@@ -8,6 +10,7 @@
             height: 34px !important;
             margin-left: 3px;
         }
+
         .border-left-0 {
             height: 67%;
         }
@@ -32,18 +35,18 @@
     // $menu_id = @$_REQUEST['menu_id'];
     $menu_id = Session::get('session_menu_id');
     if ($sPermission == 1) {
-    $sC = '';
-    $sU = '';
-    $sD = '';
+        $sC = '';
+        $sU = '';
+        $sD = '';
     } else {
-    $role_group_id = \Auth::user()->role_group_id_fk;
-    $menu_permit = DB::table('role_permit')
-    ->where('role_group_id_fk', $role_group_id)
-    ->where('menu_id_fk', $menu_id)
-    ->first();
-    $sC = @$menu_permit->c == 1 ? '' : 'display:none;';
-    $sU = @$menu_permit->u == 1 ? '' : 'display:none;';
-    $sD = @$menu_permit->d == 1 ? '' : 'display:none;';
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        $menu_permit = DB::table('role_permit')
+            ->where('role_group_id_fk', $role_group_id)
+            ->where('menu_id_fk', $menu_id)
+            ->first();
+        $sC = @$menu_permit->c == 1 ? '' : 'display:none;';
+        $sU = @$menu_permit->u == 1 ? '' : 'display:none;';
+        $sD = @$menu_permit->d == 1 ? '' : 'display:none;';
     }
     ?>
 
@@ -55,15 +58,35 @@
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-12 d-flex ">
-                                    <div class="col-md-4 ">
+
+                                    <div class="col-md-2 ">
                                         <div class="form-group row">
                                             <select id="business_location" name="business_location"
                                                 class="form-control select2-templating ">
-                                                <option value="">Business Location</option>
+                                                {{-- <option value="">Business Location</option> --}}
                                                 @if (@$business_location)
                                                     @foreach (@$business_location as $r)
                                                         <option value="{{ $r->id }}">
                                                             {{ $r->txt_desc }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 ">
+                                        <div class="form-group row">
+                                            <select id="action_user" name="action_user"
+                                                class="form-control select2-templating ">
+                                                <option value="">ผู้ทำรายการ</option>
+                                                <option value="v3">
+                                                    V3
+                                                </option>
+                                                @if (@$sUser)
+                                                    @foreach (@$sUser as $r)
+                                                        <option value="{{ $r->id }}">
+                                                            {{ $r->name }}
                                                         </option>
                                                     @endforeach
                                                 @endif
@@ -115,9 +138,8 @@
 
 
                     <div class="table-responsive">
-                        <table id="thai_cambodia" class="table table-bordered  thai_cambodia"
-                            style="width: 100%;">
-                            <tfoot>
+                        <table id="thai_cambodia" class="table table-bordered  thai_cambodia" style="width: 100%;">
+                            {{-- <tfoot>
                                 <tr>
                                     <th></th>
                                     <th></th>
@@ -129,7 +151,7 @@
                                     <th></th>
                                     <th></th>
                                 </tr>
-                            </tfoot>
+                            </tfoot> --}}
                         </table>
 
                     </div>
@@ -154,8 +176,7 @@
                         </div>
                     </div>
 
-                    <table id="data-table-thai" class="table table-bordered  mt-0"
-                        style="width: 100%;">
+                    <table id="data-table-thai" class="table table-bordered  mt-0" style="width: 100%;">
                         <tfoot>
                             <tr>
                                 <th colspan="2"></th>
@@ -169,8 +190,7 @@
                         </tfoot>
                     </table>
                     <br>
-                    <table id="data-table-cambodia" class="table table-bordered  mt-0"
-                        style="width: 100%;">
+                    <table id="data-table-cambodia" class="table table-bordered  mt-0" style="width: 100%;">
                         <tfoot>
                             <tr>
                                 <th colspan="2"></th>
@@ -192,9 +212,7 @@
 @endsection
 
 @section('script')
-
     <script>
-
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.00';
         }
@@ -220,6 +238,8 @@
                         d.status_search = $('#status_search').val();
                         d.startDate = $('#startDate').val();
                         d.endDate = $('#endDate').val();
+                        d.action_user = $('#action_user').val();
+
                     },
                     method: 'POST'
                 },
@@ -239,23 +259,28 @@
                         className: 'text-center'
                     },
                     {
-                        data: 'total_balance',
-                        title :'<center>จำนวน</center>',
+                        data: 'invoice',
+                        title: '<center>Invoice</center>',
                         className: 'text-center'
                     },
                     {
+                        data: 'invoice_total',
+                        title: '<center>จำนวนรวม</center>',
+                        className: 'text-right'
+                    },
+                    {
                         data: 'total_price',
-                        title: '<center>เงินสดรวม</center>',
+                        title: '<center>เงินสด</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'total_transfer',
-                        title: '<center>เงินโอนรวม</center>',
+                        title: '<center>เงินโอน</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'total_credit_card',
-                        title: '<center>เครดิตรวม</center>',
+                        title: '<center>เครดิต</center>',
                         className: 'text-right',
                         footer: 'Id',
                     },
@@ -265,78 +290,103 @@
                         className: 'text-right'
                     },
                     {
+                        data: 'total_balance',
+                        title: '<center>รวมการชำระ</center>',
+                        className: 'text-right'
+                    },
+
+                    {
                         data: 'total_add_aicash',
                         title: '<center>เติม Ai-Cash</center>',
                         'footer': 'Id',
                         className: 'text-right table-warning'
                     },
+                    {
+                        data: 'total_add_aicash',
+                        title: '<center>ผู้ทำรายการ</center>',
+                        'footer': 'Id',
+                        className: 'text-left table-warning'
+                    },
                 ],
-                "footerCallback": function ( row, data, start, end, display ) {
-                    var api = this.api(), data;
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
 
                     // Remove the formatting to get integer data for summation
-                    var intVal = function ( i ) {
+                    var intVal = function(i) {
                         return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
+                            i.replace(/[\$,]/g, '') * 1 :
                             typeof i === 'number' ?
-                                i : 0;
+                            i : 0;
                     };
 
                     total_balance = api
-                        .column( 3, { page: 'current'} )
+                        .column(3, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_price = api
-                        .column( 4, { page: 'current'} )
+                        .column(4, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_transfer = api
-                        .column( 5, { page: 'current'} )
+                        .column(5, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_credit_card = api
-                        .column( 6, { page: 'current'} )
+                        .column(6, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_aicash = api
-                        .column( 7, { page: 'current'} )
+                        .column(7, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_add_aicash = api
-                        .column( 8, { page: 'current'} )
+                        .column(8, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     // Update footer
-                    $(api.column( 0 ).footer()).html('Total');
-                    $(api.column( 3 ).footer()).html(numberWithCommas(total_balance));
-                    $(api.column( 4 ).footer()).html(numberWithCommas(total_price));
-                    $(api.column( 5 ).footer()).html(numberWithCommas(total_transfer));
-                    $(api.column( 6 ).footer()).html(numberWithCommas(total_credit_card));
-                    $(api.column( 7 ).footer()).html(numberWithCommas(total_aicash));
-                    $(api.column( 8 ).footer()).html(numberWithCommas(total_add_aicash));
+                    $(api.column(0).footer()).html('Total');
+                    $(api.column(3).footer()).html(numberWithCommas(total_balance));
+                    $(api.column(4).footer()).html(numberWithCommas(total_price));
+                    $(api.column(5).footer()).html(numberWithCommas(total_transfer));
+                    $(api.column(6).footer()).html(numberWithCommas(total_credit_card));
+                    $(api.column(7).footer()).html(numberWithCommas(total_aicash));
+                    $(api.column(8).footer()).html(numberWithCommas(total_add_aicash));
                 }
             });
 
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-                 oTable.draw();
+                oTable.draw();
             });
 
             $('#search-form').on('click', function(e) {
@@ -346,11 +396,9 @@
             });
 
         });
-
     </script>
 
     <script>
-
         var sU = "{{ @$sU }}";
         var sD = "{{ @$sD }}";
         var oTable_total_thai;
@@ -422,67 +470,80 @@
                         className: 'text-right table-warning'
                     },
                 ],
-                "footerCallback": function ( row, data, start, end, display ) {
-                    var api = this.api(), data;
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
 
                     // Remove the formatting to get integer data for summation
-                    var intVal = function ( i ) {
+                    var intVal = function(i) {
                         return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
+                            i.replace(/[\$,]/g, '') * 1 :
                             typeof i === 'number' ?
-                                i : 0;
+                            i : 0;
                     };
 
                     total_balance = api
-                        .column( 2, { page: 'current'} )
+                        .column(2, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_price = api
-                        .column( 3, { page: 'current'} )
+                        .column(3, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_transfer = api
-                        .column( 4, { page: 'current'} )
+                        .column(4, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_credit_card = api
-                        .column( 5, { page: 'current'} )
+                        .column(5, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_aicash = api
-                        .column( 6, { page: 'current'} )
+                        .column(6, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_add_aicash = api
-                        .column( 7, { page: 'current'} )
+                        .column(7, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     // Update footer
-                    $(api.column( 0 ).footer()).html('Total');
-                    $(api.column( 2 ).footer()).html(numberWithCommas(total_balance));
-                    $(api.column( 3 ).footer()).html(numberWithCommas(total_price));
-                    $(api.column( 4 ).footer()).html(numberWithCommas(total_transfer));
-                    $(api.column( 5 ).footer()).html(numberWithCommas(total_credit_card));
-                    $(api.column( 6 ).footer()).html(numberWithCommas(total_aicash));
-                    $(api.column( 7 ).footer()).html(numberWithCommas(total_add_aicash));
+                    $(api.column(0).footer()).html('Total');
+                    $(api.column(2).footer()).html(numberWithCommas(total_balance));
+                    $(api.column(3).footer()).html(numberWithCommas(total_price));
+                    $(api.column(4).footer()).html(numberWithCommas(total_transfer));
+                    $(api.column(5).footer()).html(numberWithCommas(total_credit_card));
+                    $(api.column(6).footer()).html(numberWithCommas(total_aicash));
+                    $(api.column(7).footer()).html(numberWithCommas(total_add_aicash));
                 }
                 // initComplete: function() {
                 //     this.api().columns().every(function() {
@@ -557,67 +618,80 @@
                         className: 'text-right table-warning'
                     },
                 ],
-                "footerCallback": function ( row, data, start, end, display ) {
-                    var api = this.api(), data;
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
 
                     // Remove the formatting to get integer data for summation
-                    var intVal = function ( i ) {
+                    var intVal = function(i) {
                         return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
+                            i.replace(/[\$,]/g, '') * 1 :
                             typeof i === 'number' ?
-                                i : 0;
+                            i : 0;
                     };
 
                     total_balance = api
-                        .column( 2, { page: 'current'} )
+                        .column(2, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_price = api
-                        .column( 3, { page: 'current'} )
+                        .column(3, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_transfer = api
-                        .column( 4, { page: 'current'} )
+                        .column(4, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_credit_card = api
-                        .column( 5, { page: 'current'} )
+                        .column(5, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_aicash = api
-                        .column( 6, { page: 'current'} )
+                        .column(6, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     total_add_aicash = api
-                        .column( 7, { page: 'current'} )
+                        .column(7, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
 
                     // Update footer
-                    $(api.column( 0 ).footer()).html('Total');
-                    $(api.column( 2 ).footer()).html(numberWithCommas(total_balance));
-                    $(api.column( 3 ).footer()).html(numberWithCommas(total_price));
-                    $(api.column( 4 ).footer()).html(numberWithCommas(total_transfer));
-                    $(api.column( 5 ).footer()).html(numberWithCommas(total_credit_card));
-                    $(api.column( 6 ).footer()).html(numberWithCommas(total_aicash));
-                    $(api.column( 7 ).footer()).html(numberWithCommas(total_add_aicash));
+                    $(api.column(0).footer()).html('Total');
+                    $(api.column(2).footer()).html(numberWithCommas(total_balance));
+                    $(api.column(3).footer()).html(numberWithCommas(total_price));
+                    $(api.column(4).footer()).html(numberWithCommas(total_transfer));
+                    $(api.column(5).footer()).html(numberWithCommas(total_credit_card));
+                    $(api.column(6).footer()).html(numberWithCommas(total_aicash));
+                    $(api.column(7).footer()).html(numberWithCommas(total_add_aicash));
                 }
                 // initComplete: function() {
                 //     this.api().columns().every(function() {
@@ -643,7 +717,6 @@
                 e.preventDefault();
             });
         });
-
     </script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -670,11 +743,5 @@
         //  $('#startDate').change(function(event) {
         //    $('#endDate').val($(this).val());
         //  });
-
-
-
     </script>
-
-
-
 @endsection

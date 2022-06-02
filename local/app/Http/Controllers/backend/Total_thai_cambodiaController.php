@@ -13,8 +13,11 @@ class Total_thai_cambodiaController extends Controller
     {
         $data = DB::table('dataset_business_location')
             ->get();
-
-        return view('backend.total_thai_cambodia.index')->with(array('business_location' => $data));
+        $sUser = DB::select(" select * from ck_users_admin ");
+        return view('backend.total_thai_cambodia.index')->with([
+            'business_location' => $data,
+            'sUser' => $sUser
+        ]);
     }
 
     public function create()
@@ -123,58 +126,147 @@ class Total_thai_cambodiaController extends Controller
         if ($rs->startDate) {
             $date = str_replace('/', '-', $rs->startDate);
             $s_date = date('Y-m-d', strtotime($date));
-
+            $startDate = " AND DATE(db_orders.created_at) >= '" . $s_date . "' ";
         } else {
-            $s_date = '';
+            $startDate = '';
         }
-
+        
         if ($rs->endDate) {
             $date = str_replace('/', '-', $rs->endDate);
             $e_date = date('Y-m-d', strtotime($date));
+            $endDate = " AND DATE(db_orders.created_at) <= '" . $e_date . "' ";
         } else {
-            $e_date = '';
+            $endDate = '';
         }
 
-        $sTable = DB::table('db_total_thai_cambodia')
-            ->select('db_total_thai_cambodia.*', 'dataset_business_location.txt_desc', 'branchs.id', 'branchs.b_name', 'branchs.b_details')
-            ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_total_thai_cambodia.business_location_id_fk')
-            ->leftjoin('branchs', 'branchs.id', '=', 'db_total_thai_cambodia.branchs_id_fk')
-            ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else db_total_thai_cambodia.business_location_id_fk = '{$rs->business_location}' END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_total_thai_cambodia.action_date) = '{$s_date}' else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) >= '{$s_date}' and date(db_total_thai_cambodia.action_date) <= '{$e_date}'else 1 END"))
-            ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) = '{$e_date}' else 1 END"))
-            ->get();
+        if ($rs->action_user) {
+            $action_user = " AND db_orders.action_user = $rs->action_user ";
+           
+        } else {
+            $action_user = '';
+        }
 
-        $sQuery = \DataTables::of($sTable);
-        return $sQuery
-            ->addColumn('branchs', function ($row) {
-                return "{$row->b_name} ({$row->b_details})";
-            })
-            ->addColumn('total_balance', function ($row) {
-                return number_format($row->total_balance, 2);
-            })
-            ->addColumn('total_price', function ($row) {
-                return number_format($row->total_price, 2);
-            })
-            ->addColumn('total_transfer', function ($row) {
-                return number_format($row->total_transfer, 2);
-            })
+        if ($rs->business_location) {
+            $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $rs->business_location . " ";
+        } else {
+            $business_location_id_fk = "";
+        }
+    
+        $sTable =DB::select("
+        SELECT
+        db_orders.action_user,
+        ck_users_admin.`name` as action_user_name,
+        db_orders.pay_type_id_fk,
+        dataset_pay_type.detail AS pay_type,
+        date(db_orders.action_date) AS action_date,
+        db_orders.branch_id_fk,
 
-            ->addColumn('total_credit_card', function ($row) {
-                return number_format($row->total_credit_card, 2);
-            })
-            ->addColumn('total_aicash', function ($row) {
-                return number_format($row->total_aicash, 2);
-            })
+        SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS credit_price,
+        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
+        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
+        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
+        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
+        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
 
-            ->addColumn('total_add_aicash', function ($row) {
-                return number_format($row->total_add_aicash, 2);
-            })
+        SUM(
+        (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+        -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+        -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+        ) as total_price,
 
-            ->addColumn('action_date', function ($row) {
-                return is_null($row->action_date) ? '-' : date('Y/m/d', strtotime($row->action_date));
-            })
-            ->make(true);
+        SUM(
+         CASE WHEN db_orders.shipping_free = 1 THEN 0 ELSE db_orders.shipping_price END
+        ) AS shipping_price
+
+        FROM
+        db_orders
+        Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+        Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+        Left Join branchs ON db_orders.action_user = ck_users_admin.id
+        WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+        $startDate
+        $endDate
+        $action_user
+        $business_location_id_fk
+        GROUP BY action_user
+");
+
+
+    $sQuery = \DataTables::of($sTable);
+    return $sQuery
+        ->addColumn('branchs', function ($row) {
+            return "{$row->b_name} ({$row->b_details})";
+        })
+        ->addColumn('total_balance', function ($row) {
+            return number_format($row->total_balance, 2);
+        })
+        ->addColumn('total_price', function ($row) {
+            return number_format($row->total_price, 2);
+        })
+        ->addColumn('total_transfer', function ($row) {
+            return number_format($row->total_transfer, 2);
+        })
+
+        ->addColumn('total_credit_card', function ($row) {
+            return number_format($row->total_credit_card, 2);
+        })
+        ->addColumn('total_aicash', function ($row) {
+            return number_format($row->total_aicash, 2);
+        })
+
+        ->addColumn('total_add_aicash', function ($row) {
+            return number_format($row->total_add_aicash, 2);
+        })
+
+        ->addColumn('action_date', function ($row) {
+            return is_null($row->action_date) ? '-' : date('Y/m/d', strtotime($row->action_date));
+        })
+        ->make(true);
+
+        // วุฒิเปลี่ยนแบบเลย
+        // $sTable = DB::table('db_total_thai_cambodia')
+        //     ->select('db_total_thai_cambodia.*', 'dataset_business_location.txt_desc', 'branchs.id', 'branchs.b_name', 'branchs.b_details')
+        //     ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_total_thai_cambodia.business_location_id_fk')
+        //     ->leftjoin('branchs', 'branchs.id', '=', 'db_total_thai_cambodia.branchs_id_fk')
+        //     ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else db_total_thai_cambodia.business_location_id_fk = '{$rs->business_location}' END"))
+        //     ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_total_thai_cambodia.action_date) = '{$s_date}' else 1 END"))
+        //     ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) >= '{$s_date}' and date(db_total_thai_cambodia.action_date) <= '{$e_date}'else 1 END"))
+        //     ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_total_thai_cambodia.action_date) = '{$e_date}' else 1 END"))
+        //     ->get();
+
+        // $sQuery = \DataTables::of($sTable);
+        // return $sQuery
+        //     ->addColumn('branchs', function ($row) {
+        //         return "{$row->b_name} ({$row->b_details})";
+        //     })
+        //     ->addColumn('total_balance', function ($row) {
+        //         return number_format($row->total_balance, 2);
+        //     })
+        //     ->addColumn('total_price', function ($row) {
+        //         return number_format($row->total_price, 2);
+        //     })
+        //     ->addColumn('total_transfer', function ($row) {
+        //         return number_format($row->total_transfer, 2);
+        //     })
+
+        //     ->addColumn('total_credit_card', function ($row) {
+        //         return number_format($row->total_credit_card, 2);
+        //     })
+        //     ->addColumn('total_aicash', function ($row) {
+        //         return number_format($row->total_aicash, 2);
+        //     })
+
+        //     ->addColumn('total_add_aicash', function ($row) {
+        //         return number_format($row->total_add_aicash, 2);
+        //     })
+
+        //     ->addColumn('action_date', function ($row) {
+        //         return is_null($row->action_date) ? '-' : date('Y/m/d', strtotime($row->action_date));
+        //     })
+        //     ->make(true);
     }
 
     public function DatatableTotalThai(Request $rs)
