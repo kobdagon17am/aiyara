@@ -244,12 +244,12 @@
                     method: 'POST'
                 },
                 columns: [{
-                        data: 'txt_desc',
+                        data: 'business_location_name',
                         title: '<center>Business Location</center>',
                         className: 'text-left'
                     },
                     {
-                        data: 'branchs',
+                        data: 'branchs_name',
                         title: '<center>Branch</center>',
                         className: 'text-left'
                     },
@@ -261,7 +261,7 @@
                     {
                         data: 'invoice',
                         title: '<center>Invoice</center>',
-                        className: 'text-center'
+                        className: 'text-left'
                     },
                     {
                         data: 'invoice_total',
@@ -298,90 +298,88 @@
                     {
                         data: 'total_add_aicash',
                         title: '<center>เติม Ai-Cash</center>',
-                        'footer': 'Id',
-                        className: 'text-right table-warning'
+                        className: 'text-right'
                     },
                     {
-                        data: 'total_add_aicash',
+                        data: 'action_user',
                         title: '<center>ผู้ทำรายการ</center>',
-                        'footer': 'Id',
-                        className: 'text-left table-warning'
+                        className: 'text-left'
                     },
                 ],
                 "footerCallback": function(row, data, start, end, display) {
-                    var api = this.api(),
-                        data;
+                    // var api = this.api(),
+                    //     data;
 
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
+                    // // Remove the formatting to get integer data for summation
+                    // var intVal = function(i) {
+                    //     return typeof i === 'string' ?
+                    //         i.replace(/[\$,]/g, '') * 1 :
+                    //         typeof i === 'number' ?
+                    //         i : 0;
+                    // };
 
-                    total_balance = api
-                        .column(3, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    // total_balance = api
+                    //     .column(3, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
 
-                    total_price = api
-                        .column(4, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    // total_price = api
+                    //     .column(4, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
 
-                    total_transfer = api
-                        .column(5, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    // total_transfer = api
+                    //     .column(5, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
 
-                    total_credit_card = api
-                        .column(6, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    // total_credit_card = api
+                    //     .column(6, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
 
-                    total_aicash = api
-                        .column(7, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    // total_aicash = api
+                    //     .column(7, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
 
-                    total_add_aicash = api
-                        .column(8, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    // total_add_aicash = api
+                    //     .column(8, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
 
-                    // Update footer
-                    $(api.column(0).footer()).html('Total');
-                    $(api.column(3).footer()).html(numberWithCommas(total_balance));
-                    $(api.column(4).footer()).html(numberWithCommas(total_price));
-                    $(api.column(5).footer()).html(numberWithCommas(total_transfer));
-                    $(api.column(6).footer()).html(numberWithCommas(total_credit_card));
-                    $(api.column(7).footer()).html(numberWithCommas(total_aicash));
-                    $(api.column(8).footer()).html(numberWithCommas(total_add_aicash));
+                    // // Update footer
+                    // $(api.column(0).footer()).html('Total');
+                    // $(api.column(3).footer()).html(numberWithCommas(total_balance));
+                    // $(api.column(4).footer()).html(numberWithCommas(total_price));
+                    // $(api.column(5).footer()).html(numberWithCommas(total_transfer));
+                    // $(api.column(6).footer()).html(numberWithCommas(total_credit_card));
+                    // $(api.column(7).footer()).html(numberWithCommas(total_aicash));
+                    // $(api.column(8).footer()).html(numberWithCommas(total_add_aicash));
                 }
             });
 
