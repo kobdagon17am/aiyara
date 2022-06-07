@@ -228,6 +228,7 @@ class Total_thai_cambodiaController extends Controller
             db_orders.product_value,
             db_orders.tax,
             db_orders.sum_price,
+            db_orders.pv_total,
 
             db_orders.code_order
             
@@ -268,6 +269,7 @@ class Total_thai_cambodiaController extends Controller
             SUM(CASE WHEN db_orders.product_value is null THEN 0 ELSE db_orders.product_value END) AS product_value,
             SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
             SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
+            SUM(CASE WHEN db_orders.pv_total is null THEN 0 ELSE db_orders.pv_total END) AS pv_total,
 
             db_orders.code_order
             
@@ -365,6 +367,10 @@ class Total_thai_cambodiaController extends Controller
         })
         ->addColumn('total_aicash', function ($row) {
             return number_format($row->aicash_price, 2);
+        })
+
+        ->addColumn('total_aicash', function ($row) {
+            return number_format($row->pv_total, 2);
         })
 
         ->addColumn('total_balance', function ($row) {

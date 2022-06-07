@@ -331,7 +331,11 @@
                         title: '<center>รวมการชำระ</center>',
                         className: 'text-right'
                     },
-
+                    {
+                        data: 'pv_total',
+                        title: '<center>PV</center>',
+                        className: 'text-right'
+                    },
                     // {
                     //     data: 'total_add_aicash',
                     //     title: '<center>เติม Ai-Cash</center>',
@@ -511,7 +515,11 @@
                         title: '<center>รวมการชำระ</center>',
                         className: 'text-right'
                     },
-
+                    {
+                        data: 'pv_total',
+                        title: '<center>PV</center>',
+                        className: 'text-right'
+                    },
                     // {
                     //     data: 'total_add_aicash',
                     //     title: '<center>เติม Ai-Cash</center>',
