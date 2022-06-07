@@ -29,14 +29,14 @@
                     @if ($aicash_data)
                         <form action="{{ route('edit_password_aicash_submit') }}" id="edit_password_aicash_submit" method="post" accept-charset="utf-8">
                         @csrf
-                        <div class="input-group input-group-primary">
+                        {{-- <div class="input-group input-group-primary">
                             <span class="input-group-addon">
                                 <i class="fa fa-lock"></i>
                             </span>
                             <input type="password" name="old_password" id="old_password" class="form-control"
                                 style="font-size: 18px;color: #000;font-weight: bold;" placeholder="Old Password"
                                 required="">
-                        </div>
+                        </div> --}}
 
                         <div class="input-group input-group-primary">
                             <span class="input-group-addon">
@@ -55,11 +55,47 @@
                                 placeholder="Confirm Change Password" class="form-control"
                                 style="font-size: 18px;color: #000;font-weight: bold;" required="">
                         </div>
+
+                        <div class="modal fade" id="default-Modal" tabindex="-1" role="dialog">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Please confirm your password Login</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <div class="row text-center">
+                                  <div class="col-sm-2">
+                                  </div>
+                                  <div class="col-sm-8">
+                                    <div class="input-group input-group-primary">
+                                      <span class="input-group-addon">
+                                        <i class="fa fa-lock"></i>
+                                      </span>
+                                      <input type="password" name="password" class="form-control" autocomplete="off"  required="">
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-2">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                               @if($canAccess)
+                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary waves-effect waves-light ">@lang('message.confirm_your_password')</button>
+                                @endif
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                         </form>
                         <hr>
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <button type="button" onclick="change_password()" class="btn btn-primary"> Change Password Ai-Cash
+                                <button onclick="change_password()" class="btn btn-primary"> Change Password Ai-Cash
                                 </button>
 
                             </div>
@@ -159,7 +195,8 @@
                     })
 
                 } else {
-                    document.getElementById("edit_password_aicash_submit").submit();
+                    //document.getElementById("edit_password_aicash_submit").submit();
+                    $('#default-Modal').modal('show');
                 }
             }
         }
@@ -192,6 +229,8 @@
                         title: 'Add password not matching',
                     })
                 } else {
+
+
                     document.getElementById("add_password_aicash_submit").submit();
                 }
 

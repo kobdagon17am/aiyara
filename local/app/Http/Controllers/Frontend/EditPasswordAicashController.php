@@ -32,12 +32,12 @@ class EditPasswordAicashController extends Controller
                    ->first();
     $aicash_password = $aicash_data->aicash_password;
 
-		$old_password = md5($rs->old_password);
+		//$old_password = md5($rs->old_password);
 		$confirm_edit_password = md5($rs->confirm_edit_password);
 
-		if($old_password != $aicash_password){
-			return redirect('chage_password_aicash')->withError('Old password is incorrect');
-		}else{
+		//if($old_password != $aicash_password){
+	  //return redirect('chage_password_aicash')->withError('Old password is incorrect');
+		//}else{
 			try {
 				$update_pass = DB::table('customers_aicash_password')
 				->where('customer_id_fk', Auth::guard('c_user')->user()->id)
@@ -45,11 +45,11 @@ class EditPasswordAicashController extends Controller
 				return redirect('chage_password_aicash')->withSuccess('Edit Password Success');
 
 			} catch (Exception $e) {
-				return redirect('chage_password_aicash')->withError($e);
+				return redirect('chage_password_aicash')->withError('Edit Password Fail');
 
 			}
 
-		}
+		//}
 
 	}
 
