@@ -696,6 +696,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('commission_transfer/datatable', 'Commission_transferController@Datatable')->name('commission_transfer.datatable');
     Route::get('commission_transfer/modal_commission_transfer','Commission_transferController@modal_commission_transfer')->name('commission_transfer.modal_commission_transfer');
     Route::resource('commission_transfer', 'Commission_transferController');
+    Route::post('commission_transfer_pdf', 'AjaxController@commission_transfer_pdf');
 
     Route::resource('commission_aistockist', 'Commission_aistockistController');
     Route::get('commission_transfer_aistockist/modal_commission_transfer_aistockist','Commission_aistockistController@modal_commission_transfer_aistockist')->name('commission_transfer_aistockist.modal_commission_transfer_aistockist');

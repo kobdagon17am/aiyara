@@ -354,6 +354,48 @@ class AjaxController extends Controller
 
    }
 
+   public function commission_transfer_pdf(Request $rs)
+   {
+       $report_type = $rs->report_type;
+    
+       if ($rs->startDate) {
+        $date = str_replace('/','-',$rs->startDate);
+        $s_date = date('Y-m-d', strtotime($date));
+
+      } else {
+          $s_date = '';
+      }
+
+      if ($rs->endDate) {
+          $date = str_replace('/','-',$rs->endDate);
+          $e_date = date('Y-m-d', strtotime($date));
+      } else {
+          $e_date = '';
+      }
+
+      $sTable = DB::table('db_report_bonus_transfer')
+      ->select('db_report_bonus_transfer.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+      ->leftjoin('customers', 'db_report_bonus_transfer.customer_username', '=', 'customers.user_name')
+      ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer.business_location_id_fk')
+      ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer.business_location_id_fk = '{$rs->business_location}' END"))
+      ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer.status_transfer = '{$rs->status_search}' END"))
+      ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$s_date}' else 1 END"))
+      ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+      ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$e_date}' else 1 END"))
+      ->orderby('bonus_transfer_date', 'DESC')
+      ->get();
+
+
+       $pdf = PDF::loadView('backend.commission_transfer.print_day_total',[
+       'report_type' => $report_type,
+      ])->setPaper('a4', 'landscape');
+      
+   //    return $pdf->download('day_total.pdf'); // โหลดทันที
+      return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
+
+  }
+
+
     public function createPDFReceipt022($id)
      {
         // dd($id);

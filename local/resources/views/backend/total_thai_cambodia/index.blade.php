@@ -117,14 +117,12 @@
                                                 class="btn btn-success btn-sm waves-effect btnSearchInList "
                                                 style="font-size: 14px !important;">
                                                 <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
+                                            </button> &nbsp;
+                                            <button type="button" id="print_btn" class="btn btn-warning btn-sm"
+                                                style="font-size: 14px !important;">
+                                                <i class="fa fa-print"></i> Print
                                             </button>
                                         </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button type="button" id="print_btn" class="btn btn-warning btn-sm"
-                                            style="font-size: 14px !important;">
-                                            <i class="fa fa-print"></i> Print
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -987,41 +985,6 @@
                 $('#modal_endDate').val($('#endDate').val());
                 $('#modal_action_user').val($('#action_user').val());
             });
-
-            // $(document).on('click', '#print_submit', function(event) {
-            //     var report_type = $('#report_type').val();
-
-            //     // if (!confirm("ยืนยัน ? เพื่อยกลบ ")) {
-            //     //     return false;
-            //     // } else {
-            //     $.ajax({
-            //         url: " {{ url('backend/total_thai_cambodia_pdf') }} ",
-            //         method: "post",
-            //         data: {
-            //             "_token": "{{ csrf_token() }}",
-            //             business_location: $('#business_location').val(),
-            //             startDate: $('#startDate').val(),
-            //             endDate: $('#endDate').val(),
-            //             action_user: $('#action_user').val(),
-            //             report_type: report_type,
-            //         },
-            //         success: function(data) {
-            //             // console.log(data);
-            //             // return false;
-            //             // Swal.fire({
-            //             //     type: 'success',
-            //             //     title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
-            //             //     showConfirmButton: false,
-            //             //     timer: 2000
-            //             // });
-            //             // setTimeout(function() {
-            //             //     // $('#data-table').DataTable().clear().draw();
-            //             //     location.reload();
-            //             // }, 1500);
-            //         }
-            //     });
-            //     // }
-            // });
 
         });
     </script>

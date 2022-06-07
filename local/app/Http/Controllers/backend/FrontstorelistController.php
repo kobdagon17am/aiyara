@@ -319,6 +319,7 @@ class FrontstorelistController extends Controller
         for ($i=0; $i < count($request->product_id_fk) ; $i++) {
             // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
             // echo $Check_stock->product_id_fk;
+        // dd($text);
               $sProducts = DB::select("
                 SELECT
                 products.id,
@@ -349,7 +350,7 @@ class FrontstorelistController extends Controller
 
               // return $sProducts;
               // dd();
-
+           
            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();

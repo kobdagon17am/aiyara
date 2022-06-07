@@ -1,6 +1,8 @@
 @extends('backend.layouts.master')
 
-@section('title') Aiyara Planet @endsection
+@section('title')
+    Aiyara Planet
+@endsection
 
 @section('css')
     <style>
@@ -12,7 +14,6 @@
         .border-left-0 {
             height: 67%;
         }
-
     </style>
 @endsection
 
@@ -22,7 +23,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 font-size-18">  รายงานการโอนค่าคอมมิชชั่น AF ประจำรอบ </h4>
+                <h4 class="mb-0 font-size-18"> รายงานการโอนค่าคอมมิชชั่น AF ประจำรอบ </h4>
             </div>
         </div>
     </div>
@@ -33,18 +34,18 @@
     // $menu_id = @$_REQUEST['menu_id'];
     $menu_id = Session::get('session_menu_id');
     if ($sPermission == 1) {
-    $sC = '';
-    $sU = '';
-    $sD = '';
+        $sC = '';
+        $sU = '';
+        $sD = '';
     } else {
-    $role_group_id = \Auth::user()->role_group_id_fk;
-    $menu_permit = DB::table('role_permit')
-    ->where('role_group_id_fk', $role_group_id)
-    ->where('menu_id_fk', $menu_id)
-    ->first();
-    $sC = @$menu_permit->c == 1 ? '' : 'display:none;';
-    $sU = @$menu_permit->u == 1 ? '' : 'display:none;';
-    $sD = @$menu_permit->d == 1 ? '' : 'display:none;';
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        $menu_permit = DB::table('role_permit')
+            ->where('role_group_id_fk', $role_group_id)
+            ->where('menu_id_fk', $menu_id)
+            ->first();
+        $sC = @$menu_permit->c == 1 ? '' : 'display:none;';
+        $sU = @$menu_permit->u == 1 ? '' : 'display:none;';
+        $sD = @$menu_permit->d == 1 ? '' : 'display:none;';
     }
     ?>
 
@@ -63,9 +64,9 @@
                                                 <option value="">Business Location</option>
                                                 @if (@$business_location)
                                                     @foreach (@$business_location as $r)
-                                                    <option value="{{ $r->country_id_fk }}">
-                                                      {{ $r->txt_desc }}
-                                                    </option>
+                                                        <option value="{{ $r->country_id_fk }}">
+                                                            {{ $r->txt_desc }}
+                                                        </option>
                                                     @endforeach
                                                 @endif
                                             </select>
@@ -85,8 +86,10 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 d-flex  ">
-                                      <input id="startDate" autocomplete="off" value="{{ date('1/m/Y') }}" placeholder="วันเริ่ม" />
-                                      <input id="endDate" autocomplete="off" value="{{ date('t/m/Y') }}" placeholder="วันสิ้นสุด" />
+                                        <input id="startDate" autocomplete="off" value="{{ date('1/m/Y') }}"
+                                            placeholder="วันเริ่ม" />
+                                        <input id="endDate" autocomplete="off" value="{{ date('t/m/Y') }}"
+                                            placeholder="วันสิ้นสุด" />
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group row"> &nbsp; &nbsp;
@@ -137,7 +140,6 @@
 @endsection
 
 @section('script')
-
     <script>
         var sU = "{{ @$sU }}";
         var sD = "{{ @$sD }}";
@@ -177,6 +179,11 @@
                     {
                         data: 'location',
                         title: 'Location',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'tax_number',
+                        title: 'เลขประจำตัวผู้เสียภาษี',
                         className: 'text-center'
                     },
                     {
@@ -238,51 +245,62 @@
                     },
 
                 ],
-                order:[[0,'DESC']],
-                "footerCallback": function ( row, data, start, end, display ) {
-                    var api = this.api(), data;
-        
+                order: [
+                    [0, 'DESC']
+                ],
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
                     // Remove the formatting to get integer data for summation
-                    var intVal = function ( i ) {
+                    var intVal = function(i) {
                         return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
+                            i.replace(/[\$,]/g, '') * 1 :
                             typeof i === 'number' ?
-                                i : 0;
+                            i : 0;
                     };
 
                     bonus_total = api
-                        .column( 4, { page: 'current'} )
+                        .column(4, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
-                    
+                        }, 0);
+
                     tax = api
-                        .column( 6, { page: 'current'} )
+                        .column(6, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
-                        
+                        }, 0);
+
                     fee = api
-                        .column( 7, { page: 'current'} )
+                        .column(7, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
-                      
+                        }, 0);
+
                     price_transfer_total = api
-                        .column( 8, { page: 'current'} )
+                        .column(8, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce( function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
-                        }, 0 );
+                        }, 0);
                     // Update footer
-                    $(api.column( 0 ).footer()).html('Total');
-                    $(api.column( 4 ).footer()).html(numberWithCommas(bonus_total));
-                    $(api.column( 6 ).footer()).html(numberWithCommas(tax));
-                    $(api.column( 7 ).footer()).html(numberWithCommas(fee));
-                    $(api.column( 8 ).footer()).html(numberWithCommas(price_transfer_total));
+                    $(api.column(0).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(bonus_total));
+                    $(api.column(6).footer()).html(numberWithCommas(tax));
+                    $(api.column(7).footer()).html(numberWithCommas(fee));
+                    $(api.column(8).footer()).html(numberWithCommas(price_transfer_total));
                 }
             });
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
@@ -295,7 +313,6 @@
                 e.preventDefault();
             });
         });
-
     </script>
 
 
@@ -322,9 +339,5 @@
         // $('#startDate').change(function(event) {
         //     $('#endDate').val($(this).val());
         // });
-
-
-
     </script>
-
 @endsection
