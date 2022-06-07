@@ -1952,7 +1952,7 @@
                                                                 <div class="divTableCell">
                                                                     <?php
 
-                          // echo @$gift_voucher;
+                          // echo @$gift_voucher; ห
                               if(@$gift_voucher>0){
                                 if(@$sRow->sum_price>@$gift_voucher){
                                   $cash_pay = @$sRow->sum_price-@$gift_voucher+@$sRow->shipping_price;
@@ -2044,8 +2044,16 @@
                                                                         <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป {{$slip->transfer_bill_date}} {!!$status_str!!} </h5>
                                                                             <span width="100" class="span_file_slip">
 
-                                                                                <img src="{{ $slip->url }}/{{ @$slip->file }}"
-                                                                                    style="margin-top: 5px;height: 180px;">
+                                                                                @if ($slip->order_channel == 'MEMBER')
+                                                                                <img src="{{ $slip->url }}/{{ @$slip->file }}" data-lity width="200px"
+                                                                                    height="200px" class="grow">
+                                                                            @else
+                                                                                <img src="https://v3.aiyara.co.th/aiyarashop/{{ $slip->url }}/{{ @$slip->file }}"
+                                                                                    data-lity width="200px" height="200px" class="grow">
+                                                                            @endif
+
+                                                                                {{-- <img src="{{ $slip->url }}/{{ @$slip->file }}"
+                                                                                    style="margin-top: 5px;height: 180px;"> --}}
 
                                                                                 <button type="button"
                                                                                     data-id="{{ @$slip->id }}"
