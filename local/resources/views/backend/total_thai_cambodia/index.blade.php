@@ -14,7 +14,6 @@
         .border-left-0 {
             height: 67%;
         }
-
     </style>
 @endsection
 
@@ -121,6 +120,12 @@
                                             </button>
                                         </div>
                                     </div>
+                                    <div class="col-md-2">
+                                        <button type="button" id="print_btn" class="btn btn-warning btn-sm"
+                                            style="font-size: 14px !important;">
+                                            <i class="fa fa-print"></i> Print
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -162,8 +167,6 @@
     </div> <!-- end row -->
 
     <div class="row">
-
-
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
@@ -177,7 +180,7 @@
                     </div>
 
                     <table id="data-table-thai" class="table table-bordered  mt-0" style="width: 100%;">
-                        <tfoot>
+                        {{-- <tfoot>
                             <tr>
                                 <th colspan="2"></th>
                                 <th></th>
@@ -187,10 +190,10 @@
                                 <th></th>
                                 <th></th>
                             </tr>
-                        </tfoot>
+                        </tfoot> --}}
                     </table>
                     <br>
-                    <table id="data-table-cambodia" class="table table-bordered  mt-0" style="width: 100%;">
+                    {{-- <table id="data-table-cambodia" class="table table-bordered  mt-0" style="width: 100%;">
                         <tfoot>
                             <tr>
                                 <th colspan="2"></th>
@@ -202,12 +205,46 @@
                                 <th></th>
                             </tr>
                         </tfoot>
-                    </table>
+                    </table> --}}
                 </div>
             </div>
         </div>
     </div>
 
+    <form id="action_form" action="{{ url('backend/total_thai_cambodia_pdf') }}" method="POST" target="_blank"
+        enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <div id="print_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">รายงาน</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" name="business_location" id="modal_business_location">
+                        <input type="hidden" name="status_search" id="modal_status_search">
+                        <input type="hidden" name="startDate" id="modal_startDate">
+                        <input type="hidden" name="endDate" id="modal_endDate">
+                        <input type="hidden" name="action_user" id="modal_action_user">
+
+                        เลือกรูปแบบรายงาน
+                        <select name="report_type" id="report_type" class="form-control">
+                            <option value="day">รายงานรายวัน</option>
+                            <option value="month">รายงานรายเดือน</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success" id="print_submit">Print</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
 
 @endsection
 
@@ -239,7 +276,7 @@
                         d.startDate = $('#startDate').val();
                         d.endDate = $('#endDate').val();
                         d.action_user = $('#action_user').val();
-
+                        d.report_type = 'day';
                     },
                     method: 'POST'
                 },
@@ -295,11 +332,191 @@
                         className: 'text-right'
                     },
 
+                    // {
+                    //     data: 'total_add_aicash',
+                    //     title: '<center>เติม Ai-Cash</center>',
+                    //     className: 'text-right'
+                    // },
                     {
-                        data: 'total_add_aicash',
-                        title: '<center>เติม Ai-Cash</center>',
+                        data: 'action_user',
+                        title: '<center>ผู้ทำรายการ</center>',
+                        className: 'text-left'
+                    },
+                ],
+                "footerCallback": function(row, data, start, end, display) {
+                    // var api = this.api(),
+                    //     data;
+
+                    // // Remove the formatting to get integer data for summation
+                    // var intVal = function(i) {
+                    //     return typeof i === 'string' ?
+                    //         i.replace(/[\$,]/g, '') * 1 :
+                    //         typeof i === 'number' ?
+                    //         i : 0;
+                    // };
+
+                    // total_balance = api
+                    //     .column(3, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
+
+                    // total_price = api
+                    //     .column(4, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
+
+                    // total_transfer = api
+                    //     .column(5, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
+
+                    // total_credit_card = api
+                    //     .column(6, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
+
+                    // total_aicash = api
+                    //     .column(7, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
+
+                    // total_add_aicash = api
+                    //     .column(8, {
+                    //         page: 'current'
+                    //     })
+                    //     .data()
+                    //     .reduce(function(a, b) {
+                    //         return intVal(a) + intVal(b);
+                    //     }, 0);
+
+                    // // Update footer
+                    // $(api.column(0).footer()).html('Total');
+                    // $(api.column(3).footer()).html(numberWithCommas(total_balance));
+                    // $(api.column(4).footer()).html(numberWithCommas(total_price));
+                    // $(api.column(5).footer()).html(numberWithCommas(total_transfer));
+                    // $(api.column(6).footer()).html(numberWithCommas(total_credit_card));
+                    // $(api.column(7).footer()).html(numberWithCommas(total_aicash));
+                    // $(api.column(8).footer()).html(numberWithCommas(total_add_aicash));
+                }
+            });
+
+            $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+                oTable.draw();
+            });
+
+            $('#search-form').on('click', function(e) {
+
+                oTable.draw();
+                oTable2.draw();
+                e.preventDefault();
+            });
+
+        });
+
+
+        var sU = "{{ @$sU }}";
+        var sD = "{{ @$sD }}";
+        var oTable2;
+        $(function() {
+            oTable2 = $('#data-table-thai').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                scrollCollapse: true,
+                scrollX: true,
+                ordering: false,
+                scrollY: '' + ($(window).height() - 370) + 'px',
+                iDisplayLength: 25,
+                ajax: {
+                    url: '{{ route('backend.total_thai_cambodia.datatable') }}',
+                    data: function(d) {
+                        d.business_location = $('#business_location').val();
+                        d.status_search = $('#status_search').val();
+                        d.startDate = $('#startDate').val();
+                        d.endDate = $('#endDate').val();
+                        d.action_user = $('#action_user').val();
+                        d.report_type = 'month';
+                    },
+                    method: 'POST'
+                },
+                columns: [{
+                        data: 'business_location_name',
+                        title: '<center>Business Location</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'branchs_name',
+                        title: '<center>Branch</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'action_date',
+                        title: '<center>วันที่ทำรายการ</center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'invoice',
+                        title: '<center>Invoice</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'invoice_total',
+                        title: '<center>จำนวนรวม</center>',
                         className: 'text-right'
                     },
+                    {
+                        data: 'total_price',
+                        title: '<center>เงินสด</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_transfer',
+                        title: '<center>เงินโอน</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_credit_card',
+                        title: '<center>เครดิต</center>',
+                        className: 'text-right',
+                        footer: 'Id',
+                    },
+                    {
+                        data: 'total_aicash',
+                        title: '<center>Ai-Cash</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_balance',
+                        title: '<center>รวมการชำระ</center>',
+                        className: 'text-right'
+                    },
+
+                    // {
+                    //     data: 'total_add_aicash',
+                    //     title: '<center>เติม Ai-Cash</center>',
+                    //     className: 'text-right'
+                    // },
                     {
                         data: 'action_user',
                         title: '<center>ผู้ทำรายการ</center>',
@@ -397,323 +614,323 @@
     </script>
 
     <script>
-        var sU = "{{ @$sU }}";
-        var sD = "{{ @$sD }}";
-        var oTable_total_thai;
-        var oTable_total_cambodia;
-        $(function() {
-            oTable_total_thai = $('#data-table-thai').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                scroller: true,
-                scrollCollapse: true,
-                scrollX: true,
-                ordering: false,
-                scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
-                ajax: {
-                    url: '{{ route('backend.total_thai_cambodia.datatable_total_thai') }}',
-                    data: function(d) {
-                        d.business_location = $('#business_location').val();
-                        d.status_search = $('#status_search').val();
-                        d.startDate = $('#startDate').val();
-                        d.endDate = $('#endDate').val();
-                    },
-                    method: 'POST'
-                },
-                columns: [{
-                        data: 'txt_desc',
-                        title: '<center>Business Location</center>',
-                        className: 'text-left'
-                    },
-                    {
-                        data: 'branchs',
-                        title: '<center>Branch</center>',
-                        className: 'text-left'
-                    },
-                    // {
-                    //     data: 'action_date',
-                    //     title: '<center>วันที่ทำรายการ</center>',
-                    //     className: 'text-center'
-                    // },
-                    {
-                        data: 'total_balance',
-                        title: '<center>จำนวนรวม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_price',
-                        title: '<center>จำนวนเงินสดรวม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_transfer',
-                        title: '<center>จำนวนเงินโอนรวม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_credit_card',
-                        title: '<center>จำนวนเงินเครดิตรวม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_aicash',
-                        title: '<center>Ai-Cash</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_add_aicash',
-                        title: '<center>เติม Ai-Cash</center>',
-                        className: 'text-right table-warning'
-                    },
-                ],
-                "footerCallback": function(row, data, start, end, display) {
-                    var api = this.api(),
-                        data;
+        // var sU = "{{ @$sU }}";
+        // var sD = "{{ @$sD }}";
+        // var oTable_total_thai;
+        // var oTable_total_cambodia;
+        // $(function() {
+        //     oTable_total_thai = $('#data-table-thai').DataTable({
+        //         "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        //         processing: true,
+        //         serverSide: true,
+        //         scroller: true,
+        //         scrollCollapse: true,
+        //         scrollX: true,
+        //         ordering: false,
+        //         scrollY: '' + ($(window).height() - 370) + 'px',
+        //         iDisplayLength: 25,
+        //         ajax: {
+        //             url: '{{ route('backend.total_thai_cambodia.datatable_total_thai') }}',
+        //             data: function(d) {
+        //                 d.business_location = $('#business_location').val();
+        //                 d.status_search = $('#status_search').val();
+        //                 d.startDate = $('#startDate').val();
+        //                 d.endDate = $('#endDate').val();
+        //             },
+        //             method: 'POST'
+        //         },
+        //         columns: [{
+        //                 data: 'txt_desc',
+        //                 title: '<center>Business Location</center>',
+        //                 className: 'text-left'
+        //             },
+        //             {
+        //                 data: 'branchs',
+        //                 title: '<center>Branch</center>',
+        //                 className: 'text-left'
+        //             },
+        //             // {
+        //             //     data: 'action_date',
+        //             //     title: '<center>วันที่ทำรายการ</center>',
+        //             //     className: 'text-center'
+        //             // },
+        //             {
+        //                 data: 'total_balance',
+        //                 title: '<center>จำนวนรวม</center>',
+        //                 className: 'text-right'
+        //             },
+        //             {
+        //                 data: 'total_price',
+        //                 title: '<center>จำนวนเงินสดรวม</center>',
+        //                 className: 'text-right'
+        //             },
+        //             {
+        //                 data: 'total_transfer',
+        //                 title: '<center>จำนวนเงินโอนรวม</center>',
+        //                 className: 'text-right'
+        //             },
+        //             {
+        //                 data: 'total_credit_card',
+        //                 title: '<center>จำนวนเงินเครดิตรวม</center>',
+        //                 className: 'text-right'
+        //             },
+        //             {
+        //                 data: 'total_aicash',
+        //                 title: '<center>Ai-Cash</center>',
+        //                 className: 'text-right'
+        //             },
+        //             {
+        //                 data: 'total_add_aicash',
+        //                 title: '<center>เติม Ai-Cash</center>',
+        //                 className: 'text-right table-warning'
+        //             },
+        //         ],
+        //         "footerCallback": function(row, data, start, end, display) {
+        //             var api = this.api(),
+        //                 data;
 
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
+        //             // Remove the formatting to get integer data for summation
+        //             var intVal = function(i) {
+        //                 return typeof i === 'string' ?
+        //                     i.replace(/[\$,]/g, '') * 1 :
+        //                     typeof i === 'number' ?
+        //                     i : 0;
+        //             };
 
-                    total_balance = api
-                        .column(2, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //             total_balance = api
+        //                 .column(2, {
+        //                     page: 'current'
+        //                 })
+        //                 .data()
+        //                 .reduce(function(a, b) {
+        //                     return intVal(a) + intVal(b);
+        //                 }, 0);
 
-                    total_price = api
-                        .column(3, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //             total_price = api
+        //                 .column(3, {
+        //                     page: 'current'
+        //                 })
+        //                 .data()
+        //                 .reduce(function(a, b) {
+        //                     return intVal(a) + intVal(b);
+        //                 }, 0);
 
-                    total_transfer = api
-                        .column(4, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //             total_transfer = api
+        //                 .column(4, {
+        //                     page: 'current'
+        //                 })
+        //                 .data()
+        //                 .reduce(function(a, b) {
+        //                     return intVal(a) + intVal(b);
+        //                 }, 0);
 
-                    total_credit_card = api
-                        .column(5, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //             total_credit_card = api
+        //                 .column(5, {
+        //                     page: 'current'
+        //                 })
+        //                 .data()
+        //                 .reduce(function(a, b) {
+        //                     return intVal(a) + intVal(b);
+        //                 }, 0);
 
-                    total_aicash = api
-                        .column(6, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //             total_aicash = api
+        //                 .column(6, {
+        //                     page: 'current'
+        //                 })
+        //                 .data()
+        //                 .reduce(function(a, b) {
+        //                     return intVal(a) + intVal(b);
+        //                 }, 0);
 
-                    total_add_aicash = api
-                        .column(7, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //             total_add_aicash = api
+        //                 .column(7, {
+        //                     page: 'current'
+        //                 })
+        //                 .data()
+        //                 .reduce(function(a, b) {
+        //                     return intVal(a) + intVal(b);
+        //                 }, 0);
 
-                    // Update footer
-                    $(api.column(0).footer()).html('Total');
-                    $(api.column(2).footer()).html(numberWithCommas(total_balance));
-                    $(api.column(3).footer()).html(numberWithCommas(total_price));
-                    $(api.column(4).footer()).html(numberWithCommas(total_transfer));
-                    $(api.column(5).footer()).html(numberWithCommas(total_credit_card));
-                    $(api.column(6).footer()).html(numberWithCommas(total_aicash));
-                    $(api.column(7).footer()).html(numberWithCommas(total_add_aicash));
-                }
-                // initComplete: function() {
-                //     this.api().columns().every(function() {
-                //         var column = this;
-                //         var input = document.createElement("input");
-                //         $(input).appendTo($(column.footer()).empty())
-                //             .on('change', function() {
-                //                 column.search($(this).val(), false, false, true).draw();
-                //             });
-                //     });
-                // }
-            });
+        //             // Update footer
+        //             $(api.column(0).footer()).html('Total');
+        //             $(api.column(2).footer()).html(numberWithCommas(total_balance));
+        //             $(api.column(3).footer()).html(numberWithCommas(total_price));
+        //             $(api.column(4).footer()).html(numberWithCommas(total_transfer));
+        //             $(api.column(5).footer()).html(numberWithCommas(total_credit_card));
+        //             $(api.column(6).footer()).html(numberWithCommas(total_aicash));
+        //             $(api.column(7).footer()).html(numberWithCommas(total_add_aicash));
+        //         }
+        //         // initComplete: function() {
+        //         //     this.api().columns().every(function() {
+        //         //         var column = this;
+        //         //         var input = document.createElement("input");
+        //         //         $(input).appendTo($(column.footer()).empty())
+        //         //             .on('change', function() {
+        //         //                 column.search($(this).val(), false, false, true).draw();
+        //         //             });
+        //         //     });
+        //         // }
+        //     });
 
-            oTable_total_cambodia = $('#data-table-cambodia').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                scroller: true,
-                scrollCollapse: true,
-                scrollX: true,
-                ordering: false,
-                scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
-                ajax: {
-                    url: '{{ route('backend.total_thai_cambodia.datatable_total_cambodia') }}',
-                    data: function(d) {
-                        d.business_location = $('#business_location').val();
-                        d.status_search = $('#status_search').val();
-                        d.startDate = $('#startDate').val();
-                        d.endDate = $('#endDate').val();
-                    },
-                    method: 'POST'
-                },
-                columns: [{
-                        data: 'txt_desc',
-                        title: '<center>Business Location</center>',
-                        className: 'text-left'
-                    },
-                    {
-                        data: 'branchs',
-                        title: '<center>Branch</center>',
-                        className: 'text-left'
-                    },
-                    {
-                        data: 'total_balance',
-                        title: '<center>จำนวนรวม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_price',
-                        title: '<center>จำนวนเงินสดรวม</center>',
-                        className: 'text-right '
-                    },
-                    {
-                        data: 'total_transfer',
-                        title: '<center>จำนวนเงินโอนรวม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_credit_card',
-                        title: '<center>จำนวนเงินเครดิตรวม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_aicash',
-                        title: '<center>Ai-Cash</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_add_aicash',
-                        title: '<center>เติม Ai-Cash</center>',
-                        className: 'text-right table-warning'
-                    },
-                ],
-                "footerCallback": function(row, data, start, end, display) {
-                    var api = this.api(),
-                        data;
+        // oTable_total_cambodia = $('#data-table-cambodia').DataTable({
+        //     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        //     processing: true,
+        //     serverSide: true,
+        //     scroller: true,
+        //     scrollCollapse: true,
+        //     scrollX: true,
+        //     ordering: false,
+        //     scrollY: '' + ($(window).height() - 370) + 'px',
+        //     iDisplayLength: 25,
+        //     ajax: {
+        //         url: '{{ route('backend.total_thai_cambodia.datatable_total_cambodia') }}',
+        //         data: function(d) {
+        //             d.business_location = $('#business_location').val();
+        //             d.status_search = $('#status_search').val();
+        //             d.startDate = $('#startDate').val();
+        //             d.endDate = $('#endDate').val();
+        //         },
+        //         method: 'POST'
+        //     },
+        //     columns: [{
+        //             data: 'txt_desc',
+        //             title: '<center>Business Location</center>',
+        //             className: 'text-left'
+        //         },
+        //         {
+        //             data: 'branchs',
+        //             title: '<center>Branch</center>',
+        //             className: 'text-left'
+        //         },
+        //         {
+        //             data: 'total_balance',
+        //             title: '<center>จำนวนรวม</center>',
+        //             className: 'text-right'
+        //         },
+        //         {
+        //             data: 'total_price',
+        //             title: '<center>จำนวนเงินสดรวม</center>',
+        //             className: 'text-right '
+        //         },
+        //         {
+        //             data: 'total_transfer',
+        //             title: '<center>จำนวนเงินโอนรวม</center>',
+        //             className: 'text-right'
+        //         },
+        //         {
+        //             data: 'total_credit_card',
+        //             title: '<center>จำนวนเงินเครดิตรวม</center>',
+        //             className: 'text-right'
+        //         },
+        //         {
+        //             data: 'total_aicash',
+        //             title: '<center>Ai-Cash</center>',
+        //             className: 'text-right'
+        //         },
+        //         {
+        //             data: 'total_add_aicash',
+        //             title: '<center>เติม Ai-Cash</center>',
+        //             className: 'text-right table-warning'
+        //         },
+        //     ],
+        //     "footerCallback": function(row, data, start, end, display) {
+        //         var api = this.api(),
+        //             data;
 
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
+        //         // Remove the formatting to get integer data for summation
+        //         var intVal = function(i) {
+        //             return typeof i === 'string' ?
+        //                 i.replace(/[\$,]/g, '') * 1 :
+        //                 typeof i === 'number' ?
+        //                 i : 0;
+        //         };
 
-                    total_balance = api
-                        .column(2, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //         total_balance = api
+        //             .column(2, {
+        //                 page: 'current'
+        //             })
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
 
-                    total_price = api
-                        .column(3, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //         total_price = api
+        //             .column(3, {
+        //                 page: 'current'
+        //             })
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
 
-                    total_transfer = api
-                        .column(4, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //         total_transfer = api
+        //             .column(4, {
+        //                 page: 'current'
+        //             })
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
 
-                    total_credit_card = api
-                        .column(5, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //         total_credit_card = api
+        //             .column(5, {
+        //                 page: 'current'
+        //             })
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
 
-                    total_aicash = api
-                        .column(6, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //         total_aicash = api
+        //             .column(6, {
+        //                 page: 'current'
+        //             })
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
 
-                    total_add_aicash = api
-                        .column(7, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+        //         total_add_aicash = api
+        //             .column(7, {
+        //                 page: 'current'
+        //             })
+        //             .data()
+        //             .reduce(function(a, b) {
+        //                 return intVal(a) + intVal(b);
+        //             }, 0);
 
-                    // Update footer
-                    $(api.column(0).footer()).html('Total');
-                    $(api.column(2).footer()).html(numberWithCommas(total_balance));
-                    $(api.column(3).footer()).html(numberWithCommas(total_price));
-                    $(api.column(4).footer()).html(numberWithCommas(total_transfer));
-                    $(api.column(5).footer()).html(numberWithCommas(total_credit_card));
-                    $(api.column(6).footer()).html(numberWithCommas(total_aicash));
-                    $(api.column(7).footer()).html(numberWithCommas(total_add_aicash));
-                }
-                // initComplete: function() {
-                //     this.api().columns().every(function() {
-                //         var column = this;
-                //         var input = document.createElement("input");
-                //         $(input).appendTo($(column.footer()).empty())
-                //             .on('change', function() {
-                //                 column.search($(this).val(), false, false, true).draw();
-                //             });
-                //     });
-                // }
-            });
+        //         // Update footer
+        //         $(api.column(0).footer()).html('Total');
+        //         $(api.column(2).footer()).html(numberWithCommas(total_balance));
+        //         $(api.column(3).footer()).html(numberWithCommas(total_price));
+        //         $(api.column(4).footer()).html(numberWithCommas(total_transfer));
+        //         $(api.column(5).footer()).html(numberWithCommas(total_credit_card));
+        //         $(api.column(6).footer()).html(numberWithCommas(total_aicash));
+        //         $(api.column(7).footer()).html(numberWithCommas(total_add_aicash));
+        //     }
+        //     // initComplete: function() {
+        //     //     this.api().columns().every(function() {
+        //     //         var column = this;
+        //     //         var input = document.createElement("input");
+        //     //         $(input).appendTo($(column.footer()).empty())
+        //     //             .on('change', function() {
+        //     //                 column.search($(this).val(), false, false, true).draw();
+        //     //             });
+        //     //     });
+        //     // }
+        // });
 
-            $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-                oTable_total_thai.draw();
-                oTable_total_cambodia.draw();
-            });
+        $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+            oTable_total_thai.draw();
+            oTable_total_cambodia.draw();
+        });
 
-            $('#search-form').on('click', function(e) {
+        $('#search-form').on('click', function(e) {
 
-                oTable_total_thai.draw();
-                oTable_total_cambodia.draw();
-                e.preventDefault();
-            });
+        oTable_total_thai.draw();
+        oTable_total_cambodia.draw();
+        e.preventDefault();
+        });
         });
     </script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
@@ -741,5 +958,63 @@
         //  $('#startDate').change(function(event) {
         //    $('#endDate').val($(this).val());
         //  });
+
+
+        $(document).ready(function() {
+            $('#modal_business_location').val($('#business_location').val());
+            $('#modal_startDate').val($('#startDate').val());
+            $('#modal_endDate').val($('#endDate').val());
+            $('#modal_action_user').val($('#action_user').val());
+            $(document).on('click', '#print_btn', function(event) {
+                $('#modal_business_location').val($('#business_location').val());
+                $('#modal_startDate').val($('#startDate').val());
+                $('#modal_endDate').val($('#endDate').val());
+                $('#modal_action_user').val($('#action_user').val());
+                $('#print_modal').modal('show');
+            });
+            $(document).on('change', '#business_location,#startDate,#endDate,#action_user', function(
+                event) {
+                $('#modal_business_location').val($('#business_location').val());
+                $('#modal_startDate').val($('#startDate').val());
+                $('#modal_endDate').val($('#endDate').val());
+                $('#modal_action_user').val($('#action_user').val());
+            });
+
+            // $(document).on('click', '#print_submit', function(event) {
+            //     var report_type = $('#report_type').val();
+
+            //     // if (!confirm("ยืนยัน ? เพื่อยกลบ ")) {
+            //     //     return false;
+            //     // } else {
+            //     $.ajax({
+            //         url: " {{ url('backend/total_thai_cambodia_pdf') }} ",
+            //         method: "post",
+            //         data: {
+            //             "_token": "{{ csrf_token() }}",
+            //             business_location: $('#business_location').val(),
+            //             startDate: $('#startDate').val(),
+            //             endDate: $('#endDate').val(),
+            //             action_user: $('#action_user').val(),
+            //             report_type: report_type,
+            //         },
+            //         success: function(data) {
+            //             // console.log(data);
+            //             // return false;
+            //             // Swal.fire({
+            //             //     type: 'success',
+            //             //     title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
+            //             //     showConfirmButton: false,
+            //             //     timer: 2000
+            //             // });
+            //             // setTimeout(function() {
+            //             //     // $('#data-table').DataTable().clear().draw();
+            //             //     location.reload();
+            //             // }, 1500);
+            //         }
+            //     });
+            //     // }
+            // });
+
+        });
     </script>
 @endsection

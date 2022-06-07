@@ -710,6 +710,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('total_thai_cambodia/datatable_total_thai', 'Total_thai_cambodiaController@DatatableTotalThai')->name('total_thai_cambodia.datatable_total_thai');
     Route::post('total_thai_cambodia/datatable_total_cambodia', 'Total_thai_cambodiaController@DatatableTotalCambodia')->name('total_thai_cambodia.datatable_total_cambodia');
 
+    Route::post('total_thai_cambodia_pdf', 'AjaxController@total_thai_cambodia_pdf');
+
 
     Route::resource('cambodia_account', 'Cambodia_accountController');
     Route::post('cambodia_account/datatable', 'Cambodia_accountController@Datatable')->name('cambodia_account.datatable');

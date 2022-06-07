@@ -151,52 +151,141 @@ class Total_thai_cambodiaController extends Controller
         } else {
             $business_location_id_fk = "";
         }
+
+        if ($rs->report_type) {
+            $report_type = $rs->report_type;
+        } else {
+            $report_type = "day";
+        }
     
-        $sTable =DB::select("
-        SELECT
-        db_orders.action_user,
-        ck_users_admin.`name` as action_user_name,
-        db_orders.pay_type_id_fk,
-        dataset_pay_type.detail AS pay_type,
-        date(db_orders.action_date) AS action_date,
-        db_orders.branch_id_fk,
-        branchs.b_name as branchs_name,
-        dataset_business_location.txt_desc as business_location_name,
+//         $sTable =DB::select("
+//         SELECT
+//         db_orders.action_user,
+//         ck_users_admin.`name` as action_user_name,
+//         db_orders.pay_type_id_fk,
+//         dataset_pay_type.detail AS pay_type,
+//         date(db_orders.action_date) AS action_date,
+//         db_orders.branch_id_fk,
+//         branchs.b_name as branchs_name,
+//         dataset_business_location.txt_desc as business_location_name,
 
-        SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS credit_price,
-        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
-        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
-        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
-        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
-        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
+//         SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS credit_price,
+//         SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
+//         SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
+//         SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
+//         SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
+//         SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
 
-        SUM(
-        (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
-        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-        -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
-        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
-        -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
-        ) as total_price,
+//         SUM(
+//         (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+//         (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+//         -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
+//         (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+//         (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
+//         -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
+//         ) as total_price,
 
-        SUM(
-         CASE WHEN db_orders.shipping_free = 1 THEN 0 ELSE db_orders.shipping_price END
-        ) AS shipping_price
+//         SUM(
+//          CASE WHEN db_orders.shipping_free = 1 THEN 0 ELSE db_orders.shipping_price END
+//         ) AS shipping_price
 
-        FROM
-        db_orders
-        Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-        Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-        Left Join branchs ON branchs.id = db_orders.branch_id_fk
-        Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-        WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
-        $startDate
-        $endDate
-        $action_user
-        $business_location_id_fk
-        GROUP BY action_user
-");
+//         FROM
+//         db_orders
+//         Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+//         Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+//         Left Join branchs ON branchs.id = db_orders.branch_id_fk
+//         Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+//         WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+//         $startDate
+//         $endDate
+//         $action_user
+//         $business_location_id_fk
+//         GROUP BY action_user
+// ");
 
+   // แบบไม่ sum
+        if($report_type == 'day'){
+            $sTable =DB::select("
+            SELECT
+            db_orders.action_user,
+            ck_users_admin.`name` as action_user_name,
+            ck_users_admin.`first_name` as action_first_name,
+            ck_users_admin.`last_name` as action_last_name,
+            db_orders.pay_type_id_fk,
+            dataset_pay_type.detail AS pay_type,
+            date(db_orders.action_date) AS action_date,
+            db_orders.branch_id_fk,
+            branchs.b_name as branchs_name,
+            dataset_business_location.txt_desc as business_location_name,
+
+            db_orders.sum_credit_price,
+            db_orders.transfer_price,
+            db_orders.fee_amt,
+            db_orders.aicash_price,
+            db_orders.cash_pay,
+            db_orders.gift_voucher_price,
+            db_orders.shipping_price,
+            db_orders.product_value,
+            db_orders.tax,
+            db_orders.sum_price,
+
+            db_orders.code_order
+            
+            FROM
+            db_orders
+            Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+            Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+            Left Join branchs ON branchs.id = db_orders.branch_id_fk
+            Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+            WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+            $startDate
+            $endDate
+            $action_user
+            $business_location_id_fk
+            ORDER BY action_date ASC
+        ");
+        }else{
+            $sTable =DB::select("
+            SELECT
+            db_orders.action_user,
+            ck_users_admin.`name` as action_user_name,
+            ck_users_admin.`first_name` as action_first_name,
+            ck_users_admin.`last_name` as action_last_name,
+            db_orders.pay_type_id_fk,
+            dataset_pay_type.detail AS pay_type,
+            date_format(db_orders.action_date, '%M') AS action_date,
+            db_orders.branch_id_fk,
+            branchs.b_name as branchs_name,
+            dataset_business_location.txt_desc as business_location_name,
+
+            SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS sum_credit_price,
+            SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
+            SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
+            SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
+            SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
+            SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
+            SUM(CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) AS shipping_price,
+            SUM(CASE WHEN db_orders.product_value is null THEN 0 ELSE db_orders.product_value END) AS product_value,
+            SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
+            SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
+
+            db_orders.code_order
+            
+            FROM
+            db_orders
+            Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+            Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+            Left Join branchs ON branchs.id = db_orders.branch_id_fk
+            Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+            WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+            $startDate
+            $endDate
+            $action_user
+            $business_location_id_fk
+            GROUP BY action_user , date_format(db_orders.action_date, '%M')
+            ORDER BY action_date ASC
+        ");
+        }
 
     $sQuery = \DataTables::of($sTable);
     return $sQuery
@@ -206,48 +295,61 @@ class Total_thai_cambodiaController extends Controller
         ->addColumn('business_location_name', function ($row) {
             return $row->business_location_name;
         })
-        ->addColumn('action_date', function ($row) {
-            return is_null($row->action_date) ? '-' : date('Y/m/d', strtotime($row->action_date));
+        ->addColumn('action_date', function ($row) use($report_type) {
+
+            if($report_type == 'day'){
+                $action_date = date('d/m/Y', strtotime($row->action_date));
+              }else{
+                $action_date = date('m/Y', strtotime($row->action_date));
+              }
+
+            return $action_date;
         })
 
-        ->addColumn('invoice' , function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk) {
-            $orders =DB::select("
-            SELECT
-            db_orders.code_order
-            FROM
-            db_orders
-            WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
-            $startDate
-            $endDate
-            $action_user
-            $business_location_id_fk
-    ");
-       $p = "";
-       foreach($orders as $ord){
-            $p .= $ord->code_order."<br>";
-       }
-            return $p;
+        ->addColumn('invoice' , function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk,$report_type) {
+    //         $orders =DB::select("
+    //         SELECT
+    //         db_orders.code_order
+    //         FROM
+    //         db_orders
+    //         WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+    //         $startDate
+    //         $endDate
+    //         $action_user
+    //         $business_location_id_fk
+    // ");
+    //    $p = "";
+    //    foreach($orders as $ord){
+    //         $p .= $ord->code_order."<br>";
+    //    }
+    //         return $p;
+            if($report_type == 'day'){
+                return $row->code_order;
+            }else{
+                return '-';
+            }
         })
         ->escapeColumns('invoice')
 
         ->addColumn('invoice_total', function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk) {
 
-            $orders =DB::select("
-            SELECT
-            db_orders.code_order
-            FROM
-            db_orders
-            WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
-            $startDate
-            $endDate
-            $action_user
-            $business_location_id_fk
-    ");
-                $p = 0;
-                foreach($orders as $ord){
-                        $p++;
-                }
-            return $p;
+    //         $orders =DB::select("
+    //         SELECT
+    //         db_orders.code_order
+    //         FROM
+    //         db_orders
+    //         WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+    //         $startDate
+    //         $endDate
+    //         $action_user
+    //         $business_location_id_fk
+    // ");
+    //             $p = 0;
+    //             foreach($orders as $ord){
+    //                     $p++;
+    //             }
+    //         return $p;
+            return number_format($row->sum_price, 2);
         })
        
         
@@ -259,14 +361,17 @@ class Total_thai_cambodiaController extends Controller
         })
 
         ->addColumn('total_credit_card', function ($row) {
-            return number_format($row->credit_price, 2);
+            return number_format($row->sum_credit_price, 2);
         })
         ->addColumn('total_aicash', function ($row) {
             return number_format($row->aicash_price, 2);
         })
 
         ->addColumn('total_balance', function ($row) {
-            return number_format($row->total_price, 2);
+            return number_format($row->cash_pay+
+            $row->transfer_price+
+            $row->sum_credit_price+
+            $row->aicash_price, 2);
         })
         ->addColumn('total_add_aicash', function ($row) {
             return number_format(0, 2);

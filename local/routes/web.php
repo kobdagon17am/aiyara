@@ -5,6 +5,12 @@ Route::get('b', function () {
     return redirect('backend/login');
 });
 
+Route::get('/crc', function() {
+    $exitCode = Artisan::call('config:cache');
+    return '<h1>Clear Config cleared</h1>';
+});
+
+
 /*
 |--------------------------------------------------------------------------------------------------------------------------
 | Web reverse proxy

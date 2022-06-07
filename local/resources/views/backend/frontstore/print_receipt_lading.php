@@ -1,100 +1,124 @@
 <style>
+@page {
+    margin: 0px;
+}
 
-    @page { margin: 0px; }
-    body{
-      font-family: "THSarabunNew";
-      font-size: 20px;
-      font-weight: bold;
-      line-height: 14px;
-      margin-top: 20px;
-      margin-left: 25px;
-      margin-right: 33px;
-      line-height: 13px;
-    }
+body {
+    font-family: "THSarabunNew";
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 14px;
+    margin-top: 20px;
+    margin-left: 25px;
+    margin-right: 33px;
+    line-height: 13px;
+}
 
-    @charset "utf-8";
+@charset "utf-8";
 
-    .NameAndAddress table {
-        width: 100% !important;
-        border-collapse: collapse;
-        padding: 0px;
+.NameAndAddress table {
+    width: 100% !important;
+    border-collapse: collapse;
+    padding: 0px;
 
 
-    }
+}
 
-    .NameAndAddress table thead {
-        background: #ebebeb;
-        color: #222222;
-    }
+.NameAndAddress table thead {
+    background: #ebebeb;
+    color: #222222;
+}
 
-    .NameAndAddress table tbody tr td b {
-        width: 150px;
-        display: inline-block;
-    }
+.NameAndAddress table tbody tr td b {
+    width: 150px;
+    display: inline-block;
+}
 
-  /* DivTable.com */
-  .divTable{
+/* DivTable.com */
+.divTable {
     display: table;
     /*width: 120%;*/
-  }
-  .divTableRow {
+}
+
+.divTableRow {
     display: table-row;
-  }
-  .divTableHeading {
+}
+
+.divTableHeading {
     background-color: #EEE;
     display: table-header-group;
-  }
-  .divTableCell, .divTableHead {
+}
+
+.divTableCell,
+.divTableHead {
     border: 1px solid white;
     display: table-cell;
     /*padding: 3px 10px;*/
-  }
-  .divTableHeading {
+}
+
+.divTableHeading {
     background-color: #EEE;
     display: table-header-group;
 
-  }
-  .divTableFoot {
+}
+
+.divTableFoot {
     background-color: #EEE;
     display: table-footer-group;
 
-  }
-  .divTableBody {
+}
+
+.divTableBody {
     display: table-row-group;
-  }
-  .divTH {text-align: right;}
+}
+
+.divTH {
+    text-align: right;
+}
 
 
-  .inline-group {
+.inline-group {
     max-width: 5rem;
     /*padding: .5rem;*/
-  }
+}
 
-  .inline-group .form-control {
+.inline-group .form-control {
     text-align: right;
-  }
+}
 
-  .form-control[type="number"]::-webkit-inner-spin-button,
-  .form-control[type="number"]::-webkit-outer-spin-button {
+.form-control[type="number"]::-webkit-inner-spin-button,
+.form-control[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
-  }
+}
 
-  .quantity {width: 50px;text-align: right;color: blue;font-size: 16px;}
+.quantity {
+    width: 50px;
+    text-align: right;
+    color: blue;
+    font-size: 16px;
+}
 
-  .btn-minus,.btn-plus,.btn-minus-pro,.btn-plus-pro,.btn-plus-product-pro,.btn-minus-product-pro {background-color: bisque !important;}
+.btn-minus,
+.btn-plus,
+.btn-minus-pro,
+.btn-plus-pro,
+.btn-plus-product-pro,
+.btn-minus-product-pro {
+    background-color: bisque !important;
+}
 
-  input[type="text"]:disabled {
+input[type="text"]:disabled {
     background: #f2f2f2;
-  }
+}
 
-    .page {
-       page-break-after: always;
-    }
-    .page:last-child {
-       page-break-after: unset;
-    }
+.page {
+    page-break-after: always;
+}
 
+.page:last-child {
+    page-break-after: unset;
+}
 </style>
 
 <?php
@@ -1202,168 +1226,169 @@ for ($j=0; $j < $amt_page ; $j++) {
 
  ?>
 
-<div class="NameAndAddress " >
-    <table >
-      <tr>
-        <td style="width: 60% ;margin-left:35px !important;">
+<div class="NameAndAddress ">
+    <table>
+        <tr>
+            <td style="width: 60% ;margin-left:35px !important;">
 
-          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
-          <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
+                <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
 
-          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+3) ; "); ?>
-          <?php echo "<span style='font-size:24px;'>".@$DB[0]->a."</span><br>"; ?>
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+3) ; "); ?>
+                <?php echo "<span style='font-size:24px;'>".@$DB[0]->a."</span><br>"; ?>
 
-          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+6) ; "); ?>
-          <?php echo "<span style='font-size:14px;'>".@$cus_address."</span><br>"; ?>
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+6) ; "); ?>
+                <?php echo "<span style='font-size:14px;'>".@$cus_address."</span><br>"; ?>
 
-          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+7) ; "); ?>
-          <?php echo "<span style='font-size:15px;'>".@$cus_tax."</span><br>"; ?>
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+7) ; "); ?>
+                <?php echo "<span style='font-size:15px;'>".@$cus_tax."</span><br>"; ?>
 
-      </td>
+            </td>
 
-<!-- THELP  -->
-      <td style="vertical-align: top; font-size: 24px;font-weight: bold;" >
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+1) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-      </td>
+            <!-- THELP  -->
+            <td style="vertical-align: top; font-size: 24px;font-weight: bold;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+1) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+            </td>
 
-      <td style="margin-left:25px !important;margin-top:18px !important;width:30%;vertical-align: top;" >
-        <br> 
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-        <br>
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+5) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-      </td>
-      </tr>
+            <td style="margin-left:25px !important;margin-top:18px !important;width:30%;vertical-align: top;">
+                <br>
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+                <br>
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+5) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+            </td>
+        </tr>
     </table>
-    
-    <table style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;" >
+
+    <table
+        style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;">
 
 
-<!-- รายการสินค้า -->
+        <!-- รายการสินค้า -->
 
-<?php $runno = 1; for ($i= ($j*$n)+6; $i <= ($j*$n)+15 ; $i++) {  ?>
+        <?php $runno = 1; for ($i= ($j*$n)+6; $i <= ($j*$n)+15 ; $i++) {  ?>
 
-          <tr style="vertical-align: top;line-height: 10px !important;">
+        <tr style="vertical-align: top;line-height: 10px !important;">
 
-                <td style="width:2.6%;text-align: left;">
+            <td style="width:2.6%;text-align: left;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php //echo @$DB[0]->a ; echo substr(trim(@$DB[0]->b),1,1); ?>
                 <?php if(substr(trim(@$DB[0]->b),1,1)=='n'){ $runno = $runno - 1 ; }else{ if(@$DB[0]->b!='') echo $runno; } ?>
-                </td>
+            </td>
 
-                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
-                <?php 
+            <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
+            <?php 
                 if(@$DB[0]->c==""){ ?>
-                    <td colspan="2" style="width:28%;text-align: left;">
-                    <?php echo @$DB[0]->b ; ?>
-                     </td>
-                    <?php
+            <td colspan="2" style="width:28%;text-align: left;">
+                <?php echo @$DB[0]->b ; ?>
+            </td>
+            <?php
                 }else{  ?>
-                    <td style="width:18%;text-align: left;">
-                    <?php echo @$DB[0]->b ; ?>
-                    </td>
-                    <td style="width:10%;text-align: left;">
-                    <?php echo @$DB[0]->c ; ?>
-                    </td>
-                    <?php
+            <td style="width:18%;text-align: left;">
+                <?php echo @$DB[0]->b ; ?>
+            </td>
+            <td style="width:10%;text-align: left;">
+                <?php echo @$DB[0]->c ; ?>
+            </td>
+            <?php
                 }
                 ?>
 
-                <td style="width:6%;text-align: right;">
+            <td style="width:6%;text-align: right;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php 
                 if(@$DB[0]->c==""){
                    echo @$DB[0]->d ; 
                 }
                 ?>
-                </td>
+            </td>
 
-                <td style="width:5%;text-align: right;">
+            <td style="width:5%;text-align: right;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php 
                 if(@$DB[0]->c==""){
                   echo @$DB[0]->e ; 
                 }
                 ?>
-                </td>
+            </td>
 
-                <td style="width:4%;text-align: right;">
+            <td style="width:4%;text-align: right;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php echo @$DB[0]->f ; ?>
-                </td>
+            </td>
 
-                <td style="width:11%;text-align: right;">
+            <td style="width:11%;text-align: right;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php echo @$DB[0]->g ; ?>
-                </td>
+            </td>
 
-          </tr>
- <?php $runno++; }  ?>
+        </tr>
+        <?php $runno++; }  ?>
 
 
     </table>
 
 
-  <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;" >
-    <tr>
-      <td colspan="2" style="margin-left:33px !important;width:80%;font-size: 14px;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+16) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-      </td>
-      <!-- <td style="text-align: right;"></td> -->
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"></td>
-    </tr>
+    <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;">
+        <tr>
+            <td colspan="2" style="margin-left:33px !important;width:80%;font-size: 14px;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+16) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+            </td>
+            <!-- <td style="text-align: right;"></td> -->
+            <td style="text-align: right;"></td>
+            <td style="text-align: right;"></td>
+        </tr>
 
 
-    <tr>
-      <td colspan="4" style="margin-left:33px !important;width:80%;font-size: 14px;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+17) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-      </td>
-    </tr>
+        <tr>
+            <td colspan="4" style="margin-left:33px !important;width:80%;font-size: 14px;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+17) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+            </td>
+        </tr>
 
-    <tr>
-      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+18) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-      </td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;margin-top:-3px !important;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+18) ; "); ?>
-        <?php echo @$DB[0]->g ; ?>
-      </td>
-    </tr>
+        <tr>
+            <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+18) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+            </td>
+            <td style="text-align: right;"></td>
+            <td style="text-align: right;"></td>
+            <td style="text-align: right;margin-top:-3px !important;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+18) ; "); ?>
+                <?php echo @$DB[0]->g ; ?>
+            </td>
+        </tr>
 
-    <tr>
-       <td style="margin-left:33px !important;width:80%;font-size: 14px;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+19) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-      </td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"></td>
-      <td style="text-align: right;"> 
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+19) ; "); ?>
-        <?php echo @$DB[0]->g ; ?>
-      </td>
-    </tr>
+        <tr>
+            <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+19) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+            </td>
+            <td style="text-align: right;"></td>
+            <td style="text-align: right;"></td>
+            <td style="text-align: right;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+19) ; "); ?>
+                <?php echo @$DB[0]->g ; ?>
+            </td>
+        </tr>
 
-    <tr>
-      <td colspan="2" style="font-size: 14px !important;margin-left: 5% !important;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
-      </td>
-      <td colspan="2" style="width:50%;text-align: right;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
-        <?php echo @$DB[0]->g ; ?>
-      </td>
-    </tr>
+        <tr>
+            <td colspan="2" style="font-size: 14px !important;margin-left: 5% !important;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
+                <?php echo @$DB[0]->a ; ?>
+            </td>
+            <td colspan="2" style="width:50%;text-align: right;">
+                <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
+                <?php echo @$DB[0]->g ; ?>
+            </td>
+        </tr>
 
 
-    <!-- <tr>
+        <!-- <tr>
       <td colspan="3" style="font-size: 14px !important;margin-left: 5% !important;">
         <php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+21) ; "); ?>
         <php echo @$DB[0]->a ; ?> &nbsp;
@@ -1372,14 +1397,14 @@ for ($j=0; $j < $amt_page ; $j++) {
       </td>
     </tr> -->
 
-  </table>
+    </table>
 </div>
 
- <div style="float:right;font-size: 14px !important;">
-  <!-- Page 1 -->
-       <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+22) ; "); ?>
-       <?php echo @$DB[0]->g ; ?>
- </div>
+<div style="float:right;font-size: 14px !important;">
+    <!-- Page 1 -->
+    <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+22) ; "); ?>
+    <?php echo @$DB[0]->g ; ?>
+</div>
 
 <?php } ?>
 <?php } ?>
