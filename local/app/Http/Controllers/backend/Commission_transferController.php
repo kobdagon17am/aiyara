@@ -144,7 +144,8 @@ class Commission_transferController extends Controller
         $sTable = DB::table('db_report_bonus_transfer')
             ->select('db_report_bonus_transfer.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
             ->leftjoin('customers', 'db_report_bonus_transfer.customer_username', '=', 'customers.user_name')
-            ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer.business_location_id_fk')
+            // ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer.business_location_id_fk')
+            ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer.business_location_id_fk')
             ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer.business_location_id_fk = '{$rs->business_location}' END"))
             ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer.status_transfer = '{$rs->status_search}' END"))
             ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$s_date}' else 1 END"))
@@ -202,10 +203,17 @@ class Commission_transferController extends Controller
                 return is_null($row->bonus_transfer_date) ? '-' : date('Y/m/d', strtotime($row->bonus_transfer_date));
             })
             ->addColumn('view', function ($row) {
-              $date=  strtotime($row->bonus_transfer_date);
-              $customer_id = $row->customer_id_fk;
-             return '<button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;"  onclick="modal_commission_transfer('.$customer_id.','.$date.')">
-              <i class="bx bx-search font-size-16 align-middle"></i>';
+            //   $cus = DB::table('customers')->select('id')->where('user_name',$row->customer_username)->first();
+            //   $date=  strtotime($row->bonus_transfer_date);
+            //   if($cus){
+            //     $customer_id = $cus->id;
+            //   }else{
+            //     $customer_id = 0;
+            //   }
+             
+            //  return '<button type="button" class="btn btn-success btn-sm waves-effect btnSearchInList " style="font-size: 14px !important;"  onclick="modal_commission_transfer('.$customer_id.','.$date.')">
+            //   <i class="bx bx-search font-size-16 align-middle"></i>';
+            return "";
             })
             ->rawColumns(['view'])
             ->make(true);

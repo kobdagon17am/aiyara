@@ -98,6 +98,11 @@
                                                 style="font-size: 14px !important;">
                                                 <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
                                             </button>
+                                            &nbsp;
+                                            <button type="button" id="print_btn" class="btn btn-warning btn-sm"
+                                                style="font-size: 14px;">
+                                                <i class="fa fa-print"></i> Print
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -138,10 +143,68 @@
         </div> <!-- end col -->
     </div> <!-- end row -->
 
+    <form id="action_form" action="{{ url('backend/commission_aistockist_pdf') }}" method="POST" target="_blank"
+        enctype="multipart/form-data">
+        {{ csrf_field() }}
+        <div id="print_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">รายงาน</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" name="business_location" id="modal_business_location">
+                        <input type="hidden" name="status_search" id="modal_status_search">
+                        <input type="hidden" name="startDate" id="modal_startDate">
+                        <input type="hidden" name="endDate" id="modal_endDate">
+
+                        เลือกรูปแบบรายงาน
+                        <select name="report_type" id="report_type" class="form-control">
+                            <option value="day">รายงานรายวัน</option>
+                            <option value="month">รายงานรายเดือน</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success" id="print_submit">Print</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
 @endsection
 
 @section('script')
     <script>
+        $(document).ready(function() {
+            $('#modal_business_location').val($('#business_location').val());
+            $('#modal_status_search').val($('#status_search').val());
+            $('#modal_startDate').val($('#startDate').val());
+            $('#modal_endDate').val($('#endDate').val());
+
+            $(document).on('click', '#print_btn', function(event) {
+                $('#modal_business_location').val($('#business_location').val());
+                $('#modal_status_search').val($('#status_search').val());
+                $('#modal_startDate').val($('#startDate').val());
+                $('#modal_endDate').val($('#endDate').val());
+
+                $('#print_modal').modal('show');
+            });
+            $(document).on('change', '#business_location,#startDate,#endDate,#action_user', function(
+                event) {
+                $('#modal_business_location').val($('#business_location').val());
+                $('#modal_status_search').val($('#status_search').val());
+                $('#modal_startDate').val($('#startDate').val());
+                $('#modal_endDate').val($('#endDate').val());
+
+            });
+        });
+
         var sU = "{{ @$sU }}";
         var sD = "{{ @$sD }}";
         var oTable;
@@ -243,11 +306,11 @@
                         title: '<center>หมายเหตุ</center>',
                         className: 'text-left'
                     },
-                    {
-                        data: 'view',
-                        title: '<center>#</center>',
-                        className: 'text-left'
-                    },
+                    // {
+                    //     data: 'view',
+                    //     title: '<center>#</center>',
+                    //     className: 'text-left'
+                    // },
                 ],
                 order: [
                     [0, 'DESC']

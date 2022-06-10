@@ -373,21 +373,50 @@ class AjaxController extends Controller
           $e_date = '';
       }
 
-      $sTable = DB::table('db_report_bonus_transfer')
-      ->select('db_report_bonus_transfer.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
-      ->leftjoin('customers', 'db_report_bonus_transfer.customer_username', '=', 'customers.user_name')
-      ->leftjoin('dataset_business_location', 'dataset_business_location.country_id_fk', '=', 'db_report_bonus_transfer.business_location_id_fk')
-      ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer.business_location_id_fk = '{$rs->business_location}' END"))
-      ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer.status_transfer = '{$rs->status_search}' END"))
-      ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$s_date}' else 1 END"))
-      ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer.bonus_transfer_date) <= '{$e_date}'else 1 END"))
-      ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$e_date}' else 1 END"))
-      ->orderby('bonus_transfer_date', 'DESC')
-      ->get();
+      if($report_type == 'day'){
+        $sTable = DB::table('db_report_bonus_transfer')
+        ->select('db_report_bonus_transfer.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+        ->leftjoin('customers', 'db_report_bonus_transfer.customer_username', '=', 'customers.user_name')
+        ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer.business_location_id_fk')
+        ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer.business_location_id_fk = '{$rs->business_location}' END"))
+        ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer.status_transfer = '{$rs->status_search}' END"))
+        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$s_date}' else 1 END"))
+        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+        ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$e_date}' else 1 END"))
+        ->orderby('bonus_transfer_date', 'DESC')
+        ->get();
+      }else{
+        $sTable = DB::table('db_report_bonus_transfer')
+        ->select(
+            'db_report_bonus_transfer.bonus_transfer_date',
+            'db_report_bonus_transfer.tax_number',
+            'db_report_bonus_transfer.customer_username',
+
+            DB::raw('SUM(db_report_bonus_transfer.bonus_total) AS bonus_total'),
+            DB::raw('SUM(db_report_bonus_transfer.tax) AS tax'),
+            DB::raw('SUM(db_report_bonus_transfer.fee) AS fee'),
+            DB::raw('SUM(db_report_bonus_transfer.price_transfer_total) AS price_transfer_total'),
+        
+        'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+        ->leftjoin('customers', 'db_report_bonus_transfer.customer_username', '=', 'customers.user_name')
+        ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer.business_location_id_fk')
+        ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer.business_location_id_fk = '{$rs->business_location}' END"))
+        ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer.status_transfer = '{$rs->status_search}' END"))
+        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$s_date}' else 1 END"))
+        ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+        ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer.bonus_transfer_date) = '{$e_date}' else 1 END"))
+        ->orderby('bonus_transfer_date', 'DESC')
+        ->groupBy(DB::raw("date_format(db_report_bonus_transfer.bonus_transfer_date, '%M')"))
+        ->get();
+      }
+     
 
 
        $pdf = PDF::loadView('backend.commission_transfer.print_day_total',[
        'report_type' => $report_type,
+       'sTable' => $sTable,
+       'startDate2' => $s_date,
+       'endDate2' => $e_date,
       ])->setPaper('a4', 'landscape');
       
    //    return $pdf->download('day_total.pdf'); // โหลดทันที
@@ -395,6 +424,145 @@ class AjaxController extends Controller
 
   }
 
+  public function commission_aistockist_pdf(Request $rs)
+  {
+      $report_type = $rs->report_type;
+   
+      if ($rs->startDate) {
+       $date = str_replace('/','-',$rs->startDate);
+       $s_date = date('Y-m-d', strtotime($date));
+
+     } else {
+         $s_date = '';
+     }
+
+     if ($rs->endDate) {
+         $date = str_replace('/','-',$rs->endDate);
+         $e_date = date('Y-m-d', strtotime($date));
+     } else {
+         $e_date = '';
+     }
+
+     if($report_type == 'day'){
+       $sTable = DB::table('db_report_bonus_transfer_aistockist')
+       ->select('db_report_bonus_transfer_aistockist.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+       ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_username', '=', 'customers.user_name')
+       ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer_aistockist.business_location_id_fk')
+       ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer_aistockist.business_location_id_fk = '{$rs->business_location}' END"))
+       ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_aistockist.status_transfer = '{$rs->status_search}' END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$s_date}' else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_aistockist.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$e_date}' else 1 END"))
+       ->orderby('bonus_transfer_date', 'DESC')
+       ->get();
+     }else{
+       $sTable = DB::table('db_report_bonus_transfer_aistockist')
+       ->select(
+           'db_report_bonus_transfer_aistockist.bonus_transfer_date',
+           'db_report_bonus_transfer_aistockist.tax_number',
+           'db_report_bonus_transfer_aistockist.customer_username',
+
+           DB::raw('SUM(db_report_bonus_transfer_aistockist.bonus_total) AS bonus_total'),
+           DB::raw('SUM(db_report_bonus_transfer_aistockist.tax) AS tax'),
+           DB::raw('SUM(db_report_bonus_transfer_aistockist.fee) AS fee'),
+           DB::raw('SUM(db_report_bonus_transfer_aistockist.price_transfer_total) AS price_transfer_total'),
+       
+       'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+       ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_username', '=', 'customers.user_name')
+       ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer_aistockist.business_location_id_fk')
+       ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer_aistockist.business_location_id_fk = '{$rs->business_location}' END"))
+       ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_aistockist.status_transfer = '{$rs->status_search}' END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$s_date}' else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_aistockist.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_aistockist.bonus_transfer_date) = '{$e_date}' else 1 END"))
+       ->orderby('bonus_transfer_date', 'DESC')
+       ->groupBy(DB::raw("date_format(db_report_bonus_transfer_aistockist.bonus_transfer_date, '%M')"))
+       ->get();
+     }
+    
+
+
+      $pdf = PDF::loadView('backend.commission_transfer.print_day_total',[
+      'report_type' => $report_type,
+      'sTable' => $sTable,
+      'startDate2' => $s_date,
+      'endDate2' => $e_date,
+     ])->setPaper('a4', 'landscape');
+     
+  //    return $pdf->download('day_total.pdf'); // โหลดทันที
+     return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
+
+ }
+
+ public function commission_transfer_af_pdf(Request $rs)
+  {
+      $report_type = $rs->report_type;
+   
+      if ($rs->startDate) {
+       $date = str_replace('/','-',$rs->startDate);
+       $s_date = date('Y-m-d', strtotime($date));
+
+     } else {
+         $s_date = '';
+     }
+
+     if ($rs->endDate) {
+         $date = str_replace('/','-',$rs->endDate);
+         $e_date = date('Y-m-d', strtotime($date));
+     } else {
+         $e_date = '';
+     }
+
+     if($report_type == 'day'){
+       $sTable = DB::table('db_report_bonus_transfer_af')
+       ->select('db_report_bonus_transfer_af.*', 'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+       ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_username', '=', 'customers.user_name')
+       ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer_af.business_location_id_fk')
+       ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer_af.business_location_id_fk = '{$rs->business_location}' END"))
+       ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_af.status_transfer = '{$rs->status_search}' END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$s_date}' else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_af.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$e_date}' else 1 END"))
+       ->orderby('bonus_transfer_date', 'DESC')
+       ->get();
+     }else{
+       $sTable = DB::table('db_report_bonus_transfer_af')
+       ->select(
+           'db_report_bonus_transfer_af.bonus_transfer_date',
+           'db_report_bonus_transfer_af.tax_number',
+           'db_report_bonus_transfer_af.customer_username',
+
+           DB::raw('SUM(db_report_bonus_transfer_af.bonus_total) AS bonus_total'),
+           DB::raw('SUM(db_report_bonus_transfer_af.tax) AS tax'),
+           DB::raw('SUM(db_report_bonus_transfer_af.fee) AS fee'),
+           DB::raw('SUM(db_report_bonus_transfer_af.price_transfer_total) AS price_transfer_total'),
+       
+       'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
+       ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_username', '=', 'customers.user_name')
+       ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer_af.business_location_id_fk')
+       ->whereRaw(("case WHEN '{$rs->business_location}' = '' THEN 1 else  db_report_bonus_transfer_af.business_location_id_fk = '{$rs->business_location}' END"))
+       ->whereRaw(("case WHEN '{$rs->status_search}' = '' THEN 1 else db_report_bonus_transfer_af.status_transfer = '{$rs->status_search}' END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' = ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$s_date}' else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' != '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) >= '{$s_date}' and date(db_report_bonus_transfer_af.bonus_transfer_date) <= '{$e_date}'else 1 END"))
+       ->whereRaw(("case WHEN '{$s_date}' = '' and '{$e_date}' != ''  THEN  date(db_report_bonus_transfer_af.bonus_transfer_date) = '{$e_date}' else 1 END"))
+       ->orderby('bonus_transfer_date', 'DESC')
+       ->groupBy(DB::raw("date_format(db_report_bonus_transfer_af.bonus_transfer_date, '%M')"))
+       ->get();
+     }
+    
+
+
+      $pdf = PDF::loadView('backend.commission_transfer.print_day_total',[
+      'report_type' => $report_type,
+      'sTable' => $sTable,
+      'startDate2' => $s_date,
+      'endDate2' => $e_date,
+     ])->setPaper('a4', 'landscape');
+     
+  //    return $pdf->download('day_total.pdf'); // โหลดทันที
+     return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
+
+ }
 
     public function createPDFReceipt022($id)
      {

@@ -701,9 +701,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('commission_aistockist', 'Commission_aistockistController');
     Route::get('commission_transfer_aistockist/modal_commission_transfer_aistockist','Commission_aistockistController@modal_commission_transfer_aistockist')->name('commission_transfer_aistockist.modal_commission_transfer_aistockist');
     Route::post('commission_aistockist/datatable', 'Commission_aistockistController@Datatable')->name('commission_aistockist.datatable');
+    Route::post('commission_aistockist_pdf', 'AjaxController@commission_aistockist_pdf');
 
     Route::resource('commission_transfer_af', 'Commission_transfer_afController');
     Route::post('commission_af/datatable', 'Commission_transfer_afController@Datatable')->name('commission_af.datatable');
+    Route::post('commission_transfer_af_pdf', 'AjaxController@commission_transfer_af_pdf');
 
     Route::get('total_thai_cambodia/datatable_total_all', 'Total_thai_cambodiaController@datatable_total_all')->name('total_thai_cambodia.datatable_total_all');
     Route::resource('total_thai_cambodia', 'Total_thai_cambodiaController');

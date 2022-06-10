@@ -220,7 +220,7 @@ tr.border_bottom td {
     <table style="border-collapse: collapse;">
         <tr>
             <th style="font-size: 18px;">
-                รายงานการขาย
+                รายงานค่าคอมมิชชั่น
                 <br>
                 <?php 
               if($report_type == 'day'){
@@ -244,233 +244,60 @@ tr.border_bottom td {
             <thead>
                 <tr style="background-color: #e6e6e6;">
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                        ลำดับ
+                    </td>
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
                         วันเดือนปี
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        เลขที่เอกสาร
+                        เลขประจำตัวผู้เสียภาษี
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        ชื่อ-นามสกุล
+                        ชื่อ/ชื่อกลาง/นามสกุล
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        มูลค่าสินค้า
+                        จำนวนเงิน
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        ภาษีมูลค่าเพิ่ม
+                        ค่าภาษีหัก ณ ที่จ่าย
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        รวม
+                        ค่าธรรมเนียมการโอน
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        เงินสด
-                    </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        เงินโอน
-                    </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        เครดิต
-                    </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        Ai-Cash
+                        จำนวนสุทธิที่ได้รับ
                     </td>
                 </tr>
             </thead>
             <tbody>
                 <?php
-
-                      // $sTable =DB::select("
-                      //       SELECT
-                      //       db_orders.action_user,
-                      //       ck_users_admin.`name` as action_user_name,
-                      //       db_orders.pay_type_id_fk,
-                      //       dataset_pay_type.detail AS pay_type,
-                      //       date(db_orders.action_date) AS action_date,
-                      //       db_orders.branch_id_fk,
-                      //       branchs.b_name as branchs_name,
-                      //       dataset_business_location.txt_desc as business_location_name,
-
-                      //       SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS credit_price,
-                      //       SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
-                      //       SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
-                      //       SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
-                      //       SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
-                      //       SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-
-                      //       SUM(
-                      //       (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
-                      //       (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                      //       -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
-                      //       (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                      //       (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
-                      //       -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
-                      //       ) as total_price,
-
-                      //       SUM(
-                      //       CASE WHEN db_orders.shipping_free = 1 THEN 0 ELSE db_orders.shipping_price END
-                      //       ) AS shipping_price
-
-                      //       FROM
-                      //       db_orders
-                      //       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                      //       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                      //       Left Join branchs ON branchs.id = db_orders.branch_id_fk
-                      //       Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-                      //       WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
-                      //       $startDate
-                      //       $endDate
-                      //       $action_user
-                      //       $business_location_id_fk
-                      //       GROUP BY action_user
-                      //       ORDER BY action_date ASC
-                      // ");
-
-                      // แบบไม่ sum
-                      if($report_type == 'day'){
-                        $sTable =DB::select("
-                        SELECT
-                        db_orders.action_user,
-                        ck_users_admin.`name` as action_user_name,
-                        ck_users_admin.`first_name` as action_first_name,
-                        ck_users_admin.`last_name` as action_last_name,
-                        db_orders.pay_type_id_fk,
-                        dataset_pay_type.detail AS pay_type,
-                        date(db_orders.action_date) AS action_date,
-                        db_orders.branch_id_fk,
-                        branchs.b_name as branchs_name,
-                        dataset_business_location.txt_desc as business_location_name,
-  
-                        db_orders.sum_credit_price,
-                        db_orders.transfer_price,
-                        db_orders.fee_amt,
-                        db_orders.aicash_price,
-                        db_orders.cash_pay,
-                        db_orders.gift_voucher_price,
-                        db_orders.shipping_price,
-                        db_orders.product_value,
-                        db_orders.tax,
-                        db_orders.sum_price,
                 
-                        db_orders.code_order
-                        
-                        FROM
-                        db_orders
-                        Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                        Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                        Left Join branchs ON branchs.id = db_orders.branch_id_fk
-                        Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-                        WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
-                        $startDate
-                        $endDate
-                        $action_user
-                        $business_location_id_fk
-                        ORDER BY action_date ASC
-                  ");
-                      }else{
-                        $sTable =DB::select("
-                        SELECT
-                        db_orders.action_user,
-                        ck_users_admin.`name` as action_user_name,
-                        ck_users_admin.`first_name` as action_first_name,
-                        ck_users_admin.`last_name` as action_last_name,
-                        db_orders.pay_type_id_fk,
-                        dataset_pay_type.detail AS pay_type,
-                        date_format(db_orders.action_date, '%M') AS action_date,
-                        db_orders.branch_id_fk,
-                        branchs.b_name as branchs_name,
-                        dataset_business_location.txt_desc as business_location_name,
-
-                        SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS sum_credit_price,
-                        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
-                        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
-                        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
-                        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
-                        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-                        SUM(CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) AS shipping_price,
-                        SUM(CASE WHEN db_orders.product_value is null THEN 0 ELSE db_orders.product_value END) AS product_value,
-                        SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
-                        SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
-
-                        db_orders.code_order
-                        
-                        FROM
-                        db_orders
-                        Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                        Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                        Left Join branchs ON branchs.id = db_orders.branch_id_fk
-                        Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-                        WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
-                        $startDate
-                        $endDate
-                        $action_user
-                        $business_location_id_fk
-                        GROUP BY action_user , date_format(db_orders.action_date, '%M')
-                        ORDER BY action_date ASC
-                  ");
-                      }
-                    
-
               $p = "";
-              $product_value_total = 0;
-              $tax_total = 0;
-              $sum_price_total = 0;
-              $cash_pay_total = 0;
-              $cash_transfer_price_total = 0;
-              $cash_sum_credit_price_total = 0;
-              $aicash_price_total = 0;
-              
-            foreach($sTable as $order){
-              if($order->action_user_name == ''){
-                $order->action_user_name = 'V3';
-              }
-              if($order->cash_pay == ''){
-                $order->cash_pay = 0.00;
-              }
-              if($order->transfer_price == ''){
-                $order->transfer_price = 0.00;
-              }
-              if($order->sum_credit_price == ''){
-                $order->sum_credit_price = 0.00;
-              }
-              if($order->aicash_price == ''){
-                $order->aicash_price = 0.00;
-              }
-      
-              $product_value_total += $order->product_value;
-              $tax_total += $order->tax;
-              $sum_price_total += $order->sum_price;
+              $bonus_total_sum = 0;
+              $tax_sum = 0;
+              $fee_sum = 0;
+              $price_transfer_total_sum = 0;
+                foreach($sTable as $key => $data){
+                    $bonus_total_sum += $data->bonus_total;
+                    $tax_sum += $data->tax;
+                    $fee_sum += $data->fee;
+                    $price_transfer_total_sum += $data->price_transfer_total;
+                    $data_date = date('d/m/Y', strtotime($data->bonus_transfer_date));
+                          $p.= '
+                                  <tr>
+                                  <td style="text-align: center;">'.($key+1).'</td>
+                                  <td style="text-align: center;">'.$data_date.'</td>
+                                  <td style="text-align: left;">'.$data->tax_number.'</td>
+                                  <td style="text-align: left;">'.$data->customer_username.'</td>
+                                  <td style="text-align: right;">'.number_format($data->bonus_total,2,".",",").'</td>
+                                  <td style="text-align: right;">'.number_format($data->tax,2,".",",").'</td>
+                                  <td style="text-align: right;">'.number_format($data->fee,2,".",",").'</td>
+                                  <td style="text-align: right;">'.number_format($data->price_transfer_total,2,".",",").'</td>
+                              </tr>
+                                  ';
+                }
+     
 
-              $cash_pay_total += $order->cash_pay;
-              $cash_transfer_price_total += $order->transfer_price;
-              $cash_sum_credit_price_total += $order->sum_credit_price;
-              $aicash_price_total += $order->aicash_price;
-
-              if($report_type == 'day'){
-                $action_date = date('d/m/Y', strtotime($order->action_date));
-              }else{
-                $action_date = date('m/Y', strtotime($order->action_date));
-              }
-
-              if($report_type == 'day'){
-                $code_order = $order->code_order;
-              }else{
-                $code_order = '-';
-              }
-              
-              $p.= '
-              <tr>
-              <td style="text-align: center;">'.$action_date.'</td>
-              <td style="text-align: left;">'.$code_order.'</td>
-              <td style="text-align: left;">'.$order->action_first_name.' '.$order->action_last_name.' ('.$order->action_user_name.') '.'</td>
-              <td style="text-align: right;">'.number_format($order->product_value,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->tax,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->sum_price,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->cash_pay,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->transfer_price,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->sum_credit_price,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->aicash_price,2,".",",").'</td>
-          </tr>
-              ';
-            }
               echo $p;
               ?>
 
@@ -478,20 +305,15 @@ tr.border_bottom td {
                     <td style="text-align: center;"></td>
                     <td style="text-align: left;"></td>
                     <td style="text-align: left;"></td>
+                    <td style="text-align: left;"></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($product_value_total,2,".",","); ?></td>
+                        <?php echo number_format($bonus_total_sum,2,".",","); ?></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($tax_total,2,".",","); ?></td>
+                        <?php echo number_format($tax_sum,2,".",","); ?></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($sum_price_total,2,".",","); ?></td>
+                        <?php echo number_format($fee_sum,2,".",","); ?></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($cash_pay_total,2,".",","); ?></td>
-                    <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($cash_transfer_price_total,2,".",","); ?></td>
-                    <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?></td>
-                    <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($aicash_price_total,2,".",","); ?></td>
+                        <?php echo number_format($price_transfer_total_sum,2,".",","); ?></td>
 
                 </tr>
 
@@ -509,9 +331,9 @@ tr.border_bottom td {
     <table style="border-collapse: collapse;vertical-align: top;text-align: left;">
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> รวมวิธีการชำระค่าสินค้าและบริการ &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> รวมวิธีการจ่ายค่าคอมมิชชั่น &nbsp;</td>
             <td style="">&nbsp;</td>
-            <td style="border-left: 1px solid #ccc;">รวมมูลค่าสินค้าและภาษีมูลค่าเพิ่ม &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;">รวมมูลค่าค่าคอมมิชชั่นและภาษีหักณ ที่จ่าย &nbsp;</td>
             <!-- <td style="border-left: 1px solid #ccc;"> ในนาม บริษัท ไอยรา แพลนเน็ต จำกัด
                     <br>
                     <img src="" width="100"> (ลายเซ็น)
@@ -523,41 +345,37 @@ tr.border_bottom td {
 
         <tr>
             <td style="border-left: 1px solid #ccc;"> เงินสด &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_pay_total,2,".",","); ?> &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format(0,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> มูลค่าสินค้า &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($product_value_total,2,".",","); ?> &nbsp;</td>
+            <td style="text-align: right;">0.00 &nbsp;</td>
         </tr>
 
         <tr>
             <td style="border-left: 1px solid #ccc;"> เงินโอน &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_total,2,".",","); ?>&nbsp;
+            <td style="text-align: right;"> <?php echo number_format($bonus_total_sum,2,".",","); ?> &nbsp;
             </td>
-            <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
-            <td style="text-align: right;"><?php echo number_format($tax_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> TAX 3% &nbsp;</td>
+            <td style="text-align: right;"><?php echo number_format($tax_sum,2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> เครดิต &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?> &nbsp;
-            </td>
-            <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระ</u></b> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> &nbsp;</td>
+            <td style="text-align: right;"> &nbsp; </td>
+            <td style="border-left: 1px solid #ccc;"> ค่าธรรมเนียมธนาคาร &nbsp;</td>
             <td style="text-align: right;">
-                <u style="text-align: right;">
-                    <?php echo number_format($sum_price_total,2,".",","); ?></u>
+
+                <?php echo number_format($fee_sum,2,".",","); ?>
                 &nbsp;
             </td>
         </tr>
         <tr>
-            <td style="border-left: 1px solid #ccc;"> Ai-Cash &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($aicash_price_total,2,".",","); ?> &nbsp;
-            </td>
-
-        </tr>
-
-        <tr>
             <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระทั้งสิ้น</u></b> </td>
             <td style="text-align: right;"><u style="text-align: right;">
-                    <?php echo number_format($cash_pay_total+$cash_transfer_price_total+$cash_sum_credit_price_total+$aicash_price_total,2,".",","); ?></u>
+                    <?php echo number_format($bonus_total_sum,2,".",","); ?></u>
+                &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระ</u></b> </td>
+            <td style="text-align: right;"><u style="text-align: right;">
+                    <?php echo number_format($price_transfer_total_sum,2,".",","); ?></u>
                 &nbsp;</td>
         </tr>
 
