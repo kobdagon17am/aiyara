@@ -719,7 +719,7 @@ class Pick_warehouseController extends Controller
       return $sQuery
       ->addColumn('column_001', function($row) {
            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
-           return '<b>'.$DP->packing_code.'</b>';
+           return '<b>'.@$DP->packing_code.'</b>';
       })
       ->escapeColumns('column_001')  
       ->addColumn('column_002', function($row) {
@@ -1975,8 +1975,6 @@ ORDER BY db_pick_pack_packing.id
 
           $pn .= '</div>';  
           return $pn;
-
-
       })
       ->escapeColumns('column_002')  
       ->make(true);
@@ -2002,11 +2000,11 @@ ORDER BY db_pick_pack_packing.id
         if($d1){
         
           // วุฒิลองแก้เป็นฐานตัวเอง 
-          $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
-          // $db_pick_pack_requisition_code = "db_pick_pack_requisition_code";
+          // $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+          $db_pick_pack_requisition_code = "db_pick_pack_requisition_code";
           $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             // $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
-  
+
             $arr1 = []; 
 
             if(!$d2){
@@ -2077,6 +2075,7 @@ ORDER BY db_pick_pack_packing.id
               
               // $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=0 ;");
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2);");
+              // dd($arr2);
 // dd($d3);
               if(!empty($d3)){
                      foreach ($d3 as $key => $v3) {
@@ -2114,11 +2113,44 @@ ORDER BY db_pick_pack_packing.id
         }
   
       }
+
       $sTable = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk='$reg->packing_id' group by pick_pack_requisition_code_id_fk order by recipient_code asc");
 
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
+
+      ->addColumn('column_del', function($row) {   
+        
+        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+  
+        $f = [] ;
+        $tx = '';
+        foreach ($d as $key => $v) {
+
+            $tx = '<center> 
+               
+              <a href="backend/pick_warehouse_del_packing/'.$v->recipient_code.'"  onclick="return confirm(\'คุณต้องการยกเลิกรายการ '.$v->recipient_code.' ? (หลังจากนั้นจะไม่สามารถแก้ไขได้อีก)\')" ><i class="bx bx-trash grow " data-toggle="tooltip" data-placement="left" title="ยกเลิกรายการ '.$v->recipient_code.'" style="font-size:24px;cursor:pointer;color:red;"></i></a> 
+
+               </center>' ;
+
+           array_push($f,@$tx);
+        }
+        // $f = implode('<br><br>',$f);
+        // return $f;
+
+        $web_all = "";
+        foreach($f as $value){
+          $web = "<div class='col-md-12'style='height: 70px;'>";
+          $web .=$value;
+          $web .= "</div>";
+          $web_all .=$web.'<br>';
+        }
+
+        return $web_all;
+    
+     })
+     ->escapeColumns('column_del') 
 
       ->addColumn('column_001', function($row) {
         
@@ -2348,6 +2380,136 @@ ORDER BY db_pick_pack_packing.id
       ->make(true);
     }
 
+    function pick_warehouse_del_packing($p_id){
+      \DB::beginTransaction();
+      try {
+      $db_consignments = DB::table('db_consignments')->where('recipient_code',$p_id)->get();
+      foreach($db_consignments as $con){
+        $db_delivery = DB::table('db_delivery')->where('packing_code_desc',$con->recipient_code)->get();
+        foreach($db_delivery as $de){
+          $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$con->pick_pack_requisition_code_id_fk)->first();
+          DB::table('db_delivery')->where('id',$de->id)->update([
+            'status_pick_pack' => 0,
+            'status_delivery' => 0
+          ]);
+          if($db_pick_pack_packing_code){
+            $or_ids = explode(",", $db_pick_pack_packing_code->orders_id_fk);
+            $or_codes = explode(",", $db_pick_pack_packing_code->receipt);
+            $or_ids_str = "";
+            $or_codes_str = "";
+
+            foreach($or_ids as $key => $or_id){
+                if($or_id!=$de->orders_id_fk){
+                  if($key+1==count($or_ids)){
+                    $or_ids_str .= $or_id;
+                  }else{
+                    $or_ids_str .= $or_id.',';
+                  }
+                }
+            }
+
+            foreach($or_codes as $key => $or_code){
+              if($or_code!=$de->receipt){
+                if($key+1==count($or_codes)){
+                  $or_codes_str .= $or_code;
+                }else{
+                  $or_codes_str .= $or_code.',';
+                }
+              }
+          }
+          
+            DB::table('db_pick_pack_packing_code')->where('id',$db_pick_pack_packing_code->id)->update([
+              'orders_id_fk' => $or_ids_str,
+              'receipt' => $or_codes_str,
+            ]);
+
+            $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')->where('order_id',$de->orders_id_fk)->get();
+            foreach($db_pay_requisition_002_item as $req_item){
+              $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+              if($db_pay_requisition_002){
+                DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->update([
+                  'amt_get' => ($db_pay_requisition_002->amt_get - $req_item->amt_get),
+                  'amt_need' => ($db_pay_requisition_002->amt_need - $req_item->amt_need),
+                  'amt_remain' => ($db_pay_requisition_002->amt_get - $req_item->amt_get) - ($db_pay_requisition_002->amt_need - $req_item->amt_need),
+                ]);
+              }
+              $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+              if($db_pay_requisition_002){
+                $db_stocks = DB::table('db_stocks')
+                ->where('product_id_fk',$db_pay_requisition_002->product_id_fk)
+                ->where('warehouse_id_fk',$db_pay_requisition_002->warehouse_id_fk)
+                ->where('business_location_id_fk',$db_pay_requisition_002->business_location_id_fk)
+                ->where('branch_id_fk',$db_pay_requisition_002->branch_id_fk)
+                ->where('zone_id_fk',$db_pay_requisition_002->zone_id_fk)
+                ->where('shelf_id_fk',$db_pay_requisition_002->shelf_id_fk)
+                ->where('shelf_floor',$db_pay_requisition_002->shelf_floor)
+                ->where('lot_number',$db_pay_requisition_002->lot_number)
+                ->first();
+                if($db_stocks){
+                    DB::table('db_stocks')
+                  ->where('id',$db_stocks->id)
+                  ->update([
+                    'amt' => $db_stocks->amt + $req_item->amt_get,
+                  ]);
+                  $db_pick_pack_packing = DB::table('db_pick_pack_packing')->select('packing_code','created_at')->where('packing_code_id_fk',$con->pick_pack_requisition_code_id_fk)->first();
+                  if($db_pick_pack_packing){
+                    $ref_doc = $db_pick_pack_packing->packing_code;
+                    $doc_date = $db_pick_pack_packing->created_at;
+                  }else{
+                    $ref_doc = "";
+                    $doc_date = "";
+                  }
+                  DB::table('db_stock_movement')->insert([
+                    'stock_type_id_fk' => 1,
+                    'stock_id_fk' => $db_stocks->id,
+                    'ref_table' => 'db_pay_requisition_002',
+                    'ref_table_id' => $req_item->requisition_002_id,
+                    'ref_doc' => $ref_doc,
+                    'doc_date' => $doc_date,
+                    'business_location_id_fk' => $db_stocks->business_location_id_fk,
+                    'branch_id_fk' => $db_stocks->branch_id_fk,
+                    'product_id_fk' => $db_stocks->product_id_fk,
+                    'lot_number' => $db_stocks->lot_number,
+                    'lot_expired_date' => $db_stocks->lot_expired_date,
+                    'amt' => $req_item->amt_get,
+                    'in_out' => 1,
+                    'product_unit_id_fk' => $db_stocks->product_unit_id_fk,
+                    'warehouse_id_fk' => $db_stocks->warehouse_id_fk,
+                    'zone_id_fk' => $db_stocks->zone_id_fk,
+                    'shelf_id_fk' => $db_stocks->shelf_id_fk,
+                    'shelf_floor' => $db_stocks->shelf_floor,
+                    'status' => 1,
+                    'note' => 'ยกเลิกจ่ายสินค้าตามใบเบิก',
+                    'action_user' => \Auth::user()->id,
+                    'action_date' => date('Y-m-d H:i:s'),
+                    'approver' => \Auth::user()->id,
+                    'approve_date' => date('Y-m-d H:i:s'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                  ]);
+                }
+              }
+              DB::table('db_pay_requisition_002_item')->where('id',$req_item->id)->delete();
+              DB::table('db_pick_pack_packing')->where('delivery_id_fk',$de->id)->where('packing_code_id_fk',$con->pick_pack_requisition_code_id_fk)->delete();
+            }
+            
+          }          
+         
+        }
+      }
+
+      DB::table('db_consignments')->where('recipient_code',$p_id)->delete();
+
+      \DB::commit();
+    } catch (\Exception $e) {
+          echo $e->getMessage();
+          \DB::rollback();
+          return redirect()->back()->with(['alert'=>\App\Models\Alert::e($e)]);
+        }
+
+      return redirect()->back()->with('success','Delete success');
+    }
+    
 
     function pick_warehouse_scan_save(Request $r){
       DB::table('db_delivery')->where('id',$r->delivery_id)->update([
