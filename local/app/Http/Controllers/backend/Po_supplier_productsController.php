@@ -26,8 +26,10 @@ class Po_supplier_productsController extends Controller
        // dd($sRowNew);
        // dd($sRowNew->po_number);
        // $sProduct = \App\Models\Backend\Products::get();
-       $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
-       $sProductUnit = \App\Models\Backend\Product_unit::where('id', 4)->where('lang_id', 1)->get();
+      //  $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
+      $sProduct = DB::table('products')->select('products_details.*','products.product_code')->join('products_details','products_details.product_id_fk','products.id')->where('products_details.lang_id', 1)->get();
+      //  $sProductUnit = \App\Models\Backend\Product_unit::where('id', 4)->where('lang_id', 1)->get();
+      $sProductUnit = \App\Models\Backend\Product_unit::where('lang_id', 1)->get();
        return View('backend.po_supplier_products.form')->with(array(
         'sRowNew'=>$sRowNew,
         'sProduct'=>$sProduct,

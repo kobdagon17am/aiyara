@@ -14,15 +14,36 @@ class Po_supplierController extends Controller
 
     public function index(Request $request)
     {
-        General::gen_id_url();
+        // General::gen_id_url();
+        // วุฒิสร้าง session
+        $menus = DB::table('ck_backend_menu')->select('id')->where('id',51)->first();
+        Session::put('session_menu_id', $menus->id);
+        Session::put('menu_id', $menus->id);
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',@$role_group_id)->where('menu_id_fk',@$menus->id)->first();
+        $sC = @$menu_permit->c;
+        $sU = @$menu_permit->u;
+        $sD = @$menu_permit->d;
+        Session::put('sC', $sC);
+        Session::put('sU', $sU);
+        Session::put('sD', $sD);
+        $can_cancel_bill = @$menu_permit->can_cancel_bill;
+        $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
+        $can_approve = @$menu_permit->can_approve;
+        Session::put('can_cancel_bill', $can_cancel_bill);
+        Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
+        Session::put('can_approve', $can_approve);
+
+
        $sAction_user = DB::select(" select * from ck_users_admin where branch_id_fk=".(\Auth::user()->branch_id_fk)."  ");
        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
            return $query->where('id', auth()->user()->business_location_id_fk);
        })->get();
        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
-            return $query->where('id', auth()->user()->branch_id);
+            return $query->where('id', auth()->user()->branch_id_fk);
         })->get();
-       $Supplier = DB::select(" select * from dataset_supplier ");
+      //  $Supplier = DB::select(" select * from dataset_supplier ");
+       $Supplier = \App\Models\Backend\Supplier::search()->orderBy('id', 'asc')->get();
        $po_number = DB::select(" SELECT po_number FROM `db_po_supplier` where branch_id_fk=".(\Auth::user()->branch_id_fk)." ");
       return View('backend.po_supplier.index')->with(
         array(
@@ -47,7 +68,8 @@ class Po_supplierController extends Controller
 
        $sBusiness_location = \App\Models\Backend\Business_location::get();
        $sBranchs = \App\Models\Backend\Branchs::get();
-       $Supplier = DB::select(" select * from dataset_supplier ");
+      //  $Supplier = DB::select(" select * from dataset_supplier ");
+      $Supplier = \App\Models\Backend\Supplier::search()->orderBy('id', 'asc')->get();
       return View('backend.po_supplier.form')->with(
         array(
            'sBusiness_location'=>$sBusiness_location,'sBranchs'=>$sBranchs
