@@ -172,7 +172,8 @@ class Pick_warehouse_fifoController extends Controller
             // return "Not";
             DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
           }
-          
+        
+
           // return $temp_db_stocks;
           // return $arr_product_id_fk;
           // return $business_location_id_fk;
@@ -189,6 +190,7 @@ class Pick_warehouse_fifoController extends Controller
 
           DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
           WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+
 
       //    $r_test = DB::select(" SELECT * FROM $temp_db_stocks ");
       //    return ($r_test);
@@ -1051,6 +1053,11 @@ class Pick_warehouse_fifoController extends Controller
 
           $z = 1;
           foreach ($Products as $key => $value) {
+
+            // if($value->product_id_fk == 18){
+            //   dd($temp_db_stocks_01[0]->amt);
+            // }
+
             // dd($value);
                // บิลปกติ
                 $arr_inv = [];
@@ -1115,12 +1122,16 @@ class Pick_warehouse_fifoController extends Controller
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
+                
+   
                 // วุฒิเพิ่มมา
                 // dd($invoice_code);
                 // if($db_pick_pack_packing_code_data){
                 // $all_orders_lists = DB::table('db_order_products_list')->whereIn('frontstore_id_fk',$all_orders)->where('')->get();
                 // $data_remark = '';
                 // }
+
+           
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
@@ -1751,7 +1762,11 @@ class Pick_warehouse_fifoController extends Controller
             array_push($arr1,$v->orders_id_fk);
           }
           $orders_id_fk = array_filter($arr1);
+
+          // dd($orders_id_fk);
+
           $orders_id_fk = implode(',',$orders_id_fk);
+  
           // return $orders_id_fk;
           $r01 = DB::select(" SELECT invoice_code FROM db_orders where id in ($orders_id_fk) ");
     }

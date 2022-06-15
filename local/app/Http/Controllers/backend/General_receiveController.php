@@ -54,7 +54,7 @@ class General_receiveController extends Controller
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
-
+// dd(Session::get('sC'));
         return View('backend.general_receive.index')->with(
         array(
            'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,'sBranchs'=>$sBranchs,'User_branch_id'=>$User_branch_id

@@ -488,12 +488,14 @@ class Pick_warehouseController extends Controller
 
 
     public function Datatable0002(Request $req){
-      
+ 
       $sTable = DB::select(" SELECT * FROM db_pay_requisition_001  WHERE  pick_pack_requisition_code_id_fk='".$req->packing_id."' 
         group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);
+
       return $sQuery
       ->addColumn('column_001', function($row) { 
+        
             // วุฒิเปลี่ยน pick_pack_requisition_code_id_fk เป็น pick_pack_packing_code_id_fk
             $rs = DB::select(" SELECT
                   db_pay_requisition_002_pay_history.id,
@@ -555,7 +557,7 @@ class Pick_warehouseController extends Controller
           ';
 
           $amt_get = 0;
-         
+        //  dd($Products );
           foreach ($Products as $key => $v) {
 
                    $css_font = $v->amt_remain>0?"color:red;font-weight:bold;":"";
@@ -2006,7 +2008,7 @@ ORDER BY db_pick_pack_packing.id
             // $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
 
             $arr1 = []; 
-
+// dd($d2);
             if(!$d2){
      // วุฒิเพิ่มกันที่อยู่หาย
               $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in (".$d1[0]->pick_pack_requisition_code_id_fk.") ; ");
@@ -2407,7 +2409,22 @@ ORDER BY db_pick_pack_packing.id
                   }
                 }
             }
-
+            $or_ids_str2 = explode(",", $or_ids_str);
+            $or_ids_str_arr = [];
+            foreach($or_ids_str2 as $key => $or_id){
+            if($or_id!=''){
+              array_push($or_ids_str_arr,$or_id);
+            }
+          }
+          $or_ids_str = '';
+          foreach($or_ids_str_arr as $key => $or_id){
+              if($key+1==count($or_ids_str_arr)){
+                $or_ids_str .= $or_id;
+              }else{
+                $or_ids_str .= $or_id.',';
+              }
+        }
+        
             foreach($or_codes as $key => $or_code){
               if($or_code!=$de->receipt){
                 if($key+1==count($or_codes)){
@@ -2417,7 +2434,23 @@ ORDER BY db_pick_pack_packing.id
                 }
               }
           }
-          
+          $or_codes_str2 = explode(",", $or_codes_str);
+          $or_codes_str_arr = [];
+          foreach($or_codes_str2 as $key => $or_code){
+           if($or_code!=''){
+            array_push($or_codes_str_arr,$or_code);
+           }
+        }
+        $or_codes_str = '';
+        foreach($or_codes_str_arr as $key => $or_code){
+            if($key+1==count($or_codes_str_arr)){
+              $or_codes_str .= $or_code;
+            }else{
+              $or_codes_str .= $or_code.',';
+            }
+      }
+
+          // db_pick_pack_packing_code
             DB::table('db_pick_pack_packing_code')->where('id',$db_pick_pack_packing_code->id)->update([
               'orders_id_fk' => $or_ids_str,
               'receipt' => $or_codes_str,
@@ -2489,6 +2522,17 @@ ORDER BY db_pick_pack_packing.id
                   ]);
                 }
               }
+
+              DB::table('db_pick_pack_requisition_code')->where('pick_pack_packing_code_id_fk',$db_pick_pack_packing_code->id)->update([
+                'receipts' => $or_codes_str,
+              ]);
+
+              //  db_pick_pack_requisition_code
+              $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+              if($db_pay_requisition_002->amt_need<=0){
+               DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->delete();
+              }
+
               DB::table('db_pay_requisition_002_item')->where('id',$req_item->id)->delete();
               DB::table('db_pick_pack_packing')->where('delivery_id_fk',$de->id)->where('packing_code_id_fk',$con->pick_pack_requisition_code_id_fk)->delete();
             }
