@@ -108,11 +108,37 @@ class ProductsListController extends Controller
       //       $category_id
       //       ORDER BY pn
       //   ");
+
+      $check = DB::select("
+      SELECT 
+      products.id
+      FROM
+      products
+      WHERE products.status = 1
+      $category_id
+      ");
+        $not_in = "";
+        foreach($check as $c){
+            $img = DB::table('products_images')->where('product_id_fk',$c->id)->first();    
+            if($img){
+              $products_details = DB::table('products_details')->where('product_id_fk',$c->id)->first();    
+            }else{
+              $not_in .= $c->id.',';
+            }
+        }
+
+        if($not_in != ""){
+        $not_in = rtrim($not_in, ", ");
+          $not_in = " AND products.id NOT In (".$not_in.")";
+        }else{
+          $not_in = "";
+        }
+
       $sTable = DB::select("
       SELECT
       products.id,
       products.category_id ,categories.category_name,
-      (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
+      (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1) as p_img,
       (
       SELECT concat( products.product_code,' : '  ,
       products_details.product_name)
@@ -144,6 +170,7 @@ class ProductsListController extends Controller
         $order_type = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 5), ',', -1)
       )
       $category_id
+      $not_in
       ORDER BY pn
   ");
       $sQuery = \DataTables::of($sTable);

@@ -2995,12 +2995,12 @@ class FrontstoreController extends Controller
     ->whereNotIn('db_orders.approve_status',[5,6])
     ->where('db_orders.status_sent_money',0)
     ->where('db_orders.code_order','!=','')
+    ->where('db_orders.action_user',$user_login_id)
     ->where(function($query) {
       $query->where('db_orders.cash_price','>',0)
             ->orWhere('db_orders.cash_pay', '>', 0);
   })->orderBy('db_orders.created_at','desc')
   ->get();
-
 
   $p = '';
   foreach($order_back as $ord){
