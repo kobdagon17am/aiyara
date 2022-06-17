@@ -2002,8 +2002,8 @@ ORDER BY db_pick_pack_packing.id
         if($d1){
         
           // วุฒิลองแก้เป็นฐานตัวเอง 
-          // $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
-          $db_pick_pack_requisition_code = "db_pick_pack_requisition_code";
+          $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+          // $db_pick_pack_requisition_code = "db_pick_pack_requisition_code";
           $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             // $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
 
@@ -2033,7 +2033,7 @@ ORDER BY db_pick_pack_packing.id
 
             $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             }
-
+// dd($db_pick_pack_requisition_code);
             if($d2){
               foreach ($d2 as $key => $v) {
                  $str = explode(',',$v->receipts);
