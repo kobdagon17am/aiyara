@@ -81,7 +81,7 @@
                 scroller: true,
                 scrollCollapse: true,
                 scrollX: true,
-                ordering: false,
+                ordering: true,
                 destroy: true,
                 // scrollY: ''+($(window).height()-370)+'px',
                 iDisplayLength: 100,
