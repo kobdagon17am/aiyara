@@ -300,7 +300,7 @@ class Pick_packPackingCodeController extends Controller
 
               }
 
-              return "<span data-toggle='tooltip' data-placement='right' title='".$t."' >".@$sD[0]->txt_desc."</span>";
+              return "<span data-toggle='tooltip' style='color:red;' data-placement='right' title='".$t."' >".@$sD[0]->txt_desc."</span>";
 
             
           }else{

@@ -588,7 +588,7 @@ class Check_money_dailyController extends Controller
 
       ->addColumn('column_004', function($row) {
         if($row->remark==1){
-           return $row->updated_at;
+           return $row->created_at;
           }else{
              return '';
           }           

@@ -2946,7 +2946,7 @@ class FrontstoreController extends Controller
 
         $show .= '
                           <td class="text-center">' . @$r->sender . '</td>
-                          <td class="text-center">' . @$r->updated_at . '</td>
+                          <td class="text-center">' . @$r->created_at . '</td>
                           <td class="text-center">' . $status_approve . '</td>
                           <td class="text-center">' . @$r->remark . '</td>
                           <td class="text-center">';

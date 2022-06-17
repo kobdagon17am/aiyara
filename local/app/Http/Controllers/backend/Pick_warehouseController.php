@@ -2002,8 +2002,8 @@ ORDER BY db_pick_pack_packing.id
         if($d1){
         
           // วุฒิลองแก้เป็นฐานตัวเอง 
-          // $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
-          $db_pick_pack_requisition_code = "db_pick_pack_requisition_code";
+          $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+          // $db_pick_pack_requisition_code = "db_pick_pack_requisition_code";
           $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             // $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
 
@@ -2033,7 +2033,7 @@ ORDER BY db_pick_pack_packing.id
 
             $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." "); 
             }
-
+// dd($db_pick_pack_requisition_code);
             if($d2){
               foreach ($d2 as $key => $v) {
                  $str = explode(',',$v->receipts);
@@ -2527,7 +2527,13 @@ ORDER BY db_pick_pack_packing.id
                 'receipts' => $or_codes_str,
               ]);
 
-              //  db_pick_pack_requisition_code
+              $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+
+              DB::table($db_pick_pack_requisition_code)->where('pick_pack_packing_code_id_fk',$db_pick_pack_packing_code->id)->update([
+                'receipts' => $or_codes_str,
+              ]);
+
+              //  db_pick_pack_requisition_code 
               $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
               if($db_pay_requisition_002->amt_need<=0){
                DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->delete();
