@@ -259,16 +259,16 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
     <div class="NameAndAddress" style="">
         <table style="border-collapse: collapse;">
-          <tr>
-            <th style="text-align: left; width:40%;">
-                <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.......................................................................
-            </th>
-            <th style="text-align: left;font-size: 30px;">
-                รายละเอียดจัดส่งสินค้า
-                {{-- <center> รายละเอียดจัดส่งสินค้า </center> --}}
-            </th>
-        </tr>
+            <tr>
+                <th style="text-align: left; width:40%;">
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.......................................................................
+                </th>
+                <th style="text-align: left;font-size: 30px;">
+                    รายละเอียดจัดส่งสินค้า
+                    {{-- <center> รายละเอียดจัดส่งสินค้า </center> --}}
+                </th>
+            </tr>
         </table>
     </div>
 
@@ -282,20 +282,20 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
     
     $delivery = DB::select(
         " SELECT
-                              db_delivery.set_addr_send_this,
-                              db_delivery.recipient_name,
-                              db_delivery.addr_send,
-                              db_delivery.postcode,
-                              db_delivery.mobile,
-                              db_delivery.tel_home,
-                              db_delivery.status_pack,
-                              db_delivery.receipt,
-                              db_delivery.id as delivery_id_fk,
-                              db_delivery.orders_id_fk
-                              FROM
-                              db_delivery
-                              WHERE 
-                              db_delivery.id = " .
+                                  db_delivery.set_addr_send_this,
+                                  db_delivery.recipient_name,
+                                  db_delivery.addr_send,
+                                  db_delivery.postcode,
+                                  db_delivery.mobile,
+                                  db_delivery.tel_home,
+                                  db_delivery.status_pack,
+                                  db_delivery.receipt,
+                                  db_delivery.id as delivery_id_fk,
+                                  db_delivery.orders_id_fk
+                                  FROM
+                                  db_delivery
+                                  WHERE 
+                                  db_delivery.id = " .
             $pick_pack_packing_data->delivery_id_fk .
             ' AND set_addr_send_this=1 ',
     );
@@ -371,37 +371,37 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
                 // วุฒิเพิ่มมา
                 $sTable = DB::select(
                     " 
-                                                                
-                                                                SELECT 
-                                                                db_pick_pack_packing.id,
-                                                                db_pick_pack_packing.p_size,
-                                                                db_pick_pack_packing.p_weight,
-                                                                db_pick_pack_packing.p_amt_box,
-                                                                db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-                                                                db_pick_pack_packing.packing_code as packing_code,
-                                                                db_delivery.id as db_delivery_id,
-                                                                db_delivery.packing_code as db_delivery_packing_code
-                                                                FROM `db_pick_pack_packing` 
-                                                                LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-                                                                WHERE 
-                                                                db_pick_pack_packing.packing_code_id_fk =" .
+                                                                                
+                                                                                SELECT 
+                                                                                db_pick_pack_packing.id,
+                                                                                db_pick_pack_packing.p_size,
+                                                                                db_pick_pack_packing.p_weight,
+                                                                                db_pick_pack_packing.p_amt_box,
+                                                                                db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+                                                                                db_pick_pack_packing.packing_code as packing_code,
+                                                                                db_delivery.id as db_delivery_id,
+                                                                                db_delivery.packing_code as db_delivery_packing_code
+                                                                                FROM `db_pick_pack_packing` 
+                                                                                LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+                                                                                WHERE 
+                                                                                db_pick_pack_packing.packing_code_id_fk =" .
                         $data[0] .
                         " 
-                                                                AND db_pick_pack_packing.delivery_id_fk = " .
+                                                                                AND db_pick_pack_packing.delivery_id_fk = " .
                         $pick_pack_packing_data->delivery_id_fk .
                         "
-                                                                ORDER BY db_pick_pack_packing.id
-                                                                ",
+                                                                                ORDER BY db_pick_pack_packing.id
+                                                                                ",
                 );
                 
                 foreach ($sTable as $key => $row) {
                     $pn = '<div class="divTable"><div class="divTableBody">';
                     $pn .= '<div class="divTableRow">
-                                                                <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
-                                                                <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
-                                                                <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-                                                                </div>
-                                                                ';
+                                                                                <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
+                                                                                <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+                                                                                <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+                                                                                </div>
+                                                                                ';
                 
                     $sum_amt = 0;
                     $r_ch_t = '';
@@ -420,20 +420,20 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
                             if (!empty($value->product_id_fk)) {
                                 $pn .=
                                     '<div class="divTableRow">
-                                                                    <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-                                                                    ' .
+                                                                                    <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                                                                                    ' .
                                     @$value->product_code .
                                     ' : ' .
                                     @$value->product_name .
                                     '</b>
-                                                                    </div>
-                                                                    <div class="divTableCell" style="text-align:center;">' .
+                                                                                    </div>
+                                                                                    <div class="divTableCell" style="text-align:center;">' .
                                     @$value->amt_sum .
                                     '</div> 
-                                                                    <div class="divTableCell" style="text-align:center;">' .
+                                                                                    <div class="divTableCell" style="text-align:center;">' .
                                     @$value->product_unit .
                                     '</div> 
-                                                                    ';
+                                                                                    ';
                                 $pn .= '</div>';
                                 @$sum_amt += @$value->amt_sum;
                             }
@@ -441,13 +441,13 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
                 
                         $pn .=
                             '<div class="divTableRow">
-                                                                  <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
-                                                                  <div class="divTableCell" style="text-align:center;font-weight:bold;">' .
+                                                                                  <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+                                                                                  <div class="divTableCell" style="text-align:center;font-weight:bold;">' .
                             @$sum_amt .
                             '</div>
-                                                                  <div class="divTableCell" style="text-align:center;"> </div>
-                                                                  </div>
-                                                                  ';
+                                                                                  <div class="divTableCell" style="text-align:center;"> </div>
+                                                                                  </div>
+                                                                                  ';
                 
                         $pn .= '</div>';
                         echo $pn;
@@ -460,37 +460,38 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
             </table>
         </div>
 
+        <br> <br>
+        <table style="border-collapse: collapse;">
+            <tr>
+                <th style="text-align: center;font-size: 18px;">
+                    ขนาดลัง ...................................
+                </th>
+                <th style="text-align: center;font-size: 18px;">
+                    น้ำหนัก ...................................
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: center;font-size: 18px;">
+                    เวลาที่จัด ...................................
+                </th>
+                <th style="text-align: center;font-size: 18px;">
+                    ถุงใหญ๋ ...................................
+                </th>
+            </tr>
+
+            <tr>
+                <th style="text-align: center;font-size: 18px;">
+                    ผู้จัดสินค้า ...................................
+                </th>
+                <th style="text-align: center;font-size: 18px;">
+                    ถุงเล็ก ...................................
+                </th>
+            </tr>
+
+        </table>
+
+
         @if ($index < count($db_pick_pack_packing_data) - 1)
             <div class="page-break"></div>
         @endif
 @endforeach
-
-<br> <br>
-<table style="border-collapse: collapse;">
-    <tr>
-        <th style="text-align: center;font-size: 18px;">
-            ขนาดลัง ...................................
-        </th>
-        <th style="text-align: center;font-size: 18px;">
-            น้ำหนัก ...................................
-        </th>
-    </tr>
-    <tr>
-        <th style="text-align: center;font-size: 18px;">
-            เวลาที่จัด ...................................
-        </th>
-        <th style="text-align: center;font-size: 18px;">
-            ถุงใหญ๋ ...................................
-        </th>
-    </tr>
-
-    <tr>
-        <th style="text-align: center;font-size: 18px;">
-            ผู้จัดสินค้า ...................................
-        </th>
-        <th style="text-align: center;font-size: 18px;">
-            ถุงเล็ก ...................................
-        </th>
-    </tr>
-
-</table>

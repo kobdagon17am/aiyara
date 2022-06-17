@@ -3109,9 +3109,11 @@ class AjaxController extends Controller
 
     public function ajaxClearConsignment(Request $request)
     {
+
         DB::delete(" DELETE FROM db_consignments_import where pick_pack_requisition_code_id_fk=$request->id ");
         DB::select(" ALTER table db_consignments_import AUTO_INCREMENT=1; ");
         DB::select(" UPDATE db_consignments set consignment_no='' where pick_pack_requisition_code_id_fk=$request->id  ; ");
+        DB::select(" UPDATE db_consignments set con_arr='' where pick_pack_requisition_code_id_fk=$request->id  ; ");
     }
 
 

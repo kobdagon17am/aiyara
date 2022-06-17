@@ -30,8 +30,8 @@
                             <form action="{{ route('backend.transfer_branch_get.store') }}" method="POST"
                                 enctype="multipart/form-data" autocomplete="off">
                             @else
-                                <form action="{{ route('backend.transfer_branch_get.update', @$sRow->id) }}" method="POST"
-                                    enctype="multipart/form-data" autocomplete="off">
+                                <form action="{{ route('backend.transfer_branch_get.update', @$sRow->id) }}"
+                                    method="POST" enctype="multipart/form-data" autocomplete="off">
                                     <input name="_method" type="hidden" value="PUT">
                         @endif
                         {{ csrf_field() }}
@@ -129,17 +129,17 @@
                         </div>
 
                         <!--             <div class="form-group row">
-                                                <label for="tr_status" class="col-md-3 col-form-label">สถานะ :</label>
-                                                <div class="col-md-6">
-                                                   <select id="tr_status" name="tr_status" class="form-control select2-templating " >
-                                                    <option value="">-Status-</option>
-                                                    <option value="0" {{ 0 == @$sRow->tr_status ? 'selected' : '' }}> อยู่ระหว่างการดำเนินการ </option>
-                                                    <option value="1" {{ 1 == @$sRow->tr_status ? 'selected' : '' }}> ได้รับสินค้าครบแล้ว </option>
-                                                    <option value="2" {{ 2 == @$sRow->tr_status ? 'selected' : '' }}> ยังค้างรับสินค้า </option>
-                                                    <option value="3" {{ 3 == @$sRow->tr_status ? 'selected' : '' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
-                                                  </select>
-                                                </div>
-                                              </div> -->
+                                                                                                                                            <label for="tr_status" class="col-md-3 col-form-label">สถานะ :</label>
+                                                                                                                                            <div class="col-md-6">
+                                                                                                                                               <select id="tr_status" name="tr_status" class="form-control select2-templating " >
+                                                                                                                                                <option value="">-Status-</option>
+                                                                                                                                                <option value="0" {{ 0 == @$sRow->tr_status ? 'selected' : '' }}> อยู่ระหว่างการดำเนินการ </option>
+                                                                                                                                                <option value="1" {{ 1 == @$sRow->tr_status ? 'selected' : '' }}> ได้รับสินค้าครบแล้ว </option>
+                                                                                                                                                <option value="2" {{ 2 == @$sRow->tr_status ? 'selected' : '' }}> ยังค้างรับสินค้า </option>
+                                                                                                                                                <option value="3" {{ 3 == @$sRow->tr_status ? 'selected' : '' }}> ไม่อนุมัติรับโอน/ปฏิเสธการรับโอน </option>
+                                                                                                                                              </select>
+                                                                                                                                            </div>
+                                                                                                                                          </div> -->
 
                         <div class="form-group row">
                             <label for="note1" class="col-md-3 col-form-label">หมายเหตุ :</label>
@@ -152,18 +152,18 @@
 
 
                         <!--                   <div class="form-group row">
-                                                <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ(User Login):</label>
-                                                <div class="col-md-6">
-                                                  @if (empty($sRow))
+                                                                                                                                            <label for="" class="col-md-3 col-form-label">ผู้ดำเนินการ(User Login):</label>
+                                                                                                                                            <div class="col-md-6">
+                                                                                                                                              @if (empty($sRow))
     <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
-                                                      <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="action_user" readonly >
+                                                                                                                                                  <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="action_user" readonly >
 @else
     <input class="form-control" type="text" value="{{ @$action_user }}" readonly >
-                                                      <input class="form-control" type="hidden" value="{{ @$sRow->action_user }}" name="action_user" >
+                                                                                                                                                  <input class="form-control" type="hidden" value="{{ @$sRow->action_user }}" name="action_user" >
     @endif
-                                                </div>
-                                           </div>
-                                               -->
+                                                                                                                                            </div>
+                                                                                                                                       </div>
+                                                                                                                                           -->
 
                         <div class="form-group mb-0 row">
                             <div class="col-md-6">
@@ -174,8 +174,8 @@
                             </div>
                             <div class="col-md-6 text-right">
                                 <!--         <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave ">
-                                              <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
-                                            </button> -->
+                                                                                                                                          <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
+                                                                                                                                        </button> -->
                             </div>
                         </div>
 
@@ -191,12 +191,12 @@
                                     <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i>
                                         รายการรับสินค้าตามใบโอน </span>
                                     <!--
-                                  <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get_products.create') }}/{{ @$sRow->id }}" style="float: right;" >
-                                    <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
-                                  </a> -->
+                                                                                                                              <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get_products.create') }}/{{ @$sRow->id }}" style="float: right;" >
+                                                                                                                                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
+                                                                                                                              </a> -->
 
                                     <!--       <a href="{{ URL::to('backend/transfer_branch_get_products/print_receipt') }}/{{ @$sRow->id }}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i>
-                                   </a> -->
+                                                                                                                               </a> -->
 
                                 </div>
                             </div>
@@ -232,8 +232,8 @@
                                     <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i>
                                         ประวัติการรับสินค้า </span>
                                     <!--   <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.transfer_branch_get.create') }}/{{ @$sRow->id }}" style="float: right;" >
-                                    <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">บันทึกประวัติการรับสินค้า</span>
-                                  </a> -->
+                                                                                                                                <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">บันทึกประวัติการรับสินค้า</span>
+                                                                                                                              </a> -->
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -291,7 +291,8 @@
                                     <div class=" ">
 
                                         <input type="radio" class="" id="customSwitch2" name="approve_status"
-                                            value="5" {{ @$sRow->approve_status == '5' ? 'checked' : '' }} required>
+                                            value="5" {{ @$sRow->approve_status == '5' ? 'checked' : '' }}
+                                            required>
                                         <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved
                                             (ปฏิเสธการรับโอน)</label>
 
@@ -372,7 +373,8 @@
                     enctype="multipart/form-data" autocomplete="off">
                     <input type="hidden" name="save_set_to_warehouse" value="1">
                     <input type="hidden" id="this_id" name="id">
-                    <input type="hidden" id="transfer_branch_get_products_id_fk" name="transfer_branch_get_products_id_fk">
+                    <input type="hidden" id="transfer_branch_get_products_id_fk"
+                        name="transfer_branch_get_products_id_fk">
                     <input type="hidden" id="transfer_branch_get_id_fk" name="transfer_branch_get_id_fk"
                         value="{{ @$sRow->id }}">
                     <input type="hidden" id="product_id_fk" name="product_id_fk">
@@ -398,8 +400,8 @@
                                                             name="lot_number" readonly>
                                                         <input type="hidden" class="form-control" id="lot_expired_date"
                                                             name="lot_expired_date" readonly>
-                                                        <input type="hidden" class="form-control" id="product_unit_id_fk"
-                                                            name="product_unit_id_fk" readonly>
+                                                        <input type="hidden" class="form-control"
+                                                            id="product_unit_id_fk" name="product_unit_id_fk" readonly>
                                                         <input type="hidden" class="form-control" id="branch_id_fk_c"
                                                             name="branch_id_fk_c" readonly>
                                                         <!-- บอกสถานะว่า มีการปฏิเสธการรับ จากฝั่งรับ  -->
@@ -415,17 +417,19 @@
                                         <div class="row">
                                             <div class="col-md-5 ">
                                                 <div class="form-group row">
-                                                    <label for="" class="col-md-5 col-form-label required_star_red ">
+                                                    <label for=""
+                                                        class="col-md-5 col-form-label required_star_red ">
                                                         จำนวนที่ได้รับ : </label>
                                                     <div class="col-md-7">
-                                                        <input type="text" class="form-control NumberOnly " name="amt_get"
-                                                            id="amt_get" required>
+                                                        <input type="text" class="form-control NumberOnly "
+                                                            name="amt_get" id="amt_get" required>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 ">
                                                 <div class="form-group row">
-                                                    <label for="" class="col-md-5 col-form-label">นำไปเก็บที่ => สาขา :
+                                                    <label for="" class="col-md-5 col-form-label">นำไปเก็บที่ =>
+                                                        สาขา :
                                                     </label>
                                                     <div class="col-md-7">
                                                         <input type="text" class="form-control" id="branch_name"
@@ -541,7 +545,8 @@
                     enctype="multipart/form-data" autocomplete="off">
                     <input type="hidden" name="save_set_to_warehouse" value="1">
                     <input type="hidden" id="this_id2" name="id">
-                    <input type="hidden" id="transfer_branch_get_products_id_fk2" name="transfer_branch_get_products_id_fk">
+                    <input type="hidden" id="transfer_branch_get_products_id_fk2"
+                        name="transfer_branch_get_products_id_fk">
                     <input type="hidden" id="transfer_branch_get_id_fk2" name="transfer_branch_get_id_fk"
                         value="{{ @$sRow->id }}">
                     <input type="hidden" id="product_id_fk2" name="product_id_fk">
@@ -584,7 +589,8 @@
                                         <div class="row">
                                             <div class="col-md-5 ">
                                                 <div class="form-group row">
-                                                    <label for="" class="col-md-5 col-form-label required_star_red ">
+                                                    <label for=""
+                                                        class="col-md-5 col-form-label required_star_red ">
                                                         จำนวนที่ชำรุด : </label>
                                                     <div class="col-md-7">
                                                         <input type="text" class="form-control  " name="amt_get"
@@ -594,7 +600,88 @@
                                             </div>
                                             <div class="col-md-6 ">
                                                 <div class="form-group row">
-                                                    <label for="" class="col-md-5 col-form-label">หมายเหตุ : </label>
+                                                    <label for="" class="col-md-5 col-form-label">นำไปเก็บที่ =>
+                                                        สาขา :
+                                                    </label>
+                                                    <div class="col-md-7">
+                                                        <input type="text" class="form-control" id="branch_name2"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-5 ">
+                                                <div class="form-group row">
+                                                    <label for="example-text-input"
+                                                        class="col-md-3 col-form-label required_star_red "> คลัง : </label>
+                                                    <div class="col-md-9">
+                                                        <select id="warehouse_id_fk_c2" name="warehouse_id_fk_c"
+                                                            class="form-control select2-templating " required>
+                                                            <option value="">เลือกคลัง</option>
+                                                            @if (@$Subwarehouse)
+                                                                @foreach (@$Subwarehouse as $r)
+                                                                    <option value="{{ $r->id }}">
+                                                                        {{ $r->w_name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 ">
+                                                <div class="form-group row">
+                                                    <label for="example-text-input"
+                                                        class="col-md-3 col-form-label required_star_red "> Zone : </label>
+                                                    <div class="col-md-9">
+                                                        <select id="zone_id_fk_c2" name="zone_id_fk_c"
+                                                            class="form-control select2-templating " required>
+                                                            <option disabled selected>กรุณาเลือกคลังก่อน</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-5 ">
+                                                <div class="form-group row">
+                                                    <label for="example-text-input"
+                                                        class="col-md-3 col-form-label required_star_red "> Shelf :
+                                                    </label>
+                                                    <div class="col-md-9">
+                                                        <select id="shelf_id_fk_c2" name="shelf_id_fk_c"
+                                                            class="form-control select2-templating " required>
+                                                            <option disabled selected>กรุณาเลือกโซนก่อน</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 ">
+                                                <div class="form-group row">
+                                                    <label for="example-text-input"
+                                                        class="col-md-3 col-form-label required_star_red "> ชั้น : </label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" class="form-control NumberOnly "
+                                                            id="shelf_floor_c2" name="shelf_floor_c"
+                                                            placeholder="เก็บไว้ที่ชั้น" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-5 ">
+                                                <div class="form-group row">
+                                                    <label for="" class="col-md-5 col-form-label">หมายเหตุ :
+                                                    </label>
                                                     <div class="col-md-7">
                                                         <input type="text" class="form-control" id="remark_repair"
                                                             name="remark_repair">
@@ -602,6 +689,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <br>
 
                                         <div class="row">
@@ -1098,6 +1186,38 @@
 
         });
 
+        $('#warehouse_id_fk_c2').change(function() {
+            $('.myloading').show();
+            var warehouse_id_fk = this.value;
+            // alert(warehouse_id_fk);
+
+            if (warehouse_id_fk != '') {
+                $.ajax({
+                    url: " {{ url('backend/ajaxGetZone') }} ",
+                    method: "post",
+                    data: {
+                        warehouse_id_fk: warehouse_id_fk,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(data) {
+                        if (data == '') {
+                            alert('ไม่พบข้อมูล Zone !!.');
+                        } else {
+                            var layout = '<option value="" selected>- เลือก Zone -</option>';
+                            $.each(data, function(key, value) {
+                                layout += '<option value=' + value.id + '>' + value.z_name +
+                                    '</option>';
+                            });
+                            $('#zone_id_fk_c2').html(layout);
+                            $('#shelf_id_fk_c2').html('กรุณาเลือกโซนก่อน');
+                            $('.myloading').hide();
+                        }
+                    }
+                })
+            }
+
+        });
+
 
         $('#zone_id_fk_c').change(function() {
             $('.myloading').show();
@@ -1130,11 +1250,47 @@
 
         });
 
+        $('#zone_id_fk_c2').change(function() {
+            $('.myloading').show();
+            var zone_id_fk = this.value;
+            // alert(zone_id_fk);
+
+            if (zone_id_fk != '') {
+                $.ajax({
+                    url: " {{ url('backend/ajaxGetShelf') }} ",
+                    method: "post",
+                    data: {
+                        zone_id_fk: zone_id_fk,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(data) {
+                        if (data == '') {
+                            alert('ไม่พบข้อมูล Shelf !!.');
+                        } else {
+                            var layout = '<option value="" selected>- เลือก Shelf -</option>';
+                            $.each(data, function(key, value) {
+                                layout += '<option value=' + value.id + '>' + value.s_name +
+                                    '</option>';
+                            });
+                            $('#shelf_id_fk_c2').html(layout);
+                            $('.myloading').hide();
+                        }
+                    }
+                })
+            }
+
+        });
+
 
 
         $('#shelf_id_fk_c').change(function() {
             setTimeout(function() {
                 $('#shelf_floor_c').focus();
+            })
+        });
+        $('#shelf_id_fk_c2').change(function() {
+            setTimeout(function() {
+                $('#shelf_floor_c2').focus();
             })
         });
     </script>

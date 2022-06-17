@@ -170,6 +170,39 @@ class Transfer_branch_get_productsController extends Controller
     {
         //  dd($request->all());
         if(isset($request->save_set_to_warehouse)){
+
+          DB::select(" INSERT INTO `db_transfer_branch_get_products_receive_defective`  (
+            `transfer_branch_get_id_fk`,
+            `transfer_branch_get_products`,
+            `product_id_fk`,
+            `lot_number`,
+            `lot_expired_date`,
+            `amt_get`,
+            `product_unit_id_fk`,
+            `branch_id_fk`,
+            `warehouse_id_fk`, 
+            `zone_id_fk`, 
+            `shelf_id_fk`, 
+            `shelf_floor`, 
+            `action_user`,
+            `action_date`
+            ) VALUES (
+            '$request->transfer_branch_get_id_fk',
+            '$request->transfer_branch_get_products_id_fk',
+            '$request->product_id_fk',
+            '$request->lot_number',
+            '$request->lot_expired_date',
+            '$request->amt_get',
+            '$request->product_unit_id_fk',
+            '$request->branch_id_fk_c',
+            '$request->warehouse_id_fk_c',
+            '$request->zone_id_fk_c',
+            '$request->shelf_id_fk_c',
+            '$request->shelf_floor_c',
+            '". \Auth::user()->id."',
+             now())
+            ");
+
             // db_transfer_branch_get_products
             $db_transfer_branch_get_products = DB::table('db_transfer_branch_get_products')->where('id',$request->transfer_branch_get_products_id_fk)->first();
                DB::select("

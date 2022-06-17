@@ -79,6 +79,10 @@ class General {
 			ORDER BY db_pick_pack_packing.id
 			");
 
+			// if($packing->id==10){
+			// 	dd($sTable);
+			// }
+
 			foreach ($sTable as $key => $row) {
 
 			$sum_amt = 0 ;

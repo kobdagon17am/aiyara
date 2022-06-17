@@ -81,8 +81,7 @@
 				$sheet = $spreadsheet->getActiveSheet();
 				$sheet->setTitle("Sheet".($j+1));
 
-				$sRow = \App\Models\Backend\Consignments::where('pick_pack_requisition_code_id_fk',$request->id)->get();
-
+				$sRow = \App\Models\Backend\Consignments::where('pick_pack_requisition_code_id_fk',$request->id)->orderBy('delivery_id_fk','asc')->get();
 				$sheet->setCellValue('A1', 'Consignment No. (หมายเลขพัสดุ)');
 				$sheet->setCellValue('B1', 'Customer Ref No. (เลขอ้างอิง)');
 				$sheet->setCellValue('C1', 'Sender Code (รหัสผู้ส่ง)');
@@ -211,6 +210,10 @@
 								$sheet->setCellValue('S'.($i+2+$p_i), '');
 							}
 						}
+						// test
+						// else{
+						// 	dd($pick_pack_packing);
+						// }
 					
 					}
 					

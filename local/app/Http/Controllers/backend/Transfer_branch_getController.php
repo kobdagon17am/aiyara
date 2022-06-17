@@ -94,7 +94,7 @@ class Transfer_branch_getController extends Controller
         return $this->form($id);
 
       }elseif(isset($request->save_from_firstform)){
-            // dd($request->all());
+            dd($request->all());
             // dd($id);
             $sRow = \App\Models\Backend\Transfer_branch_get::find($id);
             $sRow->note    = request('note');
@@ -105,17 +105,17 @@ class Transfer_branch_getController extends Controller
       }elseif(isset($request->approve_getback)){
      
 
-            $sRow = \App\Models\Backend\Transfer_branch_get::find($request->id);
-            $sRow->approve_status    = $request->approve_status;
-            $sRow->approver    = $request->approver;
-            $sRow->approve_date    = date('Y-m-d H:i:s');
-            $sRow->note3    = $request->note3;
-            $sRow->tr_status_get    = 6;
-            $sRow->created_at = date('Y-m-d H:i:s');
-            $sRow->save();
+            // $sRow = \App\Models\Backend\Transfer_branch_get::find($request->id);
+            // $sRow->approve_status    = $request->approve_status;
+            // $sRow->approver    = $request->approver;
+            // $sRow->approve_date    = date('Y-m-d H:i:s');
+            // $sRow->note3    = $request->note3;
+            // $sRow->tr_status_get    = 6;
+            // $sRow->created_at = date('Y-m-d H:i:s');
+            // $sRow->save();
 
 
-            DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='6' where tr_number='".$sRow->tr_number."' ");
+            // DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='6' where tr_number='".$sRow->tr_number."' ");
 
             // เมื่ออนุมัติ == 1 ตัดเข้าคลังอีกครั้ง
           // ดึงเข้าคลัง สาขาที่รับโอนมา กรณี อนุมัติเท่านั้น
@@ -218,6 +218,107 @@ class Transfer_branch_getController extends Controller
 
 
             }
+
+               // ดึงเข้าคลัง สาขาที่รับโอนมา กรณี อนุมัติเท่านั้น (ชำรุด)
+               if(request('approve_status')==1){
+
+                // นำเข้า Stock
+                                 $products = DB::select("
+                
+                                    SELECT
+                                    sum(amt_get) AS sum_amt,
+                                    db_transfer_branch_get_products_receive_defective.id,
+                                    db_transfer_branch_get_products_receive_defective.transfer_branch_get_id_fk,
+                                    db_transfer_branch_get_products_receive_defective.transfer_branch_get_products,
+                                    db_transfer_branch_get_products_receive_defective.product_id_fk,
+                                    db_transfer_branch_get_products_receive_defective.lot_number,
+                                    db_transfer_branch_get_products_receive_defective.lot_expired_date,
+                                    db_transfer_branch_get_products_receive_defective.amt_get,
+                                    db_transfer_branch_get_products_receive_defective.product_unit_id_fk,
+                                    db_transfer_branch_get_products_receive_defective.branch_id_fk,
+                                    db_transfer_branch_get_products_receive_defective.warehouse_id_fk,
+                                    db_transfer_branch_get_products_receive_defective.zone_id_fk,
+                                    db_transfer_branch_get_products_receive_defective.shelf_id_fk,
+                                    db_transfer_branch_get_products_receive_defective.shelf_floor,
+                                    db_transfer_branch_get_products_receive_defective.action_user,
+                                    db_transfer_branch_get_products_receive_defective.action_date,
+                                    db_transfer_branch_get_products_receive_defective.approver,
+                                    db_transfer_branch_get_products_receive_defective.approve_status,
+                                    db_transfer_branch_get_products_receive_defective.approve_date,
+                                    db_transfer_branch_get_products_receive_defective.created_at,
+                                    db_transfer_branch_get_products_receive_defective.updated_at,
+                                    db_transfer_branch_get_products_receive_defective.deleted_at
+                                    from db_transfer_branch_get_products_receive_defective
+                                    WHERE transfer_branch_get_id_fk in ($request->id)
+                                    GROUP BY transfer_branch_get_id_fk,branch_id_fk,warehouse_id_fk,zone_id_fk,shelf_floor
+                
+                                    ");
+                
+                // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
+                
+                                 foreach ($products as $key => $p) {
+                                          $branch_data = DB::table('branchs')->where('id',$p->branch_id_fk)->first();
+                                          if($branch_data){
+                                            $business_location_id_fk = $branch_data->business_location_id_fk;
+                                          }else{
+                                            $business_location_id_fk = 0;
+                                          }
+                                       
+                                          $_check=DB::table('db_stocks')
+                                          ->where('business_location_id_fk', $business_location_id_fk)
+                                          ->where('branch_id_fk', $p->branch_id_fk)
+                                          ->where('product_id_fk', $p->product_id_fk)
+                                          ->where('lot_number', $p->lot_number)
+                                          ->where('lot_expired_date', $p->lot_expired_date)
+                                          ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                                          ->where('zone_id_fk', $p->zone_id_fk)
+                                          ->where('shelf_id_fk', $p->shelf_id_fk)
+                                          ->where('shelf_floor', $p->shelf_floor)
+                                          ->get();
+                                          if($_check->count() == 0){
+                
+                                              $stock = new  \App\Models\Backend\Check_stock;
+                                              $stock->business_location_id_fk = $business_location_id_fk ;
+                                              $stock->product_id_fk = $p->product_id_fk ;
+                                              $stock->lot_number = $p->lot_number ;
+                                              $stock->lot_expired_date = $p->lot_expired_date ;
+                                              $stock->amt = $p->sum_amt ;
+                                              $stock->product_unit_id_fk = $p->product_unit_id_fk ;
+                                              $stock->branch_id_fk = $p->branch_id_fk ;
+                                              $stock->warehouse_id_fk = $p->warehouse_id_fk ;
+                                              $stock->zone_id_fk = $p->zone_id_fk ;
+                                              $stock->shelf_id_fk = $p->shelf_id_fk ;
+                                              $stock->shelf_floor = $p->shelf_floor ;
+                                              $stock->date_in_stock = date("Y-m-d");
+                                              $stock->created_at = date("Y-m-d H:i:s");
+                                              $stock->save();
+                
+                
+                                          }else{
+                
+                                                DB::table('db_stocks')
+                                                ->where('business_location_id_fk', $business_location_id_fk)
+                                                  ->where('branch_id_fk', $p->branch_id_fk)
+                                                  ->where('product_id_fk', $p->product_id_fk)
+                                                  ->where('lot_number', $p->lot_number)
+                                                  ->where('lot_expired_date', $p->lot_expired_date)
+                                                  ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                                                  ->where('zone_id_fk', $p->zone_id_fk)
+                                                  ->where('shelf_id_fk', $p->shelf_id_fk)
+                                                  ->where('shelf_floor', $p->shelf_floor)
+                                                ->update(array(
+                                                  'amt' => DB::raw( ' amt + '.$p->sum_amt )
+                                                ));
+                
+                
+                                          }
+                
+                
+                
+                                 }
+                
+                
+                            }
 
             return redirect()->to(url("backend/transfer_branch_get/noget/".$request->id));
 
@@ -435,6 +536,191 @@ class Transfer_branch_getController extends Controller
                  }
 
             }
+
+            // ดึงเข้าคลัง สาขาที่รับโอนมา กรณี อนุมัติเท่านั้น ชำรุด
+            if(request('approve_status')==1){
+
+              // นำเข้า Stock
+                            $products = DB::select("
+              
+                            SELECT
+              
+                            db_transfer_branch_get_products_receive_defective.id,
+                            db_transfer_branch_get_products_receive_defective.transfer_branch_get_id_fk,
+                            db_transfer_branch_get_products_receive_defective.transfer_branch_get_products,
+                            db_transfer_branch_get_products_receive_defective.product_id_fk,
+                            db_transfer_branch_get_products_receive_defective.lot_number,
+                            db_transfer_branch_get_products_receive_defective.lot_expired_date,
+                            db_transfer_branch_get_products_receive_defective.amt_get,
+                            db_transfer_branch_get_products_receive_defective.product_unit_id_fk,
+                            db_transfer_branch_get_products_receive_defective.branch_id_fk,
+                            db_transfer_branch_get_products_receive_defective.warehouse_id_fk,
+                            db_transfer_branch_get_products_receive_defective.zone_id_fk,
+                            db_transfer_branch_get_products_receive_defective.shelf_id_fk,
+                            db_transfer_branch_get_products_receive_defective.shelf_floor,
+                            db_transfer_branch_get_products_receive_defective.action_user,
+                            db_transfer_branch_get_products_receive_defective.action_date,
+                            db_transfer_branch_get_products_receive_defective.approver,
+                            db_transfer_branch_get_products_receive_defective.approve_status,
+                            db_transfer_branch_get_products_receive_defective.approve_date,
+                            db_transfer_branch_get_products_receive_defective.created_at,
+                            db_transfer_branch_get_products_receive_defective.updated_at,
+                            db_transfer_branch_get_products_receive_defective.deleted_at
+                            from db_transfer_branch_get_products_receive_defective
+                            WHERE transfer_branch_get_id_fk in ($id)
+              
+              
+                            ");
+                            // วุฒิเปลี่ยนเป็นแบบไม่ sum และไม่กรุ๊ป
+                            // sum(amt_get) AS sum_amt,
+                            // GROUP BY transfer_branch_get_id_fk,branch_id_fk,warehouse_id_fk,zone_id_fk,shelf_floor
+                
+                               $sRow = \App\Models\Backend\Transfer_branch_get::find($id);
+              
+                        // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
+                               foreach ($products as $key => $p) {
+                                $branch_data = DB::table('branchs')->where('id',$p->branch_id_fk)->first();
+                                if($branch_data){
+                                  $business_location_id_fk = $branch_data->business_location_id_fk;
+                                }else{
+                                  $business_location_id_fk = 0;
+                                }
+                                        $_check=DB::table('db_stocks')
+                                        ->where('business_location_id_fk', $business_location_id_fk)
+                                        ->where('branch_id_fk', $p->branch_id_fk)
+                                        ->where('product_id_fk', $p->product_id_fk)
+                                        ->where('lot_number', $p->lot_number)
+                                        ->where('lot_expired_date', $p->lot_expired_date)
+                                        ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                                        ->where('zone_id_fk', $p->zone_id_fk)
+                                        ->where('shelf_id_fk', $p->shelf_id_fk)
+                                        ->where('shelf_floor', $p->shelf_floor)
+                                        ->get();
+              
+                                   
+              
+                                        if($_check->count() == 0){
+              
+                                            $stock = new  \App\Models\Backend\Check_stock;
+                                            $stock->business_location_id_fk = $business_location_id_fk ;
+                                            $stock->product_id_fk = $p->product_id_fk ;
+                                            $stock->lot_number = $p->lot_number ;
+                                            $stock->lot_expired_date = $p->lot_expired_date ;
+                                            // วุฒิปรับจากเพิ่ม amt แบบรวมเปลี่ยนเป็นแบบรายตัวแทน
+                                            $stock->amt = $p->amt_get ;
+                                            // $stock->amt = $p->sum_amt ;
+                                            $stock->product_unit_id_fk = $p->product_unit_id_fk ;
+                                            $stock->branch_id_fk = $p->branch_id_fk ;
+                                            $stock->warehouse_id_fk = $p->warehouse_id_fk ;
+                                            $stock->zone_id_fk = $p->zone_id_fk ;
+                                            $stock->shelf_id_fk = $p->shelf_id_fk ;
+                                            $stock->shelf_floor = $p->shelf_floor ;
+                                            $stock->date_in_stock = date("Y-m-d");
+                                            $stock->created_at = date("Y-m-d H:i:s");
+                                            $stock->save();
+              
+                                            $lastID = DB::getPdo()->lastInsertId();
+              
+              
+                                        }else{
+                                            DB::table('db_stocks')
+                                                ->where('business_location_id_fk', $business_location_id_fk)
+                                                ->where('branch_id_fk', $p->branch_id_fk)
+                                                ->where('product_id_fk', $p->product_id_fk)
+                                                ->where('lot_number', $p->lot_number)
+                                                ->where('lot_expired_date', $p->lot_expired_date)
+                                                ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                                                ->where('zone_id_fk', $p->zone_id_fk)
+                                                ->where('shelf_id_fk', $p->shelf_id_fk)
+                                                ->where('shelf_floor', $p->shelf_floor)
+                                              ->update(array(
+                                              // วุฒิปรับจากเพิ่ม amt แบบรวมเปลี่ยนเป็นแบบรายตัวแทน
+                                              'amt' => DB::raw( ' amt + '.$p->amt_get )
+                                                // 'amt' => DB::raw( ' amt + '.$p->sum_amt )
+                                              ));
+              
+                                              $lastID = DB::table('db_stocks')->latest()->first();
+                                             $lastID = $lastID->id;
+              
+                                        }
+                                        
+              
+                                        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+              
+                                            /*
+                                            เปลี่ยนใหม่ นำเข้าเฉพาะรายการที่มีการอนุมัติอันล่าสุดเท่านั้น
+                                            นำเข้า Stock movement => กรองตาม 4 ฟิลด์ที่สร้างใหม่ stock_type_id_fk,stock_id_fk,ref_table_id,ref_doc
+                                            [dataset_stock_type]
+                                            1 จ่ายสินค้าตามใบเบิก 26
+                                            2 จ่ายสินค้าตามใบเสร็จ  27
+                                            3 รับสินค้าเข้าทั่วไป 28
+                                            4 รับสินค้าเข้าตาม PO 29
+                                            5 นำสินค้าออก 30
+                                            6 สินค้าเบิก-ยืม  31
+                                            7 โอนภายในสาขา  32
+                                            8 โอนระหว่างสาขา  33
+                                            9 รับสินค้าจากการโอนระหว่างสาขา  82
+                                            */
+                                            $stock_type_id_fk = 9 ;
+                                            // $stock_id_fk =  @$lastID?$lastID:0 ;
+                                            $ref_table = 'db_transfer_branch_get_products_receive_defective' ;
+                                            $ref_table_id = $p->id ;
+                                            // $ref_doc = $p->ref_doc;
+                                            $ref_doc = DB::select(" select * from `db_transfer_branch_get` WHERE id=".$id." ");
+                                            // dd($ref_doc[0]->ref_doc);
+                                            $ref_doc = @$ref_doc[0]->tr_number;
+              
+                                            $value=DB::table('db_stock_movement')
+                                            ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
+                                            ->where('stock_id_fk', $lastID )
+                                            ->where('ref_table_id', @$ref_table_id?$ref_table_id:0 )
+                                            ->where('ref_doc', @$ref_doc?$ref_doc:NULL )
+                                            ->get();
+              
+                                            if($value->count() == 0){
+              
+                                                  DB::table('db_stock_movement')->insertOrignore(array(
+                                                      "stock_type_id_fk" =>  @$stock_type_id_fk?$stock_type_id_fk:0,
+                                                      "stock_id_fk" =>  $lastID,
+                                                      "ref_table" =>  @$ref_table?$ref_table:0,
+                                                      "ref_table_id" =>  @$ref_table_id?$ref_table_id:0,
+                                                      "ref_doc" =>  @$ref_doc?$ref_doc:NULL,
+                                                      "doc_date" =>  $p->updated_at,
+                                                      "business_location_id_fk" =>  $business_location_id_fk?$business_location_id_fk:0,
+                                                      "branch_id_fk" =>  @$p->branch_id_fk?$p->branch_id_fk:0,
+                                                      "product_id_fk" =>  @$p->product_id_fk?$p->product_id_fk:0,
+                                                      "lot_number" =>  @$p->lot_number?$p->lot_number:NULL,
+                                                      "lot_expired_date" =>  @$p->lot_expired_date?$p->lot_expired_date:NULL,
+                                                      "amt" =>  @$p->amt_get?$p->amt_get:0,
+                                                      "in_out" =>  '1',
+                                                      "product_unit_id_fk" =>  @$p->product_unit_id_fk?$p->product_unit_id_fk:0,
+              
+                                                      "warehouse_id_fk" =>  @$p->warehouse_id_fk?$p->warehouse_id_fk:0,
+                                                      "zone_id_fk" =>  @$p->zone_id_fk?$p->zone_id_fk:0,
+                                                      "shelf_id_fk" =>  @$p->shelf_id_fk?$p->shelf_id_fk:0,
+                                                      "shelf_floor" =>  @$p->shelf_floor?$p->shelf_floor:0,
+              
+                                                      "status" => '1',
+                                                      "note" =>  'รับสินค้าจากการโอนระหว่างสาขา ',
+                                                      "note2" =>  @$p->description?$p->description:NULL,
+              
+                                                      "action_user" =>  @$p->action_user?$p->action_user:NULL,
+                                                      "action_date" =>  @$p->action_date?$p->action_date:NULL,
+                                                      "approver" =>  @\Auth::user()->id,
+                                                      "approve_date" =>  @$p->updated_at?$p->updated_at:NULL,
+              
+                                                      "created_at" =>@$p->created_at,
+                                                  ));
+              
+                                            }
+                                            // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+              
+              
+              
+              
+                               }
+              
+                          }
 
 
           \DB::commit();
