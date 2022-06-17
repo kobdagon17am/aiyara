@@ -28,11 +28,10 @@
                           <th> หมายเหตุ </th>
                         </tr>
                           @foreach ($file_slip as $value)
+                       
                               <tr>
                                   <td>
-                                      <p>{{ date('d/m/Y') }}</p>
-
-
+                                      <p>{{ date('d/m/Y',strtotime($value->create_at)) }}</p>
                                   </td>
                                   <td>
                                    <img class="img-fluid"
