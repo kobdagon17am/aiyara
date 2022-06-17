@@ -81,7 +81,7 @@
                 scroller: true,
                 scrollCollapse: true,
                 scrollX: true,
-                ordering: false,
+                ordering: true,
                 destroy: true,
                 // scrollY: ''+($(window).height()-370)+'px',
                 iDisplayLength: 100,
@@ -112,6 +112,30 @@
                     {
                         data: 'Categories',
                         title: '<center>Category</center>',
+                        className: 'text-left'
+                    },
+
+                    {
+                        data: 'selling_price',
+                        title: '<center>ราคาขาย</center>',
+                        className: 'text-left'
+                    },
+
+                    {
+                        data: 'member_price',
+                        title: '<center>ราคาสมาชิก</center>',
+                        className: 'text-left'
+                    },
+
+                    {
+                        data: 'pv',
+                        title: '<center>คะแนน</center>',
+                        className: 'text-left'
+                    },
+
+                    {
+                        data: 'txt_desc',
+                        title: '<center>ประเทศ</center>',
                         className: 'text-left'
                     },
                     {

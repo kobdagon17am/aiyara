@@ -179,7 +179,9 @@ class ProductsController extends Controller
       }
 
 
-      $sTable = DB::select("select * from products where 1 $w01 $w02 $w03 order by updated_at desc ");
+      $sTable = DB::select("select products.*,products_cost.selling_price,products_cost.business_location_id,products_cost.member_price,products_cost.pv,dataset_business_location.txt_desc
+       from products  LEFT JOIN products_cost on products_cost.product_id_fk = products.id
+       LEFT JOIN dataset_business_location on dataset_business_location.id = products_cost.business_location_id where 1 $w01 $w02 $w03 order by updated_at desc ");
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('pname', function($row) {

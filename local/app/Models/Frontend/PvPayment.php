@@ -733,6 +733,8 @@ class PvPayment extends Model
     public static function PvPayment_type_confirme_vip($order_id, $admin_id, $distribution_channel, $action_type)
     {
 
+
+
         DB::BeginTransaction();
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
@@ -762,6 +764,8 @@ class PvPayment extends Model
         }
 
         $invoice_code = $run_pament_code['code_order'];
+
+        dd($invoice_code);
         $transection_code = RunNumberPayment::run_number_aistockis();
 
         //dd($order_data->pv_total,$order_data->drop_ship_bonus);
