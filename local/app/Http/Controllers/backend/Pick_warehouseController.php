@@ -2527,7 +2527,13 @@ ORDER BY db_pick_pack_packing.id
                 'receipts' => $or_codes_str,
               ]);
 
-              //  db_pick_pack_requisition_code
+              $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+
+              DB::table($db_pick_pack_requisition_code)->where('pick_pack_packing_code_id_fk',$db_pick_pack_packing_code->id)->update([
+                'receipts' => $or_codes_str,
+              ]);
+
+              //  db_pick_pack_requisition_code 
               $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
               if($db_pay_requisition_002->amt_need<=0){
                DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->delete();
