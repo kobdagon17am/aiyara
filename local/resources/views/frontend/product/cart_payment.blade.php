@@ -694,7 +694,7 @@
                                              <div class="col-sm-4">
                                                  <label>รหัสไปษณีย์</label>
                                                  <input type="text" class="form-control sent_address_other"
-                                                     placeholder="รหัสไปษณีย์" id="other_zipcode" name="other_zipcode"
+                                                     placeholder="รหัสไปษณีย์" id="zipcode" name="other_zipcode"
                                                      value="">
                                              </div>
 
