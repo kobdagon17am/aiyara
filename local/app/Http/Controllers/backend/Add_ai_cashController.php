@@ -157,7 +157,7 @@ class Add_ai_cashController extends Controller
     //dd($sRow);
 
     $sPay_type = DB::select(" select * from dataset_pay_type where id in(1,5,7,8,10); ");
-
+    $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
     if ($sRow) {
       $action_user = \App\Models\Backend\Permission\Admin::where('id', $sRow->action_user)->get();
       $action_user = @$action_user[0]->name;
@@ -174,11 +174,8 @@ class Add_ai_cashController extends Controller
       $CustomerAicashName = 'ไม่ระบุชื่อ';
     }
 
-
     $sAccount_bank = \App\Models\Backend\Account_bank::get();
     $sFee = \App\Models\Backend\Fee::get();
-
-
 
     return View('backend.add_ai_cash.form')->with(array(
       'sRow' => $sRow,
@@ -191,15 +188,15 @@ class Add_ai_cashController extends Controller
       'CustomerAicash' => $CustomerAicash,
       'CustomerAicash' => $CustomerAicash,
       'CustomerAicashName' => $CustomerAicashName,
+      'r_invoice_code' => $r_invoice_code,
     ));
   }
 
   public function update(Request $request, $id)
   {
 
-    // dd($id);
     if (isset($request->approved)) {
-
+      // approved
       $admin_id = \Auth::user()->id;
       $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id, $admin_id, 'admin', $request->note, $pay_type_id = '1');
 
@@ -209,8 +206,11 @@ class Add_ai_cashController extends Controller
       $sRow->approver = \Auth::user()->id;
       $sRow->approve_date = now();
       $sRow->note = $request->note;
-
-
+      if(isset($request->pay_with_other_bill)){
+        $sRow->pay_with_other_bill_select = $request->pay_with_other_bill;
+        $sRow->pay_with_other_bill_code = $request->invoice_code;
+  
+      }
 
       if ($sRow->code_order == "") {
         $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
@@ -226,6 +226,11 @@ class Add_ai_cashController extends Controller
         DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $id . "') ");
       }
       $sRow->note = $request->note;
+      if(isset($request->pay_with_other_bill)){
+        $sRow->pay_with_other_bill_select = $request->pay_with_other_bill;
+        $sRow->pay_with_other_bill_code = $request->invoice_code;
+  
+      }
 
       $sRow->save();
       return $this->form($id);
@@ -694,6 +699,16 @@ class Add_ai_cashController extends Controller
 
     $sQuery = \DataTables::of($sTable);
     return $sQuery
+      ->addColumn('other_bill', function ($row) {
+        if($row->pay_with_other_bill_code != '' && $row->pay_with_other_bill_select == 1){
+          return $row->pay_with_other_bill_code;
+        }else{
+          return '-';
+        }
+      })
+      ->escapeColumns('other_bill')
+
+
       ->addColumn('customer_name', function ($row) {
         if (@$row->customer_id_fk != '') {
           $Customer = DB::select(" select * from customers where id=" . @$row->customer_id_fk . " ");
@@ -703,6 +718,7 @@ class Add_ai_cashController extends Controller
         }
       })
       ->escapeColumns('customer_name')
+
       ->addColumn('action_user', function ($row) {
         if (@$row->action_user != '') {
           $sD = DB::select(" select * from ck_users_admin where id=" . $row->action_user . " ");

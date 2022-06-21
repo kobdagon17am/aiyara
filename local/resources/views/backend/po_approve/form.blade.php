@@ -61,6 +61,12 @@
                                         <table id="data-table_other" class="table table-bordered " style="width: 100%;">
                                         </table>
 
+                                        <br>
+
+                                        <label>Ai-cash ที่ชำระพร้อมบิลนี้</label>
+                                        <table id="data-table_other_ai" class="table table-bordered " style="width: 100%;">
+                                        </table>
+
                                         <hr>
 
                                         <div class="row">
@@ -118,8 +124,8 @@
                                                     data-lity width="200px" height="200px" class="grow">
                                             @endif
                                             <br> <br>
-                                            <input type="text" class="form-control" name="note" placeholder="" readonly
-                                                value="หมายเหตุ : {{ @$r->note }}">
+                                            <input type="text" class="form-control" name="note" placeholder=""
+                                                readonly value="หมายเหตุ : {{ @$r->note }}">
                                             <br>
                                             <input type="text" class="form-control note2" data-id="{{ @$r->id }}"
                                                 name="note2" placeholder="หมายเหตุ 2 สำหรับพนักงาน"
@@ -186,7 +192,8 @@
                                         <button type="button" class="btn btn-primary waves-effect waves-light"
                                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
 
-                                        <button type="button" class="btn btn-danger waves-effect waves-light btnNotAprrove"
+                                        <button type="button"
+                                            class="btn btn-danger waves-effect waves-light btnNotAprrove"
                                             data-toggle="modal" data-target="#cancel"
                                             order_id="{{ @$sRow->id }}">ไม่อนุมัติ</button>
                                         {{-- <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
@@ -284,7 +291,8 @@
                                                     <div class="col-md-12 mt-2 mb-2 text-left">
                                                         <div class="row form-group ">
                                                             <div class="col-md-6 text-left">
-                                                                <h5 class="font-size-14 required_star_red ">ธนาคารที่โอนชำระ
+                                                                <h5 class="font-size-14 required_star_red ">
+                                                                    ธนาคารที่โอนชำระ
                                                                 </h5>
                                                                 <select id="account_bank" name="account_bank"
                                                                     class="form-control select2-templating " required>
@@ -305,7 +313,8 @@
                                                                 <input class="form-control NumberOnly " type="text"
                                                                     name="approval_amount_transfer"
                                                                     id="approval_amount_transfer"
-                                                                    value="{{ @$approval_amount_transfer }}" required="">
+                                                                    value="{{ @$approval_amount_transfer }}"
+                                                                    required="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -318,13 +327,15 @@
                                                             <div class="row form-group ">
                                                                 <div class="col-md-6 text-left">
                                                                     <h5 class="font-size-14 ">ชำระพร้อมบิลอื่น </h5>
-                                                                    <input class="form-control" type="text" name="" id=""
+                                                                    <input class="form-control" type="text"
+                                                                        name="" id=""
                                                                         value="{{ @$sRow->pay_with_other_bill_note }}"
                                                                         readonly="">
                                                                 </div>
                                                                 <div class="col-md-6 text-left">
                                                                     <h5 class="font-size-14  ">ชำระร่วม </h5>
-                                                                    <input class="form-control" type="text" name="" id=""
+                                                                    <input class="form-control" type="text"
+                                                                        name="" id=""
                                                                         value="{{ @$sRow->pay_with_other_bill_note }}"
                                                                         readonly="">
                                                                 </div>
@@ -343,7 +354,8 @@
                                                                 <div class="col-md-12 mt-2 mb-2 text-left ">
                                                                     <div class="row form-group ">
                                                                         <div class="col-md-6 text-left">
-                                                                            <h5 class="font-size-14 required_star_red ">Slip
+                                                                            <h5 class="font-size-14 required_star_red ">
+                                                                                Slip
                                                                                 {{ @$i }} :
                                                                                 วันที่เวลาที่โอนในสลิป </h5>
                                                                         </div>
@@ -379,16 +391,16 @@
 
                                                                 @if ($i == 2)
                                                                     @if (!empty(@$sRow->note_fullpayonetime_02))
-                                                                        <input class="form-control" type="text" name=""
-                                                                            id=""
+                                                                        <input class="form-control" type="text"
+                                                                            name="" id=""
                                                                             value="{{ @$sRow->note_fullpayonetime_02 }}">
                                                                     @endif
                                                                 @endif
 
                                                                 @if ($i == 3)
                                                                     @if (!empty(@$sRow->note_fullpayonetime_03))
-                                                                        <input class="form-control" type="text" name=""
-                                                                            id=""
+                                                                        <input class="form-control" type="text"
+                                                                            name="" id=""
                                                                             value="{{ @$sRow->note_fullpayonetime_03 }}">
                                                                     @endif
                                                                 @endif
@@ -721,6 +733,90 @@
                             }
                         },
 
+                    ],
+                    rowCallback: function(nRow, aData, dataIndex) {
+
+                    }
+
+                });
+
+            });
+
+            var oTable_ai;
+            $(function() {
+                oTable_ai = $('#data-table_other_ai').DataTable({
+                    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: false,
+                    serverSide: false,
+                    scroller: false,
+                    scrollCollapse: false,
+                    scrollX: false,
+                    ordering: false,
+                    // scrollY: ''+($(window).height()-370)+'px',
+                    // iDisplayLength: 25,
+                    ajax: {
+                        url: '{{ route('backend.po_approve_edit_other_ai.datatable') }}',
+                        data: {
+                            id: id,
+                        },
+                        method: 'POST',
+                    },
+
+                    columns: [{
+                            data: 'id',
+                            title: 'ID',
+                            className: 'text-center w50'
+                        },
+                        {
+                            data: 'customer_name',
+                            title: '<center>ลูกค้า </center>',
+                            className: 'text-left w100 '
+                        },
+                        {
+                            data: 'code_order',
+                            title: '<center> Order </center>',
+                            className: 'text-left w100 '
+                        },
+                        {
+                            data: 'aicash_remain',
+                            title: '<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'aicash_amt',
+                            title: '<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'action_user',
+                            title: '<center>พนักงาน <br> ที่ดำเนินการ </center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'pay_type_id_fk',
+                            title: '<center>รูปแบบการชำระเงิน </center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'total_amt',
+                            title: '<center>ยอดชำระเงิน </center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'status',
+                            title: '<center>สถานะ </center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'approver',
+                            title: '<center>ผู้อนุมัติ</center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'updated_at',
+                            title: '<center>วันที่เติม Ai-Cash</center>',
+                            className: 'text-center'
+                        },
                     ],
                     rowCallback: function(nRow, aData, dataIndex) {
 

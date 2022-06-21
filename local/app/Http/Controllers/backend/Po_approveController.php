@@ -104,13 +104,25 @@ class Po_approveController extends Controller
              $other_bill = DB::table('db_orders')
              ->where('pay_with_other_bill',1)
              ->where('pay_with_other_bill_note','like','%'.$sRow->code_order.'%')
-             ->where('approve_status',1)
+            //  ->where('approve_status',1)
              ->get();
 
              foreach($other_bill as $ot){
                 $sum_price += $ot->transfer_price;
                 $p_bill .= "บิล : ".$ot->code_order.'<br> ยอดชำระ : <label style="color:red;"> '.$ot->transfer_price.' </label><br>';
              }
+
+             $other_bill_ai = DB::table('db_add_ai_cash')
+             ->where('pay_with_other_bill_select',1)
+             ->where('pay_with_other_bill_code',$sRow->code_order)
+            //  ->where('approve_status',1)
+             ->get();
+
+             foreach($other_bill_ai as $ot){
+                $sum_price += $ot->transfer_price;
+                $p_bill .= "บิล : ".$ot->code_order.'<br> ยอดชำระ : <label style="color:red;"> '.$ot->transfer_price.' </label><br>';
+             }
+
 
              $price =  number_format($sum_price, 2);
 
@@ -271,6 +283,26 @@ class Po_approveController extends Controller
 
                     }
                 }
+
+                $admin_id = \Auth::user()->id;
+                $ai_cash = DB::table('db_add_ai_cash')->where('pay_with_other_bill_select',1)->where('pay_with_other_bill_code',$data_id->code_order)->get();
+                foreach($ai_cash as $ai){
+                    $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($ai->id, $admin_id, 'admin', $ai->note, $pay_type_id = '1');
+                    $sRow = \App\Models\Backend\Add_ai_cash::find($ai->id);
+                    $sRow->approve_status = 2;
+                    $sRow->order_type_id_fk = 7;
+                    $sRow->approver = \Auth::user()->id;
+                    $sRow->approve_date = now();
+                    $sRow->note = $ai->note;
+    
+                    if ($sRow->code_order == "") {
+                        $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+                        DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
+                    }
+    
+                    $sRow->save();
+                }
+           
 
             }else{
                 return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
@@ -557,10 +589,20 @@ ORDER BY code_order DESC
                             $str .= "<label>".$b->code_order."</label><br>";
                         }
                     }else{
-                        $str .= '-';
+                        $str .= '';
                     }
                 }
-                   
+
+                $ai_cash = DB::table('db_add_ai_cash')
+                ->select('code_order')
+                ->where('pay_with_other_bill_select',1)
+                ->where('pay_with_other_bill_code',$row->code_order)
+                ->get();
+
+                foreach($ai_cash as $a){
+                    $str .= '<label>'.$a->code_order.'</label><br>';
+                }
+                
                     return $str;
 
             })
@@ -801,6 +843,117 @@ ORDER BY code_order DESC
             ->make(true);
     }
 
+    public function DatatableEditOther_ai(Request $req)
+    {
+
+        $order_id = DB::table('db_orders')->where('id',$req->id)->first();
+
+        $sTable = DB::select("
+        SELECT db_add_ai_cash.*
+        FROM
+        db_add_ai_cash
+        WHERE pay_type_id_fk in (1,8,10,11,12)
+        AND pay_with_other_bill_select = 1 AND pay_with_other_bill_code = '".$order_id->code_order."'
+        ORDER BY db_add_ai_cash.created_at DESC
+     ");
+
+            $sQuery = \DataTables::of($sTable);
+            return $sQuery
+            ->addColumn('other_bill', function ($row) {
+                if($row->pay_with_other_bill_code != '' && $row->pay_with_other_bill_select == 1){
+                return $row->pay_with_other_bill_code;
+                }else{
+                return '-';
+                }
+            })
+            ->escapeColumns('other_bill')
+
+
+            ->addColumn('customer_name', function ($row) {
+                if (@$row->customer_id_fk != '') {
+                $Customer = DB::select(" select * from customers where id=" . @$row->customer_id_fk . " ");
+                return @$Customer[0]->user_name . " <br> " . @$Customer[0]->prefix_name . @$Customer[0]->first_name . " " . @$Customer[0]->last_name;
+                } else {
+                return '';
+                }
+            })
+            ->escapeColumns('customer_name')
+
+            ->addColumn('action_user', function ($row) {
+                if (@$row->action_user != '') {
+                $sD = DB::select(" select * from ck_users_admin where id=" . $row->action_user . " ");
+                return @$sD[0]->name;
+                } else {
+                return '';
+                }
+            })
+
+            ->addColumn('code_order', function ($row) {
+                return $row->code_order;
+
+            })
+
+            ->addColumn('approver', function ($row) {
+                if (@$row->approver != '') {
+                $sD = DB::select(" select * from ck_users_admin where id=" . $row->approver . " ");
+                return @$sD[0]->name;
+                } else {
+                return '-';
+                }
+            })
+            ->addColumn('pay_type_id_fk', function ($row) {
+                if (@$row->pay_type_id_fk != '') {
+                $sD = DB::select(" select * from dataset_pay_type where id=" . $row->pay_type_id_fk . " ");
+                return @$sD[0]->detail;
+                } else {
+                return '';
+                }
+            })
+            ->addColumn('aicash_remain', function ($row) {
+                if (@$row->customer_id_fk != '') {
+                $Customer = DB::select(" select * from customers where id=" . @$row->customer_id_fk . " ");
+                return @$Customer[0]->ai_cash;
+                } else {
+                return '';
+                }
+            })
+            ->addColumn('status', function ($row) {
+                // if(!empty($row->bill_status)){
+                //   if($row->bill_status==1){
+                //     return 'รอชำระ';
+                //   }else if($row->bill_status==2){
+                //     return 'ชำระแล้ว';
+                //   }else if($row->bill_status==3){
+                //     return 'ยกเลิก';
+                //   }
+                // }else{
+                // return '';
+                // }
+                //  `approve_status` int(11) DEFAULT '0' COMMENT 'ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id',
+                if (@$row->approve_status != "") {
+                @$approve_status = DB::select(" select * from `dataset_approve_status` where id=" . @$row->approve_status . " ");
+                // return $purchase_type[0]->orders_type;
+                if (@$approve_status[0]->id == 2 || @$approve_status[0]->id == 3 || @$approve_status[0]->id == 4) {
+                    return "<label style='color:green;'>อนุมัติแล้ว";
+                } else {
+                    // return $approve_status[0]->orders_type;
+                    return "<label style='color:".@$approve_status[0]->color.";'>".@$approve_status[0]->txt_desc."</label>";
+                    // return @$approve_status[0]->txt_desc;
+                }
+                // return @$approve_status[0]->txt_desc;
+                } else {
+                return "รออนุมัติ";
+                }
+            })
+            ->addColumn('created_at', function ($row) {
+                return is_null($row->created_at) ? '-' : date("Y-m-d", strtotime($row->created_at));
+            })
+            ->addColumn('approve_date', function ($row) {
+                return is_null($row->approve_date) ? '-' : date("Y-m-d", strtotime($row->approve_date));
+            })
+            ->make(true);
+                }
+
     public function DatatableEditOtherSum(Request $req)
     {
 
@@ -844,6 +997,31 @@ ORDER BY code_order DESC
 
                 $sum += $row->transfer_price;
             }
+
+
+            $sTable = DB::select("
+            SELECT db_add_ai_cash.*
+            FROM
+            db_add_ai_cash
+            WHERE pay_type_id_fk in (1,8,10,11,12)
+            AND pay_with_other_bill_select = 1 AND pay_with_other_bill_code = '".@$order_id->code_order."'
+            ORDER BY db_add_ai_cash.created_at DESC
+         ");
+
+            foreach($sTable as $row){
+            
+                // if (@$row->purchase_type_id_fk == 7) {
+                //     $sum += $row->sum_price;
+                // } else if (@$row->purchase_type_id_fk == 5) {
+                //     $total_price = $row->transfer_price;
+                //     $sum += $total_price;
+                // } else {
+                //     $sum += @$row->sum_price + $row->shipping_price;
+                // }
+
+                $sum += $row->transfer_price;
+            }
+
 
             // if (@$order_id->purchase_type_id_fk == 7) {
             //     $sum += $order_id->sum_price;
