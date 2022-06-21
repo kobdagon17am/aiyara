@@ -74,8 +74,8 @@ class CancelOrderController extends Controller
         ->whereIn('purchase_type_id_fk',[1,2,3,4,5])
         ->get();
 
-        if(count($order_first) == 1){
-          $customer_user->date_order_first = null;
+        if(count($order_first) <= 1){
+          $customer_user->date_order_first = '0000-00-00 00:00:00';
         }
 
         if ($pv_total > 0) {
