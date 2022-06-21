@@ -42,7 +42,13 @@
 					{{-- <input type="" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}"> --}}
 				</div>
 
-				<div class="col-sm-3">
+				<div class="col-sm-3 mt-2">
+					<label>เบอร์บ้าน</label>
+          <input type="text" placeholder="เบอร์บ้าน" id="tel_mobile" name="tel_home"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_home }}">
+					{{-- <input type="" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}"> --}}
+				</div>
+
+				<div class="col-sm-3 mt-2">
 					<label>Email</label>
 					<input type="email" class="form-control" autocomplete="off" placeholder="อีเมลล์" id="email" name="email" value="{{ @$customer->email }}">
 				</div>

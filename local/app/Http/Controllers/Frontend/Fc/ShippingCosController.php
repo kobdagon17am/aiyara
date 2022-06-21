@@ -9,6 +9,7 @@ class ShippingCosController extends Controller
 {
   public function check_shipping_cos(Request $request){//check ราคาค่าส่ง
 
+
   	$shipping_type_id_1 = DB::table('dataset_shipping_cost')
   	->where('business_location_id_fk','=',$request->location_id)
   	->where('shipping_type_id','=',1)
