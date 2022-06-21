@@ -76,6 +76,9 @@ class CancelOrderController extends Controller
 
         if(count($order_first) <= 1){
           $customer_user->date_order_first = '0000-00-00 00:00:00';
+          $customer_user->mt_active = '0000-00-00 00:00:00';
+          $customer_user->status_pv_mt == 'not';
+          $customer_user->date_mt_first == null;
         }
 
         if ($pv_total > 0) {
@@ -167,10 +170,6 @@ class CancelOrderController extends Controller
               $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
               $customer_user->pv_mt_active = $mt_active;
             }
-
-            // $update_tv = DB::table('customers')
-            //   ->where('id', $customer_user->id)
-            //   ->update(['pv_mt' => $order_data->pv_mt_old, 'pv_mt_active' => $order_data->active_mt_old_date, 'status_pv_mt' => $order_data->status_pv_mt_old]);
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 3) { //รักษาคุณสมบัตรการท่องเที่ยว
