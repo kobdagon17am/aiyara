@@ -239,13 +239,10 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>Email <font class="text-danger">*</font></label>
-                                                        <input type="email" class="form-control" placeholder="Email@email.com" name="email" value="{{ old('email') }}" required="">
+                                                        <label>Email </label>
+                                                        <input type="email" class="form-control" placeholder="Email@email.com" name="email" value="{{ old('email') }}" >
                                                     </div>
                                                 </div>
-
-
-
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
                                                         <h3 class="sub-title m-t-0" style="color: #000;font-size: 16px">

@@ -61,7 +61,7 @@ class VipReportController extends Controller
                 return "<span class='badge badge-{$order->css_class} rounded px-2 py-1'>$order->pay_status</span>";
             })
             ->editColumn('action', function ($order) {
-                $route = route('cart-payment-history', $order->code_order);
+                $route = route('cart-payment-history-vip', $order->code_order);
                 return "<a href='{$route}' class='btn btn-sm btn-success'><i class='fa fa-search'></i></a>";
             })
 

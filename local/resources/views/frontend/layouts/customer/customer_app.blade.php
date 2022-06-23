@@ -555,7 +555,7 @@
 			</ul>
 		</li>
 
-    <li class="pcoded-hasmenu {{ (request()->is('salepage/*') || request()->is('s*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+    <li class="pcoded-hasmenu {{ (request()->is('salepage/*') || request()->is('cart-payment-history-vip/*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-chrome text-success"></i><b> @lang('message.salepage')</b></span>
 				<span class="pcoded-mtext"> @lang('message.salepage')</span>
@@ -623,7 +623,7 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('salepage/vip-report')) ? 'active' : '' }}">
+				<li class="{{ ( request()->is('salepage/vip-report') || request()->is('cart-payment-history-vip/*') ) ? 'active' : '' }}">
 					<a href="{{route('salepage.vip-report')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext"> @lang('message.vipreport')</span>
