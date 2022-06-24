@@ -98,7 +98,8 @@ class ProfileController extends Controller
                 'road' => trim($request->road),
                 'province_id_fk' => trim($request->province),
                 'zipcode' => trim($request->zipcode),
-                'tel_mobile' => trim($request->tel_mobile)
+                'tel_mobile' => trim($request->tel_mobile),
+                'tel_home' => trim($request->tel_home)
             );
 
             try {

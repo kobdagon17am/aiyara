@@ -46,7 +46,7 @@ Register
                                         @csrf
                                         <div class="form-group">
                                             <label for="useremail">Email</label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" value="{{old('email')}}" id="useremail" name="email" required placeholder="Enter email">
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" value="{{old('email')}}" id="useremail" name="email"  placeholder="Enter email">
                                             @error('email')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>

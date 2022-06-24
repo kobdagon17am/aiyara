@@ -162,9 +162,9 @@
                      </div>
 
                      <div class="col-sm-3">
-                         <label>Email <font class="text-danger">*</font></label>
+                         <label>Email </label>
                          <input type="email" class="form-control" autocomplete="off" placeholder="Email@email.com" name="email"
-                             value="{{ old('email') }}" required="">
+                             value="{{ old('email') }}" >
                      </div>
                  </div>
 

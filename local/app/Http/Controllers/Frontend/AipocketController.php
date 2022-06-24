@@ -472,10 +472,7 @@ class AipocketController extends Controller
   public static function cancel_aistockist(Request $rs)
   {
 
-
-
     if (empty($rs->cancel_code)) {
-
       return redirect('ai-stockist')->withError('ไม่พบข้อมูลเลขบิล กรุณาติดต่อเจ้าหน้าที่');
     }
 
@@ -567,9 +564,11 @@ class AipocketController extends Controller
     }
 
     if ($rs['status'] == 'success') {
+
       $ai_stockist_update_not_cancel = DB::table('ai_stockist')
-        ->where('set_transection_code', $ai_stockist->set_transection_code)
+        ->where('transection_code',$ai_stockist->transection_code)
         ->update(['cancel_expiry_date' => null]);
+
       $update_ai_stockist->save();
       $customer->save();
       return redirect('ai-stockist')->withSuccess($rs['message']);

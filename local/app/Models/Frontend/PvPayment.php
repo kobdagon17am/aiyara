@@ -765,7 +765,7 @@ class PvPayment extends Model
 
         $invoice_code = $run_pament_code['code_order'];
 
-        dd($invoice_code);
+
         $transection_code = RunNumberPayment::run_number_aistockis();
 
         //dd($order_data->pv_total,$order_data->drop_ship_bonus);

@@ -694,7 +694,7 @@
                                              <div class="col-sm-4">
                                                  <label>รหัสไปษณีย์</label>
                                                  <input type="text" class="form-control sent_address_other"
-                                                     placeholder="รหัสไปษณีย์" id="other_zipcode" name="other_zipcode"
+                                                     placeholder="รหัสไปษณีย์" id="zipcode" name="other_zipcode"
                                                      value="">
                                              </div>
 
@@ -1259,80 +1259,6 @@
      </script>
 
      <script type="text/javascript">
-        //  $('#province').change(function() {
-        //      var province = $(this).val();
-        //      check_shipping(province, '');
-        //      $.ajax({
-        //          async: false,
-        //          type: "get",
-        //          url: "{{ route('location') }}",
-        //          data: {
-        //              id: province,
-        //              function: 'provinces'
-        //          },
-        //          success: function(data) {
-        //              $('#amphures').html(data);
-        //              $('#district').val('');
-        //              // $('#zipcode').val('');
-        //          }
-        //      });
-
-        //  });
-
-
-        //  $('#amphures').change(function() {
-        //      var amphures = $(this).val();
-        //      $('#province').change(function() {
-        //          var province = $(this).val();
-
-        //          $.ajax({
-        //              async: false,
-        //              type: "get",
-        //              url: "{{ route('location') }}",
-        //              data: {
-        //                  id: province,
-        //                  function: 'provinces'
-        //              },
-        //              success: function(data) {
-        //                  $('#amphures').html(data);
-        //                  $('#district').val('');
-        //                  // $('#zipcode').val('');
-        //              }
-        //          });
-
-        //      });
-        //      $.ajax({
-        //          async: false,
-        //          type: "get",
-        //          url: "{{ route('location') }}",
-        //          data: {
-        //              id: amphures,
-        //              function: 'amphures'
-        //          },
-        //          success: function(data) {
-        //              $('#district').html(data);
-        //          }
-        //      });
-        //  });
-
-        //  $('#district').change(function() {
-        //      var district = $(this).val();
-        //      $.ajax({
-        //          type: "get",
-        //          url: "{{ route('location') }}",
-        //          data: {
-        //              id: district,
-        //              function: 'district'
-        //          },
-        //          success: function(data) {
-        //              $('#other_zipcode').val(data);
-        //          }
-        //      });
-
-        //  });
-
-
-
 
 
          function check() {
@@ -1595,7 +1521,7 @@
       const token = "{{ csrf_token() }}";
      </script>
 
-     <script src="{{ asset('frontend/address.js') }}"></script>
+     <script src="{{ asset('frontend/address_card.js') }}"></script>
 
      {{-- <script src="{{ asset('frontend/assets/pages/payment-card/card.js') }}"></script>
      <script src="{{ asset('frontend/assets/pages/payment-card/jquery.payform.min.js') }}" charset="utf-8"></script>
