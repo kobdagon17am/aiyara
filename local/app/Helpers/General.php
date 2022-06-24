@@ -26,6 +26,7 @@ class General {
 
 	static function check_export_excel_customer($id,$packing_code_id)
     {
+
 		$check = 0;
 		$packing = DB::select(" SELECT * FROM db_pick_pack_packing WHERE delivery_id_fk=".$id." and packing_code_id_fk=".$packing_code_id."  GROUP BY packing_code ");
         $recipient_name = '';
@@ -79,9 +80,7 @@ class General {
 			ORDER BY db_pick_pack_packing.id
 			");
 
-			// if($packing->id==10){
-			// 	dd($sTable);
-			// }
+	
 
 			foreach ($sTable as $key => $row) {
 
@@ -96,9 +95,11 @@ class General {
 			->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
 			->groupBy('product_id_fk')
 			->get();
-			
+		
 			if(@$Products){
 
+			$arr_re_002_item = [];
+			$arr_re_002 = [];
 			foreach ($Products as $key => $value) {
 
 				if(!empty($value->product_id_fk)){
@@ -126,7 +127,9 @@ class General {
 							->first();
 						
 								if($db_pay_requisition_002_item->amt_remain > 0){
-									$check = $check+1;
+									 $check = $check+1;
+									array_push($arr_re_002_item, $db_pay_requisition_002_item->order_id);
+									array_push($arr_re_002, $db_pay_requisition_002->pick_pack_requisition_code_id_fk);
 								$r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
 								}else{
 								$r_ch_t = '';
@@ -148,6 +151,25 @@ class General {
 
 			}
 
+			$fid_arr = explode(',',$receipt);
+			if(count($arr_re_002)>0){
+				$arr_002 = DB::table('db_pay_requisition_002')->select('id')->where('pick_pack_requisition_code_id_fk',$arr_re_002)->pluck('id')->toArray();
+				if(count($arr_re_002)>0){
+					$order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
+					$arr_002_item = DB::table('db_pay_requisition_002_item')->whereIn('requisition_002_id',$arr_002)->whereIn('order_id',$order_arr)->where('amt_remain',0)->first();
+					if($arr_002_item){
+						$check = 0;
+					}
+				}
+			
+			}else{
+				$check = 0;
+			}
+		
+			// if($id==26){
+			// 	dd($receipt);
+			// 	// dd($arr_re_002_item);
+			// }
 			return $check;
    }
 

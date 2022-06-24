@@ -103,23 +103,32 @@
 				$sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
 
 				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
-	
+
 				$p_i = 0;
 				for ($i=0; $i < count($sRow) ; $i++) {
+					
 					$pick_pack_packing = DB::table('db_pick_pack_packing')->select('p_amt_box','delivery_id_fk','packing_code_id_fk')->where('packing_code_id_fk',$sRow[$i]->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$sRow[$i]->delivery_id_fk)->first();
 					$delivery_data = DB::table('db_delivery')->where('id',$sRow[$i]->delivery_id_fk)->first();
 					if($delivery_data){
 						$check_customer = 0;
 						$check_customer = General::check_export_excel_customer($pick_pack_packing->delivery_id_fk,$pick_pack_packing->packing_code_id_fk);
+
+						// if($sRow[$i]->recipient_code == 'P100005'){
+						// 	dd($pick_pack_packing->delivery_id_fk);
+						// }
+// 						if($pick_pack_packing->delivery_id_fk == 26){
+// echo 'ok';
+// 						}
+
 						if($check_customer==0){
 						// if($delivery_data->status_scan_wh==1){
 							if($pick_pack_packing){
 
-								echo 'box number : '.$pick_pack_packing->p_amt_box.'<br>';
+								// echo 'box number : '.$pick_pack_packing->p_amt_box.'<br>';
 		
 								if($pick_pack_packing->p_amt_box != null && $pick_pack_packing->p_amt_box != ''){
-		
-									echo 'box : '.$sRow[$i]->id.'<br>';
+						
+									// echo 'box : '.$sRow[$i]->id.'<br>';
 		
 									$arr_con_box = [];
 									if($sRow[$i]->con_arr!=''){
@@ -160,7 +169,8 @@
 									}
 		
 								}else{
-									echo 'no box : '.$sRow[$i]->id.'<br>';
+								
+									// echo 'no box : '.$sRow[$i]->id.'<br>';
 									$sheet->setCellValue('A'.($i+2+$p_i), $sRow[$i]->consignment_no);
 									$sheet->setCellValue('B'.($i+2+$p_i), $sRow[$i]->customer_ref_no);
 									$sheet->setCellValue('C'.($i+2+$p_i), $sRow[$i]->sender_code);
