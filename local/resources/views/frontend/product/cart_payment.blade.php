@@ -81,7 +81,7 @@
                                                      <label>
                                                          <input type="radio" name="sent_type_to_customer"
                                                              value="sent_type_customer" id="sent_type_customer"
-                                                             onclick="sent_type('customer')" checked="checked">
+                                                             onclick="sent_type('customer','{{@$address->province_id_fk}}')" checked="checked">
                                                          <i class="helper"></i><b>ซื้อให้ตัวเอง</b>
                                                      </label>
                                                  </div>
@@ -93,6 +93,15 @@
                                                          <i class="helper"></i><b>ซื้อให้ลูกทีม</b>
                                                      </label>
                                                  </div>
+
+                                                 <div class="radio radio-inline">
+                                                  <label>
+                                                      <input type="radio" name="sent_type_to_customer"
+                                                          value="sent_type_bill" id="sent_type_bill"
+                                                          onclick="sent_type('sent_type_bill')">
+                                                      <i class="helper"></i><b>จัดส่งพร้อมบิลอื่น</b>
+                                                  </label>
+                                              </div>
                                              </div>
 
                                          </div>
@@ -114,7 +123,7 @@
                                                              </span>
                                                          </div>
                                                          {{-- <span style="font-size: 12px"
-                                                             class="text-danger">*คะแนนการสั่งซื้อจะถูกใช้ให้กับลูกทีมที่เลือก</span> --}}
+                                                             class="text-danger">*ค่าจัดส่งจะรวมจะถูกคิดแค่บิลที่เลือกเท่านั้น</span> --}}
                                                      </div>
 
                                                  </div>
@@ -160,40 +169,34 @@
 
                                                      </div>
                                                  </div>
-                                                 {{-- <hr class="m-b-5 m-t-5">
-                                                 <div class="row">
-                                                     <div class="col-md-6">
-                                                         <h5 class="m-b-0 text-right" id="ai_text_pv"
-                                                             style="color: #000"></h5>
-                                                     </div>
-                                                 </div> --}}
-                                                 {{-- <hr class="m-b-5 m-t-5">
-                                                 <div class="row">
-                                                     <div class="col-md-6">
-                                                         <p class="m-b-0" style="color: #000">
-                                                             <b>สถานะรักษาคุณสมบัติรายเดือน</b>
-                                                         </p>
-                                                     </div>
-                                                     <div class="col-md-6 text-right">
-                                                         <div id="ai_tex_pv_mt_active"></div>
-                                                     </div>
-                                                 </div> --}}
 
-                                                 {{-- <hr class="m-b-5 m-t-5">
-                                                 <div class="row">
-                                                     <div class="col-md-6">
-                                                         <p class="m-b-0" style="color: #000">
-                                                             <b>สถานะรักษาคุณสมบัติท่องเที่ยว</b>
-                                                         </p>
-                                                     </div>
-                                                     <div class="col-md-6 text-right">
-                                                         <div id="ai_tex_pv_tv_active"></div>
-                                                     </div>
-                                                 </div> --}}
                                              </div>
                                          </div>
                                      </div>
                                      </div>
+
+                                     <div class="row" id="bill_code" style="display:none">
+                                      <div class="col-md-12">
+                                          <div class="row">
+                                              <div class="col-md-6 col-lg-6 col-xl-6">
+                                                  <div class="card">
+                                                      <div class="card-block" style="padding: 10px;">
+                                                          <h6>จัดส่งพร้อมบิลอื่น</h6>
+                                                            <select class="form-control col-sm-12" id="select_bill_code" name="bill_code" >
+                                                                <option value=""> Select </option>
+                                                                @foreach($orders as $value_order)
+                                                                <option value="{{$value_order->code_order}}"> {{$value_order->code_order}} </option>
+                                                                @endforeach
+                                                            </select>
+                                                            <span style="font-size: 12px"
+                                                            class="text-danger">*สามรถเลือกบิลที่ชำระภายในวันหรือยังไม่ถูกจัดส่งเท่านั้น</span>
+                                                      </div>
+                                                  </div>
+                                              </div>
+
+                                          </div>
+                                      </div>
+                                  </div>
 
                                      <div class="row" id="check_user" style="display: none">
                                          <div class="col-md-12">
@@ -286,15 +289,14 @@
                                              </div>
                                          </div>
                                      </div>
-
                                      <div class="row">
                                          <div class="col-sm-12 col-md-12 col-xl-12">
                                              <h4 class="sub-title" style="font-size: 17px">ที่อยู่ผู้รับสินค้า</h4>
-                                             <div class="form-radio">
+                                             <div class="form-radio h_address">
                                                  <div class="radio radio-inline" id="i_sent_address">
                                                      <label>
                                                          <input type="radio"
-                                                             onchange="sent_address('sent_address',{{ @$address->province_id_fk }})"
+                                                             onchange="sent_address('sent_address','{{@$address->province_id_fk}}')"
                                                              id="sent_address_check" name="receive" value="sent_address"
                                                              checked="checked">
                                                          <i class="helper"></i><b>จัดส่ง</b>
@@ -332,7 +334,7 @@
                                      </div>
 
                                      @if ($address)
-                                         <div id="sent_address">
+                                         <div id="sent_address" class="h_address">
                                              <div class="row m-t-5">
                                                  <div class="col-md-6 col-sm-6 col-6">
                                                      <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
@@ -428,7 +430,7 @@
 
                                          </div>
                                      @else
-                                         <div id="sent_address">
+                                         <div id="sent_address" class="h_address">
 
                                              <div class="alert alert-warning icons-alert">
 
@@ -442,7 +444,7 @@
                                      @endif
 
                                      @if ($address_card && $address_card->card_province_id_fk)
-                                         <div id="sent_address_card" style="display: none;">
+                                         <div id="sent_address_card" style="display: none;" class="h_address">
                                              <div class="row m-t-5">
                                                  <div class="col-md-6 col-sm-6 col-6">
                                                      <label>ชื่อผู้รับ <b class="text-danger">*</b></label>
@@ -540,7 +542,7 @@
 
                                          </div>
                                      @else
-                                         <div id="sent_address_card" style="display: none;">
+                                         <div id="sent_address_card" style="display: none;" class="h_address">
 
                                              <div class="alert alert-warning icons-alert">
                                                  <p><strong>Warning!</strong> <code>ไม่มีข้อมูลที่อยู่ตามบัตรประชาชน
@@ -549,7 +551,7 @@
                                          </div>
                                      @endif
 
-                                     <div id="sent_office" style="display: none;">
+                                     <div id="sent_office" style="display: none;" class="h_address">
                                          <div class="row m-t-5">
                                              <div class="col-sm-12">
                                                  <select name="receive_location" class="form-control" readonly="">
@@ -587,7 +589,7 @@
                                          </div>
                                      </div>
 
-                                     <div id="sent_address_other" style="display: none;">
+                                     <div id="sent_address_other" style="display: none;" class="h_address">
                                       <div class="row">
                                         <div class="col-sm-3">
                                           <label><b> ประเทศ </b></label>
@@ -1100,15 +1102,26 @@
 
          function check_shipping(provinces_id = '', type_sent = '') {
 
-             if (provinces_id == '' && type_sent !== 'sent_office') {
+
+             var location_id = '{{ $bill['location_id'] }}';
+             var type = '{{ $bill['type'] }}';
+             var price = '{{ $bill['price'] }}';
+
+             if ( provinces_id == '') {
+              var price_total_view = numberWithCommas(price);
+              $('.price_total').html(price_total_view);
+              $('#price_total').val(price_total);
+              document.getElementById('shipping').textContent = 0;
+
+              if(type_sent == 'sent_type_bill'){
+                $('#shipping_detail').html('<label class="label label-inverse-warning">จัดส่งพร้อมบิลอื่น</label>');
+              }
+
                  return '';
              }
 
 
-             var location_id = '{{ $bill['location_id'] }}';
-             var price = '{{ $bill['price'] }}';
 
-             var type = '{{ $bill['type'] }}';
 
              //  var shipping_premium = document.getElementById('checkbox13').checked;
 
@@ -1133,6 +1146,7 @@
                      type_sent: type_sent,
                  },
                  success: function(data) {
+
 
                      document.getElementById('shipping_detail').innerHTML =
                          '<label class="label label-inverse-warning">' + data['data']['shipping_name'] +
@@ -1164,13 +1178,12 @@
 
                      //document.getElementsByClassName('.price_total').textContent = price_total;
                      //console.log(data);
+
                  }
              });
          }
 
-         function sent_address(type_sent, provinces_id) {
-
-
+         function sent_address(type_sent,provinces_id) {
 
              if (type_sent == 'sent_address') {
 
@@ -1184,9 +1197,12 @@
                  document.getElementById("sent_address_check").checked = true;
 
                  if (provinces_id) {
+
                      document.getElementById("btn_pay").style.display = 'block';
 
                  } else {
+
+
                      document.getElementById('shipping_detail').innerHTML = '';
                      document.getElementById("btn_pay").style.display = 'none';
 
@@ -1251,7 +1267,7 @@
                      title: 'เลือกที่อยู่ไม่ถูกต้อง',
                  })
 
-                 alert('เลือกที่อยู่ไม่ถูกต้อง');
+
              }
 
 
@@ -1375,6 +1391,29 @@
              var check_sent_other = document.getElementById("sent_other").checked;
              var check_office_check = document.getElementById("sent_office_check").checked;
              var sent_type_other = document.getElementById("sent_type_other").checked; //จัดส่งให้คนอื่น
+             var sent_type_bill = document.getElementById("sent_type_bill").checked; //จัดส่งพร้อมบิลอื่น
+
+             if (sent_type_bill == true) {
+              var select_bill_code = $('#select_bill_code').val();
+
+              if(select_bill_code == ''){
+                Swal.fire({
+                         icon: 'error',
+                         title: 'กรุณาเลือกบิลที่ต้องการชำระร่วม',
+                     })
+                return;
+              }
+
+              Swal.fire({
+                         icon: 'error',
+                         title: 'ยังไม่สมบูรณ์ ( Dev Demo Test )',
+                     })
+                return;
+
+              document.getElementById("payment_address").submit();
+
+             }
+
 
 
              if (sent_type_other) {

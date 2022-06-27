@@ -25,6 +25,15 @@ class ShippingCosController extends Controller
   		->where('shipping_type_id','=',4)
   		->first();
 
+
+    }elseif($request->type_sent == 'sent_type_bill'){
+  		$data = DB::table('dataset_shipping_cost')
+  		->where('business_location_id_fk','=',$request->location_id)
+  		->where('shipping_type_id','=',6)
+  		->first();
+
+      dd();
+
     }elseif($request->price >= $shipping_type_id_1->purchase_amt){
   		//0
   		$data = DB::table('dataset_shipping_cost')
@@ -95,6 +104,7 @@ class ShippingCosController extends Controller
   	->where('shipping_type_id','=',1)
   	->first();
 
+
   	$shipping_type_id_2 = DB::table('dataset_shipping_vicinity')
   	->where('province_id_fk','=',$provinces_id)
   	->first();
@@ -117,6 +127,13 @@ class ShippingCosController extends Controller
   		->where('business_location_id_fk','=',$location_id)
   		->where('shipping_type_id','=',5)
   		->first();
+
+    }elseif($type_sent == 'sent_type_bill'){
+  		$data = DB::table('dataset_shipping_cost')
+  		->where('business_location_id_fk','=',$location_id)
+  		->where('shipping_type_id','=',6)
+  		->first();
+
 
     }elseif($shipping_type_id_2){
   		$data = DB::table('dataset_shipping_cost')

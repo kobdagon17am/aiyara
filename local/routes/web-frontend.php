@@ -173,7 +173,7 @@ Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('uploa
 Route::post('re_new_payment','Frontend\HistoryController@re_new_payment')->name('re_new_payment');
 
 Route::get('cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history');
-Route::get('cart-payment-history-vip/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('cart-payment-history-vip');
+Route::get('cart-payment-history-vip/{code_order?}','Frontend\HistoryController@cart_payment_history_vip')->name('cart-payment-history-vip');
 
 Route::get('gift-cart-payment-history/{code_order?}','Frontend\HistoryController@cart_payment_history')->name('gift-cart-payment-history');
 Route::get('log_tranfer','Frontend\HistoryController@log_tranfer')->name('log_tranfer');
