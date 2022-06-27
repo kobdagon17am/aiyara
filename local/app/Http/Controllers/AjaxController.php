@@ -16,6 +16,6 @@ use Storage;
 
 class AjaxController extends Controller
 {
-   
+//    test
   
 }
