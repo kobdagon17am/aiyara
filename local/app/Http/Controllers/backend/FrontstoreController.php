@@ -1103,7 +1103,7 @@ class FrontstoreController extends Controller
 
   public function update(Request $request, $id)
   {
-   // dd($request->all());
+  //  dd($request->all());
 
 
     // dd($request->transfer_money_datetime." : AAAA");

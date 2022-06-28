@@ -1310,7 +1310,7 @@ class AjaxController extends Controller
                             }
 
                         }
-                        dd($shipping_cost[0]->shipping_cost);
+                        // dd($shipping_cost[0]->shipping_cost);
 
                 }
 

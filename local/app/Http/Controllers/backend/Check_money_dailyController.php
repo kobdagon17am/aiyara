@@ -341,6 +341,71 @@ class Check_money_dailyController extends Controller
 
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$
     public function DatatableSentMoney(Request $req){
+
+      // วุฒิทำค้นหา บิลวันที่ทำรายการก่อน
+      if(!empty($req->business_location_id_fk)){
+         $w012 = " AND db_orders.business_location_id_fk=".$req->business_location_id_fk ;
+      }else{
+         // $w01 = "";
+         $w012 = " AND db_orders.business_location_id_fk=".\Auth::user()->business_location_id_fk;
+      }
+      if(!empty($req->branch_id_fk)){
+         $w022 = " AND db_orders.branch_id_fk=".$req->branch_id_fk ;
+      }else{
+         $w022 = "";
+      }
+
+      if(!empty($req->seller)){
+         $w032 = " AND db_orders.action_user=".$req->seller ;
+      }else{
+         $w032 = "";
+      }
+
+      if(!empty($req->status_search)){
+         $s = $req->status_search==1?"2":"1";
+         $w042 = " AND db_orders.status_sent_money=".$s."" ;
+      }else{
+         $w042 = "";
+      }
+
+      if(!empty($req->startDate) && !empty($req->endDate)){
+         $w052 = " AND date(db_orders.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+      }else{
+         $w052 = " AND date(db_orders.created_at)=CURDATE() ";
+      }
+
+      // วุฒิแก้ รวมข้อมูล groupby
+      $sTable2 = DB::select("
+      SELECT
+      db_orders.id,
+      db_orders.sent_money_daily_id_fk
+      FROM
+      db_orders
+      WHERE
+      db_orders.invoice_code!=''
+      $w012
+      $w022
+      $w032
+      $w042
+      $w052
+      AND sent_money_daily_id_fk != 0 
+    ");
+// dd($sTable2);
+      $arr_sent = "";
+      foreach($sTable2 as $key => $s2){
+         if($s2!=''){
+            if($key+1 == count($sTable2)){
+               $arr_sent .= $s2->sent_money_daily_id_fk;
+            }else{
+               $arr_sent .= $s2->sent_money_daily_id_fk.',';
+            }
+         }
+      }
+      if($arr_sent!=""){
+         $w_arr = "AND db_sent_money_daily.id IN ($arr_sent)";
+      }else{
+         $w_arr = "AND db_sent_money_daily.id IN (0)";
+      }
        
       if(!empty($req->business_location_id_fk)){
          $w01 = " HAVING business_location=".$req->business_location_id_fk;
@@ -366,19 +431,34 @@ class Check_money_dailyController extends Controller
       }else{
          $w04 = "";
       }
+
       $date_check = 0;
       if(!empty($req->startDate) && !empty($req->endDate)){
-         $w05 = " AND date(db_sent_money_daily.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+         // $w05 = " AND date(db_sent_money_daily.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
          $date_check = 1;
          $w05_order = " AND date(db_orders.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
-      }else{
-         $w05 = " AND date(db_sent_money_daily.created_at)=CURDATE() ";
+      }
+      else{
+         // $w05 = " AND date(db_sent_money_daily.created_at)=CURDATE() ";
          $w05_order = " AND date(db_orders.created_at)<=CURDATE() ";
       }
+      $w05 = "";
+
+      // if(!empty($req->startDate) && !empty($req->endDate)){
+      //    $w05 = " AND date(db_sent_money_daily.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+      //    $date_check = 1;
+      //    $w05_order = " AND date(db_orders.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+      // }else{
+      //    $w05 = " AND date(db_sent_money_daily.created_at)=CURDATE() ";
+      //    $w05_order = " AND date(db_orders.created_at)<=CURDATE() ";
+      // }
+
+     
+
          $has_id = 0;
       if(isset($req->id)){
         $sTable = DB::select("  SELECT db_sent_money_daily.*,remark as detail,1 as remark,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location FROM db_sent_money_daily WHERE  id=".$req->id." AND db_sent_money_daily.status_cancel=0 
-          ");
+         $w_arr ");
                $has_id = 1;
                $w05 = " ";
                $w05_order = " ";
@@ -416,6 +496,7 @@ class Check_money_dailyController extends Controller
          $w03
          $w04
          $w05
+         $w_arr
      ");
 
       }
@@ -1411,6 +1492,8 @@ class Check_money_dailyController extends Controller
       $w04
       $w05
 
+      AND cash_pay > 0
+
       GROUP BY DATE(db_orders.created_at) , db_orders.action_user
 
       UNION ALL 
@@ -1435,6 +1518,8 @@ class Check_money_dailyController extends Controller
       $w03
       $w04
       $w05
+
+      AND cash_pay > 0
 
     ");
 
@@ -1511,7 +1596,22 @@ class Check_money_dailyController extends Controller
          AND db_orders.action_user = ".$row->order_action_user."
          AND date(db_orders.created_at)='".$created_at."'
        ");
-
+//        $Text = "
+//        SELECT
+//        db_orders.id
+//        FROM
+//        db_orders
+//        WHERE
+//        db_orders.invoice_code!=''
+//        $w01
+//        $w02
+//        $w03
+//        $w04
+//        $w05
+//        AND db_orders.action_user = ".$row->order_action_user."
+//        AND date(db_orders.created_at)='".$created_at."'
+//      ";
+// dd($Text);
        $arr = "";
        foreach($data as $key=>$d){
          if($key+1 == count($data)){

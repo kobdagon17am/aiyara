@@ -287,20 +287,44 @@ class Po_approveController extends Controller
                 $admin_id = \Auth::user()->id;
                 $ai_cash = DB::table('db_add_ai_cash')->where('pay_with_other_bill_select',1)->where('pay_with_other_bill_code',$data_id->code_order)->get();
                 foreach($ai_cash as $ai){
-                    $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($ai->id, $admin_id, 'admin', $ai->note, $pay_type_id = '1');
-                    $sRow = \App\Models\Backend\Add_ai_cash::find($ai->id);
-                    $sRow->approve_status = 2;
-                    $sRow->order_type_id_fk = 7;
-                    $sRow->approver = \Auth::user()->id;
-                    $sRow->approve_date = now();
-                    $sRow->note = $ai->note;
-    
-                    if ($sRow->code_order == "") {
-                        $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
-                        DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
+
+                    if (@request('approved') != null) {
+
+                        $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($ai->id, $admin_id, 'admin', $ai->note, $pay_type_id = '1');
+                        $sRow = \App\Models\Backend\Add_ai_cash::find($ai->id);
+                        $sRow->approve_status = 2;
+                        $sRow->order_type_id_fk = 7;
+                        $sRow->approver = \Auth::user()->id;
+                        $sRow->approve_date = now();
+                        $sRow->note = $ai->note;
+        
+                        if ($sRow->code_order == "") {
+                            $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+                            DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
+                        }
+        
+                        $sRow->save();
                     }
-    
-                    $sRow->save();
+
+                    if (@request('no_approved') != null) {
+
+                        // $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($ai->id, $admin_id, 'admin', $ai->note, $pay_type_id = '1');
+                        $sRow = \App\Models\Backend\Add_ai_cash::find($ai->id);
+                        $sRow->approve_status = 6;
+                        $sRow->order_type_id_fk = 7;
+                        $sRow->approver = \Auth::user()->id;
+                        $sRow->approve_date = now();
+                        $sRow->note = $ai->note;
+        
+                        if ($sRow->code_order == "") {
+                            $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+                            DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
+                        }
+        
+                        $sRow->save();
+
+                    }
+
                 }
            
 

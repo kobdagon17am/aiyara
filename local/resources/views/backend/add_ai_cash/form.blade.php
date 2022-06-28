@@ -373,7 +373,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="cash_price" class="col-md-4 col-form-label">เลขที่ใบเสร็จ :</label>
+                                <label for="cash_price" class="col-md-4 col-form-label">เลขที่ใบเสร็จที่ชำพร้อมบิลอื่น :</label>
                                 <div class="col-md-8 ">
                                     @if (@$r_invoice_code)
                                         <select id="invoice_code" name="invoice_code"
