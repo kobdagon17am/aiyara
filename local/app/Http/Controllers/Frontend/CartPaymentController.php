@@ -38,7 +38,7 @@ class CartPaymentController extends Controller
         }
 
         $location = Location::location($business_location_id, $business_location_id);
-       
+
         $cartCollection = Cart::session($type)->getContent();
         $data = $cartCollection->toArray();
         $quantity = Cart::session($type)->getTotalQuantity();
@@ -162,7 +162,15 @@ class CartPaymentController extends Controller
             ->select('*')
             ->get();
 
-        return view('frontend/product/cart_payment', compact('check_giveaway', 'customer', 'address', 'address_card', 'location', 'provinces', 'bill'));
+            //จัดส่งพร้อมบิลอื่น
+            $orders = DB::table('db_orders')
+            ->select('*')
+            ->where('customers_id_fk', '=', $customer_id)
+            ->where('order_channel', '!=', 'VIP')
+            ->wherein('order_status_id_fk',['5','6','2'])
+            ->get();
+
+        return view('frontend/product/cart_payment', compact('check_giveaway', 'customer', 'address', 'address_card', 'location', 'provinces', 'bill','orders'));
     }
 
     public function cart_submit_course($type)
