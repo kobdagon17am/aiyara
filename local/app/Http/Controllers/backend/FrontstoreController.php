@@ -2944,9 +2944,16 @@ class FrontstoreController extends Controller
           $status_approve = '<label style="color:red;">ยกเลิกรายการ</label>';
         }
 
+          $approver = DB::table('ck_users_admin')->where('id',$r->approver)->first();
+          if($approver){
+            $approver = $approver->name;
+          }else{
+            $approver = "";
+          }
+
         $show .= '
                           <td class="text-center">' . @$r->sender . '</td>
-                          <td class="text-center">' . @$r->created_at . '</td>
+                          <td class="text-center">' . @$r->created_at . '<br> วันเวลาที่รับเงิน : '.@$r->approve_date.' <br> ผู้รับเงิน : '.$approver.' </td>
                           <td class="text-center">' . $status_approve . '</td>
                           <td class="text-center">' . @$r->remark . '</td>
                           <td class="text-center">';

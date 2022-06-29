@@ -1523,6 +1523,62 @@ class Check_money_dailyController extends Controller
 
     ");
 
+//     $text = "
+
+//     SELECT
+//     db_orders.*,
+//     db_orders.action_user AS order_action_user,
+//     DATE(db_orders.created_at) AS created_date,
+//     dataset_business_location.txt_desc AS business_location,
+//     branchs.b_name AS branch_name,
+//     ck_users_admin.`name` as action_user,
+//     '' as ttp,
+//     1 as remark 
+//     FROM
+//     db_orders
+//     Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
+//     Left Join branchs ON db_orders.branch_id_fk = branchs.id
+//     Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+//     WHERE
+//     db_orders.invoice_code!=''
+//     $w01
+//     $w02
+//     $w03
+//     $w04
+//     $w05
+
+//     AND cash_pay > 0
+
+//     GROUP BY DATE(db_orders.created_at) , db_orders.action_user
+
+//     UNION ALL 
+//     SELECT
+//     db_orders.*,
+//     db_orders.action_user AS order_action_user,
+//     DATE(db_orders.created_at) AS created_date,
+//     dataset_business_location.txt_desc AS business_location,
+//     branchs.b_name AS branch_name,
+//     ck_users_admin.`name` as action_user , 
+//     sum(cash_pay) as ttp,
+//     2 as remark 
+//     FROM
+//     db_orders
+//     Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
+//     Left Join branchs ON db_orders.branch_id_fk = branchs.id
+//     Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+//     WHERE
+//     db_orders.invoice_code!=''
+//     $w01
+//     $w02
+//     $w03
+//     $w04
+//     $w05
+
+//     AND cash_pay > 0
+
+//   ";
+//   dd($text);
+
    //  DATE(db_orders.created_at)=CURDATE() AND db_orders.invoice_code!=''
 
    //  sum(sum_price) as ttp,
@@ -1571,7 +1627,7 @@ class Check_money_dailyController extends Controller
       //       $w05
       //       $w_b
       //     ");
-
+      
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
