@@ -19,6 +19,19 @@ class CancelOrderController extends Controller
 
     $order_data  = Order::find($order_id);
 
+
+    $delivery = DB::table('db_delivery')
+    ->where('orders_id_fk','=',$order_id)
+    ->first();
+
+    if($delivery){
+      if($delivery->status_to_wh != 0){
+        $resule = ['status' => 'fail', 'message' => 'ไม่สามารถยกเลิกบิลได้เนื่องจากสินค้าเข้าสู่ขั้นตอนแพคสินค้าแล้ว'];
+        return $resule;
+      }
+    }
+
+
     if ($order_data->status_payment_sent_other == 1) {
       $customer_id = $order_data->customers_sent_id_fk;
     } else {
