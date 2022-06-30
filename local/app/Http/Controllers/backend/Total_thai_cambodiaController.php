@@ -369,7 +369,7 @@ class Total_thai_cambodiaController extends Controller
             return number_format($row->aicash_price, 2);
         })
 
-        ->addColumn('total_aicash', function ($row) {
+        ->addColumn('pv_total', function ($row) {
             return number_format($row->pv_total, 2);
         })
 
