@@ -116,28 +116,34 @@
                     },
 
                     {
-                        data: 'selling_price',
-                        title: '<center>ราคาขาย</center>',
+                        data: 'price_detail',
+                        title: '<center>รายละเอียดราคา</center>',
                         className: 'text-left'
                     },
 
-                    {
-                        data: 'member_price',
-                        title: '<center>ราคาสมาชิก</center>',
-                        className: 'text-left'
-                    },
+                    // {
+                    //     data: 'selling_price',
+                    //     title: '<center>ราคาขาย</center>',
+                    //     className: 'text-left'
+                    // },
 
-                    {
-                        data: 'pv',
-                        title: '<center>คะแนน</center>',
-                        className: 'text-left'
-                    },
+                    // {
+                    //     data: 'member_price',
+                    //     title: '<center>ราคาสมาชิก</center>',
+                    //     className: 'text-left'
+                    // },
 
-                    {
-                        data: 'txt_desc',
-                        title: '<center>ประเทศ</center>',
-                        className: 'text-left'
-                    },
+                    // {
+                    //     data: 'pv',
+                    //     title: '<center>คะแนน</center>',
+                    //     className: 'text-left'
+                    // },
+
+                    // {
+                    //     data: 'txt_desc',
+                    //     title: '<center>ประเทศ</center>',
+                    //     className: 'text-left'
+                    // },
                     {
                         data: 'status',
                         title: '<center>สถานะ</center>',
@@ -166,6 +172,7 @@
                             '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/' +
                             aData['id'] + '" class="btn btn-sm btn-danger cDelete" style="' + sD +
                             '" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                            // '<a href="{{url('')}}"></a>';
                         ).addClass('input');
 
                     }

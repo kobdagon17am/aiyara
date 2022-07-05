@@ -138,22 +138,25 @@ class ProductsController extends Controller
 
     public function destroy($id)
     {
-      // $sRow = \App\Models\Backend\Products::find($id);
-      // $sRowProducts_images = \App\Models\Backend\Products_images::where('product_id_fk',$id)->get();
-      // foreach ($sRowProducts_images as $key => $value) {
-      // 	  @UNLINK(@$value->img_url.@$value->product_img);
-      // }
-      // if( $sRowProducts_images ){
-      //   DB::select(" DELETE FROM products_images WHERE (product_id_fk='$id') ");
-      // }
-      // if( $sRow ){
-      	// DB::select(" DELETE FROM products_details WHERE (product_id_fk='$id') ");
-        // DB::select(" DELETE FROM products_cost WHERE (product_id_fk='$id') ");
-        // $sRow->forceDelete();
-      // }
-      //  DB::select(" UPDATE products SET `status`='2', deleted_at=now() WHERE (id='$id') ");
+      // dd('ok');
+      $sRow = \App\Models\Backend\Products::find($id);
+      $sRowProducts_images = \App\Models\Backend\Products_images::where('product_id_fk',$id)->get();
+      foreach ($sRowProducts_images as $key => $value) {
+      	  @UNLINK(@$value->img_url.@$value->product_img);
+      }
+      if( $sRowProducts_images ){
+        DB::select(" DELETE FROM products_images WHERE (product_id_fk='$id') ");
+      }
+      if( $sRow ){
+      	DB::select(" DELETE FROM products_details WHERE (product_id_fk='$id') ");
+        DB::select(" DELETE FROM products_cost WHERE (product_id_fk='$id') ");
+        // if($sRow->deleted_at!=''){
+        //   $sRow->forceDelete();
+        // }
+      }
+       DB::select(" UPDATE products SET `status`='2', deleted_at=now() WHERE (id='$id') ");
 
-      // return response()->json(\App\Models\Alert::Msg('success'));
+      return response()->json(\App\Models\Alert::Msg('success'));
       // return redirect()->to(url("backend/products"));
     }
 
@@ -179,9 +182,14 @@ class ProductsController extends Controller
       }
 
 
-      $sTable = DB::select("select products.*,products_cost.selling_price,products_cost.business_location_id,products_cost.member_price,products_cost.pv,dataset_business_location.txt_desc
-       from products  LEFT JOIN products_cost on products_cost.product_id_fk = products.id
-       LEFT JOIN dataset_business_location on dataset_business_location.id = products_cost.business_location_id where 1 $w01 $w02 $w03 order by updated_at desc ");
+      // $sTable = DB::select("select products.*,products_cost.selling_price,products_cost.business_location_id,products_cost.member_price,products_cost.pv,dataset_business_location.txt_desc
+      //  from products  LEFT JOIN products_cost on products_cost.product_id_fk = products.id
+      //  LEFT JOIN dataset_business_location on dataset_business_location.id = products_cost.business_location_id where 1 $w01 $w02 $w03 order by updated_at desc ");
+
+      $sTable = DB::select("select products.*
+      from products
+      where 1 $w01 $w02 $w03 order by updated_at desc ");
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('pname', function($row) {
@@ -195,6 +203,18 @@ class ProductsController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+
+      ->addColumn('price_detail', function($row) {
+        $p = "";
+        $products_costs = DB::table('products_cost')->select('business_location_id','selling_price','pv')->where('product_id_fk',$row->id)->get();
+        foreach($products_costs as $products_cost){
+          $dataset_business_location = DB::table('dataset_business_location')->select('txt_desc')->where('id',$products_cost->business_location_id)->first();
+          $p .= "(".$dataset_business_location->txt_desc.") ราคาขาย : ".$products_cost->selling_price."<br>";
+        }
+        return $p;
+      })
+     ->escapeColumns('price_detail')
+
       ->make(true);
     }
 
