@@ -94,11 +94,12 @@
                     method: 'POST',
                 },
 
-                columns: [{
-                        data: 'id',
-                        title: 'ID',
-                        className: 'text-center w50'
-                    },
+                columns: [
+                  // {
+                  //       data: 'id',
+                  //       title: 'ID',
+                  //       className: 'text-center w50'
+                  //   },
                     {
                         data: 'product_code',
                         title: '<center>Product Code</center>',

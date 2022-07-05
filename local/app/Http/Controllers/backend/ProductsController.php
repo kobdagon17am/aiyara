@@ -188,7 +188,7 @@ class ProductsController extends Controller
 
       $sTable = DB::select("select products.*
       from products
-      where 1 $w01 $w02 $w03 order by updated_at desc ");
+      where 1 $w01 $w02 $w03 order by product_code asc ");
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
