@@ -5215,6 +5215,8 @@ class AjaxController extends Controller
                 concat(url,'/',file) AS file_path,
                 customers.user_name,
 
+                customers.first_name as name_first,
+                customers.last_name as name_last,
                 customers.business_name,
                 customers.id_card,
                 customers.email,

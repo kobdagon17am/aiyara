@@ -39,7 +39,7 @@
             float: left;
             width: 50%;
             padding: 10px;
-            height: 200px; /* Should be removed. Only for demonstration */
+            /* height: 200px; Should be removed. Only for demonstration */
           }
 
           /* Clear floats after the columns */
@@ -1148,8 +1148,8 @@ $(function() {
 
                               $('#cus_name').html(value.cus_name);
                               // วุฒิเพิ่มมา
-                              $('#text_name_first').html(value.first_name);
-                              $('#text_name_last').html(value.cus_name);
+                              $('#text_name_first').html(value.name_first);
+                              $('#text_name_last').html(value.name_last);
                               $('#text_name_business').html(value.business_name);
                               $('#text_ID_card_number').html(value.id_card);
                               $('#text_email').html(value.email);

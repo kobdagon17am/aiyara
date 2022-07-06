@@ -288,7 +288,7 @@ $delivery = DB::select(
               db_delivery.orders_id_fk
               FROM
               db_delivery
-              WHERE 
+              WHERE
               db_delivery.id = " .
         @$data[0] .
         ' AND set_addr_send_this=1 ',
@@ -359,7 +359,7 @@ if (@$delivery[0]->status_pack == 1) {
             </tr>
 
             <?php
-            
+
             // // วุฒิเพิ่มมา เอาไว้ตรวจว่าสินค้าไหนจ่ายแล้วของบิลไหน
             // $db_pay_requisition_002_datas = DB::table('db_pay_requisition_002')
             //               ->where('pick_pack_requisition_code_id_fk',@$data[1])->get();
@@ -400,7 +400,7 @@ if (@$delivery[0]->status_pack == 1) {
             //                                     $pro = DB::table('promotions_products')->where('promotion_id_fk',$order_product2_data->promotion_id_fk)->first();
             //                                     $sum_want_amt+=($order_product2_data->amt*$pro->product_amt);
             //                                   }
-            
+
             //                                    $amt_get_data = 0;
             //                                    $amt_remain_data = 0;
             //                                   // จำนวนที่ต้องการหักจากที่ได้รับ
@@ -413,11 +413,11 @@ if (@$delivery[0]->status_pack == 1) {
             //                                      $amt_remain_data = $sum_want_amt - $product_amt_get;
             //                                      $product_amt_get = 0;
             //                                   }
-            
+
             //                                   //  if($data2->frontstore_id_fk==5){
-            
+
             //                                   //   dd($sum_want_amt);
-            
+
             //                                       DB::table('db_pay_requisition_002_item')->insert([
             //                                         'requisition_002_id' => $data_002->id,
             //                                         'order_id' => $data2->frontstore_id_fk,
@@ -429,47 +429,55 @@ if (@$delivery[0]->status_pack == 1) {
             //                                         'updated_at' => date('Y:m:d H:i:s'),
             //                                         'delete_status' => 1,
             //                                       ]);
-            
+
             //                                   //  }
-            
+
             //                             }
             //               }
-            
+
             // วุฒิเพิ่มมา
             $sTable = DB::select(
-                " 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            SELECT 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_pick_pack_packing.id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_pick_pack_packing.p_size,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_pick_pack_packing.p_weight,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_pick_pack_packing.p_amt_box,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_pick_pack_packing.packing_code as packing_code,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_delivery.id as db_delivery_id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_delivery.packing_code as db_delivery_packing_code
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            FROM `db_pick_pack_packing` 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            WHERE 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            db_pick_pack_packing.packing_code_id_fk =" .
+                "
+
+              SELECT
+              db_pick_pack_packing.id,
+              db_pick_pack_packing.p_size,
+              db_pick_pack_packing.p_weight,
+              db_pick_pack_packing.p_amt_box,
+              db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+              db_pick_pack_packing.packing_code as packing_code,
+              db_delivery.id as db_delivery_id,
+              db_delivery.packing_code as db_delivery_packing_code
+              FROM `db_pick_pack_packing`
+              LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+              WHERE
+              db_pick_pack_packing.packing_code_id_fk =" .
                     $data[1] .
-                    " 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            AND db_pick_pack_packing.delivery_id_fk = " .
+                    "
+              AND db_pick_pack_packing.delivery_id_fk = " .
                     $data[0] .
                     "
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            ORDER BY db_pick_pack_packing.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            ",
+              ORDER BY db_pick_pack_packing.id
+              ",
             );
-            
+
             foreach ($sTable as $key => $row) {
-                $pn = '<div class="divTable"><div class="divTableBody">';
-                $pn .= '<div class="divTableRow">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            ';
-            
+
+
+              $pn = '<tr>
+                    <td style="width:70%; "><b>รหัส : ชื่อสินค้า</b></td>
+                    <td style="width:15%; text-align:left;"><b>จำนวน</b></td>
+                    <td style="width:15%; text-align:left;"><b>หน่วย</b></td>
+                    </tr>';
+
+              //   $pn = '<div class="divTable"><div class="divTableBody">';
+              //   $pn .= '<div class="divTableRow">
+              // <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
+              // <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+              // <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+              // </div>
+              // ';
+
                 $sum_amt = 0;
                 $r_ch_t = '';
                 $fid_arr = explode(',', $receipt);
@@ -485,7 +493,7 @@ if (@$delivery[0]->status_pack == 1) {
                     ->whereIn('db_pay_requisition_002_item.order_id', $order_arr)
                     ->groupBy('product_id_fk')
                     ->get();
-            
+
                 if (@$Products) {
                     foreach ($Products as $key => $value) {
                         if (!empty($value->product_id_fk)) {
@@ -498,72 +506,88 @@ if (@$delivery[0]->status_pack == 1) {
                             //  }else{
                             //    $r_ch_t = '';
                             //  }
-            
+
                             //  วุฒิเพิ่มมา
                             $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
                                 ->where('product_id_fk', $value->product_id_fk)
                                 ->where('pick_pack_requisition_code_id_fk', $row->packing_code_id_fk)
                                 ->orderBy('time_pay', 'desc')
                                 ->first();
-            
+
                             $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
                                 ->where('product_id_fk', $value->product_id_fk)
                                 ->where('order_id', $value->order_id)
                                 ->where('requisition_002_id', @$db_pay_requisition_002->id)
                                 ->first();
-            
+
                             if ($db_pay_requisition_002_item->amt_remain > 0) {
                                 $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน ' . $db_pay_requisition_002_item->amt_remain . ' )</span>';
                             } else {
                                 $r_ch_t = '';
                             }
-            
+
                             $amt_get = DB::table('db_pay_requisition_002')
                                 ->join('db_pay_requisition_002_item', 'db_pay_requisition_002_item.requisition_002_id', 'db_pay_requisition_002.id')
                                 ->where('db_pay_requisition_002.pick_pack_requisition_code_id_fk', $data[1])
                                 ->whereIn('db_pay_requisition_002_item.order_id', $order_arr)
                                 ->where('db_pay_requisition_002_item.product_id_fk', $value->product_id_fk)
                                 ->sum('db_pay_requisition_002_item.amt_get');
-            
+
                             $sum_amt += $amt_get;
-                            $pn .=
-                                '<div class="divTableRow">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ' .
-                                @$value->product_name .
-                                '</b><br>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <font color=red>' .
-                                $r_ch_t .
-                                '</font>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="divTableCell" style="text-align:center;">' .
-                                @$amt_get .
-                                '</div> 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="divTableCell" style="text-align:center;">' .
-                                @$value->product_unit .
-                                '</div> 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ';
-                            $pn .= '</div>';
+                            // $pn .=
+                            //     '<div class="divTableRow">
+                            //                                                                                                                                                                                                                                                                                                                                                                                                                                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                            //                                                                                                                                                                                                                                                                                                                                                                                                                                     ' .
+                            //     @$value->product_name .
+                            //     '</b><br>
+                            //                                                                                                                                                                                                                                                                                                                                                                                                                                     <font color=red>' .
+                            //     $r_ch_t .
+                            //     '</font>
+                            //                                                                                                                                                                                                                                                                                                                                                                                                                                     </div>
+                            //                                                                                                                                                                                                                                                                                                                                                                                                                                     <div class="divTableCell" style="text-align:center;">' .
+                            //     @$amt_get .
+                            //     '</div>
+                            //                                                                                                                                                                                                                                                                                                                                                                                                                                     <div class="divTableCell" style="text-align:center;">' .
+                            //     @$value->product_unit .
+                            //     '</div>
+                            //                                                                                                                                                                                                                                                                                                                                                                                                                                     ';
+                            // $pn .= '</div>';
+
+                            $pn .="
+                                <tr>
+                                  <td>".@$value->product_name." <br> ".$r_ch_t."</td>
+                                  <td style='text-align:left;'>".@$amt_get."</td>
+                                  <td style='text-align:left;'>".@$value->product_unit."</td>
+                                  </tr>
+                              ";
                         }
                     }
-            
-                    $pn .=
-                        '<div class="divTableRow">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              <div class="divTableCell" style="text-align:center;font-weight:bold;">' .
-                        @$sum_amt .
-                        '</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              <div class="divTableCell" style="text-align:center;"> </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              ';
-            
-                    $pn .= '</div>';
+
+                    // $pn .=
+                    //     '<div class="divTableRow">
+                    //                                                                                                                                                                                                                                                                                                                                                                                                                                           <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+                    //                                                                                                                                                                                                                                                                                                                                                                                                                                           <div class="divTableCell" style="text-align:center;font-weight:bold;">' .
+                    //     @$sum_amt .
+                    //     '</div>
+                    //                                                                                                                                                                                                                                                                                                                                                                                                                                           <div class="divTableCell" style="text-align:center;"> </div>
+                    //                                                                                                                                                                                                                                                                                                                                                                                                                                           </div>
+                    //                                                                                                                                                                                                                                                                                                                                                                                                                                           ';
+
+                    // $pn .= '</div>';
+
+                    $pn .= "  <tr>
+                                  <td style='text-align:right;'><b>รวม</b></td>
+                                  <td style='text-align:left;'>". @$sum_amt."</td>
+                                  <td style='text-align:left;'></td>
+                                  </tr>";
+
                     echo $pn;
                     // }
                 }
             }
-            
+
             ?>
+            <br>
 
         </table>
     </div>
