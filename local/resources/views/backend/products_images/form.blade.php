@@ -42,7 +42,7 @@
                     <div class="myBorder">
 
                           <div class="form-group row">
-                              <label for="example-text-input" class="col-md-3 col-form-label">รูปสินค้า :</label>
+                              <label for="example-text-input" class="col-md-3 col-form-label">รูปสินค้า (ขนาด 500 * 500 px และไม่เกิน 2 MB) :</label>
                               <div class="col-md-6">
                                   <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" {{ (empty(@$sRow->product_img))?'required':'' }} >
                                   @IF(!empty(@$sRow->product_img))

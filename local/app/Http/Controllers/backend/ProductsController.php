@@ -140,6 +140,7 @@ class ProductsController extends Controller
     {
       // dd('ok');
       $sRow = \App\Models\Backend\Products::find($id);
+      // dd($sRow);
       $sRowProducts_images = \App\Models\Backend\Products_images::where('product_id_fk',$id)->get();
       foreach ($sRowProducts_images as $key => $value) {
       	  @UNLINK(@$value->img_url.@$value->product_img);
