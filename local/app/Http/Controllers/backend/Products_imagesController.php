@@ -55,9 +55,11 @@ class Products_imagesController extends Controller
 
           $request = app('request');
           if ($request->hasFile('image01')) {
+
               @UNLINK(@$sRow->img_url.@$sRow->image01);
               $this->validate($request, [
-                'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                // 'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:258465',
               ]);
               $image = $request->file('image01');
               $name = 'p1'.time() . '.' . $image->getClientOriginalExtension();
@@ -69,18 +71,17 @@ class Products_imagesController extends Controller
             }
 
             if(!empty(request('image_default'))){
-              
+
               if(request('image_default')==1){
-                DB::update(" 
+                DB::update("
                     UPDATE products_images SET image_default = 0  where product_id_fk=".request('product_id_fk')." ;
                 ");
               }
 
               $sRow->image_default    = request('image_default');
-              
+
             }
 
-                    
           $sRow->product_id_fk = request('product_id_fk');
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();

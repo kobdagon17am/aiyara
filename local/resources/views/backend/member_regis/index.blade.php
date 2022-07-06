@@ -440,12 +440,12 @@
               <div class="row">
                 <div class="column column_1 " style="background-color:#aaa;">
                   <h4 class="p_desc_1">(1) {{ __('message.file_types.1') }}</h4>
-                  <p> <img id="file_path1" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                  <p> <img id="file_path1" class="grow img-fluid" src="" width="80%" style="cursor: pointer;" > </p>
                   <h4 class="p_desc_11"></h4>
                 </div>
                 <div class="column column_2 " style="background-color:#bbb;">
                    <h4 class="p_desc_2">(2) {{ __('message.file_types.2') }}</h4>
-                   <p> <img id="file_path2" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                   <p> <img id="file_path2" class="grow img-fluid" src="" width="80%" style="cursor: pointer;" > </p>
                 </div>
               </div>
 
@@ -453,12 +453,12 @@
               <div class="row">
                 <div class="column column_3 " style="background-color:#bbb;color: black;">
                   <h4 class="p_desc_3">(3) {{ __('message.file_types.3') }}</h4>
-                  <p> <img id="file_path3" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                  <p> <img id="file_path3" class="grow img-fluid" src="" width="80%" style="cursor: pointer;" > </p>
                   <h4 class="p_desc_33"></h4>
                 </div>
                 <div class="column column_4 " style="background-color:#aaa;">
                    <h4 class="p_desc_4">(4) {{ __('message.file_types.4') }}</h4>
-                   <p> <img id="file_path4" class="grow" src="" width="80%" style="cursor: pointer;" > </p>
+                   <p> <img id="file_path4" class="grow img-fluid" src="" width="80%" style="cursor: pointer;" > </p>
                     <h4 class="p_desc_44"> </h4>
                 </div>
               </div>

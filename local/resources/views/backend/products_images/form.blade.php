@@ -28,7 +28,6 @@
     <div class="col-10">
         <div class="card">
             <div class="card-body">
-
               @if( empty($sRow) )
               <form action="{{ route('backend.products_images.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" name="product_id_fk" value="{{@$sRowNew->id}}" >
@@ -36,7 +35,7 @@
               <form action="{{ route('backend.products_images.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input type="hidden" name="product_id_fk" value="{{@$sRowNew->id}}" >
-                
+
               @endif
                 {{ csrf_field() }}
 
@@ -47,12 +46,12 @@
                               <div class="col-md-6">
                                   <input type="file" accept="image/*" id="image01" name="image01" class="form-control" OnChange="showPreview_01(this)" {{ (empty(@$sRow->product_img))?'required':'' }} >
                                   @IF(!empty(@$sRow->product_img))
-                                  <img id="imgAvatar_01" src="{{ $sRow->img_url }}{{ @$sRow->product_img }}" width="300px" > 
+                                  <img id="imgAvatar_01" src="{{ $sRow->img_url }}{{ @$sRow->product_img }}" width="300px" >
                                   @ELSE
-                                  <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="300px"> 
+                                  <img id="imgAvatar_01" src="{{ asset('local/public/images/example_img.png') }}" class="imgProfileNisit" width="300px">
                                   @ENDIF
 
-                              
+
                               </div>
                           </div>
 
