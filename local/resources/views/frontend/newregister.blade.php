@@ -353,7 +353,7 @@
                      <div class="col-sm-3">
                          <label> @lang('message.accountno')</label>
                          <input type="text" class="form-control" placeholder="@lang('message.accountno')" name="bank_no"
-                             value="{{ old('bank_no') }}" maxlength="10" minlength="10">
+                             value="{{ old('bank_no') }}" maxlength="9" minlength="10">
                      </div>
 
                      <div class="col-sm-3">

@@ -11,18 +11,21 @@ function sent_type(type, province_id_fk = '') {
         document.getElementById("check_user").style.display = "block";
         $("sent_address").css("display", "none")
         $("sent_address_card").css("display", "none");
+        $("#send_to").css("display", "none");
 
-    } else if (type == 'sent_type_bill') {
+    } else if (type == 'sent_another_bill') {
 
         $(".h_address").css("display", "none");
         // $("#btn_pay").css("display", "none");
         $("#check_user").css("display", "none");
         $("#bill_code").css("display", "block");
         check_shipping('', type);
+        $("#send_to").css("display", "block");
 
     } else {
-        $("#bill_code").css("display", "none");
+
         $(".h_address").css("display", "block");
+        $("#bill_code").css("display", "none");
         sent_address('sent_address', province_id_fk);
         document.getElementById("i_sent_address").classList.remove('radio-disable');
         document.getElementById("i_sent_address_card").classList.remove('radio-disable');

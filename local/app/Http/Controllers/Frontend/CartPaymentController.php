@@ -167,6 +167,8 @@ class CartPaymentController extends Controller
             ->select('*')
             ->where('customers_id_fk', '=', $customer_id)
             ->where('order_channel', '!=', 'VIP')
+            ->where('delivery_location','!=','4')
+            ->wheredate('created_at','=',date('y-m-d'))
             ->wherein('order_status_id_fk',['5','6','2'])
             ->get();
 
@@ -291,6 +293,13 @@ class CartPaymentController extends Controller
     public function payment_address(Request $rs)
     {
 
+
+      if($rs->sent_type_to_customer == 'sent_another_bill'){//ส่งพร้อมบิลอื่น
+        $shipping =0;
+      }else{
+        $shipping = $rs->shipping;
+      }
+
         DB::BeginTransaction();
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
@@ -329,18 +338,18 @@ class CartPaymentController extends Controller
                 $data_gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
                 $gv_customer = $data_gv->sum_gv;
                 $gv =$gv_customer;
-                $gv_total = $gv_customer - ($rs->price + $rs->shipping);
+                $gv_total = $gv_customer - ($rs->price + $shipping);
 
                 if ($gv_total < 0) {
-                    $price_remove_gv = abs($gv_customer - ($rs->price + $rs->shipping));
+                    $price_remove_gv = abs($gv_customer - ($rs->price + $shipping));
                     $gv_price = $gv_customer;
                 } else {
                     $price_remove_gv = 0;
-                    $gv_price = $rs->price + $rs->shipping;
+                    $gv_price = $rs->price + $shipping;
                 }
 
 
-                $price_total = $rs->price + $rs->shipping;
+                $price_total = $rs->price + $shipping;
                 $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($price_total, $customer_id, $code_order,$gv_price);
 
                 if ($rs_log_gift['status'] == 'fail') {
@@ -646,6 +655,27 @@ class CartPaymentController extends Controller
         } else {
             return redirect('product-history')->withError('Payment submit Fail');
         }
+    }
+
+    public function get_billl(Request $request){
+
+
+      $order_data = DB::table('db_orders')
+      ->select('db_orders.*','dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
+      ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'db_orders.province_id_fk')
+      ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'db_orders.amphures_id_fk')
+      ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'db_orders.district_id_fk')
+      ->where('db_orders.code_order', '=', $request->select_bill_code)
+      ->first();
+
+      if($order_data){
+        $resule = ['status' => 'success', 'message' => 'success' ,'data'=>$order_data];
+        return $resule;
+      }else{
+        $resule = ['status' => 'fail', 'message' => 'ไม่มีข้อมูลบิล'];
+        return $resule;
+      }
+
     }
 
 }

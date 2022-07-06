@@ -109,6 +109,7 @@ Route::post('check_pass_aicash','Frontend\EditPasswordAicashController@check_pas
 
 
 Route::post('payment_submit','Frontend\CartPaymentController@payment_submit')->name('payment_submit');
+Route::post('get_billl','Frontend\CartPaymentController@get_billl')->name('get_billl');
 Route::post('payment_address','Frontend\CartPaymentController@payment_address')->name('payment_address');
 
 //------------------------------end-------------------------------//

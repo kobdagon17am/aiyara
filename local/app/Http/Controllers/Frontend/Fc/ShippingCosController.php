@@ -26,13 +26,12 @@ class ShippingCosController extends Controller
   		->first();
 
 
-    }elseif($request->type_sent == 'sent_type_bill'){
+    }elseif($request->type_sent == 'sent_another_bill'){
   		$data = DB::table('dataset_shipping_cost')
   		->where('business_location_id_fk','=',$request->location_id)
   		->where('shipping_type_id','=',6)
   		->first();
 
-      dd();
 
     }elseif($request->price >= $shipping_type_id_1->purchase_amt){
   		//0
@@ -128,7 +127,7 @@ class ShippingCosController extends Controller
   		->where('shipping_type_id','=',5)
   		->first();
 
-    }elseif($type_sent == 'sent_type_bill'){
+    }elseif($type_sent == 'sent_another_bill'){
   		$data = DB::table('dataset_shipping_cost')
   		->where('business_location_id_fk','=',$location_id)
   		->where('shipping_type_id','=',6)

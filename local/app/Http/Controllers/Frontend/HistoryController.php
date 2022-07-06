@@ -719,14 +719,12 @@ class HistoryController extends Controller
       );
 
       $data = KsherController::gateway_ksher($gateway_pay_data);
-
       //targetUrl
           if($data['status'] == 'success'){
             return redirect($data['url']);
           }else{
             return redirect('product-history')->withError('Payment Fail');
           }
-
     }
 
     public static function get_detail_order_aicash(Request $rs){
