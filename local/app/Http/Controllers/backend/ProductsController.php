@@ -161,6 +161,31 @@ class ProductsController extends Controller
       // return redirect()->to(url("backend/products"));
     }
 
+    public function products_delete(Request $r)
+    {
+      // dd($r->all());
+      $sRow = \App\Models\Backend\Products::find($r->id);
+      // dd($sRow);
+      $sRowProducts_images = \App\Models\Backend\Products_images::where('product_id_fk',$r->id)->get();
+      foreach ($sRowProducts_images as $key => $value) {
+      	  @UNLINK(@$value->img_url.@$value->product_img);
+      }
+      if( $sRowProducts_images ){
+        DB::select(" DELETE FROM products_images WHERE (product_id_fk='$r->id') ");
+      }
+      if( $sRow ){
+      	DB::select(" DELETE FROM products_details WHERE (product_id_fk='$r->id') ");
+        DB::select(" DELETE FROM products_cost WHERE (product_id_fk='$r->id') ");
+        // if($sRow->deleted_at!=''){
+        //   $sRow->forceDelete();
+        // }
+      }
+       DB::select(" UPDATE products SET `status`='2', deleted_at=now() WHERE (id='$r->id') ");
+
+      return response()->json(\App\Models\Alert::Msg('success'));
+      // return redirect()->to(url("backend/products"));
+    }
+
     public function Datatable(Request $req){
       // $sTable = \App\Models\Backend\Products::search()->orderBy('id', 'asc');
       // $sTable = DB::table("products")->orderBy('id', 'asc')->get();

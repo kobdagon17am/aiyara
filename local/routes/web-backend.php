@@ -31,6 +31,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('products', 'ProductsController');
     Route::post('products/datatable', 'ProductsController@Datatable')->name('products.datatable');
+    Route::post('products_delete', 'ProductsController@products_delete');
 
     Route::resource('package', 'PackageController');
     Route::post('package/datatable', 'PackageController@Datatable')->name('package.datatable');
@@ -359,7 +360,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxDelFileSlip_04', 'AjaxController@ajaxDelFileSlip_04');
     Route::post('ajaxApproveFileSlip_04', 'AjaxController@ajaxApproveFileSlip_04');
     Route::post('ajaxChangeFileSlip_04', 'AjaxController@ajaxChangeFileSlip_04');
-    
+
     Route::post('ajaxDelFileSlipGiftVoucher', 'AjaxController@ajaxDelFileSlipGiftVoucher');
     Route::post('ajaxClearCostFrontstore', 'AjaxController@ajaxClearCostFrontstore');
     Route::post('ajaxClearPayTypeFrontstore', 'AjaxController@ajaxClearPayTypeFrontstore');
@@ -452,7 +453,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pick_warehouse_scan_save', 'Pick_warehouseController@pick_warehouse_scan_save');
     Route::post('pick_warehouse_save_new_bill', 'Pick_warehouseController@pick_warehouse_save_new_bill');
     Route::get('pick_warehouse_del_packing/{p_id}', 'Pick_warehouseController@pick_warehouse_del_packing');
-    
+
 
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
     // หน้าแรก

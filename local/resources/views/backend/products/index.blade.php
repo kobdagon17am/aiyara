@@ -170,9 +170,13 @@
                             '<a href="{{ route('backend.products.index') }}/' + aData['id'] +
                             '/edit" class="btn btn-sm btn-primary" style="' + sU +
                             '" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ' +
-                            '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/' +
-                            aData['id'] + '" class="btn btn-sm btn-danger cDelete" style="' + sD +
+                            // '<a href="javascript: void(0);" data-url="{{ route('backend.products.index') }}/' +
+                            // aData['id'] + '" class="btn btn-sm btn-danger cDelete" style="' + sD +
+                            // '" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
+                            '<a href="javascript: void(0);" data-url="{{ url('backend/products_delete') }}" delete_id="'+aData['id']+'" class="btn btn-sm btn-danger cDelete2" style="' + sD +
                             '" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+
                             // '<a href="{{url('')}}"></a>';
                         ).addClass('input');
 
@@ -202,6 +206,45 @@
 
     <script>
         $(document).ready(function() {
+
+          $(document).on('click','.cDelete2',function () {
+        if( $(this).data('url') !== undefined && $(this).data('url')!='' ){
+          var delete_id = $(this).attr('delete_id');
+          if(confirm('Are you sure?') == true){
+            toastr['info']('กำลังเริ่มทำรายการ');
+            $.ajax({
+              url: $(this).data('url'),
+              // type: 'DELETE',
+              // dataType: "JSON",
+              method: 'POST',
+              data: {
+                        _token: '{{ csrf_token() }}',
+                        id: delete_id,
+                    },
+              success: function(result) {
+                // toastr[result.status.toLowerCase()](result.msg);
+                // if( result.mode=='reload' ){
+                //   setTimeout(function () {
+                //     location.reload(true);
+                //   },3000);
+                // }
+                // if( result.mode=='dataTable' || result.mode == undefined ){
+                //   oTable.draw();
+                // }
+                // if( result.mode=='href' ){
+                //   window.location.href = result.href;
+                // }
+                location.reload(true);
+              }
+            });
+
+          }else{
+            toastr['info']('ยกเลิกการทำรายการ');
+          }
+        }else{
+          toastr['warning']('ไม่พบที่อยู่ปลายทาง');
+        }
+      });
 
             $(document).on('change', '.myLike', function(event) {
                 event.preventDefault();
