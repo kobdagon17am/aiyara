@@ -339,6 +339,10 @@ class AipocketController extends Controller
   {
 
     $user_name = Auth::guard('c_user')->user()->user_name;
+    $kyc = \App\Helpers\Frontend::check_kyc($request->user_name);
+    if($kyc['status'] == 'fail'){
+      return $kyc;
+    }
     $resule = LineModel::check_line_backend($user_name, $request->user_name);
     if ($resule['status'] == 'success') {
 

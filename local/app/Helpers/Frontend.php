@@ -72,6 +72,18 @@ class Frontend{
 
 
   public static function check_kyc($user_customer){
+
+    $c =  DB::table('customers')
+		->where('user_name','=',$user_customer)
+		->first();
+
+    if(empty($c)){
+      $rs = ['status'=>'fail','message'=> 'ไม่พบรหัส "'.$user_customer .'" ในระบบกรุณาตรวจสอบรหัสอีกครั้ง'];
+      return $rs;
+    }
+
+
+
 		$customer =  DB::table('customers')
 		->select('*')
 		->where('user_name','=',$user_customer)
@@ -95,7 +107,7 @@ class Frontend{
        <p><strong>Warning!</strong> <code>'.__('message.not_verified').'</code>  <a href="'.route('docs').'" class="pcoded-badge label label-warning ">'.__('message.Check').'</a></p>
       </div>';
 
-    $rs = ['status'=>'fail','message'=>'คุณไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
+    $rs = ['status'=>'fail','message'=>$user_customer.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
     'html'=>$html];
     }
     return $rs;

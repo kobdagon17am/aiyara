@@ -178,7 +178,7 @@ class Register extends Model
        try {
           DB::BeginTransaction();
   //ฟรีแอคทีม 2 เดือนปฏิทินหลังจากกการสมัคร
-          $strtime = strtotime(date('Y-m-t'));
+          $strtime = strtotime(date('Y-m'));
           $caltime=strtotime("+2 Month",$strtime);
           $two_month = date("Y-m-1", $caltime);
 

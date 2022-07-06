@@ -436,6 +436,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
         function check() {
             //var url = '{{ route('cart_delete') }}';
             var username = $('#username').val();
+            // alert(username);
             $.ajax({
                     url: '{{ route('check_customer_id') }}',
                     type: 'POST',
@@ -446,10 +447,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                 })
                 .done(function(data) {
 
-                    console.log(data['data']['data']);
+
                     if (data['status'] == 'success') {
                         document.getElementById("text_username").innerHTML = data['data']['data']['business_name'] +
-                            ' (' + data['data']['data']['user_name'] + ')';
+                            ' (' + data['user_name'] + ')';
 
                         document.getElementById("name").innerHTML = data[
                             'data']['data']['first_name'] + ' ' + data['data']['data']['last_name'];
@@ -459,18 +460,18 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                         document.getElementById("qualification_name").innerHTML = data['data']['data']['qualification_name'] ;
 
-                        document.getElementById("pv_mt_active").innerHTML = data['pv_mt_active'];
-                        document.getElementById("pv_tv_active").innerHTML = data['pv_tv_active'];
+                        document.getElementById("pv_mt_active").innerHTML = data['data']['data']['pv_mt_active'];
+                        document.getElementById("pv_tv_active").innerHTML = data['data']['data']['pv_tv_active'];
 
-                        console.log(data);
+
 
                         $("#large-Modal").modal();
                         //alert(data['status']);
 
                     } else {
-                        console.log(data);
+
                         Swal.fire({
-                            title: data['data']['message'],
+                            title: data['message'],
                             // text: "You won't be able to revert this!",
                             icon: 'warning',
                             showConfirmButton: false,
