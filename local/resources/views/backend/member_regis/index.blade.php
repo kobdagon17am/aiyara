@@ -413,7 +413,7 @@
 
 
 <div class="modal fade" id="checkRegis" tabindex="-1" role="dialog" aria-labelledby="checkRegisTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1000px !important;">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 1000px !important;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="checkRegisTitle"><b><i class="bx bx-play"></i>{{ __('message.register_checked_list') }} </b></h5>
@@ -466,6 +466,158 @@
 
                 <br>
 
+                {{-- วุฒิเพิ่มมา --}}
+
+                <h4>ข้อมูลทั่วไป</h4>
+                <div class="row" >
+                  <div class="col-md-4" >
+                  <div class="form-group row">
+                    <label for="comment" class="col-form-label"> {{ __('message.name_first') }} : <span id="text_name_first"></span> </label>
+                  </div>
+                </div>
+                <div class="col-md-4" >
+                  <div class="form-group row">
+                    <label for="comment" class="col-form-label"> {{ __('message.name_last') }} : <span id="text_name_last"></span></label>
+                  </div>
+                </div>
+                <div class="col-md-4" >
+                  <div class="form-group row">
+                    <label for="comment" class="col-form-label"> {{ __('message.name_business') }} : <span id="text_name_business"></span></label>
+                  </div>
+                </div>
+            </div>
+              <br>
+              <div class="row" >
+                <div class="col-md-4" >
+                <div class="form-group row">
+                  <label for="comment" class="col-form-label"> {{ __('message.ID_card_number') }} : <span id="text_ID_card_number"></span> </label>
+                </div>
+              </div>
+              <div class="col-md-4" >
+                <div class="form-group row">
+                  <label for="comment" class="col-form-label"> {{ __('message.email') }} : <span id="text_email"></span></label>
+                </div>
+              </div>
+              <div class="col-md-4" >
+                <div class="form-group row">
+                  <label for="comment" class="col-form-label"> {{ __('message.upline') }} : <span id="text_upline"></span></label>
+                </div>
+              </div>
+          </div>
+            <br>
+            <div class="row" >
+              <div class="col-md-4" >
+              <div class="form-group row">
+                <label for="comment" class="col-form-label"> {{ __('message.Referral_UserName') }} : <span id="text_Referral_UserName"></span> </label>
+              </div>
+            </div>
+        </div>
+          <br>
+          <hr>
+          <h4>ที่อยู่ตามบัตรประชาชน</h4>
+          <div class="row" >
+            <div class="col-md-4" >
+            <div class="form-group row">
+              <label for="comment" class="col-form-label"> {{ __('message.no') }} : <span id="text_no"></span> </label>
+            </div>
+          </div>
+          <div class="col-md-4" >
+            <div class="form-group row">
+              <label for="comment" class="col-form-label"> {{ __('message.building') }} : <span id="text_building"></span></label>
+            </div>
+          </div>
+          <div class="col-md-4" >
+            <div class="form-group row">
+              <label for="comment" class="col-form-label"> {{ __('message.villageno') }} : <span id="text_villageno"></span></label>
+            </div>
+          </div>
+      </div>
+      <br>
+      <div class="row" >
+        <div class="col-md-4" >
+        <div class="form-group row">
+          <label for="comment" class="col-form-label"> {{ __('message.lane') }} : <span id="text_lane"></span> </label>
+        </div>
+      </div>
+      <div class="col-md-4" >
+        <div class="form-group row">
+          <label for="comment" class="col-form-label"> {{ __('message.road') }} : <span id="text_road"></span></label>
+        </div>
+      </div>
+      <div class="col-md-4" >
+        <div class="form-group row">
+          <label for="comment" class="col-form-label"> {{ __('message.province') }} : <span id="text_province"></span></label>
+        </div>
+      </div>
+  </div>
+  <br>
+  <div class="row" >
+    <div class="col-md-4" >
+    <div class="form-group row">
+      <label for="comment" class="col-form-label"> {{ __('message.district/area') }} : <span id="text_district_area"></span> </label>
+    </div>
+  </div>
+  <div class="col-md-4" >
+    <div class="form-group row">
+      <label for="comment" class="col-form-label"> {{ __('message.sub-district/sub-area') }} : <span id="text_sub-district_sub-area"></span></label>
+    </div>
+  </div>
+  <div class="col-md-4" >
+    <div class="form-group row">
+      <label for="comment" class="col-form-label"> {{ __('message.zipcode') }} : <span id="text_zipcode"></span></label>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row" >
+  <div class="col-md-4" >
+  <div class="form-group row">
+    <label for="comment" class="col-form-label"> {{ __('message.Mobile_Phone') }} : <span id="text_Mobile_Phone"></span> </label>
+  </div>
+</div>
+<div class="col-md-4" >
+  <div class="form-group row">
+    <label for="comment" class="col-form-label"> {{ __('message.Home_Phone') }} : <span id="text_Home_Phone"></span></label>
+  </div>
+</div>
+</div>
+<br>
+<hr>
+<h4>ข้อมูลธนาคาร</h4>
+<div class="row" >
+  <div class="col-md-4" >
+  <div class="form-group row">
+    <label for="comment" class="col-form-label"> {{ __('message.accountname') }} : <span id="text_accountname"></span> </label>
+  </div>
+</div>
+<div class="col-md-4" >
+  <div class="form-group row">
+    <label for="comment" class="col-form-label"> {{ __('message.accountno') }} : <span id="text_accountno"></span></label>
+  </div>
+</div>
+<div class="col-md-4" >
+  <div class="form-group row">
+    <label for="comment" class="col-form-label"> {{ __('message.bankingaccount') }} : <span id="text_bankingaccount"></span></label>
+  </div>
+</div>
+</div>
+<br>
+<div class="row" >
+  <div class="col-md-4" >
+  <div class="form-group row">
+    <label for="comment" class="col-form-label"> {{ __('message.branch') }} : <span id="text_branch"></span> </label>
+  </div>
+</div>
+<div class="col-md-4" >
+  <div class="form-group row">
+    <label for="comment" class="col-form-label"> {{ __('message.ประเภทบัญชี') }} : <span id="text_ประเภทบัญชี"></span></label>
+  </div>
+</div>
+</div>
+<br>
+{{--  --}}
+    <hr>
+                <h4>ยืนยันข้อมูล</h4>
               <div class="row" >
                       <div class="col-md-12" >
                       <div class="form-group row">
@@ -995,6 +1147,35 @@ $(function() {
                               // console.log(value.status);
 
                               $('#cus_name').html(value.cus_name);
+                              // วุฒิเพิ่มมา
+                              $('#text_name_first').html(value.first_name);
+                              $('#text_name_last').html(value.cus_name);
+                              $('#text_name_business').html(value.business_name);
+                              $('#text_ID_card_number').html(value.id_card);
+                              $('#text_email').html(value.email);
+                              $('#text_upline').html(value.upline_id);
+                              $('#text_Referral_UserName').html(value.introduce_name);
+
+                              $('#text_no').html(value.card_house_no);
+                              $('#text_building').html(value.card_house_name);
+                              $('#text_villageno').html(value.card_moo);
+                              $('#text_lane').html(value.card_soi);
+                              $('#text_road').html(value.card_road);
+                              $('#text_province').html(value.card_province_id_fk);
+                              $('#text_province').html(value.pro_name);
+                              $('#text_district_area').html(value.amp_name);
+                              $('#text_sub-district_sub-area').html(value.dis_name);
+                              $('#text_zipcode').html(value.card_zipcode);
+                              $('#text_Mobile_Phone').html(value.tel);
+                              $('#text_Home_Phone').html(value.tel_home);
+
+                              $('#text_accountname').html(value.bank_account);
+                              $('#text_accountno').html(value.bank_no);
+                              $('#text_bankingaccount').html(value.bank_name);
+                              $('#text_branch').html(value.bank_branch);
+                              $('#text_ประเภทบัญชี').html(value.bank_type);
+
+                              //
 
                                var strArray = value.file.split(".");
                                 // console.log(strArray[1]);

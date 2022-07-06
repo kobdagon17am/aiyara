@@ -305,7 +305,7 @@ class AjaxController extends Controller
     public function total_thai_cambodia_pdf(Request $rs)
     {
         $report_type = $rs->report_type;
-     
+
         if ($rs->startDate) {
             $date = str_replace('/', '-', $rs->startDate);
             $s_date = date('Y-m-d', strtotime($date));
@@ -315,7 +315,7 @@ class AjaxController extends Controller
             $startDate = '';
             $startDate2 = '';
         }
-        
+
         if ($rs->endDate) {
             $date = str_replace('/', '-', $rs->endDate);
             $e_date = date('Y-m-d', strtotime($date));
@@ -328,7 +328,7 @@ class AjaxController extends Controller
 
         if ($rs->action_user) {
                       $action_user = " AND db_orders.action_user = $rs->action_user ";
-           
+
         } else {
             $action_user = '';
         }
@@ -348,7 +348,7 @@ class AjaxController extends Controller
         'action_user' => $action_user,
         'business_location_id_fk' => $business_location_id_fk,
        ])->setPaper('a4', 'landscape');
-       
+
     //    return $pdf->download('day_total.pdf'); // โหลดทันที
        return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
 
@@ -357,7 +357,7 @@ class AjaxController extends Controller
    public function commission_transfer_pdf(Request $rs)
    {
        $report_type = $rs->report_type;
-    
+
        if ($rs->startDate) {
         $date = str_replace('/','-',$rs->startDate);
         $s_date = date('Y-m-d', strtotime($date));
@@ -396,7 +396,7 @@ class AjaxController extends Controller
             DB::raw('SUM(db_report_bonus_transfer.tax) AS tax'),
             DB::raw('SUM(db_report_bonus_transfer.fee) AS fee'),
             DB::raw('SUM(db_report_bonus_transfer.price_transfer_total) AS price_transfer_total'),
-        
+
         'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
         ->leftjoin('customers', 'db_report_bonus_transfer.customer_username', '=', 'customers.user_name')
         ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer.business_location_id_fk')
@@ -409,7 +409,7 @@ class AjaxController extends Controller
         ->groupBy(DB::raw("date_format(db_report_bonus_transfer.bonus_transfer_date, '%M')"))
         ->get();
       }
-     
+
 
 
        $pdf = PDF::loadView('backend.commission_transfer.print_day_total',[
@@ -418,7 +418,7 @@ class AjaxController extends Controller
        'startDate2' => $s_date,
        'endDate2' => $e_date,
       ])->setPaper('a4', 'landscape');
-      
+
    //    return $pdf->download('day_total.pdf'); // โหลดทันที
       return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
 
@@ -427,7 +427,7 @@ class AjaxController extends Controller
   public function commission_aistockist_pdf(Request $rs)
   {
       $report_type = $rs->report_type;
-   
+
       if ($rs->startDate) {
        $date = str_replace('/','-',$rs->startDate);
        $s_date = date('Y-m-d', strtotime($date));
@@ -466,7 +466,7 @@ class AjaxController extends Controller
            DB::raw('SUM(db_report_bonus_transfer_aistockist.tax) AS tax'),
            DB::raw('SUM(db_report_bonus_transfer_aistockist.fee) AS fee'),
            DB::raw('SUM(db_report_bonus_transfer_aistockist.price_transfer_total) AS price_transfer_total'),
-       
+
        'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
        ->leftjoin('customers', 'db_report_bonus_transfer_aistockist.customer_username', '=', 'customers.user_name')
        ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer_aistockist.business_location_id_fk')
@@ -479,7 +479,7 @@ class AjaxController extends Controller
        ->groupBy(DB::raw("date_format(db_report_bonus_transfer_aistockist.bonus_transfer_date, '%M')"))
        ->get();
      }
-    
+
 
 
       $pdf = PDF::loadView('backend.commission_transfer.print_day_total',[
@@ -488,7 +488,7 @@ class AjaxController extends Controller
       'startDate2' => $s_date,
       'endDate2' => $e_date,
      ])->setPaper('a4', 'landscape');
-     
+
   //    return $pdf->download('day_total.pdf'); // โหลดทันที
      return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
 
@@ -497,7 +497,7 @@ class AjaxController extends Controller
  public function commission_transfer_af_pdf(Request $rs)
   {
       $report_type = $rs->report_type;
-   
+
       if ($rs->startDate) {
        $date = str_replace('/','-',$rs->startDate);
        $s_date = date('Y-m-d', strtotime($date));
@@ -536,7 +536,7 @@ class AjaxController extends Controller
            DB::raw('SUM(db_report_bonus_transfer_af.tax) AS tax'),
            DB::raw('SUM(db_report_bonus_transfer_af.fee) AS fee'),
            DB::raw('SUM(db_report_bonus_transfer_af.price_transfer_total) AS price_transfer_total'),
-       
+
        'customers.user_name', 'customers.prefix_name', 'customers.first_name', 'customers.last_name','dataset_business_location.txt_desc as location')
        ->leftjoin('customers', 'db_report_bonus_transfer_af.customer_username', '=', 'customers.user_name')
        ->leftjoin('dataset_business_location', 'dataset_business_location.id', '=', 'db_report_bonus_transfer_af.business_location_id_fk')
@@ -549,7 +549,7 @@ class AjaxController extends Controller
        ->groupBy(DB::raw("date_format(db_report_bonus_transfer_af.bonus_transfer_date, '%M')"))
        ->get();
      }
-    
+
 
 
       $pdf = PDF::loadView('backend.commission_transfer.print_day_total',[
@@ -558,7 +558,7 @@ class AjaxController extends Controller
       'startDate2' => $s_date,
       'endDate2' => $e_date,
      ])->setPaper('a4', 'landscape');
-     
+
   //    return $pdf->download('day_total.pdf'); // โหลดทันที
      return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
 
@@ -961,7 +961,7 @@ class AjaxController extends Controller
                 $query = DB::select(" select *,name_th as amphur_name from dataset_amphures where province_id=".$request->province_id." order by name_th ");
             // }
 
-         
+
 
           return response()->json($query);
         }
@@ -987,7 +987,7 @@ class AjaxController extends Controller
                 $query = DB::select(" select *,name_th as tambon_name from dataset_districts where amphure_id=".$request->amphur_id." order by name_th ");
             // }
 
-     
+
 
           return response()->json($query);
         }
@@ -1256,7 +1256,7 @@ class AjaxController extends Controller
         }else{
             $province_id = 0 ;
         }
-     
+
         if(!empty($request->shipping_special)){
 
             // return $province_id;
@@ -1383,7 +1383,7 @@ class AjaxController extends Controller
         }
 
         }else{
- 
+
             DB::select(" UPDATE db_orders SET shipping_special=0  WHERE id=$frontstore_id ");
 
             // return $province_id;
@@ -1393,7 +1393,7 @@ class AjaxController extends Controller
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
 
             if($sum_price>=$shipping[0]->purchase_amt){
-             
+
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
                 return 0 ;
             }else{
@@ -1437,7 +1437,7 @@ class AjaxController extends Controller
                             }
 
                         }
-              
+
 
                 }
 
@@ -4685,7 +4685,7 @@ class AjaxController extends Controller
         // วุฒิแก้ไข ให้เอาเฉพาะบิลเงินสด
         //  AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.credit_price>0 or db_add_ai_cash.transfer_price>0)  ");
 
-    
+
 
           // return $r0;
           $id = 0;
@@ -5168,10 +5168,10 @@ class AjaxController extends Controller
       if($request->ajax()){
 
            $r1 = DB::select("  SELECT db_transfer_branch_get_products.*,product_amt-product_amt_receive-defective as remain FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk='".$request->transfer_branch_get_id_fk."' AND product_id_fk='".$request->product_id_fk."' ");
-      
+
            if($r1){
                 if($r1[0]->remain > 0){
-                  
+
                     if($request->amt_get > $r1[0]->remain){
                         return 1;
                     }else{
@@ -5214,6 +5214,31 @@ class AjaxController extends Controller
                 register_files.deleted_at,
                 concat(url,'/',file) AS file_path,
                 customers.user_name,
+
+                customers.business_name,
+                customers.id_card,
+                customers.email,
+                customers.upline_id,
+                (SELECT CONCAT(introduce.first_name, ' ', introduce.last_name) FROM customers as introduce
+            WHERE introduce.user_name = customers.introduce_id) as introduce_name,
+
+            customers_address_card.card_house_no,
+            customers_address_card.card_house_name,
+            customers_address_card.card_moo,
+            customers_address_card.card_soi,
+            customers_address_card.card_road,
+            customers_address_card.card_province_id_fk,
+            customers_address_card.card_zipcode,
+            customers_address_card.tel,
+            customers_address_card.tel_home,
+            dataset_provinces.name_th as pro_name,
+            dataset_amphures.name_th as amp_name,
+            dataset_districts.name_th as dis_name,
+
+            customers_detail.bank_account,
+            customers_detail.bank_branch,
+            customers_detail.bank_type,
+
                 concat(
                 customers.user_name,' : ',
                 customers.prefix_name,
@@ -5226,6 +5251,12 @@ class AjaxController extends Controller
                 register_files
                 LEFT Join customers ON register_files.customer_id = customers.id
                 Left Join customers_detail ON register_files.customer_id = customers_detail.customer_id
+
+                Left Join customers_address_card ON register_files.customer_id = customers_address_card.customer_id
+                Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+
                 where register_files.id= '".$request->id."'
              ");
 
