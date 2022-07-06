@@ -97,8 +97,8 @@
                                                  <div class="radio radio-inline">
                                                   <label>
                                                       <input type="radio" name="sent_type_to_customer"
-                                                          value="sent_type_bill" id="sent_type_bill"
-                                                          onclick="sent_type('sent_type_bill')">
+                                                          value="sent_another_bill" id="sent_another_bill"
+                                                          onclick="sent_type('sent_another_bill')">
                                                       <i class="helper"></i><b>จัดส่งพร้อมบิลอื่น</b>
                                                   </label>
                                               </div>
@@ -182,7 +182,7 @@
                                                   <div class="card">
                                                       <div class="card-block" style="padding: 10px;">
                                                           <h6>จัดส่งพร้อมบิลอื่น</h6>
-                                                            <select class="form-control col-sm-12" id="select_bill_code" name="bill_code" >
+                                                            <select class="form-control col-sm-12" id="select_bill_code"  name="bill_code" onchange="select_bill()" >
                                                                 <option value=""> Select </option>
                                                                 @foreach($orders as $value_order)
                                                                 <option value="{{$value_order->code_order}}"> {{$value_order->code_order}} </option>
@@ -705,6 +705,82 @@
                                      </div>
 
 
+                                     <div id="send_to" style="display: none;">
+                                      <input type="hidden" name="receive" value="sent_another_bill">
+                                      <div class="row m-t-5">
+                                          <div class="col-md-6 col-sm-6 col-6">
+                                              <label>ชื่อผู้รับ</label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="ชื่อผู้รับ" id="send_to_name" value="" disabled>
+                                          </div>
+                                          <div class="col-md-6 col-sm-6 col-6">
+                                              <label>เบอร์โทรศัพท์</label>
+                                              <input type="text" class="form-control form-control-bold us_telephone" data-mask="999-999-9999" id="send_to_tel_mobile" value="" disabled>
+                                          </div>
+                                      </div>
+                                      <div class="row m-t-5">
+                                        <div class="col-md-6 col-sm-6 col-6">
+                                          <label>เบอร์โทรศัพท์บ้าน</label>
+                                          <input type="text" class="form-control form-control-bold us_telephone" data-mask="999-999-9999" id="send_to_tel_home" value="" disabled>
+                                      </div>
+                                          <div class="col-md-6 col-sm-6 col-6">
+                                              <label>Email </label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="Email" id="send_to_email" value="" disabled>
+                                          </div>
+
+                                      </div>
+
+                                      <div class="row m-t-5">
+                                          <div class="col-md-3 col-sm-4 col-4">
+                                              <label>บ้านเลขที่</label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="บ้านเลขที่" id="send_to_house_no" value="" disabled>
+                                          </div>
+                                          <div class="col-md-5 col-sm-8 col-8">
+                                              <label>หมู่บ้าน/อาคาร</label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="หมู่บ้าน/อาคาร" id="send_to_house_name" value="" disabled>
+                                          </div>
+                                          <div class="col-md-3 col-sm-12 col-12">
+                                              <label>หมู่ที่</label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="หมู่ที่" id="send_to_moo" value="" disabled>
+                                          </div>
+
+                                      </div>
+                                      <div class="row m-t-5">
+                                          <div class="col-sm-4">
+                                              <label>ถนน</label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="ถนน" id="send_to_road" value="" disabled>
+                                          </div>
+
+                                          <div class="col-sm-4">
+                                              <label>ตรอก/ซอย </label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="ตรอก/ซอย" id="send_to_soi" value="" disabled>
+                                          </div>
+
+                                          <div class="col-sm-4">
+                                              <label>จังหวัด</label>
+                                              <input type="text" id="send_to_provinces_address" class="form-control form-control-bold" placeholder="จังหวัด" value="" disabled>
+
+                                          </div>
+
+                                          <div class="col-sm-4">
+                                              <label>เขต/อำเภอ <b class="text-danger">*</b></label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="เขต/อำเภอ" value="" disabled>
+                                              <input type="hidden" id="send_to_amphures" value="">
+                                          </div>
+                                          <div class="col-sm-4">
+                                              <label>แขวง/ตำบล <b class="text-danger">*</b> </label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="แขวง/ตำบล" value="" disabled>
+                                              <input type="hidden" id="send_to_district" value="">
+                                          </div>
+
+                                          <div class="col-sm-4">
+                                              <label>รหัสไปษณีย์ <b class="text-danger">*</b></label>
+                                              <input type="text" class="form-control form-control-bold" placeholder="รหัสไปษณีย์" id="send_to_zipcode" value="" disabled>
+                                          </div>
+                                      </div>
+
+                                  </div>
+
+
                                  </div>
                              </div>
 
@@ -1113,7 +1189,7 @@
               $('#price_total').val(price_total);
               document.getElementById('shipping').textContent = 0;
 
-              if(type_sent == 'sent_type_bill'){
+              if(type_sent == 'sent_another_bill'){
                 $('#shipping_detail').html('<label class="label label-inverse-warning">จัดส่งพร้อมบิลอื่น</label>');
               }
 
@@ -1188,13 +1264,15 @@
              if (type_sent == 'sent_address') {
 
                  check_shipping(provinces_id);
+
                  document.getElementById("sent_address").style.display = 'block';
                  document.getElementById("sent_address_card").style.display = 'none';
                  document.getElementById("sent_address_other").style.display = 'none';
                  document.getElementById("sent_office").style.display = 'none';
                  $('.sent_address_other').prop('required', false);
+                 $("#bill_code").css("display", "block");
                  //  document.getElementById("html_shipping_premium").style.display = 'block';
-                 document.getElementById("sent_address_check").checked = true;
+
 
                  if (provinces_id) {
 
@@ -1211,6 +1289,7 @@
              } else if (type_sent == 'sent_address_card') {
 
                  check_shipping(provinces_id);
+
                  document.getElementById("sent_address").style.display = 'none';
                  document.getElementById("sent_address_card").style.display = 'block';
                  document.getElementById("sent_address_other").style.display = 'none';
@@ -1391,9 +1470,9 @@
              var check_sent_other = document.getElementById("sent_other").checked;
              var check_office_check = document.getElementById("sent_office_check").checked;
              var sent_type_other = document.getElementById("sent_type_other").checked; //จัดส่งให้คนอื่น
-             var sent_type_bill = document.getElementById("sent_type_bill").checked; //จัดส่งพร้อมบิลอื่น
+             var sent_another_bill = document.getElementById("sent_another_bill").checked; //จัดส่งพร้อมบิลอื่น
 
-             if (sent_type_bill == true) {
+             if (sent_another_bill == true) {
               var select_bill_code = $('#select_bill_code').val();
 
               if(select_bill_code == ''){
@@ -1403,12 +1482,6 @@
                      })
                 return;
               }
-
-              Swal.fire({
-                         icon: 'error',
-                         title: 'ยังไม่สมบูรณ์ ( Dev Demo Test )',
-                     })
-                return;
 
               document.getElementById("payment_address").submit();
 
@@ -1550,6 +1623,68 @@
                  document.getElementById("payment_address").submit();
              }
          }
+
+
+
+  function select_bill() {
+    var select_bill_code = $("#select_bill_code").val();
+    if(select_bill_code){
+        $.ajax({
+            url: '{{ route('get_billl') }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                'select_bill_code': select_bill_code
+            }
+        })
+        .done(function(data) {
+          //  console.log(data['data']);
+            if (data['status'] == 'success') {
+            $("#send_to_name").val(data['data']['name']);
+            $("#send_to_tel_mobile").val(data['data']['tel']);
+            $("#send_to_tel_home").val(data['data']['tel_home']);
+            $("#send_to_email").val(data['data']['email']);
+            $("#send_to_house_no").val(data['data']['house_no']);
+            $("#send_to_house_name").val(data['data']['house_name']);
+            $("#send_to_moo").val(data['data']['moo']);
+            $("#send_to_road").val(data['data']['road']);
+            $("#send_to_provinces_address").val(data['data']['provinces_name']);
+            $("#send_to_amphures").val(data['data']['amphures_name']);
+            $("#send_to_soi").val(data['data']['soi']);
+            $("#send_to_district").val(data['data']['district_name']);
+            $("#send_to_zipcode").val(data['data']['zipcode']);
+
+            } else {
+                // console.log(data);
+                Swal.fire({
+                    icon: 'error',
+                    text: 'ไม่พบข้อมูลบิลนี้ในระบบ กรุณาติดต่อเจ้าหน้าที่',
+                })
+            }
+        })
+        .fail(function() {
+            console.log("error");
+        })
+
+    }else{
+          $("#send_to_name").val('');
+          $("#send_to_tel_mobile").val('');
+          $("#send_to_tel_home").val('');
+          $("#send_to_email").val('');
+          $("#send_to_house_no").val('');
+          $("#send_to_house_name").val('');
+          $("#send_to_moo").val('');
+          $("#send_to_road").val('');
+          $("#send_to_provinces_address").val('');
+          $("#send_to_amphures").val('');
+          $("#send_to_soi").val('');
+          $("#send_to_district").val('');
+          $("#send_to_zipcode").val('');
+    }
+
+
+
+}
      </script>
      <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
      <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
