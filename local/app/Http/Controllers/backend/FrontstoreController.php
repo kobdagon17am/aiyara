@@ -367,6 +367,16 @@ class FrontstoreController extends Controller
   public function store(Request $request)
   {
 
+    $customers = DB::table('customers')->select('user_name')->where('id',@$request->customers_id_fk)->first();
+    if($customers){
+     $result = \App\Helpers\Frontend::check_kyc($customers->user_name);
+     if($result['status']=='fail'){
+      return redirect()->back()->with('error',$customers->user_name.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน');
+     }
+    }
+
+    $sRow = \App\Models\Backend\Frontstore::find($request->id);
+
     if (!empty($request->upload_file)) {
 
       $sRow = \App\Models\Backend\Frontstore::find($request->id);
@@ -390,7 +400,9 @@ class FrontstoreController extends Controller
 
       return redirect()->to(url("backend/frontstore/" . $request->id . "/edit"));
     } else {
+
       return $this->form();
+
     }
   }
 
@@ -677,7 +689,7 @@ class FrontstoreController extends Controller
     // $data_gv = \App\Helpers\Frontend::get_gitfvoucher("A101987");
     // $gv = \App\Helpers\Frontend::get_gitfvoucher("A436875");
     // $gv = \App\Helpers\Frontend::get_gitfvoucher("A548815"); CusAddrFrontstore
-    $gv = @$data_gv->sum_gv; 
+    $gv = @$data_gv->sum_gv;
     // $gitfvoucher = @$gv!=null?$gv:0; sProvince
     // $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
     $customer_pv = DB::table('customers')
@@ -3040,9 +3052,9 @@ class FrontstoreController extends Controller
     '.$p.'
     </tbody>
     </table>
-    
+
     ';
-   
+
 
 
 
@@ -3814,7 +3826,7 @@ $endDate1
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
-           
+
                 $action_user_011
                 $startDate
                 $endDate

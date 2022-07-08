@@ -1230,7 +1230,7 @@
                                                             </tr>
 
                                                             <?php
-                                                            
+
                                                             @$addr = DB::select(
                                                                 "select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
                                                                     dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
@@ -2059,7 +2059,7 @@
                                                                                     data-id="{{ @$slip->id }}"
                                                                                     class="btn btn-danger btn-sm font-size-10 btnDelSlip ch_Disabled "
                                                                                     style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
-                                                                                
+
                                                                                 <input {{ @$disAfterSave }} type="text"
                                                                                     class="form-control ch_Disabled "
                                                                                     name="note_bill[]" placeholder=""
@@ -2154,11 +2154,11 @@
 
                     ?>
 
-                                                                
+
 
                                                                         <input type="hidden" id="pay_type_transfer_slip"
                                                                             name="pay_type_transfer_slip" value="1">
-                                                                        
+
                                                                         @if (!empty(@$PaymentSlip))
 
                                                                             <button type="button"
@@ -2386,7 +2386,7 @@
                                         <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
                                         <input name="product_plus" type="hidden" value="1">
                                         <input name="branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
-                                        
+
                                         {{ csrf_field() }}
                                         <table id="data-table-products-list" class="table table-bordered "
                                             style="width: 100%;">
@@ -2852,6 +2852,11 @@
 
 @section('script')
 
+@if(session('error'))
+    <script>
+      alert('<?php echo session('error'); ?>');
+    </script>
+@endif
 
     <script type="text/javascript">
         var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
@@ -3009,7 +3014,7 @@
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
-                
+
                 if(status==2){
                     $('.lock_input_row').show();
                 $('#lock_input').prop("disabled", false);
@@ -5575,8 +5580,8 @@
                 var data_name = 'pay_with_other_bill_note';
                 account_bank_id_cal(data_name,id,order_id);
             });
-            
- 
+
+
         });
 
 
@@ -6576,7 +6581,7 @@
                                 $('.class_btnSave').removeAttr("disabled");
                                 $('.class_btnSave').show();
                             }
-                            else 
+                            else
                               // 14 Gift Voucher + Ai-Cash
                             if(pay_type_id_fk == 14){
                                 $("#aicash_price").val('');
@@ -6589,7 +6594,7 @@
                                 $('.class_btnSave').removeAttr(
                                      "disabled");
                                 $('.class_btnSave').show();
-                           
+
                                 $(".show_div_aicash_price").show();
                                 $('#member_id_aicash_select').attr('required', true);
 
