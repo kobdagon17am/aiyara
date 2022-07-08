@@ -453,7 +453,7 @@
                                                         <label>เลขที่บัญชี</label>
                                                         <input type="text" class="form-control"
                                                             placeholder="เลขที่บัญชี" name="bank_no"
-                                                            value="{{ old('bank_no') }}" maxlength="9" minlength="10">
+                                                            value="{{ old('bank_no') }}" maxlength="10" minlength="9">
                                                     </div>
 
                                                     <div class="col-sm-3">

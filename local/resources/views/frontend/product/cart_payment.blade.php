@@ -706,7 +706,7 @@
 
 
                                      <div id="send_to" style="display: none;">
-                                      <input type="hidden" name="receive" value="sent_another_bill">
+
                                       <div class="row m-t-5">
                                           <div class="col-md-6 col-sm-6 col-6">
                                               <label>ชื่อผู้รับ</label>
@@ -1399,10 +1399,11 @@
 
                      } else {
 
-                         //console.log(data);
+                         console.log(data['message']);
+                         $("#username").val('');
                          Swal.fire({
                              icon: 'error',
-                             text: 'ไม่มีรหัสของลูกทีมที่ท่านเลือก กรุณาเช็คข้อมูลก่อนทำการชำระเงิน',
+                             text: data['message'],
                          })
                      }
                  })
@@ -1454,6 +1455,8 @@
                      } else {
 
                          //console.log(data);
+
+                         $("#username_aistockist").val('');
                          Swal.fire({
                              icon: 'error',
                              text: data['data']['message'],

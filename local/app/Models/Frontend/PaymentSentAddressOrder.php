@@ -35,6 +35,11 @@ class PaymentSentAddressOrder extends Model
         $insert_db_orders->aistockist = $rs->aistockist_id_fk;
       }
 
+      if ($rs->sent_type_to_customer == 'sent_another_bill') {
+        $rs->receive = 'sent_another_bill';
+      }
+
+
       if ($rs->type == '5') { //โอนชำระแบบกิฟวอยเชอ
         $insert_db_orders->gift_voucher_cost = $gv;
         $insert_db_orders->gift_voucher_price = $rs->gift_voucher_price;
@@ -250,6 +255,7 @@ class PaymentSentAddressOrder extends Model
         $insert_db_orders->name = $order_sent_another_bill->name;
 
       } else {
+
 
         $resule = ['status' => 'fail', 'message' => 'Orderstatus Not Type'];
 

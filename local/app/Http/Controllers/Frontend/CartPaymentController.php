@@ -294,6 +294,7 @@ class CartPaymentController extends Controller
     {
 
 
+
       if($rs->sent_type_to_customer == 'sent_another_bill'){//ส่งพร้อมบิลอื่น
         $shipping =0;
       }else{
