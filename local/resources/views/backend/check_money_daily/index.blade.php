@@ -11,7 +11,7 @@
 .divTable{
     display: table;
     width: 100%;
-    
+
   }
   .divTableRow {
     display: table-row;
@@ -55,7 +55,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
     $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -84,7 +84,7 @@
                   <div class="col-11">
                   <div class="row">
                     <div class="col-12 d-flex ">
-                      
+
                       <div class="col-md-2 ">
                         <div class="form-group row">
                           <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " >
@@ -103,7 +103,7 @@
                         <div class="form-group row">
                           <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating " >
                             <option value="">สาขา</option>
-                          
+
                           </select>
                         </div>
                       </div>
@@ -122,7 +122,7 @@
                         </div>
                       </div>
 
-               
+
                       <div class="col-md-2">
                         <div class="form-group row">
                           <select id="status_search" name="status_search" class="form-control select2-templating " >
@@ -162,7 +162,7 @@
                     </table> --}}
                   </div>
 
-          
+
                   <div class="myBorder">
                     <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย </span>
                     <table id="data-table-0002" class="table table-bordered " style="width: 84%;">
@@ -257,7 +257,7 @@
 
                 }
             });
-       
+
         });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
@@ -295,7 +295,7 @@
 
                 }
             });
-       
+
         });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
@@ -329,7 +329,7 @@
                     {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ', className: 'text-right'},
                     {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ', className: 'text-right'},
                     {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน</span> ', className: 'text-right'},
-                  
+
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
@@ -345,7 +345,7 @@
 
                 }
             });
-       
+
         });
 
         $.fn.dataTable.ext.errMode = 'throw';
@@ -371,7 +371,7 @@
                     {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
                     {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
                     {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
-                  
+
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
@@ -387,12 +387,12 @@
 
                 }
             });
-       
+
         });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
 
-var sU = "{{@$sU}}"; 
+var sU = "{{@$sU}}";
 var sD = "{{@$sD}}";
 var oTable;
 $(function() {
@@ -452,7 +452,7 @@ $(function() {
               }
             }},
             // {data: 'action_date', title :'<center>วันที่ดำเนินการ </center>', className: 'text-center'},
-            {data: 'id', title :'Tools', className: 'text-center w60'}, 
+            {data: 'id', title :'Tools', className: 'text-center w60'},
         ],
         "columnDefs": [
             {
@@ -469,7 +469,7 @@ $(function() {
 
           if(sU!=''&&sD!=''){
               $('td:last-child', nRow).html('-');
-          }else{ 
+          }else{
 
               $('td:last-child', nRow).html('-');
 
@@ -516,7 +516,7 @@ $(function() {
 
          $('#startDate').change(function(event) {
            $('#endDate').val($(this).val());
-         });        
+         });
 
 
 
@@ -529,9 +529,9 @@ $(function() {
                var t = $(this).siblings('.arr_inv').val();
                var tt = t.split(",").join("\r\n");
                $('.invoice_list').html(tt);
-               $('#modalOne').modal('show');
+              //  $('#modalOne').modal('show');
             });
-                
+
      });
     </script>
 
@@ -545,14 +545,14 @@ $(function() {
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                     $(".myloading").hide();
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
@@ -570,7 +570,7 @@ $(function() {
             $('#branch_id_fk').html(layout);
             $(".myloading").hide();
            }
- 
+
       });
     </script>
 
@@ -621,7 +621,7 @@ $(function() {
                     console.log(status_search);
                     console.log(startDate);
                     console.log(endDate);
-                    
+
 
                     $(".myloading").show();
 
@@ -672,10 +672,10 @@ $(function() {
                                         $(".myloading").hide();
                                     }
                                 });
-                           
+
                             });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
- 
+
                           // var txtSearch = $("input[name='txtSearch']").val();
                           $.fn.dataTable.ext.errMode = 'throw';
                           var oTable0002;
@@ -711,7 +711,7 @@ $(function() {
                     {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ', className: 'text-right'},
                     {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ', className: 'text-right'},
                     {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน</span> ', className: 'text-right'},
-                  
+
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
@@ -727,7 +727,7 @@ $(function() {
 
                               }
                               });
-                         
+
                           });
 
                           $.fn.dataTable.ext.errMode = 'throw';
@@ -761,7 +761,7 @@ $(function() {
                     {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
                     {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
                     {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
-                  
+
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
@@ -777,7 +777,7 @@ $(function() {
 
                         }
                               });
-                         
+
                           });
 
                   // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@

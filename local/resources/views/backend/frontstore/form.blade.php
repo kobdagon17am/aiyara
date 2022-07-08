@@ -2851,12 +2851,14 @@
 @endsection
 
 @section('script')
-
-@if(session('error'))
-    <script>
-      alert('<?php echo session('error'); ?>');
-    </script>
+<script>
+$(document).ready(function(){
+  @if(session('error'))
+  // confirm("<?php echo session('error'); ?>");
+  alert('<?php echo session('error'); ?>');
 @endif
+});
+</script>
 
     <script type="text/javascript">
         var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
