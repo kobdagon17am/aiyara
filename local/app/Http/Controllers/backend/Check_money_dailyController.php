@@ -474,11 +474,13 @@ class Check_money_dailyController extends Controller
 
          $has_id = 0;
       if(isset($req->id)){
-        $sTable = DB::select("  SELECT db_sent_money_daily.*,remark as detail,1 as remark,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location FROM db_sent_money_daily WHERE  id=".$req->id." AND db_sent_money_daily.status_cancel=0
-         $w_arr ");
+
+        $sTable = DB::select("  SELECT db_sent_money_daily.*,remark as detail,1 as remark,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location FROM db_sent_money_daily WHERE  id=".$req->id." AND db_sent_money_daily.status_cancel=0 ");
                $has_id = 1;
                $w05 = " ";
                $w05_order = " ";
+               $w052 = " ";
+               $w_arr= " ";
       }else{
 
          // วุฒิแก้ เอา union ออก
@@ -531,6 +533,8 @@ class Check_money_dailyController extends Controller
 */
 
       $sQuery = \DataTables::of($sTable);
+
+
       return $sQuery
       ->addColumn('column_001', function($row) {
 
