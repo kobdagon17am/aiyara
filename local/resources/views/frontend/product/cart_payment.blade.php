@@ -1186,7 +1186,7 @@
              if ( provinces_id == '') {
               var price_total_view = numberWithCommas(price);
               $('.price_total').html(price_total_view);
-              $('#price_total').val(price_total);
+              $('#price_total').val(price);
               document.getElementById('shipping').textContent = 0;
 
               if(type_sent == 'sent_another_bill'){
@@ -1270,7 +1270,7 @@
                  document.getElementById("sent_address_other").style.display = 'none';
                  document.getElementById("sent_office").style.display = 'none';
                  $('.sent_address_other').prop('required', false);
-                 $("#bill_code").css("display", "block");
+                 $("#bill_code").css("display", "none");
                  //  document.getElementById("html_shipping_premium").style.display = 'block';
 
 

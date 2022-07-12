@@ -293,8 +293,6 @@ class CartPaymentController extends Controller
     public function payment_address(Request $rs)
     {
 
-
-
       if($rs->sent_type_to_customer == 'sent_another_bill'){//ส่งพร้อมบิลอื่น
         $shipping =0;
       }else{
@@ -351,6 +349,8 @@ class CartPaymentController extends Controller
 
 
                 $price_total = $rs->price + $shipping;
+
+
                 $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($price_total, $customer_id, $code_order,$gv_price);
 
                 if ($rs_log_gift['status'] == 'fail') {

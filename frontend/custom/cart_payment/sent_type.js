@@ -25,8 +25,9 @@ function sent_type(type, province_id_fk = '') {
     } else {
 
         $(".h_address").css("display", "block");
-        $("#bill_code").css("display", "none");
+
         sent_address('sent_address', province_id_fk);
+        $("#bill_code").css("display", "none");
         document.getElementById("i_sent_address").classList.remove('radio-disable');
         document.getElementById("i_sent_address_card").classList.remove('radio-disable');
         document.getElementById("sent_address_check").disabled = false;
