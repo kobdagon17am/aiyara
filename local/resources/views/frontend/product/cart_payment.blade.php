@@ -1189,11 +1189,11 @@
               $('#price_total').val(price);
               document.getElementById('shipping').textContent = 0;
 
+
               if(type_sent == 'sent_another_bill'){
                 $('#shipping_detail').html('<label class="label label-inverse-warning">จัดส่งพร้อมบิลอื่น</label>');
               }
 
-                 return '';
              }
 
 
@@ -1232,6 +1232,7 @@
                      var shipping_cost = data['shipping_cost'];
                      var price_total = data['price_total'];
 
+                    //  console.log(data);
                      if (type == 5) {
                          var price_total_type5 = numberWithCommas(data['price_total_type5']);
                          $('.price_total_type5').html(price_total_type5);
