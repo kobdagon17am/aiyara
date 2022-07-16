@@ -370,10 +370,10 @@ class FrontstoreController extends Controller
     $customers = DB::table('customers')->select('user_name')->where('id',@$request->customers_id_fk)->first();
     if($customers){
      $result = \App\Helpers\Frontend::check_kyc($customers->user_name);
-    //  if($result['status']=='fail'){
+    if($result['status']=='fail'){
       return redirect()->back()->with('error',$customers->user_name.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน');
-    //  }
     }
+  }
 
     $sRow = \App\Models\Backend\Frontstore::find($request->id);
 
