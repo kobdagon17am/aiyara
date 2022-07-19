@@ -4,10 +4,10 @@ function sent_type(type, province_id_fk = '') {
         $(".h_address").css("display", "block");
         $("#bill_code").css("display", "none");
         sent_address('sent_other');
-        document.getElementById("i_sent_address").classList.add('radio-disable');
-        document.getElementById("i_sent_address_card").classList.add('radio-disable');
-        document.getElementById("sent_address_check").disabled = true;
-        document.getElementById("sent_address_card_check").disabled = true;
+        // document.getElementById("i_sent_address").classList.add('radio-disable');
+        // document.getElementById("i_sent_address_card").classList.add('radio-disable');
+        // document.getElementById("sent_address_check").disabled = true;
+        // document.getElementById("sent_address_card_check").disabled = true;
         document.getElementById("check_user").style.display = "block";
         $("sent_address").css("display", "none")
         $("sent_address_card").css("display", "none");

@@ -89,7 +89,7 @@ class CancelOrderController extends Controller
 
         if(count($order_first) <= 1){
           $customer_user->date_order_first = '0000-00-00 00:00:00';
-          $customer_user->mt_active = '0000-00-00 00:00:00';
+          $customer_user->pv_mt_active = '0000-00-00 00:00:00';
           $customer_user->status_pv_mt == 'not';
           $customer_user->date_mt_first == null;
         }
@@ -208,6 +208,9 @@ class CancelOrderController extends Controller
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 4) { //เติม Aistockis
+
+
+
             $add_pv_aistockist = $customer_user->pv_aistockist - $pv_total;
 
             // $update_pv = DB::table('customers')
@@ -240,22 +243,19 @@ class CancelOrderController extends Controller
             $update_ai_stockist->banlance = $add_pv_aistockist;
             $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
 
-            if ($order_data->pv_total >= 10000) {
-              $cancel_status_aistockist = DB::table('db_orders')
-                ->where('customers_id_fk', '=',  $customer_user->id)
-                ->where('purchase_type_id_fk', '=', 4)
-                ->where('pv_total', '>=', 10000)
-                ->wherein('approve_status', [2, 4, 9])
-                ->where('id', '!=', $order_id)
+              //check การยกเลิก Aistockis
+              if($pv_total>=10000 and $customer_user->aistockist_status == 1){
+                $check_aistockis_status = DB::table('db_orders')
+                ->where('purchase_type_id_fk','=',$type_id)
+                ->where('customers_id_fk','=',$customer_user->id)
+                ->whereIn('db_orders.approve_status',[2,4,9])
+                ->where('pv_total','>=',10000)
                 ->count();
-
-              //dd($cancel_status_aistockist);
-
-              if ($cancel_status_aistockist == 0) {
-                $customer_user->aistockist_status = 0;
-                $customer_user->aistockist_date = null;
+                if($check_aistockis_status == 1){
+                  $customer_user->aistockist_status = 0;
+                  $customer_user->aistockist_date = null;
+                }
               }
-            }
 
             $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 5) {
@@ -518,7 +518,6 @@ class CancelOrderController extends Controller
           $update_ai_stockist->save();
         }
 
-
         $update_products_lis = DB::table('db_order_products_list')
           ->where('frontstore_id_fk', $order_id)
           ->update([
@@ -532,7 +531,7 @@ class CancelOrderController extends Controller
             'approve_status' => 2,
             'approve_date' => date('Y-m-d H:i:s'),
           ]);
-
+          $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($customer_order->user_name);
         $order_data->save();
         $customer_user->save();
 

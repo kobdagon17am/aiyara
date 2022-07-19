@@ -9,9 +9,14 @@
         <div class="card-block">
             <div class="card-header">
 
-                <div class="card-header-right">
-                    <a href="{{ route('export_pdf_history', ['code_order' => $order->code_order]) }}" target="_new"><span
-                            class="text-rimary"><i class="fa fa-file-pdf-o"> PDF</i></span></a>
+                <div class="card-header-right p-2">
+
+
+                   <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg"  >
+                    <a href="{{route('product-history')}}"  class="btn btn-primary btn-mini waves-effect waves-light"><i class="fa fa-reply" style="color:#fff"></i>กลับ </a>
+                    <a href="{{ route('export_pdf_history', ['code_order' => $order->code_order]) }}" target="_new" class="btn btn-primary btn-mini waves-effect waves-light"><i class="fa fa-file-pdf-o" style="color:#fff"> PDF</i></a>
+                </div>
+
 
                 </div>
             </div>
