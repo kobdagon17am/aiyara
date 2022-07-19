@@ -27,7 +27,6 @@ class RunNumberPayment extends Model
       ->where('code_order', '!=', '')
       ->orderby('id', 'desc')
       ->first();
-
     // dd($id);
 
     if (@$id->code_order) {
@@ -60,13 +59,14 @@ class RunNumberPayment extends Model
       $data = ['status'=>'fail','code_order'=>$last_code];
 
     } else {
+      $last_code = $code_order;
+      $code = substr($last_code, -5);
+      $last_code = $code + 2;
       $data = ['status'=>'success','code_order'=>$code_order];
 
     }
     return $data;
   }
-
-
 
   public static function run_number_aicash($business_location_id_fk)
   {
@@ -94,7 +94,6 @@ class RunNumberPayment extends Model
       $rs = RunNumberPayment::check_number_aicash($code_order);
     }while ($rs['status']=='fail');
 
-
     return  $rs['code_order'];
   }
 
@@ -109,6 +108,9 @@ class RunNumberPayment extends Model
       $data = ['status'=>'fail','code_order'=>$last_code];
 
     } else {
+      $last_code = $code_order;
+      $code = substr($last_code, -5);
+      $last_code = $code + 2;
       $data = ['status'=>'success','code_order'=>$code_order];
 
     }

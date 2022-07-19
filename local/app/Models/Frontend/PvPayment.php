@@ -733,8 +733,6 @@ class PvPayment extends Model
     public static function PvPayment_type_confirme_vip($order_id, $admin_id, $distribution_channel, $action_type)
     {
 
-
-
         DB::BeginTransaction();
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
@@ -791,6 +789,7 @@ class PvPayment extends Model
                     'pv' => $order_data->pv_total,
                     'type_id' => '8',
                     'status' => 'success',
+                    'status_add_remove'=>'add',
                     'pv_aistockist' => $add_pv_aipocket,
                     'banlance' => $add_pv_aipocket,
                     'order_channel' => 'VIP',
