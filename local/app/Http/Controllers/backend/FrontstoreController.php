@@ -3821,7 +3821,7 @@ $endDate1
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
-                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,
+                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
                 db_orders.shipping_free
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -3875,6 +3875,15 @@ ORDER BY created_at DESC
           return @$purchase_type[0]->detail;
         }
       })
+
+// ->escapeColumns('purchase_type')
+      // ->addColumn('pay_with_other', function ($row) {
+      //   $other = "";
+      //   if($row->pay_with_other_bill == 1){
+      //     $other = $row->pay_with_other_bill_note;
+      //   }
+      //   return $other;
+      // })
       ->addColumn('status', function ($row) {
 
         // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=Finished (ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
@@ -4060,8 +4069,12 @@ ORDER BY created_at DESC
         }
       })
       ->addColumn('code_order_select', function ($row) {
+        $other = "";
+        if($row->pay_with_other_bill == 1){
+          $other = "<br><br> ชำระพร้อมบิล ".$row->pay_with_other_bill_note;
+        }
         $p = "<a href='javascript:;' class='order_select' code_id='".@$row->code_order."'><span class='badge badge-pill badge-soft-primary font-size-16'>".@$row->code_order."</span></a>";
-        return $p;
+        return $p.$other;
       })
 
       ->make(true);

@@ -7513,9 +7513,14 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
         $d2 =  DB::select(" SELECT * FROM `db_delivery` where id in (".$d1[0]->delivery_id_fk.") LIMIT 1 ");
         $d3 = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".$d2[0]->orders_id_fk." ");
         if($d3){
+          // dd('ok1');
+          // dd($d3);
             return response()->json($d3);
         }else{
-            $d2 =  DB::select(" SELECT orders_id_fk as frontstore_id_fk,customer_id FROM `db_delivery` where id in (".$d1[0]->delivery_id_fk.") LIMIT 1 ");
+          // dd('ok2');
+          // dd($d2);
+            $d2 =  DB::select(" SELECT orders_id_fk as frontstore_id_fk,customer_id,recipient_name,addr_send as addr_no, postcode as zip_code,mobile as tel,tel_home,province_id_fk FROM `db_delivery` where id in (".$d1[0]->delivery_id_fk.") LIMIT 1 ");
+            // dd($d2);
             return response()->json($d2);
         }
 

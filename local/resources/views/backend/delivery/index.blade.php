@@ -9,7 +9,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -81,7 +81,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -95,7 +95,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -105,10 +105,10 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
-      // echo  @$menu_permit->can_packing_list;     
-      // echo  @$menu_permit->can_payproduct;     
-      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";     
+      // echo $menu_id;
+      // echo  @$menu_permit->can_packing_list;
+      // echo  @$menu_permit->can_payproduct;
+      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";
    ?>
 
 <div class="row">
@@ -120,7 +120,7 @@
 
         <div class="myBorder" >
 
-            
+
 @if(@\Auth::user()->permission==1)
 
               <div class="row" >
@@ -204,7 +204,7 @@
                          @if(@$receipt)
                           @foreach(@$receipt AS $r)
                             <option value="{{$r->receipt}}" >
-                              {{$r->receipt}} 
+                              {{$r->receipt}}
                             </option>
                           @endforeach
                         @endif
@@ -231,7 +231,7 @@
 
                   </div>
                 </div>
-              </div> 
+              </div>
 
 
             <!--  <div class="row" >
@@ -269,7 +269,7 @@
                      <div class="col-md-9 d-flex">
                       <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="" />
                       <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="" />
-                    </div> 
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-6 " >
@@ -289,7 +289,7 @@
             <input type="hidden" name="save_to_packing" value="1" >
 
             {{ csrf_field() }}
-         
+
                  <table id="data-table" class="table table-bordered " style="width: 100%;" ></table>
 
                  <div class=" divBtnSave " style="display: none;">
@@ -304,7 +304,7 @@
               <div id="last_form"></div>
 
               </form>
- 
+
 
  </div>
 
@@ -342,7 +342,7 @@
                         </div>
                       </div>
                         <div>
-                   <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้ 
+                   <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้
                   </div>
                     </div>
 
@@ -365,7 +365,7 @@
         <p style="color:red;">หากต้องการเปลี่ยน ตำบล,อำเภอ กรุณาเลือกจังหวัดใหม่อีกครั้งเป็นจังหวัดอื่นก่อน หลังจากนั้นกดกลับมาที่จังหวัดของตน</p>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> 
+        </button>
       </div>
       <div class="modal-body">
 
@@ -513,7 +513,7 @@ var oTable;
 $(function() {
 
   $(".myloading").show();
-  
+
   $.fn.dataTable.ext.errMode = 'throw';
 
     oTable = $('#data-table').DataTable({
@@ -577,7 +577,7 @@ $(function() {
                   		  return '-รอเบิกสินค้า-';
                   	}
                   }},
-                  // {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  // {data: 'id', title :'Tools', className: 'text-center w80'},
               ],
               'columnDefs': [
                {
@@ -603,7 +603,7 @@ $(function() {
                  }else{
                       $("td:eq(2)", nRow).html('');
                  }
-                
+
 
                  $("td:eq(1)", nRow).hide();
                  // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
@@ -627,21 +627,21 @@ $(function() {
           			//         $("td:eq(10)", nRow).html('');
           			//         var i;
              //  					for (i = 0; i < 10 ; i++) {
-             //  					   $("td:eq("+i+")", nRow).prop('disabled',true); 
-             //  					} 
+             //  					   $("td:eq("+i+")", nRow).prop('disabled',true);
+             //  					}
 
     			      // }else{
-      			    //   	$("td:eq(7)", nRow).prop('disabled',true); 
-      			    //   	$("td:eq(8)", nRow).prop('disabled',true); 
-      			    //   	$("td:eq(10)", nRow).prop('disabled',true); 
-    			      // } 
+      			    //   	$("td:eq(7)", nRow).prop('disabled',true);
+      			    //   	$("td:eq(8)", nRow).prop('disabled',true);
+      			    //   	$("td:eq(10)", nRow).prop('disabled',true);
+    			      // }
 
 
                     // if(aData['status_pick_pack']=='1'){
                     //     $('td', nRow).css('background-color', '#ffd9b3');
                     //     var i;
                     //     for (i = 0; i < 10 ; i++) {
-                    //        $("td:eq("+i+")", nRow).prop('disabled',true); 
+                    //        $("td:eq("+i+")", nRow).prop('disabled',true);
                     //     }
                     //     $('td:last-child', nRow).html('-');
                     //     $('td:eq(8)', nRow).html(''
@@ -649,16 +649,16 @@ $(function() {
                     //      ).addClass('input');
 
                     // }else{
-                    
+
                           if(sU!=''&&sD!=''){
                               $('td:last-child', nRow).html('-');
-                          }else{ 
+                          }else{
 
                             if (aData['status_delivery'] != "1") {
 
                                 // $('td:last-child', nRow).html(''
                                 //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                  
+
                                 // ).addClass('input');
                               }
 
@@ -708,10 +708,10 @@ $(function() {
                                     .val(v[0])
                              );
 
-                            total_price+=parseFloat(v[1]); 
-                            shipping_price+=parseFloat(v[2]); 
+                            total_price+=parseFloat(v[1]);
+                            shipping_price+=parseFloat(v[2]);
                             if(v[3]!=''){
-                              shipping_special+=parseFloat(v[3]); 
+                              shipping_special+=parseFloat(v[3]);
                             }
 
                           });
@@ -725,7 +725,7 @@ $(function() {
             	            		if($('.select-info').text()!=''){
             	            			var str = $('.select-info').text();
                   							var str = str.split(" ");
-       
+
                                 // วุฒิปรับให้อันเดียวก็ส่งได้
                                 if(parseInt(str[0])>0){
                               	// if(parseInt(str[0])>1){
@@ -742,7 +742,7 @@ $(function() {
                                             $('.divBtnSave').hide();
                                           }
                                         }
-                                
+
                   							}else{
                   								$('.divBtnSave').hide();
                   							}
@@ -833,7 +833,7 @@ $(function() {
                           return d ;
                       }},
 
-                      {data: 'id', title :'Tools ', className: 'text-center w80'}, 
+                      {data: 'id', title :'Tools ', className: 'text-center w80'},
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
 
@@ -862,7 +862,7 @@ $(function() {
 
                         if(sU!='1' && sD!='1'){
                             $('td:last-child', nRow).html('-');
-                        }else{ 
+                        }else{
 
                         	if (aData['status_delivery'] != "1") {
                         		$('td:last-child', nRow).html(''
@@ -941,7 +941,7 @@ var oTable ;
         },
         method: 'POST',
        data: {
-        "_token": "{{ csrf_token() }}", 
+        "_token": "{{ csrf_token() }}",
          },
       },
             columns: [
@@ -963,29 +963,29 @@ var oTable ;
 
             rowCallback: function(nRow, aData, dataIndex){
 
-              // ยกเว้นกรณีส่งฟรี 
+              // ยกเว้นกรณีส่งฟรี
               if(aData['check_case_sent_free']=="sent_free"){
 
               }else{
 
                     if(aData['status_pack'] != "1" && aData['delivery_location']==4){
                       //  alert("! กรณีจัดส่งพร้อมบิลอื่น ให้ไปทำการรวมบิลที่หน้า สินค้ารอจัดส่ง ");
-                       $("td:eq(0)", nRow).prop('disabled',true); 
-                       $("td:eq(1)", nRow).prop('disabled',true); 
-                       $("td:eq(2)", nRow).prop('disabled',true); 
-                       $("td:eq(3)", nRow).prop('disabled',true); 
-                       $("td:eq(4)", nRow).prop('disabled',true); 
-                       $("td:eq(5)", nRow).prop('disabled',true); 
-                       $("td:eq(6)", nRow).prop('disabled',true); 
-                       $("td:eq(7)", nRow).prop('disabled',true); 
-                       $("td:eq(8)", nRow).prop('disabled',true); 
-                       $("td:eq(9)", nRow).prop('disabled',true); 
+                       $("td:eq(0)", nRow).prop('disabled',true);
+                       $("td:eq(1)", nRow).prop('disabled',true);
+                       $("td:eq(2)", nRow).prop('disabled',true);
+                       $("td:eq(3)", nRow).prop('disabled',true);
+                       $("td:eq(4)", nRow).prop('disabled',true);
+                       $("td:eq(5)", nRow).prop('disabled',true);
+                       $("td:eq(6)", nRow).prop('disabled',true);
+                       $("td:eq(7)", nRow).prop('disabled',true);
+                       $("td:eq(8)", nRow).prop('disabled',true);
+                       $("td:eq(9)", nRow).prop('disabled',true);
                     }
               }
-              
 
-              $("td:eq(6)", nRow).prop('disabled',true); 
-              
+
+              $("td:eq(6)", nRow).prop('disabled',true);
+
 
               $(".myloading").hide();
 
@@ -993,17 +993,17 @@ var oTable ;
         });
         }
 
-          
+
 </script>
 
-  <script> 
+  <script>
 
-        
+
 
           $(document).ready(function() {
 
           		$('input[type=checkbox]').click(function(event) {
-          	
+
                  setTimeout(function(){
                     if($('.select-info').text()!=''){
                       var str = $('.select-info').text();
@@ -1020,7 +1020,7 @@ var oTable ;
                     }
                   }, 500);
 
-                }); 
+                });
 
                 $(document).on('click', '.dt-checkboxes', function(event) {
 
@@ -1040,25 +1040,25 @@ var oTable ;
                       }
                     }, 500);
 
-                }); 
+                });
 
-                
+
                 $(document).on('click', '.btnEditAddr', function(event) {
                 	event.preventDefault();
                 	var id = $(this).data('id');
                   var receipt_no = $(this).data('receipt_no');
-                  console.log(id+":"+receipt_no); 
+                  console.log(id+":"+receipt_no);
                 	$.ajax({
 		               type:'POST',
-		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ", 
+		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ",
 		               data:{ _token: '{{csrf_token()}}',id:id,receipt_no:receipt_no },
 		                success:function(data){
-		                     console.log(data); 
+		                     console.log(data);
 		                     // location.reload();
 		                     $('#select_addr_result_edit').html(data);
 
 		                  },
-		                error: function(jqXHR, textStatus, errorThrown) { 
+		                error: function(jqXHR, textStatus, errorThrown) {
 		                    console.log(JSON.stringify(jqXHR));
 		                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
 		                    $(".myloading").hide();
@@ -1075,17 +1075,17 @@ var oTable ;
 
 		           if(branch_id_fk != ''){
 		             $.ajax({
-		                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+		                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
 		                  method: "post",
 		                  data: {
 		                    branch_id_fk:branch_id_fk,
-		                    "_token": "{{ csrf_token() }}", 
+		                    "_token": "{{ csrf_token() }}",
 		                  },
 		                  success:function(data)
-		                  { 
+		                  {
 		                   if(data == ''){
-		                       alert('ไม่พบข้อมูลคลัง !!.'); 
-		                       $("#warehouse_id_search").val('').trigger('change'); 
+		                       alert('ไม่พบข้อมูลคลัง !!.');
+		                       $("#warehouse_id_search").val('').trigger('change');
 		                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
 		                   }else{
 		                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
@@ -1097,14 +1097,14 @@ var oTable ;
 		                  }
 		                })
 		           }
-		 
+
 		      });
 
 
 
 
           });
-    </script> 
+    </script>
 
 
 
@@ -1115,18 +1115,18 @@ var oTable ;
           $(document).on('click', '.cCancel', function(event) {
 
             var id = $(this).data('id');
-         
+
               if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
                   return false;
               }else{
               $.ajax({
-                  url: " {{ url('backend/ajaxDelDelivery') }} ", 
+                  url: " {{ url('backend/ajaxDelDelivery') }} ",
                   method: "post",
                   data: {
                     "_token": "{{ csrf_token() }}", id:id,
                   },
                   success:function(data)
-                  { 
+                  {
                     // console.log(data);
                     // return false;
                         Swal.fire({
@@ -1144,9 +1144,9 @@ var oTable ;
 
             }
 
-              
+
             });
-                
+
       });
 
     </script>
@@ -1199,7 +1199,7 @@ var oTable ;
                   }
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                    var sU = "{{@$sU}}"; 
+                    var sU = "{{@$sU}}";
                     var sD = "{{@$sD}}";
                     var oTable_001;
                     $(function() {
@@ -1228,10 +1228,10 @@ var oTable ;
                                       // startPayDate:startPayDate,
                                       // endDate:endDate,
                                       // endPayDate:endPayDate,
-                                      // status_sent:status_sent,                                 
-                                      // txtSearch_001:txtSearch_001,                                  
-                                      // btnSearch03:btnSearch03,                                  
-                                      // action_user:action_user,                                  
+                                      // status_sent:status_sent,
+                                      // txtSearch_001:txtSearch_001,
+                                      // btnSearch03:btnSearch03,
+                                      // action_user:action_user,
                                     },
                                   method: 'POST',
                                 },
@@ -1259,7 +1259,7 @@ var oTable ;
                                           return '-รอเบิกสินค้า-';
                                       }
                                     }},
-                                    // {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                    // {data: 'id', title :'Tools', className: 'text-center w80'},
                                 ],
                                 'columnDefs': [
                                  {
@@ -1285,7 +1285,7 @@ var oTable ;
                                    }else{
                                         $("td:eq(2)", nRow).html('');
                                    }
-                                  
+
 
                                    $("td:eq(1)", nRow).hide();
                                    // `list_type` int(1) DEFAULT '0' COMMENT '1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน',
@@ -1309,21 +1309,21 @@ var oTable ;
                                   //         $("td:eq(10)", nRow).html('');
                                   //         var i;
                                   //         for (i = 0; i < 10 ; i++) {
-                                  //            $("td:eq("+i+")", nRow).prop('disabled',true); 
-                                  //         } 
+                                  //            $("td:eq("+i+")", nRow).prop('disabled',true);
+                                  //         }
 
                                   // }else{
-                                  //     $("td:eq(7)", nRow).prop('disabled',true); 
-                                  //     $("td:eq(8)", nRow).prop('disabled',true); 
-                                  //     $("td:eq(10)", nRow).prop('disabled',true); 
-                                  // } 
+                                  //     $("td:eq(7)", nRow).prop('disabled',true);
+                                  //     $("td:eq(8)", nRow).prop('disabled',true);
+                                  //     $("td:eq(10)", nRow).prop('disabled',true);
+                                  // }
 
 
                                   //     if(aData['status_pick_pack']=='1'){
                                   //         $('td', nRow).css('background-color', '#ffd9b3');
                                   //         var i;
                                   //         for (i = 0; i < 10 ; i++) {
-                                  //            $("td:eq("+i+")", nRow).prop('disabled',true); 
+                                  //            $("td:eq("+i+")", nRow).prop('disabled',true);
                                   //         }
                                   //         $('td:last-child', nRow).html('-');
                                   //         $('td:eq(8)', nRow).html(''
@@ -1331,16 +1331,16 @@ var oTable ;
                                   //          ).addClass('input');
 
                                   //     }else{
-                                      
+
                                             if(sU!=''&&sD!=''){
                                                 $('td:last-child', nRow).html('-');
-                                            }else{ 
+                                            }else{
 
                                               if (aData['status_delivery'] != "1") {
 
                                                   // $('td:last-child', nRow).html(''
                                                   //   + '<a href="{{ route('backend.delivery.index') }}/'+aData['id']+'/edit?role_group_id='+role_group_id+'&menu_id='+menu_id+'" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                                    
+
                                                   // ).addClass('input');
                                                 }
 
@@ -1358,20 +1358,20 @@ var oTable ;
                                   $('[data-toggle="tooltip"]').tooltip();
                                 });
                             });
-                   
+
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                                  
+
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-               
+
 
                 setTimeout(function(){
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
 
-        }); 
+        });
 
 
 
@@ -1382,14 +1382,14 @@ var oTable ;
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
                    }else{
@@ -1405,14 +1405,14 @@ var oTable ;
                   }
                 })
            }
- 
+
       });
 
 
 </script>
         <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_id_fk").select2({
           minimumInputLength: 2,
@@ -1426,7 +1426,7 @@ var oTable ;
           cache: false,
           data: function (params) {
             console.log(params);
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -1461,24 +1461,24 @@ var oTable ;
                  $(".myloading").hide();
               }, 500);
 
-         
-        
+
+
               // $.ajax({
-              //     url: " {{ url('backend/ajaxCancelOrderBackend') }} ", 
+              //     url: " {{ url('backend/ajaxCancelOrderBackend') }} ",
               //     method: "post",
               //     data: {
               //       "_token": "{{ csrf_token() }}", id:id,
               //     },
               //     success:function(data)
-              //     { 
+              //     {
               //       // console.log(data);
               //       return false;
               //     }
               //   });
 
-              
+
             });
-                
+
       });
 
 
@@ -1491,7 +1491,7 @@ var oTable ;
                 $.ajax({
                         url: " {{ url('backend/ajaxGetOrdersIDtoDeliveryAddr') }} ",
                         method: "post",
-                        dataType: "json", 
+                        dataType: "json",
                         data: {
                           id:id,
                           "_token": "{{ csrf_token() }}",
@@ -1504,9 +1504,9 @@ var oTable ;
                               return false;
                             }
                             $.each(data, function( index, value ) {
-                                  $('#customers_addr_frontstore_id').val(value.frontstore_id_fk);
-                                  $('#customer_id').val(value.customer_id);
 
+                                $('#customers_addr_frontstore_id').val(value.frontstore_id_fk);
+                                  $('#customer_id').val(value.customer_id);
                                   $('#delivery_cusname').val(value.recipient_name);
                                   $('#delivery_addr').val(value.addr_no);
                                   $('#delivery_province').val(value.province_id_fk).select2();
@@ -1532,7 +1532,7 @@ var oTable ;
                                                   if(value2.id==value.amphur_code){
                                                        $('#delivery_amphur').html('<option value='+value.id+' selected >'+value2.amphur_name+'</option>');
                                                   }
-                                                  
+
                                                 });
                                               }
                                             })
@@ -1558,14 +1558,14 @@ var oTable ;
                                                   if(value2.id==value.tambon_code){
                                                        $('#delivery_tambon').html('<option value='+value.id+' selected >'+value2.tambon_name+'</option>');
                                                   }
-                                                  
+
                                                 });
 
                                                 }
                                               })
                                          }
 
-                                 
+
                             });
 
                              $('#modalDelivery').modal('show');
@@ -1574,7 +1574,7 @@ var oTable ;
                         }
                       })
 
-                   
+
               }
         });
 
@@ -1689,7 +1689,7 @@ var oTable ;
 
 
     </script>
-   
+
 
 	</script>
 
@@ -1727,7 +1727,7 @@ var oTable ;
           $('#bill_edate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -1736,22 +1736,22 @@ var oTable ;
 
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
+
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสำหรับเมนูนี้ ? ")){
                       return false;
                   }else{
-                  
+
                       location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
+
                   }
-              
+
             });
-                
+
       });
 
     </script>
-   
-    <?php 
+
+    <?php
     if(isset($_REQUEST['test_clear_data'])){
       DB::select("TRUNCATE `db_delivery` ;");
       DB::select("TRUNCATE `db_delivery_packing` ;");
@@ -1774,17 +1774,17 @@ var oTable ;
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
@@ -1805,17 +1805,17 @@ var oTable ;
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
