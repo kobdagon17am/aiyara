@@ -4681,13 +4681,10 @@ class AjaxController extends Controller
             -- AND status_sent_money <> 1
             AND status_sent_money = 0
             AND code_order <> ''
-            AND (db_add_ai_cash.cash_price>0)  ");
+            AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.cash_pay>0)  ");
         // วุฒิแก้ไข ให้เอาเฉพาะบิลเงินสด
         //  AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.credit_price>0 or db_add_ai_cash.transfer_price>0)  ");
 
-
-
-          // return $r0;
           $id = 0;
           if($r0){
 
@@ -4696,24 +4693,8 @@ class AjaxController extends Controller
                 array_push($arr_orders_id_fk,$v->id);
             }
             $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
-            // return $arr_orders_id_fk;
-            // dd($arr_orders_id_fk);
-
             // วุฒิปรับให้ insert ใหม่ทุกครั้ง
             $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
-
-            // if($r1){
-
-                //   $time_sent = $r1[0]->time_sent + 1 ;
-
-            //       $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
-            //       $id = DB::getPdo()->lastInsertId();
-
-            //       DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
-            //       $id = $id.'';
-
-            // }else{
-
                 // วุฒิเพิ่ม ครั้งที่ส่งด้วย จาก 1
                 if($r1){
                     $time_sent = $r1[0]->time_sent + 1 ;
@@ -4727,8 +4708,6 @@ class AjaxController extends Controller
 
                   DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
                   $id = $id.'';
-            //   }
-
           }
 
           if($r0_ai){
@@ -4742,36 +4721,17 @@ class AjaxController extends Controller
 
             $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily_ai`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
 
-            // return $r1;
-            // if($r1){
-
-            //       $time_sent = $r1[0]->time_sent + 1 ;
-
-            //       $r2 = DB::select(" INSERT INTO db_sent_money_daily_ai(time_sent,sender_id,add_ai_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
-            //       $id_ai = DB::getPdo()->lastInsertId();
-
-            //       DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=1,sent_money_daily_id_fk=$id,sent_money_daily_id_fk_ai=$id_ai WHERE id in ($arr_orders_id_fk) ");
-
-            //       // return $id;
-
-            // }else{
-
                 if($r1){
                     $time_sent = $r1[0]->time_sent + 1 ;
                 }else{
                     $time_sent = 1;
                 }
 
-
                   $r2 = DB::select(" INSERT INTO db_sent_money_daily_ai(time_sent,sender_id,add_ai_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
                   $id_ai = DB::getPdo()->lastInsertId();
 
-                  DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=1,sent_money_daily_id_fk=$id,sent_money_daily_id_fk_ai=$id_ai WHERE id in ($arr_orders_id_fk) ");
-            //   }
-
+                  DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=1,sent_money_daily_id_fk=$id_ai,sent_money_daily_id_fk_ai=$id_ai WHERE id in ($arr_orders_id_fk) ");
           }
-
-
       }
 
     }

@@ -878,8 +878,12 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('check_money_daily/datatable', 'Check_money_dailyController@DatatableSentMoney')->name('check_money_daily.datatable');
     Route::post('check_money_daily/datatable_ai', 'Check_money_dailyController@DatatableSentMoney_ai')->name('check_money_daily.datatable_ai');
     Route::post('check_money_daily02/datatable', 'Check_money_dailyController@DatatableTotal')->name('check_money_daily02.datatable');
+    Route::post('check_money_daily02/datatable_ai', 'Check_money_dailyController@DatatableTotal_ai')->name('check_money_daily02_ai.datatable');
     Route::get('check_money_daily_report', 'Check_money_dailyController@check_money_daily_report');
     Route::post('check_money_daily_report/datatable', 'Check_money_dailyController@DatatableTotal_report')->name('check_money_daily02.datatable_report');
+    Route::get('check_money_daily_ai/{id}/edit', 'Check_money_dailyController@check_money_daily_ai_edit')->name('backend.check_money_daily_ai.index');
+    Route::post('check_money_daily_ai_store', 'Check_money_dailyController@check_money_daily_ai_store')->name('backend.check_money_daily_ai.store');
+    Route::post('check_money_daily_ai_update', 'Check_money_dailyController@check_money_daily_ai_update')->name('backend.check_money_daily_ai.update');
 
     Route::resource('promotion_code', 'PromotionCodeController');
     Route::post('promotion_code/datatable', 'PromotionCodeController@Datatable')->name('promotion_code.datatable');

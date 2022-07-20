@@ -157,9 +157,9 @@
                     <table id="data-table-0001" class="table table-bordered " style="width: 100%;">
                     </table>
                     <br>
-                    {{-- <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash รายวัน  </span>
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการ เติม Ai-Cash รายวัน  </span>
                     <table id="data-table-0001_ai" class="table table-bordered " style="width: 100%;">
-                    </table> --}}
+                    </table>
                   </div>
 
 
@@ -169,11 +169,11 @@
                     </table>
                   </div>
 
-                  {{-- <div class="myBorder">
-                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขายกัมพูชา </span>
+                  <div class="myBorder">
+                    <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย Ai-Cash </span>
                     <table id="data-table-0002_2" class="table table-bordered " style="width: 84%;">
                     </table>
-                  </div> --}}
+                  </div>
 
             </div>
         </div>
@@ -280,16 +280,22 @@
                           type: "POST",
                           // data:{ _token: '{{csrf_token()}}',txtSearch:txtSearch },
                       },
-                columns: [
+                      columns: [
                     {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
                     {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
                     {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ (คลิกเพื่อดูบิลเพิ่มเติม) </span> ', className: 'text-center'},
+                    {data: 'date_order', title :'<span style="vertical-align: middle;"> วันที่รายการ </span> ', className: 'text-center'},
                     {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
-                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                    // {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                    {data: 'column_005', title :'<span style="vertical-align: middle;">รวมเงินสด </span> ', className: 'text-center'},
                    {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
-                  //  {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
-                  //       return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
-                  //   }},
+                   {data: 'approver', title :'<span style="vertical-align: middle;">ผู้รับเงิน </span> ', className: 'text-center'},
+                   {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},
+                   {data: 'detail', title :'<span style="vertical-align: middle;">หมายเหตุ </span> ', className: 'text-center'},
+                   {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
+                            var show = '<a style="'+d+'" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' + d + '" > ยกเลิก </a>';
+                        return '<a style="'+d+'" href="{{ url('backend/check_money_daily_ai/') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '+show;
+                    }},
                 ],
                  rowCallback: function(nRow, aData, dataIndex){
 
@@ -361,16 +367,19 @@
                 "paging": false,
                 destroy:true,
                       ajax: {
-                          url: '{{ route('backend.check_money_daily02.datatable') }}',
+                          url: '{{ route('backend.check_money_daily02_ai.datatable') }}',
                           type: "POST",
                            data:{ _token: '{{csrf_token()}}', business_location:3},
                       },
-                columns: [
-                    {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                      columns: [
+                    // {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                    {data: 'created_date', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
                     {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
                     {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
                     {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
-                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย </span> ', className: 'text-right'},
+                    {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ', className: 'text-right'},
+                    {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ', className: 'text-right'},
+                    {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน</span> ', className: 'text-right'},
 
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
@@ -585,6 +594,9 @@ $(function() {
                   $('#data-table-0001').DataTable().clear();
                   $('#data-table-0002').DataTable().clear();
 
+                  $('#data-table-0001_ai').DataTable().clear();
+                  $('#data-table-0002_ai').DataTable().clear();
+
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var seller = $('#seller').val();
@@ -597,31 +609,6 @@ $(function() {
                       $("#spinner_frame").hide();
                        return false;
                     }
-                  //  if(branch_id_fk==''){
-                  //     $("#branch_id_fk").select2('open');
-                  //     $("#spinner_frame").hide();
-                  //      return false;
-                  //   }
-
-                  // if(startDate==''){
-                  //     $("#startDate").focus();
-                  //     $("#spinner_frame").hide();
-                  //      return false;
-                  //   }
-
-                  //   if(endDate==''){
-                  //     $("#endDate").focus();
-                  //     $("#spinner_frame").hide();
-                  //      return false;
-                  //   }
-
-                    console.log(business_location_id_fk);
-                    console.log(branch_id_fk);
-                    console.log(seller);
-                    console.log(status_search);
-                    console.log(startDate);
-                    console.log(endDate);
-
 
                     $(".myloading").show();
 
@@ -780,15 +767,67 @@ $(function() {
 
                           });
 
-                  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-
-
                   setTimeout(function(){
                     // $("#spinner_frame").hide();
                      $(".myloading").hide();
                   },2000);
 
+                  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+                    // var txtSearch = $("input[name='txtSearch']").val();
+                    $.fn.dataTable.ext.errMode = 'throw';
+                    var oTable0001;
+                    $(function() {
+                        oTable0001 = $('#data-table-0001_ai').DataTable({
+                        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                            processing: true,
+                            serverSide: true,
+                            scroller: true,
+                            ordering: false,
+                            "info":   false,
+                            "paging": false,
+                            destroy:true,
+                                  ajax: {
+                                              url: '{{ route('backend.check_money_daily.datatable_ai') }}',
+                                              type: "POST",
+                                              data:{ _token: '{{csrf_token()}}',
+                                              business_location_id_fk:business_location_id_fk,
+                                              branch_id_fk:branch_id_fk,
+                                              seller:seller,
+                                              status_search:status_search,
+                                              startDate:startDate,
+                                              endDate:endDate,
+                                            },
+                                          },
+                                  columns: [
+                                {data: 'column_001', title :'<span style="vertical-align: middle;"> ผู้ส่ง </span> ', className: 'text-center'},
+                                {data: 'column_002', title :'<span style="vertical-align: middle;"> ครั้งที่ส่ง </span> ', className: 'text-center'},
+                                {data: 'column_003', title :'<span style="vertical-align: middle;"> รายการใบเสร็จ (คลิกเพื่อดูบิลเพิ่มเติม) </span> ', className: 'text-center'},
+                                {data: 'date_order', title :'<span style="vertical-align: middle;"> วันที่รายการ </span> ', className: 'text-center'},
+                                {data: 'column_004', title :'<span style="vertical-align: middle;"> วันเวลาที่ส่ง </span> ', className: 'text-center'},
+                                // {data: 'column_005', title :'<span style="vertical-align: middle;">รวมรายการชำระค่าสินค้า </span> ', className: 'text-center'},
+                                {data: 'column_005', title :'<span style="vertical-align: middle;">รวมเงินสด </span> ', className: 'text-center'},
+                              {data: 'column_007', title :'<span style="vertical-align: middle;">สถานะ </span> ', className: 'text-center'},
+                              {data: 'approver', title :'<span style="vertical-align: middle;">ผู้รับเงิน </span> ', className: 'text-center'},
+                              {data: 'approver_time', title :'<span style="vertical-align: middle;">เวลารับเงิน </span> ', className: 'text-center'},
+                              {data: 'detail', title :'<span style="vertical-align: middle;">หมายเหตุ </span> ', className: 'text-center'},
+                              {data: 'column_006',   title :'<center>Tools</center>', className: 'text-center w100 ',render: function(d) {
+                                        var show = '<a style="'+d+'" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' + d + '" > ยกเลิก </a>';
+                                    return '<a style="'+d+'" href="{{ route('backend.check_money_daily.index') }}/'+d+'/edit?fromFrontstore" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '+show;
+                                }},
+                            ],
+                            rowCallback: function(nRow, aData, dataIndex){
+
+                            }
+                        });
+
+                    });
+            // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
+
             });
+
+
+
+
             $(document).on('click', '.btnCancelSentMoney', function(e) {
 
         var id = $(this).attr('send_id');

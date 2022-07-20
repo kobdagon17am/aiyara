@@ -382,7 +382,7 @@ class Total_thai_cambodiaController extends Controller
             Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
             Left Join branchs ON branchs.id = db_add_ai_cash.branch_id_fk
             Left Join dataset_business_location ON dataset_business_location.id = db_add_ai_cash.business_location_id_fk
-            WHERE db_add_ai_cash.approve_status not in (2,4,9)
+            WHERE db_add_ai_cash.approve_status in (2,4,9)
             $startDate
             $endDate
             $action_user
@@ -419,7 +419,7 @@ class Total_thai_cambodiaController extends Controller
             Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
             Left Join branchs ON branchs.id = db_add_ai_cash.branch_id_fk
             Left Join dataset_business_location ON dataset_business_location.id = db_add_ai_cash.business_location_id_fk
-            WHERE db_add_ai_cash.approve_status not in (2,4,9)
+            WHERE db_add_ai_cash.approve_status in (2,4,9)
             $startDate
             $endDate
             $action_user
@@ -427,8 +427,8 @@ class Total_thai_cambodiaController extends Controller
             GROUP BY action_user , date_format(db_add_ai_cash.created_at, '%M')
             ORDER BY action_date ASC
         ");
-        }
 
+        }
     $sQuery = \DataTables::of($sTable);
     // dd($sTable);
     return $sQuery
