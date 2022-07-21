@@ -101,7 +101,7 @@
         <div class="divTable">
           <div class="divTableBody">
             <div class="divTableRow">
-              
+
 
               <div class="divTH">
                 <label for="" >Business Location : </label>
@@ -358,10 +358,10 @@
             </div>
           </div>
         </div>
-       
+
         <table id="data-table" class="table table-bordered" style="width: 100%;">
         </table>
-      
+
         <b>หมายเหตุ</b> รายการ <font color=red>* รอดำเนินการต่อ </font> หมายถึง รายการบิล ที่ยังไม่ทำการกดปุ่ม save ขั้นตอนการชำระเงิน สำหรับบิลนี้สามารถทำการยกเลิกได้หรือเข้าไปทำการบันทึกอีกครั้งได้
         <div class="row">
           <div class="col-lg-5">
@@ -474,7 +474,7 @@ $(function() {
 var oTable;
 $(function() {
     oTable = $('#data-table').DataTable({
-   
+
         processing: true,
         serverSide: true,
         scroller: true,

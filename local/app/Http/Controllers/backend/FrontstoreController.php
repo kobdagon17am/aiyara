@@ -2973,7 +2973,7 @@ class FrontstoreController extends Controller
         if (@$r->status_approve == 0 || @$r->status_approve == 2) {
           if (@$r->status_cancel == 0 ) {
             $show .= '
-                            <a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data-id="' . @$r->id . '" > ยกเลิก </a>';
+                            <a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data_type="sale" data-id="' . @$r->id . '" > ยกเลิก </a>';
           }
         } else {
           echo "-";
@@ -2986,6 +2986,138 @@ class FrontstoreController extends Controller
         $tt++;
       }
     }
+
+    $show .= '<tr><td colspan="7"><b>Ai-cash</b></td></tr>';
+
+    // วุฒิเพิ่ม ai cash
+                    $sDBSentMoneyDaily_ai = DB::select("
+                    SELECT
+                    db_sent_money_daily_ai.*,
+                    ck_users_admin.`name` as sender
+                    FROM
+                    db_sent_money_daily_ai
+                    Left Join ck_users_admin ON db_sent_money_daily_ai.sender_id = ck_users_admin.id
+                    WHERE date(db_sent_money_daily_ai.updated_at)=CURDATE() and sender_id=$user_login_id
+                    order by db_sent_money_daily_ai.time_sent
+                ");
+
+                if (@$sDBSentMoneyDaily_ai) {
+                $tt = 1;
+
+                $sDBSentMoneyDaily02 = DB::select("
+                                          SELECT
+                                          db_sent_money_daily_ai.*,
+                                          ck_users_admin.`name` as sender
+                                          FROM
+                                          db_sent_money_daily_ai
+                                          Left Join ck_users_admin ON db_sent_money_daily_ai.sender_id = ck_users_admin.id
+                                          WHERE date(db_sent_money_daily_ai.updated_at)=CURDATE() and sender_id=$user_login_id
+                                          AND status_cancel=0
+                                          order by db_sent_money_daily_ai.time_sent
+                                    ");
+
+                foreach (@$sDBSentMoneyDaily_ai as $key1 => $r) {
+                // $order_ex = explode(',',$r->orders_ids);
+                    $order_ex = $r->add_ai_ids;
+                // วุฒิแก้ให้มันแสดงแยกครั้งส่งไปเลย
+                // $sOrders = DB::select("
+                //                   SELECT db_orders.code_order ,customers.prefix_name,customers.first_name,customers.last_name
+                //                               FROM
+                //                               db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
+                //                               where db_orders.id in (" . (@$sDBSentMoneyDaily02[0]->orders_ids ? @$sDBSentMoneyDaily02[0]->orders_ids : 0) . ") AND code_order<>'' AND action_user='$user_login_id' ;
+                //                   ");
+
+                $sOrders = DB::select("
+                SELECT db_add_ai_cash.code_order ,customers.prefix_name,customers.first_name,customers.last_name
+                          FROM
+                          db_add_ai_cash Left Join customers ON db_add_ai_cash.customer_id_fk = customers.id
+                          where db_add_ai_cash.id in (" . $order_ex . ") AND code_order<>'' AND action_user='$user_login_id' ;
+                ");
+// dd($order_ex);
+                // AND code_order<>'' AND action_user='$user_login_id'
+                $show .= '
+                              <tr>
+                                <td class="text-center">' . $tt . '</td>';
+                                // if($key1==1){
+                                //   dd($sDBSentMoneyDaily02[0]->orders_ids);
+                                // }
+
+                if (@$r->status_cancel == 0) {
+
+                $show .= '
+                                <td class="text-center">
+                                  <div class="invoice_code_list" data-toggle="tooltip" data-placement="bottom" title="คลิ้กเพื่อดูใบเสร็จทั้งหมด" >';
+
+                $i = 1;
+                foreach ($sOrders as $key => $value) {
+                  $show .=  $value->code_order . "<br>";
+                  $i++;
+                  if ($i == 4) {
+                    break;
+                  }
+                }
+                if ($i > 3) $show .= "...";
+                $arr = [];
+                foreach ($sOrders as $key => $value) {
+                  array_push($arr, $value->code_order . ' :' . (@$value->first_name . ' ' . @$value->last_name) . '<br>');
+                }
+                $arr_inv = implode(",", $arr);
+
+                $show .= '
+                                  </div>
+                                  <input type="hidden" class="arr_inv" value="' . $arr_inv . '">
+                                </td>';
+                } else {
+
+                $show .= '
+                                <td class="text-left" style="color:red;">
+                                  * รายการนี้ได้ทำการยกเลิกการส่งเงิน
+                                </td>';
+                }
+
+                if(@$r->status_approve == 1){
+                  $status_approve = '<label style="color:green;">อนุมติ</label>';
+                }elseif(@$r->status_approve == 2){
+                $status_approve = '<label style="color:red;">ไม่อนุมัติ</label>';
+                }else{
+                $status_approve = '<label style="color:black;">รอดำเนินการ</label>';
+                }
+
+                if(@$r->status_cancel == 1){
+                $status_approve = '<label style="color:red;">ยกเลิกรายการ</label>';
+                }
+
+                $approver = DB::table('ck_users_admin')->where('id',$r->approver)->first();
+                if($approver){
+                  $approver = $approver->name;
+                }else{
+                  $approver = "";
+                }
+
+                $show .= '
+                                <td class="text-center">' . @$r->sender . '</td>
+                                <td class="text-center">' . @$r->created_at . '<br> วันเวลาที่รับเงิน : '.@$r->approve_date.' <br> ผู้รับเงิน : '.$approver.' </td>
+                                <td class="text-center">' . $status_approve . '</td>
+                                <td class="text-center">' . @$r->remark . '</td>
+                                <td class="text-center">';
+
+                if (@$r->status_approve == 0 || @$r->status_approve == 2) {
+                if (@$r->status_cancel == 0 ) {
+                  $show .= '
+                                  <a href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " data_type="aicash" data-id="' . @$r->id . '" > ยกเลิก </a>';
+                }
+                } else {
+                echo "-";
+                }
+
+                $show .= '
+                                </td>
+                              </tr>';
+
+                $tt++;
+                }
+                }
+    // ปิด
 
     $show .= '
                         <tr>
@@ -3021,8 +3153,35 @@ class FrontstoreController extends Controller
   })->orderBy('db_orders.created_at','desc')
   ->get();
 
+  $order_back_ai = DB::table('db_add_ai_cash')
+  ->select('db_add_ai_cash.code_order','db_add_ai_cash.created_at','db_add_ai_cash.cash_pay','ck_users_admin.name')
+  ->join('ck_users_admin','ck_users_admin.id','db_add_ai_cash.action_user')
+  ->where('db_add_ai_cash.created_at','<',date('Y-m-d H:i:s'))
+  ->whereIn('db_add_ai_cash.approve_status',[2,4,9])
+  ->whereNotIn('db_add_ai_cash.approve_status',[5,6])
+  ->where('db_add_ai_cash.status_sent_money',0)
+  ->where('db_add_ai_cash.code_order','!=','')
+  ->where('db_add_ai_cash.action_user',$user_login_id)
+  ->where(function($query) {
+    $query->where('db_add_ai_cash.cash_price','>',0)
+          ->orWhere('db_add_ai_cash.cash_pay', '>', 0);
+})->orderBy('db_add_ai_cash.created_at','desc')
+->get();
+
   $p = '';
   foreach($order_back as $ord){
+    $date=date_create($ord->created_at);
+    $date=date_format($date,"d-m-Y");
+      $p .= '<tr>
+      <td class="text-left">'.$ord->name.'</td>
+      <td class="text-left">'.$date.'</td>
+      <td class="text-left">'.$ord->code_order.'</td>
+      <td class="text-right">'.number_format($ord->cash_pay, 2).'</td>
+      <td></td>
+      </tr>';
+  }
+  $p .= '<tr><td><b>Ai-cash</b></td></tr>';
+  foreach($order_back_ai as $ord){
     $date=date_create($ord->created_at);
     $date=date_format($date,"d-m-Y");
       $p .= '<tr>
@@ -3821,7 +3980,7 @@ $endDate1
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
-                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,
+                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
                 db_orders.shipping_free
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -3875,6 +4034,15 @@ ORDER BY created_at DESC
           return @$purchase_type[0]->detail;
         }
       })
+
+// ->escapeColumns('purchase_type')
+      // ->addColumn('pay_with_other', function ($row) {
+      //   $other = "";
+      //   if($row->pay_with_other_bill == 1){
+      //     $other = $row->pay_with_other_bill_note;
+      //   }
+      //   return $other;
+      // })
       ->addColumn('status', function ($row) {
 
         // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=Finished (ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
@@ -4060,8 +4228,12 @@ ORDER BY created_at DESC
         }
       })
       ->addColumn('code_order_select', function ($row) {
+        $other = "";
+        if($row->pay_with_other_bill == 1){
+          $other = "<br><br> ชำระพร้อมบิล ".$row->pay_with_other_bill_note;
+        }
         $p = "<a href='javascript:;' class='order_select' code_id='".@$row->code_order."'><span class='badge badge-pill badge-soft-primary font-size-16'>".@$row->code_order."</span></a>";
-        return $p;
+        return $p.$other;
       })
 
       ->make(true);
