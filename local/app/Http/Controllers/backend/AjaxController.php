@@ -17,6 +17,7 @@ use App\Models\Frontend\CourseCheckRegis;
 use App\Models\Frontend\PvPayment;
 use App\Models\Frontend\LineModel;
 use App\Http\Controllers\Frontend\Fc\CancelOrderController;
+use App\Models\Frontend\Order;
 
 
 class AjaxController extends Controller
@@ -5788,13 +5789,19 @@ class AjaxController extends Controller
 
 
       if($Orders[0]->approve_status==0){
-
         $resule = \App\Http\Controllers\Frontend\Fc\DeleteOrderController::delete_order($request->id);
-
        }else{
 
           //DB::select(" UPDATE db_orders SET approve_status=5,order_status_id_fk=8 where id=$request->id ");
-          $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+          $order_data  = Order::find($request->id);
+
+          if($order_data->order_channel == 'VIP'){
+
+            $resule = \App\Http\Controllers\Frontend\Fc\CancelOrderVipShopController::cancel_order_vip($request->id, @\Auth::user()->id , 0, 'admin');
+          }else{
+
+            $resule = CancelOrderController::cancel_order($request->id, @\Auth::user()->id , 0, 'admin');
+          }
 
 
       }
