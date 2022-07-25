@@ -65,14 +65,6 @@
                   @ENDIF
             </div>
 
-            {{-- <div class="myBorder">
-              <table id="data-table-0001_ai" class="table table-bordered " style="width: 100%;">
-                  </table>
-                  @IF($sRow->status_cancel==0)
-                  <center> รวมเงินทั้งสิ้น : <input type="text" name="sum_total_price_ai" id="sum_total_price_ai" style="text-align: center;" readonly=""></center>
-                  @ENDIF
-            </div> --}}
-
 
         @IF($sRow->status_cancel==0 && $sRow->status_approve==0)
 

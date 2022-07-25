@@ -1270,7 +1270,7 @@ class Check_money_dailyController extends Controller
      ");
     //  $w01
       }
-
+// dd($sTable); sum_total_price
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
@@ -1619,6 +1619,7 @@ class Check_money_dailyController extends Controller
                               AND db_add_ai_cash.business_location_id_fk in(".$row->business_location.")
                               GROUP BY action_user
                          ");
+
 
                   return number_format(@$sDBFrontstoreSumCostActionUser[0]->total_price,2);
 
