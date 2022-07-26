@@ -221,7 +221,7 @@ class AiCashController extends Controller
       ->leftjoin('db_add_ai_cash', 'db_add_ai_cash.id', '=', 'db_movement_ai_cash.add_ai_cash_id_fk')
       ->where('dataset_orders_type.lang_id', '=', $business_location_id)
       ->where('db_movement_ai_cash.customer_id_fk', '=', $customer_id)
-      ->whereRaw("(db_add_ai_cash.type_create != 'admin' and db_add_ai_cash.order_status_id_fk != '8')")
+      ->whereRaw("(db_add_ai_cash.type_create != 'admin' || db_add_ai_cash.order_status_id_fk != '8')")
       ->orderby('db_movement_ai_cash.created_at', 'desc')
       ->get();
 
