@@ -394,7 +394,7 @@ return [
 'Married'=> 'Married',
 'Divorced'=> 'Divorced',
 'date_of_birth'=> 'Aay/Month/Year of birth',
-'ID_card_number'=> 'ID card number (13 digits) ',
+'ID_card_number'=> 'ID card number',
 'Nationality'=> 'Nationality',
 'Mobile_Phone'=> 'Mobile Phone',
 'Home_Phone'=> 'Home Phone',

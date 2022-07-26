@@ -19,7 +19,7 @@
       $(".isbn3").inputmask({ mask: "999/99/999/9999/9" });
       $(".ipv4").inputmask({ mask: "999.999.999.9999" });
       $(".ipv6").inputmask({ mask: "9999:9999:9999:9:999:9999:9999:9999" });
-      $(".card").inputmask({ mask: "99999-99999-999" });
+      $(".card").inputmask({ mask: "99999-99999-9999" });
 
       /*numbers*/
       $('.autonumber').autoNumeric('init');

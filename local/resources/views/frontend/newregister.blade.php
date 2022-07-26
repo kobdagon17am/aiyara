@@ -130,7 +130,7 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.ID_card_number') <font class="text-danger">*</font></label>
-                         <input class="form-control card" data-mask="99999-99999-999" type="text" name="id_card"
+                         <input class="form-control card" data-mask="99999-99999-9999" type="text" name="id_card"
                              value="{{ old('id_card') }}" required="">
                      </div>
 
@@ -433,7 +433,7 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.ID_card_number')</label>
-                         <input type="text" class="form-control card" data-mask="99999-99999-999" name="benefit_id"
+                         <input type="text" class="form-control card" data-mask="99999-99999-9999" name="benefit_id"
                              value="{{ old('benefit_id') }}">
                      </div>
 

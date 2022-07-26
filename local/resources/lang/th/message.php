@@ -397,7 +397,7 @@ return [
 'Married'=> 'สมรส',
 'Divorced'=> 'หย่าร้าง',
 'date_of_birth'=> 'วัน/เดือน/ปีเกิด',
-'ID_card_number'=> 'เลขที่บัตรประชาชน (13 หลัก)',
+'ID_card_number'=> 'เลขที่บัตรประชาชน',
 'Nationality'=> 'สัญชาติ',
 'Mobile_Phone'=> 'โทรศัพท์มือถือ',
 'Home_Phone'=> 'โทรศัพท์บ้าน',
