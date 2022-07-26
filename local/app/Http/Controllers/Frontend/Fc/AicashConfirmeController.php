@@ -33,7 +33,7 @@ class AicashConfirmeController extends Controller
               ->where('id', '=',$db_add_ai_cash->customer_id_fk)
               ->first();
 
-          $banlance = $customer_data->ai_cash +  $db_add_ai_cash->total_amt;
+          $banlance = $customer_data->ai_cash +  $db_add_ai_cash->aicash_amt;
 
           $strtotime_date_now_30 = strtotime("+30 minutes");
               $strtotime_date_now_23 = strtotime(date('Y-m-d 23:00:00'));
@@ -69,9 +69,9 @@ class AicashConfirmeController extends Controller
           //'order_id_fk' =>$order_id,
           'add_ai_cash_id_fk' => $aicash_id, //กรณีเติม Aicash
           'business_location_id_fk' => $customer_data->business_location_id,
-          'price_total' => $db_add_ai_cash->total_amt,
+          'price_total' => $db_add_ai_cash->aicash_amt,
           'aicash_old' => $customer_data->ai_cash,
-          'aicash_price' => $db_add_ai_cash->total_amt,
+          'aicash_price' => $db_add_ai_cash->aicash_amt,
           'aicash_banlance' => $banlance,
           'order_code' =>  $db_add_ai_cash->code_order,
           'order_type_id_fk' => 7,
