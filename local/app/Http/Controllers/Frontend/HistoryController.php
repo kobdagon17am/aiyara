@@ -27,6 +27,9 @@ class HistoryController extends Controller
 
     public function index()
     {
+
+
+
       $business_location_id = Auth::guard('c_user')->user()->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
@@ -521,6 +524,17 @@ class HistoryController extends Controller
             ->where('id', $order->branch_id_fk)
             ->first();
 
+            $pm = DB::table('pm')
+            ->select('*')
+            ->where('order_code','=',$code_order)
+            ->where('see_status','=',0)
+            ->first();
+            if($pm){
+              $pm_update = DB::table('pm')
+              ->where('order_code','=',$code_order)
+              ->update(['see_status' => 1,'last_update'=>date('Y-m-d')]);
+            }
+
         if ($order->delivery_location_frontend == 'sent_address') {
             $address = HistoryController::address($order->name, $order->tel, $order->email, $order->house_no, $order->moo, $order->house_name, $order->soi, $order->road, $order->district_name, $order->amphures_name, $order->provinces_name, $order->zipcode);
 
@@ -561,9 +575,13 @@ class HistoryController extends Controller
         ->select('first_name','last_name','user_name','business_name')
         ->where('id','=',$order->customers_id_fk)
         ->first();
+        $file_slip =  DB::table('payment_slip')
+        ->where('order_id','=',$order->id)
+        ->get();
+
 
         if (!empty($order)) {
-            return view('frontend/product/cart-payment-history', compact('order', 'order_items', 'address','customer_confirm','customer_use'));
+            return view('frontend/product/cart-payment-history', compact('order', 'order_items', 'address','customer_confirm','customer_use','file_slip'));
         } else {
             return redirect('product-history')->withError('Payment Data is Null');
         }

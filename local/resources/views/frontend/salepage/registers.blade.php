@@ -204,7 +204,7 @@
                                                     <div class="col-sm-3">
                                                         <label>เลขที่บัตรประชาชน <font class="text-danger">*</font>
                                                             </label>
-                                                        <input class="form-control card" data-mask="99999-99999-9999" type="text" name="id_card"
+                                                        <input class="form-control" minlength="8" maxlength="14"  type="text" name="id_card"
                                                             value="{{ old('id_card') }}"   required="">
                                                     </div>
 
@@ -539,7 +539,7 @@
 
                                                     <div class="col-sm-3">
                                                         <label>เลขที่บัตรประชาชน  </label>
-                                                        <input type="text" class="form-control card" data-mask="99999-99999-9999"   name="benefit_id"
+                                                        <input type="text" class="form-control"  minlength="8" maxlength="14"  name="benefit_id"
                                                             value="{{ old('benefit_id') }}">
                                                     </div>
 

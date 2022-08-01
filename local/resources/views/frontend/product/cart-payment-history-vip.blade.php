@@ -11,7 +11,7 @@
 
                 <div class="card-header-right">
 
-                      <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg"  >
+                      <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title=""  >
                         <a href="{{route('salepage.vip-report')}}" class="btn btn-primary btn-mini waves-effect waves-light"><i class="fa fa-reply" style="color:#fff"></i>กลับ </a>
 
                     </div>
