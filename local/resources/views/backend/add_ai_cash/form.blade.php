@@ -582,7 +582,7 @@
                     }
 
 
-                    //      
+                    //
                 });
 
                 var fromAddAiCash = "<?= @$_REQUEST['fromAddAiCash'] ?>";
@@ -805,7 +805,22 @@
                             $(".show_div_cash_pay").show();
                             $("#cash_pay").val('');
 
-                        } else
+                        }
+                         // เครดิตอย่างเดียว
+                        if (pay_type_id_fk == 2) {
+                            // เครดิต
+                            $(".show_div_credit").show();
+                            $("#credit_price").val('');
+                            $(".div_fee").show();
+                            $("#fee_amt").val('');
+                            $('#fee').attr('required', true);
+                            $("#sum_credit_price").val('');
+                            // เงินสด
+                            $(".show_div_cash_pay").show();
+                            $("#cash_pay").val('');
+
+                        }
+                        else
                             // 4  เครดิต + เงินโอน
                             if (pay_type_id_fk == 8) {
 

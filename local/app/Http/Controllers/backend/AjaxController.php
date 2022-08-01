@@ -3646,6 +3646,58 @@ class AjaxController extends Controller
 
         }
 
+        if($pay_type_id_fk==2){
+
+
+          if(empty($request->credit_price)){
+              exit;
+          }
+
+          $credit_price = str_replace(',','',$request->credit_price);
+          $credit_price = $credit_price>$sum_price?$sum_price:$credit_price;
+
+          DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price WHERE id=$id ");
+
+          if(!empty($request->fee)){
+              $fee = DB::select(" SELECT * from dataset_fee where id =".$request->fee." ");
+              $fee_type = $fee[0]->fee_type;
+              if($fee_type==1){
+                  $fee = $fee[0]->txt_value;
+                  $fee_amt    = $credit_price * (@$fee/100) ;
+                  $sum_credit_price = $credit_price + $fee_amt ;
+              }else{
+                  $fee = $fee[0]->txt_fixed_rate;
+                  $fee_amt =  $fee ;
+                  $sum_credit_price = $credit_price + $fee_amt ;
+              }
+         }else{
+            $fee_id = 0 ;
+            $fee_amt  = 0 ;
+            $sum_credit_price  = 0 ;
+         }
+
+        if(!empty($credit_price) && intval($credit_price) != 0){
+
+              $fee_id = $request->fee?$request->fee:0;
+              $charger_type = $request->charger_type;
+
+              if($charger_type==1){
+
+                  if($credit_price==$sum_price){
+                      DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=0,cash_pay=0,total_amt=($sum_price) WHERE id=$id ");
+                  }else{
+                      DB::select(" UPDATE db_add_ai_cash SET credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$sum_credit_price,cash_price=($sum_price-$credit_price),cash_pay=($sum_price-$credit_price),total_amt=($sum_price) WHERE id=$id ");
+                  }
+
+              }else{
+
+                  DB::select(" UPDATE db_add_ai_cash SET charger_type=$charger_type,credit_price=$credit_price, fee=$fee_id,fee_amt=$fee_amt,sum_credit_price=$credit_price,cash_price=($sum_price-$credit_price),cash_pay=(($sum_price-$credit_price)+$fee_amt),total_amt=($sum_price) WHERE id=$id ");
+
+              }
+
+          }
+
+  }
 
         // return $pay_type_id_fk;
         // dd();
