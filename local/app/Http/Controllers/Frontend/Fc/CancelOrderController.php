@@ -525,6 +525,17 @@ class CancelOrderController extends Controller
             'approve_date' => date('Y-m-d H:i:s'),
           ]);
 
+
+          $order_wut = DB::table('db_orders')
+          ->where('id','=',$order_id)
+          ->first();
+          if($order_wut){
+            $db_order_products_list = DB::table('db_order_products_list')->select('promotion_code')->where('frontstore_id_fk',$order_wut->id)->where('promotion_code','!=','')->get();
+            foreach($db_order_products_list as $pl){
+              DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$pl->promotion_code."') ");
+            }
+          }
+
         $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
           ->where('order_id_fk', $order_id)
           ->update([
