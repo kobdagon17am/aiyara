@@ -235,7 +235,7 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
     ->where('packing_code_id_fk', $data[0])
     ->orderBy('delivery_id_fk', 'asc')
     ->get();
-
+// dd($db_pick_pack_packing_data);
 ?>
 
 @foreach ($db_pick_pack_packing_data as $index => $pick_pack_packing_data)
@@ -282,23 +282,95 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
     $delivery = DB::select(
         " SELECT
-                                  db_delivery.set_addr_send_this,
-                                  db_delivery.recipient_name,
-                                  db_delivery.addr_send,
-                                  db_delivery.postcode,
-                                  db_delivery.mobile,
-                                  db_delivery.tel_home,
-                                  db_delivery.status_pack,
-                                  db_delivery.receipt,
-                                  db_delivery.id as delivery_id_fk,
-                                  db_delivery.orders_id_fk
-                                  FROM
-                                  db_delivery
-                                  WHERE
-                                  db_delivery.id = " .
+                                      db_delivery.set_addr_send_this,
+                                      db_delivery.recipient_name,
+                                      db_delivery.addr_send,
+                                      db_delivery.postcode,
+                                      db_delivery.mobile,
+                                      db_delivery.tel_home,
+                                      db_delivery.status_pack,
+                                      db_delivery.receipt,
+                                      db_delivery.id as delivery_id_fk,
+                                      db_delivery.orders_id_fk
+                                      FROM
+                                      db_delivery
+                                      WHERE
+                                      db_delivery.id = " .
             $pick_pack_packing_data->delivery_id_fk .
             ' AND set_addr_send_this=1 ',
     );
+
+          $delivery0 = DB::select(
+              " SELECT
+                                            db_delivery.set_addr_send_this,
+                                            db_delivery.recipient_name,
+                                            db_delivery.addr_send,
+                                            db_delivery.postcode,
+                                            db_delivery.mobile,
+                                            db_delivery.tel_home,
+                                            db_delivery.status_pack,
+                                            db_delivery.receipt,
+                                            db_delivery.id as delivery_id_fk,
+                                            db_delivery.id,
+                                            db_delivery.orders_id_fk
+                                            FROM
+                                            db_delivery
+                                            WHERE
+                                            db_delivery.id = " .
+                  $pick_pack_packing_data->delivery_id_fk .
+                  ' AND set_addr_send_this=0 ',
+          );
+
+            if(!$delivery){
+              if ($delivery0) {
+                // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
+                        $order_this = DB::table('db_orders')
+                            ->where('id', $delivery0[0]->orders_id_fk)
+                            ->first();
+                        if ($order_this) {
+                            $order_send = DB::table('db_orders')
+                                ->where('code_order', 'like', '%' . $order_this->bill_transfer_other . '%')
+                                ->first();
+                            if ($order_send) {
+                                $delivery2 = DB::table('db_delivery')
+                                    ->where('orders_id_fk', $order_send->id)
+                                    ->first();
+                                if ($delivery2) {
+                                    DB::table('db_delivery')
+                                        ->where('id', $delivery0[0]->id)
+                                        ->update([
+                                            'recipient_name' => $delivery2->recipient_name,
+                                            'addr_send' => $delivery2->addr_send,
+                                            'postcode' => $delivery2->postcode,
+                                            'mobile' => $delivery2->mobile,
+                                            'tel_home' => $delivery2->tel_home,
+                                        ]);
+
+                                        $delivery = DB::select(
+                " SELECT
+                                              db_delivery.set_addr_send_this,
+                                              db_delivery.recipient_name,
+                                              db_delivery.addr_send,
+                                              db_delivery.postcode,
+                                              db_delivery.mobile,
+                                              db_delivery.tel_home,
+                                              db_delivery.status_pack,
+                                              db_delivery.receipt,
+                                              db_delivery.id as delivery_id_fk,
+                                              db_delivery.orders_id_fk
+                                              FROM
+                                              db_delivery
+                                              WHERE
+                                              db_delivery.id = " .
+                                              $delivery0[0]->id
+                    ,
+            );
+                    }
+                            }
+                        }
+            }
+            }
+
 
     $recipient_name = @$delivery[0]->recipient_name ? @$delivery[0]->recipient_name : '';
     $addr_send = @$delivery[0]->addr_send . ' ' . @$delivery[0]->postcode;
@@ -373,35 +445,34 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
                 $sTable = DB::select(
                     "
 
-                                                                                SELECT
-                                                                                db_pick_pack_packing.id,
-                                                                                db_pick_pack_packing.p_size,
-                                                                                db_pick_pack_packing.p_weight,
-                                                                                db_pick_pack_packing.p_amt_box,
-                                                                                db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-                                                                                db_pick_pack_packing.packing_code as packing_code,
-                                                                                db_delivery.id as db_delivery_id,
-                                                                                db_delivery.packing_code as db_delivery_packing_code
-                                                                                FROM `db_pick_pack_packing`
-                                                                                LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-                                                                                WHERE
-                                                                                db_pick_pack_packing.packing_code_id_fk =" .
+                                                                                                SELECT
+                                                                                                db_pick_pack_packing.id,
+                                                                                                db_pick_pack_packing.p_size,
+                                                                                                db_pick_pack_packing.p_weight,
+                                                                                                db_pick_pack_packing.p_amt_box,
+                                                                                                db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+                                                                                                db_pick_pack_packing.packing_code as packing_code,
+                                                                                                db_delivery.id as db_delivery_id,
+                                                                                                db_delivery.packing_code as db_delivery_packing_code
+                                                                                                FROM `db_pick_pack_packing`
+                                                                                                LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+                                                                                                WHERE
+                                                                                                db_pick_pack_packing.packing_code_id_fk =" .
                         $data[0] .
                         "
-                                                                                AND db_pick_pack_packing.delivery_id_fk = " .
+                                                                                                AND db_pick_pack_packing.delivery_id_fk = " .
                         $pick_pack_packing_data->delivery_id_fk .
                         "
-                                                                                ORDER BY db_pick_pack_packing.id
-                                                                                ",
+                                                                                                ORDER BY db_pick_pack_packing.id
+                                                                                                ",
                 );
 
                 foreach ($sTable as $key => $row) {
-
-                  $pn = '<tr>
-                    <td style="width:70%; "><b>รหัส : ชื่อสินค้า</b></td>
-                    <td style="width:15%; text-align:left;"><b>จำนวน</b></td>
-                    <td style="width:15%; text-align:left;"><b>หน่วย</b></td>
-                    </tr>';
+                    $pn = '<tr>
+                                    <td style="width:70%; "><b>รหัส : ชื่อสินค้า</b></td>
+                                    <td style="width:15%; text-align:left;"><b>จำนวน</b></td>
+                                    <td style="width:15%; text-align:left;"><b>หน่วย</b></td>
+                                    </tr>';
 
                     // $pn = '<div class="divTable"><div class="divTableBody">';
                     // $pn .= '<div class="divTableRow">
@@ -426,16 +497,23 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
                     if (@$Products) {
                         foreach ($Products as $key => $value) {
-
                             if (!empty($value->product_id_fk)) {
-
-                              $pn .="
-                                <tr>
-                                  <td>".@$value->product_code." : ".@$value->product_name."</td>
-                                  <td style='text-align:left;'>".@$value->amt_sum."</td>
-                                  <td style='text-align:left;'>".@$value->product_unit."</td>
-                                  </tr>
-                              ";
+                                $pn .=
+                                    "
+                                                <tr>
+                                                  <td>" .
+                                    @$value->product_code .
+                                    ' : ' .
+                                    @$value->product_name .
+                                    "</td>
+                                                  <td style='text-align:left;'>" .
+                                    @$value->amt_sum .
+                                    "</td>
+                                                  <td style='text-align:left;'>" .
+                                    @$value->product_unit .
+                                    "</td>
+                                                  </tr>
+                                              ";
 
                                 // $pn .=
                                 //     '<div class="divTableRow">
@@ -470,11 +548,14 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
                         // $pn .= '</div></div>';
 
-                        $pn .= "  <tr>
-                                  <td style='text-align:right;'><b>รวม</b></td>
-                                  <td style='text-align:left;'>". @$sum_amt."</td>
-                                  <td style='text-align:left;'></td>
-                                  </tr>";
+                        $pn .=
+                            "  <tr>
+                                                  <td style='text-align:right;'><b>รวม</b></td>
+                                                  <td style='text-align:left;'>" .
+                            @$sum_amt .
+                            "</td>
+                                                  <td style='text-align:left;'></td>
+                                                  </tr>";
 
                         echo $pn;
 
@@ -483,16 +564,15 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
                         // if($key+1 == 10 ){
                         //       echo '<div class="page-break"></div>';
                         //   }
-
                     }
                 }
 
                 ?>
-<br>
+                <br>
             </table>
         </div>
 
-        <br>  <br>
+        <br> <br>
         <table style="border-collapse: collapse;">
             <tr>
                 <th style="text-align: center;font-size: 18px;">

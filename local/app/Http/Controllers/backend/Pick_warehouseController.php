@@ -2055,7 +2055,7 @@ ORDER BY db_pick_pack_packing.id
                     // dd($data->orders_id_fk);
                     $order_this = DB::table('db_orders')->where('id',$data->orders_id_fk)->first();
                     if($order_this){
-                      $order_send = DB::table('db_orders')->where('code_order','like','%'.$order_this->pay_with_other_bill_note.'%')->first();
+                      $order_send = DB::table('db_orders')->where('code_order','like','%'.$order_this->bill_transfer_other.'%')->first();
                       if($order_send){
                           // $d3_arr[$data->id] = $order_send->code_order;
                           $d_send = DB::table('db_delivery')->where('orders_id_fk',$order_send->id)->first();
@@ -2092,7 +2092,10 @@ ORDER BY db_pick_pack_packing.id
                       //  }
 
                       $check = DB::table('db_consignments')->where('recipient_code',$recipient_code)->where('pick_pack_requisition_code_id_fk',$reg->packing_id)->first();
-
+                        // if($recipient_code=='P100002'){
+                        //   // dd($v3->addr_send);
+                        //   // dd($v3->recipient_name);
+                        // }
                       if(!$check){
                         DB::select(" INSERT IGNORE INTO `db_consignments`
                         SET

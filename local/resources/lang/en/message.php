@@ -435,6 +435,7 @@ return [
 'down_c'=> 'Down C',
 //model
 'add'=> 'Add line ',
+'add_order'=> 'Order list',
 'under'=> 'Under',
 
 'Register_Date'=> 'Register date',

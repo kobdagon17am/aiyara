@@ -14,7 +14,7 @@ class PmController extends Controller
     {
 
       return view('backend.pm.index');
-      
+
     }
 
  public function create()
@@ -48,17 +48,17 @@ class PmController extends Controller
       }else{
         $operator_name = '';
       }
-      
+
 
       if($sRow->customers_id_fk!=0){
         $Customer = DB::table('customers')->where('id',$sRow->customers_id_fk)->get();
       }else{
        $Customer = DB::select(" select * from customers limit 100 ");
       }
-    
+
        $sMainGroup = DB::select(" select * from role_group where id<>1 ");
        $ans_more = DB::table('pm_answers')->where('pm_id_fk',$sRow->id)->orderBy('created_at','asc')->get();
-  
+
        return View('backend.pm.form')->with(array('sRow'=>$sRow,'ans_more'=>$ans_more, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
     }
 
@@ -78,17 +78,17 @@ class PmController extends Controller
       }else{
         $operator_name = '';
       }
-      
+
 
       if($sRow->customers_id_fk!=0){
         $Customer = DB::table('customers')->where('id',$sRow->customers_id_fk)->get();
       }else{
        $Customer = DB::select(" select * from customers limit 100 ");
       }
-    
+
        $sMainGroup = DB::select(" select * from role_group where id<>1 ");
        $ans_more = DB::table('pm_answers')->where('pm_id_fk',$sRow->id)->orderBy('created_at','asc')->get();
-  
+
        return View('backend.pm.anser')->with(array('sRow'=>$sRow,'ans_more'=>$ans_more, 'id'=>$id, 'subject_recipient_name'=>$subject_recipient,'operator_name'=>$operator_name,'Customer'=>$Customer,'sMainGroup'=>$sMainGroup));
     }
 
@@ -102,6 +102,11 @@ class PmController extends Controller
          'created_at' => date('Y-m-d H:i:s'),
          'updated_at' => date('Y-m-d H:i:s')
        ]);
+
+      //  DB::table('pm')->where('id',$request->pm_id)->update([
+      //   'pm_id_fk' => $request->pm_id,
+      //   'updated_at' => date('Y-m-d H:i:s')
+      // ]);
        return redirect()->back();
     }
 
@@ -134,7 +139,7 @@ class PmController extends Controller
 
           $sRow->status_close_job    = request('status_close_job')?request('status_close_job'):0;
           $sRow->status    = request('status')?request('status'):0;
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
@@ -153,7 +158,7 @@ class PmController extends Controller
 
          // return redirect()->action('backend\PmController@index')->with(['alert'=>\App\Models\Alert::Msg('success')]);
            return redirect()->to(url("backend/pm/".$sRow->id."/edit?role_group_id=".request('role_group_id')."&menu_id=".request('menu_id')));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -173,6 +178,7 @@ class PmController extends Controller
 
     public function Datatable(){
       $sTable = \App\Models\Backend\Pm::search()->orderBy('id', 'asc');
+      // dd($sTable);
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('role_name', function($row) {
@@ -196,8 +202,23 @@ class PmController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+
+      ->addColumn('topics_question', function($row) {
+       $ans_pm = DB::table('pm_answers')->select('type')->where('pm_id_fk',$row->id)->orderBy('updated_at','desc')->first();
+       $p = "";
+       if($ans_pm){
+          if($ans_pm->type == 'customer'){
+            $p = '<br><label style="color:red;">มีข้อความที่ยังไม่ตอบ</label>';
+          }
+       }
+        return $row->topics_question.$p;
+      })
+     ->escapeColumns('topics_question')
+
       ->make(true);
     }
+
+
 
 
 
