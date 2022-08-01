@@ -77,27 +77,30 @@ class RunNumberPayment extends Model
       ->first();
 
 
+
     if (@$id->code_order) {
+
       $last_code = $id->code_order;
       $code = substr($last_code, -5);
       $last_code = $code + 1;
-
       $num_code = substr("00000" . $last_code, -5);
+
       $code_order = 'W' . $business_location_id_fk . date('ymd') . '' . $num_code;
     } else {
+
       $last_code = 1;
       $num_code = substr("00000" . $last_code, -5);
       $code_order = 'W' . $business_location_id_fk . date('ymd') . '' . $num_code;
     }
 
-    do {
-      $rs = RunNumberPayment::check_number_aicash($code_order);
-    }while ($rs['status']=='fail');
 
-    return  $rs['code_order'];
+      $rs = RunNumberPayment::check_number_aicash($code_order,$business_location_id_fk);
+        return  $rs['code_order'];
+
+
   }
 
-  public static function check_number_aicash($code_order)
+  public static function check_number_aicash($code_order,$business_location_id_fk)
   {
     $check_number_aicash = Db_Add_ai_cash::where('code_order', '=', $code_order)
       ->count();
@@ -105,12 +108,11 @@ class RunNumberPayment extends Model
       $last_code = $code_order;
       $code = substr($last_code, -5);
       $last_code = $code + 1;
-      $data = ['status'=>'fail','code_order'=>$last_code];
+      $num_code = substr("00000" . $last_code, -5);
+      $code_order = 'W' . $business_location_id_fk . date('ymd') . '' . $num_code;
+      $data = ['status'=>'fail','code_order'=>$code_order];
 
     } else {
-      $last_code = $code_order;
-      $code = substr($last_code, -5);
-      $last_code = $code + 2;
       $data = ['status'=>'success','code_order'=>$code_order];
 
     }
