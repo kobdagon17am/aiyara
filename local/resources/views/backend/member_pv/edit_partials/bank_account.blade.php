@@ -5,7 +5,7 @@
         <h5 class="font-weight-bold">ข้อมูลธนาคาร</h5>
         <hr class="mt-1 mb-2">
 
-        <form action="{{ route('backend.member_pv.update', $customer->id) }}" method="POST">
+        <form action="{{ route('backend.member_pv.update', $customer->id) }}" method="POST"  enctype="multipart/form-data" autocomplete="off">
           @csrf
           @method('PATCH')
 
@@ -73,6 +73,19 @@
                     <label class="custom-control-label" for="bank_type2">กระแสรายวัน</label>
                 </div>
               </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="p_desc_4">{{ __('message.file_types.4') }}</h4>
+              @if($file_img)
+              <p> <img id="file_path4" class="grow img-fluid" src="{{asset($file_img->url.'/'.$file_img->file)}}" width="50%" style="cursor: pointer;" > </p>
+              <div class="col-md-4">
+              <input type="file" name="file_bank" class="form-control">
+              </div>
+              @endif
             </div>
           </div>
 

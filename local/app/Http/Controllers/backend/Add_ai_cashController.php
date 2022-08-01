@@ -155,8 +155,7 @@ class Add_ai_cashController extends Controller
     // dd($request->all());
     $sRow = \App\Models\Backend\Add_ai_cash::find($id);
     //dd($sRow);
-
-    $sPay_type = DB::select(" select * from dataset_pay_type where id in(1,5,7,8,10); ");
+    $sPay_type = DB::select(" select * from dataset_pay_type where id in(1,2,5,7,8,10); ");
     $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
     if ($sRow) {
       $action_user = \App\Models\Backend\Permission\Admin::where('id', $sRow->action_user)->get();
@@ -202,7 +201,7 @@ class Add_ai_cashController extends Controller
 
         $admin_id = \Auth::user()->id;
         $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id, $admin_id, 'admin', $request->note, $pay_type_id = '1');
-        
+
         $sRow = \App\Models\Backend\Add_ai_cash::find($id);
         $sRow->approve_status = 2;
         $sRow->order_type_id_fk = 7;
@@ -212,7 +211,7 @@ class Add_ai_cashController extends Controller
         // if(isset($request->pay_with_other_bill)){
         //   $sRow->pay_with_other_bill_select = $request->pay_with_other_bill;
         //   $sRow->pay_with_other_bill_code = $request->invoice_code;
-    
+
         // }
         if ($sRow->code_order == "") {
           $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
@@ -224,7 +223,7 @@ class Add_ai_cashController extends Controller
 
         $admin_id = \Auth::user()->id;
         // $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($request->id, $admin_id, 'admin', $request->note, $pay_type_id = '1');
-        
+
         $sRow = \App\Models\Backend\Add_ai_cash::find($id);
         $sRow->approve_status = 6;
         $sRow->order_type_id_fk = 7;
@@ -234,7 +233,7 @@ class Add_ai_cashController extends Controller
         // if(isset($request->pay_with_other_bill)){
         //   $sRow->pay_with_other_bill_select = $request->pay_with_other_bill;
         //   $sRow->pay_with_other_bill_code = $request->invoice_code;
-    
+
         // }
         if ($sRow->code_order == "") {
           $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
@@ -242,7 +241,7 @@ class Add_ai_cashController extends Controller
         }
         $sRow->save();
       }
-     
+
       return redirect()->to(url("backend/po_approve"));
     } else {
       $sRow = \App\Models\Backend\Add_ai_cash::find($id);
@@ -254,7 +253,7 @@ class Add_ai_cashController extends Controller
       if(isset($request->pay_with_other_bill)){
         $sRow->pay_with_other_bill_select = $request->pay_with_other_bill;
         $sRow->pay_with_other_bill_code = $request->invoice_code;
-  
+
       }
 
       $sRow->save();
@@ -388,12 +387,12 @@ class Add_ai_cashController extends Controller
       //           'file_slip' => $url . '/' . $f_name,
       //         ]);
       //       // $resule = ['status' => 'success', 'message' => 'Add Ai-Cash Success'];
-        
+
       //   // }
       // }
       // }
-  
-      // 
+
+      //
 
       if($sRow->approve_status==0){
         $sRow->action_user    = @\Auth::user()->id;

@@ -294,6 +294,76 @@ $delivery = DB::select(
         ' AND set_addr_send_this=1 ',
 );
 
+$delivery0 = DB::select(
+    " SELECT
+              db_delivery.set_addr_send_this,
+              db_delivery.recipient_name,
+              db_delivery.addr_send,
+              db_delivery.postcode,
+              db_delivery.mobile,
+              db_delivery.tel_home,
+              db_delivery.status_pack,
+              db_delivery.receipt,
+              db_delivery.id as delivery_id_fk,
+              db_delivery.id,
+              db_delivery.orders_id_fk
+              FROM
+              db_delivery
+              WHERE
+              db_delivery.id = " .
+        @$data[0] .
+        ' AND set_addr_send_this=0 ',
+);
+
+if(!$delivery){
+  if($delivery0){
+  // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
+  $order_this = DB::table('db_orders')
+                            ->where('id', $delivery0[0]->orders_id_fk)
+                            ->first();
+                        if ($order_this) {
+                            $order_send = DB::table('db_orders')
+                                ->where('code_order', 'like', '%' . $order_this->bill_transfer_other . '%')
+                                ->first();
+                            if ($order_send) {
+                                $delivery2 = DB::table('db_delivery')
+                                    ->where('orders_id_fk', $order_send->id)
+                                    ->first();
+                                if ($delivery2) {
+                                    DB::table('db_delivery')
+                                        ->where('id', $delivery0[0]->id)
+                                        ->update([
+                                            'recipient_name' => $delivery2->recipient_name,
+                                            'addr_send' => $delivery2->addr_send,
+                                            'postcode' => $delivery2->postcode,
+                                            'mobile' => $delivery2->mobile,
+                                            'tel_home' => $delivery2->tel_home,
+                                        ]);
+
+                                        $delivery = DB::select(
+    " SELECT
+              db_delivery.set_addr_send_this,
+              db_delivery.recipient_name,
+              db_delivery.addr_send,
+              db_delivery.postcode,
+              db_delivery.mobile,
+              db_delivery.tel_home,
+              db_delivery.status_pack,
+              db_delivery.receipt,
+              db_delivery.id as delivery_id_fk,
+              db_delivery.orders_id_fk
+              FROM
+              db_delivery
+              WHERE
+              db_delivery.id = " .
+              $delivery0[0]->id
+      );
+                    }
+                            }
+                        }
+}
+}
+
 $recipient_name = @$delivery[0]->recipient_name ? @$delivery[0]->recipient_name : '';
 $addr_send = @$delivery[0]->addr_send . ' ' . @$delivery[0]->postcode;
 $tel = @$delivery[0]->mobile . ' ' . @$delivery[0]->tel_home;

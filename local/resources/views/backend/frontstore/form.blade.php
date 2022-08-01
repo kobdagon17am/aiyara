@@ -7982,6 +7982,12 @@ $(document).ready(function(){
                 }
             }
 
+            if(pay_type_id_fk == 5 || pay_type_id_fk == 6 ||pay_type_id_fk == 7 ||pay_type_id_fk == 10 ||pay_type_id_fk == 19 ){
+              $(".show_div_cash_pay ").show();
+            }else{
+              $(".show_div_cash_pay ").hide();
+            }
+
 
             $(document).on('click', '#aicash_choose', function() {
                 $(this).hide();

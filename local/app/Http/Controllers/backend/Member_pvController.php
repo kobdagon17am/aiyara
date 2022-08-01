@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Frontend\Customer;
+use Auth;
 
 class Member_pvController extends Controller
 {
@@ -84,7 +85,7 @@ class Member_pvController extends Controller
         ->leftJoin('customers_detail as detail', 'detail.customer_id', '=', 'customers.id')
         ->where('customers.id', $id)
         ->first();
-      
+
       $addressCard = DB::table('customers_address_card')
           ->where('customer_id', $id)
           ->first();
@@ -93,12 +94,14 @@ class Member_pvController extends Controller
       $packages = DB::table('dataset_package')->pluck('dt_package', 'id');
 
       $provinces = DB::table('dataset_provinces')->pluck('name_th', 'id');
+      $file_img = DB::table('register_files')->where('customer_id',$customer->id)->where('type',4)->first();
 
       return view('backend.member_pv.edit')->with([
         'customer' => $customer,
         'qualifications' => $qualifications,
         'packages' => $packages,
         'addressCard' => $addressCard,
+        'file_img' => $file_img,
         'provinces' => $provinces
       ]);
     }
@@ -152,9 +155,41 @@ class Member_pvController extends Controller
     }
     public function updateBankInformation($request, $customer_id)
     {
-      DB::table('customers_detail')->updateOrInsert([
-        'customer_id' => $customer_id
-      ],$request->except(['_method', '_token','type']));
+      // DB::table('customers_detail')->updateOrInsert([
+      //   'customer_id' => $customer_id
+      // ],$request->except(['_method', '_token','type']));
+
+      DB::table('customers_detail')->where('customer_id',$customer_id)->update(
+        [
+          'bank_account' => $request->bank_account,
+          'bank_no' => $request->bank_no,
+          'bank_name' => $request->bank_name,
+          'bank_branch' => $request->bank_branch,
+          'bank_type' => $request->bank_type,
+        ]
+      );
+
+      if(isset($request->file_bank)){
+        if($request->file_bank!=null){
+          $file_4 = $request->file_bank;
+                  // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
+            $url='local/public/files_register/4/'.date('Ym');
+            $f_name =  date('YmdHis').'_'.Auth::user()->id.'_4'.'.'.$file_4->getClientOriginalExtension();
+            if($file_4->move($url,$f_name)){
+            DB::table('register_files')
+            ->where('customer_id',$customer_id)->where('type',4)
+            ->update(
+           [
+            'url' => $url,
+           'file' => $f_name,
+           'updated_at' => date('Y-m-d')
+           ]
+            );
+                  // $update_use->regis_doc4_status = 0;
+            }
+                    }
+
+            }
     }
 
 
@@ -322,7 +357,7 @@ class Member_pvController extends Controller
         if (auth()->user()->permission == 0 && !auth()->user()->can_edit_profile) {
           return '';
         }
-        
+
         return "
           <a class='btn btn-sm btn-warning' href='{$routeEdit}' target='_blank' class='btn btn-primary'>
             <i class='bx bx-edit font-size-16 align-middle'></i>

@@ -1240,6 +1240,7 @@ $(function() {
                                   }
 
                                   if(value.type=="4"){
+                                    console.log(value.file_path);
                                     $('#file_path4').attr("src", value.file_path);
                                     $('#file_path4').show();
                                     $('.p_desc_4').css({"background-color": "bisque", "color": "blue" });

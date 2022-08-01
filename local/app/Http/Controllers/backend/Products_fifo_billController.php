@@ -523,6 +523,7 @@ foreach($temp_ppr_0021_data as $tmp){
                $amt_pay_this = $value->amt;
               // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
                $w_arr2 = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+              //  dd($w_arr2);
                $w_str2 = '';
                foreach($w_arr2 as $key => $w){
                  if($key+1==count($w_arr2)){
@@ -532,18 +533,18 @@ foreach($temp_ppr_0021_data as $tmp){
                  }
 
                }
-               
+
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
-
+// dd(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
                 if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
-    
+
                   $pay_this = $value->amt ;
                   $amt_pay_remain = 0;
-       
+
                     $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">'.$value->product_name.'</div>
@@ -573,7 +574,7 @@ foreach($temp_ppr_0021_data as $tmp){
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
                           // TEMPORARY
                           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-                      
+
                           // dd($w_arr);
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
@@ -633,7 +634,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                       ->where('shelf_id_fk', $v_02->shelf_id_fk)
                                       ->where('shelf_floor', $v_02->shelf_floor)
                                       ->get();
-                             
+
                                         if($_choose->count() == 0){
                                               DB::select(" INSERT IGNORE INTO $temp_ppr_004 (
                                               business_location_id_fk,
@@ -920,7 +921,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
                 }else{ // กรณีไม่มีสินค้าในคลังเลย
-          
+
                      $amt_pay_remain = $value->amt ;
                      $pay_this = 0 ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
@@ -944,7 +945,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
                               // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE product_id_fk=".$value->product_id_fk." ");
-                        
+
                                     // // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
                                     //   $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id;
                                     // if(count($temp_db_stocks_02)==0){
@@ -954,11 +955,11 @@ foreach($temp_ppr_0021_data as $tmp){
                                     //     'promotions_products.product_unit as product_unit_id_fk',
                                     //     'promotions_products.product_id_fk as product_id_fk',
                                     //     DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                                    //     'promotions_products.product_amt as amt', 
+                                    //     'promotions_products.product_amt as amt',
                                     //   )
                                     //   ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                                    //   ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                                    //   ->join('products','products.id','promotions_products.product_id_fk')  
+                                    //   ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
+                                    //   ->join('products','products.id','promotions_products.product_id_fk')
                                     //   ->where($temp_ppp_002.'.type_product','promotion')
                                     //   ->where('promotions_products.product_id_fk',$value->product_id_fk)
                                     //   ->groupBy('promotions_products.product_id_fk')
@@ -1256,7 +1257,10 @@ foreach($temp_ppr_0021_data as $tmp){
 
           if(!empty($arr_product_id_fk)){
             DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
-             WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+             WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk'
+             AND db_stocks.lot_expired_date>=now()
+            --  AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk )
+             AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
         }
 
         foreach($product_id_fk as $p){
@@ -1294,8 +1298,9 @@ foreach($temp_ppr_0021_data as $tmp){
 
       if(!empty($arr_product_id_fk)){
         DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
-         WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk ) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
-    }
+         WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk'  AND db_stocks.lot_expired_date>=now()  AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+// AND db_stocks.warehouse_id_fk in (SELECT id FROM warehouse WHERE warehouse.branch_id_fk=db_stocks.branch_id_fk )
+  }
 
     // dd(DB::table($temp_db_stocks)->get());
          // $Data = DB::select(" SELECT * FROM $temp_db_stocks; ");
@@ -1418,7 +1423,7 @@ foreach($temp_ppr_0021_data as $tmp){
           }else{
             $Products = DB::table('db_pay_product_receipt_002')->where('invoice_code',$row->invoice_code)->where('status_cancel',0)->groupBy('product_id_fk')->orderby('time_pay','desc')->get();
           }
-         
+
           // $Products = DB::select("
           //   SELECT db_pay_product_receipt_002.* from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."' and amt_remain <> 0 AND time_pay=(SELECT max(time_pay) from db_pay_product_receipt_002 WHERE status_cancel=0 LIMIT 1) and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay
           // ");
@@ -1466,7 +1471,7 @@ foreach($temp_ppr_0021_data as $tmp){
        }
 
      }
-     
+
 
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
@@ -1652,7 +1657,7 @@ foreach($temp_ppr_0021_data as $tmp){
                        }else{
                          $w_str.=$w.',';
                        }
- 
+
                      }
          // wut อันนี้แก้ จ่ายผิดคลัง
                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
@@ -1880,11 +1885,11 @@ foreach($temp_ppr_0021_data as $tmp){
                             'promotions_products.product_unit as product_unit_id_fk',
                             'promotions_products.product_id_fk as product_id_fk',
                             DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                            'promotions_products.product_amt as amt', 
+                            'promotions_products.product_amt as amt',
                           )
                           ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                          ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                          ->join('products','products.id','promotions_products.product_id_fk')  
+                          ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
+                          ->join('products','products.id','promotions_products.product_id_fk')
                           ->where($temp_ppp_002.'.type_product','promotion')
                           ->where('promotions_products.product_id_fk',$value->product_id_fk)
                           ->groupBy('promotions_products.product_id_fk')
@@ -2220,7 +2225,7 @@ foreach($temp_ppr_0021_data as $tmp){
                               }else{
                                 $w_str.=$w.',';
                               }
-        
+
                             }
                 // wut อันนี้แก้ จ่ายผิดคลัง
                             $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
@@ -2370,7 +2375,7 @@ foreach($temp_ppr_0021_data as $tmp){
                                }else{
                                  $w_str.=$w.',';
                                }
-         
+
                              }
                  // wut อันนี้แก้ จ่ายผิดคลัง
                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
@@ -2601,11 +2606,11 @@ foreach($temp_ppr_0021_data as $tmp){
                                           'promotions_products.product_unit as product_unit_id_fk',
                                           'promotions_products.product_id_fk as product_id_fk',
                                           DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                                          'promotions_products.product_amt as amt', 
+                                          'promotions_products.product_amt as amt',
                                         )
                                         ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                                        ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                                        ->join('products','products.id','promotions_products.product_id_fk')  
+                                        ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
+                                        ->join('products','products.id','promotions_products.product_id_fk')
                                         ->where($temp_ppp_002.'.type_product','promotion')
                                         ->where('promotions_products.product_id_fk',$value->product_id_fk)
                                         ->groupBy('promotions_products.product_id_fk')

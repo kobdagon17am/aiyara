@@ -102,6 +102,11 @@ class PmController extends Controller
          'created_at' => date('Y-m-d H:i:s'),
          'updated_at' => date('Y-m-d H:i:s')
        ]);
+
+      //  DB::table('pm')->where('id',$request->pm_id)->update([
+      //   'pm_id_fk' => $request->pm_id,
+      //   'updated_at' => date('Y-m-d H:i:s')
+      // ]);
        return redirect()->back();
     }
 
@@ -196,8 +201,23 @@ class PmController extends Controller
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
+
+      ->addColumn('topics_question', function($row) {
+       $ans_pm = DB::table('pm_answers')->select('type')->where('pm_id_fk',$row->id)->orderBy('updated_at','desc')->first();
+       $p = "";
+       if($ans_pm){
+          if($ans_pm->type == 'customer'){
+            $p = '<br><label style="color:red;">มีข้อความที่ยังไม่ตอบ</label>';
+          }
+       }
+        return $row->topics_question.$p;
+      })
+     ->escapeColumns('topics_question')
+
       ->make(true);
     }
+
+
 
 
 
