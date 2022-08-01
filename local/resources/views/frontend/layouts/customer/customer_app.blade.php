@@ -238,15 +238,37 @@
 									@foreach($noti['data'] as $noti_value)
 
 									<li>
-										<a href="{{ route('message',['active'=>'inbox']) }}">
-										<div class="media">
+                    @if($noti_value->type == 'system' )
+                    <a href="{{ route('cart-payment-history',['code_order'=>$noti_value->order_code]) }}">
+                    <div class="media">
 											<img class="d-flex align-self-center img-radius" src="{{asset('local/public/images/admin_aiyara.png')}}" alt="Generic placeholder image">
 											<div class="media-body">
+
+                        <h5 class="notification-user">{{ $noti_value->topics_question }}</h5>
+												<p class="notification-msg">{{ $noti_value->details_question }}</p>
+
+
+											</div>
+										</div>
+                    </a>
+
+                    @else
+                    <a href="{{ route('message',['active'=>'inbox']) }}">
+                    <div class="media">
+											<img class="d-flex align-self-center img-radius" src="{{asset('local/public/images/admin_aiyara.png')}}" alt="Generic placeholder image">
+											<div class="media-body">
+
 												<h5 class="notification-user">มีข้อความตอบกลับจากใส่ใจคะ</h5>
 												<p class="notification-msg">{{ $noti_value->topics_question }}</p>
 												{{-- <span class="notification-time">30 minutes ago</span> --}}
+
 											</div>
 										</div>
+                    </a>
+
+                    @endif
+
+
 									</a>
 									</li>
 									@endforeach
@@ -274,7 +296,7 @@
 										<a href="{{route('profile_address')}}"><i class="fa fa-paper-plane-o text-success"></i> @lang('message.edit_profile') </a>
 									</li>
 									<li>
-										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i>  @lang('message.edit_profile') </a>
+										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i>  @lang('message.registration_documents') </a>
 									</li>
                   @if($canAccess)
 									<li>

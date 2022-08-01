@@ -177,8 +177,7 @@ class PmController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Pm::search()->orderBy('id', 'asc');
-      // dd($sTable);
+      $sTable = \App\Models\Backend\Pm::search()->where('type','customer')->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('role_name', function($row) {

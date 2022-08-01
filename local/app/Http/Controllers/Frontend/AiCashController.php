@@ -118,7 +118,7 @@ class AiCashController extends Controller
       ->where('db_add_ai_cash.code_order', '!=', null)
       ->where('dataset_order_status.lang_id', '=', $business_location_id)
       ->where('db_add_ai_cash.customer_id_fk', '=', $customer_id)
-      ->whereRaw("(db_add_ai_cash.type_create != 'admin' and db_add_ai_cash.order_status_id_fk != '8')")
+      ->whereRaw("(db_add_ai_cash.type_create != 'admin' || db_add_ai_cash.order_status_id_fk != '8')")
       ->orderby('db_add_ai_cash.created_at', 'desc')
       ->get();
 
@@ -145,7 +145,7 @@ class AiCashController extends Controller
         // } else {
         //     return '<b class="text-success"> ' . number_format($row->total_amt, 2) . '</b>';
         // }
-        return '<b>' . number_format($row->total_amt, 2) . '</b>';
+        return '<b>' . number_format($row->aicash_amt, 2) . '</b>';
       })
 
       ->addColumn('aicash_banlance', function ($row) {
@@ -221,7 +221,7 @@ class AiCashController extends Controller
       ->leftjoin('db_add_ai_cash', 'db_add_ai_cash.id', '=', 'db_movement_ai_cash.add_ai_cash_id_fk')
       ->where('dataset_orders_type.lang_id', '=', $business_location_id)
       ->where('db_movement_ai_cash.customer_id_fk', '=', $customer_id)
-      ->whereRaw("(db_add_ai_cash.type_create != 'admin' and db_add_ai_cash.order_status_id_fk != '8')")
+      ->whereRaw("(db_add_ai_cash.type_create != 'admin' || db_add_ai_cash.order_status_id_fk != '8')")
       ->orderby('db_movement_ai_cash.created_at', 'desc')
       ->get();
 

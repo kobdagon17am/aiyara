@@ -129,7 +129,7 @@ class Po_approveController extends Controller
         // $TransferBank = \App\Models\Backend\TransferBank::get();
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
 
-        
+
         return view('backend.po_approve.form')->with([
             'sRow' => $sRow,
             'p_bill' => $p_bill,
@@ -150,7 +150,7 @@ class Po_approveController extends Controller
         \DB::beginTransaction();
         try {
 
-       
+
             $data_id = DB::table('db_orders')->where('id',$id)->first();
             if($data_id){
                 $sRow = \App\Models\Backend\Orders::find($data_id->id);
@@ -179,7 +179,7 @@ class Po_approveController extends Controller
                     $sRow->transfer_bill_approvedate = date("Y-m-d H:i:s");
                     DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                 }
-    
+
                 if (@request('no_approved') != null) {
                     $sRow->status_slip = 'false';
                     $sRow->order_status_id_fk = '3';
@@ -196,9 +196,25 @@ class Po_approveController extends Controller
                     DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                     $sRow->approve_status = 6;
                     $sRow->status_slip = false;
+
+                    if($sRow->order_channel == 'MEMBER'){
+                      $message = ['customers_id_fk'=>$sRow->customers_id_fk,
+                      'topics_question'=>'เอกสารไม่ผ่านการตรวจสอบ',
+                      'details_question'=>'Order:'.$sRow->code_order,
+                      'order_code'=>$sRow->code_order,
+                      'orders_type'=>$sRow->purchase_type_id_fk,
+                      'type'=>'system',
+                      'status'=>0,
+                      'see_status'=>0,
+                    ];
+
+                    DB::table('pm')->insert($message);
+
+                    }
+
                 }
-    
-    
+
+
                 if (@request('approved') != null) {
                     if ($sRow->order_channel == 'VIP') {
                       $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
@@ -206,8 +222,9 @@ class Po_approveController extends Controller
                       $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
                     }
                 }
-    
+
                 $sRow->save();
+
                 if($sRow->approve_status==2){
                     // $this->fncUpdateDeliveryAddress($sRow->id);
                     // $this->fncUpdateDeliveryAddressDefault($sRow->id);
@@ -246,7 +263,7 @@ class Po_approveController extends Controller
                         $sRow2->transfer_bill_approvedate = date("Y-m-d H:i:s");
                         DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                     }
-                    
+
                     if (@request('no_approved') != null) {
                         $sRow2->status_slip = 'false';
                         $sRow2->order_status_id_fk = '3';
@@ -264,8 +281,8 @@ class Po_approveController extends Controller
                         $sRow2->approve_status = 6;
                         $sRow->status_slip = false;
                     }
-        
-        
+
+
                     if (@request('approved') != null) {
                         if ($sRow2->order_channel == 'VIP') {
                           $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
@@ -273,7 +290,7 @@ class Po_approveController extends Controller
                           $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
                         }
                     }
-        
+
                     $sRow2->save();
                     if($sRow2->approve_status==2){
                         // $this->fncUpdateDeliveryAddress($sRow2->id);
@@ -297,12 +314,12 @@ class Po_approveController extends Controller
                         $sRow->approver = \Auth::user()->id;
                         $sRow->approve_date = now();
                         $sRow->note = $ai->note;
-        
+
                         if ($sRow->code_order == "") {
                             $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
                             DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
                         }
-        
+
                         $sRow->save();
                     }
 
@@ -315,18 +332,18 @@ class Po_approveController extends Controller
                         $sRow->approver = \Auth::user()->id;
                         $sRow->approve_date = now();
                         $sRow->note = $ai->note;
-        
+
                         if ($sRow->code_order == "") {
                             $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
                             DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
                         }
-        
+
                         $sRow->save();
 
                     }
 
                 }
-           
+
 
             }else{
                 return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
@@ -449,7 +466,7 @@ class Po_approveController extends Controller
         }else{
             $customer_id = "";
         }
-        
+
 
         // if(@\Auth::user()->role_group_id_fk==4){
             $branch_id_fk = "" ;
@@ -515,7 +532,7 @@ ORDER BY code_order DESC
                 // } else {
                 //     return number_format(@$row->sum_price + $row->shipping_price, 2);
                 // }
-                
+
                 return number_format(@$row->transfer_price, 2);
             })
             // ->addColumn('date', function ($row) {
@@ -558,7 +575,7 @@ ORDER BY code_order DESC
                 }else{
                     return "-";
                 }
-        
+
               })
              ->escapeColumns('approval_amount_transfer')
              ->addColumn('transfer_amount_approver', function($row) {
@@ -626,7 +643,7 @@ ORDER BY code_order DESC
                 foreach($ai_cash as $a){
                     $str .= '<label>'.$a->code_order.'</label><br>';
                 }
-                
+
                     return $str;
 
             })
@@ -857,7 +874,7 @@ ORDER BY code_order DESC
                     }else{
                         return '<label style="color:red;">บิลยกเลิก</label>';
                     }
-                   
+
 
                 }
                 // return    $str = "<label style='color:".$row->color.";'>".$row->txt_desc."</label>";
@@ -1009,7 +1026,7 @@ ORDER BY code_order DESC
 
             $sum = 0;
             foreach($sTable as $row){
-            
+
                 // if (@$row->purchase_type_id_fk == 7) {
                 //     $sum += $row->sum_price;
                 // } else if (@$row->purchase_type_id_fk == 5) {
@@ -1033,7 +1050,7 @@ ORDER BY code_order DESC
          ");
 
             foreach($sTable as $row){
-            
+
                 // if (@$row->purchase_type_id_fk == 7) {
                 //     $sum += $row->sum_price;
                 // } else if (@$row->purchase_type_id_fk == 5) {
@@ -1060,7 +1077,7 @@ ORDER BY code_order DESC
 
            return number_format($sum, 2);
 
-      
+
     }
 
 }

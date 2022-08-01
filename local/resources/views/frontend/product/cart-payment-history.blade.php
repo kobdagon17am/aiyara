@@ -1,6 +1,5 @@
 @extends('frontend.layouts.customer.customer_app')
 @section('css')
-
 @endsection
 @section('conten')
     <!-- Invoice card start -->
@@ -12,10 +11,13 @@
                 <div class="card-header-right p-2">
 
 
-                   <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="" data-original-title=".btn-xlg"  >
-                    <a href="{{route('product-history')}}"  class="btn btn-primary btn-mini waves-effect waves-light"><i class="fa fa-reply" style="color:#fff"></i>กลับ </a>
-                    <a href="{{ route('export_pdf_history', ['code_order' => $order->code_order]) }}" target="_new" class="btn btn-primary btn-mini waves-effect waves-light"><i class="fa fa-file-pdf-o" style="color:#fff"> PDF</i></a>
-                </div>
+                    <div class="btn-group " role="group" data-toggle="tooltip" data-placement="top" title="">
+                        <a href="{{ route('product-history') }}" class="btn btn-primary btn-mini waves-effect waves-light"><i
+                                class="fa fa-reply" style="color:#fff"></i>กลับ </a>
+                        <a href="{{ route('export_pdf_history', ['code_order' => $order->code_order]) }}" target="_new"
+                            class="btn btn-primary btn-mini waves-effect waves-light"><i class="fa fa-file-pdf-o"
+                                style="color:#fff"> PDF</i></a>
+                    </div>
 
 
                 </div>
@@ -41,38 +43,61 @@
                     <h6>ที่อยู่การจัดส่ง : <span class="label label-{{ $order->css_class }}">{{ $address_sent }}</span>
                     </h6>
                     @if ($address)
-                    <p><b>{{ $address['name'] }}</b><br>
-                      @if ($address['tel']) Tel: {{ $address['tel'] }} <br>@endif
-                      @if ($address['email']) Email: {{ $address['email'] }}<br>@endif
-                      @if ($address['house_no']) {{ $address['house_no'] }}, @endif
-                      @if ($address['moo'] != '-' and $address['moo'] != '') หมู่.{{ $address['moo'] }}, @endif
-                      @if ($address['house_name'] != '-' and $address['house_name'] != '') {{ $address['house_name'] }}, @endif
-                      @if ($address['soi'] != '-' and $address['soi'] != '') {{ $address['soi'] }}, @endif
-                      @if ($address['road'] != '-' and $address['road'] != '') ถนน.{{ $address['road'] }}, @endif
+                        <p><b>{{ $address['name'] }}</b><br>
+                            @if ($address['tel'])
+                                Tel: {{ $address['tel'] }} <br>
+                            @endif
+                            @if ($address['email'])
+                                Email: {{ $address['email'] }}<br>
+                            @endif
+                            @if ($address['house_no'])
+                                {{ $address['house_no'] }},
+                            @endif
+                            @if ($address['moo'] != '-' and $address['moo'] != '')
+                                หมู่.{{ $address['moo'] }},
+                            @endif
+                            @if ($address['house_name'] != '-' and $address['house_name'] != '')
+                                {{ $address['house_name'] }},
+                            @endif
+                            @if ($address['soi'] != '-' and $address['soi'] != '')
+                                {{ $address['soi'] }},
+                            @endif
+                            @if ($address['road'] != '-' and $address['road'] != '')
+                                ถนน.{{ $address['road'] }},
+                            @endif
 
-                      @if ($address['district_name'] != '-' and $address['district_name'] != '')<br>{{ $address['district_name'] }}, @endif
-                      @if ($address['amphures_name'] != '-' and $address['amphures_name'] != ''){{ $address['amphures_name'] }}, @endif
-                      @if ($address['provinces_name'] != '-' and $address['provinces_name'] != ''){{ $address['provinces_name'] }}, @endif
-                      @if ($address['zipcode']) {{ $address['zipcode'] }}@endif
-                  </p>
+                            @if ($address['district_name'] != '-' and $address['district_name'] != '')
+                                <br>{{ $address['district_name'] }},
+                            @endif
+                            @if ($address['amphures_name'] != '-' and $address['amphures_name'] != '')
+                                {{ $address['amphures_name'] }},
+                            @endif
+                            @if ($address['provinces_name'] != '-' and $address['provinces_name'] != '')
+                                {{ $address['provinces_name'] }},
+                            @endif
+                            @if ($address['zipcode'])
+                                {{ $address['zipcode'] }}
+                            @endif
+                        </p>
                     @else
                         <p><b> </b>
                     @endif
-                         @if ($order->status_payment_sent_other == 1)
-                         <?php
-                         $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($order->customers_sent_id_fk);
-                         $customer_pay = \App\Helpers\Frontend::get_customer_id($order->customers_id_fk);
+                    @if ($order->status_payment_sent_other == 1)
+                        <?php
+                        $sent_to_customer_data = \App\Helpers\Frontend::get_customer_id($order->customers_sent_id_fk);
+                        $customer_pay = \App\Helpers\Frontend::get_customer_id($order->customers_id_fk);
 
-                         ?>
-                         <hr>
-                         <span class="label label-success mb-2">สั่งซื้อให้ลูกทีม</span>
-                         <p class="mt-1">
-                          <b>ผู้สังซื้อ </b> |  {{ $customer_pay->first_name }} {{ $customer_pay->last_name }} ({{ $customer_pay->user_name }})
-                           <br>
-                          <b>ผู้รับคะแนน </b> |  {{ $sent_to_customer_data->first_name }} {{ $sent_to_customer_data->last_name }} ({{ $sent_to_customer_data->user_name }})
-                         </p>
-
-                     @endif
+                        ?>
+                        <hr>
+                        <span class="label label-success mb-2">สั่งซื้อให้ลูกทีม</span>
+                        <p class="mt-1">
+                            <b>ผู้สังซื้อ </b> | {{ $customer_pay->first_name }} {{ $customer_pay->last_name }}
+                            ({{ $customer_pay->user_name }})
+                            <br>
+                            <b>ผู้รับคะแนน </b> | {{ $sent_to_customer_data->first_name }}
+                            {{ $sent_to_customer_data->last_name }} ({{ $sent_to_customer_data->user_name }})
+                        </p>
+                    @endif
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6>Order Information :</h6>
@@ -80,20 +105,31 @@
                         <tbody>
                             <tr>
                                 <th>Date :</th>
-                                <td>@if ($order->created_at) {{ date('d/m/Y', strtotime($order->created_at)) }} @endif</td>
+                                <td>
+                                    @if ($order->created_at)
+                                        {{ date('d/m/Y', strtotime($order->created_at)) }}
+                                    @endif
+                                </td>
                             </tr>
                             <tr>
                                 <th>Status :</th>
                                 <td>
-                                    @if ($order->detail)<span
-                                            class="label label-{{ $order->css_class }}">{{ $order->detail }}</span>
+                                    @if ($order->detail)
+                                        <span class="label label-{{ $order->css_class }}">{{ $order->detail }}</span>
                                     @endif
+
+                                    @if( $order->order_status_id_fk == 3)
+                                    <a class="btn btn-sm btn-success" href="{{route('cart_payment_transfer',['code_order'=>$order->code_order])}}"><i class="fa fa-refresh"></i> ชำระเงิน </a>
+                                    @endif
+
                                 </td>
                             </tr>
                             <tr>
                                 <th>Type :</th>
                                 <td>
-                                    @if ($order->type) <span>{{ $order->type }}</span> @endif
+                                    @if ($order->type)
+                                        <span>{{ $order->type }}</span>
+                                    @endif
                                 </td>
                             </tr>
                             {{-- <tr>
@@ -108,24 +144,29 @@
                     </table>
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">เลขใบสั่งซื้อ : @if ($order->detail)<span> {{ $order->code_order }} </span> @endif
+                    <h6 class="m-b-20">เลขใบสั่งซื้อ : @if ($order->detail)
+                            <span> {{ $order->code_order }} </span>
+                        @endif
                     </h6>
 
-                    <h6 class="m-b-20 ">เลขใบเสร็จ : @if ($order->order_payment_code)<span class="text-success">
-                                {{ $order->order_payment_code }} </span> @endif
+                    <h6 class="m-b-20 ">เลขใบเสร็จ : @if ($order->order_payment_code)
+                            <span class="text-success">
+                                {{ $order->order_payment_code }} </span>
+                        @endif
                     </h6>
 
                     {{-- <h6 class="m-b-20 ">Paid by : @if ($order->pay_type_name)<span class="text-success">
                                 {{ $order->pay_type_name }} </span> @endif
                     </h6> --}}
 
-                    @if($order->aistockist)
-                    <?php
-                     $aistockis = App\Helpers\Frontend::get_customer_id($order->aistockist);
+                    @if ($order->aistockist)
+                        <?php
+                        $aistockis = App\Helpers\Frontend::get_customer_id($order->aistockist);
 
-                    ?>
-                     <b class="m-b-20">ซื้อผ่าน Ai-Stockist </b><br> <span> {{$aistockis->first_name}} {{$aistockis->last_name}} ( {{$aistockis->user_name}} ) </span></b>
-                   @endif
+                        ?>
+                        <b class="m-b-20">ซื้อผ่าน Ai-Stockist </b><br> <span> {{ $aistockis->first_name }}
+                            {{ $aistockis->last_name }} ( {{ $aistockis->user_name }} ) </span></b>
+                    @endif
 
                     {{-- <table class="table table-responsive invoice-table invoice-order table-borderless">
                <tbody>
@@ -166,8 +207,13 @@
                                 <tr class="thead-default">
                                     <th>Description</th>
 
-                                    @if ($order->purchase_type_id_fk == 6)<th>Ticket Number</th>@endif
-                                    @if ($order->purchase_type_id_fk == 7)@else <th>Quantity</th> @endif
+                                    @if ($order->purchase_type_id_fk == 6)
+                                        <th>Ticket Number</th>
+                                    @endif
+                                    @if ($order->purchase_type_id_fk == 7)
+                                    @else
+                                        <th>Quantity</th>
+                                    @endif
                                     <th>Amount</th>
                                     <th>PV</th>
                                     <th>Total</th>
@@ -175,13 +221,11 @@
                             </thead>
                             <tbody>
                                 @foreach ($order_items as $index => $value)
-
                                     <tr>
                                         <td>
                                             <h6>{{ $value->product_name }}</h6>
 
                                             @if ($value->type_product == 'promotion')
-
                                                 @if ($value->promotion_code)
                                                     <span class="label label-warning"><b style="color: #000">
                                                             {{ $value->promotion_code }} </b></span>
@@ -211,9 +255,7 @@
                                                     ?>
 
                                                     @foreach ($get_giveaway as $giveaway_value)
-
                                                         @if ($giveaway_value->type_product == 'giveaway_product')
-
                                                             <li style="font-size: 12px">
                                                                 <?php $sum_giveaway = $giveaway_value->product_amt * $value->amt; ?>
                                                                 <i class="icofont icofont-double-right text-success"></i>
@@ -223,10 +265,7 @@
                                                                 x [{{ $value->amt }}] <b> => {{ $sum_giveaway }}
                                                                     {{ $giveaway_value->product_unit_name }}</b>
                                                             </li>
-
-
                                                         @else
-
                                                             <li style="font-size: 12px">
                                                                 <?php $gv_giveaway = number_format($giveaway_value->gv_free * $value->amt); ?>
                                                                 <i
@@ -235,7 +274,6 @@
                                                                 <b> => {{ $gv_giveaway }} GV </b>
                                                             </li>
                                                         @endif
-
                                                     @endforeach
 
                                                 </ul>
@@ -269,72 +307,83 @@
             <div class="row">
                 <div class="col-sm-6">
 
-                  @if ($order->distribution_channel_id_fk != 3 and ($order->pay_type_id_fk == 3 || $order->pay_type_id_fk == 6 ||
-                   $order->pay_type_id_fk == 9 || $order->pay_type_id_fk == 11 || $order->pay_type_id_fk == 14 ) )
-                  <div class="card widget-statstic-card borderless-card">
-                   <div class="card-block">
-                     <div class="row">
-                         <div class="col-md-12">
-                             <h5 id="aicash_user" style="color: #000">รายละเอียดการใช้ Ai-Cash</h5>
-                         </div>
-                     </div>
-                         <hr class="m-b-5 m-t-5">
-                     <div class="row">
-                         <div class="col-md-4">
-                             <h6 class="m-b-0">ผู้อนุมัติ </h6>
-                         </div>
-                         <div class="col-md-8 text-right">
+                    @if ($order->distribution_channel_id_fk != 3 and
+                        $order->pay_type_id_fk == 3 ||
+                            $order->pay_type_id_fk == 6 ||
+                            $order->pay_type_id_fk == 9 ||
+                            $order->pay_type_id_fk == 11 ||
+                            $order->pay_type_id_fk == 14)
+                        <div class="card widget-statstic-card borderless-card">
+                            <div class="card-block">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 id="aicash_user" style="color: #000">รายละเอียดการใช้ Ai-Cash</h5>
+                                    </div>
+                                </div>
+                                <hr class="m-b-5 m-t-5">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h6 class="m-b-0">ผู้อนุมัติ </h6>
+                                    </div>
+                                    <div class="col-md-8 text-right">
 
-                           <p class="m-b-0 text-right" id="text_pv" style="color: #000">{{$customer_confirm->first_name  }} {{$customer_confirm->last_name  }}({{$customer_confirm->business_name  }}) </p>
-                         </div>
+                                        <p class="m-b-0 text-right" id="text_pv" style="color: #000">
+                                            {{ $customer_confirm->first_name }}
+                                            {{ $customer_confirm->last_name }}({{ $customer_confirm->business_name }})
+                                        </p>
+                                    </div>
 
-                         <div class="col-md-4">
-                             <h6 class="m-b-0" style="color: #000">รหัส</h6>
-                         </div>
-                         <div class="col-md-8">
+                                    <div class="col-md-4">
+                                        <h6 class="m-b-0" style="color: #000">รหัส</h6>
+                                    </div>
+                                    <div class="col-md-8">
 
-                             <p class="m-b-0 text-right" id="text_pv" style="color: #000">{{$customer_confirm->user_name  }} </p>
-                      </div>
-                     </div>
+                                        <p class="m-b-0 text-right" id="text_pv" style="color: #000">
+                                            {{ $customer_confirm->user_name }} </p>
+                                    </div>
+                                </div>
 
-                     <div id="text_confirm_aicash">
-                         <hr class="m-b-5 m-t-5">
-                         <div class="row">
-                             <div class="col-md-4">
-                                 <h6 class="m-b-0" style="color: #000">สั่งซื้อสินค้า</h6>
-                             </div>
-                             <div class="col-md-8">
-                               {{-- $customer_confirm =  DB::table('customers')
+                                <div id="text_confirm_aicash">
+                                    <hr class="m-b-5 m-t-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6 class="m-b-0" style="color: #000">สั่งซื้อสินค้า</h6>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{-- $customer_confirm =  DB::table('customers')
                                ->select('first_name','last_name','user_name','business_name') --}}
-                                 <p class="m-b-0 text-right" id="text_pv" style="color: #000">{{$customer_use->first_name  }} {{$customer_use->last_name  }}({{$customer_use->business_name  }}) </p>
-                             </div>
+                                            <p class="m-b-0 text-right" id="text_pv" style="color: #000">
+                                                {{ $customer_use->first_name }}
+                                                {{ $customer_use->last_name }}({{ $customer_use->business_name }}) </p>
+                                        </div>
 
-                             <div class="col-md-4">
-                                 <h6 class="m-b-0" style="color: #000">รหัส</h6>
-                             </div>
-                             <div class="col-md-8">
+                                        <div class="col-md-4">
+                                            <h6 class="m-b-0" style="color: #000">รหัส</h6>
+                                        </div>
+                                        <div class="col-md-8">
 
-                                 <p class="m-b-0 text-right" id="text_pv" style="color: #000">{{$customer_use->user_name  }} </p>
-                             </div>
-                         </div>
-                         <hr class="m-b-5 m-t-5">
-                         <div class="row">
-                             <div class="col-md-6">
-                                 <h6 class="m-b-0" style="color: #000">ยอดขอชำระด้วย AiCash</h6>
-                             </div>
-                             <div class="col-md-6" id="">
-                                 <u>
-                                     <h5 class="m-b-0 text-right" id="text_pv" style="color: #000">{{number_format($order->aicash_price)}}</h5>
-                                 </u>
-                             </div>
-                         </div>
-                     </div>
-                    </div>
+                                            <p class="m-b-0 text-right" id="text_pv" style="color: #000">
+                                                {{ $customer_use->user_name }} </p>
+                                        </div>
+                                    </div>
+                                    <hr class="m-b-5 m-t-5">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="m-b-0" style="color: #000">ยอดขอชำระด้วย AiCash</h6>
+                                        </div>
+                                        <div class="col-md-6" id="">
+                                            <u>
+                                                <h5 class="m-b-0 text-right" id="text_pv" style="color: #000">
+                                                    {{ number_format($order->aicash_price) }}</h5>
+                                            </u>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 
-                  </div>
-
-                  @endif
+                        </div>
+                    @endif
 
 
 
@@ -355,32 +404,30 @@
                                 <td> {{ number_format($order->tax, 2) }}</td>
                             </tr>
                             <tr>
-                              <th>รวมค่าสินค้า : </th>
-                              <td> {{ number_format($order->sum_price, 2) }}</td>
+                                <th>รวมค่าสินค้า : </th>
+                                <td> {{ number_format($order->sum_price, 2) }}</td>
                             </tr>
 
-                          @if($order->fee_amt)
-                            <tr>
-                              <th>ค่าบริการบัตรเครดิต : </th>
-                              <td> {{ number_format($order->fee_amt, 2) }}</td>
-                           </tr>
-                          @endif
+                            @if ($order->fee_amt)
+                                <tr>
+                                    <th>ค่าบริการบัตรเครดิต : </th>
+                                    <td> {{ number_format($order->fee_amt, 2) }}</td>
+                                </tr>
+                            @endif
 
                             @if ($order->purchase_type_id_fk != 6 and $order->purchase_type_id_fk != 7)
-
                                 <tr>
                                     <th>
-                                        @if ($order->shipping_cost_detail) <label
-                                                class="label label-inverse-warning">
+                                        @if ($order->shipping_cost_detail)
+                                            <label class="label label-inverse-warning">
                                                 <font id="shipping_detail" style="color: #000">
                                                     {{ $order->shipping_cost_detail }}
                                                 </font>
-                                            </label>@endif ค่าจัดส่ง :
+                                            </label>
+                                        @endif ค่าจัดส่ง :
                                     </th>
                                     <td> {{ number_format($order->shipping_price, 2) }} </td>
                                 </tr>
-
-
                             @endif
                             <tr>
                                 <th>คะแนนที่ได้รับ : </th>
@@ -389,7 +436,6 @@
 
 
                             @if ($order->purchase_type_id_fk == 5)
-
                                 <tr>
                                     <td><strong>ยอดรวม : </strong></td>
                                     <td align="right"><strong>
@@ -410,7 +456,6 @@
 
                                     </td>
                                 </tr>
-
                             @elseif($order->purchase_type_id_fk == 6 || $order->purchase_type_id_fk == 7)
                                 <tr>
                                     <td><strong>ยอดชำระ</strong></td>
@@ -431,20 +476,64 @@
 
                 </div>
             </div>
-            {{-- <div class="row">
-   <div class="col-sm-12">
-       <h6>Terms And Condition :</h6>
-       <p>lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor </p>
-   </div>
-</div> --}}
+
         </div>
     </div>
 
-    </div>
-    </div>
+    @if($file_slip)
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+              <h5>เอกสารการโอนชำระ</h5>
+              <code>{{  $order->transfer_bill_note }}</code>
+          </div>
+          <div class="card-block">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>วันที่</th>
+                        <th>บิลใบเสร็จ</th>
+                        <th>สถานะ</th>
+                        <th>หมายเหตุ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($file_slip as $value)
+                    <tr>
+                        <td>
+                            <p>{{ date('d/m/Y',strtotime($value->create_at)) }}</p>
+                        </td>
+                        <td>
+                         <img class="img-fluid" src="{{ asset($value->url.'/'.$value->file) }}" alt="Theme-Logo" width="300">
+                      </td>
+                        <td>
+                          <?php
+                          if ($value->status == '2') {
 
+                              $status = "<span class='badge badge-success> อนุมัติ </span>";
+                          } elseif ($value->status == '3') {
+                              $status = "<span class='badge badge-danger'> ไม่อนุมัติ </span>";
+                          }else{
+                              $status = "<span class='badge badge-warning'> รอการอนุมัติ </span>";
+                          }
+                      ?>
+                      {!! $status !!}
+
+                        </td>
+                        <td>
+                            {{ $value->note2 }}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+          </div>
+      </div>
+      </div>
+  </div>
+  @endif
 
 @endsection
 @section('js')
-
 @endsection
