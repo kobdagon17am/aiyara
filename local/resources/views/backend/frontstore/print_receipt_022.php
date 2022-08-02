@@ -492,7 +492,7 @@ if(!empty($db_orders[0]->action_user)){
 
        $cus_tax = @$cus[0]->id_card!=""?': '.@$cus[0]->id_card:': เลขผู้เสียภาษี (ไม่ได้ระบุไว้)';
 
-     
+
       //  $address_in_order = DB::select("
       //       SELECT
       //       house_no,
@@ -541,7 +541,7 @@ if(!empty($db_orders[0]->action_user)){
             Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
             WHERE customers_detail.customer_id=".@$db_orders[0]->customers_id_fk."
           ");
-          // 
+          //
 
            if(!empty(@$address_in_order[0]->provname)){
               @$cus_address = @$address_in_order[0]->house_no." ". @$address_in_order[0]->house_name." ". @$address_in_order[0]->moo."";
@@ -768,13 +768,13 @@ if(!empty($db_orders[0]->action_user)){
                                 }
 
                                 // if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
-                                
+
                                 //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
                                 //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
                                 //   }
-                              
+
                                 // }else{
-                                  
+
                                 //   if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
                                     $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
                                 //   }
@@ -910,10 +910,10 @@ if(!empty($db_orders[0]->action_user)){
         }
 
     }else
-    if(@$pay_type[0]->pay_type_id_fk==1){ // 1 เงินโอน 
+    if(@$pay_type[0]->pay_type_id_fk==1){ // 1 เงินโอน
           $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
   }else
-  if(@$pay_type[0]->pay_type_id_fk==2){ // 2 บัตรเครดิต 
+  if(@$pay_type[0]->pay_type_id_fk==2){ // 2 บัตรเครดิต
       $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
 }else
 if(@$pay_type[0]->pay_type_id_fk==3){ // 3 Ai-Cash
@@ -987,7 +987,7 @@ if(@$pay_type[0]->pay_type_id_fk==3){ // 3 Ai-Cash
     }else if(@$pay_type[0]->pay_type_id_fk==4){ // 4  Gift Voucher
           $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price;
   }
-  
+
   else if(@$pay_type[0]->pay_type_id_fk==12){ // 12  Gift Voucher + เงินโอน
     $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + เงินโอน: '.@$pay_type[0]->transfer_price;
 }
@@ -1241,7 +1241,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 
 <!-- THELP  -->
       <td style="vertical-align: top; font-size: 24px;font-weight: bold;" >
-      <?php 
+      <?php
       if($sRow->approve_status == 5){
         echo '<b style="color:red;"><u> BILL CANCEL </u></b>';
       }
@@ -1250,7 +1250,7 @@ for ($j=0; $j < $amt_page ; $j++) {
         <?php echo @$DB[0]->a ;
         ?>
       </td>
-     
+
       <td style="margin-left:25px !important;margin-top:18px !important;width:30%;vertical-align: top;" >
         <br>
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
@@ -1377,7 +1377,7 @@ for ($j=0; $j < $amt_page ; $j++) {
       // $amt_page = ceil($cnt_all[0]->cnt/$limit);
       // dd($page_string);
   ?>
-  <?php 
+  <?php
   // dd($page_string);
   //  dd($DB[0]->g);
     // if ( strstr( $DB[0]->g,  $page_string) ) {
@@ -1398,7 +1398,7 @@ for ($j=0; $j < $amt_page ; $j++) {
           <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
           </tr> ';
           echo $text1;
-      } 
+      }
       if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
         $total_shipping_price += $shipping[0]->shipping_price;
           $text2 =  '
@@ -1416,7 +1416,7 @@ for ($j=0; $j < $amt_page ; $j++) {
   }
 
   ?>
-    <?php 
+    <?php
     // if($shipping[0]->fee_amt > 0){
     //   if($shipping[0]->fee_amt!=null){
     //     $total_fee_amt += $shipping[0]->fee_amt;
@@ -1432,10 +1432,10 @@ for ($j=0; $j < $amt_page ; $j++) {
     //     <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
     //     </tr> ';
     //     echo $text1;
-    // } 
+    // }
     ?>
 
-<?php 
+<?php
 // if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
 //       $total_shipping_price += $shipping[0]->shipping_price;
 //         $text2 =  '
@@ -1449,7 +1449,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 //         <td style="width:11%;text-align: right;"> '.number_format($total_shipping_price, 2).' </td>
 //         </tr> ';
 //         echo $text2;
-//     } 
+//     }
     ?>
 
     </table>
@@ -1506,17 +1506,17 @@ for ($j=0; $j < $amt_page ; $j++) {
       <td colspan="2" style="width:50%;text-align: right;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
         <?php
-        //  echo floatval(@$DB[0]->g); 
+        //  echo floatval(@$DB[0]->g);
         if($total_fee_amt > 0){
           $new_total = str_replace(',', '', @$DB[0]->g);
- 
+
           if($new_total=='' || $new_total==null){
             $new_total = 0;
           }
           $new_total = $new_total+$total_fee_amt;
-          echo number_format($new_total, 2); 
+          echo number_format($new_total, 2);
         }else{
-          echo @$DB[0]->g; 
+          echo @$DB[0]->g;
         }
          ?>
       </td>
