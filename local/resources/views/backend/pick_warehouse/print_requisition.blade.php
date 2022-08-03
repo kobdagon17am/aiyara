@@ -319,21 +319,21 @@ if(!empty($Products)){
                   'code_order' => '',
                        'time_pay' => $value->time_pay,
                 ];
-                  
+
                   }
 
               }
             }
-          
+
           }
-          $old = []; 
+          $old = [];
           foreach($arr_time_check as $key1 => $arr1){
             foreach($arr1 as $arr2){
               if(!isset($old[$arr2['code_order']])){
                 $bill_remain .= $arr2['code_order'].'<br>';
                 $old[$arr2['code_order']] = '';
               }
-             
+
               }
           }
 
@@ -369,7 +369,7 @@ if(!empty($Products)){
 
             @if ($p->amt_get > 0 && $p->amt_remain > 0)
                 <?php
-                
+
                 $i++;
                 $sWarehouse = '<span style="width:200px;text-align:center;color:red;">*** ค้างสินค้าจากบิลเลขที่  *** ' . $bill_remain . ' </span>';
                 ?>
@@ -384,7 +384,7 @@ if(!empty($Products)){
           </tr> --}}
 
                 <?php
-                
+
                 $p_wait =
                     '
                                           <tr>
@@ -402,7 +402,7 @@ if(!empty($Products)){
                     ' </td>
                                           </tr>
                                           ';
-                
+
                 if (!isset($arr_time_check2[$item->order_id][$item->product_id_fk])) {
                     $arr_time_check2[$item->order_id][$item->product_id_fk] = [
                         'time_pay' => $value->time_pay,
@@ -416,7 +416,7 @@ if(!empty($Products)){
                         ];
                     }
                 }
-                
+
                 ?>
             @elseif($p->zone_id_fk == '')
                 <?php
@@ -437,7 +437,7 @@ if(!empty($Products)){
                     ' </td>
                                           </tr>
                                           ';
-                
+
                 if (!isset($arr_time_check2[$item->order_id][$item->product_id_fk])) {
                     $arr_time_check2[$item->order_id][$item->product_id_fk] = [
                         'time_pay' => $value->time_pay,
@@ -451,7 +451,7 @@ if(!empty($Products)){
                         ];
                     }
                 }
-                
+
                 ?>
             @endif
 
@@ -475,7 +475,7 @@ if(!empty($Products)){
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> </td>
           </tr> --}}
 
-            <?php }  
+            <?php }
 // dd($arr_time_check);
 ?>
             <?php } ?>
@@ -487,18 +487,16 @@ if(!empty($Products)){
                     $p_wait .= $arr2['p_wait'];
                 }
             }
-            
+
             echo $p_wait;
             ?>
 
         </table>
     </div>
 
+    <div>&nbsp;</div>
 
-    <br>
-    <br>
-
-    <div style="border-radius: 5px; height: 28mm; border: 1px solid grey;padding:-1px;">
+    <div style="border-radius: 5px; height: 28mm; border: 1px solid grey;padding:-1px; ">
         <table style="border-collapse: collapse;vertical-align: top;text-align: center;">
 
             <tr>
