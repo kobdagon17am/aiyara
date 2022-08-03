@@ -17,7 +17,7 @@ class Pick_warehouse_fifoController extends Controller
 
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
@@ -44,7 +44,7 @@ class Pick_warehouse_fifoController extends Controller
       // return $request->picking_id;
       // return "aaa";
       // dd();
-      
+
       // $arr_picking_id = $request->picking_id;
       // $picking = explode(",", $request->picking_id);
 
@@ -64,7 +64,7 @@ class Pick_warehouse_fifoController extends Controller
       // return count($picking);
 
       // $arr_picking = [];
-      // for ($i=0; $i < count($picking) ; $i++) { 
+      // for ($i=0; $i < count($picking) ; $i++) {
       //   $a = "P2".sprintf("%05d",$picking[$i]);
       //   array_push($arr_picking,$a);
       // }
@@ -77,7 +77,7 @@ class Pick_warehouse_fifoController extends Controller
       // return gettype($picking);
       // $picking = array_unique($picking);
       // $row_id = implode(',', $picking);
-      
+
       // return gettype($row_id);
       // return $arr_picking_id;
       // dd(); db_pick_pack_requisition_code
@@ -88,7 +88,7 @@ class Pick_warehouse_fifoController extends Controller
 
           // return $r_db_pick_pack_packing_code;
           // dd();
-          
+
           $arr_00 = [];
           $arr_receipt = [];
           foreach ($r_db_pick_pack_packing_code as $key => $value) {
@@ -96,18 +96,18 @@ class Pick_warehouse_fifoController extends Controller
             array_push($arr_receipt,$value->receipt);
           }
           $receipts = implode(",",$arr_receipt);
-          
+
           $orders_id_fk = array_filter($arr_00);
           $orders_id_fk = implode(",",$orders_id_fk);
           // return $orders_id_fk;
 
-          $r_db_order_products_list = DB::select(" SELECT * FROM db_order_products_list WHERE frontstore_id_fk in ($orders_id_fk) "); 
+          $r_db_order_products_list = DB::select(" SELECT * FROM db_order_products_list WHERE frontstore_id_fk in ($orders_id_fk) ");
           // return $r_db_order_products_list;
           // return ($id);
 
           // check กรณีสินค้าที่เกิดขจากการซื้อโปร ด้วย ถ้าซื้อโปร รหัสสินค้าจะไม่มีในฃตาราง db_order_products_list ต้อง join หาอีกที
 
-    //  ดึง product_id_fk ออกมารวมกัน 
+    //  ดึง product_id_fk ออกมารวมกัน
           $arr_03 = [];
           $arr_04 = [];
           foreach ($r_db_order_products_list as $key => $value) {
@@ -143,22 +143,22 @@ class Pick_warehouse_fifoController extends Controller
           $branch_id_fk = \Auth::user()->branch_id_fk;
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-          $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+          $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
-      
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
+
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
 
           $TABLES = DB::select(" SHOW TABLES ");
           // return $TABLES;
           // dd(); temp_ppp_0022
 
           // return $temp_db_stocks;
-          
+
           $array_TABLES = [];
           foreach($TABLES as $t){
             // print_r($t->Tables_in_aiyaraco_v3);
@@ -172,7 +172,7 @@ class Pick_warehouse_fifoController extends Controller
             // return "Not";
             DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
           }
-        
+
 
           // return $temp_db_stocks;
           // return $arr_product_id_fk;
@@ -180,7 +180,7 @@ class Pick_warehouse_fifoController extends Controller
           // return $branch_id_fk;
           // return $temp_db_stocks;
           // dd();
-          // if($branch_id_fk==1){ // รวม 6 = WAREHOUSE คลังสินค้า 
+          // if($branch_id_fk==1){ // รวม 6 = WAREHOUSE คลังสินค้า
           //   $wh_branch_id_fk = " AND db_stocks.branch_id_fk in (1,6) ";
           // }else{
           //   $wh_branch_id_fk = " AND db_stocks.branch_id_fk='$branch_id_fk' ";
@@ -188,7 +188,7 @@ class Pick_warehouse_fifoController extends Controller
 
           // return $arr_product_id_fk;
 
-          DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+          DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
           WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
 
@@ -198,13 +198,13 @@ class Pick_warehouse_fifoController extends Controller
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ");
       DB::select(" CREATE TABLE $temp_db_stocks_check LIKE temp_db_stocks_check_template ");
-      
+
       // return $temp_db_stocks_check;
       // dd();
 
-    // return $request; 
+    // return $request;
     // หาในตาราง db_orders ว่ามีมั๊ย
-    // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0 
+    // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
     // $invoice_code = $request->txtSearch;
 
@@ -225,7 +225,7 @@ class Pick_warehouse_fifoController extends Controller
               DB::select(" DROP TABLE IF EXISTS $temp_db_pick_pack_requisition_code ; ");
               DB::select(" CREATE TABLE $temp_db_pick_pack_requisition_code LIKE db_pick_pack_requisition_code ");
               DB::select(" INSERT INTO $temp_db_pick_pack_requisition_code select * from db_pick_pack_requisition_code ");
- 
+
               DB::select(" INSERT IGNORE INTO $temp_db_pick_pack_requisition_code(pick_pack_packing_code_id_fk,pick_pack_packing_code,action_user,receipts) VALUES ('$picking','$picking',".(\Auth::user()->id).",'".$receipts."') ");
               $lastInsertId01 = DB::getPdo()->lastInsertId();
 
@@ -237,7 +237,7 @@ class Pick_warehouse_fifoController extends Controller
               DB::select(" DROP TABLE IF EXISTS $temp_ppp_002; ");
               DB::select(" CREATE TABLE $temp_ppp_002 LIKE db_order_products_list ");
               // กรณี product
-              DB::select(" INSERT IGNORE INTO $temp_ppp_002 
+              DB::select(" INSERT IGNORE INTO $temp_ppp_002
               SELECT db_order_products_list.* FROM db_order_products_list INNER Join $temp_ppp_001 ON db_order_products_list.frontstore_id_fk = $temp_ppp_001.id ");
 
 
@@ -249,11 +249,11 @@ class Pick_warehouse_fifoController extends Controller
               DB::select(" UPDATE $temp_ppp_002 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
 
 
-              $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; 
+              $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id;
               DB::select(" DROP TABLE IF EXISTS $temp_ppp_0022; ");
               DB::select(" CREATE TABLE $temp_ppp_0022 LIKE temp_ppp_002_template ");
               // sleep(3);
-              DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) 
+              DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk)
               SELECT $lastInsertId01, product_id_fk, product_name, sum(amt), product_unit_id_fk FROM $temp_ppp_002 WHERE product_id_fk in ($arr_product_id_fk) GROUP BY pick_pack_packing_code_id_fk,product_id_fk");
 
               // กรณี promotion
@@ -282,7 +282,7 @@ class Pick_warehouse_fifoController extends Controller
 
                   //         DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) values ($lastInsertId01, $v->product_id_fk,'$pn', $v->product_amt, $v->product_unit)
                   //          ");
-                      
+
                   //     }
                   // }
 
@@ -290,7 +290,7 @@ class Pick_warehouse_fifoController extends Controller
 
                   // วุฒิเพิ่มมานับจำนวนโปร
                   $Pro_amt = DB::table($temp_ppp_002)->select('*',DB::raw('SUM(amt) AS sum_amt'))->whereIn('promotion_id_fk',$new_arr_promotion)->groupBy('promotion_id_fk')->get();
-                  
+
                   foreach($Pro_amt as $pro){
                       $r_pro = DB::table('promotions_products')->where('promotion_id_fk',$pro->promotion_id_fk)->get();
                       foreach($r_pro as $r){
@@ -315,20 +315,20 @@ class Pick_warehouse_fifoController extends Controller
                         DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) values ($lastInsertId01, $r->product_id_fk,'$pn', $sum_amt, $r->product_unit) ");
                       }
                   }
-                 
+
                 }
 
              // ต้องมีอีกตารางนึง เก็บ สถานะการอนุมัติ และ ที่อยู่การจัดส่งสินค้า > $temp_ppp_003
                 DB::select(" DROP TABLE IF EXISTS $temp_ppp_003; ");
                 DB::select(" CREATE TABLE $temp_ppp_003 LIKE temp_ppp_003_template ");
-                DB::select(" 
-                  INSERT IGNORE INTO $temp_ppp_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at) 
+                DB::select("
+                  INSERT IGNORE INTO $temp_ppp_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at)
                   SELECT id,business_location_id_fk,branch_id_fk,sentto_branch_id,invoice_code,action_date,action_user , customers_id_fk ,'3', now() FROM db_orders WHERE id in ($orders_id_fk) ;
                 ");
 
               // $Data = DB::select(" SELECT * FROM $temp_ppp_003; ");
               // return $Data;
-              // FIFO 
+              // FIFO
 
                   // if(in_array($temp_db_stocks,$array_TABLES)){
                   //   // return "IN";
@@ -338,7 +338,7 @@ class Pick_warehouse_fifoController extends Controller
                   //   DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
                   // }
 
-                // DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+                // DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
                 // WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
                  DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare; ");
@@ -365,10 +365,10 @@ class Pick_warehouse_fifoController extends Controller
             return $lastInsertId01 ;
             // dd();
 // Close > if($r01)
-            // กรณีหาแล้วไม่เจอ 
+            // กรณีหาแล้วไม่เจอ
           }else{
             return 0;
-          } 
+          }
 
 
 
@@ -395,17 +395,17 @@ class Pick_warehouse_fifoController extends Controller
           $branch_id_fk = \Auth::user()->branch_id_fk;
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-          $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-          $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+          $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
+          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+          $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
      // หา arr_product_id_fk
           $r_db_pay_requisition_002 = DB::select(" SELECT product_id_fk FROM `db_pay_requisition_002` WHERE pick_pack_requisition_code_id_fk in($requisition_code) ");
 
-    //  ดึง product_id_fk ออกมารวมกัน 
+    //  ดึง product_id_fk ออกมารวมกัน
           $arr_01 = [];
           foreach ($r_db_pay_requisition_002 as $key => $value) {
             array_push($arr_01,$value->product_id_fk);
@@ -419,7 +419,7 @@ class Pick_warehouse_fifoController extends Controller
           DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks  ");
 
 
-          DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+          DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
           WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
 
@@ -449,7 +449,7 @@ class Pick_warehouse_fifoController extends Controller
 
         // DB::select(" DROP TABLE IF EXISTS $temp_ppp_002; ");
         // DB::select(" CREATE TABLE $temp_ppp_002 LIKE db_order_products_list ");
-        // DB::select(" INSERT IGNORE INTO $temp_ppp_002 
+        // DB::select(" INSERT IGNORE INTO $temp_ppp_002
         // SELECT db_order_products_list.* FROM db_order_products_list INNER Join $temp_ppp_001 ON db_order_products_list.frontstore_id_fk = $temp_ppp_001.id ");
 
         //   DB::select(" ALTER TABLE $temp_ppp_002
@@ -462,25 +462,25 @@ class Pick_warehouse_fifoController extends Controller
 
         //   // return $arr_product_id_fk;
 
-        // $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; 
+        // $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id;
         // DB::select(" DROP TABLE IF EXISTS $temp_ppp_0022; ");
         // DB::select(" CREATE TABLE $temp_ppp_0022 LIKE temp_ppp_002_template ");
         // // sleep(3);
-        // DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk) 
+        // DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk)
         //  SELECT $lastInsertId01, product_id_fk, product_name, sum(amt), product_unit_id_fk FROM $temp_ppp_002 WHERE product_id_fk in ($arr_product_id_fk) GROUP BY pick_pack_packing_code_id_fk,product_id_fk");
 
 
         //      // ต้องมีอีกตารางนึง เก็บ สถานะการอนุมัติ และ ที่อยู่การจัดส่งสินค้า > $temp_ppp_003
         //         DB::select(" DROP TABLE IF EXISTS $temp_ppp_003; ");
         //         DB::select(" CREATE TABLE $temp_ppp_003 LIKE temp_ppp_003_template ");
-        //         DB::select(" 
-        //           INSERT IGNORE INTO $temp_ppp_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at) 
+        //         DB::select("
+        //           INSERT IGNORE INTO $temp_ppp_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at)
         //           SELECT id,business_location_id_fk,branch_id_fk,sentto_branch_id,invoice_code,action_date,action_user , customers_id_fk ,'3', now() FROM db_orders WHERE id in ($id) ;
         //         ");
 
               // $Data = DB::select(" SELECT * FROM $temp_ppp_003; ");
               // return $Data;
-      // FIFO 
+      // FIFO
 
                 //   if(in_array($temp_db_stocks,$array_TABLES)){
                 //     // return "IN";
@@ -490,7 +490,7 @@ class Pick_warehouse_fifoController extends Controller
                 //     DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
                 //   }
 
-                // DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+                // DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
                 // WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
                 //  DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_compare; ");
@@ -509,10 +509,10 @@ class Pick_warehouse_fifoController extends Controller
 
             return $requisition_code;
 // Close > if($r01)
-            // กรณีหาแล้วไม่เจอ 
+            // กรณีหาแล้วไม่เจอ
           }else{
             return 0;
-          } 
+          }
 
 
 
@@ -555,8 +555,8 @@ class Pick_warehouse_fifoController extends Controller
 
           DB::select(" DELETE FROM db_consignments WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
 
-          $r = DB::select(" 
-            SELECT 
+          $r = DB::select("
+            SELECT
             time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now()
              FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' AND time_pay='".$request->time_pay."' ; ");
 
@@ -578,8 +578,8 @@ class Pick_warehouse_fifoController extends Controller
                       ->get();
                       if($_choose->count() == 0){
 
-                             DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, pick_pack_requisition_code_id_fk, created_at, updated_at,status_cancel) 
-                            SELECT 
+                             DB::select(" INSERT INTO db_stocks_return (time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk,shelf_floor, pick_pack_requisition_code_id_fk, created_at, updated_at,status_cancel)
+                            SELECT
                             time_pay,business_location_id_fk, branch_id_fk, product_id_fk, lot_number, lot_expired_date, amt_get, product_unit_id_fk, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor,pick_pack_requisition_code_id_fk, created_at,now(),1
                              FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' AND time_pay='".$v->time_pay."' ; ");
 
@@ -656,9 +656,9 @@ class Pick_warehouse_fifoController extends Controller
 
                          DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ; ");
 
-                         DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")  
-                                  WHERE 
-                                  business_location_id_fk= ".$v->business_location_id_fk." AND 
+                         DB::select(" UPDATE db_stocks SET db_stocks.amt=db_stocks.amt+(".$v->amt_get.")
+                                  WHERE
+                                  business_location_id_fk= ".$v->business_location_id_fk." AND
                                   branch_id_fk= ".$v->branch_id_fk." AND
                                   product_id_fk= ".$v->product_id_fk." AND
                                   lot_number= '".$v->lot_number."' AND
@@ -666,13 +666,13 @@ class Pick_warehouse_fifoController extends Controller
                                   warehouse_id_fk= ".$v->warehouse_id_fk." AND
                                   zone_id_fk= ".$v->zone_id_fk." AND
                                   shelf_id_fk= ".$v->shelf_id_fk." AND
-                                  shelf_floor= ".$v->shelf_floor." 
+                                  shelf_floor= ".$v->shelf_floor."
                               ");
-       
+
 
                }
 
-          $r2 = DB::select(" 
+          $r2 = DB::select("
             SELECT * FROM db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' AND time_pay='".$request->time_pay."' AND status_cancel=1 ; ");
 
              foreach ($r2 as $key => $v) {
@@ -697,7 +697,7 @@ class Pick_warehouse_fifoController extends Controller
                       ->get();
                       if($_choose->count() == 0){
 
-                              DB::select(" INSERT IGNORE INTO db_pay_requisition_002_cancel_log (time_pay, business_location_id_fk, branch_id_fk, customers_id_fk, pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt_need, amt_get, amt_lot, amt_remain, product_unit_id_fk, product_unit, lot_number, lot_expired_date, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor, status_cancel, created_at)  
+                              DB::select(" INSERT IGNORE INTO db_pay_requisition_002_cancel_log (time_pay, business_location_id_fk, branch_id_fk, customers_id_fk, pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt_need, amt_get, amt_lot, amt_remain, product_unit_id_fk, product_unit, lot_number, lot_expired_date, warehouse_id_fk, zone_id_fk, shelf_id_fk, shelf_floor, status_cancel, created_at)
                                 VALUES
                                (".$v->time_pay.", ".$v->business_location_id_fk.", ".$v->branch_id_fk.", ".$v->customers_id_fk.", '".$v->pick_pack_requisition_code_id_fk."', ".$v->product_id_fk.", '".$v->product_name."', ".$v->amt_get.", 0 , 0, ".$v->amt_get.", ".$v->product_unit_id_fk.", '".$v->product_unit."', '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->warehouse_id_fk.", ".$v->zone_id_fk.", ".$v->shelf_id_fk.", ".$v->shelf_floor.", ".$v->status_cancel.", '".$v->created_at."') ");
 
@@ -712,7 +712,7 @@ class Pick_warehouse_fifoController extends Controller
                     DB::select(" UPDATE db_pay_requisition_001 SET status_sent=1 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
                  }
 
-          // มีการยกเลิกตั้งแต่การจ่ายครั้งแรกเลย 
+          // มีการยกเลิกตั้งแต่การจ่ายครั้งแรกเลย
            if($request->time_pay==1){
               DB::select(" UPDATE db_pay_requisition_001 SET status_sent=6 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
               DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=6,who_cancel=".@\Auth::user()->id.",cancel_date=now() WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
@@ -726,15 +726,15 @@ class Pick_warehouse_fifoController extends Controller
                }
 
             }else{
-          
+
                // เช็คว่ามีสินค้าค้างจ่ายหรือไม่
                   $ch01 =  DB::select(" SELECT * FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ORDER BY time_pay DESC LIMIT 1 ");
 
                   // $ch02 =  DB::select(" SELECT * FROM db_pay_requisition_002_cancel_log WHERE pick_pack_requisition_code_id_fk='".$pick_pack_requisition_code_id_fk."' and status_cancel=1 GROUP BY time_pay ORDER BY time_pay DESC LIMIT 1");
-    
+
                 // return count($ch);
                 if(@$ch01[0]->amt_remain>0){
-                  // 2=สินค้าไม่พอ มีบางรายการค้างจ่าย,3=สินค้าพอต่อการจ่ายครั้งนี้ 
+                  // 2=สินค้าไม่พอ มีบางรายการค้างจ่าย,3=สินค้าพอต่อการจ่ายครั้งนี้
                   DB::select(" UPDATE db_pay_requisition_001 SET status_sent=2 WHERE pick_pack_requisition_code_id_fk='".$request->pick_pack_requisition_code_id_fk."' ");
                   // 1=รอเบิก, 2=อนุมัติแล้วรอจัดกล่อง (มีค้างจ่ายบางรายการ), 3=อนุมัติแล้วรอจัดกล่อง (ไม่มีค้างจ่าย), 4=Packing กล่องแล้ว, 5=บ.ขนส่งเข้ามารับสินค้าแล้ว, 6=ยกเลิกใบเบิก
                   DB::select(" UPDATE `db_pick_pack_packing_code` SET `status`=2 WHERE (`id` in (".$request->pick_pack_requisition_code_id_fk.")  ) ");
@@ -772,10 +772,10 @@ class Pick_warehouse_fifoController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -802,14 +802,14 @@ class Pick_warehouse_fifoController extends Controller
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
-      }) 
+      })
       ->addColumn('product_unit', function($row) {
         $p = DB::select("  SELECT product_unit
               FROM
               dataset_product_unit
               WHERE id = ".$row->product_unit_id_fk." AND  lang_id=1  ");
           return @$p[0]->product_unit;
-      }) 
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })
@@ -820,7 +820,7 @@ class Pick_warehouse_fifoController extends Controller
   public function Datatable0001(Request $reg){
 
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$reg->picking_id);
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       $sTable = DB::select(" select * from $temp_db_pick_pack_requisition_code where id =".$reg->picking_id."  ");
       $sQuery = \DataTables::of($sTable);
@@ -833,15 +833,15 @@ class Pick_warehouse_fifoController extends Controller
       ->addColumn('column_002', function($row) {
 
            $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-       
-           $Products = DB::select(" 
+
+           $Products = DB::select("
             select $temp_ppp_002.*, (SELECT invoice_code FROM temp_ppp_0011 where id=temp_ppp_0021.frontstore_id_fk LIMIT 1) as invoice_code
-            from 
-            $temp_ppp_002 
+            from
+            $temp_ppp_002
             where $temp_ppp_002.pick_pack_requisition_code_id_fk=".$row->id."");
 
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:250px;font-weight:bold;">ชื่อสินค้า (เลขที่ใบเสร็จ)</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวนที่สั่งซื้อ</div>
@@ -850,7 +850,7 @@ class Pick_warehouse_fifoController extends Controller
             ';
 
             $sum_amt = 0 ;
-              
+
               foreach ($Products as $key => $value) {
 
                 $p_unit  = DB::select("  SELECT product_unit
@@ -858,22 +858,22 @@ class Pick_warehouse_fifoController extends Controller
                 dataset_product_unit
                 WHERE id = ".$value->product_unit_id_fk." AND  lang_id=1  ");
                $p_unit_name = @$p_unit[0]->product_unit;
-                                     
+
               $sum_amt += $value->amt;
-              $pn .=     
+              $pn .=
               '<div class="divTableRow">
               <div class="divTableCell" style="font-weight:bold;padding-bottom:15px;">
               '.$value->product_name.'<br>('.$value->invoice_code.')
               </div>
-              <div class="divTableCell" style="text-align:center;">'.$value->amt.'</div> 
-              <div class="divTableCell" style="text-align:center;">'.$p_unit_name.'</div> 
+              <div class="divTableCell" style="text-align:center;">'.$value->amt.'</div>
+              <div class="divTableCell" style="text-align:center;">'.$p_unit_name.'</div>
               ';
 
-              $pn .= '</div>';  
-            
+              $pn .= '</div>';
+
             }
 
-              $pn .=     
+              $pn .=
               '<div class="divTableRow">
               <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
               <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$sum_amt.'</div>
@@ -881,11 +881,11 @@ class Pick_warehouse_fifoController extends Controller
               </div>
               ';
 
-              $pn .= '</div>';  
+              $pn .= '</div>';
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
+      ->escapeColumns('column_002')
       ->make(true);
     }
 
@@ -902,8 +902,8 @@ class Pick_warehouse_fifoController extends Controller
       $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
       $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
-      $temp_db_pick_pack_packing_code = "db_pick_pack_packing_code".\Auth::user()->id; 
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+      $temp_db_pick_pack_packing_code = "db_pick_pack_packing_code".\Auth::user()->id;
        // วุฒิเพิ่มมา
       $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->where('id',$request->picking_id)->first();
       if($db_pick_pack_packing_code_data){
@@ -918,7 +918,7 @@ class Pick_warehouse_fifoController extends Controller
         // print_r($t->Tables_in_aiyaraco_v3);
         array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
-      // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
+      // เก็บรายการสินค้าที่จ่าย ตอน FIFO
 
       if(in_array($temp_ppp_004,$array_TABLES)){
         // return "IN";
@@ -950,17 +950,17 @@ class Pick_warehouse_fifoController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-       ->addColumn('column_001', function($row) { 
+       ->addColumn('column_001', function($row) {
 
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
             </div>
             ';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
@@ -973,15 +973,15 @@ class Pick_warehouse_fifoController extends Controller
         })
        ->escapeColumns('column_001')
        ->addColumn('column_002', function($row) {
-          
+
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
           $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-          $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+          $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
 
 
@@ -1008,13 +1008,13 @@ class Pick_warehouse_fifoController extends Controller
 
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
-                     
+
                       <div class="divTableRow">
                       <div class="divTableCell" style="width:220px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง.</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
@@ -1036,15 +1036,15 @@ class Pick_warehouse_fifoController extends Controller
 
 
             $Products_02 = DB::select("
-            SELECT 
+            SELECT
             db_order_products_list.product_id_fk,
             db_order_products_list.product_name,
             db_order_products_list.product_unit_id_fk,
             SUM(db_order_products_list.amt) AS amt ,
             dataset_product_unit.product_unit
             from db_order_products_list
-            LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id 
-            LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+            LEFT Join dataset_product_unit ON db_order_products_list.product_unit_id_fk = dataset_product_unit.id
+            LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
             WHERE db_orders.id in  (".$orders_id_fk.")
             GROUP BY db_order_products_list.product_id_fk
             ORDER BY db_order_products_list.product_id_fk ");
@@ -1071,11 +1071,11 @@ class Pick_warehouse_fifoController extends Controller
                 }
 
                 // บิลโปร
-                $p2 = DB::select(" 
-                select db_orders.code_order 
-                FROM `promotions_products` 
+                $p2 = DB::select("
+                select db_orders.code_order
+                FROM `promotions_products`
                 LEFT JOIN db_order_products_list on db_order_products_list.promotion_id_fk=promotions_products.promotion_id_fk
-                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id 
+                LEFT Join db_orders ON db_order_products_list.frontstore_id_fk = db_orders.id
                 WHERE db_orders.id in  ($orders_id_fk) AND promotions_products.product_id_fk in ($value->product_id_fk) AND db_order_products_list.type_product='promotion' ");
                 if(@$p2){
                   foreach (@$p2 as $inv) {
@@ -1087,21 +1087,21 @@ class Pick_warehouse_fifoController extends Controller
                 // $invoice_code = implode(",",$arr_inv);
                 $invoice_code = '<a href="javascript:;">';
                 foreach($arr_inv as $index =>$ai){
-                  $invoice_code .= $ai; 
+                  $invoice_code .= $ai;
                   if($index+1 != count($arr_inv)){
-                    $invoice_code .= ','; 
+                    $invoice_code .= ',';
                   }
                   if($index+1 == 3){
                     if(count($arr_inv)> 3){
-                      $invoice_code .= $ai.',...'; 
+                      $invoice_code .= $ai.',...';
                     }
                     break;
                   }
                 }
-                $invoice_code .= '</a>';  
+                $invoice_code .= '</a>';
 
-               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-               $amt_pay_this = $value->amt; 
+               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+               $amt_pay_this = $value->amt;
 
 
                    // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
@@ -1113,17 +1113,17 @@ class Pick_warehouse_fifoController extends Controller
                      }else{
                        $w_str2.=$w.',';
                      }
-    
+
                    }
 
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
-                // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+                // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                 // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
-                
-   
+
+
                 // วุฒิเพิ่มมา
                 // dd($invoice_code);
                 // if($db_pick_pack_packing_code_data){
@@ -1131,26 +1131,26 @@ class Pick_warehouse_fifoController extends Controller
                 // $data_remark = '';
                 // }
 
-           
+
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
-                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
-                  
+                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
+
                   $pay_this = $value->amt ;
                   $amt_pay_remain = 0;
-                  
-                    $pn .=     
+
+                    $pn .=
                     '<div class="divTableRow">
                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                     '.@$value->product_name.'</b><br>
                         ('.@$invoice_code.')
                     </div>
-                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="text-align:center;"> '.$amt_pay_remain.' </div>  
+                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="text-align:center;"> '.$amt_pay_remain.' </div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
-                    
+                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
+
                     $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
                     $w_str = '';
                     foreach($w_arr as $key => $w){
@@ -1183,7 +1183,7 @@ class Pick_warehouse_fifoController extends Controller
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$branch[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                             $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
                             $amt_to_take = $pay_this;
@@ -1194,7 +1194,7 @@ class Pick_warehouse_fifoController extends Controller
                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
                               $amt_to_take = $rs_[0]->amt_get;
                             }else{
-                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                               // $amt_remain = $r_before[0]->amt_remain;
                               DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_to_take,0) ");
                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
@@ -1202,7 +1202,7 @@ class Pick_warehouse_fifoController extends Controller
                             }
 
 
-                                $pn .=     
+                                $pn .=
                                 '<div class="divTableRow">
                                 <div class="divTableCell" style="width:220px;text-align:center;"> '.$sWarehouse.' </div>
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -1264,9 +1264,9 @@ class Pick_warehouse_fifoController extends Controller
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -1291,17 +1291,17 @@ class Pick_warehouse_fifoController extends Controller
                      $amt_pay_remain = $value->amt - $temp_db_stocks_01[0]->amt ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                      <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                     '.@$value->product_name.'</b><br>
                         ('.@$invoice_code.')
                     </div>
-                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                      $w_arr = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
                      $w_str = '';
                      foreach($w_arr as $key => $w){
@@ -1310,19 +1310,19 @@ class Pick_warehouse_fifoController extends Controller
                        }else{
                          $w_str.=$w.',';
                        }
- 
+
                      }
                      // wut อันนี้แก้ จ่ายผิดคลัง
                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-      
+
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
                           $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                           $amt_to_take = $pay_this;
                           $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
@@ -1334,7 +1334,7 @@ class Pick_warehouse_fifoController extends Controller
                                     $rs_ = DB::select(" SELECT amt_get FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $rs_[0]->amt_get;
 
-                                   $pn .=     
+                                   $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;">'.$sWarehouse.'</div>
                                     <div class="divTableCell" style="width:200px;text-align:center;">'.$v_02->lot_number.' ['.$v_02->lot_expired_date.']</div>
@@ -1396,9 +1396,9 @@ class Pick_warehouse_fifoController extends Controller
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -1409,19 +1409,19 @@ class Pick_warehouse_fifoController extends Controller
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
                                       $r_temp_001 = DB::select(" SELECT amt_remain FROM temp_001 order by id desc limit 1 ; ");
                                      // return $r_temp_001[0]->amt_remain;
-                                     if($r_temp_001[0]->amt_remain==0) break;                           
+                                     if($r_temp_001[0]->amt_remain==0) break;
 
                                 }else{
 
-                          
-                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+
+                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                     $amt_remain = @$r_before[0]->amt_remain?@$r_before[0]->amt_remain:0;
 
                                     DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_remain,".($r_before[0]->amt_remain-$amt_in_wh).") ");
                                     $rs_ = DB::select(" SELECT * FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $amt_in_wh;
 
-                                    $pn .=     
+                                    $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -1429,7 +1429,7 @@ class Pick_warehouse_fifoController extends Controller
                                     </div>
                                     ';
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                     
+
                                     $p_unit  = DB::select("  SELECT product_unit
                                       FROM
                                       dataset_product_unit
@@ -1483,9 +1483,9 @@ class Pick_warehouse_fifoController extends Controller
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -1494,7 +1494,7 @@ class Pick_warehouse_fifoController extends Controller
                                         }
 
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                        
+
                                  $r_temp_001 = DB::select(" SELECT amt_remain FROM temp_001 order by id desc limit 1 ; ");
                                      // return $r_temp_001[0]->amt_remain;
                                      if($r_temp_001[0]->amt_remain==0) break;
@@ -1507,24 +1507,24 @@ class Pick_warehouse_fifoController extends Controller
 
 
 
-                }else{ // กรณีไม่มีสินค้าในคลังเลย 
-                
+                }else{ // กรณีไม่มีสินค้าในคลังเลย
+
                      $amt_pay_remain = $value->amt ;
                      $pay_this = 0 ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                      <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                     '.@$value->product_name.'</b><br>
                         ('.@$invoice_code.')
                     </div>
-                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:400px;text-align:center;"> ';
 
 
-                      $pn .=     
+                      $pn .=
                             '<div class="divTableRow" style="text-align:center;">
                             <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง </div>
                             </div>
@@ -1543,11 +1543,11 @@ class Pick_warehouse_fifoController extends Controller
                                   'promotions_products.product_unit as product_unit_id_fk',
                                   'promotions_products.product_id_fk as product_id_fk',
                                   DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                                  'promotions_products.product_amt as amt', 
+                                  'promotions_products.product_amt as amt',
                                 )
                                 ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                                ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                                ->join('products','products.id','promotions_products.product_id_fk')  
+                                ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
+                                ->join('products','products.id','promotions_products.product_id_fk')
                                 ->where($temp_ppp_002.'.type_product','promotion')
                                 ->where('promotions_products.product_id_fk',$value->product_id_fk)
                                 ->groupBy('promotions_products.product_id_fk')
@@ -1556,7 +1556,7 @@ class Pick_warehouse_fifoController extends Controller
 
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
-                       
+
                              // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
                                      $p_unit  = DB::select("  SELECT product_unit
                                       FROM
@@ -1608,13 +1608,13 @@ class Pick_warehouse_fifoController extends Controller
 
                 }
 
-            $pn .= '</div>';  
-            $pn .= '</div>';  
+            $pn .= '</div>';
+            $pn .= '</div>';
 
             $z++;
           }
 
-          $pn .= '</div>';  
+          $pn .= '</div>';
 
             $rs_temp_ppp_004 = DB::select(" select product_id_fk,lot_number,lot_expired_date,sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, amt_remain  from $temp_ppp_004 group by pick_pack_requisition_code_id_fk,product_id_fk,lot_number  ");
 
@@ -1630,7 +1630,7 @@ class Pick_warehouse_fifoController extends Controller
                 // ->where('amt_remain', $v->amt_remain)
                 ->get();
                 if($_choose->count() == 0){
-                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (pick_pack_requisition_code_id_fk,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain) 
+                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (pick_pack_requisition_code_id_fk,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain)
                     VALUES (
                     '".$row->pick_pack_requisition_code_id_fk."', ".$v->product_id_fk.", '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->amt_lot.", '".$v->amt_lot."', '".$v->amt_remain."'
                     )
@@ -1639,7 +1639,7 @@ class Pick_warehouse_fifoController extends Controller
 
           }
 
-        
+
           $rs_temp_db_stocks_check = DB::select(" select pick_pack_requisition_code_id_fk, sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, sum(amt_remain) as amt_remain from $temp_db_stocks_check group by pick_pack_requisition_code_id_fk ");
 
           foreach ($rs_temp_db_stocks_check as $key => $v) {
@@ -1662,29 +1662,29 @@ class Pick_warehouse_fifoController extends Controller
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
-      ->addColumn('column_003', function($row) { 
+      ->escapeColumns('column_002')
+      ->addColumn('column_003', function($row) {
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
           <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
           <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">จำนวน</div>
           </div>
           ';
-          $pn .= '</div>';  
+          $pn .= '</div>';
           return $pn;
 
        })
-      ->escapeColumns('column_003')      
-      ->addColumn('ch_amt_lot_wh', function($row) { 
+      ->escapeColumns('column_003')
+      ->addColumn('ch_amt_lot_wh', function($row) {
 // ดูว่าไม่มีสินค้าคลังเลย
 
           $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id;
 
           $Products = DB::select("
-            SELECT * from $temp_ppp_004 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' 
+            SELECT * from $temp_ppp_004 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."'
           ");
 
           if(count($Products)>0){
@@ -1695,22 +1695,22 @@ class Pick_warehouse_fifoController extends Controller
               $arr_im = implode(',',$arr);
               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
               $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
-              return @$r[0]->sum?@$r[0]->sum:0; 
+              return @$r[0]->sum?@$r[0]->sum:0;
           }else{
               return 0;
           }
 
-       })    
+       })
 
-      ->addColumn('check_product_instock', function($row) { 
+      ->addColumn('check_product_instock', function($row) {
       // ดูว่าไม่มีสินค้าในคลังบางรายการ
           if(@$_SESSION['check_product_instock']=="0"){
-            return "N"; 
+            return "N";
           }else{
-            return "Y"; 
+            return "Y";
           }
 
-       })    
+       })
       ->make(true);
     }
 
@@ -1723,11 +1723,11 @@ class Pick_warehouse_fifoController extends Controller
       $branch_id_fk = \Auth::user()->branch_id_fk;
       $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-      $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-      $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
+      $temp_ppp_003 = "temp_ppp_003".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+      $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
 
       $TABLES = DB::select(" SHOW TABLES ");
       // return $TABLES;
@@ -1744,7 +1744,7 @@ class Pick_warehouse_fifoController extends Controller
 
     // return $request;
     // หาในตาราง db_orders ว่ามีมั๊ย
-    // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0 
+    // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
     $tb0 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code".\Auth::user()->id."` WHERE `pick_pack_packing_code_id_fk` in(".$request->packing_id.") ");
 
@@ -1756,6 +1756,7 @@ class Pick_warehouse_fifoController extends Controller
           // return $tb1;
           // dd();
 
+
           $tb2 = DB::select(" SELECT * FROM `db_pick_pack_packing_code` WHERE `id` in(".$tb1[0]->pick_pack_packing_code_id_fk.") ");
           $arr1 = [];
           foreach ($tb2 as $key => $v) {
@@ -1766,7 +1767,10 @@ class Pick_warehouse_fifoController extends Controller
           // dd($orders_id_fk);
 
           $orders_id_fk = implode(',',$orders_id_fk);
-  
+          if($orders_id_fk==""){
+            $orders_id_fk = "0";
+          }
+  // dd($orders_id_fk);
           // return $orders_id_fk;
           $r01 = DB::select(" SELECT invoice_code FROM db_orders where id in ($orders_id_fk) ");
     }
@@ -1788,7 +1792,7 @@ class Pick_warehouse_fifoController extends Controller
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppp_002; ");
         DB::select(" CREATE TABLE $temp_ppp_002 LIKE db_order_products_list ");
-        DB::select(" INSERT $temp_ppp_002 
+        DB::select(" INSERT $temp_ppp_002
         SELECT db_order_products_list.* FROM db_order_products_list INNER Join $temp_ppp_001 ON db_order_products_list.frontstore_id_fk = $temp_ppp_001.id ");
         $Data = DB::select(" SELECT * FROM $temp_ppp_002; ");
         return $Data;
@@ -1800,14 +1804,14 @@ class Pick_warehouse_fifoController extends Controller
        // ต้องมีอีกตารางนึง เก็บ สถานะการอนุมัติ และ ที่อยู่การจัดส่งสินค้า > $temp_ppp_003
           DB::select(" DROP TABLE IF EXISTS $temp_ppp_003; ");
           DB::select(" CREATE TABLE $temp_ppp_003 LIKE temp_ppp_003_template ");
-          DB::select(" 
-            INSERT IGNORE INTO $temp_ppp_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at) 
+          DB::select("
+            INSERT IGNORE INTO $temp_ppp_003 (orders_id_fk, business_location_id_fk, branch_id_fk, branch_id_fk_tosent, invoice_code, bill_date, action_user,  customer_id_fk,  address_send_type, created_at)
             SELECT id,business_location_id_fk,branch_id_fk,sentto_branch_id,invoice_code,action_date,action_user , customers_id_fk ,'1', now() FROM db_orders where db_orders.id in ($orders_id_fk) ;
           ");
 
         // $Data = DB::select(" SELECT * FROM $temp_ppp_003; ");
         // return $Data;
-// FIFO 
+// FIFO
         // Qry > product_id_fk from $temp_ppp_002
             $product = DB::select(" select product_id_fk from $temp_ppp_002 ");
             // return $product;
@@ -1831,10 +1835,10 @@ class Pick_warehouse_fifoController extends Controller
               DB::select(" CREATE TABLE $temp_db_stocks LIKE db_stocks ");
             }
 
-          DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks 
+          DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
           WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
- 
+
           if(in_array($temp_db_stocks_compare,$array_TABLES)){
             // return "IN";
           }else{
@@ -1848,12 +1852,12 @@ class Pick_warehouse_fifoController extends Controller
 
             return 1;
 // Close > if($r01)
-            // กรณีหาแล้วไม่เจอ 
+            // กรณีหาแล้วไม่เจอ
           }else{
             return 0;
-          } 
+          }
 
-      
+
     }// Close > function
 
     public function ajaxSearch_requisition_db_orders002(Request $request)
@@ -1861,13 +1865,13 @@ class Pick_warehouse_fifoController extends Controller
 
             $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
-            $r_compare_1 =  DB::select(" 
+            $r_compare_1 =  DB::select("
               SELECT amt_get+amt_lot+amt_remain as sum from $temp_db_stocks_compare ORDER BY id DESC LIMIT 1,1;
             ");
 
             $x = @$r_compare_1[0]->sum?@$r_compare_1[0]->sum:0;
 
-            $r_compare_2 =  DB::select(" 
+            $r_compare_2 =  DB::select("
               SELECT amt_get+amt_lot+amt_remain as sum from $temp_db_stocks_compare ORDER BY id DESC LIMIT 0,1;
             ");
             $y = @$r_compare_2[0]->sum?@$r_compare_2[0]->sum:0;
@@ -1877,15 +1881,15 @@ class Pick_warehouse_fifoController extends Controller
             }else{
                   return "changed";
             }
-       
-      
+
+
     }// Close > function
 
 
 
 // /backend/pick_warehouse/1/edit (กรณีที่ยังไม่มีการยกเลิกการจ่าย status_cancel==0)
     public function Datatable0003(Request $req){
-     
+
       $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
@@ -1900,7 +1904,7 @@ class Pick_warehouse_fifoController extends Controller
         // print_r($t->Tables_in_aiyaraco_v3);
         array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
-      // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
+      // เก็บรายการสินค้าที่จ่าย ตอน FIFO
 
       if(in_array($temp_ppp_004,$array_TABLES)){
         // return "IN";
@@ -1920,17 +1924,17 @@ class Pick_warehouse_fifoController extends Controller
         // temp_ppp_002
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-       ->addColumn('column_001', function($row) { 
+       ->addColumn('column_001', function($row) {
 
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
             </div>
             ';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
@@ -1941,11 +1945,11 @@ class Pick_warehouse_fifoController extends Controller
         })
        ->escapeColumns('column_001')
        ->addColumn('column_002', function($row) {
-          
-          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+
+          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
           $max_time_pay = DB::table('db_pay_requisition_002')
           ->select('time_pay')
           ->where('pick_pack_requisition_code_id_fk',$row->pick_pack_requisition_code_id_fk)
@@ -1955,17 +1959,17 @@ class Pick_warehouse_fifoController extends Controller
           ->first();
 
           $Products = DB::select("
-            SELECT db_pay_requisition_002.* from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and amt_remain <> 0 AND time_pay='".@$max_time_pay->time_pay."' and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay 
+            SELECT db_pay_requisition_002.* from db_pay_requisition_002 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' and amt_remain <> 0 AND time_pay='".@$max_time_pay->time_pay."' and status_cancel=0  GROUP BY product_id_fk ORDER BY time_pay
           ");
           // status_sent
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
-                     
+
                       <div class="divTableRow">
                       <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
@@ -1984,14 +1988,14 @@ class Pick_warehouse_fifoController extends Controller
          DB::select(" DROP TABLE IF EXISTS temp_001; ");
          // TEMPORARY
          DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-               
+
           foreach ($Products as $key => $value) {
 
-               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-               $amt_pay_this = $value->amt_remain; 
-             
+               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+               $amt_pay_this = $value->amt_remain;
+
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
-               // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+               // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
               // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
             $w_arr2 = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
             $w_str2 = '';
@@ -2002,32 +2006,32 @@ class Pick_warehouse_fifoController extends Controller
                 $w_str2.=$w.',';
               }
 
-            } 
+            }
             // time_pay
                 // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                 $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
-                // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ 
-                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
+                // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
+                if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
 
                   $pay_this = $value->amt_remain ;
-           
+
                   $amt_pay_remain = 0;
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                      <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                     '.@$value->product_name.'</b><br>
                     </div>
-                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                    // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
                     $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
-                     
+
                       DB::select(" DROP TABLE IF EXISTS temp_001; ");
                       // TEMPORARY
                       DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
@@ -2044,7 +2048,7 @@ class Pick_warehouse_fifoController extends Controller
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                             $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
                             $amt_to_take = $pay_this;
@@ -2055,7 +2059,7 @@ class Pick_warehouse_fifoController extends Controller
                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
                               $amt_to_take = $rs_[0]->amt_get;
                             }else{
-                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                              // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                               // $amt_remain = $r_before[0]->amt_remain;
                                      DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_to_take,0) ");
                                       $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
@@ -2063,7 +2067,7 @@ class Pick_warehouse_fifoController extends Controller
                             }
 
 
-                                $pn .=     
+                                $pn .=
                                 '<div class="divTableRow">
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                 <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2125,9 +2129,9 @@ class Pick_warehouse_fifoController extends Controller
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -2152,26 +2156,26 @@ class Pick_warehouse_fifoController extends Controller
                      $amt_pay_remain = $value->amt_remain - $temp_db_stocks_01[0]->amt ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                      <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                     '.@$value->product_name.'</b><br>
                     </div>
-                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                     // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
                     $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
-                    
+
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
                           $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                           $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                           $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                          // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                           // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                           $amt_to_take = $pay_this;
                           $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
@@ -2184,7 +2188,7 @@ class Pick_warehouse_fifoController extends Controller
                                     $rs_ = DB::select(" SELECT amt_get FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $rs_[0]->amt_get;
 
-                                   $pn .=     
+                                   $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2246,9 +2250,9 @@ class Pick_warehouse_fifoController extends Controller
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -2257,18 +2261,18 @@ class Pick_warehouse_fifoController extends Controller
                                         }
 
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                                                         
+
 
                                 }else{
 
-                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                                    $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                     $amt_remain = @$r_before[0]->amt_remain?@$r_before[0]->amt_remain:0;
 
                                     DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_remain,".($r_before[0]->amt_remain-$amt_in_wh).") ");
                                     $rs_ = DB::select(" SELECT * FROM temp_001 WHERE id='$i' ");
                                     $amt_to_take = $amt_in_wh;
 
-                                    $pn .=     
+                                    $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2276,7 +2280,7 @@ class Pick_warehouse_fifoController extends Controller
                                     </div>
                                     ';
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                     
+
                                     $p_unit  = DB::select("  SELECT product_unit
                                       FROM
                                       dataset_product_unit
@@ -2330,9 +2334,9 @@ class Pick_warehouse_fifoController extends Controller
                                                 '".$v_02->product_unit_id_fk."',
                                                 '".$p_unit_name."',
                                                 '".$v_02->lot_number."',
-                                                '".$v_02->lot_expired_date."', 
+                                                '".$v_02->lot_expired_date."',
                                                 '".$v_02->warehouse_id_fk."',
-                                                '".$v_02->zone_id_fk."', 
+                                                '".$v_02->zone_id_fk."',
                                                 '".$v_02->shelf_id_fk."',
                                                 '".$v_02->shelf_floor."',
                                                 '".$v_02->created_at."'
@@ -2341,8 +2345,8 @@ class Pick_warehouse_fifoController extends Controller
                                         }
 
                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                        
-                                 
+
+
                                 }
 
 
@@ -2352,23 +2356,23 @@ class Pick_warehouse_fifoController extends Controller
 
 
 
-                }else{ // กรณีไม่มีสินค้าในคลังเลย 
+                }else{ // กรณีไม่มีสินค้าในคลังเลย
 
                      $amt_pay_remain = $value->amt_remain ;
                      $pay_this = 0 ;
                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                    $pn .=     
+                    $pn .=
                     '<div class="divTableRow">
                      <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                     '.@$value->product_name.'</b><br>
-                        
+
                     </div>
-                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .' </div>  
+                    <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                    <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .' </div>
                     <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                      $pn .=     
+                      $pn .=
                             '<div class="divTableRow">
                             <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง *** </div>
                             <div class="divTableCell" style="width:200px;text-align:center;">  </div>
@@ -2377,10 +2381,10 @@ class Pick_warehouse_fifoController extends Controller
                             ';
 
                       @$_SESSION['check_product_instock'] = 0;
-                    
+
                       // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
                       $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt=0 AND branch_id_fk=".\Auth::user()->branch_id_fk."  AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
-                    
+
 
                    // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
                   //  $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
@@ -2391,11 +2395,11 @@ class Pick_warehouse_fifoController extends Controller
                   //     'promotions_products.product_unit as product_unit_id_fk',
                   //     'promotions_products.product_id_fk as product_id_fk',
                   //     DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                  //     'promotions_products.product_amt as amt', 
+                  //     'promotions_products.product_amt as amt',
                   //   )
                   //   ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                  //   ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                  //   ->join('products','products.id','promotions_products.product_id_fk')  
+                  //   ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
+                  //   ->join('products','products.id','promotions_products.product_id_fk')
                   //   ->where($temp_ppp_002.'.type_product','promotion')
                   //   ->where('promotions_products.product_id_fk',$value->product_id_fk)
                   //   ->groupBy('promotions_products.product_id_fk')
@@ -2454,11 +2458,11 @@ class Pick_warehouse_fifoController extends Controller
 
                 }
 
-            $pn .= '</div>';  
-            $pn .= '</div>';  
+            $pn .= '</div>';
+            $pn .= '</div>';
           }
 
-          $pn .= '</div>';  
+          $pn .= '</div>';
 
           $rs_temp_ppp_004 = DB::select(" select product_id_fk,lot_number,lot_expired_date,sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, amt_remain  from $temp_ppp_004 group by pick_pack_requisition_code_id_fk,product_id_fk,lot_number  ");
 
@@ -2474,7 +2478,7 @@ class Pick_warehouse_fifoController extends Controller
                 // ->where('amt_remain', $v->amt_remain)
                 ->get();
                 if($_choose->count() == 0){
-                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (pick_pack_requisition_code_id_fk,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain) 
+                  DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (pick_pack_requisition_code_id_fk,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain)
                     VALUES (
                     '".$row->pick_pack_requisition_code_id_fk."', ".$v->product_id_fk.", '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->amt_lot.", '".$v->amt_lot."', '".$v->amt_remain."'
                     )
@@ -2483,7 +2487,7 @@ class Pick_warehouse_fifoController extends Controller
 
           }
 
-        
+
           $rs_temp_db_stocks_check = DB::select(" select pick_pack_requisition_code_id_fk, sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, sum(amt_remain) as amt_remain from $temp_db_stocks_check group by pick_pack_requisition_code_id_fk ");
 
           foreach ($rs_temp_db_stocks_check as $key => $v) {
@@ -2506,11 +2510,11 @@ class Pick_warehouse_fifoController extends Controller
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
-       ->addColumn('column_003', function($row) { 
+      ->escapeColumns('column_002')
+       ->addColumn('column_003', function($row) {
 
                 $pn = '<div class="divTable" ><div class="divTableBody" style="background-color:white !important;">';
-                $pn .=     
+                $pn .=
                 '<div class="divTableRow" style="background-color:white !important;">
                 <div class="divTableCell" style="text-align:center;font-weight:bold;">
 
@@ -2524,9 +2528,9 @@ class Pick_warehouse_fifoController extends Controller
             return $pn;
 
         })
-        ->escapeColumns('column_003')      
-        ->addColumn('ch_amt_remain', function($row) { 
-        // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
+        ->escapeColumns('column_003')
+        ->addColumn('ch_amt_remain', function($row) {
+        // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่
         // Case ที่มีการบันทึกข้อมูลแล้ว
         // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
            $rs_pay_history = DB::select(" SELECT id FROM db_pay_requisition_002_pay_history WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
@@ -2538,12 +2542,12 @@ class Pick_warehouse_fifoController extends Controller
            }
 
        })
-      ->addColumn('ch_amt_lot_wh', function($row) { 
+      ->addColumn('ch_amt_lot_wh', function($row) {
 // ดูว่าไม่มีสินค้าคลังเลย
-          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง 
+          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บสถานะการส่ง และ ที่อยู่ในการจัดส่ง
 
           $Products = DB::select("
-            SELECT * from $temp_ppp_004 WHERE pick_pack_requisition_code_id_fk in (".$row->pick_pack_requisition_code_id_fk.") AND amt_remain>0 GROUP BY product_id_fk  
+            SELECT * from $temp_ppp_004 WHERE pick_pack_requisition_code_id_fk in (".$row->pick_pack_requisition_code_id_fk.") AND amt_remain>0 GROUP BY product_id_fk
           ");
           // Case ที่มีการบันทึกข้อมูลแล้ว
           // return count($Products);
@@ -2555,23 +2559,23 @@ class Pick_warehouse_fifoController extends Controller
               $arr_im = implode(',',$arr);
               $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
               $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
-              return @$r[0]->sum?@$r[0]->sum:0; 
+              return @$r[0]->sum?@$r[0]->sum:0;
           }else{
               // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน
               return 1;
           }
 
-       })    
-     ->addColumn('status_sent', function($row) { 
+       })
+     ->addColumn('status_sent', function($row) {
 
           $status_sent = DB::select(" SELECT status_sent FROM db_pay_requisition_001 WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."'  ");
           if($status_sent){
-              return $status_sent[0]->status_sent; 
+              return $status_sent[0]->status_sent;
           }else{
               return 0;
           }
 
-       })     
+       })
       ->addColumn('status_cancel_all', function($row) {
             $P = DB::select(" select status_cancel from db_pay_requisition_002 where pick_pack_requisition_code_id_fk='".@$row->pick_pack_requisition_code_id_fk."' AND status_cancel=1 ");
             if(count($P)>0){
@@ -2579,7 +2583,7 @@ class Pick_warehouse_fifoController extends Controller
             }else{
               return 0; // ไม่มีการยกเลิก
             }
-      })             
+      })
       ->make(true);
     }
 
@@ -2590,7 +2594,7 @@ class Pick_warehouse_fifoController extends Controller
 // /backend/pick_warehouse/1/edit (กรณีที่มีการยกเลิกการจ่าย status_cancel==1 บ้างบางรายการหรือทั้งหมด)
 // %%%%%%%%%%%%%%%%%%%%%%%
     public function Datatable0004(Request $req){
-     
+
       $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
       $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
       $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -2605,7 +2609,7 @@ class Pick_warehouse_fifoController extends Controller
         // print_r($t->Tables_in_aiyaraco_v3);
         array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
-      // เก็บรายการสินค้าที่จ่าย ตอน FIFO 
+      // เก็บรายการสินค้าที่จ่าย ตอน FIFO
 
       if(in_array($temp_ppp_004,$array_TABLES)){
         // return "IN";
@@ -2624,16 +2628,16 @@ class Pick_warehouse_fifoController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
-       ->addColumn('column_001', function($row) { 
+       ->addColumn('column_001', function($row) {
             $pn = '<div class="divTable"><div class="divTableBody">';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:50px;font-weight:bold;">ครั้งที่</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;">วันที่จ่าย</div>
             <div class="divTableCell" style="width:100px;text-align:center;font-weight:bold;"> พนักงาน </div>
             </div>
             ';
-            $pn .=     
+            $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
             <div class="divTableCell" style="text-align:center;font-weight:bold;">-</div>
@@ -2644,13 +2648,13 @@ class Pick_warehouse_fifoController extends Controller
         })
        ->escapeColumns('column_001')
        ->addColumn('column_002', function($row) {
-          
+
           $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
           $temp_ppp_002 = "temp_ppp_002".\Auth::user()->id; // ดึงข้อมูลมาจาก db_order_products_list
-          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO 
-          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
+          $temp_ppp_004 = "temp_ppp_004".\Auth::user()->id; // เก็บรายการที่หยิบสินค้ามาจากชั้นต่างๆ ตอน FIFO
+          $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+          $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+          $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
 
 
            $ch_status_cancel = DB::select(" SELECT * FROM `db_pay_requisition_002` WHERE pick_pack_requisition_code_id_fk in (".$row->pick_pack_requisition_code_id_fk.") AND status_cancel in (0) ");
@@ -2670,13 +2674,13 @@ class Pick_warehouse_fifoController extends Controller
 
 
           $pn = '<div class="divTable"><div class="divTableBody">';
-          $pn .=     
+          $pn .=
           '<div class="divTableRow">
           <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
           <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
           <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
-                     
+
                       <div class="divTableRow">
                       <div class="divTableCell" style="width:250px;text-align:center;font-weight:bold;">หยิบสินค้าจากคลัง</div>
                       <div class="divTableCell" style="width:200px;text-align:center;font-weight:bold;">Lot number [Expired]</div>
@@ -2695,38 +2699,38 @@ class Pick_warehouse_fifoController extends Controller
           DB::select(" DROP TABLE IF EXISTS temp_001; ");
            // TEMPORARY
           DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
-                           
+
           if($Products){
 
                   foreach ($Products as $key => $value) {
 
-                       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id; 
-                       $amt_pay_this = $value->amt_remain; 
+                       $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+                       $amt_pay_this = $value->amt_remain;
                         // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
-                        // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่ 
+                        // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                         $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
                         $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                         // return $amt_pay_this ;
 
                         // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
-                        if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){ 
+                        if($temp_db_stocks_01[0]->amt>0 && $temp_db_stocks_01[0]->amt>=$amt_pay_this ){
 
                           $pay_this = $value->amt_remain ;
                           $amt_pay_remain = 0;
 
-                            $pn .=     
+                            $pn .=
                             '<div class="divTableRow">
                              <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                             '.@$value->product_name.'</b><br>
                             </div>
-                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                            <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>  
+                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                            <div class="divTableCell" style="width:80px;text-align:center;">'. $amt_pay_remain .'</div>
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                            // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                            // Case 1.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-                             
+
                               DB::select(" DROP TABLE IF EXISTS temp_001; ");
                               // TEMPORARY
                               DB::select(" CREATE TEMPORARY TABLE temp_001 LIKE temp_db_stocks_amt_template_02 ");
@@ -2743,7 +2747,7 @@ class Pick_warehouse_fifoController extends Controller
                                   $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                                   $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                                   // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                                     $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
                                     $amt_to_take = $pay_this;
@@ -2754,7 +2758,7 @@ class Pick_warehouse_fifoController extends Controller
                                       $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
                                       $amt_to_take = $rs_[0]->amt_get;
                                     }else{
-                                      // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                                      // $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                       // $amt_remain = $r_before[0]->amt_remain;
                                              DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_to_take,0) ");
                                               $rs_ = DB::select(" SELECT amt_get FROM temp_001 order by id desc limit 1 ");
@@ -2762,7 +2766,7 @@ class Pick_warehouse_fifoController extends Controller
                                     }
 
 
-                                        $pn .=     
+                                        $pn .=
                                         '<div class="divTableRow">
                                         <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                         <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2824,9 +2828,9 @@ class Pick_warehouse_fifoController extends Controller
                                                     '".$v_02->product_unit_id_fk."',
                                                     '".$p_unit_name."',
                                                     '".$v_02->lot_number."',
-                                                    '".$v_02->lot_expired_date."', 
+                                                    '".$v_02->lot_expired_date."',
                                                     '".$v_02->warehouse_id_fk."',
-                                                    '".$v_02->zone_id_fk."', 
+                                                    '".$v_02->zone_id_fk."',
                                                     '".$v_02->shelf_id_fk."',
                                                     '".$v_02->shelf_floor."',
                                                     '".$v_02->created_at."'
@@ -2851,25 +2855,25 @@ class Pick_warehouse_fifoController extends Controller
                              $amt_pay_remain = $value->amt_remain - $temp_db_stocks_01[0]->amt ;
                              $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                            $pn .=     
+                            $pn .=
                             '<div class="divTableRow">
                              <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                             '.@$value->product_name.'</b><br>
                             </div>
-                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                             // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน 
+                             // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
-                            
+
                              $i = 1;
                              foreach ($temp_db_stocks_02 as $v_02) {
                                   $zone = DB::select(" select * from zone where id=".$v_02->zone_id_fk." ");
                                   $shelf = DB::select(" select * from shelf where id=".$v_02->shelf_id_fk." ");
                                   $sWarehouse = @$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v_02->shelf_floor;
 
-                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น 
+                                  // Check ว่า ชั้นแรกๆ มีพอมั๊ย ถ้ามีพอแล้ว ก็หยุดค้น
                                   // ถ้าจำนวนในคลังมีพอ เอาค่าจาก ที่ต้องการ
                                   $amt_to_take = $amt_pay_this;
                                   $amt_in_wh = @$v_02->amt?@$v_02->amt:0;
@@ -2882,7 +2886,7 @@ class Pick_warehouse_fifoController extends Controller
                                             $rs_ = DB::select(" SELECT amt_get FROM temp_001 WHERE id='$i' ");
                                             $amt_to_take = $rs_[0]->amt_get;
 
-                                           $pn .=     
+                                           $pn .=
                                             '<div class="divTableRow">
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -2944,9 +2948,9 @@ class Pick_warehouse_fifoController extends Controller
                                                             '".$v_02->product_unit_id_fk."',
                                                             '".$p_unit_name."',
                                                             '".$v_02->lot_number."',
-                                                            '".$v_02->lot_expired_date."', 
+                                                            '".$v_02->lot_expired_date."',
                                                             '".$v_02->warehouse_id_fk."',
-                                                            '".$v_02->zone_id_fk."', 
+                                                            '".$v_02->zone_id_fk."',
                                                             '".$v_02->shelf_id_fk."',
                                                             '".$v_02->shelf_floor."',
                                                             '".$v_02->created_at."'
@@ -2954,18 +2958,18 @@ class Pick_warehouse_fifoController extends Controller
                                                         ");
                                                     }
                                         // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                                                                 
+
 
                                         }else{
 
-                                            $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 "); 
+                                            $r_before =  DB::select(" select * from temp_001 where amt_remain<>0 order by id desc limit 1 ");
                                             $amt_remain = @$r_before[0]->amt_remain?@$r_before[0]->amt_remain:0;
 
                                             DB::select(" INSERT IGNORE INTO temp_001(amt_get,amt_remain) values ($amt_remain,".($r_before[0]->amt_remain-$amt_in_wh).") ");
                                             $rs_ = DB::select(" SELECT * FROM temp_001 WHERE id='$i' ");
                                             $amt_to_take = $amt_in_wh;
 
-                                            $pn .=     
+                                            $pn .=
                                             '<div class="divTableRow">
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$sWarehouse.' </div>
                                             <div class="divTableCell" style="width:200px;text-align:center;"> '.$v_02->lot_number.' ['.$v_02->lot_expired_date.'] </div>
@@ -3026,9 +3030,9 @@ class Pick_warehouse_fifoController extends Controller
                                                         '".$v_02->product_unit_id_fk."',
                                                         '".$p_unit_name."',
                                                         '".$v_02->lot_number."',
-                                                        '".$v_02->lot_expired_date."', 
+                                                        '".$v_02->lot_expired_date."',
                                                         '".$v_02->warehouse_id_fk."',
-                                                        '".$v_02->zone_id_fk."', 
+                                                        '".$v_02->zone_id_fk."',
                                                         '".$v_02->shelf_id_fk."',
                                                         '".$v_02->shelf_floor."',
                                                         '".$v_02->created_at."'
@@ -3037,8 +3041,8 @@ class Pick_warehouse_fifoController extends Controller
                                                 }
 
                                         // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                                
-                                         
+
+
                                         }
 
 
@@ -3048,23 +3052,23 @@ class Pick_warehouse_fifoController extends Controller
 
 
 
-                        }else{ // กรณีไม่มีสินค้าในคลังเลย 
+                        }else{ // กรณีไม่มีสินค้าในคลังเลย
 
 
                              $amt_pay_remain = $value->amt_remain ;
                              $pay_this = 0 ;
                              $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                            $pn .=     
+                            $pn .=
                             '<div class="divTableRow">
                              <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
                               '.@$value->product_name.'</b><br>
                               </div>
-                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div> 
-                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>  
+                            <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                            <div class="divTableCell" style="width:80px;text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
                             <div class="divTableCell" style="width:450px;text-align:center;"> ';
 
-                              $pn .=     
+                              $pn .=
                                     '<div class="divTableRow">
                                     <div class="divTableCell" style="width:200px;text-align:center;color:red;"> *** ไม่มีสินค้าในคลัง *** </div>
                                     <div class="divTableCell" style="width:200px;text-align:center;">  </div>
@@ -3074,7 +3078,7 @@ class Pick_warehouse_fifoController extends Controller
 
                              @$_SESSION['check_product_instock'] = 0;
 
-                            
+
                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
 
                                // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
@@ -3085,18 +3089,18 @@ class Pick_warehouse_fifoController extends Controller
                                   'promotions_products.product_unit as product_unit_id_fk',
                                   'promotions_products.product_id_fk as product_id_fk',
                                   DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                                  'promotions_products.product_amt as amt', 
+                                  'promotions_products.product_amt as amt',
                                 )
                                 ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                                ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')  
-                                ->join('products','products.id','promotions_products.product_id_fk')  
+                                ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
+                                ->join('products','products.id','promotions_products.product_id_fk')
                                 ->where($temp_ppp_002.'.type_product','promotion')
                                 ->where('promotions_products.product_id_fk',$value->product_id_fk)
                                 ->groupBy('promotions_products.product_id_fk')
                                 ->get();
                               }
 
-                           
+
                              $i = 1;
                              foreach ($temp_db_stocks_02 as $v_02) {
 
@@ -3150,11 +3154,11 @@ class Pick_warehouse_fifoController extends Controller
 
                         }
 
-                    $pn .= '</div>';  
-                    $pn .= '</div>';  
+                    $pn .= '</div>';
+                    $pn .= '</div>';
                   }
 
-                  $pn .= '</div>';  
+                  $pn .= '</div>';
 
           }
 
@@ -3172,7 +3176,7 @@ class Pick_warehouse_fifoController extends Controller
                   // ->where('amt_remain', $v->amt_remain)
                   ->get();
                   if($_choose->count() == 0){
-                    DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (pick_pack_requisition_code_id_fk,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain) 
+                    DB::select(" INSERT IGNORE INTO $temp_db_stocks_check (pick_pack_requisition_code_id_fk,product_id_fk,lot_number,lot_expired_date,amt_get,amt_lot,amt_remain)
                       VALUES (
                       '".$row->pick_pack_requisition_code_id_fk."', ".$v->product_id_fk.", '".$v->lot_number."', '".$v->lot_expired_date."', ".$v->amt_lot.", '".$v->amt_lot."', '".$v->amt_remain."'
                       )
@@ -3181,7 +3185,7 @@ class Pick_warehouse_fifoController extends Controller
 
             }
 
-        
+
           $rs_temp_db_stocks_check = DB::select(" select pick_pack_requisition_code_id_fk, sum(amt_get) as amt_get, sum(amt_lot) as amt_lot, sum(amt_remain) as amt_remain from $temp_db_stocks_check group by pick_pack_requisition_code_id_fk ");
 
           foreach ($rs_temp_db_stocks_check as $key => $v) {
@@ -3197,11 +3201,11 @@ class Pick_warehouse_fifoController extends Controller
 
           return $pn;
       })
-      ->escapeColumns('column_002')  
-       ->addColumn('column_003', function($row) { 
+      ->escapeColumns('column_002')
+       ->addColumn('column_003', function($row) {
 
                 $pn = '<div class="divTable" ><div class="divTableBody" style="background-color:white !important;">';
-                $pn .=     
+                $pn .=
                 '<div class="divTableRow" style="background-color:white !important;">
                 <div class="divTableCell" style="text-align:center;font-weight:bold;">
 
@@ -3215,9 +3219,9 @@ class Pick_warehouse_fifoController extends Controller
             return $pn;
 
         })
-         ->escapeColumns('column_003')      
-         ->addColumn('ch_amt_remain', function($row) { 
-            // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่ 
+         ->escapeColumns('column_003')
+         ->addColumn('ch_amt_remain', function($row) {
+            // ดูว่าไม่มีสินค้าค้างจ่ายแล้วใช่หรือไม่
             // Case ที่มีการบันทึกข้อมูลแล้ว
             // '3=สินค้าพอต่อการจ่ายครั้งนี้ 2=สินค้าไม่พอ มีบางรายการค้างจ่าย',
              $rs_pay_history = DB::select(" SELECT id FROM `db_pay_requisition_002_pay_history` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."' AND status in (2) ");
@@ -3230,7 +3234,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
            })
-          ->addColumn('ch_amt_lot_wh', function($row) { 
+          ->addColumn('ch_amt_lot_wh', function($row) {
          // ดูว่าไม่มีสินค้าคลังเลย
 
             $Products = DB::select("
@@ -3245,13 +3249,13 @@ class Pick_warehouse_fifoController extends Controller
                 $arr_im = implode(',',$arr);
                 $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
                 $r = DB::select(" SELECT sum(amt) as sum FROM $temp_db_stocks WHERE product_id_fk in ($arr_im) ");
-                return @$r[0]->sum?@$r[0]->sum:0; 
+                return @$r[0]->sum?@$r[0]->sum:0;
             }else{
                 // Case ที่ยังไม่มีการบันทึกข้อมูล ก็ให้ส่งค่า >0 ไปก่อน
                 return 1;
             }
 
-       })    
+       })
       ->addColumn('status_cancel_some', function($row) {
             $P = DB::select(" select status_cancel from db_pay_requisition_002 where pick_pack_requisition_code_id_fk='".@$row->pick_pack_requisition_code_id_fk."' AND status_cancel=1 ");
             if(count($P)>0){
@@ -3259,26 +3263,26 @@ class Pick_warehouse_fifoController extends Controller
             }else{
               return 0;
             }
-      })  
-       ->addColumn('status_sent', function($row) { 
+      })
+       ->addColumn('status_sent', function($row) {
 
             $status_sent = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk='".$row->pick_pack_requisition_code_id_fk."'  ");
             if($status_sent){
-                return $status_sent[0]->status_sent; 
+                return $status_sent[0]->status_sent;
             }else{
                 return 0;
             }
 
-         })     
-      ->addColumn('check_product_instock', function($row) { 
+         })
+      ->addColumn('check_product_instock', function($row) {
       // ดูว่าไม่มีสินค้าในคลังบางรายการ
           if(@$_SESSION['check_product_instock']=="0"){
-            return "N"; 
+            return "N";
           }else{
-            return "Y"; 
+            return "Y";
           }
 
-       })      
+       })
         ->make(true);
       }
 
