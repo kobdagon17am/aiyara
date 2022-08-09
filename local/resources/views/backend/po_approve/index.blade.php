@@ -241,9 +241,9 @@
                                     $last_day = date('Y-m-d');
                                     ?>
                                     <!-- <=
-                                                 $first_day
-                                                 $last_day
-                                                 ?> -->
+                                                     $first_day
+                                                     $last_day
+                                                     ?> -->
                                     <input id="bill_sdate" autocomplete="off" placeholder="Begin Date"
                                         style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black"
                                         value="" />
@@ -283,8 +283,8 @@
 
                                     <!-- บิลเติม Ai-cash -->
                                     <!--     <a class="btn btn-info btn-sm btnSearch02 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
-                                                <i class="bx bx-search align-middle "></i> SEARCH
-                                              </a> -->
+                                                    <i class="bx bx-search align-middle "></i> SEARCH
+                                                  </a> -->
 
 
                                 </div>
@@ -590,6 +590,11 @@
                                     className: 'text-left w100 '
                                 },
                                 {
+                                    data: 'customer_bank',
+                                    title: '<center>ธนาคารที่โอนชำระ</center>',
+                                    className: 'text-left  '
+                                },
+                                {
                                     data: 'code_order',
                                     title: '<center>เลขใบสั่งซื้อ </center>',
                                     className: 'text-center'
@@ -876,6 +881,11 @@
                                             className: 'text-left w100 '
                                         },
                                         {
+                                            data: 'customer_bank',
+                                            title: '<center>ธนาคารที่โอนชำระ</center>',
+                                            className: 'text-left  '
+                                        },
+                                        {
                                             data: 'code_order',
                                             title: '<center>เลขใบสั่งซื้อ </center>',
                                             className: 'text-center'
@@ -1044,6 +1054,11 @@
                                             data: 'customer_name',
                                             title: '<center>รหัส:ชื่อลูกค้า </center>',
                                             className: 'text-left w100 '
+                                        },
+                                        {
+                                            data: 'customer_bank',
+                                            title: '<center>ธนาคารที่โอนชำระ</center>',
+                                            className: 'text-left  '
                                         },
                                         {
                                             data: 'code_order',
@@ -1254,6 +1269,11 @@
                                             className: 'text-left w100 '
                                         },
                                         {
+                                            data: 'customer_bank',
+                                            title: '<center>ธนาคารที่โอนชำระ</center>',
+                                            className: 'text-left  '
+                                        },
+                                        {
                                             data: 'aicash_remain',
                                             title: '<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>',
                                             className: 'text-center'
@@ -1413,9 +1433,9 @@
 
 
                 <!-- <audio autoplay>
-                          <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
-                        </audio>
-                         -->
+                              <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
+                            </audio>
+                             -->
 
                 <script type="text/javascript">
                     $(document).ready(function() {

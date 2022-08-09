@@ -185,7 +185,7 @@
   <div class="col-12">
       <div class="page-title-box d-flex align-items-center justify-content-between"
           style="padding-bottom: 0px;">
-          <h4 class="font-size-18"> <u>ยอดรวมการขาย</u></h4>
+          <h4 class="font-size-18"> <u>รายเดือน</u></h4>
       </div>
   </div>
 </div>
@@ -214,7 +214,7 @@
 <div class="col-12">
     <div class="page-title-box d-flex align-items-center justify-content-between"
         style="padding-bottom: 0px;">
-        <h4 class="font-size-18"> <u>ยอดรวมการขาย</u></h4>
+        <h4 class="font-size-18"> <u>รายเดือน</u></h4>
     </div>
 </div>
 </div>

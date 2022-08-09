@@ -195,7 +195,7 @@ class Add_ai_cashController extends Controller
   {
 
     if (isset($request->approved)) {
-      // dd($request->all()); total_amt
+      // dd($request->all()); pay_type_id_fk
       // approved
       if($request->approve_status == 2){
 
@@ -710,9 +710,13 @@ class Add_ai_cashController extends Controller
     }
 
     $sTable = DB::select("
-            SELECT db_add_ai_cash.*
+            SELECT db_add_ai_cash.*,
+            dataset_account_bank.txt_bank_name as txt_bank_name,
+            dataset_account_bank.txt_account_name as txt_account_name,
+            dataset_account_bank.txt_bank_number as txt_bank_number
             FROM
             db_add_ai_cash
+            left join dataset_account_bank on dataset_account_bank.id = db_add_ai_cash.account_bank_id
             WHERE pay_type_id_fk in (1,8,10,11,12)
             " . $w01 . "
             " . $w02 . "
@@ -735,15 +739,22 @@ class Add_ai_cashController extends Controller
       })
       ->escapeColumns('other_bill')
 
-      ->addColumn('transfer_price_over', function ($row) {
-        if($row->transfer_price_over != '' && $row->transfer_price_over != null){
-          return $row->transfer_price_over;
+      ->addColumn('transfer_price_over', function($row) {
+        if($row->transfer_price_over>0){
+          return '<label style="color:red;">'.number_format(@$row->transfer_price_over, 2).'</label>';
         }else{
-          return '-';
+          return '<label>'.number_format(@$row->transfer_price_over, 2).'</label>';
         }
+
       })
+
       ->escapeColumns('transfer_price_over')
 
+      ->addColumn('customer_bank', function($row) {
+
+        return 'ธนาคาร : '.$row->txt_bank_name.'<br>'.'ชื่อบัญชี : '.$row->txt_account_name.'<br>'.'เลขที่บัญชี : '.$row->txt_bank_number;
+      })
+     ->escapeColumns('customer_bank')
 
       ->addColumn('customer_name', function ($row) {
         if (@$row->customer_id_fk != '') {

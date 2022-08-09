@@ -296,7 +296,7 @@
                                   <div class="form-group row">
                                     <label for="" class="col-md-4 col-form-label"> ยอดเงินเกิน (ยอดเกินหากมี) : </label>
                                     <div class="col-md-8 ">
-                                        <input class="form-control CalAicashAmt NumberOnly text-right" type="text" placeholder="" value="{{@$sRow->transfer_price_over}}" name="transfer_price_over">
+                                        <input class="form-control NumberOnly" type="text" placeholder="" value="{{@$sRow->transfer_price_over}}" name="transfer_price_over">
                                     </div>
                                   </div>
 
