@@ -53,7 +53,7 @@
 .divTable{
     display: table;
     width: 100%;
-    
+
   }
   .divTableRow {
     display: table-row;
@@ -66,7 +66,7 @@
     border: 1px solid white;
     display: table-cell;
     padding: 3px 6px;
-    word-break: break-all; 
+    word-break: break-all;
   }
   .divTableHeading {
     background-color: #EEE;
@@ -92,7 +92,7 @@
 <div class="myloading"></div>
 
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -106,7 +106,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -116,10 +116,10 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
-      // echo  @$menu_permit->can_packing_list;     
-      // echo  @$menu_permit->can_payproduct;     
-      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";     
+      // echo $menu_id;
+      // echo  @$menu_permit->can_packing_list;
+      // echo  @$menu_permit->can_payproduct;
+      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";
    ?>
 
 <div class="row">
@@ -130,7 +130,7 @@
             <h4 class="font-size-18  "> เบิกจ่ายสินค้าจากคลัง  </h4>
             <!-- test_clear_data -->
           </div>
-          
+
           <div class="col-4" style="padding: 5px;text-align: center;font-weight: bold;margin-left: 5%;">
             <span >
               <?php $role = DB::select("SELECT * FROM `role_group` where id=".(\Auth::user()->role_group_id_fk)." "); ?>
@@ -153,7 +153,7 @@
 
         </div>
     </div>
-    
+
 </div>
 
 <div class="row">
@@ -162,18 +162,18 @@
             <div class="card-body">
 
             <div class="myBorder" style="" >
-       
+
         <div class="col-12">
-          
+
           <div class="form-group row  " >
             <div class="col-md-12 ">
             <!-- <table id="data-table-0000" class="table table-bordered " style="width: 100%;" ></table> -->
-               
+
                     @IF(@$sUser[0]->status_sent!=3)
                           <div style="background-color:#ffeecc;padding-top: 10px;display: none;">
-                        @ELSE 
+                        @ELSE
                           <div style="background-color:#ffe6ff;padding-top: 10px;display: none;">
-                        @ENDIF 
+                        @ENDIF
 
                             <div class="row">
                               <div class="col-lg-2">
@@ -189,7 +189,7 @@
                                     <li class="list-inline-item ">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="ที่อยู่จัดส่ง"><i class="bx bx-home mr-1 text-primary" ></i>ที่อยู่จัดส่ง : <b><span class="user_address">{{@$user_address}}</span></b></h5>
                                     </li>
-                                    
+
                                   @if(@$sUser[0]->status_sent!=3)
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="วันที่ดำเนินการ"><i class="bx bx-calendar mr-1 text-primary"></i>วันที่ดำเนินการ : <b><span class="pay_date">{{@$sUser[0]->pay_date}}</span></b></h5>
@@ -198,8 +198,8 @@
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14 " data-toggle="tooltip" data-placement="top" title="ผู้ดำเนินการ"><i class="bx bx-user-check font-size-18 mr-1 text-primary"></i>ผู้ดำเนินการ : <b><span class="user_action">{{@$sUser[0]->user_action}}</span></b></h5>
                                     </li>
-                                    @ENDIF 
-                                                                
+                                    @ENDIF
+
                                     <li class="list-inline-item ">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="สถานะ"><i class="bx bx-task mr-1 text-primary" ></i> STATUS : <span style="color:red;font-weight: bold;font-size: 16px;" class="bill_status" >{{@$sUser[0]->bill_status}}</span></h5>
                                     </li>
@@ -212,7 +212,7 @@
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14 " data-toggle="tooltip" data-placement="top" title="ผู้จ่าย"><i class="bx bx-user-check font-size-18 mr-1 text-primary"></i>ผู้จ่าย : <b><span class="pay_user">{{@$sUser[0]->pay_user}}</span></b></h5>
                                     </li>
-                                  @ENDIF 
+                                  @ENDIF
 
                                   </ul>
                               </div>
@@ -225,23 +225,32 @@
           <table id="data-table-0002" class="table table-bordered " style="width: 100%;"> </table>
 
 
-           <?php  //echo $sUser[0]->status_sent ?>        
-           <?php if($sUser[0]->status_sent<6){ ?>        
-                
+           <?php  //echo $sUser[0]->status_sent ?>
+           <?php if($sUser[0]->status_sent<5){ ?>
+
               <div class="col-md-12 text-center  "  >
                           <br>
                           <button type="submit" class="btn btn-danger btn-sm waves-effect font-size-16 btnCancelBill " >
                           x ยกเลิกใบเสร็จใบนี้
                           </button>
                         </div>
-           <?php }else{ ?>     
+           <?php }else{
+            if($sUser[0]->status_sent == 6){
+            ?>
 
-                <div class="col-md-12 text-center  " style="color: red;font-weight: bold;font-size: 18px;" >
-                          <br>
-                      * หมายเหตุ บิลนี้มีสถานะ ยกเลิกใบเบิก *
-                        </div>
+<div class="col-md-12 text-center  " style="color: red;font-weight: bold;font-size: 18px;" >
+  <br>
+* หมายเหตุ บิลนี้มีสถานะ ยกเลิกใบเบิก *
+</div>
 
-           <?php } ?>     
+
+
+           <?php }else{ ?>
+            <div class="col-md-12 text-center  " style="color: red;font-weight: bold;font-size: 18px;" >
+              <br>
+            </div>
+
+            <?php    }   }?>
 
 
           </div>
@@ -250,7 +259,7 @@
 
             </div>
 
-     
+
 
             </div>
         </div>
@@ -303,9 +312,9 @@
                                                                     });
                                                                 }
                                                           });
-                }); 
+                });
 </script>
-  
+
 <script>
  // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
          //  var id = "{{$id}}"; //alert(id);
@@ -344,11 +353,11 @@
          //             $(".myloading").hide();
          //          }
          //      });
-         
+
          // });
           var packing_id = "{{$pick_pack_requisition_code_id_fk}}"; //alert(packing_id);
 
-          var id = "{{$id}}"; 
+          var id = "{{$id}}";
           var oTable0000;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
@@ -412,7 +421,7 @@
 
               });
 
-             
+
           });
 
 
@@ -451,7 +460,7 @@
                      $(".myloading").hide();
                   }
               });
-         
+
          });
     // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
     </script>
@@ -460,8 +469,8 @@
 <script type="text/javascript">
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-// ตารางนี้เกิดจากการดึงข้อมูล FIFO 
-            
+// ตารางนี้เกิดจากการดึงข้อมูล FIFO
+
             var packing_id = "{{$pick_pack_requisition_code_id_fk}}"; //alert(packing_id);
             var oTable0002;
             $(function() {
@@ -487,7 +496,7 @@
                         {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center '},
                         {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
                         // {data: 'column_003', title :'<center> ยกเลิก </center> ', className: 'text-center'},
-                                             
+
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                           // console.log("xxxxxxx");
@@ -517,7 +526,7 @@
               oTable0002.on( 'draw', function () {
                 $('[data-toggle="tooltip"]').tooltip();
               });
-           
+
             });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
   </script>
@@ -525,7 +534,7 @@
 
 
 
-  
+
   <script type="text/javascript">
     $(document).ready(function() {
 
@@ -557,7 +566,7 @@
                   }
               });
 
-        
+
       });
 
 
@@ -589,7 +598,7 @@
           $(this).prev().css({ 'background-color' : 'blanchedalmond'});
           $(this).prev().val('');
 
-        
+
       });
 
 
@@ -600,20 +609,20 @@
 
 
     <script>
-          
+
 
                 var packing_id = "{{$pick_pack_requisition_code_id_fk}}"; //alert(packing_id);
-                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                  $.ajax({
 
-                      url: " {{ url('backend/ajaxSearch_requisition_db_orders') }} ", 
+                      url: " {{ url('backend/ajaxSearch_requisition_db_orders') }} ",
                       method: "post",
                       data: {
                         packing_id:packing_id,
-                        "_token": "{{ csrf_token() }}", 
+                        "_token": "{{ csrf_token() }}",
                       },
                       success:function(data)
-                      { 
+                      {
                           // console.log(data);
                           // return false;
 
@@ -630,7 +639,7 @@
                           }else{
 
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
+                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO
                                   $.fn.dataTable.ext.errMode = 'throw';
                                   var oTable0003;
                                   $(function() {
@@ -655,7 +664,7 @@
                                               {data: 'column_001', title :'<center> 3 </center> ', className: 'text-center '},
                                               {data: 'column_002', title :'<center>  </center> ', className: ''},
                                               {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
-                                                                   
+
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
 
@@ -682,7 +691,7 @@
 
                                               }else{
 
-                                                  // ถ้ามีการยกเลิกเมื่อไร ให้แสดงตาราง 4 กรณีอื่นๆ แสดงตาราง 3 
+                                                  // ถ้ามีการยกเลิกเมื่อไร ให้แสดงตาราง 4 กรณีอื่นๆ แสดงตาราง 3
                                                       if(aData['status_cancel_all']==1 ){ //มีการยกเลิก
 
                                                             $(".div_datatables_003").hide();
@@ -713,12 +722,12 @@
 
                                           }
                                       });
-                                 
+
                                   });
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
+                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO
                                   $.fn.dataTable.ext.errMode = 'throw';
                                   var oTable0004;
                                   $(function() {
@@ -743,7 +752,7 @@
                                               {data: 'column_001', title :'<center> 4 </center> ', className: 'text-center '},
                                               {data: 'column_002', title :'<center>  </center> ', className: ''},
                                               {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
-                                                                   
+
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
 
@@ -779,37 +788,37 @@
 
                                               // }
 
-                            
+
 
                                           }
                                       });
-                                 
+
                                   });
-                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@                      
+                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
                           } // ปิด if(data==0){
 
                       } // ปิด success:function(data)
-                
+
                 }); // ปิด $.ajax({
 
 
  </script>
- 
+
     <script>
 
        $(document).on('click', '.btnSave004', function(e) {
 
                 $(".myloading").show();
-                var requisition_code = "{{$pick_pack_requisition_code_id_fk}}"; 
+                var requisition_code = "{{$pick_pack_requisition_code_id_fk}}";
                 // var packing_id = packing_id.split('');
                 // alert(packing_id);
                 // return false;
-                  // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                  // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                  $.ajax({
 
                         type:'POST',
-                        url: " {{ url('backend/calFifo_edit') }} ", 
+                        url: " {{ url('backend/calFifo_edit') }} ",
                         // data:{ _token: '{{csrf_token()}}',packing_id:packing_id},
                         data: $("#frm-packing").serialize()+"&requisition_code="+requisition_code,
                         success: function(response){ // What to do if we succeed
@@ -821,7 +830,7 @@
                             $('#data-table-0004').DataTable().clear().draw();
 
                              setTimeout(function(){
-                                    
+
                                       $.ajax({
                                            type:'POST',
                                            url: " {{ url('backend/ajaxSearch_requisition_db_orders002') }} ",
@@ -841,7 +850,7 @@
                                                             cancelButtonColor: "#f46a6a"
                                                             }).then(function (result) {
                                                                 if (result.value) {
-                                                                      
+
                                                                     $(".myloading").show();
 
                                                                       $.ajax({
@@ -852,9 +861,9 @@
                                                                                console.log(d2);
                                                                                location.reload();
                                                                                // return false;
-                                                                       
+
                                                                               // location.replace('{{ url("backend/pick_warehouse") }}/'+d2+'/edit');
- 
+
                                                                              $(".myloading").hide();
                                                                           },
                                                                         error: function(jqXHR, textStatus, errorThrown) {
@@ -876,16 +885,16 @@
                                                       })
 
                                                       // var txtSearch = $("input[name='txtSearch']").val();
-                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                                                        // $.ajax({
-                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                                                        //        method: "post",
                                                        //        data: {
                                                        //          txtSearch:txtSearch,
-                                                       //          "_token": "{{ csrf_token() }}", 
+                                                       //          "_token": "{{ csrf_token() }}",
                                                        //        },
                                                        //        success:function(data)
-                                                       //        { 
+                                                       //        {
                                                        //          console.log(data);
                                                        //          $(".myloading").hide();
                                                        //        }
@@ -894,14 +903,14 @@
                                                  } // ปิด if(data=="No_changed"){
 
                                               }, // ปิด success:function(data){
-                                        
+
                                         }); // ปิด $.ajax({
 
                                   }, 500); // ปิด setTimeout(function(){
-                                          
+
 
                       } // ปิด success:function(data)
-                
+
                 }); // ปิด $.ajax({
 
          }); // ปิด $(document).on('click', '.btnSave004'
@@ -909,7 +918,7 @@
     </script>
 
    <script type="text/javascript">
-     
+
     $(document).ready(function() {
 
            $(document).on('click', '.cDelete2', function(){
@@ -930,15 +939,15 @@
                           if (result.value) {
 
                              $.ajax({
-                                url: " {{ url('backend/cancel-some-requisition_001') }} ", 
+                                url: " {{ url('backend/cancel-some-requisition_001') }} ",
                                 method: "post",
                                 data: {
                                   pick_pack_requisition_code_id_fk:packing_id,
                                   time_pay:time_pay,
-                                  "_token": "{{ csrf_token() }}", 
+                                  "_token": "{{ csrf_token() }}",
                                 },
                                 success:function(data)
-                                { 
+                                {
                                   // console.log(data);
                                   // return false;
                                       Swal.fire({
@@ -954,28 +963,28 @@
                                       }, 1000);
                                 }
                               })
-                            
+
 
 
 
                           }
                     });
 
-             });   
+             });
 
     });
    </script>
 
 
    <script type="text/javascript">
-     
+
     $(document).ready(function() {
 
            $(document).on('click', '.btnCancelBill', function(){
 
             // $(".myloading").show();
 
-            var id = "{{$id}}"; 
+            var id = "{{$id}}";
             // alert(id);
             // return false;
 
@@ -990,14 +999,14 @@
                           if (result.value) {
 
                              $.ajax({
-                                url: " {{ url('backend/cancelBill') }} ", 
+                                url: " {{ url('backend/cancelBill') }} ",
                                 method: "post",
                                 data: {
                                   id:id,
-                                  "_token": "{{ csrf_token() }}", 
+                                  "_token": "{{ csrf_token() }}",
                                 },
                                 success:function(data)
-                                { 
+                                {
                                   // console.log(data);
                                   // return false;
                                       // Swal.fire({
@@ -1013,13 +1022,13 @@
                                       }, 1000);
                                 }
                               })
-                            
+
                           }else{
                             $(".myloading").hide();
                           }
                     });
 
-             });   
+             });
 
     });
    </script>
@@ -1028,23 +1037,23 @@
 
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
+
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
                       return false;
                   }else{
-                  
+
                       location.replace( window.location.href+"?test_clear_data=test_clear_data ");
                   }
-   
+
             });
-                
+
       });
 
     </script>
-   
-   
-    <?php 
-    
+
+
+    <?php
+
     if(isset($_REQUEST['test_clear_data'])){
 
       DB::select("TRUNCATE db_pay_product_receipt_001;");
@@ -1059,17 +1068,17 @@
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
@@ -1081,7 +1090,7 @@
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
       DB::select("TRUNCATE `db_consignments`;");
       DB::select("UPDATE `db_delivery` SET `status_pick_pack`='0' ;");
-      
+
       ?>
           <script>
           location.replace( "{{ url('backend/pick_pack') }}");
