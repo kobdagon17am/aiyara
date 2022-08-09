@@ -1,4 +1,4 @@
-@extends('backend.layouts.master')
+  @extends('backend.layouts.master')
 
 @section('title') Aiyara Planet @endsection
 
@@ -15,21 +15,21 @@
             <h4 class="mb-0 font-size-18"> อนุมัติ Ai-Cash </h4>
 
             <?php if(isset($_REQUEST['fromAddAiCash'])){ $frontstore_id_fk = $_REQUEST['frontstore_id_fk']; ?>
-              
+
             <?php }else{ ?>
                 <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_approve") }}">
                       <i class="bx bx-arrow-back font-size-18 align-middle mr-1"></i> <span style="font-size: 14px;">ย้อนกลับ</span>
                 </a>
             <?php } ?>
-                    
+
         </div>
 
 
     </div>
 </div>
 <!-- end page title -->
-  <?php 
-    
+  <?php
+
     // print_r(\Auth::user()->business_location_id_fk);
     // print_r(\Auth::user()->branch_id_fk);
 
@@ -76,7 +76,7 @@
 
                       <div class="myBorder">
 
-                      <?php  $rr1 =  empty(@$sRow) ? "required" :  "" ;  ?>     
+                      <?php  $rr1 =  empty(@$sRow) ? "required" :  "" ;  ?>
 
                            <div class="form-group row">
                               <label for="customer_id_fk" class="col-md-4 col-form-label"> รหัส-ชื่อลูกค้า : * </label>
@@ -88,29 +88,29 @@
 
                                     <select class="form-control select2-templating " disabled >
                                        <option value="{{@$sRow->customer_id_fk}}" selected >{{@$CustomerAicashName}}</option>
-                                    </select> 
+                                    </select>
 
                                   @else
 
                                     <input type="hidden" name="customer_id_fk" id="customer_id_fk" >
                                     <select id="aicash_choose" class="form-control "  >
                                       <option value=""  >-Select-</option>
-                                    </select> 
+                                    </select>
                                   @endif
 
-                                   <select id="customer_id_fk_select"  class="form-control" {{@$rr1}} ></select> 
+                                   <select id="customer_id_fk_select"  class="form-control" {{@$rr1}} ></select>
 
                               </div>
                             </div>
 
-                
+
                           <div class="form-group row">
                             <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่มี :</label>
                             <div class="col-md-8">
                                <input class="form-control f-ainumber-18 input-aireadonly " id="aicash_remain" value="{{number_format(@$CustomerAicash[0]->ai_cash,2)}}" readonly />
                             </div>
                           </div>
-      <?php  $rr2 =  empty(@$sRow) ? "required" :  "readonly" ;  ?>                    
+      <?php  $rr2 =  empty(@$sRow) ? "required" :  "readonly" ;  ?>
                           <div class="form-group row">
                             <label for="aicash_amt" class="col-md-4 col-form-label">ยอด Ai-Cash ที่เติม :</label>
                             <div class="col-md-8">
@@ -122,7 +122,7 @@
                    </div>
 
          @if( !empty(@$sRow) )
-                   <div class="myBorder">      
+                   <div class="myBorder">
 
                           <div class="form-group row">
                             <label for="pay_type_id_fk" class="col-md-4 col-form-label"> รูปแบบการชำระเงิน :</label>
@@ -132,11 +132,11 @@
                                     @if(@$sPay_type)
                                       @foreach(@$sPay_type AS $r)
                                         <option value="{{$r->id}}" {{ (@$r->id==@$sRow->pay_type_id_fk)?'selected':'' }}  >
-                                          {{$r->detail}} 
+                                          {{$r->detail}}
                                         </option>
                                       @endforeach
-                                    @endif                                
-                              </select> 
+                                    @endif
+                              </select>
                             </div>
                           </div>
 
@@ -206,7 +206,7 @@
                               @foreach(@$sAccount_bank AS $r)
                                   <input disabled="" type="radio" id="account_bank_id{{@$r->id}}"  name="account_bank_id" value="{{@$r->id}}" <?=(@$r->id==@$sRow->account_bank_id?'checked':'')?> > <label for="account_bank_id{{@$r->id}}">&nbsp;&nbsp;{{@$r->txt_account_name}} {{@$r->txt_bank_name}} {{@$r->txt_bank_number}}</label><br>
                               @endforeach
-                            @endif  
+                            @endif
                           </div>
                         </div>
 
@@ -222,7 +222,7 @@
                               $ds_m = $ds[1];
                               $ds_y = $ds[0];
                               $ds = $ds_d.'/'.$ds_m.'/'.$ds_y.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime)));
-                            }else{$ds='';} ?>           
+                            }else{$ds='';} ?>
                               <input class="form-control transfer_money_datetime" autocomplete="off" value="{{$ds}}" style="width: 45%;margin-left: 5%;font-weight: bold;" disabled placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime" name="transfer_money_datetime" value="{{@$sRow->transfer_money_datetime}}"  />
 
@@ -236,10 +236,10 @@
 
                                   <span width="100" class="span_file_slip" >
                                     @IF(!empty(@$sRow->file_slip))
-                                      <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;"  data-lity > 
+                                      <img id="imgAvatar_01" src="{{ asset(@$sRow->file_slip) }}" style="margin-top: 5px;height: 180px;"  data-lity >
                                <!--        <button type="button" data-id="{{@$sRow->id}}" class="btn btn-danger btn-sm font-size-10 btnDelSlip " style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> -->
                                     @ELSE
-                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;"  data-lity > 
+                                      <img id="imgAvatar_01" src="{{ asset('local/public/images/file-slip.png') }}" style="margin-top: 5px;height: 180px;display: none;"  data-lity >
                                     @ENDIF
                                   </span>
                           </div>
@@ -251,16 +251,10 @@
                         <div class="form-group row show_div_transfer_price " style="<?=$show_div_transfer_price?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินโอน : </label>
                           <div class="col-md-8 ">
-                              
-                    
                               <input class="form-control CalAicashAmt NumberOnly input-airight f-ainumber-18 input-aifill" type="text" value="{{number_format(@$sRow->transfer_price,2)}}" name="transfer_price"  {{@$rr2}} >
-
-
-                                     
                           </div>
                         </div>
 
-                      
                       <div class="form-group row show_div_cash_price " style="display: none;">
                         <label for="cash_price" class="col-md-4 col-form-label"> cash_price : </label>
                         <div class="col-md-8 ">
@@ -273,12 +267,12 @@
                         <div class="form-group row show_div_cash_pay " style="<?=$show_div_cash_pay?>">
                           <label for="" class="col-md-4 col-form-label"> ยอดเงินสดที่ต้องชำระ : </label>
                           <div class="col-md-8 ">
-                              
-                           <?php 
-                                $cash_pay = @$sRow->cash_pay ; 
+
+                           <?php
+                                $cash_pay = @$sRow->cash_pay ;
                           ?>
                                 <input class="form-control f-ainumber-18-b input-aireadonly in-tx " name="cash_pay" id="cash_pay" value="{{number_format(@$cash_pay,2)}}" readonly="" >
-                                     
+
                           </div>
                         </div>
 
@@ -286,18 +280,25 @@
               </form>
               </div>
 
-              
+
                   @if( !empty(@$sRow->id) )
                   @if( $sPermission==1 || @$menu_permit->can_approve==1 )
                   @if( @$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 )
 
                               <div class="myBorder" style="">
-                          
+
                                 <form id="frm-main" action="{{ route('backend.add_ai_cash.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                   <input name="_method" type="hidden" value="PUT">
                                   <input name="id" type="hidden" value="{{@$sRow->id}}">
                                   <input name="approved" type="hidden" value="1">
                                   {{ csrf_field() }}
+
+                                  <div class="form-group row">
+                                    <label for="" class="col-md-4 col-form-label"> ยอดเงินเกิน (ยอดเกินหากมี) : </label>
+                                    <div class="col-md-8 ">
+                                        <input class="form-control CalAicashAmt NumberOnly text-right" type="text" placeholder="" value="{{@$sRow->transfer_price_over}}" name="transfer_price_over">
+                                    </div>
+                                  </div>
 
                                    <div class="form-group row">
                                         <label for="" class="col-md-4 col-form-label">ผู้อนุมัติ :</label>
@@ -309,7 +310,7 @@
                                                 <input class="form-control" type="text" value="{{ @$approve_user }}" readonly style="background-color: #f2f2f2;" >
                                               <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                                            @endif
-                                            
+
                                         </div>
                                     </div>
 
@@ -325,7 +326,7 @@
                                       </div>
                                        <div class="col-md-4 mt-2">
                                         <div class=" ">
-                                
+
                                             <input type="radio" class="" id="customSwitch2" name="approve_status" value="6" {{ ( @$sRow->approve_status=='6')?'checked':'' }} required >
                                             <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
 
@@ -334,6 +335,7 @@
 
                                   </div>
 
+
                                   <div class="form-group row">
                                     <label for="note" class="col-md-4 col-form-label ">หมายเหตุ :</label>
                                     <div class="col-md-8">
@@ -341,9 +343,9 @@
                                     </div>
                                   </div>
                       @IF(@$sRow->approve_status >= 2)
-              
+
                       @ELSE
-                  
+
                                   <div class="form-group row" style="padding: 1%;">
                                     <div class="col-md-4">
                                       <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_approve") }}">
@@ -360,15 +362,15 @@
 
                                     </div>
                                   </div>
-                       @ENDIF 
+                       @ENDIF
                               </form>
 
                             </div>
 
-                  @ENDIF 
-                  @ENDIF 
-                  @ENDIF 
-              
+                  @ENDIF
+                  @ENDIF
+                  @ENDIF
+
   @ENDIF
 
         </div>
@@ -398,18 +400,18 @@
                       $.ajax({
                                type:'POST',
                                dataType:'JSON',
-                               url: " {{ url('backend/ajaxGetAicash') }} ", 
+                               url: " {{ url('backend/ajaxGetAicash') }} ",
                                data: { _token: '{{csrf_token()}}', customer_id:customer_id },
                                 success:function(data){
-                                       console.log(data); 
+                                       console.log(data);
                                        $.each(data,function(key,value){
                                           // $("#aicash_remain").val(value.ai_cash);
                                           $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
-                                         
+
                                         });
                                       $(".myloading").hide();
                                   },
-                                error: function(jqXHR, textStatus, errorThrown) { 
+                                error: function(jqXHR, textStatus, errorThrown) {
                                     $(".myloading").hide();
                                 }
                             });
@@ -419,7 +421,7 @@
           function formatNumber(num) {
               return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
           }
-     
+
           function fnGetDBAddAiCash(){
 
                     var id = "{{@$sRow->id}}";
@@ -428,28 +430,28 @@
                     $.ajax({
                            type:'POST',
                            dataType:'JSON',
-                           url: " {{ url('backend/ajaxGetDBAddAiCash') }} ", 
+                           url: " {{ url('backend/ajaxGetDBAddAiCash') }} ",
                            data:{ _token: '{{csrf_token()}}',id:id,},
                            success:function(d){
                             if(d){
                               $.each(d,function(key,value){
-                                  
+
                                   $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
-                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
                                   $("#cash_price").val(formatNumber(parseFloat(value.cash_price).toFixed(2)));
 
                                   if(pay_type_id_fk==''){
-                                     $("#cash_pay").val('');    
+                                     $("#cash_pay").val('');
                                   }else{
-                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
 
                                   if(value.transfer_money_datetime==''){
-                                     $("#transfer_money_datetime").val('');    
+                                     $("#transfer_money_datetime").val('');
                                   }else{
-                                     $("#transfer_money_datetime").val(value.transfer_money_datetime); 
+                                     $("#transfer_money_datetime").val(value.transfer_money_datetime);
                                   }
 
                                 });
@@ -460,12 +462,12 @@
                               $(".myloading").hide();
 
                             },
-                            error: function(jqXHR, textStatus, errorThrown) { 
+                            error: function(jqXHR, textStatus, errorThrown) {
                                 $(".myloading").hide();
                             }
                       });
-              
-                    
+
+
                 }
 
 
@@ -479,18 +481,18 @@
               $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxGetAicash') }} ", 
+                       url: " {{ url('backend/ajaxGetAicash') }} ",
                        data: { _token: '{{csrf_token()}}', customer_id:customer_id },
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                $.each(data,function(key,value){
                                   // $("#aicash_remain").val(value.ai_cash);
                                   $("#aicash_remain").val(formatNumber(parseFloat(value.ai_cash).toFixed(2)));
-                                 
+
                                 });
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -544,14 +546,14 @@
                       $.ajax({
                        type:'POST',
                        dataType:'JSON',
-                       url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ", 
+                       url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ",
                        data: $("#frm-main").serialize()+"&id="+id,
                         success:function(data){
-                                  console.log(data); 
+                                  console.log(data);
                                   // return false;
-                                  
+
                                   $.each(data,function(key,value){
-                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));  
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   });
 
                                   fnGetDBAddAiCash();
@@ -560,7 +562,7 @@
                                   $("input[name=_method]").val('PUT');
                                   $(".myloading").hide();
                                 },
-                              error: function(jqXHR, textStatus, errorThrown) { 
+                              error: function(jqXHR, textStatus, errorThrown) {
                                   $(".myloading").hide();
                               }
                           });
@@ -586,7 +588,7 @@
                             }else
                         // 4  เครดิต + เงินโอน
                             if(pay_type_id_fk==8){
-                             
+
                                   // เครดิต
                                   $(".show_div_credit").show();
                                   $("#credit_price").val('');
@@ -607,8 +609,8 @@
 
                                   $(".show_div_cash_pay").hide();
 
-                                        
-                              }else 
+
+                              }else
                               // 6  เงินโอน + เงินสด
                               if(pay_type_id_fk==10){
 
@@ -625,10 +627,10 @@
                                 $(".show_div_cash_pay").show();
                                 $('#fee').removeAttr('required');
                                 $("#cash_pay").val('');
-                              
+
                             }
 
-                                                       // 1  เงินโอน 
+                                                       // 1  เงินโอน
                               if(pay_type_id_fk==1){
 
                                 // เงินโอน
@@ -675,25 +677,25 @@
                   $.ajax({
                    type:'POST',
                    dataType:'JSON',
-                   // url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ", 
-                   url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ", 
+                   // url: " {{ url('backend/ajaxCalPriceFrontstore01') }} ",
+                   url: " {{ url('backend/ajaxCalAddAiCashFrontstore') }} ",
                    data: $("#frm-main").serialize()+"&id="+id,
                     success:function(data){
-                          console.log(data); 
+                          console.log(data);
 
                           // return false;
 
                             $.each(data,function(key,value){
-                                  
+
                                   $("#credit_price").val(formatNumber(parseFloat(value.credit_price).toFixed(2)));
                                   $("#fee_amt").val(formatNumber(parseFloat(value.fee_amt).toFixed(2)));
                                   $("#sum_credit_price").val(formatNumber(parseFloat(value.sum_credit_price).toFixed(2)));
-                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));  
+                                  $("#transfer_price").val(formatNumber(parseFloat(value.transfer_price).toFixed(2)));
 
                                   if(pay_type_id_fk==''){
-                                     $("#cash_pay").val('');    
+                                     $("#cash_pay").val('');
                                   }else{
-                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));    
+                                     $("#cash_pay").val(formatNumber(parseFloat(value.cash_pay).toFixed(2)));
                                   }
                                   // $("#transfer_money_datetime").val(value.transfer_money_datetime);
 
@@ -754,8 +756,8 @@
 
                                   // $(".show_div_cash_pay").hide();
 
-                                        
-                              }else 
+
+                              }else
                               // 6  เงินโอน + เงินสด
                               if(pay_type_id_fk==10){
 
@@ -772,7 +774,7 @@
                                 // $(".show_div_cash_pay").show();
                                 // $('#fee').removeAttr('required');
                                 // $("#cash_pay").val('');
-                              
+
                             }else{
                                 // $('#fee').removeAttr('required');
                                 // $('input[name=account_bank_id]').removeAttr('required');
@@ -781,11 +783,11 @@
                                 // $(".show_div_transfer_price").hide();
                                 // $(".div_account_bank_id").hide();
                             }
-                         
+
                                $(".myloading").hide();
 
                             },
-                          error: function(jqXHR, textStatus, errorThrown) { 
+                          error: function(jqXHR, textStatus, errorThrown) {
                               // console.log(JSON.stringify(jqXHR));
                               // console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                               $(".myloading").hide();
@@ -803,7 +805,7 @@
 
                     $("#credit_price").val('');
                     $("#fee_amt").val('');
-                    $("#sum_credit_price").val('');  
+                    $("#sum_credit_price").val('');
                     $("#transfer_price").val('');
                     $("#cash_pay").val('');
 
@@ -815,10 +817,10 @@
                     //  $.ajax({
                     //    type:'POST',
                     //    // dataType:'JSON',
-                    //    url: " {{ url('backend/ajaxClearAfterSelChargerType') }} ", 
+                    //    url: " {{ url('backend/ajaxClearAfterSelChargerType') }} ",
                     //    data: { frontstore_id_fk:frontstore_id_fk },
                     //     success:function(data){
-                    //            console.log(data); 
+                    //            console.log(data);
                     //            // $.each(data,function(key,value){
                     //            //    if(value.ai_cash==0){
                     //            //      alert('! กรุณา ทำการเติม Ai-Cash ก่อนเลือกชำระช่องทางนี้ ขอบคุณค่ะ');
@@ -832,14 +834,14 @@
 
                     //           $(".myloading").hide();
                     //       },
-                    //     error: function(jqXHR, textStatus, errorThrown) { 
+                    //     error: function(jqXHR, textStatus, errorThrown) {
                     //         $(".myloading").hide();
                     //     }
                     // });
 
               });
 
-     
+
            $(document).on('change', '.CalAicashAmt', function(event) {
 
 
@@ -848,19 +850,19 @@
 
                     // $("#credit_price").val('');
                     // $("#fee_amt").val('');
-                    // $("#sum_credit_price").val('');  
+                    // $("#sum_credit_price").val('');
                     // $("#transfer_price").val('');
                     // $("#cash_pay").val('');
 
                      $.ajax({
                        type:'POST',
                        // dataType:'JSON',
-                       url: " {{ url('backend/ajaxGetAicashAmt') }} ", 
+                       url: " {{ url('backend/ajaxGetAicashAmt') }} ",
                        data: { id:id },
                         success:function(data){
-                               console.log(data); 
+                               console.log(data);
                                 $.each(data,function(key,value){
-                                 
+
                                 });
 
                                 fnGetDBAddAiCash();
@@ -874,7 +876,7 @@
 
                               $(".myloading").hide();
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             $(".myloading").hide();
                         }
                     });
@@ -937,16 +939,16 @@
 
 
       $(document).ready(function() {
-        
+
               $(document).on('click', '.btnDelSlip', function(event) {
                     var id = $(this).data('id');
                     if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")){
                         return false;
                     }else{
-                    
+
                         $.ajax({
                             type: "POST",
-                            url: " {{ url('backend/ajaxDelFileSlipGiftVoucher') }} ", 
+                            url: " {{ url('backend/ajaxDelFileSlipGiftVoucher') }} ",
                              data:{ _token: '{{csrf_token()}}',id:id },
                             success: function(data){
                               console.log(data);
@@ -967,10 +969,10 @@
 
                     $("#credit_price").val('');
                     $("#fee_amt").val('');
-                    $("#sum_credit_price").val('');  
+                    $("#sum_credit_price").val('');
                     $("#transfer_price").val('');
                     $("#cash_pay").val('');
-                                        
+
                     $('#credit_price').attr('required', true);
                     setTimeout(function(){
                     $('#credit_price').focus();
@@ -1000,8 +1002,8 @@
 
 </script>
 <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_id_fk_select").select2({
           minimumInputLength: 3,
@@ -1014,7 +1016,7 @@
           delay  : 250,
           cache: false,
           data: function (params) {
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -1034,7 +1036,7 @@
           };
 
        $('#customer_id_fk_select').toggleSelect2(false); //hide
-       $('#aicash_choose').show(); 
+       $('#aicash_choose').show();
 
 
        $(document).on('click', '#aicash_choose', function () {

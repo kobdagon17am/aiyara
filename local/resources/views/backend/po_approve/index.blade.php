@@ -241,9 +241,9 @@
                                     $last_day = date('Y-m-d');
                                     ?>
                                     <!-- <=
-                                             $first_day
-                                             $last_day
-                                             ?> -->
+                                                 $first_day
+                                                 $last_day
+                                                 ?> -->
                                     <input id="bill_sdate" autocomplete="off" placeholder="Begin Date"
                                         style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black"
                                         value="" />
@@ -283,8 +283,8 @@
 
                                     <!-- บิลเติม Ai-cash -->
                                     <!--     <a class="btn btn-info btn-sm btnSearch02 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
-                                            <i class="bx bx-search align-middle "></i> SEARCH
-                                          </a> -->
+                                                <i class="bx bx-search align-middle "></i> SEARCH
+                                              </a> -->
 
 
                                 </div>
@@ -617,6 +617,11 @@
                                 {
                                     data: 'total_amt',
                                     title: '<center>ยอดชำระเงิน </center>',
+                                    className: 'text-center'
+                                },
+                                {
+                                    data: 'transfer_price_over',
+                                    title: '<center>ยอดเกิน </center>',
                                     className: 'text-center'
                                 },
                                 {
@@ -1071,6 +1076,11 @@
                                             className: 'text-center'
                                         },
                                         {
+                                            data: 'transfer_price_over',
+                                            title: '<center>ยอดเกิน </center>',
+                                            className: 'text-center'
+                                        },
+                                        {
                                             data: 'other_bill',
                                             title: '<center>ชำระร่วม </center>',
                                             className: 'text-center'
@@ -1269,6 +1279,11 @@
                                             className: 'text-center'
                                         },
                                         {
+                                            data: 'transfer_price_over',
+                                            title: '<center>ยอดเกิน </center>',
+                                            className: 'text-center'
+                                        },
+                                        {
                                             data: 'other_bill',
                                             title: '<center>ชำระร่วม </center>',
                                             className: 'text-center'
@@ -1398,9 +1413,9 @@
 
 
                 <!-- <audio autoplay>
-                      <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
-                    </audio>
-                     -->
+                          <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
+                        </audio>
+                         -->
 
                 <script type="text/javascript">
                     $(document).ready(function() {
