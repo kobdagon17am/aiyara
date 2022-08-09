@@ -90,6 +90,9 @@ class RunNumberPayment extends Model
       $code_order = 'W' . $business_location_id_fk . date('ymd') . '' . $num_code;
     }
 
+
+
+
     do {
       $rs = RunNumberPayment::check_number_aicash($code_order);
     }while ($rs['status']=='fail');
