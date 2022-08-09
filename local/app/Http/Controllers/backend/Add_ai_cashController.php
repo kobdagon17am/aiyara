@@ -195,7 +195,7 @@ class Add_ai_cashController extends Controller
   {
 
     if (isset($request->approved)) {
-      // dd($request->all());
+      // dd($request->all()); total_amt
       // approved
       if($request->approve_status == 2){
 
@@ -208,6 +208,7 @@ class Add_ai_cashController extends Controller
         $sRow->approver = \Auth::user()->id;
         $sRow->approve_date = now();
         $sRow->note = $request->note;
+        $sRow->transfer_price_over = $request->transfer_price_over;
         // if(isset($request->pay_with_other_bill)){
         //   $sRow->pay_with_other_bill_select = $request->pay_with_other_bill;
         //   $sRow->pay_with_other_bill_code = $request->invoice_code;
@@ -230,6 +231,8 @@ class Add_ai_cashController extends Controller
         $sRow->approver = \Auth::user()->id;
         $sRow->approve_date = now();
         $sRow->note = $request->note;
+        $sRow->transfer_price_over = $request->transfer_price_over;
+
         // if(isset($request->pay_with_other_bill)){
         //   $sRow->pay_with_other_bill_select = $request->pay_with_other_bill;
         //   $sRow->pay_with_other_bill_code = $request->invoice_code;
@@ -731,6 +734,15 @@ class Add_ai_cashController extends Controller
         }
       })
       ->escapeColumns('other_bill')
+
+      ->addColumn('transfer_price_over', function ($row) {
+        if($row->transfer_price_over != '' && $row->transfer_price_over != null){
+          return $row->transfer_price_over;
+        }else{
+          return '-';
+        }
+      })
+      ->escapeColumns('transfer_price_over')
 
 
       ->addColumn('customer_name', function ($row) {

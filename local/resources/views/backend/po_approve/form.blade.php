@@ -327,7 +327,7 @@
                                                               name="approval_amount_transfer_over"
                                                               id="approval_amount_transfer_over"
                                                               value="{{ @$sRow->approval_amount_transfer_over }}"
-                                                              required="">
+                                                           >
                                                       </div>
 
                                                       </div>
