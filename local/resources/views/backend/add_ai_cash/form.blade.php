@@ -362,7 +362,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            {{-- <div class="form-group row">
                                 <label for="cash_price" class="col-md-4 col-form-label"></label>
                                 <div class="col-md-8 ">
                                     <input class="class_transfer_edit ch_Disabled pay_with_other_bill_select"
@@ -370,9 +370,9 @@
                                         value="1" {{ @$sRow->pay_with_other_bill_select == 1 ? 'checked' : '' }}>
                                     <label for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div class="form-group row">
+                            {{-- <div class="form-group row">
                                 <label for="cash_price" class="col-md-4 col-form-label">เลขที่ใบเสร็จที่ชำพร้อมบิลอื่น :</label>
                                 <div class="col-md-8 ">
                                     @if (@$r_invoice_code)
@@ -380,7 +380,7 @@
                                             class="form-control order_id_select2">
                                             <option value="">Select</option>
                                             @foreach (@$r_invoice_code as $r)
-                                                <option value="{{ $r->code_order }}" <?php if (@$sRow->pay_with_other_bill_code == $r->code_order) {
+                                                <option value="{{ $r->code_order }}" <php if (@$sRow->pay_with_other_bill_code == $r->code_order) {
                                                     echo 'selected';
                                                 } ?>>
                                                     {{ $r->code_order }}
@@ -393,7 +393,7 @@
                                         </select>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
 
 
                             <div class="form-group row">

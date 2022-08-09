@@ -58,9 +58,9 @@
         $sD = @$menu_permit->d == 1 ? '' : 'display:none;';
         $sA = @$menu_permit->can_approve;
     }
-    
+
     // print_r($sD);
-    
+
     ?>
 
 
@@ -417,6 +417,11 @@
                                     className: 'text-left w100 '
                                 },
                                 {
+                                    data: 'customer_bank',
+                                    title: '<center>ธนาคารที่โอนชำระ</center>',
+                                    className: 'text-left  '
+                                },
+                                {
                                     data: 'code_order',
                                     title: '<center>เลขใบสั่งซื้อ </center>',
                                     className: 'text-center'
@@ -429,6 +434,18 @@
                                 {
                                     data: 'approval_amount_transfer',
                                     title: '<center>ยอดโอน</center>',
+                                    className: 'text-center w80',
+                                    render: function(d) {
+                                        if (d) {
+                                            return d;
+                                        } else {
+                                            return '-';
+                                        }
+                                    }
+                                },
+                                {
+                                    data: 'approval_amount_transfer_over',
+                                    title: '<center>ยอดเกิน</center>',
                                     className: 'text-center w80',
                                     render: function(d) {
                                         if (d) {
@@ -866,6 +883,18 @@
                                         {
                                             data: 'approval_amount_transfer',
                                             title: '<center>ยอดโอน</center>',
+                                            className: 'text-center w80',
+                                            render: function(d) {
+                                                if (d) {
+                                                    return d;
+                                                } else {
+                                                    return '-';
+                                                }
+                                            }
+                                        },
+                                        {
+                                            data: 'approval_amount_transfer_over',
+                                            title: '<center>ยอดเกิน</center>',
                                             className: 'text-center w80',
                                             render: function(d) {
                                                 if (d) {

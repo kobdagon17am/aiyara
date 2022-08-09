@@ -129,7 +129,6 @@ class Po_approveController extends Controller
         // $TransferBank = \App\Models\Backend\TransferBank::get();
         $sAccount_bank = \App\Models\Backend\Account_bank::get();
 
-
         return view('backend.po_approve.form')->with([
             'sRow' => $sRow,
             'p_bill' => $p_bill,
@@ -150,7 +149,7 @@ class Po_approveController extends Controller
         \DB::beginTransaction();
         try {
 
-
+          // approval_amount_transfer
             $data_id = DB::table('db_orders')->where('id',$id)->first();
             if($data_id){
                 $sRow = \App\Models\Backend\Orders::find($data_id->id);
@@ -173,6 +172,7 @@ class Po_approveController extends Controller
                     }
                     // approval_amount_transfer
                     $sRow->approval_amount_transfer = $request->approval_amount_transfer;
+                    $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
                     $sRow->account_bank_name_customer = $request->account_bank;
                     $sRow->transfer_amount_approver = \Auth::user()->id;
                     $sRow->transfer_bill_date  = $request->transfer_bill_date;
@@ -188,6 +188,7 @@ class Po_approveController extends Controller
                     $sRow->transfer_bill_status = 1;
                     $sRow->status_slip = 'true';
                     $sRow->approval_amount_transfer = 0 ;
+                    $sRow->approval_amount_transfer_over = 0 ;
                     $sRow->account_bank_name_customer = 0;
                     $sRow->transfer_amount_approver =  \Auth::user()->id;
                     $sRow->transfer_bill_date  = NULL;
@@ -257,6 +258,7 @@ class Po_approveController extends Controller
                         // วุฒ็เปลี่ยนเป็น 0
                         // $sRow2->approval_amount_transfer = $sRow2->transfer_price;
                         $sRow2->approval_amount_transfer = 0;
+                        $sRow2->approval_amount_transfer_over = 0;
                         $sRow2->account_bank_name_customer = $request->account_bank;
                         $sRow2->transfer_amount_approver = \Auth::user()->id;
                         $sRow2->transfer_bill_date  = $request->transfer_bill_date;
@@ -272,6 +274,7 @@ class Po_approveController extends Controller
                         $sRow2->transfer_bill_status = 1;
                         $sRow2->status_slip = 'true';
                         $sRow2->approval_amount_transfer = 0 ;
+                        $sRow2->approval_amount_transfer_over = 0;
                         $sRow2->account_bank_name_customer = 0;
                         $sRow2->transfer_amount_approver =  \Auth::user()->id;
                         $sRow2->transfer_bill_date  = NULL;
@@ -479,9 +482,18 @@ class Po_approveController extends Controller
 
        $sTable =     DB::select("
 
-select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`, `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`, `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`  from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk` left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk` left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
+select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
+`dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
+`dataset_account_bank`.`txt_bank_name` as `txt_bank_name`,
+`dataset_account_bank`.`txt_account_name` as `txt_account_name`,
+`dataset_account_bank`.`txt_bank_number` as `txt_bank_number`,
+`dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`
+from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk`
+left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk`
+left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
 left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
 left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
+left join `dataset_account_bank` on `dataset_account_bank`.`id` = `db_orders`.`account_bank_name_customer`
 where
 pay_type_id_fk in (1,8,10,11,12) and
 `dataset_order_status`.`lang_id` = 1 and
@@ -522,6 +534,23 @@ ORDER BY code_order DESC
             ->addColumn('created_at', function ($row) {
               return $row->created_at .'<br>'. '('.$row->b_name.')';
             })
+
+            ->addColumn('customer_bank', function($row) {
+
+              return 'ธนาคาร : '.$row->txt_bank_name.'<br>'.'ชื่อบัญชี : '.$row->txt_account_name.'<br>'.'เลขที่บัญชี : '.$row->txt_bank_number;
+            })
+           ->escapeColumns('customer_bank')
+
+           ->addColumn('approval_amount_transfer_over', function($row) {
+            if($row->approval_amount_transfer_over>0){
+              return '<label style="color:red;">'.number_format(@$row->approval_amount_transfer_over, 2).'</label>';
+            }else{
+              return '<label>'.number_format(@$row->approval_amount_transfer_over, 2).'</label>';
+            }
+
+          })
+         ->escapeColumns('approval_amount_transfer_over')
+
             ->addColumn('price', function ($row) {
                 // วุฒิเปลี่ยนเป็นยอดที่ต้องโอน
                 // if (@$row->purchase_type_id_fk == 7) {
