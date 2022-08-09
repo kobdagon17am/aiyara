@@ -59,6 +59,7 @@ return [
     'commission_aistockist' => 'ค่าคอมมิชชั่น Ai-Stockist',
     'commission_transfer_af' => 'รายการโอนค่าคอมมิชชั่น AF',
     'total_thai_cambodia' => 'ยอดรวมการขายไทยและกัมพูชา',
+    'total_thai_cambodia_ai' => 'ยอดรวมการเติม Aicash รับเข้า-จ่ายออก',
     'cambodia_account' => 'รายการเดินบัญชีกัมพูชา',
     'transfer_corporate_members' => 'รายการโอนสมาชิกนิติบุคคล',
     'po_supplier' => 'ใบ PO สั่งซื้อ Supplier',

@@ -14,7 +14,7 @@ class Pick_packPackingCodeController extends Controller
     {
 
       // return view('backend.delivery_packing.index');
-      
+
     }
 
  public function create()
@@ -52,12 +52,12 @@ class Pick_packPackingCodeController extends Controller
       if( $sRow ){
         $sRow->forceDelete();
       }
-      
+
       return response()->json(\App\Models\Alert::Msg('success'));
 
     }
 
-    public function packing_list(Request $request){     
+    public function packing_list(Request $request){
 
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
       if(!empty($request->id)){
@@ -66,7 +66,7 @@ class Pick_packPackingCodeController extends Controller
       }else{
         $sTable = DB::select(" select * from db_pick_pack_packing_code where status_picked=1 AND status_delivery<>1 AND `status`=1 order by updated_at desc ");
       }
-      
+
       $sQuery = \DataTables::of($sTable);
 
       return $sQuery
@@ -74,8 +74,11 @@ class Pick_packPackingCodeController extends Controller
         // return "P2".sprintf("%05d",$row->id);
             $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
             return @$DP->packing_code;
-      })      
+      })
       ->addColumn('customer_name', function($row) {
+        if($row->orders_id_fk==""){
+          $row->orders_id_fk = "0";
+        }
           $DP = DB::select(" select * from db_orders where id in (".$row->orders_id_fk.") ");
           $array = array();
           if(@$DP){
@@ -103,7 +106,7 @@ class Pick_packPackingCodeController extends Controller
             $r = explode(',',$row->receipt);
             $t = ' <div class="invoice_code_list" data-toggle="tooltip" data-placement="top" title="คลิ้กเพื่อดูใบเสร็จทั้งหมด" style="cursor:pointer;" >';
             if(count($r)>3){
-              for ($i=0; $i < 3 ; $i++) { 
+              for ($i=0; $i < 3 ; $i++) {
                  $t .= $r[$i]."<br>";
               }
               $t .= "...";
@@ -136,7 +139,7 @@ class Pick_packPackingCodeController extends Controller
     }
 
 
- public function packing_list_for_fifo(Request $req){     
+ public function packing_list_for_fifo(Request $req){
 
        $sPermission = \Auth::user()->permission ;
        $User_branch_id = \Auth::user()->branch_id_fk;
@@ -161,7 +164,7 @@ class Pick_packPackingCodeController extends Controller
 
         }
 
-   
+
         if(!empty($req->action_user)){
            $w02 = " and action_user = '".$req->action_user."' " ;
         }else{
@@ -198,7 +201,7 @@ class Pick_packPackingCodeController extends Controller
         }
 
       // $sTable = \App\Models\Backend\Pick_packPackingCode::where('status_picked','1')->search()->orderBy('id', 'asc');
-      $sTable = DB::select(" 
+      $sTable = DB::select("
 
         SELECT * FROM db_pick_pack_packing_code where status_picked=1 $business_location_id $branch_id_fk
 
@@ -218,7 +221,7 @@ class Pick_packPackingCodeController extends Controller
         // return "P2".sprintf("%05d",$row->id);
            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
            return @$DP->packing_code;
-      })      
+      })
       ->addColumn('customer_name', function($row) {
           $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
           $array = array();
@@ -302,7 +305,7 @@ class Pick_packPackingCodeController extends Controller
 
               return "<span data-toggle='tooltip' style='color:red;' data-placement='right' title='".$t."' >".@$sD[0]->txt_desc."</span>";
 
-            
+
           }else{
             return @$sD[0]->txt_desc;
           }
@@ -311,7 +314,7 @@ class Pick_packPackingCodeController extends Controller
 
       ->addColumn('status_amt_remain', function($row) {
         $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->ref_bill_id)->first();
-        // หา max time_pay ก่อน 
+        // หา max time_pay ก่อน
            $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where pick_pack_packing_code_id_fk=".$row->id." order by time_pay desc limit 1  ");
         // Check ว่ามี status=2 ? (ค้างจ่าย)
            if(@$r_ch01){
@@ -322,14 +325,14 @@ class Pick_packPackingCodeController extends Controller
              return '';
            }
          }
-     
+
       })
       ->escapeColumns('status_amt_remain')
 
       ->make(true);
     }
 
-    public function packing_list_for_fifo_report(Request $req){    
+    public function packing_list_for_fifo_report(Request $req){
 
       if(isset($req->startDate) && isset($req->endDate)){
         $startDate = $req->startDate;
@@ -359,7 +362,7 @@ class Pick_packPackingCodeController extends Controller
           foreach ($d as $key => $v) {
             $ppack = DB::table('db_pick_pack_packing')->select('packing_code')->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$v->delivery_id_fk)->first();
             $dv = DB::table('db_delivery_packing')->select('packing_code_id_fk')->where('packing_code',@$v->recipient_code)->first();
-         
+
             array_push($f,@$v->recipient_code);
              array_push($packing_code,@$ppack->packing_code);
              array_push($delivery_packing,@$dv->packing_code_id_fk);
@@ -373,15 +376,15 @@ class Pick_packPackingCodeController extends Controller
             $web .= "</div>";
             $web_all .=$web.'<br>';
           }
-     
+
           // return $f;
           return $web_all;
       })
-      ->escapeColumns('column_001') 
+      ->escapeColumns('column_001')
 
 
       ->addColumn('column_002', function($row) {
-        
+
          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
@@ -403,17 +406,17 @@ class Pick_packPackingCodeController extends Controller
 
 
       })
-      ->escapeColumns('column_002')  
+      ->escapeColumns('column_002')
 
       ->addColumn('column_003', function($row) {
           return "<input type='button' class=\"btn btn-primary btnExportElsx \" data-id='".$row->pick_pack_requisition_code_id_fk."' value='Export Excel' >";
       })
-      ->escapeColumns('column_003')  
+      ->escapeColumns('column_003')
 
       ->addColumn('column_004', function($row) {
-          
+
           $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
-      
+
           $f = [] ;
           $ff = [] ;
           foreach ($d as $key => $v) {
@@ -434,19 +437,19 @@ class Pick_packPackingCodeController extends Controller
           return $web_all;
 
       })
-      ->escapeColumns('column_004')  
+      ->escapeColumns('column_004')
 
       ->addColumn('column_005', function($row) {
-          
+
           $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
-    
+
           $f = [] ;
           $tx = '';
           foreach ($d as $key => $v) {
 
-              $tx = '<center> 
-                 
-                <a href="backend/pick_warehouse/print_envelope/'.$v->recipient_code.'" target=_blank ><i class="bx bx-printer grow " data-toggle="tooltip" data-placement="left" title="ใบปะหน้ากล่อง" style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a> 
+              $tx = '<center>
+
+                <a href="backend/pick_warehouse/print_envelope/'.$v->recipient_code.'" target=_blank ><i class="bx bx-printer grow " data-toggle="tooltip" data-placement="left" title="ใบปะหน้ากล่อง" style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
 
                  </center>' ;
 
@@ -469,14 +472,14 @@ class Pick_packPackingCodeController extends Controller
       ->escapeColumns('column_005')
 
       ->addColumn('column_008', function($row) {
-          
+
         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
         $f = [] ;
         $tx = '';
         foreach ($d as $key => $v) {
 
-            $tx = '<center> 
+            $tx = '<center>
 
               <a href="javascript: void(0);" target=_blank data-id="'.$v->recipient_code.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
 
@@ -518,8 +521,8 @@ class Pick_packPackingCodeController extends Controller
             ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
             ->get();
           }
-     
-         
+
+
           $pn = '';
           $f = [] ;
           $tx = '';
@@ -547,10 +550,10 @@ class Pick_packPackingCodeController extends Controller
           }
 
           return $web_all;
-      
+
         })
 
-      ->escapeColumns('column_006')  
+      ->escapeColumns('column_006')
 
       ->addColumn('column_007', function($row) {
         $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
@@ -567,13 +570,13 @@ class Pick_packPackingCodeController extends Controller
               $pn = '';
               $arr = [];
               foreach ($DP as $key => $value) {
-                  $pn .=     
+                  $pn .=
                     '<div class="col-md-12" style="height: 70px;">
-                    <center> 
+                    <center>
                     <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
                     </center>
                     </div><br>';
-              } 
+              }
                return $pn;
             }else{
               return '-';
@@ -611,7 +614,7 @@ class Pick_packPackingCodeController extends Controller
           }
           return $web_all;
       })
-      ->escapeColumns('tracking_status')   
+      ->escapeColumns('tracking_status')
 
       ->addColumn('tracking_approve', function($row) {
         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
@@ -625,7 +628,7 @@ class Pick_packPackingCodeController extends Controller
         foreach($f as $key => $value){
           if($value == 0){
             $btn = "
-              <a class='btn btn-success btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/1/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งสำเร็จ!\");' >จัดส่งสำเร็จ</a> &nbsp; 
+              <a class='btn btn-success btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/1/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งสำเร็จ!\");' >จัดส่งสำเร็จ</a> &nbsp;
               <a class='btn btn-danger btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/2/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งไม่สำเร็จ!\");' >ไม่สำเร็จ</a>
             ";
           }elseif($value == 2){
@@ -642,7 +645,7 @@ class Pick_packPackingCodeController extends Controller
         }
         return $web_all;
       })
-      ->escapeColumns('tracking_approve') 
+      ->escapeColumns('tracking_approve')
 
       ->addColumn('tracking_remark', function($row) {
         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
@@ -664,20 +667,20 @@ class Pick_packPackingCodeController extends Controller
         }
         return $web_all;
       })
-      ->escapeColumns('tracking_remark') 
+      ->escapeColumns('tracking_remark')
 
       ->make(true);
    }
 
-   public function consignments_approve($approve_id , $con_id){     
+   public function consignments_approve($approve_id , $con_id){
           DB::table('db_consignments')->where('id',$con_id)->update([
             'tracking_status' => $approve_id,
           ]);
           return redirect()->back()->with('success','ทำรายการสำเร็จ');
    }
-   
 
-   public function consignments_remark(Request $request){     
+
+   public function consignments_remark(Request $request){
     DB::table('db_consignments')->where('id',$request->con_id)->update([
       'tracking_remark' => $request->remark,
     ]);
@@ -685,7 +688,7 @@ class Pick_packPackingCodeController extends Controller
 }
 
 
- public function packing_list_for_fifo_02(Request $request){     
+ public function packing_list_for_fifo_02(Request $request){
       // if(!empty($request->packing_id)){
           $sTable = \App\Models\Backend\Pick_packPackingCode::where('id',$request->id)->search();
       // }else{
@@ -698,7 +701,7 @@ class Pick_packPackingCodeController extends Controller
         // return "P2".sprintf("%05d",$row->id);
            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
            return $DP->packing_code;
-      })      
+      })
       ->addColumn('customer_name', function($row) {
           $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
           $array = array();
@@ -734,7 +737,7 @@ class Pick_packPackingCodeController extends Controller
 
     //     foreach ($order as $key => $v) {
 
-    //         $tx = '<center> 
+    //         $tx = '<center>
 
     //           <a href="javascript: void(0);" target=_blank data-id="'.$v->id.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > '.$v->code_order.' <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
 
@@ -742,7 +745,7 @@ class Pick_packPackingCodeController extends Controller
 
     //        array_push($f,@$tx);
     //     }
-        
+
     //     $web_all = "";
     //     foreach($f as $value){
     //       $web_all .=$value.'<br>';

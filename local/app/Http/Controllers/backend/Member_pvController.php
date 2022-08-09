@@ -176,13 +176,19 @@ class Member_pvController extends Controller
             $url='local/public/files_register/4/'.date('Ym');
             $f_name =  date('YmdHis').'_'.Auth::user()->id.'_4'.'.'.$file_4->getClientOriginalExtension();
             if($file_4->move($url,$f_name)){
+             $data = DB::table('register_files')
+             ->select('comment')
+              ->where('customer_id',$customer_id)->where('type',4)->first();
             DB::table('register_files')
             ->where('customer_id',$customer_id)->where('type',4)
             ->update(
            [
             'url' => $url,
            'file' => $f_name,
-           'updated_at' => date('Y-m-d')
+           'updated_at' => date('Y-m-d H:i:s'),
+           'approve_date' => date('Y-m-d'),
+           'comment' => $data->comment.' (ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดยพนักงาน)',
+           'approver' => Auth::user()->id
            ]
             );
                   // $update_use->regis_doc4_status = 0;

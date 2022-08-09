@@ -227,7 +227,7 @@
                                         <div class="modal-dialog modal-dialog-scrollable">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title mt-0" id="confirm">ยืนยันการอนุมัติใบสั่งซื้อ
+                                                    <h5 class="m  odal-title mt-0" id="confirm">ยืนยันการอนุมัติใบสั่งซื้อ
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -318,6 +318,21 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-12 mt-2 mb-2 text-left">
+                                                      <div class="row form-group ">
+                                                        <div class="col-md-6 text-left">
+                                                          <h5 class="font-size-14 ">จำนวนยอดที่เกิน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                          <input class="form-control NumberOnly " type="text"
+                                                              name="approval_amount_transfer_over"
+                                                              id="approval_amount_transfer_over"
+                                                              value="{{ @$sRow->approval_amount_transfer_over }}"
+                                                              required="">
+                                                      </div>
+
+                                                      </div>
+                                                  </div>
+
 
 
 

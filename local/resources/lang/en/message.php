@@ -58,6 +58,7 @@ return [
     'commission_aistockist' => 'Ai-Stockist Commission',
     'commission_transfer_af' => 'AF Commission Payment List',
     'total_thai_cambodia' => 'Thailand and Cambodia Total Sales',
+    'total_thai_cambodia_ai' => 'Thailand and Cambodia Total Aicash',
     'cambodia_account' => 'Cambodian Account Statement',
     'transfer_corporate_members' => 'Transfer list of Juristic Members',
     'po_supplier' => 'PO to Supplier',
