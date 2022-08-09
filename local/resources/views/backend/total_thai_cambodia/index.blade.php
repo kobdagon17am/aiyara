@@ -193,6 +193,18 @@
 <table id="data-table-thai" class="table table-bordered  mt-0" style="width: 100%;"> </table>
 <br>
 
+<div class="row mt-2 mb-0">
+  <div class="col-12">
+      <div class="page-title-box d-flex align-items-center justify-content-between"
+          style="padding-bottom: 0px;">
+          <h4 class="font-size-18"> <u>รายเดือนแบ่งตามสาขา</u></h4>
+      </div>
+  </div>
+</div>
+
+<table id="data-table-thai_branch" class="table table-bordered  mt-0" style="width: 100%;"> </table>
+<br>
+
   </div>
 
   <div class="tab-pane fade tabcontent" id="aicash" role="tabpanel" aria-labelledby="ex1-tab-2">
@@ -580,6 +592,105 @@
 
         var sU = "{{ @$sU }}";
         var sD = "{{ @$sD }}";
+        var total_thai_cambodia_month_branch;
+        $(function() {
+            total_thai_cambodia_month_branch = $('#data-table-thai_branch').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                // scroller: true,
+                // scrollCollapse: true,
+                // scrollX: true,
+                // ordering: false,
+                // scrollY: '' + ($(window).height() - 370) + 'px',
+                iDisplayLength: 25,
+                ajax: {
+                    url: '{{ route('backend.total_thai_cambodia_branch.datatable') }}',
+                    data: function(d) {
+                        d.business_location = $('#business_location').val();
+                        d.status_search = $('#status_search').val();
+                        d.startDate = $('#startDate').val();
+                        d.endDate = $('#endDate').val();
+                        d.action_user = $('#action_user').val();
+                        d.report_type = 'month';
+                    },
+                    method: 'POST'
+                },
+                columns: [{
+                        data: 'business_location_name',
+                        title: '<center>Business Location</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'branchs_name',
+                        title: '<center>Branch</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'action_date',
+                        title: '<center>วันที่ทำรายการ</center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'invoice',
+                        title: '<center>Invoice</center>',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'invoice_total',
+                        title: '<center>จำนวนรวม</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_price',
+                        title: '<center>เงินสด</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_transfer',
+                        title: '<center>เงินโอน</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_credit_card',
+                        title: '<center>เครดิต</center>',
+                        className: 'text-right',
+                        footer: 'Id',
+                    },
+                    {
+                        data: 'total_aicash',
+                        title: '<center>Ai-Cash</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_balance',
+                        title: '<center>รวมการชำระ</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'pv_total',
+                        title: '<center>PV</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'action_user',
+                        title: '<center>ผู้ทำรายการ</center>',
+                        className: 'text-left'
+                    },
+                ],
+                "footerCallback": function(row, data, start, end, display) {
+
+                }
+            });
+
+            $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+              total_thai_cambodia_month_branch.draw();
+            });
+
+        });
+
+        var sU = "{{ @$sU }}";
+        var sD = "{{ @$sD }}";
         var total_thai_cambodia_month_aicash;
         $(function() {
             total_thai_cambodia_month_aicash = $('#data-table-thai_aicash').DataTable({
@@ -669,6 +780,7 @@
             total_thai_cambodia_month.draw();
             total_thai_cambodia_aicash.draw();
             total_thai_cambodia_month_aicash.draw();
+            total_thai_cambodia_month_branch.draw();
         });
 
         $('#search-form').on('click', function(e) {
@@ -678,6 +790,7 @@
 
           total_thai_cambodia_aicash.draw();
           total_thai_cambodia_month_aicash.draw();
+          total_thai_cambodia_month_branch.draw();
         e.preventDefault();
         });
     </script>

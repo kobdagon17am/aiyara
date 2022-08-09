@@ -717,6 +717,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 
     Route::post('total_thai_cambodia/datatable', 'Total_thai_cambodiaController@Datatable')->name('total_thai_cambodia.datatable');
+    Route::post('total_thai_cambodia_branch/datatable', 'Total_thai_cambodiaController@Datatable_branch')->name('total_thai_cambodia_branch.datatable');
     Route::post('total_thai_cambodia_aicash/datatable', 'Total_thai_cambodiaController@Datatable_aicash')->name('total_thai_cambodia_aicash.datatable');
     Route::post('total_thai_cambodia_aicash_full/datatable', 'Total_thai_cambodia_aiController@Datatable_aicash_full')->name('total_thai_cambodia_aicash_full.datatable');
     Route::post('total_thai_cambodia/datatable_total_thai', 'Total_thai_cambodiaController@DatatableTotalThai')->name('total_thai_cambodia.datatable_total_thai');
