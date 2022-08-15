@@ -16,7 +16,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="m-b-10">หนังสือรับรองการหักภาษี ณ ที่จ่าย ตามมาตรา 50 ทวิ</h4>
+                    <h4 class="m-b-10">{{trans('message.p_comission tax certificate')}}</h4>
                     {{-- <div class="col-md-12">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 p-1">
@@ -37,12 +37,12 @@
                         <table class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr>
-                                    <th>วันเริ่ม</th>
-                                    <th>วันสิ้นสุด</th>
-                                    <th>ค่า Commission</th>
-                                    <th>ยอดภาษีหัก ณ ที่จ่าย</th>
-                                    <th>งวด/ปีภาษี</th>
-                                    <th>พิมพ์ 50 ทวิ</th>
+                                    <th>{{trans('message.p_comission start')}}</th>
+                                    <th>{{trans('message.p_comission end')}}</th>
+                                    <th>{{trans('message.p_comission comission')}}</th>
+                                    <th>{{trans('message.p_comission tax amount')}}</th>
+                                    <th>{{trans('message.p_comission tax year')}}</th>
+                                    <th>{{trans('message.p_comission print tax')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,7 +63,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>

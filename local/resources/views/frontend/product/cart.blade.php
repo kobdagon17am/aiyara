@@ -24,7 +24,7 @@
 
                     <div class="col-md-8 col-sx-8">
                         @if($type == 1)
-                        <h4>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h4>
+                        <h4>{{trans('message.p_tab green order')}}</h4>
                         @elseif($type == 2)
                         <h4>รายการสั่งซื้อเพื่อรักษาคุณสมบัติรายเดือน</h4>
                         @elseif($type == 3)
@@ -41,7 +41,7 @@
 
                     </div>
                     <div class="col-md-4 col-sx-4 text-right">
-                        <a href="{{route('product-list',['type'=>$type])}}" class="btn btn-primary bt-sm" type="">เลือกสินค้า</a>
+                        <a href="{{route('product-list',['type'=>$type])}}" class="btn btn-primary bt-sm" type="">{{trans('message.p_tab green product')}}</a>
                     </div>
                 </div>
 
@@ -136,7 +136,7 @@
     <div class="col-md-4">
         <div class="card card-border-success">
             <div class="card-header">
-                <h3>สรุปรายการสั่งซื้อ</h3>
+                <h3>{{trans('message.p_tab green amount order')}}</h3>
                 {{--  <span class="label label-default f-right"> 28 January, 2015 </span> --}}
             </div>
             <div class="card-block">
@@ -153,13 +153,13 @@
                         @endif
 
                         <tr>
-                            <td><strong id="quantity_bill">ยอดรวมจำนวน ({{ $bill['quantity'] }}) ชิ้น</strong></td>
+                            <td><strong id="quantity_bill">{{trans('message.p_tab green item')}} ({{ $bill['quantity'] }}) </strong></td>
                             <td align="right"><strong id="price"> {{ $bill['price_total'] }} </strong></td>
                         </tr>
 
 
                         <tr>
-                            <td><strong>คะแนนที่ได้รับ</strong></td>
+                            <td><strong>{{trans('message.p_tab green score')}}</strong></td>
                             <td align="right"><strong class="text-success" id="pv">{{ $bill['pv_total'] }} PV</strong></td>
                         </tr>
 

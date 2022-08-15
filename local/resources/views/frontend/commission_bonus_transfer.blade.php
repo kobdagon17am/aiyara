@@ -16,7 +16,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="m-b-10">รายงานการจ่ายโบนัส  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+                    <h4 class="m-b-10">{{trans('message.p_comission report')}}  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
 
 
                     <div class="col-md-12">
@@ -85,13 +85,13 @@
 
             columns: [{
                         data: 'bonus_transfer_date',
-                        title: '<center>วันที่โอน</center>',
+                        title: '<center>{{trans('message.p_comission date')}}</center>',
                         className: 'text-center'
                     },
 
                     {
                         data: 'umber_round',
-                        title: 'จำนวนรอบ',
+                        title: '{{trans('message.p_comission round')}}',
                         className: 'text-center'
                     },
 
@@ -102,43 +102,43 @@
                     },
                     {
                         data: 'tax_percent',
-                        title: '<center>% หัก ณ ที่จ่าย</center>',
+                        title: '<center>% {{trans('message.p_comission percent')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'tax',
-                        title: '<center>ภาษีหัก ณ ที่จ่าย</center>',
+                        title: '<center>{{trans('message.p_comission tax')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'fee',
-                        title: '<center>ค่าธรรมเนียม</center>',
+                        title: '<center>{{trans('message.p_comission fee')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'price_transfer_total',
-                        title: '<center>ยอดโอนสุทธิ</center>',
+                        title: '<center>{{trans('message.p_comission net')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'bank_name',
-                        title: '<center>ธนาคารปลายทาง </center>',
+                        title: '<center>{{trans('message.p_comission bank')}} </center>',
                         className: 'text-left'
                     },
                     {
                         data: 'bank_account',
-                        title: '<center>เลขที่บัญชี</center>',
+                        title: '<center>{{trans('message.p_comission account')}}</center>',
                         className: 'text-left'
                     },
 
                     {
                         data: 'status_transfer',
-                        title: '<center>ผลการโอน</center>',
+                        title: '<center>{{trans('message.p_comission result')}}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'remark_transfer',
-                        title: '<center>หมายเหตุ</center>',
+                        title: '<center>{{trans('message.p_comission remark')}}</center>',
                         className: 'text-left'
                     },
                     {

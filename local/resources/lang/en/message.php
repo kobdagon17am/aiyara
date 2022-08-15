@@ -453,7 +453,51 @@ return [
 'view_line'=> 'View line',
 'close'=> 'Close',
 
+// frontend new
+'p_tab green order'=> 'Order list for qualification',
+'p_tab green product'=> 'Choose products',
+'p_tab green amount order'=> 'Amount of order',
+'p_tab green item'=> 'Amount of items',
+'p_tab green score'=> 'Points earned',
+'p_pass aip green will not'=> 'You will not be able to use Ai-Cash
+until you set up PassWord Ai-Cash',
+'p_aip green remain'=> 'Ai-Cash remain',
+'p_direct sponsor reccom'=> 'All direct recommendations',
+'p_comission report'=> 'Bonus payment report',
+
+'p_comission date'=> 'Transfer date',
+'p_comission round'=> 'Round',
+'p_comission tax'=> 'withholding tax',
+'p_comission percent'=> 'withholding percent',
+'p_comission fee'=> 'fee',
+'p_comission net'=> 'net amount',
+'p_comission bank'=> 'transfer to bank',
+'p_comission account'=> 'bank account',
+'p_comission result'=> 'result of transfer',
+'p_comission remark'=> 'remark',
+'p_comission score movement and daily bonus'=> 'Score movement and daily bonus',
+'p_comission date'=> 'date',
+'p_comission personal'=> 'personal balance',
+'p_comission buy'=> 'buy more',
+'p_comission keep'=> 'buy for keep',
+'p_comission new s'=> 'new score',
+'p_comission balance'=> 'score balance',
+'p_comission total'=> 'total bonus',
+'p_comission Ai report'=> 'Ai-Stockist commission transfer report',
+'p_comission transaction date'=> 'transaction date',
+'p_comission name'=> 'Firstname-Surname',
+'p_comission AF report'=> 'AF commission transfer report',
+'p_comission member report'=> 'member commission transfer report',
+
+'p_comission tax certificate'=> 'Withholding tax certificate',
+'p_comission start'=> 'start date',
+'p_comission end'=> 'end date',
+'p_comission comission'=> 'comission',
+'p_comission tax amount'=> 'Withholding tax amount',
+'p_comission tax year'=> 'installment/tax year',
+'p_comission print tax'=> 'print withholding tax certificate',
+
 ];
 
 
-
+// {{trans('message.p_pass aip green will not')}}

@@ -22,7 +22,7 @@ $count_sponser = 0;
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="m-b-10">ข้อมูลแนะนำตรงทั้งหมด</h4>
+                    <h4 class="m-b-10">{{trans('message.p_direct sponsor reccom')}}</h4>
 
                 </div>
                 <div class="card-block">

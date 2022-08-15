@@ -16,7 +16,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น Ai-Stockist [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+                    <h4 class="m-b-10">{{trans('message.p_comission Ai report')}} [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 p-1">
@@ -96,7 +96,7 @@
 
                 columns: [{
                         data: 'action_date',
-                        title: '<center>วันที่ทำรายการ</center>',
+                        title: '<center>{{trans('message.p_comission transaction date')}}</center>',
                         className: 'text-center'
                     },
 
@@ -107,7 +107,7 @@
                     // },
                     {
                         data: 'cus_name',
-                        title: '<center>ชื่อ-นามสกุล</center>',
+                        title: '<center>{{trans('message.p_comission name')}}</center>',
                         className: 'text-left'
                     },
 
@@ -118,43 +118,43 @@
                     },
                     {
                         data: 'tax_percent',
-                        title: '<center>% หัก ณ ที่จ่าย</center>',
+                        title: '<center>% {{trans('message.p_comission percent')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'tax',
-                        title: '<center>ภาษีหัก ณ ที่จ่าย</center>',
+                        title: '<center>{{trans('message.p_comission tax')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'fee',
-                        title: '<center>ค่าธรรมเนียม</center>',
+                        title: '<center>{{trans('message.p_comission fee')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'amount',
-                        title: '<center>ยอดโอนสุทธิ</center>',
+                        title: '<center>{{trans('message.p_comission net')}}</center>',
                         className: 'text-right'
                     },
                     {
                         data: 'destination_bank',
-                        title: '<center>ธนาคารปลายทาง </center>',
+                        title: '<center>{{trans('message.p_comission bank')}} </center>',
                         className: 'text-left'
                     },
                     {
                         data: 'transferee_bank_no',
-                        title: '<center>เลขที่บัญชี</center>',
+                        title: '<center>{{trans('message.p_comission account')}}</center>',
                         className: 'text-left'
                     },
 
                     {
                         data: 'transfer_result',
-                        title: '<center>ผลการโอน</center>',
+                        title: '<center>{{trans('message.p_comission result')}}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'note',
-                        title: '<center>หมายเหตุ</center>',
+                        title: '<center>{{trans('message.p_comission remark')}}</center>',
                         className: 'text-left'
                     },
                     {

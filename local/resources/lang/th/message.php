@@ -461,6 +461,50 @@ return [
 'view_line'=> 'ดูสายงาน',
 'close'=> 'ปิด',
 
+// frontend new
+'p_tab green order'=> 'รายการสั่งซื้อเพื่อทำคุณสมบัติ',
+'p_tab green product'=> 'เลือกสินค้า',
+'p_tab green amount order'=> 'สรุปรายการสั่งซื้อ',
+'p_tab green item'=> 'ยอดรวมจำนวนชิ้น',
+'p_tab green score'=> 'คะแนนที่ได้รับ',
+'p_pass aip green will not'=> 'คุณจะไม่สามารถใช้งาน Ai-Cash ได้
+จนกว่าจะตั้งค่า PassWord Ai-Cash',
+'p_aip green remain'=> 'Ai-Cash คงเหลือ',
+'p_direct sponsor reccom'=> 'ข้อมูลแนะนำตรงทั้งหมด',
+'p_comission report'=> 'รายงานการจ่ายโบนัส',
+'p_comission date'=> 'วันที่โอน',
+'p_comission round'=> 'จำนวนรอบ',
+'p_comission tax'=> 'หัก ณ ที่จ่าย',
+'p_comission percent'=> '% หัก ณ ที่จ่าย',
+'p_comission fee'=> 'ค่าธรรมเนียม',
+'p_comission net'=> 'ยอดโอนสุทธิ',
+'p_comission bank'=> 'ธนาคารปลายทาง',
+'p_comission account'=> 'เลขที่บัญชี',
+'p_comission result'=> 'ผลการโอน',
+'p_comission remark'=> 'หมายเหตุ',
+'p_comission score movement and daily bonus'=> 'ความเคลื่อนไหวคะแนน และโบนัสรายวัน',
+'p_comission date'=> 'วันที่',
+'p_comission personal'=> 'ยอดส่วนตัว',
+'p_comission buy'=> 'ซื้อเพิ่ม',
+'p_comission keep'=> 'ซื้อรักษา',
+'p_comission new s'=> 'คะแนนเข้าใหม่',
+'p_comission balance'=> 'คะแนนคงเหลือ',
+'p_comission total'=> 'รวมโบนัส',
+'p_comission Ai report'=> 'รายงานการโอนค่าคอมมิชชั่น Ai-Stockist ประจำรอบ',
+'p_comission transaction date'=> 'วันที่ทำรายการ',
+'p_comission name'=> 'ชื่อ-นามสกุล',
+'p_comission AF report'=> 'รายงานการโอนค่าคอมมิชชั่น AF',
+'p_comission member report'=> 'รายงานการโอนค่าคอมมิชชั่น Member',
+
+'p_comission tax certificate'=> 'หนังสือรับรองการหักภาษี ณ ที่จ่าย ตามมาตรา 50 ทวิ',
+'p_comission start'=> 'วันที่เริ่ม',
+'p_comission end'=> 'วันที่สิ้นสุด',
+'p_comission comission'=> 'ค่า Comission',
+'p_comission tax amount'=> 'ยอดภาษีหัก ณ ที่จ่าย',
+'p_comission tax year'=> 'งวด/ปีภาษี',
+'p_comission print tax'=> 'พิมพ์ 50 ทวิ',
+
 ];
 
 
+// {{trans('message.p_pass aip green will not')}}

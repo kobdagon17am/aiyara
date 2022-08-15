@@ -10,13 +10,12 @@
 
                     {{-- </div> --}}
 
-                    <h5 class="f-w-600 m-t-10 m-b-10 text-primary">Ai-Cash คงเหลือ
+                    <h5 class="f-w-600 m-t-10 m-b-10 text-primary">{{trans('message.p_aip green remain')}}
                         {{ number_format(Auth::guard('c_user')->user()->ai_cash) }}</h5>
                     @if ($aicash_data)
                         <p class="m-t-15 text-muted"><b class="text-success">Change your password Ai-Cash</b></p>
                     @else
-                        <p class="m-t-15 text-muted"><b class="text-danger">คุณจะไม่สามารถใช้งาน Ai-Cash ได้ <br>
-                                จนกว่าจะตั้งค่า PassWord Ai-Cash</b></p>
+                        <p class="m-t-15 text-muted"><b class="text-danger">{{trans('message.p_pass aip green will not')}}</b></p>
                     @endif
 
                     <ul class="list-unstyled activity-leval m-b-10">

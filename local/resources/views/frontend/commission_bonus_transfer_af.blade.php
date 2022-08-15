@@ -7,29 +7,28 @@
         href="{{ asset('frontend/assets/pages/data-table/css/buttons.dataTables.min.css') }}">
     <link rel="stylesheet" type="text/css"
         href="{{ asset('frontend/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
-
 @endsection
 @section('conten')
-
     <div class="row">
         <div class="col-md-12">
             <div class="card">
 
                 <div class="card-header">
-                    <h4 class="m-b-10">รายงานการโอนค่าคอมมิชชั่น AF  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+                    <h4 class="m-b-10">{{ trans('message.p_comission AF report') }}
+                        [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
                     <div class="col-md-12">
-                      <div class="row">
-                          <div class="col-lg-3 col-md-3 p-1">
-                              <input class="form-control" type="date" id="startDate" value="{{ date('Y-m-01') }}">
-                          </div>
-                          <div class="col-lg-3 col-md-3  p-1">
-                              <input class="form-control" type="date" id="endDate" value="{{ date('Y-m-t') }}">
-                          </div>
-                          <div class="col-lg-1 col-md-1 p-1">
-                              <button id="search-form" class="btn btn-primary btn-block"> Start </button>
-                          </div>
-                      </div>
-                  </div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 p-1">
+                                <input class="form-control" type="date" id="startDate" value="{{ date('Y-m-01') }}">
+                            </div>
+                            <div class="col-lg-3 col-md-3  p-1">
+                                <input class="form-control" type="date" id="endDate" value="{{ date('Y-m-t') }}">
+                            </div>
+                            <div class="col-lg-1 col-md-1 p-1">
+                                <button id="search-form" class="btn btn-primary btn-block"> Start </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-block">
@@ -56,7 +55,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 @section('js')
     <!-- data-table js -->
@@ -76,15 +74,14 @@
     </script>
     <!-- Custom js -->
     <script type="text/javascript">
-
         var oTable;
         $(function() {
             oTable = $('#multi-colum-dt').DataTable({
-              processing: true,
-              serverSide: true,
-              searching: true,
+                processing: true,
+                serverSide: true,
+                searching: true,
                 ajax: {
-                    url: '{{ route("dt_commission_bonus_transfer_af") }}',
+                    url: '{{ route('dt_commission_bonus_transfer_af') }}',
                     data: function(d) {
                         d.startDate = $('#startDate').val();
                         d.endDate = $('#endDate').val();
@@ -95,7 +92,7 @@
 
                 columns: [{
                         data: 'action_date',
-                        title: '<center>วันที่ทำรายการ</center>',
+                        title: '<center>{{ trans('message.p_comission transaction date') }}</center>',
                         className: 'text-center'
                     },
 
@@ -106,56 +103,59 @@
                     // },
                     {
                         data: 'cus_name',
-                        title: '<center>ชื่อ-นามสกุล</center>',
+                        title: '<center>{{ trans('message.p_comission name') }}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'commission',
-                        title: '<center>Commission</center>',
+                        title: '<center>{{ trans('message.p_comission name') }}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'tax_percent',
-                        title: '<center>% หัก ณ ที่จ่าย</center>',
+                        title: '<center>% {{ trans('message.p_comission percent') }}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'tax',
-                        title: '<center>ภาษีหัก ณ ที่จ่าย</center>',
+                        title: '<center>{{ trans('message.p_comission tax') }}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'fee',
-                        title: '<center>ค่าธรรมเนียม</center>',
+                   title: '<center>{{trans('message.p_comission fee')}}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'amount',
-                        title: '<center>ยอดโอนสุทธิ</center>',
+                      title: '<center>{{trans('message.p_comission net')}}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'destination_bank',
-                        title: '<center>ธนาคารปลายทาง </center>',
+                           title: '<center>{{trans('message.p_comission bank')}} </center>',
                         className: 'text-left'
                     },
                     {
                         data: 'transferee_bank_no',
-                        title: '<center>เลขที่บัญชี</center>',
+                        title: '<center>{{trans('message.p_comission account')}}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'transfer_result',
-                        title: '<center>ผลการโอน</center>',
+                         title: '<center>{{trans('message.p_comission result')}}</center>',
                         className: 'text-left'
                     },
                     {
                         data: 'note',
-                        title: '<center>หมายเหตุ</center>',
+                    title: '<center>{{trans('message.p_comission remark')}}</center>',
                         className: 'text-left'
                     },
 
-                ],order:[[0,'DESC']],
+                ],
+                order: [
+                    [0, 'DESC']
+                ],
             });
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
                 oTable.draw();
@@ -166,11 +166,5 @@
                 e.preventDefault();
             });
         });
-
-
     </script>
-
-
-
-
 @endsection

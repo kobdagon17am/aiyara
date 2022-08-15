@@ -35,7 +35,7 @@
                  <div class="card card-border-success">
                      <div class="card-header p-3">
                          @if ($bill['type'] == 1)
-                             <h5>รายการสั่งซื้อเพื่อทำคุณสมบัติ</h5>
+                             <h5>{{trans('message.p_tab green order')}}</h5>
                          @elseif($bill['type'] == 2)
                              <h5>รายการสั่งซื้อเพื่อรักษาคุณสมบัติรายเดือน</h5>
                          @elseif($bill['type'] == 3)
@@ -793,7 +793,7 @@
          <div class="col-md-4">
              <div class="card card-border-success">
                  <div class="card-header">
-                     <h4>สรุปรายการสั่งซื้อ</h4>
+                     <h4>{{trans('message.p_tab green amount order')}}</h4>
 
                  </div>
                  <div class="card-block">

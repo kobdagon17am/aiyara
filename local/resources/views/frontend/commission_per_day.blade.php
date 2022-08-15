@@ -18,7 +18,7 @@ use App\Models\Frontend\DirectSponsor;
         <div class="card">
 
          <div class="card-header">
-            <h4 class="m-b-10">ความเคลื่อนไหวคะแนน และโบนัสรายวัน  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
+            <h4 class="m-b-10">{{trans('message.p_comission score movement and daily bonus')}}  [{{ Auth::guard('c_user')->user()->user_name }}]</h4>
             <div class="col-md-12">
               <div class="row">
                   <div class="col-lg-3 col-md-3 p-1">
@@ -40,12 +40,12 @@ use App\Models\Frontend\DirectSponsor;
 
                     <thead>
                       <tr class="info" style='text-align:center;'>
-                        <th class="text-center" rowspan="2" >วันที่</th>
-                        <th class="text-center" rowspan="2" >ยอดสวนตัว</th>
-                        <th class="text-center" rowspan="2" >ซื้อเพิ่ม</th>
-                        <th class="text-center" rowspan="2" >ซื้อรักษา</th>
-                        <th class="text-center" colspan="3" >คะแนนเข้าไหม่</th>
-                        <th class="text-center" colspan="3" >คะแนนคงเหลือ</th>
+                        <th class="text-center" rowspan="2" >{{trans('message.p_comission date')}}</th>
+                        <th class="text-center" rowspan="2" >{{trans('message.p_comission personal')}}</th>
+                        <th class="text-center" rowspan="2" >{{trans('message.p_comission buy')}}</th>
+                        <th class="text-center" rowspan="2" >{{trans('message.p_comission keep')}}</th>
+                        <th class="text-center" colspan="3" >{{trans('message.p_comission new s')}}</th>
+                        <th class="text-center" colspan="3" >{{trans('message.p_comission balance')}}</th>
 
                         <th class="text-center"  rowspan="2">Faststart</th>
                         <th class="text-center"  rowspan="2">Pro.</th>
@@ -54,7 +54,7 @@ use App\Models\Frontend\DirectSponsor;
                         <th class="text-center"  rowspan="2">Matching</th>
                         <th class="text-center"  rowspan="2">Pool</th>
                         <th class="text-center"  rowspan="2">Outime</th>
-                        <th class="text-center"  rowspan="2">รวมโบนัส</th>
+                        <th class="text-center"  rowspan="2">{{trans('message.p_comission total')}}</th>
                     </tr>
                     <tr>
                         <th class="text-center"  style="font-size: 12px;">A</th>
