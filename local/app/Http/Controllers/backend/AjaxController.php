@@ -4695,6 +4695,10 @@ class AjaxController extends Controller
   public function ajaxSentMoneyDaily(Request $request)
     {
       if($request->ajax()){
+
+        \DB::beginTransaction();
+        try {
+
         //  $r0 = DB::select(" SELECT * FROM `db_orders`  WHERE date(updated_at)=CURDATE() AND action_user=".(\Auth::user()->id)." AND status_sent_money=0  ");
         // `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
 // ของเดิม
@@ -4742,49 +4746,90 @@ class AjaxController extends Controller
           if($r0){
 
             $arr_orders_id_fk = [];
+            $arr_orders_date = [];
+            $arr_orders_date_arr = [];
+            // วนเอาวันที่
             foreach ($r0 as $key => $v) {
-                array_push($arr_orders_id_fk,$v->id);
-            }
-            $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
-            // วุฒิปรับให้ insert ใหม่ทุกครั้ง
-            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
-                // วุฒิเพิ่ม ครั้งที่ส่งด้วย จาก 1
-                if($r1){
-                    $time_sent = $r1[0]->time_sent + 1 ;
-                }else{
-                    $time_sent = 1;
+                // array_push($arr_orders_id_fk,$v->id);
+                $i_num = 0;
+                foreach($arr_orders_date as $arr_i){
+                    if($arr_i == date('Y-m-d', strtotime($v->created_at))){
+                      $i_num ++;
+                    }
                 }
+                if($i_num==0){
+                  array_push($arr_orders_date,date('Y-m-d', strtotime($v->created_at)));
+                  $arr_orders_date_arr[date('Y-m-d', strtotime($v->created_at))] = [];
+                }
+                array_push($arr_orders_date_arr[date('Y-m-d', strtotime($v->created_at))],$v->id);
+            }
 
-
-                  $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
-                  $id = DB::getPdo()->lastInsertId();
-
-                  DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
-                  $id = $id.'';
+            // วันวันที่เพื่อ insert
+            foreach($arr_orders_date_arr as $d_arr){
+              $arr_orders_id_fk = implode(",",$d_arr);
+              // วุฒิปรับให้ insert ใหม่ทุกครั้ง
+              $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ORDER BY time_sent DESC ");
+                  // วุฒิเพิ่ม ครั้งที่ส่งด้วย จาก 1
+                  if($r1){
+                      $time_sent = $r1[0]->time_sent + 1 ;
+                  }else{
+                      $time_sent = 1;
+                  }
+                    $r2 = DB::select(" INSERT INTO db_sent_money_daily(time_sent,sender_id,orders_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
+                    $id = DB::getPdo()->lastInsertId();
+                    DB::select(" UPDATE `db_orders` SET status_sent_money=1,sent_money_daily_id_fk=$id WHERE id in ($arr_orders_id_fk) ");
+                    // $id = $id.'';
+            }
           }
 
           if($r0_ai){
 
             $arr_orders_id_fk = [];
+            $arr_orders_date = [];
+            $arr_orders_date_arr = [];
+
             foreach ($r0_ai as $key => $v) {
-                array_push($arr_orders_id_fk,$v->id);
-            }
-            $arr_orders_id_fk = implode(",",$arr_orders_id_fk);
-            // return $arr_orders_id_fk;
-
-            $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily_ai`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ");
-
-                if($r1){
-                    $time_sent = $r1[0]->time_sent + 1 ;
-                }else{
-                    $time_sent = 1;
+                // array_push($arr_orders_id_fk,$v->id);
+                $i_num = 0;
+                foreach($arr_orders_date as $arr_i){
+                    if($arr_i == date('Y-m-d', strtotime($v->created_at))){
+                      $i_num ++;
+                    }
                 }
+                if($i_num==0){
+                  array_push($arr_orders_date,date('Y-m-d', strtotime($v->created_at)));
+                  $arr_orders_date_arr[date('Y-m-d', strtotime($v->created_at))] = [];
+                }
+                array_push($arr_orders_date_arr[date('Y-m-d', strtotime($v->created_at))],$v->id);
+            }
 
-                  $r2 = DB::select(" INSERT INTO db_sent_money_daily_ai(time_sent,sender_id,add_ai_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
-                  $id_ai = DB::getPdo()->lastInsertId();
+            foreach($arr_orders_date_arr as $d_arr){
+              $arr_orders_id_fk = implode(",",$d_arr);
+              $r1= DB::select(" SELECT time_sent FROM `db_sent_money_daily_ai`  WHERE date(created_at)=CURDATE() AND sender_id=".(\Auth::user()->id)." ORDER BY time_sent DESC ");
 
-                  DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=1,sent_money_daily_id_fk=$id_ai,sent_money_daily_id_fk_ai=$id_ai WHERE id in ($arr_orders_id_fk) ");
+              if($r1){
+                  $time_sent = $r1[0]->time_sent + 1 ;
+              }else{
+                  $time_sent = 1;
+              }
+
+                $r2 = DB::select(" INSERT INTO db_sent_money_daily_ai(time_sent,sender_id,add_ai_ids,created_at) values ($time_sent,".(\Auth::user()->id).",'$arr_orders_id_fk',now()) ");
+                $id_ai = DB::getPdo()->lastInsertId();
+
+                DB::select(" UPDATE `db_add_ai_cash` SET status_sent_money=1,sent_money_daily_id_fk=$id_ai,sent_money_daily_id_fk_ai=$id_ai WHERE id in ($arr_orders_id_fk) ");
+            }
+
           }
+
+
+          \DB::commit();
+
+      } catch (\Exception $e) {
+          echo $e->getMessage();
+          \DB::rollback();
+          return $e->getMessage();
+      }
+
       }
 
     }

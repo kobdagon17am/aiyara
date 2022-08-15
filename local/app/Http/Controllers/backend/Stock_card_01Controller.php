@@ -32,13 +32,13 @@ class Stock_card_01Controller extends Controller
            $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
 // date(lot_expired_date) >= CURDATE()
-          // $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$Stock[0]->product_id_fk." 
-          // AND lot_number='".$Stock[0]->lot_number."' 
-          // AND lot_expired_date='".$Stock[0]->lot_expired_date."' 
-          // AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."' 
-          // AND zone_id_fk='".$Stock[0]->zone_id_fk."' 
-          // AND shelf_id_fk='".$Stock[0]->shelf_id_fk."' 
-          // AND shelf_floor='".$Stock[0]->shelf_floor."' 
+          // $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where 1 AND product_id_fk=".$Stock[0]->product_id_fk."
+          // AND lot_number='".$Stock[0]->lot_number."'
+          // AND lot_expired_date='".$Stock[0]->lot_expired_date."'
+          // AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."'
+          // AND zone_id_fk='".$Stock[0]->zone_id_fk."'
+          // AND shelf_id_fk='".$Stock[0]->shelf_id_fk."'
+          // AND shelf_floor='".$Stock[0]->shelf_floor."'
           // GROUP BY product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
           // dd($sBalance);
 
@@ -85,15 +85,15 @@ class Stock_card_01Controller extends Controller
 
    public function form($id=NULL)
     {
-  
+
     }
 
     public function destroy($id)
     {
-      
+
     }
 
-    
+
     public function Datatable(Request $request){
 
       $temp_db_stock_card = "temp_db_stock_card_01".\Auth::user()->id;
@@ -113,20 +113,20 @@ class Stock_card_01Controller extends Controller
         // ถ้าวันที่ $request->start_date > ปัจจุบัน ให้เอายอด ใน stock คงเหลือปัจจุบัน เลย
            if($request->start_date > date('Y-m-d') ){
 
-                $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where product_id_fk=".($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0)." 
-                AND lot_number='".($Stock[0]->lot_number?$Stock[0]->lot_number:0)."' 
-                AND lot_expired_date='".$Stock[0]->lot_expired_date."' 
-                AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."' 
-                AND zone_id_fk='".$Stock[0]->zone_id_fk."' 
-                AND shelf_id_fk='".$Stock[0]->shelf_id_fk."' 
-                AND shelf_floor='".$Stock[0]->shelf_floor."' 
+                $sBalance= DB::select(" SELECT (case when amt>0 then sum(amt) else 0 end) as amt FROM `db_stocks` where product_id_fk=".($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0)."
+                AND lot_number='".($Stock[0]->lot_number?$Stock[0]->lot_number:0)."'
+                AND lot_expired_date='".$Stock[0]->lot_expired_date."'
+                AND warehouse_id_fk='".$Stock[0]->warehouse_id_fk."'
+                AND zone_id_fk='".$Stock[0]->zone_id_fk."'
+                AND shelf_id_fk='".$Stock[0]->shelf_id_fk."'
+                AND shelf_floor='".$Stock[0]->shelf_floor."'
                 GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ");
                 $amt_balance_stock = @$sBalance[0]->amt?$sBalance[0]->amt:0;
 
                $txt = "ยอดคงเหลือ";
                DB::select(" UPDATE $temp_db_stock_card SET details='$txt',amt_in='$amt_balance_stock' WHERE id=1 ") ;
-            
-         
+
+
             }else{
               // doc_date แปลงเป็น updated_at
                 // รายการก่อน start_date เพื่อหายอดยกมา
@@ -239,17 +239,17 @@ class Stock_card_01Controller extends Controller
 
 
             DB::select(" SET @csum := 0; ");
-            $sTable = DB::select(" 
-                SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain 
-                FROM $temp_db_stock_card 
-            ");       
+            $sTable = DB::select("
+                SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain
+                FROM $temp_db_stock_card
+            ");
       }else{
 
         DB::select(" SET @csum := 0; ");
-        $sTable = DB::select(" 
-            SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain 
-            FROM $temp_db_stock_card 
-        "); 
+        $sTable = DB::select("
+            SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain
+            FROM $temp_db_stock_card
+        ");
 
       }
 
@@ -262,7 +262,7 @@ class Stock_card_01Controller extends Controller
         }else{
           return '';
         }
-      })      
+      })
       ->addColumn('approver', function($row) {
         if(@$row->approver!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
@@ -270,15 +270,15 @@ class Stock_card_01Controller extends Controller
         }else{
           return '';
         }
-      })   
+      })
       ->addColumn('remain', function($row) {
          if(@$row->remain){
             return $row->remain;
          }else{
             return 0;
          }
-          
-      }) 
+
+      })
       ->make(true);
     }
 
