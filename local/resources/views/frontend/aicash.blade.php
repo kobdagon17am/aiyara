@@ -11,7 +11,7 @@
                 <div class="card-header">
                     <div class="card-header-left">
                         <h4>Ai-Cash</h4>
-                        <p class="m-b-0">จำนวนเงินคงเหลือ{{-- <span class="f-right">$542</span> --}}</p>
+                        <p class="m-b-0">{{trans('message.p_Ai-Cash remain')}}{{-- <span class="f-right">$542</span> --}}</p>
                     </div>
                 </div>
                 <div class="card-block">
@@ -27,7 +27,7 @@
         <div class="col-md-8 col-xl-8">
             <div class="card">
                 <div class="card-block">
-                    <h5 class="mb-2">เติม Ai-Cash</h5>
+                    <h5 class="mb-2">{{trans('message.p_Ai-Cash add')}}</h5>
 
                     @if($check_kyc['status'] == 'fail')
 
@@ -40,9 +40,9 @@
                                 @if ($canAccess)
                                     <div class="input-group input-group-button">
                                         <input type="text" id="price" name="price" class="form-control autonumber"
-                                            data-v-max="999999" placeholder="กรุณาใส่จำนวนเงิน">
+                                            data-v-max="999999" placeholder="{{trans('message.p_Ai-Cash enter amount')}}">
                                         <span class="input-group-addon btn btn-primary" onclick="add_aicash()">
-                                            <span class="">ทำรายการ</span>
+                                            <span class="">{{trans('message.p_Ai-Cash active')}}</span>
                                         </span>
                                     </div>
                                 @endif
@@ -185,7 +185,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5>ประวัติการชำระด้วย Ai-Cash</h5>
+                    <h5>{{trans('message.p_Ai-Cash history')}}</h5>
                 </div>
                 <div class="card-block">
                     <div class="table-responsive ">
@@ -218,7 +218,7 @@
                 <div class="modal-body">
                     <div class="card bg-c-green order-card">
                         <div class="card-block">
-                            <h6 class="m-b-20">เติม Ai-Cash</h6>
+                            <h6 class="m-b-20">{{trans('message.p_Ai-Cash add')}}</h6>
                             <h2 class="text-right"><i class="ti-wallet f-left"></i><span id="price_add_aicash"></span></h2>
 
 
@@ -262,7 +262,7 @@
             if (price == '') {
                 Swal.fire({
                     icon: 'error',
-                    title: 'กรุณาใส่จำนวนเงินที่ต้องการ',
+                    title: '{{trans('message.p_Ai-Cash enter amount')}}',
                     // text: 'Something went wrong!',
                     // footer: '<a href>Why do I have this issue?</a>'
                 })

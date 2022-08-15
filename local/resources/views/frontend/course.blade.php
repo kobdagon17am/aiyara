@@ -34,9 +34,9 @@
                     <th>#</th>
                     <th>Start Date</th>
                     <th>End Date</th>
-                    <th>หัวข้อ</th>
+                    <th>{{trans('message.p_couse/event topic')}}</th>
                     <th>C/E</th>
-                    <th>ราคา</th>
+                    <th>{{trans('message.p_couse/event price')}}</th>
                     <th>PV</th>
                     <th>CourseStatus</th>
                     <th>OrderStatus</th>

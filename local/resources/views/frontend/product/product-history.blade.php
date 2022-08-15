@@ -15,14 +15,14 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header p-4">
-                  <h4> ประวัติการสั่งซื้อสินค้า </h4>
+                  <h4> {{trans('message.p_history order')}} </h4>
 
                     <div class="col-md-12 col-lg-12">
                         <div class="row">
                             <div class="col-lg-3 col-md-3 p-1">
                                 <div class="form-group">
                                     <select class="form-control" id="dt_order_type">
-                                        <option value="">จุดประสงค์การสั่งซื้อ(Type)</option>
+                                        <option value="">{{trans('message.p_history goal')}}</option>
                                         @foreach ($data['orders_type'] as $value)
                                             <option value="{{ $value->group_id }}">{{ $value->orders_type }}
                                             </option>
@@ -34,7 +34,7 @@
                             <div class="col-lg-2 col-md-2 p-1">
                                 <div class="form-group">
                                     <select class="form-control" id="dt_pay_type">
-                                        <option value="">ชำระโดย(All)</option>
+                                        <option value="">{{trans('message.p_history paid')}}(All)</option>
                                         @foreach ($data['pay_type'] as $value)
                                             <option value="{{ $value->id }}">{{ $value->detail }}
                                             </option>
@@ -61,16 +61,16 @@
                         <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr>
-                                    <th>วันที่สั่งซื้อ</th>
-                                    <th>เลขใบสั่งซื้อ</th>
+                                    <th>{{trans('message.p_history order date')}}</th>
+                                    <th>{{trans('message.p_history po number')}}</th>
                                     <th>TRACKING</th>
-                                    <th>ยอดชำระ</th>
+                                    <th>{{trans('message.p_history amount')}}</th>
                                     <th>PV</th>
                                     {{-- <th>คงเหลือ</th> --}}
                                     <th>Active</th>
                                     <th>Type</th>
-                                    <th>ชำระโดย</th>
-                                    <th>สถานะ</th>
+                                    <th>{{trans('message.p_history paid')}}</th>
+                                    <th>{{trans('message.p_history status')}}</th>
                                     <th>#</th>
                                 </tr>
                             </thead>
@@ -83,8 +83,7 @@
                         @endforeach
                     </div>
                     <div class="row">
-                        <code>กรณียกเลิกบิลสามารถทำได้ถายใน 30 นาที หลังจากบิลถูกอนุมัติและสามารถยกเลิกบิลได้ภายใน 23.00 น.
-                            ของวันที่ทำรายการเท่านั้น</code>
+                        <code>{{trans('message.p_history if 30')}}</code>
                     </div>
                 </div>
 
@@ -263,7 +262,7 @@
       <div class="col-md-12">
           <div class="card">
               <div class="card-header">
-                  <h5>ประวัติการเติม Ai-Cash</h5>
+                  <h5>{{trans('message.p_history his ai')}}</h5>
                   {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
               </div>
 

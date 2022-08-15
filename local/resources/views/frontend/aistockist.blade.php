@@ -12,7 +12,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     <h3 class="text-right"><i
                             class="ti-wallet f-left"></i><span>{{ number_format(Auth::guard('c_user')->user()->pv_aistockist) }}
                             PV</span></h3>
-                    <p class="m-b-0">จำนวนคะแนนคงเหลือ{{-- <span class="f-right">$542</span> --}}</p>
+                    <p class="m-b-0">{{trans('message.p_qualification Remaining Points')}}{{-- <span class="f-right">$542</span> --}}</p>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             <div class="card">
 
                 <div class="card-block">
-                    <h6>ใช้ Ai-Stockist</h6>
+                    <h6>{{trans('message.p_Ai-Stockist use')}}</h6>
 
                     @if($check_kyc['status'] == 'fail')
 
@@ -34,7 +34,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                           <div class="input-group input-group-button">
                               <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้">
                               <span class="input-group-addon btn btn-primary" onclick="check()">
-                                  <span class="">ทำรายการ</span>
+                                  <span class="">{{trans('message.p_Ai-Cash active')}}</span>
                               </span>
                           </div>
                           @endif
@@ -42,12 +42,12 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                       @else
 
                       <div class="col-md-6 m-t-5">
-                        <span class="text-danger">คุณยังไม่ได้รับสิทธิ์ Ai-Stockit ไม่สามารถใช้งานฟังก์ชั่นนี้ได้</span>
+                        <span class="text-danger">{{trans('message.p_Ai-Stockist permission')}}</span>
                         @if($canAccess)
                         <div class="input-group input-group-button">
                             <input type="text" id="username" class="form-control" placeholder="รหัสสมาชิกที่ใช้" disabled>
                             <span class="input-group-addon btn btn-primary" onclick="check()">
-                                <span class="">ทำรายการ</span>
+                                <span class="">{{trans('message.p_Ai-Cash active')}}</span>
                             </span>
                         </div>
                         @endif
@@ -87,7 +87,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
       <div class="col-md-12">
           <div class="card">
               <div class="card-header">
-                  <h5>ประวัติ Ai-Stockist ทั้งหมด</h5>
+                  <h5>{{trans('message.p_Ai Voucher his ai')}}</h5>
                   {{-- <span>DataTables has most features enabled by default, so all you need to do to use it with your own ables is to call the construction function: $().DataTable();.</span> --}}
               </div>
               <div class="card-block">
@@ -97,8 +97,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     </table>
                 </div>
                 <div class="row">
-                  <code>กรณียกเลิกบิลสามารถทำได้ถายใน 30 นาที หลังจากบิลถูกอนุมัติและสามารถยกเลิกบิลได้ภายใน 23.00 น.
-                      ของวันที่ทำรายการเท่านั้น</code>
+                  <code>{{trans('message.p_Ai-Stockist in case')}}</code>
               </div>
 
             </div>
@@ -114,7 +113,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">ยืนยันการใช้ Ai-Stockist</h4>
+                        <h4 class="modal-title">{{trans('message.p_Ai-Stockist use approve')}}</h4>
                     </div>
 
                     <div class="modal-body">
@@ -138,7 +137,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                     <hr class="m-b-5 m-t-5">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h5 class="m-b-0" style="color: #000">คะแนนสะสม</h5>
+                                            <h5 class="m-b-0" style="color: #000">{{trans('message.p_qualification coll pont')}}</h5>
                                         </div>
                                         <div class="col-md-6">
                                             <h5 class="m-b-0 text-right" id="text_pv" style="color: #000"></h5>
@@ -147,7 +146,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                     <hr class="m-b-5 m-t-5">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติรายเดือน</b></p>
+                                            <p class="m-b-0" style="color: #000"><b>{{trans('message.p_qualification Your monthly qualification status')}}</b></p>
                                         </div>
                                         <div class="col-md-6 text-right">
                                             {{-- <span class="label label-success" style="font-size: 12px">Active ถึง 14/09/2020
@@ -159,7 +158,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                     <hr class="m-b-5 m-t-5">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <p class="m-b-0" style="color: #000"><b>สถานะรักษาคุณสมบัติท่องเที่ยว</b></p>
+                                            <p class="m-b-0" style="color: #000"><b>{{trans('message.p_qualification travel status')}}</b></p>
                                         </div>
                                         <div class="col-md-6 text-right">
                                             <div id="pv_tv_active"></div>

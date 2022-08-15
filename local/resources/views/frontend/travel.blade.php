@@ -37,7 +37,7 @@
 
     <div class="page-header card">
       <div class="card-block">
-        <h5 class="text-primary"> โปรโมชั่นท่องเที่ยวท่องเที่ยว </h5>
+        <h5 class="text-primary"> {{trans('message.p_benefits travel promotion')}} </h5>
         <hr>
 
         @if(count($data) > 0)
@@ -74,7 +74,7 @@
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <i class="icofont icofont-close-line-circled"></i>
           </button>
-          <strong>Data is Null! </strong>: ไม่มีโปรโมชั่นท่องเที่ยวท่องเที่ยวในช่วงนี้
+          <strong>Data is Null! </strong>: {{trans('message.p_benefits no travel pro')}}
         </div>
         @endif
 

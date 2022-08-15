@@ -28,16 +28,16 @@
                     <!-- Row start -->
                     <div class="row">
                         <div class="col-lg-12 col-xl-12">
-                            <div class="sub-title">รางวัลเกียรติยศ</div>
+                            <div class="sub-title">{{trans('message.award')}}</div>
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs  tabs" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#home1" role="tab"
-                                        aria-expanded="true">รางวัลเกียรติยศ Active</a>
+                                        aria-expanded="true">{{trans('message.p_benefits award active')}}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#profile1" role="tab"
-                                        aria-expanded="false">รายละเอียดรางวัลเกียรติยศ</a>
+                                        aria-expanded="false">{{trans('message.p_benefits award detail')}}</a>
                                 </li>
 
                             </ul>
@@ -104,7 +104,7 @@
                                                     </li>
 
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Time Bonus 5,000,000 บาท
                                                             (จ่ายครั้งเดียว)</p>
                                                     </li>
@@ -125,7 +125,7 @@
                                                     </li>
 
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Tmie Bonus 3,000,000
                                                             บาท(จ่ายครั้งเดียว)</p>
                                                     </li>
@@ -145,7 +145,7 @@
                                                     </li>
 
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Tmie Bonus 1,000,000 บาท
                                                             (จ่ายครั้งเดียว)</p>
                                                     </li>
@@ -172,13 +172,13 @@
                                                             (จำนวน 3 เดือน ติดต่อกัน)</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Platinum Star (active) L/T
                                                             4 รหัส : M/T 4 รหัส และรับโบนัส FS+TMB = 1,500,000 บาท/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">Fund Home & Car</p>
                                                     </li>
                                                 </ul>
@@ -198,13 +198,13 @@
                                                             (จำนวน 3 เดือน ติดต่อกัน)</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Platinum Star (active) L/T
                                                             4 รหัส : M/T 4 รหัส และรับโบนัส FS+TMB = 1,500,000 บาท/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">Fund Home & Car</p>
                                                     </li>
                                                 </ul>
@@ -225,13 +225,13 @@
                                                         </p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p>แนะนำตรง Blue star (active) : L/T 1 รหัส : M/T 1 รหัส และรับโบนัส
                                                             FS+TMB = 450,000 บาท/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">Fund Home & Car 20,000 บาท/เดือน</p>
                                                     </li>
                                                 </ul>
@@ -252,13 +252,13 @@
                                                         </p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Platinum Star (active) L/T
                                                             1 รหัส M/T 1 รหัส และรับโบนัส FS+TMB = 250,000 บาท/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">Fund Home & Car 10,000 บาท/เดือน</p>
                                                     </li>
                                                 </ul>
@@ -277,13 +277,13 @@
                                                             : M/T 5 รหัส มีคะแนน M/T = 600,000 PV/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 5 รหัส
                                                             : M/T 5 รหัส มีคะแนน : M/T = 600,000 pv/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Time Bonus 15,000
                                                             บาท(จ่ายครั้งเดียว) รับโบนัส Trinary Boosterในเดือนถัดไป 1 เดือน
                                                         </p>
@@ -304,13 +304,13 @@
                                                             : M/T 5 รหัส มีคะแนน M/T = 450,000 pv/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 5 รหัส
                                                             : M/T 5 รหัส มีคะแนน M/T = 450,000 pv/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Time Bonus</p>
                                                     </li>
                                                 </ul>
@@ -329,13 +329,13 @@
                                                             : M/T 5 รหัส มีคะแนน M/T = 350,000 PV/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 5 รหัส
                                                             : M/T 5 รหัส มีคะแนน M/T = 350,000 pv/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Time Bonus</p>
                                                     </li>
                                                 </ul>
@@ -354,13 +354,13 @@
                                                             : M/T 5 รหัส มีคะแนน M/T = 250,000 PV/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 5 รหัส
                                                             : M/T 5 รหัส มีคะแนน M/T = 250,000 pv/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Time Bonus 10000
                                                             บาท(จ่ายครั้งเดียว) รับโบนัส Trinary Booster ในเดือนถัดไป 1
                                                             เดือน</p>
@@ -381,13 +381,13 @@
                                                             : M/T 5 รหัส มีคะแนน M/T = 150,000 pv/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 5 รหัส
                                                             : M/T 5 รหัส มีคะแนน M/T = 150,000 pv/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">One Time Bonus 5000
                                                             บาท(จ่ายครั้งเดียว) รับโบนัส Trinary Booster ในเดือนถัดไป 1
                                                             เดือน</p>
@@ -423,13 +423,13 @@
                                                             รหัส มีคะแนน M/T = 20,000 PV/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 5 รหัส
                                                             : M/T 5 รหัส</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">Matching Leader Bonus ลูก หลาน เหลน
                                                         </p>
                                                     </li>
@@ -449,13 +449,13 @@
                                                             รหัส มีคะแนน M/T = 10,000 PV/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 3 รหัส
                                                             : M/T 3 รหัส มีคะแนน M/T = 10,000 PV/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">Matching Leader Bonus ลูก หลาน</p>
                                                     </li>
                                                 </ul>
@@ -475,13 +475,13 @@
                                                             รหัส มีคะแนน M/T = 5,000 PV/เดือน</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> รักษาคุณสมบัติ
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits retain qual')}}
                                                         (Re)
                                                         <p style="margin-bottom: 10px;">แนะนำตรง Basic (active) : L/T 1 รหัส
                                                             : M/T 1 รหัส</p>
                                                     </li>
                                                     <li>
-                                                        <i class="icofont icofont-hand-right text-info"></i> สิทธิประโยชน์
+                                                        <i class="icofont icofont-hand-right text-info"></i> {{trans('message.p_benefits advantage')}}
                                                         <p style="margin-bottom: 10px;">Matching Leader Bonus ลูก</p>
                                                     </li>
                                                 </ul>

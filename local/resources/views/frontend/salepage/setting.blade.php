@@ -211,7 +211,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-header-text">กำหนดสายข้อมูลการลงทะเบียนสมาชิกใหม่ที่มาจากหน้าเว็บ </h5>
+                    <h5 class="card-header-text">{{trans('message.p_sale page set')}} </h5>
                     @if ($canAccess)
                         <button id="edit-Contact" type="button" onclick="save_type_register()"
                             class="btn btn-primary waves-effect waves-light f-right">

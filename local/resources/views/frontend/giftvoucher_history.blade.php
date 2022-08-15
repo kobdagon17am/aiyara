@@ -18,16 +18,16 @@
               $gv = \App\Helpers\Frontend::get_gitfvoucher(Auth::guard('c_user')->user()->user_name);
 
               ?>
-              <h4 class="m-b-10">รายการ Ai Voucher [ คงเหลือ <b class="text-success">{{ number_format($gv->sum_gv) }}</b> ]</h4>
+              <h4 class="m-b-10">{{trans('message.p_Ai Voucher remain')}} [ {{trans('message.remain')}} <b class="text-success">{{ number_format($gv->sum_gv) }}</b> ]</h4>
             </div>
 
               <div class="col-md-12">
                 <div class="row">
                   <div class="col-md-3">
                     <select class="form-control" id="status" >
-                      <option value="">ทั้งหมด</option>
-                      <option value="not_expiry_date">ยังไม่หมดอายุ</option>
-                      <option value="expiry_date">หมดอายุ</option>
+                      <option value="">{{trans('message.p_Ai Voucher all')}}</option>
+                      <option value="not_expiry_date">{{trans('message.p_Ai Voucher not expired')}}</option>
+                      <option value="expiry_date">{{trans('message.p_Ai Voucher expired')}}</option>
                     </select>
                   </div>
 
@@ -64,7 +64,7 @@
           <div class="card-header">
             <div class="row">
 
-              <h4 class="m-b-10">ประวัติความเคลื่อนไหว Ai Voucher </h4>
+              <h4 class="m-b-10">{{trans('message.p_Ai Voucher history')}} </h4>
             </div>
 
               <div class="col-md-12">
@@ -136,19 +136,19 @@
 
       columns: [{
                         data: 'pro_sdate',
-                        title: '<center>วันที่ได้รับ</center>',
+                        title: '<center>{{trans('message.p_Ai Voucher received day')}}</center>',
                         className: 'text-center'
                     },
 
                     {
                         data: 'pro_edate',
-                        title: 'วันหมดอายุ',
+                        title: '{{trans('message.p_Ai Voucher expired day')}}',
                         className: 'text-center'
                     },
 
                     {
                         data: 'expri',
-                        title: 'วัน',
+                        title: '{{trans('message.p_Ai Voucher date')}}',
                         className: 'text-center'
                     },
 
@@ -156,7 +156,7 @@
 
                     {
                         data: 'detail',
-                        title: '<center>รายละเอียด</center>',
+                        title: '<center>{{trans('message.p_Ai Voucher detail')}}</center>',
                         className: 'text-center'
                     },
 
@@ -174,7 +174,7 @@
 
                     {
                         data: 'banlance',
-                        title: '<center>คงเหลือ</center>',
+                        title: '<center>{{trans('message.remain')}}</center>',
                         className: 'text-right'
                     },
           ],
@@ -252,7 +252,7 @@
 
                     {
                         data: 'status',
-                        title: '<center>Stattus</center>',
+                        title: '<center>Status</center>',
                         className: 'text-center'
                     },
           ],order:[[0,'DESC']],

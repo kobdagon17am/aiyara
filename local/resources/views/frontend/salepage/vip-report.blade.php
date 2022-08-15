@@ -11,10 +11,10 @@
                     <thead>
                         <tr>
                             <td>#</td>
-                            <td>ชื่อ</td>
-                            <td>เบอร์โทร</td>
-                            <td>อีเมล</td>
-                            <td>เป็นสมาชิกตั้งแต่</td>
+                            <td>{{trans('message.p_sale page name')}}</td>
+                            <td>{{trans('message.p_sale page phone number')}}</td>
+                            <td>{{trans('message.p_sale page email')}}</td>
+                            <td>{{trans('message.p_sale page since member')}}</td>
                         </tr>
                     </thead>
                 </table>
@@ -30,14 +30,14 @@
                 <table id="orders-datatable" class="table table-striped table-bordered w-100">
                     <thead>
                         <tr>
-                            <th>ชื่อ</th>
-                            <th>วันที่สั่งซื้อ</th>
-                            <th>เลขใบสั่งซื้อ</th>
+                            <th>{{trans('message.p_sale page name')}}</th>
+                            <th>{{trans('message.p_history order date')}}</th>
+                            <th>{{trans('message.p_history po number')}}</th>
                             <th>Tracking</th>
-                            <th>ยอดชำระ</th>
+                            <th>{{trans('message.p_history amount')}}</th>
                             <th>Drop Ship</th>
-                            <th>ชำระโดย</th>
-                            <th>สถานะสินค้า</th>
+                            <th>{{trans('message.p_history paid')}}</th>
+                            <th>status</th>
                             <th>#</th>
                         </tr>
                     </thead>

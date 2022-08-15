@@ -22,7 +22,7 @@
           </span>
           <input type="text" id="coupon_code" class="form-control" placeholder="รหัสสินค้าโปรโมชั่น" required="">
           <span class="input-group-addon btn btn-warning" style="background-color: #FFB64D;" id="basic-addon12" onclick="coupon()">
-            <span class="">ใช้งาน</span>
+            <span class="">{{trans('message.p_qualification use')}}</span>
           </span>
         </div>
 
@@ -63,8 +63,8 @@
 
                         <td><label class="label label-inverse-info-border"><b>{{ date('d/m/Y',strtotime($value->pro_edate)) }}</b></label></td>
 
-                        <td><span class="label label-success">ใช้งานได้</span></td>
-                        <td><button class="btn btn-success btn-sm"  onclick="coupon('{{$value->promotion_code}}')"><i class="icofont icofont-check-circled"></i> ใช้งาน </button></td>
+                        <td><span class="label label-success">{{trans('message.p_qualification it works')}}</span></td>
+                        <td><button class="btn btn-success btn-sm"  onclick="coupon('{{$value->promotion_code}}')"><i class="icofont icofont-check-circled"></i> {{trans('message.p_qualification use')}} </button></td>
                       </tr>
                       @endforeach
 
@@ -74,7 +74,7 @@
                   </table>
 
                 </div>
-                <span class="text-danger" style="font-size: 12px">*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม Ai-Stockist</span>
+                <span class="text-danger" style="font-size: 12px">*{{trans('message.p_qualification dis pro')}}</span>
               </div>
             </div>
 
@@ -107,7 +107,7 @@
         <div class="card-block">
           <div class="row">
             <div class="col-md-5">
-             <h5 class="m-b-20" style="color: #000">คะแนนสะสม</h5>
+             <h5 class="m-b-20" style="color: #000">{{trans('message.p_qualification coll pont')}}</h5>
 
            </div>
            <div class="col-md-7">
@@ -126,7 +126,7 @@
       <div class="card-block">
         <div class="row">
           <div class="col-md-6">
-           <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
+           <h5 class="m-b-10" style="color: #000">{{trans('message.p_qualification remaining')}}</h5>
 
          </div>
          <div class="col-md-6">
@@ -134,7 +134,7 @@
         </div>
       </div>
 
-      <p style="font-size: 15px;color: #000;">สถานะรักษาคุณสมบัติรายเดือนของคุณ </p>
+      <p style="font-size: 15px;color: #000;">{{trans('message.p_qualification Your monthly qualification status')}} </p>
 
       @if(empty(Auth::guard('c_user')->user()->pv_mt_active) || (strtotime(Auth::guard('c_user')->user()->pv_mt_active) < strtotime(date('Ymd')) ))
       <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_mt_active)) }}" style="font-size: 14px">Not Active </span>  </p>
@@ -152,7 +152,7 @@
     <div class="card-block">
       <div class="row">
         <div class="col-md-6">
-         <h5 class="m-b-10" style="color: #000">คงเหลือ</h5>
+         <h5 class="m-b-10" style="color: #000">{{trans('message.p_qualification remaining')}}</h5>
 
        </div>
        <div class="col-md-6">
@@ -160,7 +160,7 @@
       </div>
     </div>
 
-    <p style="font-size: 15px;color: #000;">สถานะรักษาคุณสมบัติท่องเที่ยวของคุณ </p>
+    <p style="font-size: 15px;color: #000;">{{trans('message.p_qualification travel status')}} </p>
 
     <?php
     $pv_tv_active = Auth::guard('c_user')->user()->pv_tv_active;
@@ -195,7 +195,7 @@
      </div>
    </div>
 
-   <p class="m-b-0" {{-- style="color:#000" --}}>จำนวนคะแนนคงเหลือ</p>
+   <p class="m-b-0" {{-- style="color:#000" --}}>{{trans('message.p_qualification Remaining Points')}}</p>
  </div>
 </div>
 @elseif($type==5)
@@ -214,7 +214,7 @@
     </div>
   </div>
 
-  <p class="m-b-0">จำนวน Ai Voucher คงเหลือ</p>
+  <p class="m-b-0">{{trans('message.p_qualification Balance of Ai Voucher')}}  </p>
 </div>
 </div>
 @elseif($type==6)
@@ -223,7 +223,7 @@
   <div class="card-block">
     <div class="row">
       <div class="col-md-5">
-       <h5 class="m-b-20" style="color: #000">คะแนนสะสม</h5>
+       <h5 class="m-b-20" style="color: #000">{{trans('message.p_qualification coll pont')}}</h5>
      </div>
      <div class="col-md-7">
       <h3 class="text-right" style="color: #000" >{{-- <i class="ti-wallet f-left"></i> --}}<span>{{ number_format(Auth::guard('c_user')->user()->pv) }} PV</span></h3>

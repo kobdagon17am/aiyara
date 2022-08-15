@@ -18,10 +18,10 @@
 
         <div class="row">
           <div class="col-6">
-            <h4>ติดต่อ/สอบถาม</h4>
+            <h4>{{trans('message.contactus')}}</h4>
           </div>
           <div class="col-6">
-            <button type="button" class="btn btn-primary waves-effect f-right" data-toggle="modal" data-target="#large-Modal"> <i class="fa fa-plus-square"></i> สอบถาม</button>
+            <button type="button" class="btn btn-primary waves-effect f-right" data-toggle="modal" data-target="#large-Modal"> <i class="fa fa-plus-square"></i> {{trans('message.p_contact quest')}}</button>
           </div>
 
 
@@ -32,7 +32,7 @@
                 <div class="modal-content">
 
                   <div class="modal-header">
-                    <h4 class="modal-title">สอบถาม</h4>
+                    <h4 class="modal-title">{{trans('message.p_contact us add question')}}</h4>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
@@ -44,12 +44,12 @@
 
                     @csrf
                     <div class="form-group">
-                      <input type="text" name="subject" class="form-control"  wi placeholder="หัวข้อ" required="">
+                      <input type="text" name="subject" class="form-control"  wi placeholder="{{trans('message.p_contact us topic')}}" required="">
 
 
                     </div>
 
-                    <textarea rows="5" cols="5" class="form-control" name="question" placeholder="รายละเอียด"></textarea>
+                    <textarea rows="5" cols="5" class="form-control" name="question" placeholder="{{trans('message.p_contact us detail')}}"></textarea>
 
 
 
