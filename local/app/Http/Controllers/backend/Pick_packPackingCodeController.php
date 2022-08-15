@@ -333,16 +333,18 @@ class Pick_packPackingCodeController extends Controller
     }
 
     public function packing_list_for_fifo_report(Request $req){
-
-      if(isset($req->startDate) && isset($req->endDate)){
-        $startDate = $req->startDate;
-        $endDate = $req->endDate;
+      // dd($req->all());
+      if(isset($req->startPayDate) && isset($req->endPayDate)){
+        $startDate = $req->startPayDate;
+        $endDate = $req->endPayDate;
       }else{
         $startDate = date('Y-m-d');
+        $endDate = date('Y-m-d');
       }
 
       $pick_code = DB::table('db_pick_pack_packing_code')->whereIn('status',[4,5])
-      // ->where('sent_date','>=',$startDate)
+      ->where('sent_date','>=',$startDate)
+      ->where('sent_date','<=',$endDate)
       ->pluck('id')->toArray();
       $sTable = DB::table('db_consignments')->whereIn('pick_pack_requisition_code_id_fk',$pick_code)->groupBy('pick_pack_requisition_code_id_fk')->orderBy('recipient_code','asc')->get();
       // dd($sTable);
