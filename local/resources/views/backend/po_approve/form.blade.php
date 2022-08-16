@@ -785,7 +785,7 @@
                         {
                             data: 'customer_name',
                             title: '<center>ลูกค้า </center>',
-                            className: 'text-left w100 '
+                            className: 'text-left w150 '
                         },
                         {
                             data: 'code_order',
@@ -794,12 +794,17 @@
                         },
                         {
                             data: 'aicash_remain',
-                            title: '<center>ยอด Ai-Cash <br> คงเหลือล่าสุด</center>',
+                            title: '<center>ยอด Ai-Cash <br> ก่อนชำระ</center>',
                             className: 'text-center'
                         },
                         {
                             data: 'aicash_amt',
-                            title: '<center>ยอด Ai-Cash <br>ที่เติมครั้งนี้</center>',
+                            title: '<center>ยอด Ai-Cash <br>ที่ชำระ</center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'aicash_banlance',
+                            title: '<center>ยอด Ai-Cash <br>หลังชำระ</center>',
                             className: 'text-center'
                         },
                         {
@@ -807,29 +812,29 @@
                             title: '<center>พนักงาน <br> ที่ดำเนินการ </center>',
                             className: 'text-center'
                         },
+                        // {
+                        //     data: 'pay_type_id_fk',
+                        //     title: '<center>รูปแบบการชำระเงิน </center>',
+                        //     className: 'text-center'
+                        // },
+                        // {
+                        //     data: 'total_amt',
+                        //     title: '<center>ยอดชำระเงิน </center>',
+                        //     className: 'text-center'
+                        // },
+                        // {
+                        //     data: 'status',
+                        //     title: '<center>สถานะ </center>',
+                        //     className: 'text-center'
+                        // },
+                        // {
+                        //     data: 'approver',
+                        //     title: '<center>ผู้อนุมัติ</center>',
+                        //     className: 'text-center'
+                        // },
                         {
-                            data: 'pay_type_id_fk',
-                            title: '<center>รูปแบบการชำระเงิน </center>',
-                            className: 'text-center'
-                        },
-                        {
-                            data: 'total_amt',
-                            title: '<center>ยอดชำระเงิน </center>',
-                            className: 'text-center'
-                        },
-                        {
-                            data: 'status',
-                            title: '<center>สถานะ </center>',
-                            className: 'text-center'
-                        },
-                        {
-                            data: 'approver',
-                            title: '<center>ผู้อนุมัติ</center>',
-                            className: 'text-center'
-                        },
-                        {
-                            data: 'updated_at',
-                            title: '<center>วันที่เติม Ai-Cash</center>',
+                            data: 'created_at',
+                            title: '<center>วันที่ชำระ</center>',
                             className: 'text-center'
                         },
                     ],
