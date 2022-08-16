@@ -133,7 +133,7 @@
                 <div class="col-md-8">
                   <select name="product_in_cause_id_fk" class="form-control select2-templating " id='import' required onchange="g_import('import')">
                     <option value="">Select</option>
-                    @if(@$Product_in_cause) 
+                    @if(@$Product_in_cause)
                     @foreach(@$Product_in_cause AS $r)
                     <option value="{{$r->id}}" {{ (@$r->id==@$sRow->product_in_cause_id_fk)?'selected':'' }}>
                       {{$r->txt_desc}}
@@ -164,7 +164,7 @@
                   </select>
                 </div>
               </div>
-<!-- 
+<!--
               <div class="form-group row">
                 <label for="po_invoice_no" class="col-md-3 col-form-label">เลขที่ PO : </label>
                 <div class="col-md-8">
@@ -440,9 +440,15 @@
                     style="background-color: #f2f2f2;">
                   <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver">
                   @else
+                 @if(@$sRow->approve_status != 0)
                   <input class="form-control" type="text" value="{{ @$Approver[0]->name }}" readonly
                     style="background-color: #f2f2f2;">
-                  <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver">
+                    <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver">
+                  @else
+                  <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly
+                  style="background-color: #f2f2f2;">
+                  <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver">
+                  @endif
                   @endif
 
                 </div>

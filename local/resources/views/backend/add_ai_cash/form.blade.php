@@ -1155,7 +1155,7 @@
                 timepicker: true,
                 datepicker: true,
                 weeks: false,
-                minDate: 0,
+                // minDate: 0,
             });
 
             $('.transfer_money_datetime').change(function(event) {

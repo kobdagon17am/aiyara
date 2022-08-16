@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0 font-size-18"> ยอดรวมการขายที่เกิดขึ้นจริงทั้งของไทย และ กัมพูชา </h4>
+                <h4 class="mb-0 font-size-18"> ยอดรวมการเติม Aicash รับเข้า-จ่ายออก </h4>
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
 
                                     <div class="col-md-2 " style="display:none;">
                                         <div class="form-group row">
-                                            <select id="business_location"  name="business_location"
+                                            <select id="business_location" name="business_location"
                                                 class="form-control select2-templating ">
                                                 {{-- <option value="">Business Location</option> --}}
                                                 @if (@$business_location)
@@ -76,7 +76,7 @@
 
                                     <div class="col-md-3 " style="display:none;">
                                         <div class="form-group row">
-                                            <select id="action_user"  name="action_user"
+                                            <select id="action_user" name="action_user"
                                                 class="form-control select2-templating ">
                                                 <option value="">ผู้ทำรายการ</option>
                                                 <option value="v3">
@@ -170,8 +170,16 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table id="thai_cambodia_aicash" class="table table-bordered  thai_cambodia"
+                            <table id="thai_cambodia_aicash" class="table table-centered table-nowrap table-hover w-100 thai_cambodia"
                                 style="width: 100%;">
+                                <tfoot>
+                                  <tr>
+                                      <th colspan="3" style="text-align: right !important"></th>
+                                      <th style="text-align: right !important"></th>
+                                      <th style="text-align: right !important"></th>
+                                      <th style="text-align: right !important"></th>
+                                  </tr>
+                              </tfoot>
                             </table>
                         </div>
                         <br>
@@ -238,13 +246,16 @@
 
 @section('script')
     <script>
+
+$(document).ready(function() {
+        var sU = "{{ @$sU }}";
+        var sD = "{{ @$sD }}";
+        var total_thai_cambodia_aicash;
+
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.00';
         }
 
-        var sU = "{{ @$sU }}";
-        var sD = "{{ @$sD }}";
-        var total_thai_cambodia_aicash;
         $(function() {
             total_thai_cambodia_aicash = $('#thai_cambodia_aicash').DataTable({
                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
@@ -255,7 +266,7 @@
                 // scrollX: true,
                 // ordering: false,
                 // scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
+                iDisplayLength: 100,
                 ajax: {
                     url: '{{ route('backend.total_thai_cambodia_aicash_full.datatable') }}',
                     data: function(d) {
@@ -299,7 +310,55 @@
                         className: 'text-right'
                     },
                 ],
-                "footerCallback": function(row, data, start, end, display) {}
+                // order: [
+                //     [0, 'DESC']
+                // ],
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    got_total = api
+                        .column(3, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        lost_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        total_balance_total = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(3).footer()).html(numberWithCommas(got_total));
+                    $(api.column(4).footer()).html(numberWithCommas(lost_total));
+                    $(api.column(5).footer()).html(numberWithCommas(total_balance_total));
+                }
+
             });
 
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
@@ -307,6 +366,8 @@
             });
 
         });
+
+      });
 
         // var sU = "{{ @$sU }}";
         // var sD = "{{ @$sD }}";

@@ -159,7 +159,7 @@ class General_receiveController extends Controller
       }else{
         $Approver  = DB::select(" select * from ck_users_admin where id=".@\Auth::user()->id." ");
       }
-       
+
 
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
@@ -242,7 +242,7 @@ class General_receiveController extends Controller
           $sRow->product_in_cause_id_fk    = request('product_in_cause_id_fk');
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->product_status_id_fk    = request('product_status_id_fk');
-          
+
           if(request('product_in_cause_id_fk')==4){
               $sRow->description    = request('description');
           }else{
@@ -286,7 +286,7 @@ class General_receiveController extends Controller
           // `approve_status` int(11) DEFAULT '0' COMMENT '1=อนุมัติแล้ว',
         if(request('approve_status')=='1'){
 
-// นำเข้า Stock 
+// นำเข้า Stock
                 $value=DB::table('db_stocks')
                 ->where('business_location_id_fk', request('business_location_id_fk'))
                 ->where('branch_id_fk', request('branch_id_fk'))
@@ -418,7 +418,8 @@ class General_receiveController extends Controller
           if(request('approve_status')=='1'){
             return redirect()->to(url("backend/general_receive"));
           }else{
-            return redirect()->to(url("backend/general_receive/".$sRow->id."/edit"));
+            // return redirect()->to(url("backend/general_receive/".$sRow->id."/edit"));
+            return redirect()->to(url("backend/general_receive"));
           }
 
       } catch (\Exception $e) {
@@ -469,7 +470,7 @@ class General_receiveController extends Controller
             $sTable = \App\Models\Backend\General_receive::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
 
           }
-           
+
         }
 
       // $sTable = \App\Models\Backend\General_receive::search()
