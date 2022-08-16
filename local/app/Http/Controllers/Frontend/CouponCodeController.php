@@ -105,7 +105,7 @@ public static function dt_coupon_code(Request $rs)
        WHEN '{$rs->status}' = 1 THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate >= '{$date}'
        WHEN '{$rs->status}' = 2 THEN db_promotion_cus.pro_status = 2
        WHEN '{$rs->status}' = 'expiry_date' THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate < '{$date}'
-       END"));
+       END"))->get();
 
         $sQuery = DataTables::of($sTable);
 
@@ -129,7 +129,7 @@ public static function dt_coupon_code(Request $rs)
               $code = '<label class="label label-inverse-primary"><b style="color:#000">'.$row->promotion_code.'</b></label>' ;
                 return $code;
             })
-            ->addColumn('detail', function ($row) {
+            ->addColumn('name_thai', function ($row) {
               $detail = '<b>'.$row->name_thai.'</b>';
               return $detail;
             })
@@ -163,7 +163,7 @@ public static function dt_coupon_code(Request $rs)
                  return $used;
              })
 
-            ->rawColumns(['date','expiry_date','detail','status','code','used'])
+            ->rawColumns(['date','expiry_date','name_thai','status','code','used'])
             ->make(true);
     }
 

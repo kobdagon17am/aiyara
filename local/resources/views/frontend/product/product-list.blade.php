@@ -137,7 +137,12 @@
       <p style="font-size: 15px;color: #000;">{{trans('message.p_qualification Your monthly qualification status')}} </p>
 
       @if(empty(Auth::guard('c_user')->user()->pv_mt_active) || (strtotime(Auth::guard('c_user')->user()->pv_mt_active) < strtotime(date('Ymd')) ))
-      <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="{{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_mt_active)) }}" style="font-size: 14px">Not Active </span>  </p>
+      <p class="m-b-0"><span class="label label-danger" data-toggle="tooltip" data-placement="right" data-original-title="@if(empty(Auth::guard('c_user')->user()->pv_mt_active) || Auth::guard('c_user')->user()->pv_mt_active == '0000-00-00')
+        -
+        @else
+        {{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_mt_active)) }}
+      @endif
+        " style="font-size: 14px">Not Active </span>  </p>
       @else
 
       <p class="m-b-0"><span class="label label-success" style="font-size: 14px">Active ถึง {{ date('d/m/Y',strtotime(Auth::guard('c_user')->user()->pv_mt_active)) }} </span>  </p>

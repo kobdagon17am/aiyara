@@ -400,7 +400,7 @@ class RunPvController extends Controller
                         // dd();
 
                         if ($last_upline_type == 'A') {
-                            $add_pv = $data_user->pv_a + $pv;
+                            $add_pv = $data_user->pv_a - $pv;
                             $update_pv = DB::table('customers')
                                 ->where('user_name', $customer_id)
                                 ->update(['pv_a' => $add_pv]);

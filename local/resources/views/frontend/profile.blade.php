@@ -400,7 +400,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                         className: 'text-center'
                     },
                     {
-                        data: 'detail',
+                        data: 'name_thai',
                         title: '<center>Description / Promotion</center>',
                         className: 'text-center'
                     },

@@ -28,6 +28,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
+
+
       if (Auth::guard('c_user')->user()->user_name) {
         $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package(Auth::guard('c_user')->user()->user_name);
       }
