@@ -185,12 +185,21 @@ class Member_pvController extends Controller
            [
             'url' => $url,
            'file' => $f_name,
-           'updated_at' => date('Y-m-d H:i:s'),
-           'approve_date' => date('Y-m-d'),
+           'approve_date' => null,
            'comment' => $data->comment.' (ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดยพนักงาน)',
-           'approver' => Auth::user()->id
+           'approver' => null,
+           'regis_doc_status' => 0,
+           'created_at' => date('Y-m-d H:i:s'),
+           'updated_at' => date('Y-m-d H:i:s')
            ]
             );
+
+            DB::table('customers')
+            ->where('id',$customer_id)
+            ->update([
+              'regis_doc4_status' => 0
+            ]);
+
                   // $update_use->regis_doc4_status = 0;
             }
                     }
