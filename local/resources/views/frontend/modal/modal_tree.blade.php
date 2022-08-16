@@ -49,7 +49,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
     <tr>
 
       <td><strong>@lang('message.Monthly_Features_Active_To')</strong></td>
-      <td>@if(empty($data->pv_mt_active))
+      <td>@if(empty($data->pv_mt_active) || $data->pv_mt_active == '0000-00-00')
         -
         @else
         {{ date('d/m/Y',strtotime($data->pv_mt_active)) }}
