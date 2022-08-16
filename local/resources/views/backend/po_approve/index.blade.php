@@ -679,7 +679,7 @@
                                         sD = 1;
                                     }
                                     var str_U = '';
-                                    if (sU == '1' && aData['pay_with_other_bill_select'] != 1) {
+                                    if (sU == '1' && aData['pay_with_other_bill_select'] != 1 && aData['code_order']!=null && aData['code_order']!='') {
                                         str_U = '<a href="{{ URL('backend/po_approve/form_aicash') }}/' + aData[
                                                 'id'] +
                                             '" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
