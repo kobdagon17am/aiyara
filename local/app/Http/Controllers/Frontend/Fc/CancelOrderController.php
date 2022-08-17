@@ -257,7 +257,7 @@ class CancelOrderController extends Controller
                 }
               }
 
-            $resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
+            //$resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 5) {
           } elseif ($type_id == 6) { // Course
             $update_couse = DB::table('course_event_regis')

@@ -43,10 +43,10 @@ class DirectSponsorController extends Controller
 
         $sQuery = DataTables::of($sTable);
         return $sQuery
-
-            ->addColumn('id', function ($row) {
-                return $row->id;
-            })
+           ->addIndexColumn()
+            // ->addColumn('id', function ($row) {
+            //     return $row->id;
+            // })
             ->addColumn('introduce_type', function ($row) {
                 return $row->introduce_type;
             })
