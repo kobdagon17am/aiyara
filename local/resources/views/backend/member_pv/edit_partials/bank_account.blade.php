@@ -82,10 +82,12 @@
               <h4 class="p_desc_4">{{ __('message.file_types.4') }}</h4>
               @if($file_img)
               <p> <img id="file_path4" class="grow img-fluid" src="{{asset($file_img->url.'/'.$file_img->file)}}" width="50%" style="cursor: pointer;" > </p>
-              <div class="col-md-4">
-              <input type="file" name="file_bank" class="form-control">
-              </div>
               @endif
+
+              <div class="col-md-4">
+                <input type="file" name="file_bank" class="form-control">
+                </div>
+
             </div>
           </div>
 
