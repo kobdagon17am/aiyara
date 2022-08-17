@@ -344,7 +344,8 @@ class Pick_packPackingCodeController extends Controller
 
       $pick_code = DB::table('db_pick_pack_packing_code')->whereIn('status',[4,5])
       ->where('sent_date','>=',$startDate)
-      ->where('sent_date','<=',$endDate)
+      // ->where('sent_date','<',$endDate)
+      // ->whereBetween('sent_date',[$startDate,$endDate])
       ->pluck('id')->toArray();
       $sTable = DB::table('db_consignments')->whereIn('pick_pack_requisition_code_id_fk',$pick_code)->groupBy('pick_pack_requisition_code_id_fk')->orderBy('recipient_code','asc')->get();
       // dd($sTable);
