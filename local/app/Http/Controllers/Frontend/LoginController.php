@@ -30,7 +30,7 @@ class LoginController extends Controller
           session()->forget('access_from_admin');
           Auth::guard('c_user')->login($get_users);
 
-          if($get_users->business_location_id == 1){
+          if($get_users->business_location_id == 1 || $get_users->business_location_id == ''){
             session()->put('locale','th');
           }else{
             session()->put('locale','en');
