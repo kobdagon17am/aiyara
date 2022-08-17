@@ -31,7 +31,7 @@ $count_sponser = 0;
                         <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr class="info" style='text-align:center;'>
-                                    {{-- <th class="text-center" rowspan="2">#</th> --}}
+                                    <th class="text-center" rowspan="2">#</th>
                                     <th class="text-center" rowspan="2">ID</th>
                                     <th class="text-center" rowspan="2">Line</th>
                                     <th class="text-center" rowspan="2">Buniness Name</th>
@@ -205,6 +205,7 @@ $count_sponser = 0;
                 processing: true,
                 serverSide: true,
                 searching: true,
+                paging: false,
                 ajax: {
                     url: '{{ route('dt_sponsor') }}',
                     // data: function(d) {
@@ -216,9 +217,8 @@ $count_sponser = 0;
 
 
                 columns: [
-                    {
-                        data: 'user_name',
-                    },
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex', className:'text-center'},
+
                     {
                         data: 'introduce_type',
                     },
