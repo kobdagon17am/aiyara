@@ -4,6 +4,7 @@ use DateTime;
 use DateInterval;
 use DB;
 use Session;
+use AUth;
 
 class General {
 
@@ -24,6 +25,16 @@ class General {
         // }
 	}
 
+  static function check_permission_manager() {
+      $per = 0;
+      if(auth()->user()->permission==1){
+        $per = 1;
+      }
+
+      return $per;
+	}
+
+
 	static function check_export_excel_customer($id,$packing_code_id)
     {
 
@@ -43,7 +54,7 @@ class General {
 		db_delivery.orders_id_fk
 		FROM
 		db_delivery
-		WHERE 
+		WHERE
 		db_delivery.id = ".@$id." AND set_addr_send_this=1 ");
 		$recipient_name = @$delivery[0]->recipient_name?@$delivery[0]->recipient_name:'';
 		$addr_send = @$delivery[0]->addr_send." ".@$delivery[0]->postcode;
@@ -61,9 +72,9 @@ class General {
 			$receipt = @$delivery[0]->receipt;
 	  }
 
-				$sTable = DB::select(" 
+				$sTable = DB::select("
 
-			SELECT 
+			SELECT
 			db_pick_pack_packing.id,
 			db_pick_pack_packing.p_size,
 			db_pick_pack_packing.p_weight,
@@ -72,21 +83,21 @@ class General {
 			db_pick_pack_packing.packing_code as packing_code,
 			db_delivery.id as db_delivery_id,
 			db_delivery.packing_code as db_delivery_packing_code
-			FROM `db_pick_pack_packing` 
+			FROM `db_pick_pack_packing`
 			LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-			WHERE 
-			db_pick_pack_packing.packing_code_id_fk =".$packing_code_id." 
+			WHERE
+			db_pick_pack_packing.packing_code_id_fk =".$packing_code_id."
 			AND db_pick_pack_packing.delivery_id_fk = ".$id."
 			ORDER BY db_pick_pack_packing.id
 			");
 
-	
+
 
 			foreach ($sTable as $key => $row) {
 
 			$sum_amt = 0 ;
 			$r_ch_t = '';
-			$fid_arr = explode(',',$receipt); 
+			$fid_arr = explode(',',$receipt);
 			$order_arr = DB::table('db_orders')->select('id')->whereIn('code_order',$fid_arr)->pluck('id')->toArray();
 			$Products = DB::table('db_pay_requisition_002')
 			->select('db_pay_requisition_002.product_name','db_pay_requisition_002.product_unit','db_pay_requisition_002_item.*')
@@ -95,7 +106,7 @@ class General {
 			->whereIn('db_pay_requisition_002_item.order_id',$order_arr)
 			->groupBy('product_id_fk')
 			->get();
-		
+
 			if(@$Products){
 
 			$arr_re_002_item = [];
@@ -104,7 +115,7 @@ class General {
 
 				if(!empty($value->product_id_fk)){
 
-				// หา max time_pay ก่อน 
+				// หา max time_pay ก่อน
 				$r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
 			// Check ว่ามี status=2 ? (ค้างจ่าย)
 				$r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
@@ -115,17 +126,17 @@ class General {
 				//  }
 				//  วุฒิเพิ่มมา
 				$db_pay_requisition_002 = DB::table('db_pay_requisition_002')
-							->where('product_id_fk',$value->product_id_fk) 
+							->where('product_id_fk',$value->product_id_fk)
 							->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
 							->orderBy('time_pay', 'desc')
 							->first();
-							
+
 							$db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
 							->where('product_id_fk',$value->product_id_fk)
 							->where('order_id',$value->order_id)
 							->where('requisition_002_id',@$db_pay_requisition_002->id)
 							->first();
-						
+
 								if($db_pay_requisition_002_item->amt_remain > 0){
 									 $check = $check+1;
 									array_push($arr_re_002_item, $db_pay_requisition_002_item->order_id);
@@ -143,7 +154,7 @@ class General {
 							->sum('db_pay_requisition_002_item.amt_get');
 
 				$sum_amt += $amt_get;
-		
+
 			}
 			}
 
@@ -161,11 +172,11 @@ class General {
 						$check = 0;
 					}
 				}
-			
+
 			}else{
 				$check = 0;
 			}
-		
+
 			// if($id==26){
 			// 	dd($receipt);
 			// 	// dd($arr_re_002_item);
@@ -1806,7 +1817,7 @@ class General {
 									   $sum_want_amt+=($order_product2_data->amt*$p->product_amt);
 									 }
 							   }
-						   
+
 							 }
 
 							 $amt_get_data = 0;

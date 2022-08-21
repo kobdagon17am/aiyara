@@ -235,6 +235,7 @@ class DeliveryPackingCodeController extends Controller
           $p = '
           <b class="" style="color:green;">ยืนยันแล้ว</b>
           <br> โดย : '.$user_name.'
+          <br> '.$row->updated_at.'
           ';
         }else{
           $p = '

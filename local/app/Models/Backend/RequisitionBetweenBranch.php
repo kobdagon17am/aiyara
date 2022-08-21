@@ -28,11 +28,11 @@ class RequisitionBetweenBranch extends Model
      */
     public function scopeWaitApproveByBranch($query)
     {
-        // auth()->user()->branch_id_fk
         return $query->when(auth()->user()->permission != 1, function ($query) {
                 return $query->where(function ($query) {
-                    $query->where('to_branch_id', auth()->user()->branch_id_fk)
-                        ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
+                    // $query->where('to_branch_id', auth()->user()->branch_id_fk);
+                        // ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
+                        $query->Where('from_branch_id', auth()->user()->branch_id_fk);
                     });
             })->where('is_approve', static::WAIT_APPROVE);
     }
@@ -42,8 +42,9 @@ class RequisitionBetweenBranch extends Model
         // auth()->user()->branch_id_fk
         return $query->when(auth()->user()->permission != 1, function ($query) {
             return $query->where(function ($query) {
-                $query->where('to_branch_id', auth()->user()->branch_id_fk)
-                    ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
+                // $query->where('to_branch_id', auth()->user()->branch_id_fk)
+                //     ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
+                $query->Where('from_branch_id', auth()->user()->branch_id_fk);
                 });
             })->where('is_approve', static::APPROVED);
     }

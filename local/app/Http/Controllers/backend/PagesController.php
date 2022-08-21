@@ -902,7 +902,7 @@ class PagesController extends Controller{
                             "con_arr"=>@$arr_con[@$recipient_code]
                           );
                           Consignments_import::insertData($insertData);
-                          
+
                          $i++;
 
                     }
@@ -938,7 +938,7 @@ class PagesController extends Controller{
           //     db_consignments.delivery_id_fk=db_consignments_import.delivery_id_fk
 
           //     ");
-           
+
           return redirect()->to(url("backend/pick_warehouse/".@$request->id."/qr"));
 
         }

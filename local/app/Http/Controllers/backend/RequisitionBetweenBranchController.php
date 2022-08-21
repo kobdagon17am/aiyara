@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Backend\RequisitionBetweenBranch;
 use Yajra\DataTables\DataTables;
+use App\Helpers\General;
 
 class RequisitionBetweenBranchController extends Controller
 {
@@ -97,7 +98,9 @@ class RequisitionBetweenBranchController extends Controller
 
     public function dtListWaitApprove(Request $request)
     {
-      $wait_approves = RequisitionBetweenBranch::with('requisition_details:requisition_between_branch_id,product_name,amount')->waitApproveByBranch();
+
+        $wait_approves = RequisitionBetweenBranch::with('requisition_details:requisition_between_branch_id,product_name,amount')->waitApproveByBranch();
+
 
       return DataTables::of($wait_approves)
         ->editColumn('from_branch_id', function ($wait_approve) {

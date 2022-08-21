@@ -9,7 +9,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -81,7 +81,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -95,7 +95,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         $sC = @$menu_permit->c==1?'':'display:none;';
         $sU = @$menu_permit->u==1?'':'display:none;';
@@ -105,10 +105,10 @@
       }
       // echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;     
-      // echo  @$menu_permit->can_packing_list;     
-      // echo  @$menu_permit->can_payproduct;     
-      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";     
+      // echo $menu_id;
+      // echo  @$menu_permit->can_packing_list;
+      // echo  @$menu_permit->can_payproduct;
+      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";
    ?>
 
 <div class="row">
@@ -120,7 +120,7 @@
 
         <div class="myBorder" >
 
-            
+
 @if(@\Auth::user()->permission==1)
 
               <div class="row" >
@@ -204,12 +204,12 @@
                          @if(@$receipt)
                           {{-- @foreach(@$receipt AS $r)
                             <option value="{{$r->receipt}}" >
-                              {{$r->receipt}} 
+                              {{$r->receipt}}
                             </option>
                           @endforeach --}}
                           @foreach(@$receipt AS $r)
                           <option value="{{$r->code_order}}" >
-                            {{$r->code_order}} 
+                            {{$r->code_order}}
                           </option>
                         @endforeach
                         @endif
@@ -236,7 +236,7 @@
 
                   </div>
                 </div>
-              </div> 
+              </div>
 
               <div class="row" >
                 <div class="col-md-6 " >
@@ -245,7 +245,7 @@
                      <div class="col-md-9 d-flex">
                       <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="" />
                       <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="" />
-                    </div> 
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-6 " >
@@ -278,12 +278,12 @@
                     <table id="data-table-packing" class="table table-bordered " style="width: 100%;"></table>
 
                     <br>
-                    
+
                           </div>
                         </div>
                       </div>
                         <div>
-                   <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้ 
+                   <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้
                   </div>
                     </div>
 
@@ -306,7 +306,7 @@
         <p style="color:red;">หากต้องการเปลี่ยน ตำบล,อำเภอ กรุณาเลือกจังหวัดใหม่อีกครั้งเป็นจังหวัดอื่นก่อน หลังจากนั้นกดกลับมาที่จังหวัดของตน</p>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> 
+        </button>
       </div>
       <div class="modal-body">
 
@@ -436,6 +436,26 @@
 </div>
 
 
+<div class="modal" tabindex="-1" id="modal_con_arr" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">หมายเลขพัสดุ (Consignment number)</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal_con_arr_data">
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -446,13 +466,24 @@
 <script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
 <script>
 
+$(document).on('click','.con_arr_data_show',function(){
+        var arr = $(this).attr('con_arr');
+        arr = arr.split(",");
+        var arr_str = '';
+        for(var i=0; i<arr.length;i++){
+          arr_str+=arr[i]+'<br>';
+        }
+        $('.modal_con_arr_data').html(arr_str);
+        $('#modal_con_arr').modal('show');
+      });
+
 var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
 var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
 var sU = "{{@$sU}}"; //alert(sU);
 var sD = "{{@$sD}}"; //alert(sD);
 var oTable;
 
-          
+
           var oTable2;
           $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
@@ -469,7 +500,7 @@ var oTable;
                   // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                   ajax: {
                     url: "{{ url('backend/status_delivery/datatable') }}",
-                   
+
                     data: function ( d ) {
                       d.Where={};
                       $('.myWhere').each(function() {
@@ -504,18 +535,22 @@ var oTable;
                       {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-left ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
                           }else{
                             return '-';
                           }
                       }},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-left ',render: function(d) {
                           return d ;
                       }},
 
-                      {data: 'status_tracking',   title :'<center>สถานะการจัดส่ง </center>', className: 'text-center ',render: function(d) {
+                      {data: 'approve',   title :'ยืนยันที่อยู่จัดส่ง', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+
+                      {data: 'status_tracking',   title :'<center>สถานะรายการ </center>', className: 'text-center ',render: function(d) {
                         return d ;
                       }},
 
@@ -523,9 +558,7 @@ var oTable;
                         return d ;
                       }},
 
-                      {data: 'approve',   title :'ยืนยันการจัดส่ง', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
+
 
                   ],
                   rowCallback: function(nRow, aData, dataIndex){
@@ -545,7 +578,7 @@ $(document).on('click', '.btnSearch01', function(event) {
           var business_location_id_fk = $('#business_location_id_fk').val();
           var branch_id_fk = $('#branch_id_fk').val();
           var receipt = $('#receipt').val();
-          
+
           var customer_id_fk = $('#customer_id_fk').val();
           var bill_sdate = $('#bill_sdate').val();
           var bill_edate = $('#bill_edate').val();
@@ -562,7 +595,7 @@ $(document).on('click', '.btnSearch01', function(event) {
             return false;
           }
 
-            var sU = "{{@$sU}}"; 
+            var sU = "{{@$sU}}";
             var sD = "{{@$sD}}";
             var oTable_001;
             $(function() {
@@ -587,7 +620,7 @@ $(document).on('click', '.btnSearch01', function(event) {
                               receipt:receipt,
                               customer_id_fk:customer_id_fk,
                               bill_sdate:bill_sdate,
-                              bill_edate:bill_edate,                                
+                              bill_edate:bill_edate,
                             },
                           method: 'POST',
                         },
@@ -602,18 +635,22 @@ $(document).on('click', '.btnSearch01', function(event) {
                       {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
                           return d ;
                       }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-center ',render: function(d) {
+                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-left ',render: function(d) {
                           if(d){
                             return d.replace(/ *, */g, '<br>');
                           }else{
                             return '-';
                           }
                       }},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-center ',render: function(d) {
+                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-left ',render: function(d) {
                           return d ;
                       }},
 
-                      {data: 'status_tracking',   title :'<center>สถานะการจัดส่ง </center>', className: 'text-center ',render: function(d) {
+                      {data: 'approve',   title :'ยืนยันที่อยู่จัดส่ง', className: 'text-center ',render: function(d) {
+                          return d ;
+                      }},
+
+                      {data: 'status_tracking',   title :'<center>สถานะรายการ </center>', className: 'text-center ',render: function(d) {
                         return d ;
                       }},
 
@@ -621,9 +658,7 @@ $(document).on('click', '.btnSearch01', function(event) {
                         return d ;
                       }},
 
-                      {data: 'approve',   title :'ยืนยันการจัดส่ง', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
+
 
                   ],
                         rowCallback: function(nRow, aData, dataIndex){
@@ -639,15 +674,15 @@ $(document).on('click', '.btnSearch01', function(event) {
            $(".myloading").hide();
         }, 1500);
 
-       
+
     });
 
-}); 
+});
 
           $(document).ready(function() {
 
           		$('input[type=checkbox]').click(function(event) {
-          	
+
                  setTimeout(function(){
                     if($('.select-info').text()!=''){
                       var str = $('.select-info').text();
@@ -664,7 +699,7 @@ $(document).on('click', '.btnSearch01', function(event) {
                     }
                   }, 500);
 
-                }); 
+                });
 
                 $(document).on('click', '.dt-checkboxes', function(event) {
 
@@ -684,25 +719,25 @@ $(document).on('click', '.btnSearch01', function(event) {
                       }
                     }, 500);
 
-                }); 
+                });
 
-                
+
                 $(document).on('click', '.btnEditAddr', function(event) {
                 	event.preventDefault();
                 	var id = $(this).data('id');
                   var receipt_no = $(this).data('receipt_no');
-                  console.log(id+":"+receipt_no); 
+                  console.log(id+":"+receipt_no);
                 	$.ajax({
 		               type:'POST',
-		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ", 
+		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ",
 		               data:{ _token: '{{csrf_token()}}',id:id,receipt_no:receipt_no },
 		                success:function(data){
-		                     console.log(data); 
+		                     console.log(data);
 		                     // location.reload();
 		                     $('#select_addr_result_edit').html(data);
 
 		                  },
-		                error: function(jqXHR, textStatus, errorThrown) { 
+		                error: function(jqXHR, textStatus, errorThrown) {
 		                    console.log(JSON.stringify(jqXHR));
 		                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
 		                    $(".myloading").hide();
@@ -719,17 +754,17 @@ $(document).on('click', '.btnSearch01', function(event) {
 
 		           if(branch_id_fk != ''){
 		             $.ajax({
-		                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+		                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
 		                  method: "post",
 		                  data: {
 		                    branch_id_fk:branch_id_fk,
-		                    "_token": "{{ csrf_token() }}", 
+		                    "_token": "{{ csrf_token() }}",
 		                  },
 		                  success:function(data)
-		                  { 
+		                  {
 		                   if(data == ''){
-		                       alert('ไม่พบข้อมูลคลัง !!.'); 
-		                       $("#warehouse_id_search").val('').trigger('change'); 
+		                       alert('ไม่พบข้อมูลคลัง !!.');
+		                       $("#warehouse_id_search").val('').trigger('change');
 		                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
 		                   }else{
 		                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
@@ -741,14 +776,14 @@ $(document).on('click', '.btnSearch01', function(event) {
 		                  }
 		                })
 		           }
-		 
+
 		      });
 
 
 
 
           });
-    </script> 
+    </script>
 
 
 
@@ -759,18 +794,18 @@ $(document).on('click', '.btnSearch01', function(event) {
           $(document).on('click', '.cCancel', function(event) {
 
             var id = $(this).data('id');
-         
+
               if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
                   return false;
               }else{
               $.ajax({
-                  url: " {{ url('backend/ajaxDelDelivery') }} ", 
+                  url: " {{ url('backend/ajaxDelDelivery') }} ",
                   method: "post",
                   data: {
                     "_token": "{{ csrf_token() }}", id:id,
                   },
                   success:function(data)
-                  { 
+                  {
                     // console.log(data);
                     // return false;
                         Swal.fire({
@@ -788,9 +823,9 @@ $(document).on('click', '.btnSearch01', function(event) {
 
             }
 
-              
+
             });
-                
+
       });
 
     </script>
@@ -805,14 +840,14 @@ $(document).on('click', '.btnSearch01', function(event) {
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
                    }else{
@@ -828,14 +863,14 @@ $(document).on('click', '.btnSearch01', function(event) {
                   }
                 })
            }
- 
+
       });
 
 
 </script>
         <script type="text/javascript">
-  
-   $(document).ready(function(){   
+
+   $(document).ready(function(){
 
       $("#customer_id_fk").select2({
           minimumInputLength: 2,
@@ -849,7 +884,7 @@ $(document).on('click', '.btnSearch01', function(event) {
           cache: false,
           data: function (params) {
             console.log(params);
-           return {          
+           return {
             term: params.term  || '',   // search term
             page: params.page  || 1
            };
@@ -882,7 +917,7 @@ $(document).on('click', '.btnSearch01', function(event) {
                  $(".myloading").hide();
               }, 500);
             });
-                
+
       });
 
                $('#delivery_province').change(function(){
@@ -992,7 +1027,7 @@ $(document).on('click', '.btnSearch01', function(event) {
 
 
     </script>
-   
+
 
 	</script>
 
@@ -1030,7 +1065,7 @@ $(document).on('click', '.btnSearch01', function(event) {
           $('#bill_edate').val($(this).val());
         }
 
-      });        
+      });
 
     </script>
 
@@ -1039,22 +1074,22 @@ $(document).on('click', '.btnSearch01', function(event) {
 
       $(document).ready(function() {
             $(".test_clear_data").on('click',function(){
-              
+
                   if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสำหรับเมนูนี้ ? ")){
                       return false;
                   }else{
-                  
+
                       location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-       
+
                   }
-              
+
             });
-                
+
       });
 
     </script>
-   
-    <?php 
+
+    <?php
     if(isset($_REQUEST['test_clear_data'])){
       DB::select("TRUNCATE `db_delivery` ;");
       DB::select("TRUNCATE `db_delivery_packing` ;");
@@ -1077,17 +1112,17 @@ $(document).on('click', '.btnSearch01', function(event) {
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
@@ -1108,17 +1143,17 @@ $(document).on('click', '.btnSearch01', function(event) {
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
