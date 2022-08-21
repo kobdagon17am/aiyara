@@ -916,6 +916,9 @@ class Check_money_dailyController extends Controller
                       <tr>
                         <th>พนักงานขาย</th>
                         <th class="text-right">เงินสด</th>
+                        <th class="text-right">เงินโอน</th>
+                        <th class="text-right">เครดิต</th>
+                        <th class="text-right">Ai-cash</th>
                       </tr>
                     </thead>
 
@@ -926,7 +929,7 @@ class Check_money_dailyController extends Controller
                   //    dd($id);
                   // }
                 foreach(@$sDBFrontstoreSumCostActionUser AS $r){
-                  $cash_pay_total+=$r->cash_pay;
+                  $cash_pay_total+=$r->cash_pay + $r->transfer_price+ $r->credit_price+ $r->aicash_price;
                      @$cnt_row1 += 1;
                               @$sum_cash_pay += $r->cash_pay;
                               @$sum_aicash_price += $r->aicash_price;
@@ -940,11 +943,14 @@ class Check_money_dailyController extends Controller
                                 '<tr>
                                 <td>'.$r->action_user_name.'</td>
                                 <td class="text-right"> '.number_format($r->cash_pay,2).' </td>
+                                <td class="text-right"> '.number_format($r->transfer_price,2).' </td>
+                                <td class="text-right"> '.number_format($r->credit_price,2).' </td>
+                                <td class="text-right"> '.number_format($r->aicash_price,2).' </td>
                                </tr>';
                 }
 
                 $pn .= '<tr>
-                <td class="text-right"><b>รวมทั้งสิ้น</b></td>
+                <td class="text-right" colspan="4"><b>รวมทั้งสิ้น</b></td>
                 <td class="text-right">'.number_format($cash_pay_total,2).'</td>
                 </tr>';
 
@@ -1908,6 +1914,76 @@ class Check_money_dailyController extends Controller
 
       })
       ->escapeColumns('total_money')
+
+      ->addColumn('total_money_all', function($row) use($w01,$w02,$w03,$w04,$w05) {
+
+        if($row->id){
+         $date=date_create($row->created_at);
+         $created_at = date_format($date,"Y-m-d");
+
+         $data = DB::select("
+         SELECT
+         db_orders.id
+         FROM
+         db_orders
+         WHERE
+         db_orders.invoice_code!=''
+         $w01
+         $w02
+         $w03
+         $w04
+         $w05
+         AND db_orders.action_user = ".$row->order_action_user."
+         AND date(db_orders.created_at)='".$created_at."'
+       ");
+//        $Text = "
+//        SELECT
+//        db_orders.id
+//        FROM
+//        db_orders
+//        WHERE
+//        db_orders.invoice_code!=''
+//        $w01
+//        $w02
+//        $w03
+//        $w04
+//        $w05
+//        AND db_orders.action_user = ".$row->order_action_user."
+//        AND date(db_orders.created_at)='".$created_at."'
+//      ";
+// dd($Text);
+       $arr = "";
+       foreach($data as $key=>$d){
+         if($key+1 == count($data)){
+            $arr.=$d->id;
+         }else{
+            $arr.=$d->id.',';
+         }
+
+       }
+         // $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$row->id.") GROUP BY frontstore_id_fk ");
+         //  $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$arr.") ");
+
+         $r = DB::select(" SELECT sum(cash_pay) as total_money , sum(total_price) as total_price FROM db_orders WHERE id in (".$arr.") ");
+
+             if($r){
+             if($row->remark==1){
+
+                if($r[0]->total_price)
+                return "<b>".number_format($r[0]->total_price,2)."</b>";
+
+             }else{
+               if($row->ttp)
+               return "<b>".number_format($row->ttp,2)."</b>";
+
+             }
+           }else{
+            return '';
+           }
+         }
+
+      })
+      ->escapeColumns('total_money_all')
 
       ->addColumn('total_money_sent', function($row) use($w01,$w02,$w03,$w04,$w05) {
 

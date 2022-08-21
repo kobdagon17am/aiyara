@@ -484,16 +484,16 @@ class Po_approveController extends Controller
 
 select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
 `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
-`dataset_account_bank`.`txt_bank_name` as `txt_bank_name`,
-`dataset_account_bank`.`txt_account_name` as `txt_account_name`,
-`dataset_account_bank`.`txt_bank_number` as `txt_bank_number`,
+`customers_detail`.`bank_name` as `txt_bank_name`,
+`customers_detail`.`bank_account` as `txt_account_name`,
+`customers_detail`.`bank_no` as `txt_bank_number`,
 `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`
 from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk`
 left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk`
 left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
 left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
 left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
-left join `dataset_account_bank` on `dataset_account_bank`.`id` = `db_orders`.`account_bank_name_customer`
+left join `customers_detail` on `customers_detail`.`customer_id` = `db_orders`.`customers_id_fk`
 where
 pay_type_id_fk in (1,8,10,11,12) and
 `dataset_order_status`.`lang_id` = 1 and

@@ -332,9 +332,10 @@
                     {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
                     {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
                     {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
+                    {data: 'total_money_all', title :'<span style="vertical-align: middle;"> ยอดขาย (รวม) </span> ', className: 'text-right'},
                     {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ', className: 'text-right'},
-                    {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ', className: 'text-right'},
-                    {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน</span> ', className: 'text-right'},
+                    {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน (เฉพาะเงินสด)</span> ', className: 'text-right'},
+                    {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน (เฉพาะเงินสด)</span> ', className: 'text-right'},
 
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
@@ -695,9 +696,10 @@ $(function() {
                     {data: 'business_location', title :'<span style="vertical-align: middle;"> Business Location </span> ', className: 'text-center'},
                     {data: 'branch_name', title :'<span style="vertical-align: middle;"> Branch </span> ', className: 'text-center'},
                     {data: 'action_user', title :'<span style="vertical-align: middle;"> พนักงานขาย </span> ', className: 'text-center'},
+                    {data: 'total_money_all', title :'<span style="vertical-align: middle;"> ยอดขาย (รวม) </span> ', className: 'text-right'},
                     {data: 'total_money', title :'<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ', className: 'text-right'},
-                    {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ', className: 'text-right'},
-                    {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน</span> ', className: 'text-right'},
+                    {data: 'total_money_sent_inprocess', title :'<span style="vertical-align: middle;"> ยอดส่งเงิน (เฉพาะเงินสด)</span> ', className: 'text-right'},
+                    {data: 'total_money_sent', title :'<span style="vertical-align: middle;"> ยอดรับเงิน (เฉพาะเงินสด)</span> ', className: 'text-right'},
 
                 ],
                 rowCallback: function(nRow, aData, dataIndex){

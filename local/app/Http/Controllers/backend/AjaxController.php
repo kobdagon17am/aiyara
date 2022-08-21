@@ -4897,6 +4897,7 @@ class AjaxController extends Controller
       //    DB::select(" UPDATE `db_pay_requisition_001` SET `status_sent`='3' WHERE (`id`='".$request->id."') ");
           DB::select(" UPDATE `db_pay_requisition_001` SET action_user=".(\Auth::user()->id).",action_date=now(),status_sent=6 WHERE pick_pack_requisition_code_id_fk='".$request->id."' ");
           DB::select(" UPDATE `db_pick_pack_packing_code` SET who_cancel=".(\Auth::user()->id).",cancel_date=now(),status=6 WHERE id='".$request->id."' ");
+          DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$request->id)->delete();
         //   DB::select(" UPDATE
         //     db_pay_requisition_002
         //     SET
@@ -4927,6 +4928,10 @@ class AjaxController extends Controller
             $arr_order = explode(',',$db_pick_pack_packing_code->orders_id_fk);
             DB::table('db_delivery')->whereIn('orders_id_fk',$arr_order)->update([
                 'status_pick_pack' => 0,
+                'status_delivery' => 0,
+                'status_tracking' => 0,
+                'status_scan_wh' => 0,
+                'user_scan' => 0,
             ]);
 
         //   if($r){

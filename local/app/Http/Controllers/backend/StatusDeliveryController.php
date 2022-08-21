@@ -289,17 +289,20 @@ class StatusDeliveryController extends Controller
         $p = '<label style="color:green;">ส่งออกสินค้า</label>';
        }
 
+
+
        if($row->status_tracking==1 || $row->status_tracking==2 || $row->status_tracking==3){
         $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
         if(@$DP){
           foreach ($DP as $key => $value) {
             $rs = DB::table('db_delivery')->select('id')->where('id',$value->delivery_id_fk)->first();
             if($rs){
-                 $db_pick_pack_packing = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->where('delivery_id_fk',$rs->id)->first();
+                 $db_pick_pack_packing = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->where('delivery_id_fk',$rs->id)->orderBy('packing_code_id_fk','desc')->first();
                  if($db_pick_pack_packing){
 
                   if($row->status_tracking==1){
                     $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->select('action_user','updated_at')->where('id',$db_pick_pack_packing->packing_code_id_fk)->first();
+
                     if($db_pick_pack_packing_code){
                       $action_user = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->action_user)->first();
                       $p .= '<br> โดย : '.@$action_user->name;
@@ -316,6 +319,10 @@ class StatusDeliveryController extends Controller
                     }
                   }elseif($row->status_tracking==3){
                     $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->select('sender','sent_date')->where('id',$db_pick_pack_packing->packing_code_id_fk)->first();
+        //                    if($row->packing_code=='P100007'){
+        // // dd($row->db_delivery_id);
+        // dd($db_pick_pack_packing);
+        //       }
                     if($db_pick_pack_packing_code){
                       $sender = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->sender)->first();
                       $p .= '<br> โดย : '.@$sender->name;
@@ -340,12 +347,15 @@ class StatusDeliveryController extends Controller
       //   dd($row);
       //         }
       if($row->status_tracking==3){
-        $pcode = DB::table('db_pick_pack_packing')->where('delivery_id_fk',$row->db_delivery_id)->first();
+        $pcode = DB::table('db_pick_pack_packing')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
               // if($row->packing_code=='P100008'){
               //     dd($pcode);
               // }
           if($pcode){
             $data = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
+          //   if($row->packing_code=='P100008'){
+          //     dd($pcode->packing_code_id_fk);
+          // }
             foreach($data as $d){
               $arr = explode(',',$d->con_arr);
               foreach($arr as $ar){
@@ -360,6 +370,35 @@ class StatusDeliveryController extends Controller
 
      return $p;
    })
+
+   ->addColumn('tranfer_status', function($row) {
+    $p = "";
+    if($row->status_tracking==3){
+      $pcode = DB::table('db_pick_pack_packing')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
+
+        if($pcode){
+          $data = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
+
+          foreach($data as $d){
+            // $arr = explode(',',$d->con_arr);
+            // foreach($arr as $ar){
+            //   $p .= @$ar.'<br>';
+            // }
+            if($d->tracking_status==0){
+              $p .= 'รอยืนยัน<br>หมายเหตุ: '.$d->tracking_remark;
+            }
+            if($d->tracking_status==1){
+              $p .= 'จัดส่งสำเร็จ<br>หมายเหตุ: '.$d->tracking_remark;
+            }
+            if($d->tracking_status==2){
+              $p .= 'จัดส่งไม่สำเร็จ<br>หมายเหตุ: '.$d->tracking_remark;
+            }
+
+          }
+        }
+     }
+   return $p;
+ })
 
 
      ->addColumn('updated_at', function($row) {

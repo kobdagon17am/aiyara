@@ -2398,7 +2398,10 @@ ORDER BY db_pick_pack_packing.id
           $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$con->pick_pack_requisition_code_id_fk)->first();
           DB::table('db_delivery')->where('id',$de->id)->update([
             'status_pick_pack' => 0,
-            'status_delivery' => 0
+            'status_delivery' => 0,
+            'status_tracking' => 0,
+            'status_scan_wh' => 0,
+            'user_scan' => 0,
           ]);
           if($db_pick_pack_packing_code){
             $or_ids = explode(",", $db_pick_pack_packing_code->orders_id_fk);

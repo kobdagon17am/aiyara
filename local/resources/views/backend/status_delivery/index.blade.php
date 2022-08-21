@@ -558,6 +558,9 @@ var oTable;
                         return d ;
                       }},
 
+                      {data: 'tranfer_status',   title :'<center>สถานะจัดส่ง</center>', className: 'text-center ',render: function(d) {
+                        return d ;
+                      }},
 
 
                   ],
@@ -658,7 +661,9 @@ $(document).on('click', '.btnSearch01', function(event) {
                         return d ;
                       }},
 
-
+                      {data: 'tranfer_status',   title :'<center>สถานะจัดส่ง</center>', className: 'text-center ',render: function(d) {
+                        return d ;
+                      }},
 
                   ],
                         rowCallback: function(nRow, aData, dataIndex){

@@ -17,8 +17,8 @@
     </div>
 </div>
 <!-- end page title -->
-<?php 
-    
+<?php
+
     // print_r(\Auth::user()->business_location_id_fk);
     // print_r(\Auth::user()->branch_id_fk);
 
@@ -61,7 +61,7 @@
               @endif
                 {{ csrf_field() }}
 
-    
+
                 <div class="form-group row">
                   <label for="po_number" class="col-md-3 col-form-label">รหัสใบ PO :</label>
                   <div class="col-md-6">
@@ -89,7 +89,7 @@
                             </div>
                           </div>
 
-                        
+
                         <div class="form-group row">
                           <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                           <div class="col-md-6">
@@ -111,7 +111,7 @@
 
                                       </select>
                               @endif
-                                
+
 
                           </div>
                         </div>
@@ -124,7 +124,7 @@
                                 @if(@$Supplier)
                                   @foreach(@$Supplier AS $r)
                                     <option value="{{$r->id}}" {{ (@$r->id==@$sRow->supplier_id_fk)?'selected':'' }} >
-                                      {{$r->txt_desc}} 
+                                      {{$r->txt_desc}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -167,8 +167,8 @@
                                @endif
                             </div>
                        </div>
-                          
-  
+
+
 <!--                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/po_supplier") }}">
@@ -193,12 +193,12 @@
           <div class="form-group row">
             <div class="col-md-12">
               <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการรับสินค้าตามใบ PO </span>
-<!-- 
+<!--
               <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.po_supplier_products.create') }}/{{@$sRow->id}}" style="float: right;" >
                 <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
               </a> -->
 
-               <a href="{{ URL::to('backend/po_supplier_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i> 
+               <a href="{{ URL::to('backend/po_supplier_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i>
                </a>
 
             </div>
@@ -227,7 +227,7 @@
 
 <div class="myBorder" >
 
-      
+
         <div style="">
           <div class="form-group row">
             <div class="col-md-12">
@@ -264,7 +264,7 @@
 
 
             <div class="myBorder" style="">
-        
+
               <form id="frm-main" action="{{ route('backend.po_receive.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
@@ -281,7 +281,7 @@
                               <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                             <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                          @endif
-                          
+
                       </div>
                   </div>
 
@@ -297,7 +297,7 @@
                     </div>
                      <div class="col-md-4 mt-2">
                       <div class=" ">
-              
+
                           <input type="radio" class="" id="customSwitch2" name="approve_status" value="5" {{ ( @$sRow->approve_status=='5')?'checked':'' }} required >
                           <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
 
@@ -329,7 +329,7 @@
                     </button>
                     @ENDIF
 
-                    
+
 
                   </div>
                 </div>
@@ -366,7 +366,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
 
                     <div class="row" >
                     <div class="col-md-5 " >
@@ -417,10 +417,10 @@
                             <label for="" class="col-md-3 col-form-label"> วันหมดอายุ : </label>
                             <div class="col-md-5">
                                @IF(!empty(@$sRow->lot_expired_date))
-                               <input class="form-control" type="text" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date"  pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))" readonly > 
-                               @ELSE 
-                               <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date" required > 
-                               @ENDIF 
+                               <input class="form-control" type="text" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date"  pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))" readonly >
+                               @ELSE
+                               <input class="form-control" type="date" value="{{ @$sRow->lot_expired_date }}" name="lot_expired_date" id="lot_expired_date" required >
+                               @ENDIF
                             </div>
                           </div>
                     </div>
@@ -594,7 +594,7 @@
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
@@ -602,7 +602,7 @@
                         {data: 'product_amt_receive', title :'จำนวนที่รับมาแล้ว', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'get_status', title :'สถานะ', className: 'text-center'},
-                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w80'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       // console.log(aData['get_status_2']);
@@ -662,7 +662,7 @@
                         {data: 'amt_get', title :'<center>จำนวนที่ได้รับ', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'warehouses', title :'สินค้าอยู่ที่', className: 'text-center'},
-                        {data: 'id', title :'<center>Tools', className: 'text-center w80'}, 
+                        {data: 'id', title :'<center>Tools', className: 'text-center w80'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       // $('td:last-child', nRow).html(''
@@ -670,13 +670,21 @@
                       //   + '<a href="javascript: void(0);" data-url="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       // ).addClass('input');
 
+                      if(aData['approve_status']==0){
+                     var a = '<a href="{{ url('backend/po_receive_products_get_approve') }}/'+aData['id']+'" onclick="return confirm(\'Are you sure?\')" class="btn btn-sm btn-success">อนุมัติ</a> &nbsp;';
+                    }else{
+                     var a = '';
+                    }
+
                     $('td:last-child', nRow).html(''
+
+                    + a
                         + '<a href="javascript: void(0);" data-url="{{ route('backend.po_receive_products_get.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
 
                     }
                 });
-      
+
             });
 
 
@@ -729,11 +737,11 @@
              $('#product_name').val(product_name);
              $('#product_id_fk').val(product_id_fk);
              $('#po_supplier_products_id_fk').val(id);
-            
+
              setTimeout(function(){
                  $('#amt_get').focus();
              }, 500);
-            
+
              $('#setToWarehouseModal').modal('show');
 
         });
@@ -747,14 +755,14 @@
            if(branch_id_fk != ''){
             $('.myloading').show();
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                        $('.myloading').hide();
@@ -771,7 +779,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -782,14 +790,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -804,7 +812,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -815,14 +823,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -836,7 +844,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -877,7 +885,7 @@ $( function() {
         },
         // select: function (event, ui) {
         //    console.log(ui.item);
-        //    $('#lot_number_auto').val(ui.item.value); 
+        //    $('#lot_number_auto').val(ui.item.value);
         //    return false;
         // },
         // focus: function(event, ui){
@@ -929,7 +937,7 @@ $( function() {
            $(document).on('change', '#amt_get', function(event) {
 
              $(".myloading").show();
-            
+
              var amt_get = $(this).val();
              var po_supplier_products_id_fk = $('#po_supplier_products_id_fk').val();
              var product_id_fk = $('#product_id_fk').val();
@@ -938,13 +946,13 @@ $( function() {
              // console.log(product_id_fk);
              // return false;
              $.ajax({
-               url: " {{ url('backend/ajaxCheckAmt_get_po_product') }} ", 
+               url: " {{ url('backend/ajaxCheckAmt_get_po_product') }} ",
                 method: "post",
                 data: {
                 amt_get:amt_get,
                 po_supplier_products_id_fk:po_supplier_products_id_fk,
                 product_id_fk:product_id_fk,
-                  "_token": "{{ csrf_token() }}", 
+                  "_token": "{{ csrf_token() }}",
                 },
               success:function(data){
                  console.log(data);
@@ -958,25 +966,25 @@ $( function() {
                   $(".myloading").hide();
                  }
                }
-      
+
              });
-       
+
            });
 
 
             $(document).on('click', '.cDelete', function(event) {
-            
+
                      setTimeout(function(){
                          $('#data-table').DataTable().draw();
                       }, 100);
                       setTimeout(function(){
                          $('#data-table-history').DataTable().draw();
                       }, 100);
-                      
-       
+
+
            });
 
-        
+
         });
 
 

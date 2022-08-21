@@ -759,6 +759,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('po_receive_products/create/{id}', 'Po_receive_productsController@create');
 
     Route::resource('po_receive_products_get', 'Po_receive_products_getController');
+    Route::get('po_receive_products_get_approve/{id}', 'Po_receive_products_getController@po_receive_products_get_approve');
 
     Route::post('po_receive_products_get/datatable', 'Po_receive_products_getController@Datatable')->name('po_receive_products_get.datatable');
 

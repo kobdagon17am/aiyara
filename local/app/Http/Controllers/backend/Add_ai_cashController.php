@@ -711,12 +711,12 @@ class Add_ai_cashController extends Controller
 
     $sTable = DB::select("
             SELECT db_add_ai_cash.*,
-            dataset_account_bank.txt_bank_name as txt_bank_name,
-            dataset_account_bank.txt_account_name as txt_account_name,
-            dataset_account_bank.txt_bank_number as txt_bank_number
+            customers_detail.bank_name as txt_bank_name,
+            customers_detail.bank_account as txt_account_name,
+            customers_detail.bank_no as txt_bank_number
             FROM
             db_add_ai_cash
-            left join dataset_account_bank on dataset_account_bank.id = db_add_ai_cash.account_bank_id
+            left join customers_detail on customers_detail.customer_id = db_add_ai_cash.customer_id_fk
             WHERE pay_type_id_fk in (1,8,10,11,12)
             " . $w01 . "
             " . $w02 . "

@@ -58,7 +58,7 @@
 
                                       </select>
                               @endif
-                                
+
 
                           </div>
                         </div>
@@ -137,7 +137,7 @@
 
 <div class="myBorder" >
 
-      
+
         <div style="">
           <div class="form-group row">
             <div class="col-md-12">
@@ -167,7 +167,7 @@
 @IF($ch_get_products==1)
 
             <div class="myBorder div_approve_transfer_branch_get " >
-   
+
               <h4><i class="bx bx-play"></i> อนุมัติสินค้าสินค้าที่โอนไม่สำเร็จ</h4>
 
             <form action="{{url('backend/transfer_branch_get/get_product_back')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -210,7 +210,7 @@
                               <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                             <input class="form-control" type="hidden" value="{{ @$sRow->approver }}" name="approver" >
                          @endif
-                          
+
                       </div>
                   </div>
                 <div class="form-group mb-0 row">
@@ -265,7 +265,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
 
               <div class="row" >
                 <div class="col-md-12" style="font-size: 18px;" >
@@ -429,7 +429,7 @@
           datepicker: true,
           weeks: false,
           minDate: 0,
-          minView: 2, 
+          minView: 2,
       });
 
 
@@ -461,7 +461,7 @@
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
@@ -469,7 +469,7 @@
                         {data: 'product_amt_receive', title :'จำนวนที่รับมาแล้ว', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'get_status', title :'สถานะ', className: 'text-center'},
-                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w80'},
                     ],
                        rowCallback: function(nRow, aData, dataIndex){
 
@@ -545,7 +545,7 @@
                         {data: 'amt_get', title :'<center>จำนวนที่ได้รับ', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'warehouses', title :'สินค้าอยู่ที่', className: 'text-center'},
-                        {data: 'id', title :'<center>Tools', className: 'text-center w80'}, 
+                        {data: 'id', title :'<center>Tools', className: 'text-center w80'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
@@ -561,7 +561,7 @@
                             }
                     }
                 });
-      
+
             });
 
 
@@ -632,21 +632,21 @@
 
               $('#div_show_product').html(product_details);
               $('#branch_name').val(branch_name);
-            
+
              setTimeout(function(){
                  $('#amt_get').focus();
              }, 500);
 
              if(branch_id_this != ''){
                $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                     url: " {{ url('backend/ajaxGetWarehouse') }} ",
                     method: "post",
                     data: {
                       branch_id_fk:branch_id_this,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                      if(data == ''){
                          alert('ไม่พบข้อมูลคลัง !!.');
                      }else{
@@ -666,7 +666,7 @@
                 $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
              }
 
-            
+
              $('#setToWarehouseModal').modal('show');
 
         });
@@ -679,14 +679,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -701,7 +701,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -712,14 +712,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -733,7 +733,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -758,7 +758,7 @@
            $(document).on('change', '#amt_get', function(event) {
 
              $(".myloading").show();
-            
+
              var amt_get = $(this).val();
              var transfer_branch_get_id_fk = $('#transfer_branch_get_id_fk').val();
              var product_id_fk = $('#product_id_fk').val();
@@ -767,13 +767,13 @@
              // console.log(product_id_fk);
              // return false;
              $.ajax({
-               url: " {{ url('backend/ajaxCheckAmt_get_transfer_branch_get_products') }} ", 
+               url: " {{ url('backend/ajaxCheckAmt_get_transfer_branch_get_products') }} ",
                 method: "post",
                 data: {
                 amt_get:amt_get,
                 transfer_branch_get_id_fk:transfer_branch_get_id_fk,
                 product_id_fk:product_id_fk,
-                  "_token": "{{ csrf_token() }}", 
+                  "_token": "{{ csrf_token() }}",
                 },
               success:function(data){
                  console.log(data);
@@ -787,23 +787,23 @@
                   $(".myloading").hide();
                  }
                }
-      
+
              });
-       
+
            });
 
 
             $(document).on('click', '.cDelete', function(event) {
-            
+
                      setTimeout(function(){
                          // $('#data-table-01').DataTable().draw();
                          // $('#data-table-02').DataTable().draw();
                            location.reload();
                       }, 1500);
-       
+
            });
 
-        
+
         });
 
 

@@ -383,6 +383,8 @@ class Total_thai_cambodia_aiController extends Controller
           SUM(CASE WHEN db_movement_ai_cash.aicash_banlance is null THEN 0 ELSE db_movement_ai_cash.aicash_banlance END) AS aicash_banlance,
           SUM(CASE WHEN db_movement_ai_cash.aicash_price is null THEN 0 ELSE db_movement_ai_cash.aicash_price END) AS aicash_price,
           db_movement_ai_cash.type,
+          db_movement_ai_cash.order_id_fk,
+          db_movement_ai_cash.add_ai_cash_id_fk,
           customers.upline_id,
           customers.first_name,
           customers.prefix_name,
@@ -449,9 +451,15 @@ class Total_thai_cambodia_aiController extends Controller
         })
 
         ->addColumn('invoice' , function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk,$report_type) {
-
             if($report_type == 'day'){
-                return $row->order_code;
+              $a = "";
+              if($row->type=='add_aicash'){
+                $a = '<a href="'.url('backend/add_ai_cash/'.$row->add_ai_cash_id_fk.'/edit').'" target="bank">'.$row->order_code.'</a>';
+              }
+              if($row->type=='buy_product'){
+                $a = '<a href="'.url('backend/frontstore/'.$row->order_id_fk.'/edit').'" target="bank">'.$row->order_code.'</a>';
+              }
+                return $a;
             }else{
                 return '-';
             }
