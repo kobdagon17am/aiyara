@@ -222,13 +222,13 @@ tr.border_bottom td {
             <th style="font-size: 18px;">
                 รายงานการขาย
                 <br>
-                <?php 
+                <?php
               if($report_type == 'day'){
                 echo "วันที่ ".date('d/m/Y', strtotime($startDate2))." ถึง ".date('Y/m/d', strtotime($endDate2));
               }else{
                 echo "ประจำเดือน ".date('m/Y', strtotime($startDate2));
               }
-              
+
               ?>
                 <br>
             </th>
@@ -330,15 +330,13 @@ tr.border_bottom td {
                         SELECT
                         db_orders.action_user,
                         ck_users_admin.`name` as action_user_name,
-                        ck_users_admin.`first_name` as action_first_name,
-                        ck_users_admin.`last_name` as action_last_name,
                         db_orders.pay_type_id_fk,
                         dataset_pay_type.detail AS pay_type,
                         date(db_orders.action_date) AS action_date,
                         db_orders.branch_id_fk,
                         branchs.b_name as branchs_name,
                         dataset_business_location.txt_desc as business_location_name,
-  
+
                         db_orders.sum_credit_price,
                         db_orders.transfer_price,
                         db_orders.fee_amt,
@@ -349,15 +347,19 @@ tr.border_bottom td {
                         db_orders.product_value,
                         db_orders.tax,
                         db_orders.sum_price,
-                
+
+                        customers.first_name as action_first_name,
+                        customers.last_name as action_last_name,
+
                         db_orders.code_order
-                        
+
                         FROM
                         db_orders
                         Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                         Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
                         Left Join branchs ON branchs.id = db_orders.branch_id_fk
                         Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+                        Left Join customers ON customers.id = db_orders.customers_id_fk
                         WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
                         $startDate
                         $endDate
@@ -391,7 +393,7 @@ tr.border_bottom td {
                         SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
 
                         db_orders.code_order
-                        
+
                         FROM
                         db_orders
                         Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
@@ -407,7 +409,7 @@ tr.border_bottom td {
                         ORDER BY action_date ASC
                   ");
                       }
-                    
+
 
               $p = "";
               $product_value_total = 0;
@@ -417,7 +419,7 @@ tr.border_bottom td {
               $cash_transfer_price_total = 0;
               $cash_sum_credit_price_total = 0;
               $aicash_price_total = 0;
-              
+
             foreach($sTable as $order){
               if($order->action_user_name == ''){
                 $order->action_user_name = 'V3';
@@ -434,7 +436,7 @@ tr.border_bottom td {
               if($order->aicash_price == ''){
                 $order->aicash_price = 0.00;
               }
-      
+
               $product_value_total += $order->product_value;
               $tax_total += $order->tax;
               $sum_price_total += $order->sum_price;
@@ -455,12 +457,20 @@ tr.border_bottom td {
               }else{
                 $code_order = '-';
               }
-              
+
+
+              if($report_type == 'day'){
+                $cus_name = $order->action_first_name.' '.$order->action_last_name;
+              }else{
+                $cus_name = '-';
+              }
+
+
               $p.= '
               <tr>
               <td style="text-align: center;">'.$action_date.'</td>
               <td style="text-align: left;">'.$code_order.'</td>
-              <td style="text-align: left;">'.$order->action_first_name.' '.$order->action_last_name.' ('.$order->action_user_name.') '.'</td>
+              <td style="text-align: left;">'.$cus_name.'</td>
               <td style="text-align: right;">'.number_format($order->product_value,2,".",",").'</td>
               <td style="text-align: right;">'.number_format($order->tax,2,".",",").'</td>
               <td style="text-align: right;">'.number_format($order->sum_price,2,".",",").'</td>
@@ -500,7 +510,7 @@ tr.border_bottom td {
 
         </table>
     </div>
-    <?php 
+    <?php
     if(count($sTable)>=8){
       echo '<div class="page-break"></div>';
     }
