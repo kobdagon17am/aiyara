@@ -90,7 +90,7 @@ class Frontend{
     ->where('regis_doc1_status','=','1')
     ->where('regis_doc2_status','=','1')
     ->where('regis_doc3_status','=','1')
-    ->where('regis_doc4_status','=','1')
+    // ->where('regis_doc4_status','=','1')
     ->where('regis_date_doc','!=',null)
 		->first();
 
