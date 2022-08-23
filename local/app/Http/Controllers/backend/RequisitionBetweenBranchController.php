@@ -98,9 +98,14 @@ class RequisitionBetweenBranchController extends Controller
 
     public function dtListWaitApprove(Request $request)
     {
-
         $wait_approves = RequisitionBetweenBranch::with('requisition_details:requisition_between_branch_id,product_name,amount')->waitApproveByBranch();
-
+        $perm = 0;
+        $permis = DB::table('role_permit')->where('role_group_id_fk',auth()->user()->role_group_id_fk)->where('menu_id_fk',83)->first();
+        if($permis){
+          if($permis->can_approve==1){
+            $perm = 1;
+          }
+        }
 
       return DataTables::of($wait_approves)
         ->editColumn('from_branch_id', function ($wait_approve) {
@@ -116,13 +121,31 @@ class RequisitionBetweenBranchController extends Controller
         ->editColumn('created_at', function ($wait_approve) {
           return $wait_approve->created_at->format('d/m/Y H:i:s');
         })
-        ->editColumn('actions', function ($wait_approve) {
+        ->editColumn('actions', function ($wait_approve) use($perm) {
           $routeUpdate = route('backend.requisition_between_branch.update', $wait_approve);
           $csrfToken = csrf_field();
           $methodField = "<input type='hidden' name='_method' value='PATCH' />";
 
           if (auth()->user()->permission != 1 && $wait_approve->from_branch_id === auth()->user()->branch_id_fk) {
-            return "<span class='badge badge-secondary font-size-15'>รอยืนยันการอนุมัติ</span>";
+            if($perm==1){
+              return "
+              <form action='$routeUpdate' method='POST' class='d-inline form-approve'>
+                $csrfToken
+                $methodField
+                <input type='hidden' name='is_approve' value='1'>
+                <input type='submit' class='btn btn-success btn-sm' value='อนุมัติ'>
+              </form>
+              <form action='$routeUpdate' method='POST' class='d-inline form-approve'>
+                $csrfToken
+                $methodField
+                <input type='hidden' name='is_approve' value='2'>
+                <input type='submit' class='btn btn-danger btn-sm' value='ไม่อนุมัติ'>
+              </form>
+            ";
+            }else{
+              return "<span class='badge badge-secondary font-size-15'>รอยืนยันการอนุมัติ</span>";
+            }
+
           } else {
             return "
               <form action='$routeUpdate' method='POST' class='d-inline form-approve'>

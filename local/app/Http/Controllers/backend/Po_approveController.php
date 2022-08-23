@@ -173,6 +173,7 @@ class Po_approveController extends Controller
                     // approval_amount_transfer
                     $sRow->approval_amount_transfer = $request->approval_amount_transfer;
                     $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
+                    $sRow->approval_amount_transfer_over_status = $request->approval_amount_transfer_over_status;
                     $sRow->account_bank_name_customer = $request->account_bank;
                     $sRow->transfer_amount_approver = \Auth::user()->id;
                     $sRow->transfer_bill_date  = $request->transfer_bill_date;
@@ -189,6 +190,7 @@ class Po_approveController extends Controller
                     $sRow->status_slip = 'true';
                     $sRow->approval_amount_transfer = 0 ;
                     $sRow->approval_amount_transfer_over = 0 ;
+                    $sRow->approval_amount_transfer_over_status = 0;
                     $sRow->account_bank_name_customer = 0;
                     $sRow->transfer_amount_approver =  \Auth::user()->id;
                     $sRow->transfer_bill_date  = NULL;
@@ -259,6 +261,7 @@ class Po_approveController extends Controller
                         // $sRow2->approval_amount_transfer = $sRow2->transfer_price;
                         $sRow2->approval_amount_transfer = 0;
                         $sRow2->approval_amount_transfer_over = 0;
+                        $sRow->approval_amount_transfer_over_status = 0;
                         $sRow2->account_bank_name_customer = $request->account_bank;
                         $sRow2->transfer_amount_approver = \Auth::user()->id;
                         $sRow2->transfer_bill_date  = $request->transfer_bill_date;
@@ -275,6 +278,7 @@ class Po_approveController extends Controller
                         $sRow2->status_slip = 'true';
                         $sRow2->approval_amount_transfer = 0 ;
                         $sRow2->approval_amount_transfer_over = 0;
+                        $sRow->approval_amount_transfer_over_status = 0;
                         $sRow2->account_bank_name_customer = 0;
                         $sRow2->transfer_amount_approver =  \Auth::user()->id;
                         $sRow2->transfer_bill_date  = NULL;
