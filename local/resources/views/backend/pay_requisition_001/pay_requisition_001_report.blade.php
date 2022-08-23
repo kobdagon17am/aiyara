@@ -496,6 +496,36 @@
 
       });
 
+      $(document).on('click','.approve_btn',function(){
+          var data_type = $(this).attr('data_type');
+          var data_id= $(this).attr('data_id');
+          var url = "";
+          if(data_type=='approve'){
+             url = "{{url('backend/pay_requisition_001_report/consignments_approve/1')}}"+"/"+data_id;
+          }
+          if(data_type=='no_approve'){
+             url = "{{url('backend/pay_requisition_001_report/consignments_approve/2')}}"+"/"+data_id;
+          }
+          if(data_type=='change_approve'){
+             url = "{{url('backend/pay_requisition_001_report/consignments_approve/1')}}"+"/"+data_id;
+          }
+
+          $(".myloading").show();
+             $.ajax({
+                 type:'GET',
+                 url: url,
+                  success:function(data){
+                       // console.log(data);
+                       $(".btnSearch01").trigger('click');
+                       $(".myloading").hide();
+                    },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                      $(".myloading").hide();
+                  }
+              });
+
+      });
+
 
       $(document).on('click','.con_arr_data_show',function(){
         var arr = $(this).attr('con_arr');
