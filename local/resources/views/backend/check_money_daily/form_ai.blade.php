@@ -65,7 +65,6 @@
                   @ENDIF
             </div>
 
-
         @IF($sRow->status_cancel==0 && $sRow->status_approve==0)
 
           <div class="myBorder">

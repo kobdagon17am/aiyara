@@ -2,6 +2,7 @@
 
 namespace App\Models\Backend;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class RequisitionBetweenBranch extends Model

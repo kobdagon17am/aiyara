@@ -335,7 +335,7 @@
                                                             </div>
                                                             <div class="col-md-6 text-left">
                                                                 <h5 class="font-size-14 ">
-                                                                    สถานะโฮนคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                                    สถานะโอนคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
                                                                <select class="form-control"  name="approval_amount_transfer_over_status">
                                                                 <option value="0">ยังไม่โอนยอดคืน</option>
                                                                 <option value="1">โอนยอดคืนแล้ว</option>

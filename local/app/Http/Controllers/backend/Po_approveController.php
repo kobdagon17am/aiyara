@@ -547,7 +547,11 @@ ORDER BY code_order DESC
 
            ->addColumn('approval_amount_transfer_over', function($row) {
             if($row->approval_amount_transfer_over>0){
-              return '<label style="color:red;">'.number_format(@$row->approval_amount_transfer_over, 2).'</label>';
+              if($row->approval_amount_transfer_over_status==0){
+                return '<label style="color:red;">'.number_format(@$row->approval_amount_transfer_over, 2).'</label>';
+              }else{
+                return '<label style="color:green;">'.number_format(@$row->approval_amount_transfer_over, 2).'</label>';
+              }
             }else{
               return '<label>'.number_format(@$row->approval_amount_transfer_over, 2).'</label>';
             }
@@ -666,7 +670,7 @@ ORDER BY code_order DESC
                         $str .= '';
                     }
                 }
-
+                // approval_amount_transfer_over
                 $ai_cash = DB::table('db_add_ai_cash')
                 ->select('code_order')
                 ->where('pay_with_other_bill_select',1)
