@@ -364,6 +364,7 @@ class AjaxController extends Controller
            $s_date = date('Y-m-d', strtotime($date));
               $startDate = " AND DATE(db_movement_ai_cash.created_at) >= '" . $s_date . "' ";
               $startDate2 = $s_date;
+              $startDate0 = " AND DATE(db_movement_ai_cash.created_at) < '" . $s_date . "' ";
        } else {
            $startDate = '';
            $startDate2 = '';
@@ -398,6 +399,7 @@ class AjaxController extends Controller
        'startDate' => $startDate,
        'endDate' => $endDate,
        'startDate2' => $startDate2,
+       'startDate0'=> $startDate0,
        'endDate2' => $endDate2,
        'action_user' => $action_user,
        'business_location_id_fk' => $business_location_id_fk,

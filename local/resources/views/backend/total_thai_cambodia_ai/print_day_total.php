@@ -314,7 +314,7 @@ tr.border_bottom td {
 
                       if($report_type == 'day'){
                         $sTable =DB::select("
-                        SELECT
+                           SELECT
                         db_movement_ai_cash.*,
                         customers.upline_id,
                         customers.first_name,
@@ -333,29 +333,29 @@ tr.border_bottom td {
 
                     }else{
 
-                      $sTable =DB::select("
-                      SELECT
-                      db_movement_ai_cash.created_at,
-                      SUM(CASE WHEN db_movement_ai_cash.aicash_banlance is null THEN 0 ELSE db_movement_ai_cash.aicash_banlance END) AS aicash_banlance,
-                      SUM(CASE WHEN db_movement_ai_cash.aicash_price is null THEN 0 ELSE db_movement_ai_cash.aicash_price END) AS aicash_price,
-                      db_movement_ai_cash.type,
-                      db_movement_ai_cash.order_id_fk,
-                      db_movement_ai_cash.add_ai_cash_id_fk,
-                      customers.upline_id,
-                      customers.first_name,
-                      customers.prefix_name,
-                      customers.last_name
+                  //     $sTable =DB::select("
+                  //     SELECT
+                  //     db_movement_ai_cash.created_at,
+                  //     SUM(CASE WHEN db_movement_ai_cash.aicash_banlance is null THEN 0 ELSE db_movement_ai_cash.aicash_banlance END) AS aicash_banlance,
+                  //     SUM(CASE WHEN db_movement_ai_cash.aicash_price is null THEN 0 ELSE db_movement_ai_cash.aicash_price END) AS aicash_price,
+                  //     db_movement_ai_cash.type,
+                  //     db_movement_ai_cash.order_id_fk,
+                  //     db_movement_ai_cash.add_ai_cash_id_fk,
+                  //     customers.upline_id,
+                  //     customers.first_name,
+                  //     customers.prefix_name,
+                  //     customers.last_name
 
-                      FROM
-                      db_movement_ai_cash
-                      Left Join customers ON customers.id = db_movement_ai_cash.customer_id_fk
-                      WHERE db_movement_ai_cash.order_code IS NOT NULL
-                      AND db_movement_ai_cash.type IN ('buy_product','add_aicash')
-                      $startDate
-                      $endDate
-                      GROUP BY db_movement_ai_cash.customer_id_fk , date_format(db_movement_ai_cash.created_at, '%M') , db_movement_ai_cash.type
-                      ORDER BY created_at ASC
-                  ");
+                  //     FROM
+                  //     db_movement_ai_cash
+                  //     Left Join customers ON customers.id = db_movement_ai_cash.customer_id_fk
+                  //     WHERE db_movement_ai_cash.order_code IS NOT NULL
+                  //     AND db_movement_ai_cash.type IN ('buy_product','add_aicash')
+                  //     $startDate
+                  //     $endDate
+                  //     GROUP BY db_movement_ai_cash.customer_id_fk , date_format(db_movement_ai_cash.created_at, '%M') , db_movement_ai_cash.type
+                  //     ORDER BY created_at ASC
+                  // ");
 
                     //     $sTable =DB::select("
                     //     SELECT
