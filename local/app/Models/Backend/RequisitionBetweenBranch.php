@@ -59,9 +59,9 @@ class RequisitionBetweenBranch extends Model
 
         return $query->when(auth()->user()->permission != 1 && $perm != 1, function ($query) {
             return $query->where(function ($query) {
-                // $query->where('to_branch_id', auth()->user()->branch_id_fk)
-                //     ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
-                $query->Where('from_branch_id', auth()->user()->branch_id_fk);
+                $query->where('to_branch_id', auth()->user()->branch_id_fk)
+                    ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
+                // $query->Where('from_branch_id', auth()->user()->branch_id_fk);
                 });
             })->where('is_approve', static::APPROVED);
     }
