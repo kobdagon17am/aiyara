@@ -28,7 +28,14 @@ class RequisitionBetweenBranch extends Model
      */
     public function scopeWaitApproveByBranch($query)
     {
-        return $query->when(auth()->user()->permission != 1, function ($query) {
+      $perm = 0;
+      $permis = DB::table('role_permit')->where('role_group_id_fk',auth()->user()->role_group_id_fk)->where('menu_id_fk',83)->first();
+      if($permis){
+        if($permis->view_all_branch==1){
+          $perm = 1;
+        }
+      }
+        return $query->when(auth()->user()->permission != 1 && $perm != 1, function ($query) {
                 return $query->where(function ($query) {
                     // $query->where('to_branch_id', auth()->user()->branch_id_fk);
                         // ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
@@ -40,7 +47,16 @@ class RequisitionBetweenBranch extends Model
     public function scopeisApprove($query)
     {
         // auth()->user()->branch_id_fk
-        return $query->when(auth()->user()->permission != 1, function ($query) {
+
+        $perm = 0;
+        $permis = DB::table('role_permit')->where('role_group_id_fk',auth()->user()->role_group_id_fk)->where('menu_id_fk',83)->first();
+        if($permis){
+          if($permis->view_all_branch==1){
+            $perm = 1;
+          }
+        }
+
+        return $query->when(auth()->user()->permission != 1 && $perm != 1, function ($query) {
             return $query->where(function ($query) {
                 // $query->where('to_branch_id', auth()->user()->branch_id_fk)
                 //     ->orWhere('from_branch_id', auth()->user()->branch_id_fk);
@@ -51,8 +67,16 @@ class RequisitionBetweenBranch extends Model
 
     public function scopeWaitApproveCount($query)
     {
-        return $query->when(auth()->user()->permission != 1, function ($query) {
-            return $query->where('to_branch_id', auth()->user()->branch_id_fk);
+      $perm = 0;
+      $permis = DB::table('role_permit')->where('role_group_id_fk',auth()->user()->role_group_id_fk)->where('menu_id_fk',83)->first();
+      if($permis){
+        if($permis->view_all_branch==1){
+          $perm = 1;
+        }
+      }
+        return $query->when(auth()->user()->permission != 1 && $perm != 1, function ($query) {
+            // return $query->where('to_branch_id', auth()->user()->branch_id_fk);
+            return  $query->Where('from_branch_id', auth()->user()->branch_id_fk);
         })
         ->where('is_approve', static::WAIT_APPROVE)
         ->count();

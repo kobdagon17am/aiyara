@@ -57,21 +57,21 @@
                             <div class="card-header d-flex ">
                               <h5>กำหนดสิทธิ์การเข้าถึงเมนู</h5>
                                   <label class="checkbox-inline" style="font-weight: bold;font-size: 14px;">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="checkAll"> Check All 
-                                  </label> 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="checkAll"> Check All
+                                  </label>
                             </div>
                             <div class="card-block">
                               <section class="task-panel tasks-widget">
 
                                 <div class="panel-body" style="margin-left: 5%;">
-                                 
+
                                     <input type="hidden" name="id_user" value="{{@$id}}">
 
       <div class="task-content ">
 
         @foreach(@$sMenu_All AS $row)
 
-        
+
         @php
         $menu_admin = DB::table('role_permit')->where('role_group_id_fk',@$id)->where('menu_id_fk',@$row->id)->first();
         @endphp
@@ -88,7 +88,7 @@
               <input type="hidden" name="menu_id_fk[]" value="{{@$menu_admin->menu_id_fk}}">
               <label class="checkbox-inline">
                 @IF(@$row->ref==0)
-                
+
                   <input type="checkbox" class="check_m" {!! (@$menu_admin->menu_id_fk == @$row->id ? 'checked': '') !!} class="classMenu{{@$row->id}}" name="nameMenu[]" value="{{@$row->id}}" id="m{{@$row->id}}" >
 
                 @ELSE
@@ -132,7 +132,7 @@
                           @IF(@$row->isApprove=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_approve}}">
-                            <input class="checks" type="checkbox" name="can_approve[]" {!! (@$menu_admin->can_approve == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_approve[]" {!! (@$menu_admin->can_approve == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์อนุมัติ
                           </label>
                           @ENDIF
@@ -140,7 +140,7 @@
 	                        @IF(@$row->isAnswer=="Y")
 	                        <label class="checkbox-inline">
 	                          <input type="hidden" value="{{@$menu_admin->can_answer}}">
-	                          <input class="checks" type="checkbox" name="can_answer[]" {!! (@$menu_admin->can_answer == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+	                          <input class="checks" type="checkbox" name="can_answer[]" {!! (@$menu_admin->can_answer == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
 	                          สิทธ์ตอบคำถาม
 	                        </label>
 	                        @ENDIF
@@ -148,7 +148,7 @@
                           @IF(@$row->isPacking=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_packing_list}}">
-                            <input class="checks" type="checkbox" name="can_packing_list[]" {!! (@$menu_admin->can_packing_list == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_packing_list[]" {!! (@$menu_admin->can_packing_list == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์ Packing List
                           </label>
                           @ENDIF
@@ -156,7 +156,7 @@
                           @IF(@$row->isPayproduct=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_payproduct}}">
-                            <input class="checks" type="checkbox" name="can_payproduct[]" {!! (@$menu_admin->can_payproduct == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_payproduct[]" {!! (@$menu_admin->can_payproduct == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์ จ่ายสินค้าตามใบเสร็จ
                           </label>
                           @ENDIF
@@ -164,7 +164,7 @@
                            @IF(@$row->isSentmoney=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_sentmoney}}">
-                            <input class="checks" type="checkbox" name="can_sentmoney[]" {!! (@$menu_admin->can_sentmoney == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_sentmoney[]" {!! (@$menu_admin->can_sentmoney == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์ > ส่งเงิน
                           </label>
                           @ENDIF
@@ -172,29 +172,36 @@
                           @IF(@$row->isGetmoney=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_getmoney}}">
-                            <input class="checks" type="checkbox" name="can_getmoney[]" {!! (@$menu_admin->can_getmoney == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_getmoney[]" {!! (@$menu_admin->can_getmoney == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์ > รับเงิน
                           </label>
                           @ENDIF
                            @IF(@$row->isCancelStatusSent=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_cancel_packing_sent}}">
-                            <input class="checks" type="checkbox" name="can_cancel_packing_sent[]" {!! (@$menu_admin->can_cancel_packing_sent == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_cancel_packing_sent[]" {!! (@$menu_admin->can_cancel_packing_sent == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์ > สิทธิ์ยกเลิกสถานะการแพ็คและการจัดส่ง
                           </label>
                           @ENDIF
                            @IF(@$row->isCancelBill=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_cancel_bill}}">
-                            <input class="checks" type="checkbox" name="can_cancel_bill[]" {!! (@$menu_admin->can_cancel_bill == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_cancel_bill[]" {!! (@$menu_admin->can_cancel_bill == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์ > สิทธิ์ยกเลิกใบเสร็จ(ที่ชำระเงินแล้ว)
                           </label>
                           @ENDIF
                           @IF(@$row->isCancelBillAcrossDay=="Y")
                           <label class="checkbox-inline">
                             <input type="hidden" value="{{@$menu_admin->can_cancel_bill_across_day}}">
-                            <input class="checks" type="checkbox" name="can_cancel_bill_across_day[]" {!! (@$menu_admin->can_cancel_bill_across_day == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" > 
+                            <input class="checks" type="checkbox" name="can_cancel_bill_across_day[]" {!! (@$menu_admin->can_cancel_bill_across_day == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
                             สิทธ์ > สิทธิ์ยกเลิกบิลข้ามวัน
+                          </label>
+                          @ENDIF
+                          @IF(@$row->is_view_all_branch=="Y")
+                          <label class="checkbox-inline">
+                            <input type="hidden" value="{{@$menu_admin->view_all_branch}}">
+                            <input class="checks" type="checkbox" name="view_all_branch[]" {!! (@$menu_admin->view_all_branch == 1 ? 'checked': '') !!} value="{{@$row->id}}" id="ss{{@$row->ref}}" >
+                            สิทธ์ > เห็นทุกสาขา
                           </label>
                           @ENDIF
 
@@ -217,20 +224,20 @@
                         </label>
 
 					      @ENDIF
-                                          
 
-                                      
+
+
 		  								    </div>
 
 		  								</div>
-                                          
+
                                         </div>
                                       </div>
 
                                       @endforeach
 
-                       
-                        
+
+
                                     </div>
                                 </div>
                               </section>
@@ -239,7 +246,7 @@
                         </div>
                       </div>
               <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-                
+
                    <div class="form-group row" style="display: none;">
                         <label class="col-md-2 col-form-label">สถานะ :</label>
                         <div class="col-md-10 mt-2">
@@ -271,7 +278,7 @@
                               <i class="bx bx-arrow-back font-size-16 align-middle mr-1"></i> ย้อนกลับ
                             </a>
                         </div>
-                     
+
                     </div>
 
               </form>
@@ -303,7 +310,7 @@
                 $(this).closest(".aaa").find(".check_s").not(this).prop('checked', this.checked);
               }
         });
-        
+
         $(".check_m").click(function(){
             var id = $(this).val();
             // alert(id);
