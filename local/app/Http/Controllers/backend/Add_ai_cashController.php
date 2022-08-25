@@ -193,6 +193,7 @@ class Add_ai_cashController extends Controller
 
   public function update(Request $request, $id)
   {
+    // dd($request->all());
 
     if (isset($request->approved)) {
       // dd($request->all()); pay_type_id_fk
@@ -247,7 +248,10 @@ class Add_ai_cashController extends Controller
 
       return redirect()->to(url("backend/po_approve"));
     } else {
+
+      // เวลาบันทึกครั้งที่ 2 จะเข้าเงื่อนไขนี้
       $sRow = \App\Models\Backend\Add_ai_cash::find($id);
+
       if ($sRow->code_order == "") {
         $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
         DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $id . "') ");
@@ -261,6 +265,7 @@ class Add_ai_cashController extends Controller
 
       $sRow->save();
       return $this->form($id);
+
     }
   }
 

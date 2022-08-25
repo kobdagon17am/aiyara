@@ -20,14 +20,14 @@ class DeliveryController extends Controller
       DB::select("
           INSERT IGNORE INTO db_delivery
           ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price)
-          SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price 
-          FROM db_orders where code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) AND check_press_save=2 ; 
+          SELECT id,code_order,customers_id_fk,business_location_id_fk,branch_id_fk,created_at,action_user,now(),2,shipping_price
+          FROM db_orders where code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) AND check_press_save=2 ;
         ");
         */
 
 
-   // Start => นำเข้า manaul  
-/* 
+   // Start => นำเข้า manaul
+/*
   DB::select("
           INSERT IGNORE INTO db_delivery
           ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
@@ -38,9 +38,9 @@ class DeliveryController extends Controller
               (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
               (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
               (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
-              (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) 
+              (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
               ))
-          FROM db_orders 
+          FROM db_orders
           WHERE code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) AND check_press_save=2
 
           GROUP BY db_orders.code_order
@@ -60,18 +60,18 @@ class DeliveryController extends Controller
               (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
               (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
               (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) +
-              (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) 
+              (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
               ))
 
               from db_orders  WHERE db_orders.code_order=db_delivery.receipt
               GROUP BY db_delivery.receipt
-              ) 
+              )
 
         ");
 
          $sDelivery = DB::select("
                     SELECT id,delivery_location
-                    FROM db_orders 
+                    FROM db_orders
                     WHERE code_order<>'' AND delivery_location<>0 AND approve_status in(2,4) AND check_press_save=2
                     GROUP BY db_orders.code_order
                   ");
@@ -81,7 +81,7 @@ class DeliveryController extends Controller
               $this->fncUpdateDeliveryAddress($vd->id);
          }
 
-         // สิ้นสุดการนำเข้าแบบ manual 
+         // สิ้นสุดการนำเข้าแบบ manual
   */
 
 
@@ -106,7 +106,7 @@ class DeliveryController extends Controller
       $sProvince = DB::select(" select *,name_th as province_name from dataset_provinces order by name_th ");
       $sAmphures = DB::select(" select *,name_th as amphur_name from dataset_amphures order by name_th ");
       $sTambons = DB::select(" select *,name_th as tambon_name from dataset_districts order by name_th ");
-      
+
 
         return View('backend.delivery.index')->with(
           array(
@@ -129,7 +129,7 @@ class DeliveryController extends Controller
 
    public function fncUpdateDeliveryAddress($id)
     {
-              
+
               $sRow = \App\Models\Backend\Frontstore::find($id);
               // dd($sRow->delivery_location);
               if(@$sRow->delivery_location==0){
@@ -431,8 +431,8 @@ class DeliveryController extends Controller
                                   @$address .= ", อ.". @$v->ampname;
                                   @$address .= ", จ.". @$v->provname;
 
-                                  DB::select(" UPDATE db_delivery  
-                                  SET 
+                                  DB::select(" UPDATE db_delivery
+                                  SET
                                   recipient_name = '".@$v->recipient_name."',
                                   addr_send = '".@$address."',
                                   postcode = '".@$v->zip_code."',
@@ -512,8 +512,8 @@ class DeliveryController extends Controller
                                           @$address .= ", อ.". @$v->ampname;
                                           @$address .= ", จ.". @$v->provname;
 
-                                          DB::select(" UPDATE db_delivery  
-                                          SET 
+                                          DB::select(" UPDATE db_delivery
+                                          SET
                                           recipient_name = '".@$v->recipient_name."',
                                           addr_send = '".@$address."',
                                           postcode = '".@$v->zip_code."',
@@ -545,25 +545,25 @@ class DeliveryController extends Controller
           $arr = implode(',', $request->row_id);
 
           DB::update(" UPDATE db_delivery SET status_pack='1',updated_at=now() WHERE id in ($arr)  ");
-  
+
           $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
-  
+
           $rsDeliveryAddr = DB::select("
-  
+
             SELECT
             db_orders.address_sent_id_fk as addr
             FROM
             db_delivery
             Inner Join db_orders ON db_delivery.receipt = db_orders.invoice_code
             WHERE db_delivery.id in ($arr) limit 1  ");
-  
+
             $DeliveryPackingCode = new \App\Models\Backend\DeliveryPackingCode;
             if( $DeliveryPackingCode ){
               $DeliveryPackingCode->address_sent_id_fk = @$rsDeliveryAddr[0]->addr;
               $DeliveryPackingCode->created_at = date('Y-m-d H:i:s');
               $DeliveryPackingCode->save();
             }
-  
+
            foreach ($rsDelivery as $key => $value) {
                $DeliveryPacking = new \App\Models\Backend\DeliveryPacking;
                $DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode->id;
@@ -571,23 +571,23 @@ class DeliveryController extends Controller
                $DeliveryPacking->delivery_id_fk = @$value->id;
                $DeliveryPacking->created_at = date('Y-m-d H:i:s');
               $DeliveryPacking->save();
-  
+
            }
-  
+
            // เพื่อเอาไว้ไปทำตารางเบิก
            DB::update(" UPDATE
               db_delivery
               Inner Join db_delivery_packing ON db_delivery.id = db_delivery_packing.delivery_id_fk
               SET
               db_delivery.packing_code=db_delivery_packing.packing_code_id_fk ");
-  
+
            // รหัสนี้สร้างใหม่เพื่อเอาไว้อ้างอิงให้มันชัดเจนยิ่งขึ้น
            $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
            foreach ($rsDelivery as $key => $value) {
-  
+
                 $pc = "P1".sprintf("%05d",$value->packing_code) ;
                 DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' , status_to_wh=0 WHERE id=$value->id  ");
-              
+
            }
 
         // }else{
@@ -786,9 +786,9 @@ class DeliveryController extends Controller
         // return $receipt;
 
       // $sTable = \App\Models\Backend\Delivery::search()->where('status_pack','0')->where('approver','NULL')->orderBy('id', 'asc');
-      // $sTable = DB::select(" 
+      // $sTable = DB::select("
 
-      //   SELECT * from db_delivery  
+      //   SELECT * from db_delivery
       //   WHERE status_pack=0 AND approver=0 AND status_delivery<>1 AND status_pick_pack<>1
 
       //   $business_location_id
@@ -803,9 +803,9 @@ class DeliveryController extends Controller
 
       //   ");
 
-    $sTable = DB::select(" 
+    $sTable = DB::select("
 
-        SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price, db_orders.delivery_location, db_orders.charger_type, db_orders.fee_amt, db_orders.distribution_channel_id_fk ,db_orders.approve_status from db_delivery  
+        SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price, db_orders.delivery_location, db_orders.charger_type, db_orders.fee_amt, db_orders.distribution_channel_id_fk ,db_orders.approve_status from db_delivery
         Left Join db_orders ON db_orders.code_order = db_delivery.receipt
         WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1 AND db_delivery.status_to_wh=0 AND db_orders.approve_status<>5
         $branch_id_fk
@@ -816,7 +816,7 @@ class DeliveryController extends Controller
         $billing_employee
 
         OR
-        
+
         db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1 AND db_delivery.status_to_wh=0 AND db_orders.approve_status<>5
         $business_location_id
         $receipt
@@ -828,7 +828,7 @@ class DeliveryController extends Controller
 
 
         ");
-        
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('customer_name', function($row) {
@@ -853,7 +853,7 @@ class DeliveryController extends Controller
           }else{
             return '';
           }
-      
+
         }
       })
       // status_to_wh_by
@@ -877,7 +877,7 @@ class DeliveryController extends Controller
       })
       ->addColumn('total_price_not_gv', function($row) {
         $total = 0;
-      
+
         // $total = $row->total_price - $row->gift_voucher_price;
         $total = $row->total_price;
         // if($row->charger_type==1){
@@ -904,6 +904,11 @@ class DeliveryController extends Controller
 
     public function delivery_approve_to_wh($id)
     {
+      $data =  DB::table('db_delivery')->select('tel_home','mobile')->where('id',$id)->first();
+      // dd($data);
+      if($data->mobile == '' && $data->tel_home == ''){
+        return redirect()->back()->with('error','ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!');
+      }
       DB::table('db_delivery')->where('id',$id)->update([
         'status_to_wh' => 1,
         'status_to_wh_by' => @\Auth::user()->id,

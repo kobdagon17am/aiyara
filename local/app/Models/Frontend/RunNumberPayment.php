@@ -76,8 +76,6 @@ class RunNumberPayment extends Model
       ->orderby('id', 'desc')
       ->first();
 
-
-
     if (@$id->code_order) {
 
       $last_code = $id->code_order;
@@ -92,10 +90,10 @@ class RunNumberPayment extends Model
       $num_code = substr("00000" . $last_code, -5);
       $code_order = 'W' . $business_location_id_fk . date('ymd') . '' . $num_code;
     }
+
     //new
       $rs = RunNumberPayment::check_number_aicash($code_order,$business_location_id_fk);
         return  $rs['code_order'];
-
 
   }
 

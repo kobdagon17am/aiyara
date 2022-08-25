@@ -210,7 +210,9 @@ class DeliveryPackingCodeController extends Controller
 
             if($addr){
               if($row->status_to_wh==0){
-                return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile.", ".@$addr[0]->tel_home."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ".$de;
+
+                  return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile.", ".@$addr[0]->tel_home."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ".$de;
+
               }else{
                 return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile.", ".@$addr[0]->tel_home."<br>".$de;
                 // ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
@@ -241,6 +243,39 @@ class DeliveryPackingCodeController extends Controller
           $p = '
           <a onclick="return confirm(\'ยืนยันการทำรายการ\')" href="'.url('backend/delivery_approve_to_wh/'.$row->db_delivery_id).'" class="btn btn-sm btn-success">ยืนยัน</a>
         ';
+        }
+
+        if($row->id!==""){
+          $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+          $array = array();
+          if(@$DP){
+            foreach ($DP as $key => $value) {
+              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+              array_push($array, "'".@$rs[0]->receipt."'");
+            }
+            $arr = implode(',', $array);
+          }
+        }
+
+        $addr = DB::select(" SELECT
+              db_delivery.set_addr_send_this,
+              db_delivery.recipient_name,
+              db_delivery.addr_send,
+              db_delivery.postcode,
+              db_delivery.mobile,
+              db_delivery.tel_home,
+              db_delivery.total_price,
+              db_delivery_packing_code.id AS db_delivery_packing_code_id,
+              db_delivery.receipt
+              FROM
+              db_delivery_packing_code
+              Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
+              Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
+              WHERE
+              db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
+
+        if(@$addr[0]->mobile == '' && @$addr[0]->tel_home == ''){
+          $p = '<label style="color:red;">กรุณาระบุเบอร์โทรก่อนทำรายการ!</label>';
         }
 
         return $p;
