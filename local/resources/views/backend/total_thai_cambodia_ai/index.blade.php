@@ -107,10 +107,10 @@
                                                 style="font-size: 14px !important;">
                                                 <i class="bx bx-search font-size-16 align-middle mr-1"></i> ค้น
                                             </button> &nbsp;
-                                            {{-- <button type="button" id="print_btn" class="btn btn-warning btn-sm"
+                                            <button type="button" id="print_btn" class="btn btn-warning btn-sm"
                                                 style="font-size: 14px !important;">
                                                 <i class="fa fa-print"></i> Print
-                                            </button> --}}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@
     </div>
 
 
-    <form id="action_form" action="{{ url('backend/total_thai_cambodia_pdf') }}" method="POST" target="_blank"
+    <form id="action_form" action="{{ url('backend/total_thai_cambodia_ai_pdf') }}" method="POST" target="_blank"
         enctype="multipart/form-data">
         {{ csrf_field() }}
         <div id="print_modal" class="modal fade" role="dialog">
@@ -229,7 +229,7 @@
                         เลือกรูปแบบรายงาน
                         <select name="report_type" id="report_type" class="form-control">
                             <option value="day">รายงานรายวัน</option>
-                            <option value="month">รายงานรายเดือน</option>
+                            {{-- <option value="month">รายงานรายเดือน</option> --}}
                         </select>
                     </div>
                     <div class="modal-footer">

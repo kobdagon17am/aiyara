@@ -142,7 +142,7 @@ class Check_money_dailyController extends Controller
       Session::put('can_approve', $can_approve);
 
 
-       $sRow = \App\Models\Backend\Sent_money_daily::find($id);
+       $sRow = \App\Models\Backend\Sent_money_daily_ai::find($id);
        // dd($sRow);
        // $sSent_money_daily = DB::select(" select * from  db_sent_money_daily where id=$id ");
        // dd($sSent_money_daily);

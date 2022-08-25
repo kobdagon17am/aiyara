@@ -630,13 +630,21 @@ class Pick_packPackingCodeController extends Controller
         $web_all = "";
         foreach($f as $key => $value){
           if($value == 0){
+            // $btn = "
+            //   <a class='btn btn-success btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/1/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งสำเร็จ!\");' >จัดส่งสำเร็จ</a> &nbsp;
+            //   <a class='btn btn-danger btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/2/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งไม่สำเร็จ!\");' >ไม่สำเร็จ</a>
+            // ";
             $btn = "
-              <a class='btn btn-success btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/1/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งสำเร็จ!\");' >จัดส่งสำเร็จ</a> &nbsp;
-              <a class='btn btn-danger btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/2/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งไม่สำเร็จ!\");' >ไม่สำเร็จ</a>
-            ";
+            <a class='btn btn-success btn-sm approve_btn' data_type='approve' data_id='".$ff[$key]."' style='color:white;' href='javascript:;'>จัดส่งสำเร็จ</a> &nbsp;
+            <a class='btn btn-danger btn-sm approve_btn' data_type='no_approve' data_id='".$ff[$key]."' style='color:white;' href='javascript:;'>ไม่สำเร็จ</a>
+          ";
           }elseif($value == 2){
+            // $btn = "
+            //   <a class='btn btn-warning btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/1/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งสำเร็จ!\");' >เปลี่ยนจัดส่งสำเร็จ</a> &nbsp;";
+
             $btn = "
-              <a class='btn btn-warning btn-sm' style='color:white;' href='".url('backend/pay_requisition_001_report/consignments_approve/1/'.$ff[$key])."' onclick='return confirm(\"ยืนยัน จัดส่งสำเร็จ!\");' >เปลี่ยนจัดส่งสำเร็จ</a> &nbsp;";
+            <a class='btn btn-warning btn-sm approve_btn' data_type='change_approve' data_id='".$ff[$key]."' style='color:white;' href='javascript:;' >เปลี่ยนจัดส่งสำเร็จ</a> &nbsp;";
+
           }else{
             $btn = "-";
           }

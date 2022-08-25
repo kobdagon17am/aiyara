@@ -57,7 +57,7 @@ class RoleController extends Controller
           }
 
           $sRow->role_name    = request('role_name');
-          $sRow->status    = request('status')?request('status'):0;     
+          $sRow->status    = request('status')?request('status'):0;
           $sRow->created_at = date('Y-m-d H:i:s');
 
           $id_user = request('id_user');
@@ -104,7 +104,7 @@ class RoleController extends Controller
                     }
                 }
               }
-              
+
               if(!empty(request('can_answer'))){
                 $can_answer = request('can_answer');
                 if(!empty($can_answer)){
@@ -173,7 +173,7 @@ class RoleController extends Controller
                          DB::update(" UPDATE role_permit SET can_cancel_bill=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
                     }
                 }
-              }  
+              }
               if(!empty(request('can_cancel_bill_across_day'))){
                 $can_cancel_bill_across_day = request('can_cancel_bill_across_day');
                 if(!empty($can_cancel_bill_across_day)){
@@ -181,7 +181,17 @@ class RoleController extends Controller
                          DB::update(" UPDATE role_permit SET can_cancel_bill_across_day=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
                     }
                 }
-              }  
+              }
+
+              if(!empty(request('view_all_branch'))){
+                $view_all_branch = request('view_all_branch');
+                if(!empty($view_all_branch)){
+                    foreach ($view_all_branch AS $row) {
+                         DB::update(" UPDATE role_permit SET view_all_branch=1 where role_group_id_fk=$id_user AND menu_id_fk=".$row." ");
+                    }
+                }
+              }
+
           }
 
           $sRow->save();

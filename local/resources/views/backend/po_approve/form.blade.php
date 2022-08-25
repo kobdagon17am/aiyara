@@ -187,7 +187,10 @@
                                 {{-- @if (@$sRow->transfer_bill_status == 2) --}}
                                 <?php //dd($sRow->approve_status);
                                 ?>
-                                @if (@$sRow->approve_status == 1 || @$sRow->approve_status == 2 || @$sRow->approve_status == 0 || @$sRow->approve_status == 6)
+                                @if (@$sRow->approve_status == 1 ||
+                                    @$sRow->approve_status == 2 ||
+                                    @$sRow->approve_status == 0 ||
+                                    @$sRow->approve_status == 6)
                                     <div class="div_confirm_transfer_slip">
                                         <button type="button" class="btn btn-primary waves-effect waves-light"
                                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
@@ -227,7 +230,8 @@
                                         <div class="modal-dialog modal-dialog-scrollable">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="m  odal-title mt-0" id="confirm">ยืนยันการอนุมัติใบสั่งซื้อ
+                                                    <h5 class="m  odal-title mt-0" id="confirm">
+                                                        ยืนยันการอนุมัติใบสั่งซื้อ
                                                     </h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -320,18 +324,25 @@
                                                     </div>
 
                                                     <div class="col-md-12 mt-2 mb-2 text-left">
-                                                      <div class="row form-group ">
-                                                        <div class="col-md-6 text-left">
-                                                          <h5 class="font-size-14 ">จำนวนยอดที่เกิน<br>(หากในสลิปยอดเงินเกินมา)</h5>
-                                                          <input class="form-control NumberOnly " type="text"
-                                                              name="approval_amount_transfer_over"
-                                                              id="approval_amount_transfer_over"
-                                                              value="{{ @$sRow->approval_amount_transfer_over }}"
-                                                           >
-                                                      </div>
-
-                                                      </div>
-                                                  </div>
+                                                        <div class="row form-group ">
+                                                            <div class="col-md-6 text-left">
+                                                                <h5 class="font-size-14 ">
+                                                                    จำนวนยอดที่เกิน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                                <input class="form-control NumberOnly " type="text"
+                                                                    name="approval_amount_transfer_over"
+                                                                    id="approval_amount_transfer_over"
+                                                                    value="{{ @$sRow->approval_amount_transfer_over }}">
+                                                            </div>
+                                                            <div class="col-md-6 text-left">
+                                                                <h5 class="font-size-14 ">
+                                                                    สถานะโอนคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                               <select class="form-control"  name="approval_amount_transfer_over_status">
+                                                                <option value="0">ยังไม่โอนยอดคืน</option>
+                                                                <option value="1">โอนยอดคืนแล้ว</option>
+                                                               </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
 
 
