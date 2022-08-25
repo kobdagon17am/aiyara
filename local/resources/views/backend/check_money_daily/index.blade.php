@@ -206,7 +206,7 @@
                     <div class="myBorder">
                         <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย Ai-Cash </span>
                         <table id="data-table-0002_2" class="table table-bordered " style="width: 84%;">
-                          <tfoot>
+                            <tfoot>
                             <tr>
                                 <th colspan="4" style="text-align: right !important"></th>
                                 <th style="text-align: right !important"></th>
@@ -1025,6 +1025,8 @@
                 $('#data-table-0001_ai').DataTable().clear();
                 $('#data-table-0002_ai').DataTable().clear();
 
+                $('#data-table-0002_2').DataTable().clear();
+
                 var business_location_id_fk = $('#business_location_id_fk').val();
                 var branch_id_fk = $('#branch_id_fk').val();
                 var seller = $('#seller').val();
@@ -1233,60 +1235,63 @@
 
                         },
                         "footerCallback": function(row, data, start, end, display) {
-                    var api = this.api(),
-                        data;
+                            var api = this.api(),
+                                data;
 
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
+                            // Remove the formatting to get integer data for summation
+                            var intVal = function(i) {
+                                return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                            };
 
-                    all_total = api
-                        .column(4, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            all_total = api
+                                .column(4, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
-                    all_total_cash = api
-                        .column(5, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            all_total_cash = api
+                                .column(5, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
-                    all_total_cash_send = api
-                        .column(6, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            all_total_cash_send = api
+                                .column(6, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
-                    all_total_cash_reciept = api
-                        .column(7, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
-                    // console.log(all_total);
-                    // Update footer
-                    $(api.column(1).footer()).html('Total');
-                    $(api.column(4).footer()).html(numberWithCommas(all_total));
-                    $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
-                    $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
-                    $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
-                }
+                            all_total_cash_reciept = api
+                                .column(7, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                            // console.log(all_total);
+                            // Update footer
+                            $(api.column(1).footer()).html('Total');
+                            $(api.column(4).footer()).html(numberWithCommas(all_total));
+                            $(api.column(5).footer()).html(numberWithCommas(
+                                all_total_cash));
+                            $(api.column(6).footer()).html(numberWithCommas(
+                                all_total_cash_send));
+                            $(api.column(7).footer()).html(numberWithCommas(
+                                all_total_cash_reciept));
+                        }
                     });
 
                 });
@@ -1318,7 +1323,7 @@
                             },
                         },
                         columns: [{
-                                data: 'created_at',
+                                data: 'created_date',
                                 title: '<span style="vertical-align: middle;"> วันที่ขาย </span> ',
                                 className: 'text-center'
                             },
@@ -1338,11 +1343,25 @@
                                 className: 'text-center'
                             },
                             {
-                                data: 'total_money',
-                                title: '<span style="vertical-align: middle;"> ยอดขาย </span> ',
+                                data: 'total_money_all',
+                                title: '<span style="vertical-align: middle;"> ยอดขาย (รวม) </span> ',
                                 className: 'text-right'
                             },
-
+                            {
+                                data: 'total_money',
+                                title: '<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ',
+                                className: 'text-right'
+                            },
+                            {
+                                data: 'total_money_sent_inprocess',
+                                title: '<span style="vertical-align: middle;"> ยอดส่งเงิน</span> ',
+                                className: 'text-right'
+                            },
+                            {
+                                data: 'total_money_sent',
+                                title: '<span style="vertical-align: middle;"> ยอดรับเงิน</span> ',
+                                className: 'text-right'
+                            },
                         ],
                         rowCallback: function(nRow, aData, dataIndex) {
 
@@ -1361,61 +1380,61 @@
                             }
 
                         },
-                        "footerCallback": function(row, data, start, end, display) {
-                    var api = this.api(),
-                        data;
+                                "footerCallback": function(row, data, start, end, display) {
+                            var api = this.api(),
+                                data;
 
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
+                            // Remove the formatting to get integer data for summation
+                            var intVal = function(i) {
+                                return typeof i === 'string' ?
+                                    i.replace(/[\$,]/g, '') * 1 :
+                                    typeof i === 'number' ?
+                                    i : 0;
+                            };
 
-                    all_total = api
-                        .column(4, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            all_total = api
+                                .column(4, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
-                    all_total_cash = api
-                        .column(5, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            all_total_cash = api
+                                .column(5, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
-                    all_total_cash_send = api
-                        .column(6, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            all_total_cash_send = api
+                                .column(6, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
 
-                    all_total_cash_reciept = api
-                        .column(7, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
-                    // console.log(all_total);
-                    // Update footer
-                    $(api.column(1).footer()).html('Total');
-                    $(api.column(4).footer()).html(numberWithCommas(all_total));
-                    $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
-                    $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
-                    $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
-                }
+                            all_total_cash_reciept = api
+                                .column(7, {
+                                    page: 'current'
+                                })
+                                .data()
+                                .reduce(function(a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                            // console.log(all_total);
+                            // Update footer
+                            $(api.column(1).footer()).html('Total');
+                            $(api.column(4).footer()).html(numberWithCommas(all_total));
+                            $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
+                            $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
+                            $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
+                        }
                     });
 
                 });
