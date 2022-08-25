@@ -170,16 +170,17 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table id="thai_cambodia_aicash" class="table table-centered table-nowrap table-hover w-100 thai_cambodia"
+                            <table id="thai_cambodia_aicash"
+                                class="table table-centered table-nowrap table-hover w-100 thai_cambodia"
                                 style="width: 100%;">
                                 <tfoot>
-                                  <tr>
-                                      <th colspan="3" style="text-align: right !important"></th>
-                                      <th style="text-align: right !important"></th>
-                                      <th style="text-align: right !important"></th>
-                                      <th style="text-align: right !important"></th>
-                                  </tr>
-                              </tfoot>
+                                    <tr>
+                                        <th colspan="3" style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                         <br>
@@ -246,128 +247,128 @@
 
 @section('script')
     <script>
+        $(document).ready(function() {
+            var sU = "{{ @$sU }}";
+            var sD = "{{ @$sD }}";
+            var total_thai_cambodia_aicash;
 
-$(document).ready(function() {
-        var sU = "{{ @$sU }}";
-        var sD = "{{ @$sD }}";
-        var total_thai_cambodia_aicash;
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.00';
+            }
 
-        function numberWithCommas(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.00';
-        }
+            $(function() {
+                total_thai_cambodia_aicash = $('#thai_cambodia_aicash').DataTable({
+                    "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    // scroller: true,
+                    // scrollCollapse: true,
+                    // scrollX: true,
+                    // ordering: false,
+                    // scrollY: '' + ($(window).height() - 370) + 'px',
+                    iDisplayLength: 100,
+                    ajax: {
+                        url: '{{ route('backend.total_thai_cambodia_aicash_full.datatable') }}',
+                        data: function(d) {
+                            d.business_location = $('#business_location').val();
+                            d.status_search = $('#status_search').val();
+                            d.startDate = $('#startDate').val();
+                            d.endDate = $('#endDate').val();
+                            d.action_user = $('#action_user').val();
+                            d.report_type = 'day';
+                        },
+                        method: 'POST'
+                    },
+                    columns: [{
+                            data: 'customer_name',
+                            title: '<center>ลูกค้า</center>',
+                            className: 'text-left'
+                        },
+                        {
+                            data: 'action_date',
+                            title: '<center>วันที่ทำรายการ</center>',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'invoice',
+                            title: '<center>Invoice</center>',
+                            className: 'text-left'
+                        },
+                        {
+                            data: 'got',
+                            title: '<center>ยอดเติม</center>',
+                            className: 'text-right'
+                        },
+                        {
+                            data: 'lost',
+                            title: '<center>ยอดจ่าย</center>',
+                            className: 'text-right'
+                        },
+                        {
+                            data: 'total_balance',
+                            title: '<center>ยอดคงเหลือ</center>',
+                            className: 'text-right'
+                        },
+                    ],
+                    // order: [
+                    //     [0, 'DESC']
+                    // ],
+                    "footerCallback": function(row, data, start, end, display) {
+                        var api = this.api(),
+                            data;
 
-        $(function() {
-            total_thai_cambodia_aicash = $('#thai_cambodia_aicash').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                // scroller: true,
-                // scrollCollapse: true,
-                // scrollX: true,
-                // ordering: false,
-                // scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 100,
-                ajax: {
-                    url: '{{ route('backend.total_thai_cambodia_aicash_full.datatable') }}',
-                    data: function(d) {
-                        d.business_location = $('#business_location').val();
-                        d.status_search = $('#status_search').val();
-                        d.startDate = $('#startDate').val();
-                        d.endDate = $('#endDate').val();
-                        d.action_user = $('#action_user').val();
-                        d.report_type = 'day';
-                    },
-                    method: 'POST'
-                },
-                columns: [{
-                        data: 'customer_name',
-                        title: '<center>ลูกค้า</center>',
-                        className: 'text-left'
-                    },
-                    {
-                        data: 'action_date',
-                        title: '<center>วันที่ทำรายการ</center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'invoice',
-                        title: '<center>Invoice</center>',
-                        className: 'text-left'
-                    },
-                    {
-                        data: 'got',
-                        title: '<center>ยอดเติม</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'lost',
-                        title: '<center>ยอดจ่าย</center>',
-                        className: 'text-right'
-                    },
-                    {
-                        data: 'total_balance',
-                        title: '<center>ยอดคงเหลือ</center>',
-                        className: 'text-right'
-                    },
-                ],
-                // order: [
-                //     [0, 'DESC']
-                // ],
-                "footerCallback": function(row, data, start, end, display) {
-                    var api = this.api(),
-                        data;
+                        // Remove the formatting to get integer data for summation
+                        var intVal = function(i) {
+                            return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                typeof i === 'number' ?
+                                i : 0;
+                        };
 
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
 
-                    got_total = api
-                        .column(3, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                        got_total = api
+                            .column(3, {
+                                page: 'current'
+                            })
+                            .data()
+                            .reduce(function(a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
 
                         lost_total = api
-                        .column(4, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            .column(4, {
+                                page: 'current'
+                            })
+                            .data()
+                            .reduce(function(a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
 
                         total_balance_total = api
-                        .column(5, {
-                            page: 'current'
-                        })
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                            .column(5, {
+                                page: 'current'
+                            })
+                            .data()
+                            .reduce(function(a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
 
-                    // Update footer
-                    $(api.column(1).footer()).html('Total');
-                    $(api.column(3).footer()).html(numberWithCommas(got_total));
-                    $(api.column(4).footer()).html(numberWithCommas(lost_total));
-                    $(api.column(5).footer()).html(numberWithCommas(total_balance_total));
-                }
+                        // Update footer
+                        $(api.column(1).footer()).html('Total');
+                        $(api.column(3).footer()).html(numberWithCommas(got_total));
+                        $(api.column(4).footer()).html(numberWithCommas(lost_total));
+                        $(api.column(5).footer()).html(numberWithCommas(total_balance_total));
+                    }
 
-            });
+                });
 
-            $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-                total_thai_cambodia_aicash.draw();
+                $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+                    total_thai_cambodia_aicash.draw();
+                });
+
             });
 
         });
-
-      });
 
         // var sU = "{{ @$sU }}";
         // var sD = "{{ @$sD }}";
