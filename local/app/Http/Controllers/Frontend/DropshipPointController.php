@@ -14,7 +14,7 @@ use App\Http\Controllers\Frontend\Fc\RunPvController;
 use App\Models\Db_Ai_stockist;
 use App\Models\Frontend\Customer;
 
-class AipocketController extends Controller
+class DropshipPointController extends Controller
 {
 
   public function __construct()
@@ -31,10 +31,10 @@ class AipocketController extends Controller
       ->orderby('order')
       ->get();
 
-    return view('frontend/aistockist', compact('type'));
+    return view('frontend/dropship-point', compact('type'));
   }
 
-  public function dt_aipocket(Request $request)
+  public function dt_dropship(Request $request)
   {
     //$date = date('Y-m-d');
 
@@ -54,7 +54,7 @@ class AipocketController extends Controller
       ->leftjoin('users', 'users.id', '=', 'ai_stockist.user_id_fk')
       ->leftjoin('dataset_orders_type', 'ai_stockist.type_id', '=', 'dataset_orders_type.group_id')
       ->where('dataset_orders_type.lang_id', '=', '1')
-      ->where('ai_stockist.order_channel', '=', 'MEMBER')
+      ->where('ai_stockist.order_channel', '=', 'VIP')
       ->where('ai_stockist.status', '!=', 'panding')
       ->whereRaw('(ai_stockist.customer_id = ' . Auth::guard('c_user')->user()->id . ' or  ai_stockist.to_customer_id =' . Auth::guard('c_user')->user()->id . ')')
       ->get();
@@ -408,7 +408,7 @@ class AipocketController extends Controller
     return $data;
   }
 
-  public function use_aipocket(Request $request)
+  public function use_dropship(Request $request)
   {
     $type = $request->type;
     $pv = str_replace(',', '', $request->pv);
@@ -428,52 +428,53 @@ class AipocketController extends Controller
       ->count();
 
       if($check_register == 0 ){
-        return redirect('ai-stockist')->withError($to_customer_user.' ยังไม่ผ่านการตรวจเอกสาร ไม่สามารถโอนคะแนนได้');
+        return redirect('dropship-point')->withError($to_customer_user.' ยังไม่ผ่านการตรวจเอกสาร ไม่สามารถโอนคะแนนได้');
       }
 
     }else{
-      return redirect('ai-stockist')->withError('ไม่พบข้อมูลผู้ในระบบ กรุณาตรวจสอบข้อมูล UserName');
+      return redirect('dropship-point')->withError('ไม่พบข้อมูลผู้ในระบบ กรุณาตรวจสอบข้อมูล UserName');
     }
 
-    if ($pv > Auth::guard('c_user')->user()->pv_aistockist) {
-      return redirect('ai-stockist')->withError('PV Ai-Stockist ของคุณมีไม่เพียงพอ ');
+    if ($pv > Auth::guard('c_user')->user()->drop_ship_bonus) {
+      return redirect('dropship-point')->withError('Dropship point ของคุณมีไม่เพียงพอ ');
     } else {
       if ($type == 1) {
-        $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
+        $resule = Runpv_AiStockis::run_pv_dropship($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
 
         //dd($resule);
         if ($resule['status'] == 'success') {
            $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($to_customer_user);
 
-          return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
+          return redirect('dropship-point')->withSuccess('Sent Dropship point Success');
         } else {
-          return redirect('ai-stockist')->withError('Sent Ai-Stockist Fail');
+          return redirect('dropship-point')->withError('Sent Dropship point Fail');
         }
       } elseif ($type == 2) {
-        $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
+        $resule = Runpv_AiStockis::run_pv_dropship($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
         //dd($resule);
         if ($resule['status'] == 'success') {
           $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($to_customer_user);
-          return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
+          return redirect('dropship-point')->withSuccess('Sent Dropship point Success');
         } else {
-          return redirect('ai-stockist')->withError('Sent Ai-Stockist Fail');
+          return redirect('dropship-point')->withError('Sent Dropship point Fail');
         }
       } elseif ($type == 3) {
-        $resule = Runpv_AiStockis::run_pv($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
+        $resule = Runpv_AiStockis::run_pv_dropship($type, $pv, $to_customer_user, Auth::guard('c_user')->user()->user_name);
         //dd($resule);
         if ($resule['status'] == 'success') {
           $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($to_customer_user);
-          return redirect('ai-stockist')->withSuccess('Sent Ai-Stockist Success');
+          return redirect('dropship-point')->withSuccess('Sent Dropship point Success');
         } else {
-          return redirect('ai-stockist')->withError('Sent Ai-Stockist Fail');
+          return redirect('dropship-point')->withError('Sent Dropship point Fail');
         }
       } else {
-        return redirect('ai-stockist')->withError('ไม่มีคุณสมบัติที่เลือก');
+        return redirect('dropship-point')->withError('ไม่มีคุณสมบัติที่เลือก');
       }
     }
   }
 
-  public static function cancel_aistockist(Request $rs)
+
+  public static function cancel_dropship(Request $rs)
   {
 
     if (empty($rs->cancel_code)) {
@@ -519,11 +520,11 @@ class AipocketController extends Controller
     $update_ai_stockist->status_transfer = 2;
     $update_ai_stockist->status_add_remove = 'add';
     $customer = Customer::find($ai_stockist->customer_id);
-    $add_pv_aistockist = $customer->pv_aistockist + $ai_stockist->pv;
+    $add_pv_aistockist = $customer->drop_ship_bonus + $ai_stockist->pv;
     $update_ai_stockist->banlance = $add_pv_aistockist;
     $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
 
-    $customer->pv_aistockist = $add_pv_aistockist;
+    $customer->drop_ship_bonus = $add_pv_aistockist;
 
     if ($ai_stockist->type_id == 1) { //ทำคุณสมบัติ
 
@@ -564,7 +565,7 @@ class AipocketController extends Controller
       $rs = RunPvController::Cancle_pv($ai_stockist->c_to, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
 
     } else {
-      return redirect('ai-stockist')->withError('ไม่สามารถยกเลิกบิลได้ กรุณาติดต่อเจ้าหน้าที่');
+      return redirect('dropship-point')->withError('ไม่สามารถยกเลิกบิลได้ กรุณาติดต่อเจ้าหน้าที่');
     }
 
     if ($rs['status'] == 'success') {
@@ -575,11 +576,10 @@ class AipocketController extends Controller
 
       $update_ai_stockist->save();
       $customer->save();
-      return redirect('ai-stockist')->withSuccess($rs['message']);
+      return redirect('dropship-point')->withSuccess($rs['message']);
     } else {
-      return redirect('ai-stockist')->withError($rs['message']);
+      return redirect('dropship-point')->withError($rs['message']);
     }
   }
-
 
 }

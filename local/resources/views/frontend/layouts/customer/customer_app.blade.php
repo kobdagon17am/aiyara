@@ -525,6 +525,14 @@
 			</a>
 		</li>
 
+    <li class="{{ (request()->is('dropship-point')) ? 'active' : '' }}">
+			<a href="{{route('dropship-point')}}">
+				<span class="pcoded-micon"><i class="ti-wallet text-success"></i><b> Dropship point</b></span>
+				<span class="pcoded-mtext"> Dropship point</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
     <li class="{{ (request()->is('course'))  ? 'active' : '' }}">
 			<a href="{{route('course')}}">
 				<span class="pcoded-micon"><i class="fa fa-black-tie text-success"></i><b> @lang('message.courseevent')</b></span>
