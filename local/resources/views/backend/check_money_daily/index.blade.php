@@ -206,6 +206,15 @@
                     <div class="myBorder">
                         <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย Ai-Cash </span>
                         <table id="data-table-0002_2" class="table table-bordered " style="width: 84%;">
+                          <tfoot>
+                            <tr>
+                                <th colspan="4" style="text-align: right !important"></th>
+                                <th style="text-align: right !important"></th>
+                                <th style="text-align: right !important"></th>
+                                <th style="text-align: right !important"></th>
+                                <th style="text-align: right !important"></th>
+                            </tr>
+                        </tfoot>
                         </table>
                     </div>
 
@@ -625,6 +634,11 @@
                         className: 'text-center'
                     },
                     {
+                        data: 'total_money_all',
+                        title: '<span style="vertical-align: middle;"> ยอดขาย (รวม) </span> ',
+                        className: 'text-right'
+                    },
+                    {
                         data: 'total_money',
                         title: '<span style="vertical-align: middle;"> ยอดขาย (เฉพาะเงินสด) </span> ',
                         className: 'text-right'
@@ -657,6 +671,61 @@
                         }
                     }
 
+                },
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    all_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_send = api
+                        .column(6, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_reciept = api
+                        .column(7, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    // console.log(all_total);
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(all_total));
+                    $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
+                    $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
+                    $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
                 }
             });
 
@@ -800,6 +869,61 @@
 
                     }
 
+                },
+                "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    all_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_send = api
+                        .column(6, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_reciept = api
+                        .column(7, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    // console.log(all_total);
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(all_total));
+                    $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
+                    $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
+                    $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
                 }
             });
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
@@ -1107,7 +1231,62 @@
                                 }
                             }
 
-                        }
+                        },
+                        "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    all_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_send = api
+                        .column(6, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_reciept = api
+                        .column(7, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    // console.log(all_total);
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(all_total));
+                    $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
+                    $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
+                    $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
+                }
                     });
 
                 });
@@ -1181,7 +1360,62 @@
                                 }
                             }
 
-                        }
+                        },
+                        "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    all_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_send = api
+                        .column(6, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_total_cash_reciept = api
+                        .column(7, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    // console.log(all_total);
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(all_total));
+                    $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
+                    $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
+                    $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
+                }
                     });
 
                 });

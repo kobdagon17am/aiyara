@@ -1474,6 +1474,7 @@ class Check_money_dailyController extends Controller
                 dataset_pay_type.detail AS pay_type,
                 date(db_add_ai_cash.created_at) AS action_date,
                 sum(db_add_ai_cash.cash_pay) as cash_pay,
+                sum(db_add_ai_cash.total_amt) as total_amt,
                 sum(db_add_ai_cash.credit_price) as credit_price,
                 sum(db_add_ai_cash.transfer_price) as transfer_price,
                 sum(db_add_ai_cash.fee_amt) as fee_amt,
@@ -1494,14 +1495,21 @@ class Check_money_dailyController extends Controller
                       <tr>
                         <th>พนักงานขาย</th>
                         <th class="text-right">เงินสด</th>
+                        <th class="text-right">เงินโอน</th>
+                        <th class="text-right">เครดิต</th>
                       </tr>
                     </thead>
 
                         <tbody>';
 
                   $cash_pay_total = 0;
-
+                  $transfer_price_total = 0;
+                  $credit_price_total = 0;
+                  $total_amt = 0;
                 foreach(@$sDBFrontstoreSumCostActionUser AS $r){
+                  $cash_pay_total+=$r->cash_pay;
+                  $transfer_price_total+=$r->transfer_price;
+                  $total_amt+=$r->total_amt;
                   $cash_pay_total+=$r->cash_pay;
                      @$cnt_row1 += 1;
                               @$sum_cash_pay += $r->cash_pay;
@@ -1514,12 +1522,14 @@ class Check_money_dailyController extends Controller
                                 '<tr>
                                 <td>'.$r->action_user_name.'</td>
                                 <td class="text-right"> '.number_format($r->cash_pay,2).' </td>
+                                <td class="text-right"> '.number_format($r->transfer_price,2).' </td>
+                                <td class="text-right"> '.number_format($r->credit_price,2).' </td>
                                </tr>';
                 }
 
                 $pn .= '<tr>
-                <td class="text-right"><b>รวมทั้งสิ้น</b></td>
-                <td class="text-right">'.number_format($cash_pay_total,2).'</td>
+                <td class="text-right" colspan="3"><b>รวมทั้งสิ้น</b></td>
+                <td class="text-right">'.number_format($total_amt,2).'</td>
                 </tr>';
 
                 $pn .=   '
@@ -2216,32 +2226,34 @@ class Check_money_dailyController extends Controller
 
       GROUP BY DATE(db_add_ai_cash.created_at) , db_add_ai_cash.action_user
 
-      UNION ALL
-      SELECT
-      db_add_ai_cash.*,
-      db_add_ai_cash.action_user AS order_action_user,
-      DATE(db_add_ai_cash.created_at) AS created_date,
-      dataset_business_location.txt_desc AS business_location,
-      branchs.b_name AS branch_name,
-      ck_users_admin.`name` as action_user ,
-      sum(cash_pay) as ttp,
-      2 as remark
-      FROM
-      db_add_ai_cash
-      Left Join dataset_business_location ON db_add_ai_cash.business_location_id_fk = dataset_business_location.id
-      Left Join branchs ON db_add_ai_cash.branch_id_fk = branchs.id
-      Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
-      WHERE
-      db_add_ai_cash.code_order!=''
-      $w01
-      $w02
-      $w03
-      $w04
-      $w05
-
-      AND cash_pay > 0
 
     ");
+
+
+    // UNION ALL
+    // SELECT
+    // db_add_ai_cash.*,
+    // db_add_ai_cash.action_user AS order_action_user,
+    // DATE(db_add_ai_cash.created_at) AS created_date,
+    // dataset_business_location.txt_desc AS business_location,
+    // branchs.b_name AS branch_name,
+    // ck_users_admin.`name` as action_user ,
+    // sum(cash_pay) as ttp,
+    // 2 as remark
+    // FROM
+    // db_add_ai_cash
+    // Left Join dataset_business_location ON db_add_ai_cash.business_location_id_fk = dataset_business_location.id
+    // Left Join branchs ON db_add_ai_cash.branch_id_fk = branchs.id
+    // Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
+    // WHERE
+    // db_add_ai_cash.code_order!=''
+    // $w01
+    // $w02
+    // $w03
+    // $w04
+    // $w05
+
+    // AND cash_pay > 0
 
       $sQuery = \DataTables::of($sTable);
 
@@ -2284,11 +2296,11 @@ class Check_money_dailyController extends Controller
              if($row->remark==1){
 
                 if($r[0]->total_money)
-                return "<b>".number_format($r[0]->total_money,2)."</b>";
+                return number_format($r[0]->total_money,2);
 
              }else{
                if($row->ttp)
-               return "<b>".number_format($row->ttp,2)."</b>";
+               return number_format($row->ttp,2);
 
              }
            }else{
@@ -2298,6 +2310,59 @@ class Check_money_dailyController extends Controller
 
       })
       ->escapeColumns('total_money')
+
+      ->addColumn('total_money_all', function($row) use($w01,$w02,$w03,$w04,$w05) {
+
+        if($row->id){
+         $date=date_create($row->created_at);
+         $created_at = date_format($date,"Y-m-d");
+
+         $data = DB::select("
+         SELECT
+         db_add_ai_cash.id
+         FROM
+         db_add_ai_cash
+         WHERE
+         db_add_ai_cash.code_order!=''
+         $w01
+         $w02
+         $w03
+         $w04
+         $w05
+         AND db_add_ai_cash.action_user = ".$row->order_action_user."
+         AND date(db_add_ai_cash.created_at)='".$created_at."'
+       ");
+
+       $arr = "";
+       foreach($data as $key=>$d){
+         if($key+1 == count($data)){
+            $arr.=$d->id;
+         }else{
+            $arr.=$d->id.',';
+         }
+
+       }
+
+         $r = DB::select(" SELECT sum(total_amt) as total_money FROM db_add_ai_cash WHERE id in (".$arr.") ");
+
+             if($r){
+             if($row->remark==1){
+
+                if($r[0]->total_money)
+                return number_format($r[0]->total_money,2);
+
+             }else{
+               if($row->ttp)
+               return number_format($row->ttp,2);
+
+             }
+           }else{
+            return '';
+           }
+         }
+
+      })
+      ->escapeColumns('total_money_all')
 
       ->addColumn('total_money_sent', function($row) use($w01,$w02,$w03,$w04,$w05) {
 
@@ -2364,12 +2429,12 @@ class Check_money_dailyController extends Controller
               if($row->remark==1){
 
                  if($r[0]->total_money)
-                 return "<b>".number_format($r[0]->total_money,2)."</b>";
+                 return number_format($r[0]->total_money,2);
                  else return '0.00';
 
               }else{
                 if($row->ttp)
-                return "<b>".number_format($r2[0]->total_money,2)."</b>";
+                return number_format($r2[0]->total_money,2);
 
               }
             }else{
@@ -2446,12 +2511,12 @@ class Check_money_dailyController extends Controller
               if($row->remark==1){
 
                  if($r[0]->total_money)
-                 return "<b>".number_format($r[0]->total_money,2)."</b>";
+                 return number_format($r[0]->total_money,2);
                  else return '0.00';
 
               }else{
                 if($row->ttp)
-                return "<b>".number_format($r2[0]->total_money,2)."</b>";
+                return number_format($r2[0]->total_money,2);
 
               }
             }else{
