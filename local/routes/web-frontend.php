@@ -187,6 +187,12 @@ Route::get('dt_gift_order_history','Frontend\GiftVoucherController@dt_gift_order
 Route::post('upload_slip_aicash','Frontend\AiCashController@upload_slip_aicash')->name('upload_slip_aicash');
 
 Route::get('ai-stockist','Frontend\AipocketController@index')->name('ai-stockist');
+Route::get('dropship-point','Frontend\DropshipPointController@index')->name('dropship-point');
+Route::get('dt_dropship','Frontend\DropshipPointController@dt_dropship')->name('dt_dropship');
+Route::post('cancel_dropship','Frontend\DropshipPointController@cancel_dropship')->name('cancel_dropship');
+Route::post('use_dropship','Frontend\AipocketController@use_dropship')->name('use_dropship');
+
+
 Route::post('check_customer_id','Frontend\AipocketController@check_customer_id')->name('check_customer_id');
 Route::post('check_customer_aistockis','Frontend\AipocketController@check_customer_aistockis')->name('check_customer_aistockis');
 Route::post('use_aipocket','Frontend\AipocketController@use_aipocket')->name('use_aipocket');
