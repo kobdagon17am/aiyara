@@ -585,10 +585,11 @@ class Check_money_dailyController extends Controller
       }
 
       if(!empty($req->branch_id_fk)){
-         $w02 = " AND branch=".$req->branch_id_fk ;
+         $w02 = " AND (SELECT branch_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1)=".$req->branch_id_fk ;
       }else{
          $w02 = "";
       }
+
 
       if(!empty($req->seller)){
          $w03 = " AND db_sent_money_daily.sender_id=".$req->seller ;
@@ -1222,7 +1223,7 @@ class Check_money_dailyController extends Controller
       }
 
       if(!empty($req->branch_id_fk)){
-         $w02 = " AND branch=".$req->branch_id_fk ;
+         $w02 = " AND (SELECT branch_id_fk FROM db_add_ai_cash WHERE id in(db_sent_money_daily_ai.add_ai_ids) limit 1)=".$req->branch_id_fk ;
       }else{
          $w02 = "";
       }
