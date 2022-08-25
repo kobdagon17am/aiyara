@@ -1527,17 +1527,16 @@
                                 title: '<center>Tools</center>',
                                 className: 'text-center w100 ',
                                 render: function(d) {
-                                    var show = '<a style="' + d +
-                                        '" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' +
-                                        d + '" > ยกเลิก </a>';
-                                    return '<a style="' + d +
-                                        '" href="{{ route('backend.check_money_daily.index') }}/' +
-                                        d +
-                                        '/edit?fromFrontstore" class="btn btn-sm btn-primary" style="' +
-                                        sU +
-                                        '" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ' +
-                                        show;
-                                }
+                            var show = '<a style="' + d +
+                                '" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' +
+                                d + '" > ยกเลิก </a>';
+                            return '<a style="' + d +
+                                '" href="{{ url('backend/check_money_daily_ai/') }}/' + d +
+                                '/edit?fromFrontstore" class="btn btn-sm btn-primary" style="' +
+                                sU +
+                                '" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ' +
+                                show;
+                        }
                             },
                         ],
                         rowCallback: function(nRow, aData, dataIndex) {
