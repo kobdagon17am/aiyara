@@ -280,7 +280,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                         {
                             "data": "pv",
                             "name": "pv",
-                            "title": '<center>Ai-Stockist</center>',
+                            "title": '<center>Dropship Point</center>',
                         },
                         {
                             "data": "banlance",

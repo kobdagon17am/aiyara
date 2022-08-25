@@ -251,7 +251,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     ?>
 
                     @if($customer_upline)
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                   <span>ภายใต้สายงาน : @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
                     {{ $customer_upline->business_name }}
                     @else
@@ -259,18 +259,18 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     @endif
                   </span>
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                       <span>สาย :  {{$customer_upline->line_type}} </span>
-                    </div>
+                    </div> --}}
                   @else
-                  <div class="col-md-6">
+                  <div class="col-md-12">
                   <span>ภายใต้สายงาน : - </span>
                   </div>
 
-                  <div class="col-md-6">
+                  {{-- <div class="col-md-6">
                     <span>สาย :  - </span>
 
-                  </div>
+                  </div> --}}
                   @endif
 
                   <?php
@@ -278,7 +278,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   ?>
 
                   @if($customer_introduce)
-                  <div class="col-md-6">
+                  <div class="col-md-12">
                 <span>ผู้แนะนำ : @if ($customer_introduce->business_name and $customer_introduce->business_name  != '-')
                   {{ $customer_introduce->business_name }}
                   @else
@@ -286,18 +286,18 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   @endif
                 </span>
                   </div>
-                  <div class="col-md-6">
+                  {{-- <div class="col-md-6">
                     <span>สาย :  {{$customer_introduce->introduce_type}} </span>
-                  </div>
+                  </div> --}}
                 @else
-                <div class="col-md-6">
+                <div class="col-md-12">
                 <span>ผู้แนะนำ : - </span>
                 </div>
 
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                   <span>สาย :  - </span>
 
-                </div>
+                </div> --}}
                 @endif
 
 
