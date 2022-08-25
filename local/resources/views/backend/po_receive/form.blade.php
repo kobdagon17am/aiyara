@@ -662,6 +662,7 @@
                         {data: 'amt_get', title :'<center>จำนวนที่ได้รับ', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'warehouses', title :'สินค้าอยู่ที่', className: 'text-center'},
+                        {data: 'lot_detail', title :'Lot', className: 'text-center'},
                         {data: 'id', title :'<center>Tools', className: 'text-center w80'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){

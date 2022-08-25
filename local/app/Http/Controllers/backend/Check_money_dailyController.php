@@ -1709,33 +1709,35 @@ class Check_money_dailyController extends Controller
       AND cash_pay > 0
 
       GROUP BY DATE(db_orders.created_at) , db_orders.action_user
-
-      UNION ALL
-      SELECT
-      db_orders.*,
-      db_orders.action_user AS order_action_user,
-      DATE(db_orders.created_at) AS created_date,
-      dataset_business_location.txt_desc AS business_location,
-      branchs.b_name AS branch_name,
-      ck_users_admin.`name` as action_user ,
-      sum(cash_pay) as ttp,
-      2 as remark
-      FROM
-      db_orders
-      Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
-      Left Join branchs ON db_orders.branch_id_fk = branchs.id
-      Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-      WHERE
-      db_orders.invoice_code!=''
-      $w01
-      $w02
-      $w03
-      $w04
-      $w05
-
-      AND cash_pay > 0
-
     ");
+
+    // วุฒิเอาออก
+    // UNION ALL
+    // SELECT
+    // db_orders.*,
+    // db_orders.action_user AS order_action_user,
+    // DATE(db_orders.created_at) AS created_date,
+    // dataset_business_location.txt_desc AS business_location,
+    // branchs.b_name AS branch_name,
+    // ck_users_admin.`name` as action_user ,
+    // sum(cash_pay) as ttp,
+    // 2 as remark
+    // FROM
+    // db_orders
+    // Left Join dataset_business_location ON db_orders.business_location_id_fk = dataset_business_location.id
+    // Left Join branchs ON db_orders.branch_id_fk = branchs.id
+    // Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+    // WHERE
+    // db_orders.invoice_code!=''
+    // $w01
+    // $w02
+    // $w03
+    // $w04
+    // $w05
+
+    // AND cash_pay > 0
+
+    // -------------------------------------------------------
 
 //     $text = "
 
@@ -1900,11 +1902,11 @@ class Check_money_dailyController extends Controller
              if($row->remark==1){
 
                 if($r[0]->total_money)
-                return "<b>".number_format($r[0]->total_money,2)."</b>";
+                return number_format($r[0]->total_money,2);
 
              }else{
                if($row->ttp)
-               return "<b>".number_format($row->ttp,2)."</b>";
+               return number_format($row->ttp,2);
 
              }
            }else{
@@ -1970,11 +1972,11 @@ class Check_money_dailyController extends Controller
              if($row->remark==1){
 
                 if($r[0]->total_price)
-                return "<b>".number_format($r[0]->total_price,2)."</b>";
+                return number_format($r[0]->total_price,2);
 
              }else{
                if($row->ttp)
-               return "<b>".number_format($row->ttp,2)."</b>";
+               return number_format($row->ttp,2);
 
              }
            }else{
@@ -2051,12 +2053,12 @@ class Check_money_dailyController extends Controller
               if($row->remark==1){
 
                  if($r[0]->total_money)
-                 return "<b>".number_format($r[0]->total_money,2)."</b>";
+                 return number_format($r[0]->total_money,2);
                  else return '0.00';
 
               }else{
                 if($row->ttp)
-                return "<b>".number_format($r2[0]->total_money,2)."</b>";
+                return number_format($r2[0]->total_money,2);
 
               }
             }else{
@@ -2133,12 +2135,12 @@ class Check_money_dailyController extends Controller
               if($row->remark==1){
 
                  if($r[0]->total_money)
-                 return "<b>".number_format($r[0]->total_money,2)."</b>";
+                 return number_format($r[0]->total_money,2);
                  else return '0.00';
 
               }else{
                 if($row->ttp)
-                return "<b>".number_format($r2[0]->total_money,2)."</b>";
+                return number_format($r2[0]->total_money,2);
 
               }
             }else{

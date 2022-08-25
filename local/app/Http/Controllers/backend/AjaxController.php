@@ -4781,7 +4781,9 @@ class AjaxController extends Controller
             -- AND status_sent_money <> 1
             AND status_sent_money = 0
             AND code_order <> ''
-            AND (db_orders.cash_price>0 or db_orders.cash_pay>0)  ");
+            -- AND (db_orders.cash_price>0 or db_orders.cash_pay>0)
+            ");
+
     // วุฒิแก้ไข ให้เอาเฉพาะบิลเงินสด
     // AND (db_orders.cash_price>0 or db_orders.credit_price>0 or db_orders.transfer_price>0 or db_orders.aicash_price>0 or db_orders.total_price>0)  ");
             $r0_ai = DB::select(" SELECT * FROM `db_add_ai_cash`
@@ -4793,7 +4795,8 @@ class AjaxController extends Controller
             -- AND status_sent_money <> 1
             AND status_sent_money = 0
             AND code_order <> ''
-            AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.cash_pay>0)  ");
+            -- AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.cash_pay>0)
+            ");
         // วุฒิแก้ไข ให้เอาเฉพาะบิลเงินสด
         //  AND (db_add_ai_cash.cash_price>0 or db_add_ai_cash.credit_price>0 or db_add_ai_cash.transfer_price>0)  ");
 

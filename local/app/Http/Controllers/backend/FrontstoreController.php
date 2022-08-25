@@ -3147,10 +3147,12 @@ class FrontstoreController extends Controller
     ->where('db_orders.status_sent_money',0)
     ->where('db_orders.code_order','!=','')
     ->where('db_orders.action_user',$user_login_id)
-    ->where(function($query) {
-      $query->where('db_orders.cash_price','>',0)
-            ->orWhere('db_orders.cash_pay', '>', 0);
-  })->orderBy('db_orders.created_at','desc')
+
+  //   ->where(function($query) {
+  //     $query->where('db_orders.cash_price','>',0)
+  //           ->orWhere('db_orders.cash_pay', '>', 0);
+  // })
+  ->orderBy('db_orders.created_at','desc')
   ->get();
 
   $order_back_ai = DB::table('db_add_ai_cash')
@@ -3162,10 +3164,11 @@ class FrontstoreController extends Controller
   ->where('db_add_ai_cash.status_sent_money',0)
   ->where('db_add_ai_cash.code_order','!=','')
   ->where('db_add_ai_cash.action_user',$user_login_id)
-  ->where(function($query) {
-    $query->where('db_add_ai_cash.cash_price','>',0)
-          ->orWhere('db_add_ai_cash.cash_pay', '>', 0);
-})->orderBy('db_add_ai_cash.created_at','desc')
+//   ->where(function($query) {
+//     $query->where('db_add_ai_cash.cash_price','>',0)
+//           ->orWhere('db_add_ai_cash.cash_pay', '>', 0);
+// })
+->orderBy('db_add_ai_cash.created_at','desc')
 ->get();
 
   $p = '';

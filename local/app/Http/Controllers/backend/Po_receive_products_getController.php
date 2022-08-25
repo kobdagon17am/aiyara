@@ -472,6 +472,10 @@ class Po_receive_products_getController extends Controller
         // return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
         return @$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
       })
+      ->addColumn('lot_detail', function($row) {
+
+        return $row->lot_number .' / EXP : '.$row->lot_expired_date;
+    })
       ->make(true);
     }
 
