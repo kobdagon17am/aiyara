@@ -240,6 +240,68 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   <span>@lang('message.email') : {{ $data->email }}</span>
                 </div>
               </div>
+
+
+              <hr>
+              <p class="f-w-600 mb-2"> ข้อมูลสายงาน </p>
+              <div class="row f-14">
+
+                  <?php
+                    $customer_upline = Frontend::get_customer($data->upline_id);
+                    ?>
+
+                    @if($customer_upline)
+                    <div class="col-md-6">
+                  <span>ภายใต้สายงาน : @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
+                    {{ $customer_upline->business_name }}
+                    @else
+                    {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }}
+                    @endif
+                  </span>
+                    </div>
+                    <div class="col-md-6">
+                      <span>สาย :  {{$customer_upline->line_type}} </span>
+                    </div>
+                  @else
+                  <div class="col-md-6">
+                  <span>ภายใต้สายงาน : - </span>
+                  </div>
+
+                  <div class="col-md-6">
+                    <span>สาย :  - </span>
+
+                  </div>
+                  @endif
+
+                  <?php
+                  $customer_introduce = Frontend::get_customer($data->introduce_id);
+                  ?>
+
+                  @if($customer_introduce)
+                  <div class="col-md-6">
+                <span>ผู้แนะนำ : @if ($customer_introduce->business_name and $customer_introduce->business_name  != '-')
+                  {{ $customer_introduce->business_name }}
+                  @else
+                  {{$customer_introduce->prefix_name.' '.$customer_introduce->first_name.' '.$customer_introduce->last_name }}
+                  @endif
+                </span>
+                  </div>
+                  <div class="col-md-6">
+                    <span>สาย :  {{$customer_introduce->introduce_type}} </span>
+                  </div>
+                @else
+                <div class="col-md-6">
+                <span>ผู้แนะนำ : - </span>
+                </div>
+
+                <div class="col-md-6">
+                  <span>สาย :  - </span>
+
+                </div>
+                @endif
+
+
+              </div>
               <hr>
 
               <p class="f-w-600 mb-2">@lang('message.bankingaccount')</p>
@@ -260,6 +322,8 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   <span>@lang('message.accounttype') : {{ @$details->bank_type }}</span>
                 </div>
               </div>
+
+
               <hr>
 
               <p class="f-w-600 mb-2">@lang('message.address')</p>
