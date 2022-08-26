@@ -436,7 +436,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="" class="col-md-4 col-form-label"> ที่อยู่ : </label>
+                                <label for="" class="col-md-4 col-form-label"> ที่อยู่ <br> <span style="color:red;">กรุณาลบอักษรย่อ จ. ต. อ. ออกจากช่องที่อยู่  :</span> </label>
                                 <div class="col-md-7">
                                     <textarea id="delivery_addr" name="delivery_addr" class="form-control" rows="3" required></textarea>
                                 </div>
