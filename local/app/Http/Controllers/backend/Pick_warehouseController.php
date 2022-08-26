@@ -219,6 +219,7 @@ class Pick_warehouseController extends Controller
         array(
            'packing_id'=>@$sRow->id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>@$id,'requisition_code'=>@$requisition_code,
            'can_cancel_packing_sent'=>@$can_cancel_packing_sent,
+           'sRow' => @$sRow,
         ) );
       // return View('backend.pick_warehouse.qr');
 
