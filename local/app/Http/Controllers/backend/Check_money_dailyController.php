@@ -900,6 +900,7 @@ class Check_money_dailyController extends Controller
                 sum(db_orders.aicash_price) as aicash_price,
                 sum(db_orders.shipping_price) as shipping_price,
                 sum(db_orders.fee_amt) as fee_amt,
+                sum(db_orders.sum_credit_price) as sum_credit_price,
                 sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
                 FROM
                 db_orders
@@ -930,12 +931,12 @@ class Check_money_dailyController extends Controller
                   //    dd($id);
                   // }
                 foreach(@$sDBFrontstoreSumCostActionUser AS $r){
-                  $cash_pay_total+=$r->cash_pay + $r->transfer_price+ $r->credit_price+ $r->aicash_price;
+                  $cash_pay_total+=$r->cash_pay + $r->transfer_price+ $r->sum_credit_price+ $r->aicash_price;
                      @$cnt_row1 += 1;
                               @$sum_cash_pay += $r->cash_pay;
                               @$sum_aicash_price += $r->aicash_price;
                               @$sum_transfer_price += $r->transfer_price;
-                              @$sum_credit_price += $r->credit_price;
+                              @$sum_credit_price += $r->sum_credit_price;
                               @$sum_shipping_price += $r->shipping_price;
                               @$sum_fee_amt += $r->fee_amt;
                               @$sum_total_price += $r->total_price;
@@ -945,7 +946,7 @@ class Check_money_dailyController extends Controller
                                 <td>'.$r->action_user_name.'</td>
                                 <td class="text-right"> '.number_format($r->cash_pay,2).' </td>
                                 <td class="text-right"> '.number_format($r->transfer_price,2).' </td>
-                                <td class="text-right"> '.number_format($r->credit_price,2).' </td>
+                                <td class="text-right"> '.number_format($r->sum_credit_price,2).' </td>
                                 <td class="text-right"> '.number_format($r->aicash_price,2).' </td>
                                </tr>';
                 }
@@ -1376,7 +1377,7 @@ class Check_money_dailyController extends Controller
                             $pn .=
                               '
                               <div class="divTableRow invoice_code_list ">
-                              <div class="divTableCell" style="text-align:center;">'. $value->code_order.'</div>
+                              <div class="divTableCell" style="text-align:center;"><a href="'.url('backend/add_ai_cash/'.$value->id.'/edit').'">'. $value->code_order.'</a></div>
                               </div>
                               ';
                             $i++;
@@ -1476,10 +1477,10 @@ class Check_money_dailyController extends Controller
                 date(db_add_ai_cash.created_at) AS action_date,
                 sum(db_add_ai_cash.cash_pay) as cash_pay,
                 sum(db_add_ai_cash.total_amt) as total_amt,
-                sum(db_add_ai_cash.credit_price) as credit_price,
+                sum(db_add_ai_cash.sum_credit_price) as sum_credit_price,
                 sum(db_add_ai_cash.transfer_price) as transfer_price,
                 sum(db_add_ai_cash.fee_amt) as fee_amt,
-                sum(db_add_ai_cash.cash_pay+db_add_ai_cash.credit_price+db_add_ai_cash.transfer_price) as total_price
+                sum(db_add_ai_cash.cash_pay+db_add_ai_cash.sum_credit_price+db_add_ai_cash.transfer_price) as total_price
                 FROM
                 db_add_ai_cash
                 Left Join dataset_pay_type ON db_add_ai_cash.pay_type_id_fk = dataset_pay_type.id
@@ -1503,28 +1504,15 @@ class Check_money_dailyController extends Controller
 
                         <tbody>';
 
-                  $cash_pay_total = 0;
-                  $transfer_price_total = 0;
-                  $credit_price_total = 0;
                   $total_amt = 0;
                 foreach(@$sDBFrontstoreSumCostActionUser AS $r){
-                  $cash_pay_total+=$r->cash_pay;
-                  $transfer_price_total+=$r->transfer_price;
-                  $total_amt+=$r->total_amt;
-                  $cash_pay_total+=$r->cash_pay;
-                     @$cnt_row1 += 1;
-                              @$sum_cash_pay += $r->cash_pay;
-                              @$sum_transfer_price += $r->transfer_price;
-                              @$sum_credit_price += $r->credit_price;
-                              @$sum_fee_amt += $r->fee_amt;
-                              @$sum_total_price += $r->total_price;
-
+                  $total_amt+=$r->cash_pay+$r->transfer_price+$r->sum_credit_price;
                               $pn .=
                                 '<tr>
                                 <td>'.$r->action_user_name.'</td>
                                 <td class="text-right"> '.number_format($r->cash_pay,2).' </td>
                                 <td class="text-right"> '.number_format($r->transfer_price,2).' </td>
-                                <td class="text-right"> '.number_format($r->credit_price,2).' </td>
+                                <td class="text-right"> '.number_format($r->sum_credit_price,2).' </td>
                                </tr>';
                 }
 
@@ -1976,14 +1964,15 @@ class Check_money_dailyController extends Controller
        }
          // $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$row->id.") GROUP BY frontstore_id_fk ");
          //  $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$arr.") ");
-
-         $r = DB::select(" SELECT sum(cash_pay) as total_money , sum(total_price) as total_price FROM db_orders WHERE id in (".$arr.") ");
+         $cash_pay_total = 0;
+         $r = DB::select(" SELECT sum(cash_pay) as cash_pay , sum(transfer_price) as transfer_price ,sum(sum_credit_price) as sum_credit_price ,sum(aicash_price) as aicash_price FROM db_orders WHERE id in (".$arr.") ");
 
              if($r){
              if($row->remark==1){
+              $cash_pay_total+=$r[0]->cash_pay + $r[0]->transfer_price+ $r[0]->sum_credit_price+ $r[0]->aicash_price;
 
-                if($r[0]->total_price)
-                return number_format($r[0]->total_price,2);
+                if($cash_pay_total>0)
+                return number_format($cash_pay_total,2);
 
              }else{
                if($row->ttp)
