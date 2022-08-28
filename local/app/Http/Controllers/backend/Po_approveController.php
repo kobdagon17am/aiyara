@@ -80,6 +80,8 @@ class Po_approveController extends Controller
         Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
         Session::put('can_approve', $can_approve);
 
+        // dd($can_approve);
+
 
         // $slip = DB::table('payment_slip')->where('order_id', '=', $id)->orderby('id', 'asc')->get();
         $slip = DB::table('payment_slip')->where('code_order', '=', $sRow->code_order)->orderby('id', 'asc')->get();
