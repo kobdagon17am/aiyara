@@ -3942,7 +3942,7 @@ $(document).ready(function(){
             });
 
 
-
+// คำนวนราคาหลังเลือกสินค้าโปร
             $(document).on('click', '.btn-plus-product-pro', function(e) {
                 $.fn.dataTable.ext.errMode = 'throw';
                 const input = $(e.target).closest('.input-group').find('input');

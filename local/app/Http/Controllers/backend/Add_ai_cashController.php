@@ -364,7 +364,7 @@ class Add_ai_cashController extends Controller
       if ($request->hasFile('image01') == true) {
         @UNLINK(@$sRow->file_slip);
         $this->validate($request, [
-          'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+          'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1000000',
         ]);
         $image = $request->file('image01');
         $name = '/G' . time() . '.' . $image->getClientOriginalExtension();
