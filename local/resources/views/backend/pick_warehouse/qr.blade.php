@@ -293,8 +293,10 @@
                                         <br>
 
                                         <div class="col-md-12 ">
-                                            <span style="font-weight: bold;padding-right: 10px;"><i
-                                                    class="bx bx-play"></i> นำเข้าเลขพัสดุจาก Kerry </span>
+                                            @if (@$sRow->status != 5)
+                                                <span style="font-weight: bold;padding-right: 10px;"><i
+                                                        class="bx bx-play"></i> นำเข้าเลขพัสดุจาก Kerry </span>
+                                            @endif
                                             <form class="form-horizontal" method="POST"
                                                 action="backend/uploadFileXLSConsignments" enctype="multipart/form-data">
                                                 {{ csrf_field() }}
@@ -304,26 +306,28 @@
                                                         value="{{ @$requisition_code }}">
                                                     <input type="hidden" name="id" value="{{ @$id }}">
 
-                                                    <div class="col-md-2">
-                                                        <input type="file" accept=".xlsx" class="form-control"
-                                                            name="fileXLS" required>
-                                                    </div>
-                                                    <div class="col-md-2" style="">
-                                                        <input type='submit' name="submit"
-                                                            class="btn btn-primary btnImXlsx " value='IMPORT'>
-                                                        &nbsp;
-                                                        &nbsp;
-                                                        &nbsp;
-                                                        <!-- <input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code'  > -->
+                                                    @if (@$sRow->status != 5)
+                                                        <div class="col-md-2">
+                                                            <input type="file" accept=".xlsx" class="form-control"
+                                                                name="fileXLS" required>
+                                                        </div>
+                                                        <div class="col-md-2" style="">
+                                                            <input type='submit' name="submit"
+                                                                class="btn btn-primary btnImXlsx " value='IMPORT'>
+                                                            &nbsp;
+                                                            &nbsp;
+                                                            &nbsp;
+                                                            <!-- <input type='button' class="btn btn-primary btnMapConsignments " value='Map Consignments Code'  > -->
 
-                                                        &nbsp;
-                                                        &nbsp;
-                                                        &nbsp;
-                                                        <input type='button' data-id="{{ @$id }}"
-                                                            class="btn btn-danger btnClearImport "
-                                                            value='Clear เพื่อนำเข้าใหม่'>
+                                                            &nbsp;
+                                                            &nbsp;
+                                                            &nbsp;
+                                                            <input type='button' data-id="{{ @$id }}"
+                                                                class="btn btn-danger btnClearImport "
+                                                                value='Clear เพื่อนำเข้าใหม่'>
 
-                                                    </div>
+                                                        </div>
+                                                    @endif
 
                                                     <div class="col-md-2">
                                                         <a href="backend/pick_warehouse/print_requisition/{{ @$id }}"
@@ -419,13 +423,15 @@
                                     @if (@$sUser[0]->status_sent == 5)
                                     @ELSE
                                         @if (@$sUser[0]->status_sent == 4)
-                                            <input type='button' class="btn btn-primary btnShippingFinished font-size-16 "
+                                            <input type='button'
+                                                class="btn btn-primary btnShippingFinished font-size-16 "
                                                 value="แจ้งสถานะว่าบริษัทขนส่งเข้ารับสินค้าแล้ว">
                                         @ELSE
                                             <input type='button' class="btn btn-primary btnPackingFinished font-size-16 "
                                                 value="แจ้งสถานะว่า Packing เรียบร้อยแล้ว">
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type='button' class="btn btn-primary btnShippingFinished font-size-16 "
+                                            <input type='button'
+                                                class="btn btn-primary btnShippingFinished font-size-16 "
                                                 value="บริษัทขนส่งเข้ารับสินค้าแล้ว" disabled="">
                                         @ENDIF
                                     @ENDIF
@@ -1343,7 +1349,7 @@
                                     // $('#data-table-0002').DataTable().clear().draw();
                                     location.replace(
                                         "{{ url('backend/pay_requisition_001') }}"
-                                        );
+                                    );
                                 }, 1000);
                             }
                         })
@@ -1358,7 +1364,7 @@
         });
     </script>
 
-    <?php 
+    <?php
 
 
     if(isset($_REQUEST['test_clear_data'])){
@@ -1375,7 +1381,7 @@
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
@@ -1384,10 +1390,10 @@
       DB::select("TRUNCATE db_stock_card_tmp;");
 
       DB::select("TRUNCATE db_consignments;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");

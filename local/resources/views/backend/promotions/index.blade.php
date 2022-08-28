@@ -195,7 +195,8 @@ $(function() {
               }
               var str_D = '';
               if(sD=='1'){
-                str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.promotions.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                // str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.promotions.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                str_D = '<a href="{{ url('backend/promotions_delete') }}/'+aData['id']+'" class="btn btn-sm btn-danger "><i class="bx bx-trash font-size-16 align-middle"></i></a>';
               }
               if(sU!='1' && sD!='1'){
                  $('td:last-child', nRow).html('-');
@@ -280,7 +281,8 @@ $(function() {
                                     }
                                     var str_D = '';
                                     if(sD=='1'){
-                                      str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.promotions.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                      str_D = '<a href="{{ url('backend/promotions_delete') }}/'+aData['id']+'" class="btn btn-sm btn-danger "><i class="bx bx-trash font-size-16 align-middle"></i></a>';
+                                      // str_D = '<a href="javascript: void(0);" data-url="{{ route('backend.promotions.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>';
                                     }
                                     if(sU!='1' && sD!='1'){
                                        $('td:last-child', nRow).html('-');

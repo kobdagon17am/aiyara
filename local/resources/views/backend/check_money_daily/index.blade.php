@@ -207,14 +207,14 @@
                         <span style="font-weight: bold;"> <i class="bx bx-play"></i> สรุปยอดขาย Ai-Cash </span>
                         <table id="data-table-0002_2" class="table table-bordered " style="width: 84%;">
                             <tfoot>
-                            <tr>
-                                <th colspan="4" style="text-align: right !important"></th>
-                                <th style="text-align: right !important"></th>
-                                <th style="text-align: right !important"></th>
-                                <th style="text-align: right !important"></th>
-                                <th style="text-align: right !important"></th>
-                            </tr>
-                        </tfoot>
+                                <tr>
+                                    <th colspan="4" style="text-align: right !important"></th>
+                                    <th style="text-align: right !important"></th>
+                                    <th style="text-align: right !important"></th>
+                                    <th style="text-align: right !important"></th>
+                                    <th style="text-align: right !important"></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
 
@@ -1309,7 +1309,7 @@
                         "paging": false,
                         destroy: true,
                         ajax: {
-                            url: '{{ route('backend.check_money_daily02.datatable') }}',
+                            url: '{{ route('backend.check_money_daily02_ai.datatable') }}',
                             type: "POST",
                             data: {
                                 _token: '{{ csrf_token() }}',
@@ -1322,7 +1322,9 @@
                                 business_location: 3,
                             },
                         },
-                        columns: [{
+                        columns: [
+                            // {data: 'created_at', title :'<span style="vertical-align: middle;"> วันที่ขาย </span> ', className: 'text-center'},
+                            {
                                 data: 'created_date',
                                 title: '<span style="vertical-align: middle;"> วันที่ขาย </span> ',
                                 className: 'text-center'
@@ -1362,6 +1364,7 @@
                                 title: '<span style="vertical-align: middle;"> ยอดรับเงิน</span> ',
                                 className: 'text-right'
                             },
+
                         ],
                         rowCallback: function(nRow, aData, dataIndex) {
 
@@ -1380,7 +1383,7 @@
                             }
 
                         },
-                                "footerCallback": function(row, data, start, end, display) {
+                        "footerCallback": function(row, data, start, end, display) {
                             var api = this.api(),
                                 data;
 
@@ -1431,9 +1434,12 @@
                             // Update footer
                             $(api.column(1).footer()).html('Total');
                             $(api.column(4).footer()).html(numberWithCommas(all_total));
-                            $(api.column(5).footer()).html(numberWithCommas(all_total_cash));
-                            $(api.column(6).footer()).html(numberWithCommas(all_total_cash_send));
-                            $(api.column(7).footer()).html(numberWithCommas(all_total_cash_reciept));
+                            $(api.column(5).footer()).html(numberWithCommas(
+                                all_total_cash));
+                            $(api.column(6).footer()).html(numberWithCommas(
+                                all_total_cash_send));
+                            $(api.column(7).footer()).html(numberWithCommas(
+                                all_total_cash_reciept));
                         }
                     });
 
@@ -1527,16 +1533,17 @@
                                 title: '<center>Tools</center>',
                                 className: 'text-center w100 ',
                                 render: function(d) {
-                            var show = '<a style="' + d +
-                                '" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' +
-                                d + '" > ยกเลิก </a>';
-                            return '<a style="' + d +
-                                '" href="{{ url('backend/check_money_daily_ai/') }}/' + d +
-                                '/edit?fromFrontstore" class="btn btn-sm btn-primary" style="' +
-                                sU +
-                                '" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ' +
-                                show;
-                        }
+                                    var show = '<a style="' + d +
+                                        '" href="javascript: void(0);" class="btn btn-sm btn-danger btnCancelSentMoney " send_id="' +
+                                        d + '" > ยกเลิก </a>';
+                                    return '<a style="' + d +
+                                        '" href="{{ url('backend/check_money_daily_ai/') }}/' +
+                                        d +
+                                        '/edit?fromFrontstore" class="btn btn-sm btn-primary" style="' +
+                                        sU +
+                                        '" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ' +
+                                        show;
+                                }
                             },
                         ],
                         rowCallback: function(nRow, aData, dataIndex) {

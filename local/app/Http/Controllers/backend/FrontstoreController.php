@@ -383,7 +383,7 @@ class FrontstoreController extends Controller
 
       if ($request->hasFile('image01')) {
         $this->validate($request, [
-          'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+          'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1000000',
         ]);
         $image = $request->file('image01');
         $name = 'S' . time() . '.' . $image->getClientOriginalExtension();

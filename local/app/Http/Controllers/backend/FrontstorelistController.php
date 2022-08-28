@@ -190,7 +190,7 @@ class FrontstorelistController extends Controller
     public function fnManageGiveaway($frontstore_id)
     {
 
- // แถม 
+ // แถม
       if(!empty($frontstore_id)){
 
             $sFrontstore = \App\Models\Backend\Frontstore::find($frontstore_id);
@@ -231,7 +231,7 @@ class FrontstorelistController extends Controller
                                 ->where('add_from', '4')
                                 ->get();
                                 if($_ch->count() == 0){
-                                      
+
                                       $insert_order_products_list_type_giveaway->frontstore_id_fk = $sFrontstore->id;
                                       $insert_order_products_list_type_giveaway->code_order = $sFrontstore->code_order;
                                       $insert_order_products_list_type_giveaway->customers_id_fk = $sFrontstore->customers_id_fk;
@@ -314,7 +314,7 @@ class FrontstorelistController extends Controller
         $this->fnManageGiveaway(@$request->frontstore_id);
         $sBranchs = DB::select(" select * from branchs where id=" . $request->branch_id_fk . " ");
         // if(!isset($sBranchs[0]->business_location_id_fk)){
-        //   $sBranchs[0]->business_location_id_fk = 
+        //   $sBranchs[0]->business_location_id_fk =
         // }
         for ($i=0; $i < count($request->product_id_fk) ; $i++) {
             // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
@@ -350,7 +350,7 @@ class FrontstorelistController extends Controller
 
               // return $sProducts;
               // dd();
-           
+
            $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
@@ -476,7 +476,7 @@ class FrontstorelistController extends Controller
                   total_price='0',
                   cash_price='0',
                   cash_pay='0'
-                  
+
                   WHERE id=$request->frontstore_id ");
 
 
@@ -488,13 +488,13 @@ class FrontstorelistController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-  
+
         if(isset($request->add_course)){
 
             $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
             $id = request('id');
 
-            for ($i=0; $i < count($id) ; $i++) { 
+            for ($i=0; $i < count($id) ; $i++) {
 
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = request('frontstore_id') ;
@@ -505,7 +505,7 @@ class FrontstorelistController extends Controller
                 $sRow->action_date = date('Y-m-d H:i:s');
                 $sRow->created_at = date('Y-m-d H:i:s');
                 $sRow->type_product = 'course' ;
-                
+
 
                 if(!empty(request('amt_apply')[$i])){
                     $Course_event = \App\Models\Backend\Course_event::find($id[$i]);
@@ -602,7 +602,7 @@ class FrontstorelistController extends Controller
 
         }
 
-       
+
        if(isset($request->update_delivery_custom)){
 
             DB::select(" UPDATE db_orders SET
@@ -761,15 +761,15 @@ class FrontstorelistController extends Controller
 
         }
 
- 
+
         if(isset($request->product_plus_pro)){
 
-     
+
 
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
 
-               
+
 
                 if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
@@ -789,32 +789,32 @@ class FrontstorelistController extends Controller
                 // วุฒิเช็คว่าเคยมีโปคูปองไหม
                 $check_promotion_same = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',@$request->frontstore_id)->where('promotion_code','!=','')->first();
                 if(!$check_promotion_same){
-                  
+
                   $sRow = new \App\Models\Backend\Frontstorelist;
                   $sRow->frontstore_id_fk    = @$request->frontstore_id ;
                   $sRow->amt    = @$amt;
                   $sRow->add_from    = '2';
                   $sRow->promotion_id_fk    = @$request->promotion_id_fk;
                   $sRow->promotion_code    = @$request->txtSearchPro;
-  
+
                   $sRow->selling_price    = @$Promotions_cost[0]->member_price;
                   $sRow->pv    = $pv;
                   $sRow->total_pv    =  $pv * @$request->quantity;
                   $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity;
                   $sRow->type_product    =  "promotion";
-  
+
                   $sRow->action_date    =  date('Y-m-d H:i:s');
                   $sRow->created_at = date('Y-m-d H:i:s');
                   $sRow->save();
-  
+
                   $dbOrder = \App\Models\Backend\Frontstore::find($request->frontstore_id);
                   $Customers = \App\Models\Backend\Customers::find($dbOrder->customers_id_fk);
-  
+
                   DB::select(" UPDATE `db_orders` SET `pv_total`='".$sRow->total_pv."' WHERE (`id`='".$request->frontstore_id."') ");
                   DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='2',used_user_name='".$Customers->user_name."',used_date=now() WHERE (`promotion_code`='".$sRow->promotion_code."') AND (`pro_status`='1') LIMIT 1");
-  
+
              $id =   @$request->frontstore_id;
-  
+
              $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id)  GROUP BY frontstore_id_fk ");
              // dd($sFrontstoreDataTotal);
              if($sFrontstoreDataTotal){
@@ -835,7 +835,7 @@ class FrontstorelistController extends Controller
                   // UPDATE `db_promotion_cus` SET `pro_status`='2' WHERE (`id`='1')
 
                 }
-              
+
 
         }
 
@@ -968,9 +968,9 @@ class FrontstorelistController extends Controller
                   total_price='0',
                   cash_price='0',
                   cash_pay='0'
-                  
+
                   WHERE id=$request->frontstore_id ");
-                 
+
 
 
           }
@@ -1009,9 +1009,11 @@ class FrontstorelistController extends Controller
       if(@$req->frontstore_id_fk){
          $sTable = DB::select("
             SELECT * from db_order_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=1 UNION
-            SELECT * from db_order_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=2 GROUP BY promotion_id_fk,promotion_code
+            SELECT * from db_order_products_list WHERE frontstore_id_fk = ".$req->frontstore_id_fk." and add_from=2
             ORDER BY add_from,id
         ");
+
+        // GROUP BY promotion_id_fk,promotion_code
 
       }else{
          $sTable = DB::select("
@@ -1114,7 +1116,7 @@ class FrontstorelistController extends Controller
           $Frontstore = \App\Models\Backend\Frontstore::find($row->frontstore_id_fk);
           if(@$Frontstore->purchase_type_id_fk){
               $purchase_type = DB::select(" select * from dataset_orders_type where id=".$Frontstore->purchase_type_id_fk." ");
-              return $purchase_type[0]->orders_type; 
+              return $purchase_type[0]->orders_type;
           }else{
               return '';
           }
@@ -1187,10 +1189,10 @@ class FrontstorelistController extends Controller
           (SELECT amt from db_order_products_list WHERE promotion_id_fk = promotions.id AND frontstore_id_fk='". $req->frontstore_id_fk."' limit 1) as frontstore_promotions_list,
           (SELECT customers_id_fk FROM `db_orders` WHERE id='". $req->frontstore_id_fk."'  limit 1) as customers_id_fk,
           '". $req->frontstore_id_fk."' as frontstore_id_fk
-          from promotions 
-          where promotions.status=1 AND 
+          from promotions
+          where promotions.status=1 AND
           promotions.promotion_coupon_status=0
-          
+
            AND
             (
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 1), ',', -1)  OR
@@ -1203,11 +1205,11 @@ class FrontstorelistController extends Controller
             )
             AND curdate() BETWEEN promotions.show_startdate and promotions.show_enddate
              AND business_location = ".@$branchs[0]->business_location_id_fk."
-            
+
       ");
 
 
-// AND promotions.all_available_purchase > 0 
+// AND promotions.all_available_purchase > 0
       $sQuery = \DataTables::of($sTable);
       return $sQuery
   ->addColumn('product_name', function($row) {
@@ -1292,7 +1294,7 @@ class FrontstorelistController extends Controller
            $Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
            if($Check){
               $arr = [];
-              for ($i=0; $i < count(@$Check) ; $i++) { 
+              for ($i=0; $i < count(@$Check) ; $i++) {
                    $c = array_column($Check,$i);
                    foreach ($c as $key => $value) {
                     if($value['status'] == "fail"){
@@ -1305,7 +1307,7 @@ class FrontstorelistController extends Controller
           }else{
             return 0;
           }
-         
+
       })
       ->escapeColumns('cuase_cannot_buy')
       ->make(true);
