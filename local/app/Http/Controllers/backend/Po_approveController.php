@@ -488,16 +488,13 @@ class Po_approveController extends Controller
 
 select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
 `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
-`customers_detail`.`bank_name` as `txt_bank_name`,
-`customers_detail`.`bank_account` as `txt_account_name`,
-`customers_detail`.`bank_no` as `txt_bank_number`,
+
 `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`
 from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk`
 left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk`
 left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
 left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
 left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
-left join `customers_detail` on `customers_detail`.`customer_id` = `db_orders`.`customers_id_fk`
 where
 pay_type_id_fk in (1,8,10,11,12) and
 `dataset_order_status`.`lang_id` = 1 and
@@ -533,6 +530,55 @@ ORDER BY code_order DESC
 
                 ");
 
+                // $sTable =     DB::select("
+
+                // select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
+                // `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
+                // `customers_detail`.`bank_name` as `txt_bank_name`,
+                // `customers_detail`.`bank_account` as `txt_account_name`,
+                // `customers_detail`.`bank_no` as `txt_bank_number`,
+                // `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`
+                // from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk`
+                // left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk`
+                // left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
+                // left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
+                // left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
+                // left join `customers_detail` on `customers_detail`.`customer_id` = `db_orders`.`customers_id_fk`
+                // where
+                // pay_type_id_fk in (1,8,10,11,12) and
+                // `dataset_order_status`.`lang_id` = 1 and
+                // (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
+                // `db_orders`.`id` != 0
+
+                // $business_location_id_fk
+                // $branch_id_fk
+                // $doc_id
+                // $transfer_amount_approver
+                // $transfer_bill_status
+                // $created_at
+                // $transfer_bill_approvedate
+                // $customer_id
+
+                // or
+                // pay_type_id_fk in (1,8,10,11,12) and
+                // `dataset_order_status`.`lang_id` = 1 and
+                // (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
+                // `db_orders`.`id` != 0
+
+                // $business_location_id_fk
+                // $action_user
+                // $doc_id
+                // $transfer_amount_approver
+                // $transfer_bill_status
+                // $created_at
+                // $transfer_bill_approvedate
+                // $customer_id
+
+                // ORDER BY code_order DESC
+
+
+                //                 ");
+
         $sQuery = \DataTables::of($sTable);
         return $sQuery
             ->addColumn('created_at', function ($row) {
@@ -540,8 +586,10 @@ ORDER BY code_order DESC
             })
 
             ->addColumn('customer_bank', function($row) {
+              $cus = DB::table('customers_detail')->select('bank_name','bank_account','bank_no')->where('customer_id',$row->customers_id_fk)->first();
 
-              return 'ธนาคาร : '.$row->txt_bank_name.'<br>'.'ชื่อบัญชี : '.$row->txt_account_name.'<br>'.'เลขที่บัญชี : '.$row->txt_bank_number;
+              return 'ธนาคาร : '.@$cus->bank_name.'<br>'.'ชื่อบัญชี : '.@$cus->bank_account.'<br>'.'เลขที่บัญชี : '.@$cus->bank_no;
+              // return 'ธนาคาร : '.' '.'<br>'.'ชื่อบัญชี : '.' '.'<br>'.'เลขที่บัญชี : '.' ';
             })
            ->escapeColumns('customer_bank')
 
