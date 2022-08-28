@@ -1,9 +1,10 @@
 @extends('backend.layouts.master')
 
-@section('title') Aiyara Planet @endsection
+@section('title')
+    Aiyara Planet
+@endsection
 
 @section('css')
-
     <style type="text/css">
         /* DivTable.com */
         .divTable {
@@ -131,9 +132,7 @@
             -moz-appearance: textfield;
             text-align: center;
         }
-
     </style>
-
 @endsection
 
 @section('content')
@@ -142,7 +141,8 @@
 
     <div class="row">
         <div class="col-md-12" style="">
-            <div id="spinner_frame" style="display: none;
+            <div id="spinner_frame"
+                style="display: none;
                         position: fixed;
                         top: 50%;
                         left: 50%;
@@ -195,28 +195,28 @@
     <?php
 
     /*
-             1  เงินโอน
-            2 บัตรเครดิต
-            3 Ai-Cash
-            4 Gift Voucher
+                 1  เงินโอน
+                2 บัตรเครดิต
+                3 Ai-Cash
+                4 Gift Voucher
 
-            5 เงินสด
-            6 เงินสด + Ai-Cash
-            7 เครดิต + เงินสด
-            8 เครดิต + เงินโอน
-            9 เครดิต + Ai-Cash
-            10  เงินโอน + เงินสด
-            11  เงินโอน + Ai-Cash
+                5 เงินสด
+                6 เงินสด + Ai-Cash
+                7 เครดิต + เงินสด
+                8 เครดิต + เงินโอน
+                9 เครดิต + Ai-Cash
+                10  เงินโอน + เงินสด
+                11  เงินโอน + Ai-Cash
 
-            12  Gift Voucher + เงินโอน
-            13  Gift Voucher + บัตรเครดิต
-            14  Gift Voucher + Ai-Cash
-            15  PromptPay
-            16  TrueMoney
-            17  Gift Voucher + PromptPay
-            18  Gift Voucher + TrueMoney
+                12  Gift Voucher + เงินโอน
+                13  Gift Voucher + บัตรเครดิต
+                14  Gift Voucher + Ai-Cash
+                15  PromptPay
+                16  TrueMoney
+                17  Gift Voucher + PromptPay
+                18  Gift Voucher + TrueMoney
 
-            */
+                */
     if (@$sRow->check_press_save == 2) {
         if (@$sRow->pay_type_id_fk == 1 || @$sRow->pay_type_id_fk == 6 || @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 10 || @$sRow->pay_type_id_fk == 11) {
             // วุฒิแก้
@@ -239,7 +239,6 @@
                     @if (empty(@$sRow))
                         <form id="frm-main" action="{{ route('backend.frontstore.store') }}" method="POST"
                             enctype="multipart/form-data" autocomplete="off">
-
                         @else
                             <form id="frm-main" action="{{ route('backend.frontstore.update', @$sRow->id) }}"
                                 method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -247,13 +246,12 @@
 
                                 <!-- @method('PUT') -->
 
-                                <input id="frontstore_id_fk" name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
+                                <input id="frontstore_id_fk" name="frontstore_id" type="hidden"
+                                    value="{{ @$sRow->id }}">
                                 <input name="receipt_save_list" type="hidden" value="1">
                                 <input name="invoice_code" type="hidden" value="{{ @$sRow->invoice_code }}">
                                 <input name="customers_id_fk" type="hidden" value="{{ @$sRow->customers_id_fk }}">
                                 <input name="this_branch_id_fk" type="hidden" value="{{ @$sRow->branch_id_fk }}">
-
-
                     @endif
                     {{ csrf_field() }}
 
@@ -269,9 +267,7 @@
                                             <input type="hidden" name="branch_id_fk" value="{{ $sRow->branch_id_fk }}">
                                             <input type="text" class="form-control" value="{{ @$BranchName }}"
                                                 disabled="">
-
                                         @else
-
                                             @if (@$sBranchs)
                                                 <select id="branch_id_fk" name="branch_id_fk"
                                                     class="form-control select2-templating " required>
@@ -311,7 +307,6 @@
                                                 class="form-control select2-templating ch_Disabled " disabled="">
                                                 @if (@$sDistribution_channel3)
                                                     @foreach (@$sDistribution_channel3 as $r)
-
                                                         <option value="{{ $r->id }}"
                                                             {{ @$r->id == @$sRow->distribution_channel_id_fk ? 'selected' : '' }}>
                                                             {{ $r->txt_desc }}
@@ -319,7 +314,6 @@
                                                     @endforeach
                                                 @endif
                                             </select>
-
                                         @else
                                             @php
                                                 $disChannel3 = '';
@@ -424,35 +418,47 @@
                                 <div class="form-group row">
                                     <label for="" class="col-md-4 col-form-label"> หมายเหตุ : </label>
                                     <div class="col-md-6">
-                                        <textarea class="form-control ch_Disabled " id="note" name="note"
-                                            rows="2">{{ @$sRow->note }}</textarea>
+                                        <textarea class="form-control ch_Disabled " id="note" name="note" rows="2">{{ @$sRow->note }}</textarea>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="col-md-6">
+
+                                {{--  --}}
                                 <div class="form-group row">
-                                    <label for="customers_id_fk" class="col-md-4 col-form-label"> รหัสลูกค้า : ชื่อลูกค้า :
+                                    <label for="customers_id_fk" class="col-md-4 col-form-label"> วันที่จัดทำ : <span style="color:red;">เปลี่ยนหากกรณีทำบิลย้อนหลัง</span>
+                                        :
+                                        * </label>
+                                    <div class="col-md-7">
+                                      @if (!@$sRow)
+                                      <input type="date" value="{{date('Y-m-d')}}" class="form-control date_create " id="date_create" name="date_create" >
+                                      @else
+                                      <input type="text" disabled="" value="{{ @$sRow->created_at }}" class="form-control date_create " id="date_create" name="date_create" >
+                                      @endif
+                                    </div>
+                                </div>
+                                {{--  --}}
+
+                                <div class="form-group row">
+                                    <label for="customers_id_fk" class="col-md-4 col-form-label"> รหัสลูกค้า : ชื่อลูกค้า
+                                        :
                                         * </label>
                                     <div class="col-md-7">
 
 
                                         @if (!empty(@$sRow->customers_id_fk))
-
                                             <input type="hidden" name="customers_id_fk"
                                                 value="{{ $sRow->customers_id_fk }}">
                                             <input type="text" class="form-control" value="{{ @$CusName }}"
                                                 disabled="">
-
                                         @else
-
                                             <select id="customers_id_fk" name="customers_id_fk" class="form-control"
                                                 required>
                                             </select>
 
                                             <!-- <input type="text" class="form-control customer " id="customer" name="customer" > -->
                                             <!-- <input type="hidden" id="customers_id_fk" name="customers_id_fk"  > -->
-
                                         @endif
 
                                         </select>
@@ -492,16 +498,12 @@
                                                     <option value="">Select</option>
                                                     @if (@$sPurchase_type)
                                                         @foreach (@$sPurchase_type as $r)
-
                                                             @if (empty(@$sRow->purchase_type_id_fk))
-
                                                                 <option value="{{ $r->id }}"
                                                                     {{ @$r->id == @$sRow->purchase_type_id_fk ? 'selected' : '' }}>
                                                                     {{ $r->orders_type }}
                                                                 </option>
-
                                                             @else
-
                                                                 @if (@$sRow->purchase_type_id_fk == 4 || @$sRow->purchase_type_id_fk == 6)
                                                                     <option value="{{ $r->id }}"
                                                                         {{ @$r->id == @$sRow->purchase_type_id_fk ? 'selected' : '' }}>
@@ -515,28 +517,22 @@
                                                                         {{ $r->orders_type }}
                                                                     </option>
                                                                     {{-- @endif --}}
-
                                                                 @ENDIF
-
                                                             @ENDIF
-
                                                         @endforeach
                                                     @endif
                                                 </select>
 
                                             @ENDIF
-
                                         @else
-
                                             @if (!empty(@$sRow->purchase_type_id_fk))
 
-                                                <input type="hidden" class="purchase_type_id_fk" id="purchase_type_id_fk"
-                                                    name="purchase_type_id_fk" value="{{ @$sRow->purchase_type_id_fk }}">
+                                                <input type="hidden" class="purchase_type_id_fk"
+                                                    id="purchase_type_id_fk" name="purchase_type_id_fk"
+                                                    value="{{ @$sRow->purchase_type_id_fk }}">
                                                 <input type="text" class="form-control" value="{{ @$PurchaseName }}"
                                                     disabled="">
-
                                             @else
-
                                                 <select id="purchase_type_id_fk" name="purchase_type_id_fk"
                                                     class="form-control select2-templating ch_Disabled " disabled>
                                                     <option value="">Select</option>
@@ -558,125 +554,125 @@
                                 </div>
 
                                 @if (isset($customer_pv))
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> ทำคุณสมบัติ : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" value="{{ $customer_pv->pv }} PV"
+                                                readonly>
+                                        </div>
+                                    </div>
 
-                                <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> ทำคุณสมบัติ : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" class="form-control" value="{{$customer_pv->pv}} PV"
-                                          readonly>
-                                  </div>
-                              </div>
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติรายเดือน :
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control"
+                                                value="{{ $customer_pv->pv_mt }} PV" readonly>
+                                        </div>
+                                    </div>
 
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติรายเดือน : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" class="form-control"
-                                          value="{{$customer_pv->pv_mt}} PV" readonly>
-                                  </div>
-                              </div>
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติท่องเที่ยว :
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control"
+                                                value="{{ $customer_pv->pv_tv }} PV" readonly>
+                                        </div>
+                                    </div>
 
-                              <div class="form-group row">
-                                <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติท่องเที่ยว : </label>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control"
-                                        value="{{$customer_pv->pv_tv}} PV" readonly>
-                                </div>
-                            </div>
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> เติม AiStockist : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control"
+                                                value="{{ $customer_pv->pv_aistockist }} PV" readonly>
+                                        </div>
+                                    </div>
 
-                            <div class="form-group row">
-                              <label for="" class="col-md-4 col-form-label"> เติม AiStockist : </label>
-                              <div class="col-md-6">
-                                  <input type="text" class="form-control"
-                                      value="{{$customer_pv->pv_aistockist}} PV" readonly>
-                              </div>
-                          </div>
-
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> Ai-Stockist : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" class="form-control" value="@if($customer_pv->aistockist_status=='0')ไม่เป็น @elseif($customer_pv->aistockist_status=='1')เป็น @endif"
-                                          readonly>
-                                  </div>
-                              </div>
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> Ai-Stockist : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control"
+                                                value="@if ($customer_pv->aistockist_status == '0') ไม่เป็น @elseif($customer_pv->aistockist_status == '1')เป็น @endif"
+                                                readonly>
+                                        </div>
+                                    </div>
 
 
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> ตำแหน่ง : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" class="form-control" value="{{$customer_pv->q_name}}"
-                                          readonly>
-                                  </div>
-                              </div>
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> ตำแหน่ง : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control"
+                                                value="{{ $customer_pv->q_name }}" readonly>
+                                        </div>
+                                    </div>
 
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> Package : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" class="form-control"
-                                          value="{{$customer_pv->dt_package}}" readonly>
-                                  </div>
-                              </div>
-
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> Package : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control"
+                                                value="{{ $customer_pv->dt_package }}" readonly>
+                                        </div>
+                                    </div>
                                 @else
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> ทำคุณสมบัติ :</label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="view_pv" class="form-control" value=""
+                                                readonly>
+                                        </div>
+                                    </div>
 
-                                <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> ทำคุณสมบัติ :</label>
-                                  <div class="col-md-6">
-                                      <input type="text" id="view_pv" class="form-control" value=""  readonly>
-                                  </div>
-                              </div>
-
-                              <div class="form-group row">
-                                <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติรายเดือน : </label>
-                                <div class="col-md-6">
-                                    <input type="text" id="view_customer_mt" class="form-control"
-                                        value=" " readonly>
-                                </div>
-                            </div>
-                              <div class="form-group row">
-                                <label for="" class="col-md-4 col-form-label">รักษาคุณสมบัติท่องเที่ยว : </label>
-                                <div class="col-md-6">
-                                    <input type="text" id="view_customer_tv" class="form-control"
-                                        value=" " readonly>
-                                </div>
-                            </div>
-
-
-
-                              <div class="form-group row">
-                                <label for="" class="col-md-4 col-form-label"> เติม AiStockist : </label>
-                                <div class="col-md-6">
-                                    <input type="text" id="view_customer_ai" class="form-control"
-                                        value=" " readonly>
-                                </div>
-                            </div>
-
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> Ai-Stockist : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" class="form-control" id="view_customer_aistockist" value=" "
-                                          readonly>
-                                  </div>
-                              </div>
-
-
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> ตำแหน่ง : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" class="form-control" id="view_customer_q" value=" "
-                                          readonly>
-                                  </div>
-                              </div>
-
-                              <div class="form-group row">
-                                  <label for="" class="col-md-4 col-form-label"> Package : </label>
-                                  <div class="col-md-6">
-                                      <input type="text" id="view_customer_package" class="form-control"
-                                          value=" " readonly>
-                                  </div>
-                              </div>
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> รักษาคุณสมบัติรายเดือน :
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="view_customer_mt" class="form-control"
+                                                value=" " readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label">รักษาคุณสมบัติท่องเที่ยว :
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="view_customer_tv" class="form-control"
+                                                value=" " readonly>
+                                        </div>
+                                    </div>
 
 
 
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> เติม AiStockist : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="view_customer_ai" class="form-control"
+                                                value=" " readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> Ai-Stockist : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="view_customer_aistockist"
+                                                value=" " readonly>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> ตำแหน่ง : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="view_customer_q"
+                                                value=" " readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-4 col-form-label"> Package : </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="view_customer_package" class="form-control"
+                                                value=" " readonly>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -684,7 +680,6 @@
 
 
                         @if (empty(@$sRow))
-
                             <div class="row">
 
                                 <div class="col-md-6">
@@ -711,18 +706,15 @@
                                 <div class="col-md-5 text-right">
 
                                     @if (empty(@$sRow->purchase_type_id_fk))
-
                                         <button type="submit"
                                             class="btn btn-primary btn-sm waves-effect font-size-14 ch_Disabled ">
                                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                                         </button>
-
                                     @ENDIF
 
                                 </div>
                             </div>
                             </form>
-
                         @endif
 
 
@@ -735,7 +727,6 @@
                         @if ($ChangePurchaseType == 1)
 
                             @if (!empty(@$sRow->purchase_type_id_fk) and $sRow->status_run_pv != 'success')
-
                                 @if (@$sRow->purchase_type_id_fk == 5)
                                 @ELSE
                                     <div class="col-md-11 text-right div_btnSaveChangePurchaseType">
@@ -746,9 +737,7 @@
                                         </button>
                                     </div>
                                 @ENDIF
-
                             @ELSE
-
                             @ENDIF
                         @endif
                         <br>
@@ -766,31 +755,33 @@
 
                                     <h4 class=" col-5 mb-0 font-size-18"><i class="bx bx-play"></i>
 
-                                        @if (@$sRow->purchase_type_id_fk == 6) รายการคอร์สอบรม @ELSE รายการสินค้า/บริการ @ENDIF
+                                        @if (@$sRow->purchase_type_id_fk == 6)
+                                            รายการคอร์สอบรม
+                                        @ELSE
+                                            รายการสินค้า/บริการ
+                                        @ENDIF
 
-                                        <?= @$sRow->code_order ? '[' . @$sRow->code_order . ']' : '' ?> </h4>
+                                        <?= @$sRow->code_order ? '[' . @$sRow->code_order . ']' : '' ?>
+                                    </h4>
                                     <div style="text-align: right;">
 
 
                                         @if (!empty(@$sRow->pay_type_id_fk))
                                             <!-- ไม่ต้องแสดงปุ่ม เพิ่มต่างๆ  -->
                                         @ELSE
-
                                             @if (@$sRow->purchase_type_id_fk == 6)
-
-                                                <a class="btn btn-success btn-aigreen btn-sm mt-1 btnCourse " href="#">
+                                                <a class="btn btn-success btn-aigreen btn-sm mt-1 btnCourse "
+                                                    href="#">
                                                     <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span
                                                         style="font-size: 14px;">สมัครคอร์ส </span>
                                                 </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
                                             @ELSE
-
                                                 <!--         <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{ @$sRow->id }}" target=_blank style="display: none;" >
-                            <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
-                          </a>
-                          <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{ @$sRow->id }}" target=_blank style="display: none;" >
-                            <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
-                          </a> -->
+                                <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
+                              </a>
+                              <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{ @$sRow->id }}" target=_blank style="display: none;" >
+                                <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
+                              </a> -->
                                                 <!-- แลก  Ai Voucher -->
                                                 <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromPromotion "
                                                     href="#">
@@ -802,13 +793,12 @@
                                                     <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span
                                                         style="font-size: 14px;">เพิ่มแบบ List</span>
                                                 </a>
-                                                <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddList " href="#">
+                                                <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddList "
+                                                    href="#">
                                                     <i class="bx bx-plus align-middle mr-1 font-size-18"></i><span
                                                         style="font-size: 14px;">เพิ่ม</span>
                                                 </a>
-
                                             @ENDIF
-
                                         @ENDIF
 
                                     </div>
@@ -817,8 +807,8 @@
                                 <div class="form-group row ">
                                     <div class="col-md-12">
 
-                                        <table id="data-table-list" class="table table-bordered "
-                                            style="width: 100%;"></table>
+                                        <table id="data-table-list" class="table table-bordered " style="width: 100%;">
+                                        </table>
 
                                     </div>
                                 </div>
@@ -832,9 +822,7 @@
                                             ?>
                                             <?php $i = 1; ?>
                                             @foreach ($check_giveaway as $check_giveaway_value)
-
                                                 @if (@$check_giveaway_value['status'] == 'success')
-
                                                     <h5 class="text-danger" style="margin-bottom: 0px;">Promotion Free
                                                         {{ $i++ }}</h5>
                                                     <div class="table-responsive p-3">
@@ -879,7 +867,6 @@
                                                     </div>
                                                 @endif
                                             @endforeach
-
                                         @endif
 
                                     </div>
@@ -974,19 +961,22 @@
                                                                             {{ @$pay_type_transfer_aicash }} disabled
                                                                             type="radio" province_id="0"
                                                                             class="ShippingCalculate ch_Disabled "
-                                                                            name="delivery_location" id="addr_04" value="4"
+                                                                            name="delivery_location" id="addr_04"
+                                                                            value="4"
                                                                             <?= @$sRow->delivery_location == 4 ? 'checked' : '' ?>>
-                                                                        <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น
+                                                                        <label
+                                                                            for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น
                                                                         </label>
                                                                     @ELSE
-
                                                                         <input {{ @$disChannel3 }}
-                                                                            {{ @$pay_type_transfer_aicash }} type="radio"
-                                                                            province_id="0"
+                                                                            {{ @$pay_type_transfer_aicash }}
+                                                                            type="radio" province_id="0"
                                                                             class="ShippingCalculate ch_Disabled "
-                                                                            name="delivery_location" id="addr_04" value="4"
+                                                                            name="delivery_location" id="addr_04"
+                                                                            value="4"
                                                                             <?= @$sRow->delivery_location == 4 ? 'checked' : '' ?>>
-                                                                        <label for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น
+                                                                        <label
+                                                                            for="addr_04">&nbsp;&nbsp;จัดส่งพร้อมบิลอื่น
                                                                         </label>
                                                                     @ENDIF
                                                                     {{-- วุฒิเพิ่ม --}}
@@ -1008,9 +998,11 @@
                                                                             {{ @$pay_type_transfer_aicash }} disabled
                                                                             type="radio" province_id="0"
                                                                             class="ShippingCalculate"
-                                                                            name="delivery_location" id="addr_00" value="0"
+                                                                            name="delivery_location" id="addr_00"
+                                                                            value="0"
                                                                             <?= @$sRow->delivery_location == 0 ? 'checked' : '' ?>>
-                                                                        <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง
+                                                                        <label
+                                                                            for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง
                                                                             > ระบุสาขา : </label>
 
                                                                         <div class="col-md-6">
@@ -1046,16 +1038,16 @@
                                                                                 @endif
                                                                             </select>
                                                                         </div>
-
-
                                                                     @ELSE
                                                                         <input {{ @$disChannel3 }}
                                                                             {{ @$pay_type_transfer_aicash }}
                                                                             type="radio" province_id="0"
                                                                             class="ShippingCalculate"
-                                                                            name="delivery_location" id="addr_00" value="0"
+                                                                            name="delivery_location" id="addr_00"
+                                                                            value="0"
                                                                             <?= @$sRow->delivery_location == 0 ? 'checked' : '' ?>>
-                                                                        <label for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง
+                                                                        <label
+                                                                            for="addr_00">&nbsp;&nbsp;รับสินค้าด้วยตัวเอง
                                                                             > ระบุสาขา : </label>
 
                                                                         <div class="col-md-6">
@@ -1102,37 +1094,37 @@
                                                             <?php
                                                             $addr = DB::select(
                                                                 " SELECT
-                                                                                                                                                                                                                          customers_address_card.id,
-                                                                                                                                                                                                                          customers_address_card.customer_id,
-                                                                                                                                                                                                                          customers_address_card.card_house_no,
-                                                                                                                                                                                                                          customers_address_card.card_house_name,
-                                                                                                                                                                                                                          customers_address_card.card_moo,
-                                                                                                                                                                                                                          customers_address_card.card_zipcode,
-                                                                                                                                                                                                                          customers_address_card.card_soi,
-                                                                                                                                                                                                                          customers_detail.amphures_id_fk,
-                                                                                                                                                                                                                          customers_detail.district_id_fk,
-                                                                                                                                                                                                                          customers_detail.road,
-                                                                                                                                                                                                                          customers_detail.province_id_fk,
-                                                                                                                                                                                                                          customers_address_card.created_at,
-                                                                                                                                                                                                                          customers_address_card.updated_at,
-                                                                                                                                                                                                                          dataset_provinces.name_th AS provname,
-                                                                                                                                                                                                                          dataset_amphures.name_th AS ampname,
-                                                                                                                                                                                                                          dataset_districts.name_th AS tamname,
-                                                                                                                                                                                                                          customers.prefix_name,
-                                                                                                                                                                                                                          customers.first_name,
-                                                                                                                                                                                                                          customers.last_name
-                                                                                                                                                                                                                          FROM
-                                                                                                                                                                                                                          customers_address_card
-                                                                                                                                                                                                                          Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
-                                                                                                                                                                                                                          Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
-                                                                                                                                                                                                                          Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
-                                                                                                                                                                                                                          Left Join customers ON customers_address_card.customer_id = customers.id
-                                                                                                                                                                                                                          Left Join customers_detail ON customers.id = customers_detail.customer_id
-                                                                                                                                                                                                                          where customers_address_card.customer_id = " .
+                                                                                                                                                                                                                                                                                      customers_address_card.id,
+                                                                                                                                                                                                                                                                                      customers_address_card.customer_id,
+                                                                                                                                                                                                                                                                                      customers_address_card.card_house_no,
+                                                                                                                                                                                                                                                                                      customers_address_card.card_house_name,
+                                                                                                                                                                                                                                                                                      customers_address_card.card_moo,
+                                                                                                                                                                                                                                                                                      customers_address_card.card_zipcode,
+                                                                                                                                                                                                                                                                                      customers_address_card.card_soi,
+                                                                                                                                                                                                                                                                                      customers_detail.amphures_id_fk,
+                                                                                                                                                                                                                                                                                      customers_detail.district_id_fk,
+                                                                                                                                                                                                                                                                                      customers_detail.road,
+                                                                                                                                                                                                                                                                                      customers_detail.province_id_fk,
+                                                                                                                                                                                                                                                                                      customers_address_card.created_at,
+                                                                                                                                                                                                                                                                                      customers_address_card.updated_at,
+                                                                                                                                                                                                                                                                                      dataset_provinces.name_th AS provname,
+                                                                                                                                                                                                                                                                                      dataset_amphures.name_th AS ampname,
+                                                                                                                                                                                                                                                                                      dataset_districts.name_th AS tamname,
+                                                                                                                                                                                                                                                                                      customers.prefix_name,
+                                                                                                                                                                                                                                                                                      customers.first_name,
+                                                                                                                                                                                                                                                                                      customers.last_name
+                                                                                                                                                                                                                                                                                      FROM
+                                                                                                                                                                                                                                                                                      customers_address_card
+                                                                                                                                                                                                                                                                                      Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                                                                                                                                                                                                                                                                                      Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                                                                                                                                                                                                                                                                                      Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+                                                                                                                                                                                                                                                                                      Left Join customers ON customers_address_card.customer_id = customers.id
+                                                                                                                                                                                                                                                                                      Left Join customers_detail ON customers.id = customers_detail.customer_id
+                                                                                                                                                                                                                                                                                      where customers_address_card.customer_id = " .
                                                                     (@$sRow->customers_id_fk ? @$sRow->customers_id_fk : 0) .
                                                                     "
 
-                                                                                                                                                                                                                         ",
+                                                                                                                                                                                                                                                                                     ",
                                                             );
                                                             if (@$addr[0]->provname != '') {
                                                                 @$address = '';
@@ -1151,14 +1143,14 @@
                                                             ?>
 
                                                             <tr>
-                                                                <th scope="row" class="bg_addr"
-                                                                    style="<?= $bg_01 ?>">
+                                                                <th scope="row" class="bg_addr" style="<?= $bg_01 ?>">
                                                                     <input {{ @$disChannel3 }}
                                                                         {{ @$pay_type_transfer_aicash }} type="radio"
                                                                         {{ $address_disabled }}
                                                                         province_id="<?= @$addr[0]->card_province ?>"
                                                                         class="ShippingCalculate ch_Disabled "
-                                                                        name="delivery_location" id="addr_01" value="1"
+                                                                        name="delivery_location" id="addr_01"
+                                                                        value="1"
                                                                         <?= @$sRow->delivery_location == 1 ? 'checked' : '' ?>
                                                                         {{ @$dis_addr }}> <label for="addr_01">
                                                                         ที่อยู่ตามบัตร ปชช. </label>
@@ -1170,30 +1162,30 @@
 
                                                             @$addr = DB::select(
                                                                 "SELECT
-                                                                                                                                                                                                                          customers_detail.customer_id,
-                                                                                                                                                                                                                          customers_detail.house_no,
-                                                                                                                                                                                                                          customers_detail.house_name,
-                                                                                                                                                                                                                          customers_detail.moo,
-                                                                                                                                                                                                                          customers_detail.zipcode,
-                                                                                                                                                                                                                          customers_detail.soi,
-                                                                                                                                                                                                                          customers_detail.amphures_id_fk,
-                                                                                                                                                                                                                          customers_detail.district_id_fk,
-                                                                                                                                                                                                                          customers_detail.road,
-                                                                                                                                                                                                                          customers_detail.province_id_fk,
-                                                                                                                                                                                                                          customers.prefix_name,
-                                                                                                                                                                                                                          customers.first_name,
-                                                                                                                                                                                                                          customers.last_name,
-                                                                                                                                                                                                                          dataset_provinces.name_th AS provname,
-                                                                                                                                                                                                                          dataset_amphures.name_th AS ampname,
-                                                                                                                                                                                                                          dataset_districts.name_th AS tamname
-                                                                                                                                                                                                                          FROM
-                                                                                                                                                                                                                          customers_detail
-                                                                                                                                                                                                                          Left Join customers ON customers_detail.customer_id = customers.id
-                                                                                                                                                                                                                          Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
-                                                                                                                                                                                                                          Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
-                                                                                                                                                                                                                          Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
-                                                                                                                                                                                                                          WHERE customers_detail.customer_id =
-                                                                                                                                                                                                                           " .
+                                                                                                                                                                                                                                                                                      customers_detail.customer_id,
+                                                                                                                                                                                                                                                                                      customers_detail.house_no,
+                                                                                                                                                                                                                                                                                      customers_detail.house_name,
+                                                                                                                                                                                                                                                                                      customers_detail.moo,
+                                                                                                                                                                                                                                                                                      customers_detail.zipcode,
+                                                                                                                                                                                                                                                                                      customers_detail.soi,
+                                                                                                                                                                                                                                                                                      customers_detail.amphures_id_fk,
+                                                                                                                                                                                                                                                                                      customers_detail.district_id_fk,
+                                                                                                                                                                                                                                                                                      customers_detail.road,
+                                                                                                                                                                                                                                                                                      customers_detail.province_id_fk,
+                                                                                                                                                                                                                                                                                      customers.prefix_name,
+                                                                                                                                                                                                                                                                                      customers.first_name,
+                                                                                                                                                                                                                                                                                      customers.last_name,
+                                                                                                                                                                                                                                                                                      dataset_provinces.name_th AS provname,
+                                                                                                                                                                                                                                                                                      dataset_amphures.name_th AS ampname,
+                                                                                                                                                                                                                                                                                      dataset_districts.name_th AS tamname
+                                                                                                                                                                                                                                                                                      FROM
+                                                                                                                                                                                                                                                                                      customers_detail
+                                                                                                                                                                                                                                                                                      Left Join customers ON customers_detail.customer_id = customers.id
+                                                                                                                                                                                                                                                                                      Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                                                                                                                                                                                                                                                                      Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                                                                                                                                                                                                                                                                      Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                                                                                                                                                                                                                                                                      WHERE customers_detail.customer_id =
+                                                                                                                                                                                                                                                                                       " .
                                                                     (@$sRow->customers_id_fk ? @$sRow->customers_id_fk : 0) .
                                                                     ' ',
                                                             );
@@ -1214,13 +1206,13 @@
                                                             ?>
 
                                                             <tr>
-                                                                <th scope="row" class="bg_addr"
-                                                                    style="<?= $bg_02 ?>">
+                                                                <th scope="row" class="bg_addr" style="<?= $bg_02 ?>">
                                                                     <input {{ @$disChannel3 }}
                                                                         {{ @$pay_type_transfer_aicash }} type="radio"
                                                                         province_id="<?= @$addr[0]->province ?>"
                                                                         class="ShippingCalculate ch_Disabled "
-                                                                        name="delivery_location" id="addr_02" value="2"
+                                                                        name="delivery_location" id="addr_02"
+                                                                        value="2"
                                                                         <?= @$sRow->delivery_location == 2 ? 'checked' : '' ?>
                                                                         {{ @$dis_addr }}> <label for="addr_02">
                                                                         ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ
@@ -1233,12 +1225,12 @@
 
                                                             @$addr = DB::select(
                                                                 "select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                                                                    dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
-                                                                    from customers_addr_frontstore
-                                                                    Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
-                                                                    Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
-                                                                    Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
-                                                                    where customers_addr_frontstore.id = " .
+                                                                                                                                dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
+                                                                                                                                from customers_addr_frontstore
+                                                                                                                                Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                                                                                                                                Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                                                                                                                                Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                                                                                                                                where customers_addr_frontstore.id = " .
                                                                     (@$CusAddrFrontstore[0]->id ? $CusAddrFrontstore[0]->id : 0) .
                                                                     ' ',
                                                             );
@@ -1259,12 +1251,12 @@
                                                             ?>
 
                                                             <tr>
-                                                                <th scope="row" class="bg_addr"
-                                                                    style="<?= $bg_03 ?>">
+                                                                <th scope="row" class="bg_addr" style="<?= $bg_03 ?>">
                                                                     <input class="ch_Disabled" {{ @$disChannel3 }}
                                                                         {{ @$pay_type_transfer_aicash }} type="radio"
                                                                         province_id="<?= @$addr[0]->province_id_fk ?>"
-                                                                        name="delivery_location" id="addr_03" value="3"
+                                                                        name="delivery_location" id="addr_03"
+                                                                        value="3"
                                                                         <?= @$sRow->delivery_location == 3 ? 'checked' : '' ?>
                                                                         {{ @$dis_addr }}> <label for="addr_03">
                                                                         ที่อยู่กำหนดเอง </label>
@@ -1282,15 +1274,16 @@
                                                             <?php // echo @$dis_addr
                                                             ?>
                                                             <!-- if @$sRow->updated_at >= @$shipping_special[0]->updated_at -->
-                                                            <!-- @if (@$shipping_special[0]->status_special == 1 || @$sRow->shipping_special == 1) -->
+                                                            <!-- @if (@$shipping_special[0]->status_special == 1 || @$sRow->shipping_special == 1)
+    -->
 
                                                             <tr>
                                                                 <th scope="row" style="">
                                                                     <input {{ @$disChannel3 }}
                                                                         {{ @$pay_type_transfer_aicash }} type="checkbox"
                                                                         province_id="0" name="shipping_special"
-                                                                        class="ShippingCalculate ch_Disabled " id="addr_05"
-                                                                        value="1"
+                                                                        class="ShippingCalculate ch_Disabled "
+                                                                        id="addr_05" value="1"
                                                                         <?= @$sRow->shipping_special == 1 ? 'checked' : '' ?>
                                                                         style="transform: scale(1.5);margin-right:5px; "
                                                                         {{ @$dis_addr }}> <label for="addr_05">
@@ -1300,7 +1293,8 @@
                                                                         value="{{ @$shipping_special[0]->shipping_cost }}">
                                                                 </th>
                                                             </tr>
-                                                            <!-- @ENDIF -->
+                                                            <!--
+    @ENDIF -->
 
                                                         </tbody>
                                                     </table>
@@ -1318,18 +1312,18 @@
 
 
                                                 <!--         dataset_orders_type
-                    1 ทำคุณสมบัติ
-                    2 รักษาคุณสมบัติรายเดือน
-                    3 รักษาคุณสมบัติท่องเที่ยว
-                    4 เติม Ai-Stockist
-                    5 แลก  Ai Voucher
+                        1 ทำคุณสมบัติ
+                        2 รักษาคุณสมบัติรายเดือน
+                        3 รักษาคุณสมบัติท่องเที่ยว
+                        4 เติม Ai-Stockist
+                        5 แลก  Ai Voucher
 
-                dataset_pay_type
-                1 โอนชำระ
-                2 บัตรเครดิต
-                3 Ai-Cash
-                4  Ai Voucher
-                5 เงินสด -->
+                    dataset_pay_type
+                    1 โอนชำระ
+                    2 บัตรเครดิต
+                    3 Ai-Cash
+                    4  Ai Voucher
+                    5 เงินสด -->
 
 
                                                 <div class="row">
@@ -1392,7 +1386,8 @@
                                                                 <div class="divTableRow">
                                                                     <div class="divTableCell">&nbsp; </div>
                                                                     <div class="divTH">
-                                                                        <label for="">ภาษีมูลค่าเพิ่ม ({{$vat_b}}%) : </label>
+                                                                        <label for="">ภาษีมูลค่าเพิ่ม
+                                                                            ({{ $vat_b }}%) : </label>
                                                                     </div>
                                                                     <div class="divTableCell">
                                                                         <input id="tax" name="tax"
@@ -1405,7 +1400,6 @@
                                                                 </div>
 
                                                                 @if (@$sRow->purchase_type_id_fk != 6)
-
                                                                     <div class="divTableRow ">
                                                                         <div class="divTableCell">
                                                                             <span style="color: red;">
@@ -1430,12 +1424,12 @@
                                                                 @ENDIF
 
                                                                 @if (@$sRow->purchase_type_id_fk == 5)
-
                                                                     <div class="divTableRow">
                                                                         <div class="divTableCell">
                                                                         </div>
                                                                         <div class="divTH">
-                                                                            <label for=""> รูปแบบการชำระเงิน : </label>
+                                                                            <label for=""> รูปแบบการชำระเงิน :
+                                                                            </label>
                                                                         </div>
                                                                         <div class="divTableCell">
                                                                             <input
@@ -1450,7 +1444,8 @@
                                                                         <div class="divTableCell">
                                                                         </div>
                                                                         <div class="divTH">
-                                                                            <label for=""> ยอด Ai Voucher ที่มี : </label>
+                                                                            <label for=""> ยอด Ai Voucher ที่มี :
+                                                                            </label>
                                                                         </div>
                                                                         <div class="divTableCell">
                                                                             <!--  <input class="form-control f-ainumber-18 input-aireadonly ch_Disabled " id="gift_voucher_cost" name="gift_voucher_cost" value="{{ number_format(@$giftvoucher_this, 2) }}" readonly="" > -->
@@ -1462,53 +1457,57 @@
                                                                                 readonly="">
                                                                         </div>
                                                                     </div>
-
                                                                 @else
-
                                                                     <input
                                                                         class="form-control f-ainumber-18 input-aireadonly ch_Disabled "
                                                                         type="hidden" id="gift_voucher_cost"
                                                                         name="gift_voucher_cost"
                                                                         value="{{ @$gitfvoucher > 0 ? number_format(@$gitfvoucher, 2) : '0.00' }}"
                                                                         readonly="">
-
                                                                 @ENDIF
 
                                                                 <div class="divTableRow">
                                                                     <div class="divTableCell">&nbsp; </div>
                                                                     <div class="divTH">
                                                                         @if (@$sRow->purchase_type_id_fk == 5)
-                                                                            <label for=""> รูปแบบการชำระเงินอื่นๆ : </label>
+                                                                            <label for=""> รูปแบบการชำระเงินอื่นๆ :
+                                                                            </label>
                                                                         @ELSE
-                                                                            <label for=""> รูปแบบการชำระเงิน : </label>
+                                                                            <label for=""> รูปแบบการชำระเงิน :
+                                                                            </label>
                                                                         @ENDIF
                                                                     </div>
                                                                     <div class="divTableCell">
                                                                         <!-- ===================================
-            1 เงินโอน
-            8 เครดิต + เงินโอน
-            10  เงินโอน + เงินสด
-            11  เงินโอน + Ai-Cash
-            12  Gift Voucher + เงินโอน
-            ===================================
-            3 Ai-Cash
-            6 เงินสด + Ai-Cash
-            9 เครดิต + Ai-Cash
-            =================================== -->
-                                                                        @if (@$sRow->check_press_save == 2 && ($sRow->pay_type_id_fk != '' || $sRow->pay_type_id_fk != 0) && ($sRow->pay_type_id_fk == 1 || $sRow->pay_type_id_fk == 8 || $sRow->pay_type_id_fk == 10 || $sRow->pay_type_id_fk == 11 || $sRow->pay_type_id_fk == 12 || $sRow->pay_type_id_fk == 3 || $sRow->pay_type_id_fk == 6 || $sRow->pay_type_id_fk == 9))
-
+                1 เงินโอน
+                8 เครดิต + เงินโอน
+                10  เงินโอน + เงินสด
+                11  เงินโอน + Ai-Cash
+                12  Gift Voucher + เงินโอน
+                ===================================
+                3 Ai-Cash
+                6 เงินสด + Ai-Cash
+                9 เครดิต + Ai-Cash
+                =================================== -->
+                                                                        @if (@$sRow->check_press_save == 2 &&
+                                                                            ($sRow->pay_type_id_fk != '' || $sRow->pay_type_id_fk != 0) &&
+                                                                            ($sRow->pay_type_id_fk == 1 ||
+                                                                                $sRow->pay_type_id_fk == 8 ||
+                                                                                $sRow->pay_type_id_fk == 10 ||
+                                                                                $sRow->pay_type_id_fk == 11 ||
+                                                                                $sRow->pay_type_id_fk == 12 ||
+                                                                                $sRow->pay_type_id_fk == 3 ||
+                                                                                $sRow->pay_type_id_fk == 6 ||
+                                                                                $sRow->pay_type_id_fk == 9))
                                                                             @php
                                                                                 // วุฒิลบ disabled
                                                                                 // $disAfterSave = 'disabled'
                                                                                 $disAfterSave = '';
                                                                             @endphp
-
                                                                         @ELSE
-
                                                                             @php
                                                                                 $disAfterSave = '';
                                                                             @endphp
-
                                                                         @ENDIF
                                                                         <?php //echo @$disAfterSave."xxxxxxxxxxxxxxxxxxxxxxxxx".$sRow->pay_type_id_fk;
                                                                         ?>
@@ -1548,7 +1547,6 @@
                                                                 </div>
 
                                                                 @if (@$sRow->purchase_type_id_fk == 5)
-
                                                                     <div class="divTableRow " style="">
                                                                         <div class="divTableCell">
                                                                         </div>
@@ -1569,24 +1567,23 @@
                                                                                 title="ยอดชำระ"></i>
                                                                         </div>
                                                                     </div>
-
                                                                 @else
-
                                                                     <input
                                                                         class="form-control CalGiftVoucherPrice NumberOnly input-airight f-ainumber-18 input-aifill ch_Disabled "
                                                                         type="hidden" name="gift_voucher_price"
                                                                         id="gift_voucher_price"
                                                                         value="{{ @$sRow->gift_voucher_price > 0 ? number_format(@$sRow->gift_voucher_price, 2) : '0.00' }}">
-
                                                                 @ENDIF
                                                                 <?php $div_fee = @$sRow->fee == 0 ? 'display: none;' : ''; ?>
                                                                 <div class="divTableRow div_fee " style="<?= $div_fee ?>">
                                                                     <div class="divTableCell">&nbsp; </div>
                                                                     <div class="divTH">
-                                                                        <label for="">ค่าธรรมเนียมบัตรเครดิต : </label>
+                                                                        <label for="">ค่าธรรมเนียมบัตรเครดิต :
+                                                                        </label>
                                                                     </div>
                                                                     <div class="divTableCell">
-                                                                        <select {{ @$disAfterSave }} id="fee" name="fee"
+                                                                        <select {{ @$disAfterSave }} id="fee"
+                                                                            name="fee"
                                                                             class="form-control select2-templating ch_Disabled ">
                                                                             <option value="">Select</option>
                                                                             @if (@$sFee)
@@ -1611,13 +1608,15 @@
                                                                     <div class="divTH">
                                                                         <label for=""> </label>
                                                                     </div>
-                                                                    <div class="divTableCell div_charger_type " style="">
+                                                                    <div class="divTableCell div_charger_type "
+                                                                        style="">
                                                                         <?php $charger_type = @$sRow->charger_type == 0 || @$sRow->charger_type == '' ? 'checked' : ''; ?>
                                                                         <input {{ @$disAfterSave }} type="radio"
                                                                             class="ch_Disabled" id="charger_type_01"
                                                                             name="charger_type" value="1"
                                                                             <?= @$sRow->charger_type == 1 ? 'checked' : $charger_type ?>>
-                                                                        <label for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร
+                                                                        <label
+                                                                            for="charger_type_01">&nbsp;&nbsp;ชาร์ทในบัตร
                                                                         </label>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                         <input {{ @$disAfterSave }} type="radio"
                                                                             class="ch_Disabled" id="charger_type_02"
@@ -1695,7 +1694,8 @@
                                                                     style="<?= $div_account_bank_id ?>">
                                                                     <div class="divTableCell">&nbsp; </div>
                                                                     <div class="divTH">
-                                                                        <label for=""> เลือกบัญชีสำหรับโอน : </label>
+                                                                        <label for=""> เลือกบัญชีสำหรับโอน :
+                                                                        </label>
                                                                     </div>
                                                                     <div class="divTableCell">
                                                                         @if (@$sAccount_bank)
@@ -1703,7 +1703,7 @@
                                                                                 <input
                                                                                     class="class_transfer_edit ch_Disabled account_bank_id_select"
                                                                                     {{ @$disAfterSave }} type="radio"
-                                                                                    order_id = "{{@$sRow->id}}"
+                                                                                    order_id="{{ @$sRow->id }}"
                                                                                     id="account_bank_id{{ @$r->id }}"
                                                                                     name="account_bank_id"
                                                                                     value="{{ @$r->id }}"
@@ -1721,18 +1721,20 @@
 
                                                                 <?php $div_pay_with_other_bill = @$sRow->pay_with_other_bill == 0 || @$sRow->pay_with_other_bill == '' ? 'display: none;' : ''; ?>
                                                                 {{-- วุฒิเอาออกจาก style  $div_pay_with_other_bill --}}
-                                                                <div class="divTableRow div_pay_with_other_bill " style="">
+                                                                <div class="divTableRow div_pay_with_other_bill "
+                                                                    style="">
                                                                     <div class="divTableCell">&nbsp; </div>
                                                                     <div class="divTH">
                                                                         <label for=""> </label>
                                                                     </div>
                                                                     <div class="divTableCell">
 
-                                                                        <input class="class_transfer_edit ch_Disabled pay_with_other_bill_select"
+                                                                        <input
+                                                                            class="class_transfer_edit ch_Disabled pay_with_other_bill_select"
                                                                             {{ @$disAfterSave }} type="checkbox"
                                                                             id="pay_with_other_bill"
                                                                             name="pay_with_other_bill" value="1"
-                                                                            order_id = "{{@$sRow->id}}"
+                                                                            order_id="{{ @$sRow->id }}"
                                                                             {{ @$sRow->pay_with_other_bill == 1 ? 'checked' : '' }}>
                                                                         <label
                                                                             for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
@@ -1746,23 +1748,35 @@
                                                                             placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น "
                                                                             value="{{ @$sRow->pay_with_other_bill_note }}"> --}}
 
-                                                                            <?php
-                                                                            $r_invoice_code = \DB::table('db_orders')->select('code_order')->orderBy('code_order','desc')->get();
-                                                                            ?>
-                                                                            @if(@$r_invoice_code)
-                                                                            <select id="pay_with_other_bill_note" name="pay_with_other_bill_note" class="form-control order_id_select2 ch_Disabled" order_id = "{{@$sRow->id}}">
-                                                                                <option value="">กรุณาเลือกเลขบิลที่ชำระร่วม</option>
-                                                                                 @foreach(@$r_invoice_code AS $r)
-                                                                                 <option value="{{$r->code_order}}" <?php if($r->code_order==@$sRow->pay_with_other_bill_note){echo 'selected';} ?>>
-                                                                                   {{$r->code_order}}
-                                                                                 </option>
-                                                                                 @endforeach
+                                                                        <?php
+                                                                        $r_invoice_code = \DB::table('db_orders')
+                                                                            ->select('code_order')
+                                                                            ->orderBy('code_order', 'desc')
+                                                                            ->get();
+                                                                        ?>
+                                                                        @if (@$r_invoice_code)
+                                                                            <select id="pay_with_other_bill_note"
+                                                                                name="pay_with_other_bill_note"
+                                                                                class="form-control order_id_select2 ch_Disabled"
+                                                                                order_id="{{ @$sRow->id }}">
+                                                                                <option value="">
+                                                                                    กรุณาเลือกเลขบิลที่ชำระร่วม</option>
+                                                                                @foreach (@$r_invoice_code as $r)
+                                                                                    <option value="{{ $r->code_order }}"
+                                                                                        <?php if ($r->code_order == @$sRow->pay_with_other_bill_note) {
+                                                                                            echo 'selected';
+                                                                                        } ?>>
+                                                                                        {{ $r->code_order }}
+                                                                                    </option>
+                                                                                @endforeach
                                                                             </select>
-                                                                            @else
-                                                                            <select class="form-control select2-templating " >
-                                                                                <option value="">กรุณาเลือกเลขบิลที่ชำระร่วม</option>
+                                                                        @else
+                                                                            <select
+                                                                                class="form-control select2-templating ">
+                                                                                <option value="">
+                                                                                    กรุณาเลือกเลขบิลที่ชำระร่วม</option>
                                                                             </select>
-                                                                           @endif
+                                                                        @endif
 
                                                                     </div>
                                                                     <div class="divTableCell">
@@ -1775,7 +1789,8 @@
                                                                     style="<?= $show_div_transfer_price ?>">
                                                                     <div class="divTableCell"></div>
                                                                     <div class="divTH">
-                                                                        <label for="" class="label_transfer_price">
+                                                                        <label for=""
+                                                                            class="label_transfer_price">
                                                                             ยอดเงินโอน : </label>
                                                                     </div>
                                                                     <div class="divTableCell">
@@ -1811,7 +1826,6 @@
                                                                     <div class="divTableCell">
 
                                                                         @if (!empty(@$sRow->member_id_aicash))
-
                                                                             <input type="hidden" class="form-control"
                                                                                 name="member_id_aicash"
                                                                                 id="member_id_aicash"
@@ -1830,9 +1844,7 @@
                                                                                     {{ @$Customer_name_Aicash }}
                                                                                 </option>
                                                                             </select>
-
                                                                         @else
-
                                                                             <input type="hidden" class="form-control"
                                                                                 name="member_name_aicash"
                                                                                 id="member_name_aicash">
@@ -1862,11 +1874,10 @@
 
 
                                                                     @if (!empty(@$sRow->pay_type_id_fk))
-
-
                                                                         <div class="divTH">
 
-                                                                            <label for="" class="btnAddAiCashModal02"> ยอด
+                                                                            <label for=""
+                                                                                class="btnAddAiCashModal02"> ยอด
                                                                                 Ai-Cash คงเหลือ : </label>
                                                                         </div>
 
@@ -1887,12 +1898,11 @@
                                                                         </div>
 
                                                                 </div>
-
                                                             @ELSE
-
                                                                 <div class="divTH">
 
-                                                                    <label for="" class="btnAddAiCashModal02"> ยอด Ai-Cash
+                                                                    <label for="" class="btnAddAiCashModal02"> ยอด
+                                                                        Ai-Cash
                                                                         คงเหลือ : </label>
                                                                 </div>
 
@@ -1921,7 +1931,8 @@
                                                                 style="<?= $show_div_aicash_price ?>">
                                                                 <div class="divTableCell"></div>
                                                                 <div class="divTH">
-                                                                    <label for="aicash_price" class=""> ยอด Ai-cash ที่ชำระ : </label>
+                                                                    <label for="aicash_price" class=""> ยอด Ai-cash
+                                                                        ที่ชำระ : </label>
                                                                 </div>
                                                                 <div class="divTableCell">
                                                                     <!-- CalPriceAicash -->
@@ -1929,8 +1940,7 @@
                                                                     <input {{ @$disAfterSave }}
                                                                         class="form-control input-airight f-ainumber-18-b ch_Disabled "
                                                                         id="aicash_price" name="aicash_price"
-                                                                        value="{{ number_format(@$sRow->aicash_price, 2) }}"
-                                                                        >
+                                                                        value="{{ number_format(@$sRow->aicash_price, 2) }}">
 
                                                                 </div>
                                                                 <div class="divTableCell">
@@ -2020,7 +2030,8 @@
 
                                                                     <button type="button"
                                                                         class="btn btn-info btn-sm waves-effect font-size-14 ch_Disabled "
-                                                                        data-toggle="modal" data-target="#cancel" style="">
+                                                                        data-toggle="modal" data-target="#cancel"
+                                                                        style="">
                                                                         <i
                                                                             class="bx bx-plus font-size-14 align-middle mr-1"></i>
                                                                         แนบไฟล์สลิปเงินโอน
@@ -2045,30 +2056,33 @@
                                                                 <div class="divTableCell">
 
                                                                     @if (@$PaymentSlip)
-
                                                                         @foreach (@$PaymentSlip as $slip)
+                                                                            <?php
+                                                                            $status_str = '';
+                                                                            if (@$slip->status == 1) {
+                                                                                $status_str = '<span style="color:;"><b>รออนุมัติ</b></span>';
+                                                                            } elseif (@$slip->status == 2) {
+                                                                                $status_str = '<span style="color:green;"><b>อนุมัติแล้ว</b></span>';
+                                                                            } elseif (@$slip->status == 3) {
+                                                                                $status_str = '<span style="color:red;"><b>ไม่อนุมัติ</b></span>';
+                                                                            }
+                                                                            ?>
 
-                                                                        <?php
-                                                                        $status_str = "";
-                                                                        if(@$slip->status==1){
-                                                                            $status_str = '<span style="color:;"><b>รออนุมัติ</b></span>';
-                                                                        }elseif(@$slip->status==2){
-                                                                            $status_str = '<span style="color:green;"><b>อนุมัติแล้ว</b></span>';
-                                                                        }elseif(@$slip->status==3){
-                                                                            $status_str = '<span style="color:red;"><b>ไม่อนุมัติ</b></span>';
-                                                                        }
-                                                                        ?>
-
-                                                                        <h5 class="font-size-14  ">วันที่เวลาที่โอนในสลิป {{$slip->transfer_bill_date}} {!!$status_str!!} </h5>
+                                                                            <h5 class="font-size-14  ">
+                                                                                วันที่เวลาที่โอนในสลิป
+                                                                                {{ $slip->transfer_bill_date }}
+                                                                                {!! $status_str !!} </h5>
                                                                             <span width="100" class="span_file_slip">
 
                                                                                 @if ($slip->order_channel == 'MEMBER')
-                                                                                <img src="{{ $slip->url }}/{{ @$slip->file }}" data-lity width="200px"
-                                                                                    height="200px" class="grow">
-                                                                            @else
-                                                                                <img src="https://v3.aiyara.co.th/aiyarashop/{{ $slip->url }}/{{ @$slip->file }}"
-                                                                                    data-lity width="200px" height="200px" class="grow">
-                                                                            @endif
+                                                                                    <img src="{{ $slip->url }}/{{ @$slip->file }}"
+                                                                                        data-lity width="200px"
+                                                                                        height="200px" class="grow">
+                                                                                @else
+                                                                                    <img src="https://v3.aiyara.co.th/aiyarashop/{{ $slip->url }}/{{ @$slip->file }}"
+                                                                                        data-lity width="200px"
+                                                                                        height="200px" class="grow">
+                                                                                @endif
 
                                                                                 {{-- <img src="{{ $slip->url }}/{{ @$slip->file }}"
                                                                                     style="margin-top: 5px;height: 180px;"> --}}
@@ -2078,23 +2092,26 @@
                                                                                     class="btn btn-danger btn-sm font-size-10 btnDelSlip ch_Disabled "
                                                                                     style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
 
-                                                                                <input {{ @$disAfterSave }} type="text"
+                                                                                <input {{ @$disAfterSave }}
+                                                                                    type="text"
                                                                                     class="form-control ch_Disabled "
                                                                                     name="note_bill[]" placeholder=""
                                                                                     value="{{ @$slip->note }}">
 
-                                                                                    <input type="hidden" name="note_bill_id[]" value="{{$slip->id}}">
+                                                                                <input type="hidden"
+                                                                                    name="note_bill_id[]"
+                                                                                    value="{{ $slip->id }}">
 
-                                                                                    <input {{ @$disAfterSave }} type="text"
-                                                                                    class="form-control" style="color:red;"
-                                                                                    name="note_bill2[]" readonly placeholder="สำหรับพนักงานตอบกลับ"
+                                                                                <input {{ @$disAfterSave }}
+                                                                                    type="text" class="form-control"
+                                                                                    style="color:red;" name="note_bill2[]"
+                                                                                    readonly
+                                                                                    placeholder="สำหรับพนักงานตอบกลับ"
                                                                                     value="{{ @$slip->note2 }}">
 
                                                                             </span>
                                                                             <br>
-
                                                                         @endforeach
-
                                                                     @ENDIF
 
 
@@ -2108,32 +2125,36 @@
                                                             <div class="divTableRow div_account_bank_id "
                                                                 style="<?= @$div_account_bank_id ?>">
                                                                 <!--    <div class="divTableCell" ></div>
-                                    <div class="divTH">
-                                      <label for="" class="label_transfer_price" > หมายเหตุ : </label>
-                                    </div>
-                                    <div class="divTableCell">
+                                        <div class="divTH">
+                                          <label for="" class="label_transfer_price" > หมายเหตุ : </label>
+                                        </div>
+                                        <div class="divTableCell">
 
-                                         <input {{ @$disAfterSave }} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{ @$sRow->note_fullpayonetime }}" >
+                                             <input {{ @$disAfterSave }} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{ @$sRow->note_fullpayonetime }}" >
 
-                                    </div>
-                                     <div class="divTableCell">
-                                    </div> -->
+                                        </div>
+                                         <div class="divTableCell">
+                                        </div> -->
                                                             </div>
 
 
-                                                            <div class="divTableRow lock_input_row" style="display: none;">
-                                                            <div class="divTableCell">&nbsp; </div>
-                                                            <div class="divTH">
-                                                                <label style="color:red;" for=""> ปลดล็อคเพื่อแก้ไข (Gift Voucher ไม่สามารถแก้ไขได้จำเป็นต้องยกเลิก) </label>
-                                                            </div>
-                                                            <div class="divTableCell">
-                                                                <select id="lock_input" class="form-control">
-                                                                    <option value="1">ล็อคข้อมูลทั้งหมด</option>
-                                                                    @if(@$sRow->purchase_type_id_fk!=5)
-                                                                    <option value="2">ปลดล็อคเพื่อแก้ไข</option>
-                                                                    @endif
-                                                                </select>
-                                                            </div>
+                                                            <div class="divTableRow lock_input_row"
+                                                                style="display: none;">
+                                                                <div class="divTableCell">&nbsp; </div>
+                                                                <div class="divTH">
+                                                                    <label style="color:red;" for="">
+                                                                        ปลดล็อคเพื่อแก้ไข (Gift Voucher
+                                                                        ไม่สามารถแก้ไขได้จำเป็นต้องยกเลิก) </label>
+                                                                </div>
+                                                                <div class="divTableCell">
+                                                                    <select id="lock_input" class="form-control">
+                                                                        <option value="1">ล็อคข้อมูลทั้งหมด</option>
+                                                                        @if (@$sRow->purchase_type_id_fk != 5)
+                                                                            <option value="2">ปลดล็อคเพื่อแก้ไข
+                                                                            </option>
+                                                                        @endif
+                                                                    </select>
+                                                                </div>
                                                             </div>
 
 
@@ -2158,9 +2179,9 @@
 
 
                                                                     <!--
-                                      <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;"  >
-                                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                            </button> -->
+                                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;"  >
+                                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                                                </button> -->
 
                                                                     @if (@$sRow->distribution_channel_id_fk == 3)
                                                                     @else
@@ -2178,7 +2199,6 @@
                                                                             name="pay_type_transfer_slip" value="1">
 
                                                                         @if (!empty(@$PaymentSlip))
-
                                                                             <button type="button"
                                                                                 class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave btnSave "
                                                                                 style="float: right;">
@@ -2186,7 +2206,6 @@
                                                                                     class="bx bx-save font-size-16 align-middle mr-1"></i>
                                                                                 บันทึกข้อมูลใบเสร็จ
                                                                             </button>
-
                                                                         @ELSE
                                                                             {{-- wut แก้ --}}
                                                                             <button type="button"
@@ -2197,7 +2216,6 @@
                                                                                     class="bx bx-save font-size-16 align-middle mr-1"></i>
                                                                                 บันทึกข้อมูลใบเสร็จ
                                                                             </button>
-
                                                                         @ENDIF
 
 
@@ -2217,9 +2235,9 @@
                                                                         <?php }?>
 
                                                                         <!--    <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSaveTransferType " style="float: right;display: none;"  >
-                                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                            </button>
-              -->
+                                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                                                </button>
+                  -->
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -2282,7 +2300,8 @@
                     <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
                     <input name="product_plus_pro" type="hidden" value="1">
                     <input id="promotion_id_fk" name="promotion_id_fk" type="hidden">
-                    <input id="limited_amt_person" name="limited_amt_person" type="hidden" placeholder="จำนวนจำกัดต่อคน">
+                    <input id="limited_amt_person" name="limited_amt_person" type="hidden"
+                        placeholder="จำนวนจำกัดต่อคน">
 
                     {{ csrf_field() }}
 
@@ -2313,8 +2332,8 @@
                                             style="width: 100%;">
                                         </table>
                                         <div id='divTablePromotionsCost'>
-                                            <table id="data-table-promotions-cost"
-                                                class="table table-bordered " style="width: 100%;">
+                                            <table id="data-table-promotions-cost" class="table table-bordered "
+                                                style="width: 100%;">
                                             </table>
                                         </div>
                                         <br>
@@ -2329,8 +2348,8 @@
                                                             class="btn btn-outline-secondary btn-minus-pro ">
                                                             <i class="fa fa-minus"></i>
                                                         </button>
-                                                        <input class="quantity plus-pro " min="1" name="quantity" value="1"
-                                                            type="number" readonly>
+                                                        <input class="quantity plus-pro " min="1"
+                                                            name="quantity" value="1" type="number" readonly>
                                                         <div class="input-group-append">
                                                             <button type="button" data-product_id_fk=""
                                                                 class="btn btn-outline-secondary btn-plus-pro ">
@@ -2403,7 +2422,8 @@
                                         enctype="multipart/form-data" autocomplete="off">
                                         <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
                                         <input name="product_plus" type="hidden" value="1">
-                                        <input name="branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
+                                        <input name="branch_id_fk" type="hidden"
+                                            value="{{ @$sRow->branch_id_fk }}">
 
                                         {{ csrf_field() }}
                                         <table id="data-table-products-list" class="table table-bordered "
@@ -2415,7 +2435,8 @@
                                         action="{{ route('backend.frontstorelist.store') }}" method="POST"
                                         enctype="multipart/form-data" autocomplete="off">
                                         <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
-                                        <input name="branch_id_fk" type="hidden" value="{{@$sRow->branch_id_fk}}">
+                                        <input name="branch_id_fk" type="hidden"
+                                            value="{{ @$sRow->branch_id_fk }}">
                                         {{ csrf_field() }}
                                         <div class="form-group row div-data-table-list-pro " style="display: none;">
                                             <div class="col-md-12">
@@ -2438,8 +2459,8 @@
 
                 <!--         <div class="modal-footer">
 
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div> -->
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div> -->
 
             </div>
         </div>
@@ -2452,7 +2473,8 @@
         <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
+                    <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง
+                            (กำหนดเอง) </b></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -2461,22 +2483,20 @@
 
 
                     @if (empty(@$CusAddrFrontstore))
-
-                        <form id="frmDeliveryCustom" action="{{ route('backend.frontstorelist.store') }}" method="POST"
-                            enctype="multipart/form-data" autocomplete="off">
+                        <form id="frmDeliveryCustom" action="{{ route('backend.frontstorelist.store') }}"
+                            method="POST" enctype="multipart/form-data" autocomplete="off">
                             <input name="add_delivery_custom" type="hidden" value="1">
-
                         @else
-
                             <form id="frmDeliveryCustom" action="{{ route('backend.frontstorelist.store') }}"
                                 method="POST" enctype="multipart/form-data" autocomplete="off">
                                 <input name="update_delivery_custom" type="hidden" value="1">
-                                <input name="customers_addr_frontstore_id" type="hidden" value="{{ @$sRow->id }}">
+                                <input name="customers_addr_frontstore_id" type="hidden"
+                                    value="{{ @$sRow->id }}">
                                 <input name="invoice_code" type="hidden" value="{{ @$sRow->invoice_code }}">
-
                     @endif
 
-                   <input {{@$disAfterSave}} type="hidden" class="form-control ch_Disabled " name="note" placeholder="" value="หมายเหตุ : {{@$slip->note}}" readonly>
+                    <input {{ @$disAfterSave }} type="hidden" class="form-control ch_Disabled " name="note"
+                        placeholder="" value="หมายเหตุ : {{ @$slip->note }}" readonly>
 
                     <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
 
@@ -2497,8 +2517,7 @@
                         <div class="form-group row">
                             <label for="" class="col-md-4 col-form-label"> ที่อยู่ : </label>
                             <div class="col-md-7">
-                                <textarea name="delivery_addr" class="form-control" rows="3"
-                                    required>{{ @$CusAddrFrontstore[0]->addr_no }}</textarea>
+                                <textarea name="delivery_addr" class="form-control" rows="3" required>{{ @$CusAddrFrontstore[0]->addr_no }}</textarea>
                             </div>
                         </div>
 
@@ -2570,8 +2589,8 @@
                         <div class="form-group row">
                             <label for="" class="col-md-4 col-form-label"> รหัสไปรษณีย์ : </label>
                             <div class="col-md-7">
-                                <input type="text" id="delivery_zipcode" name="delivery_zipcode" class="form-control"
-                                    value="{{ @$CusAddrFrontstore[0]->zip_code }}" required>
+                                <input type="text" id="delivery_zipcode" name="delivery_zipcode"
+                                    class="form-control" value="{{ @$CusAddrFrontstore[0]->zip_code }}" required>
                             </div>
                         </div>
 
@@ -2637,10 +2656,11 @@
                         <!--     <iframe id="main" src="/backend/frontstore/2/edit" width=420 height=250 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=1 scrolling="yes"></iframe> -->
 
 
-                        <form id="frmFrontstoreAddList" action="{{ url('backend/frontstorelist/plus') }}" method="POST"
-                            enctype="multipart/form-data" autocomplete="off">
+                        <form id="frmFrontstoreAddList" action="{{ url('backend/frontstorelist/plus') }}"
+                            method="POST" enctype="multipart/form-data" autocomplete="off">
                             <input class="product_id_fk_this" name="product_id_fk_this" type="hidden">
-                            <input class="frontstore_id" name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
+                            <input class="frontstore_id" name="frontstore_id" type="hidden"
+                                value="{{ @$sRow->id }}">
                             <input name="product_plus" type="hidden" value="1">
                             <input name="product_plus_addlist" type="hidden" value="1">
                             <input name="branch_id_fk" type="hidden" value="{{ @$sRow->branch_id_fk }}">
@@ -2669,8 +2689,7 @@
                                 <label for="" class="col-md-3 col-form-label"> <b>สินค้า :</b> </label>
                                 <div class="col-md-8">
                                     <div id="show_product">
-                                        <textarea class="form-control" rows="5" disabled
-                                            style="text-align: left !important;background: #f2f2f2;"></textarea>
+                                        <textarea class="form-control" rows="5" disabled style="text-align: left !important;background: #f2f2f2;"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -2678,8 +2697,8 @@
                             <div class="form-group row">
                                 <label for="" class="col-md-3 col-form-label"> <b>จำนวน :</b> </label>
                                 <div class="col-md-8">
-                                    <input type="number" name="quantity[]" id="amt" class="form-control" value=""
-                                        required="">
+                                    <input type="number" name="quantity[]" id="amt" class="form-control"
+                                        value="" required="">
                                 </div>
                             </div>
 
@@ -2688,7 +2707,8 @@
                                 <div class="col-md-8 text-right ">
                                     <button type="submit" class="btn btn-primary btnSaveAddlist "><i
                                             class="bx bx-save font-size-16 align-middle "></i> Save</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close</button>
                                 </div>
                             </div>
 
@@ -2726,7 +2746,7 @@
 
                     <div class="modal-body">
                         <!--
-                   <iframe id="iframe" src="{{ url('backend/add_ai_cash/1/edit') }}" width=750 height=350 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling="yes"></iframe> -->
+                       <iframe id="iframe" src="{{ url('backend/add_ai_cash/1/edit') }}" width=750 height=350 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling="yes"></iframe> -->
 
                     </div>
 
@@ -2755,8 +2775,8 @@
                     </button>
                 </div>
 
-                <form action="{{ route('backend.frontstorelist.store') }}" method="POST" enctype="multipart/form-data"
-                    autocomplete="off">
+                <form action="{{ route('backend.frontstorelist.store') }}" method="POST"
+                    enctype="multipart/form-data" autocomplete="off">
                     <input name="add_course" type="hidden" value="1">
                     <input name="frontstore_id" type="hidden" value="{{ @$sRow->id }}">
                     {{ csrf_field() }}
@@ -2789,8 +2809,8 @@
 
 
 
-    <div class="modal fade" id="cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="cancel" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
 
@@ -2828,8 +2848,8 @@
                             </div>
                             <div class="divTableCell">
                                 <input class="form-control transfer_money_datetime " autocomplete="off"
-                                    name="transfer_money_datetime" style="width: 45%;font-weight: bold;" required=""
-                                    placeholder="วัน เวลา ที่โอน" />
+                                    name="transfer_money_datetime" style="width: 45%;font-weight: bold;"
+                                    required="" placeholder="วัน เวลา ที่โอน" />
                             </div>
                         </div>
 
@@ -2839,7 +2859,8 @@
                                 <label> หมายเหตุ </label>
                             </div>
                             <div class="divTableCell" style="width: 90%;">
-                                <input type="text" class="form-control" name="note" placeholder="หมายเหตุ" value="">
+                                <input type="text" class="form-control" name="note" placeholder="หมายเหตุ"
+                                    value="">
                             </div>
                         </div>
 
@@ -2869,18 +2890,18 @@
 @endsection
 
 @section('script')
-<script>
-$(document).ready(function(){
-  @if(session('error'))
-  // confirm("<?php echo session('error'); ?>");
-  alert('<?php echo session('error'); ?>');
-@endif
+    <script>
+        $(document).ready(function() {
+            @if (session('error'))
+                // confirm("<?php echo session('error'); ?>");
+                alert('<?php echo session('error'); ?>');
+            @endif
 
 
-$('.order_id_select2').select2();
+            $('.order_id_select2').select2();
 
-});
-</script>
+        });
+    </script>
 
     <script type="text/javascript">
         var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
@@ -3033,32 +3054,32 @@ $('.order_id_select2').select2();
             var status = "{{ @$sRow->approve_status }}";
             var distribution_channel_id_fk = "{{ @$sRow->distribution_channel_id_fk }}";
             // && status != 2 เราไปล็อคที่ controller ด้วย
-            if (status != 1  && status != 6 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
-                console.log('status3 '+status);
+            if (status != 1 && status != 6 && status != 0 && status != '' || distribution_channel_id_fk == 3) {
+                console.log('status3 ' + status);
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
 
-                if(status==2){
+                if (status == 2) {
                     $('.lock_input_row').show();
-                $('#lock_input').prop("disabled", false);
+                    $('#lock_input').prop("disabled", false);
                 }
                 $("input[name=_method]").prop("disabled", false);
-            }else{
+            } else {
                 fnShippingCalculate(0);
             }
         }
 
-        $(document).on('change','#lock_input',function(){
+        $(document).on('change', '#lock_input', function() {
             var status = $(this).val();
-            if(status==1){
+            if (status == 1) {
                 $(".card-body input").prop("disabled", true);
                 $(".card-body select").prop("disabled", true);
                 $(".card-body button").prop("disabled", true);
                 $('.lock_input_row').show();
                 $('#lock_input').prop("disabled", false);
                 $("input[name=_method]").prop("disabled", false);
-            }else{
+            } else {
                 $(".card-body input").prop("disabled", false);
                 $(".card-body select").prop("disabled", false);
                 $(".card-body button").prop("disabled", false);
@@ -3148,7 +3169,6 @@ $('.order_id_select2').select2();
     </script>
 
     <script type="text/javascript">
-
         var frontstore_id_fk = $("#frontstore_id_fk").val(); ////alert(frontstore_id_fk);
         var order_type = "{{ @$sRow->purchase_type_id_fk }}";
         var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
@@ -3610,7 +3630,7 @@ $('.order_id_select2').select2();
                     var purchase_type_id_fk =
                         "{{ @$sRow->purchase_type_id_fk }}"; ////alert(frontstore_id_fk);
 
-                        var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
+                    var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
 
                     $.ajax({
                         type: 'POST',
@@ -3964,7 +3984,7 @@ $('.order_id_select2').select2();
             });
 
 
-// คำนวนราคาหลังเลือกสินค้าโปร
+            // คำนวนราคาหลังเลือกสินค้าโปร
             $(document).on('click', '.btn-plus-product-pro', function(e) {
                 $.fn.dataTable.ext.errMode = 'throw';
                 const input = $(e.target).closest('.input-group').find('input');
@@ -5248,7 +5268,8 @@ $('.order_id_select2').select2();
                                         $('.input_shipping_nofree').show();
                                     }
 
-                                    if (pay_type_id_fk == 6 || pay_type_id_fk == 11 || pay_type_id_fk == 3) {
+                                    if (pay_type_id_fk == 6 || pay_type_id_fk ==
+                                        11 || pay_type_id_fk == 3) {
                                         if (value.aicash_price > 0) {
                                             $("#aicash_price").val(formatNumber(
                                                 parseFloat(value
@@ -5348,7 +5369,7 @@ $('.order_id_select2').select2();
         $('#delivery_amphur').change(function() {
 
             var amphur_id = this.value;
-                 var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
+            var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
             // alert(amphur_id);
 
             if (amphur_id != '') {
@@ -5357,7 +5378,7 @@ $('.order_id_select2').select2();
                     method: "post",
                     data: {
                         amphur_id: amphur_id,
-                            branch_id_fk: branch_id_fk,
+                        branch_id_fk: branch_id_fk,
                         "_token": "{{ csrf_token() }}",
                     },
                     success: function(data) {
@@ -5581,28 +5602,28 @@ $('.order_id_select2').select2();
             });
 
 
-            $(document).on('click','.account_bank_id_select',function(){
+            $(document).on('click', '.account_bank_id_select', function() {
                 $('.myloading').show();
                 var id = $(this).val();
                 var order_id = $(this).attr('order_id');
                 var data_name = 'account_bank_id';
-                account_bank_id_cal(data_name,id,order_id);
+                account_bank_id_cal(data_name, id, order_id);
             });
 
-            $(document).on('click','.pay_with_other_bill_select',function(){
+            $(document).on('click', '.pay_with_other_bill_select', function() {
                 $('.myloading').show();
                 var id = $(this).val();
                 var order_id = $(this).attr('order_id');
                 var data_name = 'pay_with_other_bill';
-                account_bank_id_cal(data_name,id,order_id);
+                account_bank_id_cal(data_name, id, order_id);
             });
 
-            $(document).on('change','#pay_with_other_bill_note',function(){
+            $(document).on('change', '#pay_with_other_bill_note', function() {
                 $('.myloading').show();
                 var id = $(this).val();
                 var order_id = $(this).attr('order_id');
                 var data_name = 'pay_with_other_bill_note';
-                account_bank_id_cal(data_name,id,order_id);
+                account_bank_id_cal(data_name, id, order_id);
             });
 
 
@@ -5749,7 +5770,7 @@ $('.order_id_select2').select2();
             });
         }
 
-        function account_bank_id_cal(data_name,id,order_id) {
+        function account_bank_id_cal(data_name, id, order_id) {
             var id = id ? id : 0;
             var order_id = order_id ? order_id : 0;
             var data_name = data_name ? data_name : '';
@@ -5772,7 +5793,7 @@ $('.order_id_select2').select2();
                     $('.myloading').hide();
                 }
             });
-            }
+        }
     </script>
 
 
@@ -6259,34 +6280,33 @@ $('.order_id_select2').select2();
                             $('.class_btnSave').addClass(' btnSave ');
                             $('.class_btnSave').removeAttr("disabled");
                             $('.class_btnSave').show();
-                        }
-                        else
-                                            // 1  เงินโอน
-                                            if (pay_type_id_fk == 1) {
+                        } else
+                            // 1  เงินโอน
+                            if (pay_type_id_fk == 1) {
 
-                                                // เงินโอน
-                                                $(".show_div_transfer_price").show();
-                                                // $('input[name=account_bank_id]').prop('checked',false);
-                                                $('input[name=account_bank_id]').attr(
-                                                    'required', true);
-                                                $(".div_account_bank_id").show();
-                                                $(".div_pay_with_other_bill").show();
-                                                $("#transfer_price").val('');
-                                                // $(".transfer_money_datetime").attr('required', true);
-                                                $("#transfer_price").attr('required', true);
-                                                $("#transfer_price").removeClass(
-                                                    'input-aireadonly').addClass(
-                                                    'input-aifill').addClass('CalPrice');
+                                // เงินโอน
+                                $(".show_div_transfer_price").show();
+                                // $('input[name=account_bank_id]').prop('checked',false);
+                                $('input[name=account_bank_id]').attr(
+                                    'required', true);
+                                $(".div_account_bank_id").show();
+                                $(".div_pay_with_other_bill").show();
+                                $("#transfer_price").val('');
+                                // $(".transfer_money_datetime").attr('required', true);
+                                $("#transfer_price").attr('required', true);
+                                $("#transfer_price").removeClass(
+                                    'input-aireadonly').addClass(
+                                    'input-aifill').addClass('CalPrice');
 
-                                                // $(".show_div_cash_pay").show();
-                                                $('#fee').removeAttr('required');
-                                                $('#aicash_price').removeAttr('required');
-                                                $("#cash_pay").val('');
+                                // $(".show_div_cash_pay").show();
+                                $('#fee').removeAttr('required');
+                                $('#aicash_price').removeAttr('required');
+                                $("#cash_pay").val('');
 
-                                                // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
-                                                $('.class_btnSave').prop('disabled', true);
+                                // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
+                                $('.class_btnSave').prop('disabled', true);
 
-                                            }
+                            }
 
                         else
                             // 2  เงินสด + Ai-Cash
@@ -6307,51 +6327,51 @@ $('.order_id_select2').select2();
 
                             } else
 
-                            if (pay_type_id_fk == 3) {
+                        if (pay_type_id_fk == 3) {
 
-                                $("#aicash_price").val('');
-                                // $("#aicash_price").removeAttr('readonly');
-                                // $('#aicash_price').attr('required', true);
-                                // $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
-                                // $("#cash_pay").val('');
-                                $(".show_div_aicash_price").show();
-                                // $(".show_div_cash_pay").show();
-                                $('#member_id_aicash_select').attr('required', true);
+                            $("#aicash_price").val('');
+                            // $("#aicash_price").removeAttr('readonly');
+                            // $('#aicash_price').attr('required', true);
+                            // $("#aicash_price").removeClass('input-aireadonly').addClass('input-aifill').addClass('CalPrice');
+                            // $("#cash_pay").val('');
+                            $(".show_div_aicash_price").show();
+                            // $(".show_div_cash_pay").show();
+                            $('#member_id_aicash_select').attr('required', true);
+
+                            $('.class_btnSave').addClass(' btnSave ');
+                            $('.class_btnSave').removeAttr("disabled");
+                            $('.class_btnSave').show();
+
+                        } else
+
+                            // 3  เครดิต + เงินสด
+                            if (pay_type_id_fk == 7) {
+                                // เครดิต
+                                $(".show_div_credit").show();
+                                // $("#credit_price").attr('disabled', false);
+                                $("#credit_price").val('');
+                                $(".div_fee").show();
+                                $("#fee_amt").val('');
+                                $('#fee').attr('required', true);
+                                $("#sum_credit_price").val('');
+                                // เงินสด
+                                $(".show_div_cash_pay").show();
+                                $("#cash_pay").val('');
+                                var fee = $("#fee").val();
+                                if (fee == '') {
+                                    $("#fee").select2('open');
+                                } else {
+                                    $("#credit_price").attr('disabled', false);
+                                    $("#credit_price").focus();
+                                }
 
                                 $('.class_btnSave').addClass(' btnSave ');
                                 $('.class_btnSave').removeAttr("disabled");
                                 $('.class_btnSave').show();
 
-                                }else
-
-                                // 3  เครดิต + เงินสด
-                                if (pay_type_id_fk == 7) {
-                                    // เครดิต
-                                    $(".show_div_credit").show();
-                                    // $("#credit_price").attr('disabled', false);
-                                    $("#credit_price").val('');
-                                    $(".div_fee").show();
-                                    $("#fee_amt").val('');
-                                    $('#fee').attr('required', true);
-                                    $("#sum_credit_price").val('');
-                                    // เงินสด
-                                    $(".show_div_cash_pay").show();
-                                    $("#cash_pay").val('');
-                                    var fee = $("#fee").val();
-                                    if (fee == '') {
-                                        $("#fee").select2('open');
-                                    } else {
-                                        $("#credit_price").attr('disabled', false);
-                                        $("#credit_price").focus();
-                                    }
-
-                                    $('.class_btnSave').addClass(' btnSave ');
-                                    $('.class_btnSave').removeAttr("disabled");
-                                    $('.class_btnSave').show();
-
-                                } else
-                                    // 2 บัตรเครดิต
-                                    if (pay_type_id_fk == 2) {
+                            } else
+                                // 2 บัตรเครดิต
+                                if (pay_type_id_fk == 2) {
                                     // เครดิต
                                     $(".show_div_credit").show();
                                     // $("#credit_price").attr('disabled', false);
@@ -6605,9 +6625,9 @@ $('.order_id_select2').select2();
                                 $('.class_btnSave').removeAttr("disabled");
                                 $('.class_btnSave').show();
                             }
-                            else
-                              // 14 Gift Voucher + Ai-Cash
-                            if(pay_type_id_fk == 14){
+                        else
+                            // 14 Gift Voucher + Ai-Cash
+                            if (pay_type_id_fk == 14) {
                                 $("#aicash_price").val('');
 
                                 $("#gift_voucher_price").val(parseFloat(
@@ -6616,7 +6636,7 @@ $('.order_id_select2').select2();
                                 $('.class_btnSave').addClass(
                                     ' btnSave ');
                                 $('.class_btnSave').removeAttr(
-                                     "disabled");
+                                    "disabled");
                                 $('.class_btnSave').show();
 
                                 $(".show_div_aicash_price").show();
@@ -6942,59 +6962,59 @@ $('.order_id_select2').select2();
 
         // ปุ่มคำนวณ ai cash
         $(document).on('click', '.btnCalAddAicash', function(event) {
-                    $('.myloading').show();
-                    var this_element = "aicash_price";
-                    $("input[name=_method]").val('');
-                    // เช็คก่อนว่า จับคุณกับอะไร
-                    var pay_type_id_fk = $("#pay_type_id_fk").val();
-                    var aicash_remain = $("#aicash_remain").val();
-                    var member_id_aicash = $("#member_id_aicash").val();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        url: " {{ url('backend/ajaxCalPriceFrontstore04') }} ",
-                        data: $("#frm-main").serialize() + "&this_element=" + this_element + "&aicash_remain=" +
-                            aicash_remain + "&member_id_aicash=" + member_id_aicash,
-                        success: function(data) {
-                            fnGetDBfrontstore();
-                            $('.class_btnSave').addClass(' btnSave ');
-                            $('.class_btnSave').removeAttr("disabled");
-                            $('.class_btnSave').show();
-                            $("input[name=_method]").val('PUT');
-                            $('.myloading').hide();
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $('.myloading').hide();
-                        }
-                    });
+            $('.myloading').show();
+            var this_element = "aicash_price";
+            $("input[name=_method]").val('');
+            // เช็คก่อนว่า จับคุณกับอะไร
+            var pay_type_id_fk = $("#pay_type_id_fk").val();
+            var aicash_remain = $("#aicash_remain").val();
+            var member_id_aicash = $("#member_id_aicash").val();
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: " {{ url('backend/ajaxCalPriceFrontstore04') }} ",
+                data: $("#frm-main").serialize() + "&this_element=" + this_element + "&aicash_remain=" +
+                    aicash_remain + "&member_id_aicash=" + member_id_aicash,
+                success: function(data) {
+                    fnGetDBfrontstore();
+                    $('.class_btnSave').addClass(' btnSave ');
+                    $('.class_btnSave').removeAttr("disabled");
+                    $('.class_btnSave').show();
+                    $("input[name=_method]").val('PUT');
+                    $('.myloading').hide();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('.myloading').hide();
+                }
+            });
         });
         // วุฒิเพิ่มฟังชั่นคำนวณ ai cash
         $(document).on('change', '#aicash_price', function(event) {
-                    $('.myloading').show();
-                    var this_element = "aicash_price";
-                    $("input[name=_method]").val('');
-                    // เช็คก่อนว่า จับคุณกับอะไร
-                    var pay_type_id_fk = $("#pay_type_id_fk").val();
-                    var aicash_remain = $("#aicash_remain").val();
-                    var member_id_aicash = $("#member_id_aicash").val();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        url: " {{ url('backend/ajaxCalPriceFrontstore04') }} ",
-                        data: $("#frm-main").serialize() + "&this_element=" + this_element + "&aicash_remain=" +
-                            aicash_remain + "&member_id_aicash=" + member_id_aicash,
-                        success: function(data) {
-                            fnGetDBfrontstore();
-                            $('.class_btnSave').addClass(' btnSave ');
-                            $('.class_btnSave').removeAttr("disabled");
-                            $('.class_btnSave').show();
-                            $("input[name=_method]").val('PUT');
-                            $('.myloading').hide();
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $('.myloading').hide();
-                        }
-                    });
+            $('.myloading').show();
+            var this_element = "aicash_price";
+            $("input[name=_method]").val('');
+            // เช็คก่อนว่า จับคุณกับอะไร
+            var pay_type_id_fk = $("#pay_type_id_fk").val();
+            var aicash_remain = $("#aicash_remain").val();
+            var member_id_aicash = $("#member_id_aicash").val();
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: " {{ url('backend/ajaxCalPriceFrontstore04') }} ",
+                data: $("#frm-main").serialize() + "&this_element=" + this_element + "&aicash_remain=" +
+                    aicash_remain + "&member_id_aicash=" + member_id_aicash,
+                success: function(data) {
+                    fnGetDBfrontstore();
+                    $('.class_btnSave').addClass(' btnSave ');
+                    $('.class_btnSave').removeAttr("disabled");
+                    $('.class_btnSave').show();
+                    $("input[name=_method]").val('PUT');
+                    $('.myloading').hide();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('.myloading').hide();
+                }
+            });
         });
 
         function fnGetDBfrontstore() {
@@ -7086,7 +7106,7 @@ $('.order_id_select2').select2();
                     $('.myloading').hide();
                 }
             });
-}
+        }
 
 
 
@@ -7510,8 +7530,8 @@ $('.order_id_select2').select2();
             var status2 = $('#lock_input').val();
             var status1 = "{{ @$sRow->approve_status }}";
             var distribution_channel_id_fk2 = "{{ @$sRow->distribution_channel_id_fk }}";
-            if(status1 != 1  && status1 != 6 && status1 != 0 && status1 != '' || distribution_channel_id_fk2 == 3){
-                if(status2==1){
+            if (status1 != 1 && status1 != 6 && status1 != 0 && status1 != '' || distribution_channel_id_fk2 == 3) {
+                if (status2 == 1) {
                     alert('กรุณาปลดล็อคเพื่อแก้ไขข้อมูลก่อน');
                     return false;
                 }
@@ -7541,7 +7561,8 @@ $('.order_id_select2').select2();
                     $('.myloading').hide();
 
                     // alert(pay_type_id_fk+":"+aicash_remain+":"+aicash_price);
-                    if (pay_type_id_fk == 6 || pay_type_id_fk == 9 || pay_type_id_fk == 11 || pay_type_id_fk == 3) {
+                    if (pay_type_id_fk == 6 || pay_type_id_fk == 9 || pay_type_id_fk == 11 ||
+                        pay_type_id_fk == 3) {
                         // event.preventDefault();
                         $("#aicash_price").focus();
                         if (aicash_price >= 0 && aicash_remain <= 0) {
@@ -7584,15 +7605,15 @@ $('.order_id_select2').select2();
     </script>
     <!--
 
-                     $('.in-tx').keypress(function (e) {
-                         if (e.which === 13) {
-                             var index = $('.in-tx').index(this) + 1;
-                             // $('.in-tx').eq(index).focus();
-                             // $(".btnSave").focus();
-                             return false;
-                         }
-                     });
-             -->
+                         $('.in-tx').keypress(function (e) {
+                             if (e.which === 13) {
+                                 var index = $('.in-tx').index(this) + 1;
+                                 // $('.in-tx').eq(index).focus();
+                                 // $(".btnSave").focus();
+                                 return false;
+                             }
+                         });
+                 -->
 
     <script language="JavaScript">
         document.onkeydown = chkEvent
@@ -7689,8 +7710,8 @@ $('.order_id_select2').select2();
                     data: function(params) {
                         return {
                             term: params.term || '', // search term
-                            page: params.page || 1 ,
-                            user_by:'{{@$user_name_buy}}',
+                            page: params.page || 1,
+                            user_by: '{{ @$user_name_buy }}',
                         };
                     },
                     processResults: function(data, params) {
@@ -7783,13 +7804,13 @@ $('.order_id_select2').select2();
                         customer_id: customer_id,
                     },
                     success: function(data) {
-                      //console.log(data['customer']);
-                      data['customer']['aistockist_status'];
-                      if(data['customer']['aistockist_status'] == 1){
-                        var aistockist_status = 'เป็น AiStockist';
-                      }else{
-                        var aistockist_status = 'ไม่เป็น AiStockist';
-                      }
+                        //console.log(data['customer']);
+                        data['customer']['aistockist_status'];
+                        if (data['customer']['aistockist_status'] == 1) {
+                            var aistockist_status = 'เป็น AiStockist';
+                        } else {
+                            var aistockist_status = 'ไม่เป็น AiStockist';
+                        }
                         $('#view_pv').val(data['customer']['pv']);
                         $('#view_customer_mt').val(data['customer']['pv_mt']);
                         $('#view_customer_tv').val(data['customer']['pv_tv']);
@@ -7959,7 +7980,8 @@ $('.order_id_select2').select2();
             }
 
             // ประเภทที่มีเงินโอนพ่วงด้วย
-            if ((pay_type_id_fk == 1) || (pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk == 11) || (pay_type_id_fk ==
+            if ((pay_type_id_fk == 1) || (pay_type_id_fk == 8) || (pay_type_id_fk == 10) || (pay_type_id_fk ==
+                11) || (pay_type_id_fk ==
                     12)) {
 
                 $(".show_div_transfer_price").show();
@@ -8004,10 +8026,11 @@ $('.order_id_select2').select2();
                 }
             }
 
-            if(pay_type_id_fk == 5 || pay_type_id_fk == 6 ||pay_type_id_fk == 7 ||pay_type_id_fk == 10 ||pay_type_id_fk == 19 ){
-              $(".show_div_cash_pay ").show();
-            }else{
-              $(".show_div_cash_pay ").hide();
+            if (pay_type_id_fk == 5 || pay_type_id_fk == 6 || pay_type_id_fk == 7 || pay_type_id_fk == 10 ||
+                pay_type_id_fk == 19) {
+                $(".show_div_cash_pay ").show();
+            } else {
+                $(".show_div_cash_pay ").hide();
             }
 
 
@@ -8141,5 +8164,4 @@ $('.order_id_select2').select2();
     <?php
       }
     ?>
-
 @endsection
