@@ -17,7 +17,7 @@ class PromotionsController extends Controller
       return View('backend.promotions.index')->with(
         array(
           'sPromotions'=>$sPromotions,
-        ) 
+        )
       );
     }
 
@@ -50,7 +50,7 @@ class PromotionsController extends Controller
               'sProduct_group'=>$sProduct_group,
               'sLang'=>$sLang,
               'dsOrders_type'=>$dsOrders_type,
-            ) 
+            )
           );
     }
 
@@ -87,7 +87,7 @@ class PromotionsController extends Controller
             'sBusiness_location'=>$sBusiness_location,
             'sProduct_group'=>$sProduct_group,
             'sRow'=>$sRow ,
-            'id'=>$id, 
+            'id'=>$id,
             'sLang'=>$sLang,
             'dsOrders_type'=>$dsOrders_type,
            )
@@ -150,7 +150,7 @@ class PromotionsController extends Controller
 
           $sRow->lang_id    = request('lang_id');
           $sRow->status    = request('status')?request('status'):0;
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
@@ -173,7 +173,8 @@ class PromotionsController extends Controller
       if( $sRow ){
         $sRow->forceDelete();
       }
-      return response()->json(\App\Models\Alert::Msg('success'));
+      // return response()->json(\App\Models\Alert::Msg('success'));
+      return redirect()->back();
     }
 
     public function Datatable(Request $req){
@@ -199,7 +200,7 @@ class PromotionsController extends Controller
       $sTable = DB::select(" SELECT promotions.*,promotions_cost.member_price as proprice,promotions_cost.pv
         FROM
         promotions
-        left Join promotions_cost ON promotions.id = promotions_cost.promotion_id_fk 
+        left Join promotions_cost ON promotions.id = promotions_cost.promotion_id_fk
         WHERE 1
         ".$w01."
         ".$w02."
@@ -220,7 +221,7 @@ class PromotionsController extends Controller
         }else{
           return "";
         }
-        
+
       })
       ->make(true);
     }

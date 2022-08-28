@@ -121,6 +121,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('promotions', 'PromotionsController');
     Route::post('promotions/datatable', 'PromotionsController@Datatable')->name('promotions.datatable');
+    Route::get('promotions_delete/{id}', 'PromotionsController@destroy');
 
     Route::resource('promotions_products', 'Promotions_productsController');
     Route::post('promotions_products/datatable', 'Promotions_productsController@Datatable')->name('promotions_products.datatable');
