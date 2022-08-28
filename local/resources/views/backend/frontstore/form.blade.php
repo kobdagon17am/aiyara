@@ -1738,13 +1738,31 @@
                                                                             for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
                                                                         <br>
 
-                                                                        <input {{ @$disAfterSave }} type="text"
+                                                                        {{-- <input {{ @$disAfterSave }} type="text"
                                                                             class="form-control ch_Disabled "
                                                                             id="pay_with_other_bill_note"
                                                                             name="pay_with_other_bill_note"
                                                                             order_id = "{{@$sRow->id}}"
                                                                             placeholder="(ระบุ) หมายเหตุ * กรณีชำระพร้อมบิลอื่น "
-                                                                            value="{{ @$sRow->pay_with_other_bill_note }}">
+                                                                            value="{{ @$sRow->pay_with_other_bill_note }}"> --}}
+
+                                                                            <?php
+                                                                            $r_invoice_code = \DB::table('db_orders')->select('code_order')->orderBy('code_order','desc')->get();
+                                                                            ?>
+                                                                            @if(@$r_invoice_code)
+                                                                            <select id="pay_with_other_bill_note" name="pay_with_other_bill_note" class="form-control order_id_select2 ch_Disabled" order_id = "{{@$sRow->id}}">
+                                                                                <option value="">กรุณาเลือกเลขบิลที่ชำระร่วม</option>
+                                                                                 @foreach(@$r_invoice_code AS $r)
+                                                                                 <option value="{{$r->code_order}}" <?php if($r->code_order==@$sRow->pay_with_other_bill_note){echo 'selected';} ?>>
+                                                                                   {{$r->code_order}}
+                                                                                 </option>
+                                                                                 @endforeach
+                                                                            </select>
+                                                                            @else
+                                                                            <select class="form-control select2-templating " >
+                                                                                <option value="">กรุณาเลือกเลขบิลที่ชำระร่วม</option>
+                                                                            </select>
+                                                                           @endif
 
                                                                     </div>
                                                                     <div class="divTableCell">
@@ -2857,6 +2875,10 @@ $(document).ready(function(){
   // confirm("<?php echo session('error'); ?>");
   alert('<?php echo session('error'); ?>');
 @endif
+
+
+$('.order_id_select2').select2();
+
 });
 </script>
 
