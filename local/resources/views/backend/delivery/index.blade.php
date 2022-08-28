@@ -332,7 +332,7 @@
 
                             <div class=" divBtnSave " style="display: none;">
                                 <center>
-                                    <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-18  ">
+                                    <button type="submit" onclick="return confirm('ยืนยันการทำรายการ?')" class="btn btn-primary btn-sm waves-effect font-size-18  " >
                                         <i class="bx bx-save font-size-18 align-middle mr-1"></i> สร้าง Packing List
                                     </button>
                                 </center>
