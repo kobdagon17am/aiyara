@@ -143,6 +143,8 @@
                     <img class="" src="backend/images/flags/us.jpg" alt="Language" height="16">
                     @ELSEIF(Session::get('locale')=='lo')
                     <img class="" src="backend/images/flags/flag_laos.jpg" alt="Language" height="16">
+                    @ELSEIF(Session::get('locale')=='ca')
+                    <img class="" src="backend/images/flags/flag_cambodia.jpg" alt="Language" height="16">
                     @ELSE
                     <img class="" src="backend/images/flags/flag_thai.jpg" alt="Language" height="16">
                     @ENDIF
