@@ -4016,7 +4016,7 @@ $endDate1
                 $viewcondition_01
                 $action_user_02
                 $business_location_id_fk
-                ORDER BY created_at DESC
+                ORDER BY id DESC
 
               ");
               // AND db_orders.order_status_id_fk <> 1
