@@ -14,7 +14,7 @@
 
                 <a href="backend/index" class="logo logo-light">
                 <!--     <span class="logo-sm">
-                        <img src="backend/images/logo-light.svg" alt="" height="22">						
+                        <img src="backend/images/logo-light.svg" alt="" height="22">
 						<h3 style="margin-top:20px; color: #ffffff;">N</h3>
                     </span> -->
                     <span class="logo-lg">
@@ -155,11 +155,14 @@
                     <!-- item-->
                     <a href="{{ URL('/lang/en') }}" class="dropdown-item notify-item">
                         <img src="backend/images/flags/us.jpg" alt="user-image" class="mr-1" height="12"> <span class="align-middle">US</span>
-                    </a> 
+                    </a>
                      <!-- item-->
                     <a href="{{ URL('/lang/lo') }}" class="dropdown-item notify-item">
                         <img src="backend/images/flags/flag_laos.jpg" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Laos</span>
                     </a>
+                    <a href="{{ URL('/lang/ca') }}" class="dropdown-item notify-item">
+                      <img src="backend/images/flags/flag_cambodia.jpg" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Cambodia</span>
+                  </a>
 
                 </div>
             </div>

@@ -147,6 +147,8 @@
                     <img class="" src="{{ asset('backend/images/flags/flag_thai.jpg') }}" alt="Language" height="16">
                     @ELSEIF(Session::get('locale')=='en')
                     <img class="" src="{{ asset('backend/images/flags/us.jpg') }}" alt="Language" height="16">
+                    @ELSEIF(Session::get('locale')=='ca')
+                    <img class="" src="{{ asset('backend/images/flags/flag_cambodia.jpg') }}" alt="Language" height="16">
                     @ENDIF
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -158,6 +160,10 @@
                     <a href="{{ URL('/lang/en') }}" class="dropdown-item notify-item">
                         <img src="{{ asset('backend/images/flags/us.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">US</span>
                     </a>
+
+                    <a href="{{ URL('/lang/ca') }}" class="dropdown-item notify-item">
+                      <img src="{{ asset('backend/images/flags/flag_cambodia.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">Cambodia</span>
+                  </a>
 
 
                 </div>
