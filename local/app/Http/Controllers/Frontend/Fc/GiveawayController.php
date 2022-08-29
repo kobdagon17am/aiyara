@@ -174,145 +174,156 @@ class GiveawayController extends Controller
 
   public static function check_giveaway_all($type, $customer_username, $pv_total)
   { //ประเภทการซื้อ ,customer_username,pv order
-    // dd($type);
-    $data_customer = DB::table('customers')
-      ->where('user_name', '=', $customer_username)
-      ->first();
+      // dd($type);
+      $data_customer = DB::table('customers')
+          ->where('user_name', '=', $customer_username)
+          ->first();
 
-    if (empty($data_customer)) {
-      $resule = ['status' => 'fail', 'message' => 'Customers is Null'];
-      return $resule;
-    }
+      if (empty($data_customer)) {
+          $resule = ['status' => 'fail', 'message' => 'Customers is Null'];
+          return $resule;
+      }
 
-    $customer_id = $data_customer->id;
-    $package_id = $data_customer->package_id;
-    $qualification_id = $data_customer->qualification_id;
-    $aistockist_status = $data_customer->aistockist_status;
-    $agency_status = $data_customer->agency_status;
+      $customer_id = $data_customer->id;
+      $package_id = $data_customer->package_id;
+      $qualification_id = $data_customer->qualification_id;
+      $aistockist_status = $data_customer->aistockist_status;
+      $agency_status = $data_customer->agency_status;
 
-    $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
-    $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
+      $mt_active = \App\Helpers\Frontend::check_mt_active($customer_id);
+      $tv_active = \App\Helpers\Frontend::check_tv_active($customer_id);
 
-    // dd($data_customer->business_location_id);
+      // dd($data_customer->business_location_id);
 
-    $giveaway = Giveaway::where('business_location_id_fk', '=', (@$data_customer->business_location_id ? @$data_customer->business_location_id : 1))
-      ->where('status', '=', 1)
-      ->wheredate('start_date', '<=', now())
-      ->wheredate('end_date', '>=', now())
-      ->get();
+      $giveaway = Giveaway::where('business_location_id_fk', '=', (@$data_customer->business_location_id?@$data_customer->business_location_id:1))
+          ->where('status', '=', 1)
+          ->wheredate('start_date', '<=', now())
+          ->wheredate('end_date', '>=', now())
+          ->get();
 
     // dd($giveaway);
 
-    if (count($giveaway) > 0) {
+      if (count($giveaway) > 0) {
 
-      $i = 0;
-      $arr = array();
-      $data = array();
-      $rs = array();
-      $set_another_pro = 1; //ทำต่อ 0 หยุด
+          $i = 0;
+          $arr = array();
+          $data = array();
+          $rs = array();
+          $set_another_pro = 1; //ทำต่อ 0 หยุด
 
-      foreach ($giveaway as $key => $value) {
+          foreach ($giveaway as $key => $value) {
 
 
-        if ($set_another_pro == 0) {
-          $i++;
-          $arr_type = explode(',', $value->orders_type_id);
 
-          if (in_array($type, $arr_type) == FALSE) {
-            $arr[$i][] = 'ประเภทการซื้อไม่ถูกต้อง';
-          }
+            if ($set_another_pro == 0) {
+                  $i++;
 
-          if ($value->giveaway_member_type_id_fk == 1 and $data_customer->pv > 0) {
-            $arr[$i][] = 'เป็นสมาชิกที่มี PV มากกว่า 0 ไม่สามารถแถมสินค้าได้';
-          }
+                  $arr_type = explode(',', $value->orders_type_id);
 
-          if ($value->giveaway_member_type_id_fk == 2 and $data_customer->pv == 0) {
-            $arr[$i][] = 'เป็นสมาชิกใหม่ PV = 0 ไม่สามารถแถมสินค้าได้ ';
-          }
+                  if (in_array($type,$arr_type) == FALSE) {
+                      $arr[$i][] = 'ประเภทการซื้อไม่ถูกต้อง';
+                  }
 
-          if ($pv_total < $value->pv_minimum_purchase) {
-            $arr[$i][] = '  สินค้าสั่งซื้อมีค่า PV ไม่ถึง ' . $value->pv_minimum_purchase;
-          }
+                  if ($value->giveaway_member_type_id_fk == 1 and $data_customer->pv > 0) {
+                      $arr[$i][] = 'เป็นสมาชิกที่มี PV มากกว่า 0 ไม่สามารถแถมสินค้าได้';
 
-          if ($qualification_id < $value->reward_qualify_purchased and !empty($value->reward_qualify_purchased)) {
+                  }
 
-            $arr[$i][] = 'ไม่ผ่านคุณวุฒิ Reward ขั้นต่ำที่ซื้อได้';
-          }
+                  if ($value->giveaway_member_type_id_fk == 2 and $data_customer->pv == 0) {
+                      $arr[$i][] = 'เป็นสมาชิกใหม่ PV = 0 ไม่สามารถแถมสินค้าได้ ';
 
-          if ($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
-            $arr[$i][] = 'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้';
-          }
+                  }
 
-          if ($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail') { //ไม่ต้องรักษาคุณสมบัตรรายเดือน
-            $arr[$i][] = $mt_active['message'];
-          }
+                  if ($pv_total < $value->pv_minimum_purchase) {
+                      $arr[$i][] = '  สินค้าสั่งซื้อมีค่า PV ไม่ถึง ' . $value->pv_minimum_purchase;
+                  }
 
-          if ($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'N') { //ต้องรักษาคุณสมบัติรายเดือน
-            $arr[$i][] = 'ต้องมีการรักษาคุณสมบัติรายเดือน';
-          }
+                  if ($qualification_id < $value->reward_qualify_purchased and !empty($value->reward_qualify_purchased)) {
 
-          if ($value->keep_personal_quality == 2 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail') { //ไม่่ต้องรักษาคุณสมบัติรายเดือน
-            $arr[$i][] = $mt_active['message'];
-          }
+                      $arr[$i][] = 'ไม่ผ่านคุณวุฒิ Reward ขั้นต่ำที่ซื้อได้';
 
-          if ($value->keep_personal_quality == 2 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'Y') { //ไม่่ต้องรักษาคุณสมบัติรายเดือน
-            $arr[$i][] = 'ต้องไม่มีการรักษาคุณสมบัติรายเดือน';
-          }
+                  }
 
-          if ($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $mt_active['status'] == 'fail') {
-            //ไม่ต้องมีการรักษาคุณสมบัติท่องเที่ยว
-            $arr[$i][] = $tv_active['message'];
-          }
+                  if ($package_id < $value->minimum_package_purchased and !empty($value->minimum_package_purchased)) {
+                      $arr[$i][] = 'ไม่ผ่าน Package ขั้นต่ำที่ซื้อได้';
+                  }
 
-          if ($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $tv_active['type'] == 'N') {
-            $arr[$i][] = 'ต้องมีการรักษาคุณสมบัติท่องเที่ยว';
-          }
+                  if ($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail') { //ไม่ต้องรักษาคุณสมบัตรรายเดือน
+                      $arr[$i][] = $mt_active['message'];
+                  }
 
-          if ($value->maintain_travel_feature == 2 and !empty($value->maintain_travel_feature) and $tv_active['status'] == 'fail') {
-            //ไม่ต้องมีการรักษาคุณสมบัติท่องเที่ยว
-            $arr[$i][] = $tv_active['message'];
-          }
+                  if ($value->keep_personal_quality == 1 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'N') { //ต้องรักษาคุณสมบัติรายเดือน
+                      $arr[$i][] = 'ต้องมีการรักษาคุณสมบัติรายเดือน';
+                  }
 
-          if ($value->maintain_travel_feature == 2 and !empty($value->maintain_travel_feature) and $tv_active['type'] == 'Y') {
-            $arr[$i][] = 'ต้องไม่มีการรักษาคุณสมบัติท่องเที่ยว';
-          }
+                  if ($value->keep_personal_quality == 2 and !empty($value->keep_personal_quality) and $mt_active['status'] == 'fail') { //ไม่่ต้องรักษาคุณสมบัติรายเดือน
+                      $arr[$i][] = $mt_active['message'];
+                  }
 
-          if ($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 0) { //เป็น aistockist
-            $arr[$i][] = 'ต้องเป็น Ai-Stockist ';
-          }
+                  if ($value->keep_personal_quality == 2 and !empty($value->keep_personal_quality) and $mt_active['type'] == 'Y') { //ไม่่ต้องรักษาคุณสมบัติรายเดือน
+                      $arr[$i][] = 'ต้องไม่มีการรักษาคุณสมบัติรายเดือน';
+                  }
 
-          if ($value->aistockist == 2 and !empty($value->aistockist) and $aistockist_status == 1) { //ต้องไม่เป็น aistockist
+                  if ($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $mt_active['status'] == 'fail') {
+                      //ไม่ต้องมีการรักษาคุณสมบัติท่องเที่ยว
+                      $arr[$i][] = $tv_active['message'];
+                  }
 
-            $arr[$i][] = 'ต้องไม่เป็น Ai-Stockist';
-          }
+                  if ($value->maintain_travel_feature == 1 and !empty($value->maintain_travel_feature) and $tv_active['type'] == 'N') {
+                      $arr[$i][] = 'ต้องมีการรักษาคุณสมบัติท่องเที่ยว';
+                  }
 
-          if ($value->agency == 1 and !empty($value->agency) and $agency_status == 0) { //เป็น Agency
-            $arr[$i][] = 'ต้องเป็น Agency';
-          }
+                  if ($value->maintain_travel_feature == 2 and !empty($value->maintain_travel_feature) and $tv_active['status'] == 'fail') {
+                      //ไม่ต้องมีการรักษาคุณสมบัติท่องเที่ยว
+                      $arr[$i][] = $tv_active['message'];
 
-          if ($value->agency == 2 and !empty($value->agency) and $agency_status == 1) { //ต้องไม่เป็น Agency
-            $arr[$i][] = 'ต้องไม่เป็น Agency';
-          }
+                  }
 
-          if (@$arr[$i]) {
-            $rs[] = ['status' => 'fail', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => $arr[$i]];
-          } else {
-            $rs[] = ['status' => 'success', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => 'ได้รับรายการของแถม'];
-            if ($value->another_pro == 0 ) {
-                 $set_another_pro = 0;
-                 return $rs;
+                  if ($value->maintain_travel_feature == 2 and !empty($value->maintain_travel_feature) and $tv_active['type'] == 'Y') {
+                      $arr[$i][] = 'ต้องไม่มีการรักษาคุณสมบัติท่องเที่ยว';
+
+                  }
+
+                  if ($value->aistockist == 1 and !empty($value->aistockist) and $aistockist_status == 0) { //เป็น aistockist
+                      $arr[$i][] = 'ต้องเป็น Ai-Stockist ';
+
+                  }
+
+                  if ($value->aistockist == 2 and !empty($value->aistockist) and $aistockist_status == 1) { //ต้องไม่เป็น aistockist
+
+                      $arr[$i][] = 'ต้องไม่เป็น Ai-Stockist';
+
+                  }
+
+                  if ($value->agency == 1 and !empty($value->agency) and $agency_status == 0) { //เป็น Agency
+                      $arr[$i][] = 'ต้องเป็น Agency';
+
+                  }
+
+                  if ($value->agency == 2 and !empty($value->agency) and $agency_status == 1) { //ต้องไม่เป็น Agency
+                      $arr[$i][] = 'ต้องไม่เป็น Agency';
+
+                  }
+
+                  if (@$arr[$i]) {
+                      $rs[] = ['status' => 'fail', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => $arr[$i]];
+                  } else {
+                      $rs[] = ['status' => 'success', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => 'ได้รับรายการของแถม'];
+                  }
+
+              }
+
+              if ($value->another_pro == 0 and $rs[$i]['status'] == 'success' ) {
+                  $set_another_pro = 0;
               }
 
           }
-        }
 
-
+      } else {
+          $resule = ['status' => 'fail', 'message' => 'ยังไม่มีโปรโมชั่นแถม'];
+          return $resule;
       }
-    } else {
-      $resule = ['status' => 'fail', 'message' => 'ยังไม่มีโปรโมชั่นแถม'];
-      return $resule;
-    }
 
-    return $rs;
+      return $rs;
   }
 }

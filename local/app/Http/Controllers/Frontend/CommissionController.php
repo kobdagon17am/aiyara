@@ -104,6 +104,7 @@ class CommissionController extends Controller
 
     public function modal_commission_transfer(Request $rs)
     {
+
         $date = (date('Y-m-d', $rs->date));
         $data = DB::table('db_report_bonus_per_day')
             ->where('customer_username', '=', Auth::guard('c_user')->user()->user_name)

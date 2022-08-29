@@ -291,6 +291,7 @@ class FrontstoreController extends Controller
   public function create()
   {
 
+
     $sUser = \App\Models\Backend\Permission\Admin::get();
 
     $Products = DB::select("SELECT products.id as product_id,
@@ -366,6 +367,7 @@ class FrontstoreController extends Controller
   }
   public function store(Request $request)
   {
+    //dd($request->all());
 
     $customers = DB::table('customers')->select('user_name')->where('id',@$request->customers_id_fk)->first();
     if($customers){
@@ -2278,6 +2280,7 @@ class FrontstoreController extends Controller
           $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
         }else{
           $sRow->created_at = request('date_create').' 00:00:01';
+          $sRow->action_date = request('date_create');
           $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk,request('date_create'));
         }
       }else{
