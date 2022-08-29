@@ -231,14 +231,28 @@ if(!empty($gift_voucher)){
 }
 
 
- $sTable = DB::select("
-    SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
-    SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
-    ORDER BY add_from,id
+//  $sTable = DB::select("
+//     SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
+//     SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
+//     ORDER BY add_from,id
+// ");
+//
+
+$sTable = DB::select("
+SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
+SELECT
+id,user_id_fk,frontstore_id_fk,code_order,customers_id_fk,distribution_channel_id_fk,purchase_type_id_fk,pay_type_id_fk,selling_price,
+member_price,product_id_fk,product_name,
+(SUM((CASE WHEN amt is null THEN 0 ELSE amt END))) AS amt,
+product_unit_id_fk,pv,total_pv,total_price,total_member_price,currency,add_from,type_product,promotion_id_fk,promotion_code,giveaway_id_fk,
+course_id_fk,action_date,action_user,approve_status,approver,approve_date,qr_code,created_at,updated_at,deleted_at
+from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
+ORDER BY add_from,id
 ");
 
-foreach ($sTable as $key => $row) {
 
+foreach ($sTable as $key => $row) {
+  // amt
   $product_name = '';
 
         if($row->type_product=="course"){
