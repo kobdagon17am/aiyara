@@ -2275,16 +2275,16 @@ class FrontstoreController extends Controller
       if(request('date_create')){
         if(date('Y-m-d', strtotime(request('date_create'))) == date('Y-m-d') || date('Y-m-d', strtotime(request('date_create'))) > date('Y-m-d')){
           $sRow->created_at = date('Y-m-d H:i:s');
-          $sRow->action_date = date('Y-m-d H:i:s');
+          $sRow->action_date = date('Y-m-d');
           $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
         }else{
           $sRow->created_at = request('date_create').' 21:30:00';
-          $sRow->action_date = request('date_create').' 21:30:00';
+          $sRow->action_date = request('date_create');
           $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk,request('date_create'));
         }
       }else{
         $sRow->created_at = date('Y-m-d H:i:s');
-        $sRow->action_date = date('Y-m-d H:i:s');
+        $sRow->action_date = date('Y-m-d');
         $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
       }
 
