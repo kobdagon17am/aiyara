@@ -146,13 +146,27 @@ class GiveawayController extends Controller
                     }
 
                     if (@$arr[$i]) {
+
                         $rs[] = ['status' => 'fail', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => $arr[$i]];
+
+                        // if(!isset($rs[$i])){
+                        //   // dd($giveaway);
+                        //   dd($arr);
+                        //   }
+
                     } else {
+
                         $rs[] = ['status' => 'success', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => $data[$i]];
+                        // if(!isset($rs[$i])){
+                        //   // dd($value);
+                        //   dd('$giveaway2');
+                        //   }
                     }
                 }
+// dd($giveaway);
 
-                if ($value->another_pro == 0 and $rs[$i]['status'] == 'success') {
+                if ($value->another_pro == 0 and @$rs[$i]['status'] == 'success') {
+
                     $set_another_pro = 0;
                 }
             }

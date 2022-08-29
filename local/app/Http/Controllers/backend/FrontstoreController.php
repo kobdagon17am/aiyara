@@ -2272,7 +2272,19 @@ class FrontstoreController extends Controller
       $sRow->note    = request('note');
       $sRow->action_user = \Auth::user()->id;
       $sRow->action_date = date('Y-m-d H:i:s');
-      $sRow->created_at = date('Y-m-d H:i:s');
+      if(request('date_create')){
+        if(date('Y-m-d', strtotime(request('date_create'))) == date('Y-m-d') || date('Y-m-d', strtotime(request('date_create'))) > date('Y-m-d')){
+          $sRow->created_at = date('Y-m-d H:i:s');
+          $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+        }else{
+          $sRow->created_at = request('date_create').' 00:00:01';
+          $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk,request('date_create'));
+        }
+      }else{
+        $sRow->created_at = date('Y-m-d H:i:s');
+        $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+      }
+
 
       //   dd($sRow);
       // // กรณีโอนชำระ
@@ -2289,14 +2301,14 @@ class FrontstoreController extends Controller
 
       //    $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
       //   DB::select(" UPDATE `db_orders` SET date_setting_code='".date('ym')."' WHERE (`id`=".$sRow->id.") ");
-      $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+
       $sRow->code_order    = $code_order;
       $sRow->date_setting_code    = date('ym');
 
       //   DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
 
       // }
-
+        // dd($sRow);
       $sRow->save();
 
       DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");

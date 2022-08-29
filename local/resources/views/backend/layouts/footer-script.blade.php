@@ -1,7 +1,7 @@
         <!-- JAVASCRIPT -->
         <!-- <script src="{{ URL::asset('backend/libs/jquery/jquery.min.js') }}"></script> -->
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-                crossorigin="anonymous"></script>
+            crossorigin="anonymous"></script>
 
 
         <script src="{{ URL::asset('backend/libs/bootstrap/bootstrap.min.js') }}"></script>
@@ -149,12 +149,11 @@
                     var can_approve = sessionStorage.getItem("can_approve");
                 }
 
-                if (menu_id == null) {
+                // if (menu_id == null) {
                     var menu_id = "{{ Session::get('menu_id') }}";
                     var sC = "{{ Session::get('sC') }}";
                     var can_approve = "{{ Session::get('can_approve') }}";
-                }
-                // alert(sC);
+                // }
 
                 console.log('menu_id : ' + menu_id);
                 // console.log('sPermission : '+sPermission);
@@ -174,7 +173,6 @@
 
 
                 if (sPermission != 1) {
-
                     (sC == 1) ? ($(".class_btn_add").show()) : ($(".class_btn_add").remove());
                     // เคสนี้ ต้องรับสินค้าครบทั้งหมดก่อนถึงจะมีสิทธิ์อนุมัติใบโอนได้ และค่อยดึงเข้าคลังต่อไปได้
                     (can_approve == 1) ? ($(".div_approve_transfer_branch_get").show()) : ($(

@@ -185,7 +185,8 @@
                             &nbsp; --}}
 
                                 {{-- @if (@$sRow->transfer_bill_status == 2) --}}
-                                <?php //dd($sRow->approve_status);
+                                <?php
+                                //  dd($sRow->approve_status);
                                 ?>
                                 @if (@$sRow->approve_status == 1 ||
                                     @$sRow->approve_status == 2 ||

@@ -18,33 +18,61 @@ class RunNumberPayment extends Model
   //R = Payment
   //E = Course/Event
 
-  public static function run_number_order($business_location_id_fk)
+  public static function run_number_order($business_location_id_fk,$date_order="")
   {
+if($date_order!=''){
+    // วุฒิเพิ่มมา เพื่อไว้เลือกวันที่เฉยๆ
+        $id = Db_Orders::where('business_location_id_fk', '=', $business_location_id_fk)
+        ->where('date_setting_code', '=', date('ym', strtotime($date_order)))
+        ->where('order_channel', '=', 'MEMBER')
+        ->where('code_order', '!=', '')
+        ->orderby('id', 'desc')
+        ->first();
 
-    $id = Db_Orders::where('business_location_id_fk', '=', $business_location_id_fk)
-      ->where('date_setting_code', '=', date('ym'))
-      ->where('order_channel', '=', 'MEMBER')
-      ->where('code_order', '!=', '')
-      ->orderby('id', 'desc')
-      ->first();
-    // dd($id);
+      if (@$id->code_order) {
+        $last_code = $id->code_order;
+        $code = substr($last_code, -5);
+        $last_code = $code + 1;
 
-    if (@$id->code_order) {
-      $last_code = $id->code_order;
-      $code = substr($last_code, -5);
-      $last_code = $code + 1;
+        $num_code = substr("00000" . $last_code, -5);
+        $code_order = 'O' . $business_location_id_fk . date('ymd', strtotime($date_order)) . '' . $num_code;
+      } else {
+        $last_code = 1;
+        $num_code = substr("00000" . $last_code, -5);
+        $code_order = 'O' . $business_location_id_fk . date('ymd', strtotime($date_order)) . '' . $num_code;
+      }
+      do {
+        $rs = RunNumberPayment::check_number_order($code_order);
+      }while ($rs['status']=='fail');
+      return  $rs['code_order'];
 
-      $num_code = substr("00000" . $last_code, -5);
-      $code_order = 'O' . $business_location_id_fk . date('ymd') . '' . $num_code;
-    } else {
-      $last_code = 1;
-      $num_code = substr("00000" . $last_code, -5);
-      $code_order = 'O' . $business_location_id_fk . date('ymd') . '' . $num_code;
-    }
-    do {
-      $rs = RunNumberPayment::check_number_order($code_order);
-    }while ($rs['status']=='fail');
-    return  $rs['code_order'];
+}else{
+  // ของพี่กอล์ฟ
+  $id = Db_Orders::where('business_location_id_fk', '=', $business_location_id_fk)
+  ->where('date_setting_code', '=', date('ym'))
+  ->where('order_channel', '=', 'MEMBER')
+  ->where('code_order', '!=', '')
+  ->orderby('id', 'desc')
+  ->first();
+
+if (@$id->code_order) {
+  $last_code = $id->code_order;
+  $code = substr($last_code, -5);
+  $last_code = $code + 1;
+
+  $num_code = substr("00000" . $last_code, -5);
+  $code_order = 'O' . $business_location_id_fk . date('ymd') . '' . $num_code;
+} else {
+  $last_code = 1;
+  $num_code = substr("00000" . $last_code, -5);
+  $code_order = 'O' . $business_location_id_fk . date('ymd') . '' . $num_code;
+}
+do {
+  $rs = RunNumberPayment::check_number_order($code_order);
+}while ($rs['status']=='fail');
+return  $rs['code_order'];
+}
+
   }
 
   public static function check_number_order($code_order)
