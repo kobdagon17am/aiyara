@@ -32,6 +32,7 @@ class LoginController extends Controller
 
           if($get_users->business_location_id == 1 || $get_users->business_location_id == ''){
             session()->put('locale','th');
+          }else if($get_users->business_location_id == 3){
           }else{
             session()->put('locale','en');
           }
