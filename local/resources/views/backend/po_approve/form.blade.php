@@ -485,7 +485,7 @@
                                                     <div class="form-group">
                                                         <label>Detail <span class="text-danger">*</span></label>
                                                         <div>
-                                                            <textarea required="" name="detail" class="form-control" rows="3"></textarea>
+                                                            <textarea required="" name="detail" class="form-control" rows="3">{{ @$sRow->transfer_bill_note }}</textarea>
                                                         </div>
                                                     </div>
 

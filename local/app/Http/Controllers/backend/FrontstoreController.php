@@ -3999,7 +3999,7 @@ $endDate1
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
                 status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
-                db_orders.shipping_free
+                db_orders.shipping_free,db_orders.transfer_bill_note
                 FROM db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 WHERE 1
@@ -4071,7 +4071,12 @@ ORDER BY created_at DESC
         if (@$row->approve_status != "") {
           @$approve_status = DB::select(" select * from `dataset_approve_status` where id=" . @$row->approve_status . " ");
           // return $purchase_type[0]->orders_type;
-          return @$approve_status[0]->txt_desc;
+          if($row->approve_status == 6){
+            $transfer_bill_note = '<br><span style="color:black; font-size: 11px;"> - '.$row->transfer_bill_note.'</span>';
+          }else{
+            $transfer_bill_note = '';
+          }
+          return @$approve_status[0]->txt_desc.$transfer_bill_note;
         } else {
           // return "No completed";
           return "<font color=red>* รอดำเนินการต่อ</font>";
