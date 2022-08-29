@@ -47,8 +47,9 @@ class GiveawayController extends Controller
       $set_another_pro = 1; //0 หยุด , 1 ทำต่อ
 
       foreach ($giveaway as $key => $value) {
-        $i++;
+
         if ($set_another_pro == 1) {
+          $i++;
           $arr_type = explode(',', $value->orders_type_id);
           if (in_array($type, $arr_type) == FALSE) {
             $arr[$i]['message'] = 'ประเภทการซื้อไม่ถูกต้อง';
@@ -143,14 +144,21 @@ class GiveawayController extends Controller
             //   // dd($value);
             //   dd('$giveaway2');
             //   }
+
+            if ($value->another_pro == 0 ) {
+            $set_another_pro = 0;
+            return $rs;
+          }
+
+
           }
         }
 
 
-          if ($value->another_pro == 0 and $rs[$i]['status'] == 'success') {
+          // if ($value->another_pro == 0 and $rs[$i]['status'] == 'success') {
 
-            $set_another_pro = 0;
-          }
+          //   $set_another_pro = 0;
+          // }
 
       }
 
@@ -204,11 +212,10 @@ class GiveawayController extends Controller
       $set_another_pro = 1; //ทำต่อ 0 หยุด
 
       foreach ($giveaway as $key => $value) {
-        $i++;
+
 
         if ($set_another_pro == 0) {
-
-
+          $i++;
           $arr_type = explode(',', $value->orders_type_id);
 
           if (in_array($type, $arr_type) == FALSE) {
@@ -291,12 +298,15 @@ class GiveawayController extends Controller
             $rs[] = ['status' => 'fail', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => $arr[$i]];
           } else {
             $rs[] = ['status' => 'success', 'name' => $value->giveaway_name, 'gv_id' => $value->id, 'rs' => 'ได้รับรายการของแถม'];
+            if ($value->another_pro == 0 ) {
+                 $set_another_pro = 0;
+                 return $rs;
+              }
+
           }
         }
 
-        if ($value->another_pro == 0 and $rs[$i]['status'] == 'success') {
-          $set_another_pro = 0;
-        }
+
       }
     } else {
       $resule = ['status' => 'fail', 'message' => 'ยังไม่มีโปรโมชั่นแถม'];
