@@ -2271,17 +2271,20 @@ class FrontstoreController extends Controller
       $sRow->agency    = request('agency');
       $sRow->note    = request('note');
       $sRow->action_user = \Auth::user()->id;
-      $sRow->action_date = date('Y-m-d H:i:s');
+
       if(request('date_create')){
         if(date('Y-m-d', strtotime(request('date_create'))) == date('Y-m-d') || date('Y-m-d', strtotime(request('date_create'))) > date('Y-m-d')){
           $sRow->created_at = date('Y-m-d H:i:s');
+          $sRow->action_date = date('Y-m-d H:i:s');
           $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
         }else{
-          $sRow->created_at = request('date_create').' 00:00:01';
+          $sRow->created_at = request('date_create').' 21:30:00';
+          $sRow->action_date = request('date_create').' 21:30:00';
           $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk,request('date_create'));
         }
       }else{
         $sRow->created_at = date('Y-m-d H:i:s');
+        $sRow->action_date = date('Y-m-d H:i:s');
         $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
       }
 
