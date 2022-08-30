@@ -11,10 +11,11 @@ class LocaleController extends Controller
     public function lang($locale)
     {
 
-    	// dd($locale);
+    	//
     	if($locale==""){
     		$locale = 'th';
     	}
+
         App::setLocale($locale);
         session()->put('locale', $locale);
         // dd(Session::get('locale'));
