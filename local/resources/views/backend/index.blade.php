@@ -22,8 +22,8 @@
                                     </div>
 
                                 </div>
-                                
-                                
+
+
                             </div>
                         </div>
                         <!-- end page title -->
@@ -48,7 +48,7 @@
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="avatar-md profile-user-wid mb-4">
-                                                     <img src="backend/images/users/ex.png" alt="" class="img-thumbnail rounded-circle"> 
+                                                     <img src="backend/images/users/ex.png" alt="" class="img-thumbnail rounded-circle">
                                                 </div>
                                             </div>
 
@@ -59,7 +59,7 @@
             // $PromotionCode = \App\Models\Backend\PromotionCode::get();
             // if(@$PromotionCode){
                 // foreach ($PromotionCode as $key => $value) {
-                    
+
                 //     if($value->pro_edate < date("Y-m-d")){
                 //         // echo $value->pro_edate;
                 //         DB::select(" UPDATE `db_promotion_code` SET `status`='0' WHERE ( `pro_edate` < CURDATE() )  ");
@@ -80,7 +80,7 @@
                                         </div>
                                     </div>
                                 </div>
-             
+
                             </div>
 
                             <div class="col-xl-8">
@@ -91,7 +91,7 @@
                                             <div class="card-body">
                                                 <div class="media">
                                                     <div class="media-body">
-                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-18">ฝ่ายขาย</span></p>
+                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-15">ฝ่ายขาย</span></p>
                                                         <!-- <h4 class="mb-0">1,235</h4> -->
                                                     </div>
 
@@ -110,7 +110,7 @@
                                             <div class="card-body">
                                                 <div class="media">
                                                     <div class="media-body">
-                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-18">ฝ่ายบัญชี</span></p>
+                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-15">ฝ่ายบัญชี</span></p>
                                                         <!-- <h4 class="mb-0">35,723</h4> -->
                                                     </div>
 
@@ -129,7 +129,7 @@
                                             <div class="card-body">
                                                 <div class="media">
                                                     <div class="media-body">
-                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-18">บริการลูกค้า</span></p>
+                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-15">บริการลูกค้า</span></p>
                                                         <!-- <h4 class="mb-0">16,000</h4> -->
                                                     </div>
 
@@ -148,7 +148,7 @@
                                             <div class="card-body">
                                                 <div class="media">
                                                     <div class="media-body">
-                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-18">คลังสินค้า</span></p>
+                                                        <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-15">คลังสินค้า</span></p>
                                                         <!-- <h4 class="mb-0"> 10,000 </h4> -->
                                                     </div>
 
@@ -168,10 +168,10 @@
                                                 <div class="card-body">
                                                     <div class="media">
                                                         <div class="media-body">
-                                                            <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-warning font-size-18">ใบเบิกรออนุมัติ</span></p>
+                                                            <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-warning font-size-15">ใบเบิกรออนุมัติ</span></p>
                                                             <!-- <h4 class="mb-0"> 35,555 </h4> -->
                                                         </div>
-    
+
                                                         <div class="avatar-sm rounded-circle bg-warning align-self-center mini-stat-icon">
                                                             <span class="avatar-title rounded-circle bg-warning">
                                                                 <span class="font-size-16">{{ $wait_approve_requisition }}</span>
@@ -189,10 +189,10 @@
                                                 <div class="card-body">
                                                     <div class="media">
                                                         <div class="media-body">
-                                                            <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-warning font-size-18">เอกสารลูกค้า รออนุมัติ</span></p>
+                                                            <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-warning font-size-15">เอกสารลูกค้า รออนุมัติ</span></p>
                                                             <!-- <h4 class="mb-0"> 35,555 </h4> -->
                                                         </div>
-    
+
                                                         <div class="avatar-sm rounded-circle bg-warning align-self-center mini-stat-icon">
                                                             <span class="avatar-title rounded-circle bg-warning">
                                                                 <span class="font-size-16">{{ $wait_approve_customer_doc }}</span>
@@ -204,6 +204,28 @@
                                         </a>
                                     </div>
 
+                                    <div class="col-md-4">
+                                      <a href="{{ url('backend/transfer_branch') }}">
+                                      <div class="card mini-stats-wid">
+                                          <div class="card-body">
+                                              <div class="media">
+                                                  <div class="media-body">
+                                                      <p class="text-muted font-weight-medium"><span class="badge badge-pill badge-soft-success font-size-15">ใบเบิกระหว่างสาขา</span></p>
+                                                      <!-- <h4 class="mb-0"> 10,000 </h4> -->
+                                                  </div>
+
+                                                  <div class="avatar-sm rounded-circle bg-success align-self-center mini-stat-icon">
+                                                      <span class="avatar-title rounded-circle bg-success">
+                                                              {{-- <i class="bx bx-purchase-tag-alt font-size-24"></i> --}}
+                                                              <span class="font-size-16">{{$wait_approve_requisition_transfer}}</span>
+                                                          </span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </a>
+                                  </div>
+
                                 </div>
 
                                 <!-- end row -->
@@ -211,7 +233,7 @@
                         </div>
                         <!-- end row -->
 
-<div class="myBorder">   
+<div class="myBorder">
 
             <div class="row">
                 <div class="col-lg-12">
@@ -228,10 +250,10 @@
                                           </div>
                                     </thead>
                                     <tbody>
-                                        
+
                                         <table id="data-table-notify" class="table table-bordered " style="width: 100%;">
                                         </table>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -240,10 +262,10 @@
                     </div>
                 </div>
             </div>
-</div>          
+</div>
 
 
-<div class="myBorder">   
+<div class="myBorder">
 
             <div class="row">
                 <div class="col-lg-12">
@@ -260,10 +282,10 @@
                                           </div>
                                     </thead>
                                     <tbody>
-                                        
+
                                         <table id="data-table-crm" class="table table-bordered " style="width: 100%;">
                                         </table>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -272,9 +294,9 @@
                     </div>
                 </div>
             </div>
-</div>          
+</div>
 
-    <div class="myBorder">   
+    <div class="myBorder">
 
             <div class="row">
                 <div class="col-lg-12">
@@ -291,10 +313,10 @@
                                           </div>
                                     </thead>
                                     <tbody>
-                                        
+
                                         <table id="data-table-pm" class="table table-bordered " style="width: 100%;">
                                         </table>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -303,8 +325,8 @@
                     </div>
                 </div>
             </div>
-</div>          
-                   
+</div>
+
 
 @endsection
 
@@ -358,14 +380,14 @@
                       // }else{
                         return d;
                       // }
-                    }},   
+                    }},
                     {data: 'id', title :'<center>Note 2</center>', className: 'text-center ',render: function(d) {
                       // if(d==0){
                       //   return '* ยังไม่ได้กำหนด';
                       // }else{
                         return '';
                       // }
-                    }},         
+                    }},
                     // {data: 'updated_at', title :'<center>Last updated </center>', className: 'text-center w100 '},
                     // {data: 'diff_d', title :'<center>Last updated </center>', className: 'text-center '},
                 ],
@@ -391,7 +413,7 @@
 
                   }
                   if(aData['amt_day_before_expired']){
-                    // var start = new Date(aData['lot_expired_date']),  
+                    // var start = new Date(aData['lot_expired_date']),
                     //     end   = new Date(),
                     //     diff  = new Date(start - end),
                     //     days  = diff/1000/60/60/24;
@@ -408,7 +430,7 @@
 
                   }
 
-             
+
 
                 }
             });
@@ -469,7 +491,7 @@ $(function() {
             }},
         ],
         rowCallback: function(nRow, aData, dataIndex){
- 
+
         }
     });
     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e){
@@ -505,7 +527,7 @@ $(function() {
             //   }
             // });
             d.Where['role_group_id_fk'] = role_group_id ;
-            
+
             d.Like={};
             $('.myLike').each(function() {
               if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
