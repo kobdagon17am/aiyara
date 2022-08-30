@@ -367,8 +367,9 @@ class Product extends Model
 
                 }
 
-                if ($value->limited_amt_type == 1) {
+                if ($value->limited_amt_type == 1 and !empty($value->limited_amt_person)) {
                     //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
+
                     if ($value->limited_amt_person <= $count_per_promotion['count']) {
                         $arr[] =  ['status' => 'fail', 'message' => 'การซื้อเฉพาะต่อรอบโปรโมชั่นครบ '.$value->limited_amt_person.' ชิ้นแล้ว'];
                     }
