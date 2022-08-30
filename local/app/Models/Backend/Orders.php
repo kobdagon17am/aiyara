@@ -32,7 +32,7 @@ class Orders extends InitModel
             $products_data = DB::table('products')->select('products.product_code as product_code')->where('id',$p->product_id_fk)->first();
             $products_details = DB::table('products_details')->select('products_details.product_name as product_name')->where('product_id_fk',$p->product_id_fk)->first();
             $products_units = DB::table('products_units')->select('product_unit_id_fk')->where('product_id_fk',$p->product_id_fk)->first();
-     
+
             $dataset_product_unit = DB::table('dataset_product_unit')->select('dataset_product_unit.product_unit as product_unit')->where('id',$products_units->product_unit_id_fk)->first();
         //   dd($dataset_product_unit);
             if(isset($arr_check[$p->product_id_fk])){
@@ -40,11 +40,11 @@ class Orders extends InitModel
                     return $value->product_id_fk == $p->product_id_fk;
                 });
                 $filtered = $filtered->first();
-    
+
                 $Products = $Products->reject(function ($value, $key) use($p) {
                     return $value->product_id_fk == $p->product_id_fk;
                 });
-    
+
                 $Products->push((object)[
                     'amt_sum'=> $p->amt_sum+$filtered->amt_sum,
                     'product_id_fk'=> $p->product_id_fk,
@@ -53,7 +53,7 @@ class Orders extends InitModel
                     'product_unit'=> @$dataset_product_unit->product_unit,
                      ]);
             }else{
-              
+
                 $Products->push((object)[
                     'amt_sum'=> $p->amt_sum,
                     'product_id_fk'=> $p->product_id_fk,
@@ -64,9 +64,9 @@ class Orders extends InitModel
                      $arr_check[$p->product_id_fk] = true;
              }
 
-          
+
         }
-     
+
 
         // promotion
         // $Products = DB::table('db_order_products_list')
@@ -88,10 +88,13 @@ class Orders extends InitModel
          ->where('db_order_products_list.type_product','promotion')
          ->groupBy('db_order_products_list.promotion_id_fk')
          ->get();
-
+// dd($Pro_amt);
          foreach($Pro_amt as $key => $pro){
+          if($pro->sum_amt<0 || $pro->sum_amt==0 || $pro->sum_amt==''){
+            $pro->sum_amt = 1;
+          }
             $Products2 = DB::table('promotions_products')
-            ->select(DB::raw('promotions_products.product_amt * '.$pro->sum_amt.' AS amt_sum'),'promotions_products.product_id_fk as product_id_fk','products_details.product_name as product_name','products.product_code as product_code','dataset_product_unit.product_unit as product_unit')
+            ->select(DB::raw('(promotions_products.product_amt * '.$pro->sum_amt.') AS amt_sum'),'promotions_products.product_id_fk as product_id_fk','products_details.product_name as product_name','products.product_code as product_code','dataset_product_unit.product_unit as product_unit')
             ->leftJoin('products','products.id','promotions_products.product_id_fk')
             ->leftJoin('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
             ->leftJoin('dataset_product_unit','dataset_product_unit.id','promotions_products.product_unit')
@@ -104,7 +107,7 @@ class Orders extends InitModel
             }else{
                 $Products = $Products->merge($Products2);
             }
-         }  
+         }
 
          $collection = new Collection();
          foreach($Products as $p){
@@ -152,7 +155,7 @@ class Orders extends InitModel
          $Products = $collection_new->sortBy('product_code');
 
         return $Products;
-       
+
     }
 
 }

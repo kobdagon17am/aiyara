@@ -4627,8 +4627,6 @@
                         ],
                         rowCallback: function(nRow, aData, dataIndex) {
 
-
-
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);
 
