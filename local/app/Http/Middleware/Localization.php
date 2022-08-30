@@ -19,7 +19,7 @@ class Localization
     {
         // General::gen_id_url();
         // dd(session()->get('locale'));
-        if(session()->has('locale') && in_array(session()->get('locale'),['th','en','lo']))
+        if(session()->has('locale') && in_array(session()->get('locale'),['th','en','lo','ca']))
         {
             app()->setLocale(session()->get('locale'));
         }
