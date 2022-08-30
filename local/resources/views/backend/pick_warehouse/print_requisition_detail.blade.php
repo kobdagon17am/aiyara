@@ -315,33 +315,33 @@ $delivery0 = DB::select(
         ' AND set_addr_send_this=0 ',
 );
 
-if(!$delivery){
-  if($delivery0){
-  // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
-  $order_this = DB::table('db_orders')
-                            ->where('id', $delivery0[0]->orders_id_fk)
-                            ->first();
-                        if ($order_this) {
-                            $order_send = DB::table('db_orders')
-                                ->where('code_order', 'like', '%' . $order_this->bill_transfer_other . '%')
-                                ->first();
-                            if ($order_send) {
-                                $delivery2 = DB::table('db_delivery')
-                                    ->where('orders_id_fk', $order_send->id)
-                                    ->first();
-                                if ($delivery2) {
-                                    DB::table('db_delivery')
-                                        ->where('id', $delivery0[0]->id)
-                                        ->update([
-                                            'recipient_name' => $delivery2->recipient_name,
-                                            'addr_send' => $delivery2->addr_send,
-                                            'postcode' => $delivery2->postcode,
-                                            'mobile' => $delivery2->mobile,
-                                            'tel_home' => $delivery2->tel_home,
-                                        ]);
+if (!$delivery) {
+    if ($delivery0) {
+        // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
+        $order_this = DB::table('db_orders')
+            ->where('id', $delivery0[0]->orders_id_fk)
+            ->first();
+        if ($order_this) {
+            $order_send = DB::table('db_orders')
+                ->where('code_order', 'like', '%' . $order_this->bill_transfer_other . '%')
+                ->first();
+            if ($order_send) {
+                $delivery2 = DB::table('db_delivery')
+                    ->where('orders_id_fk', $order_send->id)
+                    ->first();
+                if ($delivery2) {
+                    DB::table('db_delivery')
+                        ->where('id', $delivery0[0]->id)
+                        ->update([
+                            'recipient_name' => $delivery2->recipient_name,
+                            'addr_send' => $delivery2->addr_send,
+                            'postcode' => $delivery2->postcode,
+                            'mobile' => $delivery2->mobile,
+                            'tel_home' => $delivery2->tel_home,
+                        ]);
 
-                                        $delivery = DB::select(
-    " SELECT
+                    $delivery = DB::select(
+                        " SELECT
               db_delivery.set_addr_send_this,
               db_delivery.recipient_name,
               db_delivery.addr_send,
@@ -355,13 +355,12 @@ if(!$delivery){
               FROM
               db_delivery
               WHERE
-              db_delivery.id = " .
-              $delivery0[0]->id
-      );
-                    }
-                            }
-                        }
-}
+              db_delivery.id = " . $delivery0[0]->id,
+                    );
+                }
+            }
+        }
+    }
 }
 
 $recipient_name = @$delivery[0]->recipient_name ? @$delivery[0]->recipient_name : '';
@@ -509,44 +508,42 @@ if (@$delivery[0]->status_pack == 1) {
             $sTable = DB::select(
                 "
 
-              SELECT
-              db_pick_pack_packing.id,
-              db_pick_pack_packing.p_size,
-              db_pick_pack_packing.p_weight,
-              db_pick_pack_packing.p_amt_box,
-              db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-              db_pick_pack_packing.packing_code as packing_code,
-              db_delivery.id as db_delivery_id,
-              db_delivery.packing_code as db_delivery_packing_code
-              FROM `db_pick_pack_packing`
-              LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-              WHERE
-              db_pick_pack_packing.packing_code_id_fk =" .
+                                      SELECT
+                                      db_pick_pack_packing.id,
+                                      db_pick_pack_packing.p_size,
+                                      db_pick_pack_packing.p_weight,
+                                      db_pick_pack_packing.p_amt_box,
+                                      db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+                                      db_pick_pack_packing.packing_code as packing_code,
+                                      db_delivery.id as db_delivery_id,
+                                      db_delivery.packing_code as db_delivery_packing_code
+                                      FROM `db_pick_pack_packing`
+                                      LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+                                      WHERE
+                                      db_pick_pack_packing.packing_code_id_fk =" .
                     $data[1] .
                     "
-              AND db_pick_pack_packing.delivery_id_fk = " .
+                                      AND db_pick_pack_packing.delivery_id_fk = " .
                     $data[0] .
                     "
-              ORDER BY db_pick_pack_packing.id
-              ",
+                                      ORDER BY db_pick_pack_packing.id
+                                      ",
             );
 
             foreach ($sTable as $key => $row) {
+                $pn = '<tr>
+                                            <td style="width:70%; "><b>รหัส : ชื่อสินค้า</b></td>
+                                            <td style="width:15%; text-align:left;"><b>จำนวน</b></td>
+                                            <td style="width:15%; text-align:left;"><b>หน่วย</b></td>
+                                            </tr>';
 
-
-              $pn = '<tr>
-                    <td style="width:70%; "><b>รหัส : ชื่อสินค้า</b></td>
-                    <td style="width:15%; text-align:left;"><b>จำนวน</b></td>
-                    <td style="width:15%; text-align:left;"><b>หน่วย</b></td>
-                    </tr>';
-
-              //   $pn = '<div class="divTable"><div class="divTableBody">';
-              //   $pn .= '<div class="divTableRow">
-              // <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
-              // <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
-              // <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
-              // </div>
-              // ';
+                //   $pn = '<div class="divTable"><div class="divTableBody">';
+                //   $pn .= '<div class="divTableRow">
+                // <div class="divTableCell" style="width:200px;font-weight:bold;">รหัส : ชื่อสินค้า</div>
+                // <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จำนวน</div>
+                // <div class="divTableCell" style="width:50px;text-align:center;font-weight:bold;"> หน่วย </div>
+                // </div>
+                // ';
 
                 $sum_amt = 0;
                 $r_ch_t = '';
@@ -584,14 +581,30 @@ if (@$delivery[0]->status_pack == 1) {
                                 ->orderBy('time_pay', 'desc')
                                 ->first();
 
+                            // $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                            //     ->where('product_id_fk', $value->product_id_fk)
+                            //     ->where('order_id', $value->order_id)
+                            //     ->where('requisition_002_id', @$db_pay_requisition_002->id)
+                            //     ->first();
+
+                            // if ($db_pay_requisition_002_item->amt_remain > 0) {
+                            //     $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน ' . $db_pay_requisition_002_item->amt_remain . ' )</span>';
+                            // } else {
+                            //     $r_ch_t = '';
+                            // }
+
                             $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                                ->select(DB::raw('SUM(amt_get) AS amt_get'), 'amt_need', DB::raw('SUM(amt_remain) AS amt_remain'))
                                 ->where('product_id_fk', $value->product_id_fk)
-                                ->where('order_id', $value->order_id)
-                                ->where('requisition_002_id', @$db_pay_requisition_002->id)
+                                // ->where('order_id',$value->order_id)
+                                ->where('order_id',  $value->order_id)
+                                // ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                                ->where('pick_pack_requisition_code_id_fk', $row->packing_code_id_fk)
+                                ->groupBy('product_id_fk')
                                 ->first();
 
-                            if ($db_pay_requisition_002_item->amt_remain > 0) {
-                                $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน ' . $db_pay_requisition_002_item->amt_remain . ' )</span>';
+                            if ($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get > 0) {
+                                $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน ' . ($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get) . ' )</span>';
                             } else {
                                 $r_ch_t = '';
                             }
@@ -623,13 +636,22 @@ if (@$delivery[0]->status_pack == 1) {
                             //                                                                                                                                                                                                                                                                                                                                                                                                                                     ';
                             // $pn .= '</div>';
 
-                            $pn .="
-                                <tr>
-                                  <td>".@$value->product_name." <br> ".$r_ch_t."</td>
-                                  <td style='text-align:left;'>".@$amt_get."</td>
-                                  <td style='text-align:left;'>".@$value->product_unit."</td>
-                                  </tr>
-                              ";
+                            $pn .=
+                                "
+                                                        <tr>
+                                                          <td>" .
+                                @$value->product_name .
+                                ' <br> ' .
+                                $r_ch_t .
+                                "</td>
+                                                          <td style='text-align:left;'>" .
+                                @$amt_get .
+                                "</td>
+                                                          <td style='text-align:left;'>" .
+                                @$value->product_unit .
+                                "</td>
+                                                          </tr>
+                                                      ";
                         }
                     }
 
@@ -645,11 +667,14 @@ if (@$delivery[0]->status_pack == 1) {
 
                     // $pn .= '</div>';
 
-                    $pn .= "  <tr>
-                                  <td style='text-align:right;'><b>รวม</b></td>
-                                  <td style='text-align:left;'>". @$sum_amt."</td>
-                                  <td style='text-align:left;'></td>
-                                  </tr>";
+                    $pn .=
+                        "  <tr>
+                                                          <td style='text-align:right;'><b>รวม</b></td>
+                                                          <td style='text-align:left;'>" .
+                        @$sum_amt .
+                        "</td>
+                                                          <td style='text-align:left;'></td>
+                                                          </tr>";
 
                     echo $pn;
                     // }

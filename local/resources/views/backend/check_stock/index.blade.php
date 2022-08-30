@@ -181,7 +181,7 @@
                                             @endforeach
                                         @endif
                                     </select>
-                                    <?php }else{ 
+                                    <?php }else{
                                       ?>
                                     <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating "
                                         disabled="">
@@ -531,7 +531,7 @@
                         scrollX: true,
                         ordering: false,
                         destroy: true,
-                        iDisplayLength: 10,
+                        iDisplayLength: 100,
                         "searching": false,
                         ajax: {
                             url: '{{ route('backend.check_stock.datatable') }}',
@@ -1249,7 +1249,7 @@
         });
     </script>
 
-    <?php 
+    <?php
     if(isset($_REQUEST['test_clear_data'])){
       // DB::select("TRUNCATE `db_delivery` ;");
       // DB::select("TRUNCATE `db_delivery_packing` ;");
@@ -1272,17 +1272,17 @@
 
       // DB::select("TRUNCATE `db_pick_pack_packing`;");
       // DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       // DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       // DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       // DB::select("TRUNCATE db_stocks_return;");
       // DB::select("TRUNCATE db_stock_card;");
       // DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      // $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      // $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      // $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      // $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      // $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      // $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
@@ -1303,17 +1303,17 @@
 
       // DB::select("TRUNCATE `db_pick_pack_packing`;");
       // DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       // DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       // DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       // DB::select("TRUNCATE db_stocks_return;");
       // DB::select("TRUNCATE db_stock_card;");
       // DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      // $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      // $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      // $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      // $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      // $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      // $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       // DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
