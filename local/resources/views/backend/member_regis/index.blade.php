@@ -701,7 +701,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group row">
                                                         <label for="comment" class="col-form-label">
-                                                            {{ __('message.ประเภทบัญชี') }} : <span
+                                                            {{ __('message.accounttype') }} : <span
                                                                 id="text_ประเภทบัญชี"></span></label>
                                                     </div>
                                                 </div>
