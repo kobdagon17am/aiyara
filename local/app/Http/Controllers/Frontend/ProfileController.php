@@ -29,6 +29,8 @@ class ProfileController extends Controller
     public function index()
     {
 
+
+
       // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all(4,'A147427');
       // dd($Check);
 
