@@ -2139,7 +2139,6 @@ ORDER BY db_pick_pack_packing.id
             // $d2 = DB::select(" SELECT * FROM `db_pick_pack_requisition_code` WHERE `id`=".$d1[0]->pick_pack_requisition_code_id_fk." ");
 
             $arr1 = [];
-// dd($d2);
             if(!$d2){
      // วุฒิเพิ่มกันที่อยู่หาย
               $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in (".$d1[0]->pick_pack_requisition_code_id_fk.") ; ");
@@ -2164,6 +2163,8 @@ ORDER BY db_pick_pack_packing.id
 
             $d2 = DB::select(" SELECT * FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." ");
             }
+
+
 // dd($db_pick_pack_requisition_code);
             if($d2){
               foreach ($d2 as $key => $v) {
@@ -2208,9 +2209,11 @@ ORDER BY db_pick_pack_packing.id
 
               // $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=0 ;");
               $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2);");
+
               // dd($arr2);
-// dd($d3);
+
               if(!empty($d3)){
+                // dd('ok');
                      foreach ($d3 as $key => $v3) {
 
                        $recipient_code = $v3->packing_code!=0?"P1".sprintf("%05d",$v3->packing_code):$v3->receipt;
@@ -2223,11 +2226,13 @@ ORDER BY db_pick_pack_packing.id
                       //  }
 
                       $check = DB::table('db_consignments')->where('recipient_code',$recipient_code)->where('pick_pack_requisition_code_id_fk',$reg->packing_id)->first();
-                        // if($recipient_code=='P100002'){
-                        //   // dd($v3->addr_send);
-                        //   // dd($v3->recipient_name);
+
+                        // if($recipient_code=='P100107' && $v3->status_to_wh_by!=0){
+                        //   // dd($check);
+                        //   dd($v3);
                         // }
-                      if(!$check){
+
+                      if(!$check && $v3->status_to_wh_by!=0){
                         DB::select(" INSERT IGNORE INTO `db_consignments`
                         SET
                         `pick_pack_requisition_code_id_fk`='$reg->packing_id' ,
@@ -2244,6 +2249,7 @@ ORDER BY db_pick_pack_packing.id
 
                     }
               }
+              // dd('no');
 
             }
         }

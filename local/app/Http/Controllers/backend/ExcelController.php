@@ -111,14 +111,16 @@
 					$delivery_data = DB::table('db_delivery')->where('id',$sRow[$i]->delivery_id_fk)->first();
 					if($delivery_data){
 						$check_customer = 0;
-						$check_customer = General::check_export_excel_customer($pick_pack_packing->delivery_id_fk,$pick_pack_packing->packing_code_id_fk);
+            if($pick_pack_packing){
+              $check_customer = General::check_export_excel_customer($pick_pack_packing->delivery_id_fk,$pick_pack_packing->packing_code_id_fk);
+            }
 
 						// if($sRow[$i]->recipient_code == 'P100007'){
 						// 	dd($check_customer);
 						// }
-// 						if($pick_pack_packing->delivery_id_fk == 26){
-// echo 'ok';
-// 						}
+                // 						if($pick_pack_packing->delivery_id_fk == 26){
+                // echo 'ok';
+                // 						}
 
 						if($check_customer==0){
 						// if($delivery_data->status_scan_wh==1){
