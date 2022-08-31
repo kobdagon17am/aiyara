@@ -1291,6 +1291,7 @@ class FrontstorelistController extends Controller
         ->addColumn('cuase_cannot_buy', function($row) {
            $d1 = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
            $d2 = \App\Models\Backend\Customers::where('id',$d1[0]->customers_id_fk)->get();
+
            $Check = \App\Models\Frontend\Product::product_list_select_promotion_all($d1[0]->purchase_type_id_fk,$d2[0]->user_name);
            if($Check){
               $arr = [];

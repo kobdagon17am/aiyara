@@ -1381,7 +1381,7 @@
                         // console.log(strArray[1]);
 
                         // var arrXls = ['xls', 'xlsx'];
-                        var arrXls = ['png', 'jpg', 'jpeg', 'gif'];
+                        var arrXls = ['png','JPG','jpg', 'jpeg', 'gif'];
 
                         // console.log(arrXls.includes(strArray[1]));
 
@@ -1535,7 +1535,7 @@
                                         var strArray = value.file.split(
                                             ".");
 
-                                        var arrXls = ['png', 'jpg', 'jpeg',
+                                        var arrXls = ['png', 'jpg','JPG', 'jpeg',
                                             'gif'
                                         ];
 
