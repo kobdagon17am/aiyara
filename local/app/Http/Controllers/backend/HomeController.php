@@ -13,13 +13,31 @@ class HomeController extends Controller
     public function index(Request $request)
     {
       $wait_approve_requisition = RequisitionBetweenBranch::waitApproveCount();
+
+          // วุฒิเพิ่มมา
+            if (\Auth::user()->permission == '1' ) {
+              $wait_approve_requisition_transfer = RequisitionBetweenBranch::with('requisition_details')
+              ->where('is_approve', RequisitionBetweenBranch::APPROVED)
+              ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER)->count();
+            }else{
+              $wait_approve_requisition_transfer = RequisitionBetweenBranch::with('requisition_details')
+              ->where('is_approve', RequisitionBetweenBranch::APPROVED)
+              ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER)
+              ->where('from_branch_id',\Auth::user()->branch_id_fk)
+              ->orWhere('to_branch_id',\Auth::user()->branch_id_fk)
+              ->where('is_approve', RequisitionBetweenBranch::APPROVED)
+              ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER)->count();
+            }
+
       $customer_doc = DB::table('register_files')->select('id')->where('regis_doc_status',0)->get();
       $wait_approve_customer_doc = count($customer_doc);
       // return view('backend.index');
       // return view('backend.banner.index');
+
       return view('backend.index')->with([
         'wait_approve_requisition' => $wait_approve_requisition,
-        'wait_approve_customer_doc' => $wait_approve_customer_doc
+        'wait_approve_customer_doc' => $wait_approve_customer_doc,
+        'wait_approve_requisition_transfer' => $wait_approve_requisition_transfer,
       ]);
 
     }
@@ -40,7 +58,7 @@ class HomeController extends Controller
         $users = DB::table('ck_users_admin')
 			  ->select(DB::raw("
 			  name,
-			  email,  
+			  email,
 			  (CASE WHEN (permission = 1) THEN 'ADMIN' ELSE 'USER' END) as TYPE")
 			)->get();
 
@@ -49,7 +67,7 @@ class HomeController extends Controller
  	   // $number_slow = $this->random_number();
        // usleep($number_slow);
 
-    }   
+    }
 
 
 

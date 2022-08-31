@@ -106,6 +106,7 @@ class Po_approveController extends Controller
              $other_bill = DB::table('db_orders')
              ->where('pay_with_other_bill',1)
              ->where('pay_with_other_bill_note','like','%'.$sRow->code_order.'%')
+             ->where('approve_status','!=',5)
             //  ->where('approve_status',1)
              ->get();
 
@@ -117,6 +118,7 @@ class Po_approveController extends Controller
              $other_bill_ai = DB::table('db_add_ai_cash')
              ->where('pay_with_other_bill_select',1)
              ->where('pay_with_other_bill_code',$sRow->code_order)
+             ->where('approve_status','!=',5)
             //  ->where('approve_status',1)
              ->get();
 
@@ -880,6 +882,7 @@ ORDER BY code_order DESC
             // ->where('db_orders.order_status_id_fk', '=', '2')
             // ->where('db_orders.id', $con01, $w01)
             ->where('db_orders.pay_with_other_bill',1)
+            ->where('db_orders.approve_status','!=',5)
             ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
             ->get();
             // ->toSql();

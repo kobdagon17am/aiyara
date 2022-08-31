@@ -262,7 +262,7 @@ SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1
 SELECT
 id,user_id_fk,frontstore_id_fk,code_order,customers_id_fk,distribution_channel_id_fk,purchase_type_id_fk,pay_type_id_fk,selling_price,
 member_price,product_id_fk,product_name,
-(SUM((CASE WHEN amt is null THEN 0 ELSE amt END))) AS amt,
+(SUM((CASE WHEN amt is null THEN 1 ELSE amt END))) AS amt,
 product_unit_id_fk,pv,total_pv,total_price,total_member_price,currency,add_from,type_product,promotion_id_fk,promotion_code,giveaway_id_fk,
 course_id_fk,action_date,action_user,approve_status,approver,approve_date,qr_code,created_at,updated_at,deleted_at
 from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
@@ -308,18 +308,38 @@ foreach ($sTable as $key => $row) {
                      ->where('pick_pack_requisition_code_id_fk',$data[1])
                      ->orderBy('time_pay', 'desc')
                      ->first();
+
+                    // $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                    // ->where('product_id_fk',$row->product_id_fk)
+                    // ->where('order_id',$sRow->id)
+                    // ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                    // ->first();
+
+                    // if(@$db_pay_requisition_002_item->amt_remain > 0){
+                    //   $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
+                    //   DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                    // }else{
+                    //   $r_ch_t = '';
+                    // }
+
                     $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
-                    ->where('product_id_fk',$row->product_id_fk)
-                    ->where('order_id',$sRow->id)
-                    ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                    ->select(DB::raw('SUM(amt_get) AS amt_get'), 'amt_need', DB::raw('SUM(amt_remain) AS amt_remain'))
+                    ->where('product_id_fk', $row->product_id_fk)
+                    // ->where('order_id',$value->order_id)
+                    ->where('order_id',  $sRow->id)
+                    // ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                    ->where('pick_pack_requisition_code_id_fk', $data[1])
+                    ->groupBy('product_id_fk')
                     ->first();
 
-                      if(@$db_pay_requisition_002_item->amt_remain > 0){
-                        $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
+                    if ($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get > 0) {
+                        $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get).' )</span>';
                         DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
                       }else{
                         $r_ch_t = '';
                       }
+
+
                   //  }else{
                   //    $r_ch_t = '';
                   //  }
@@ -374,18 +394,36 @@ foreach ($sTable as $key => $row) {
                           ->where('pick_pack_requisition_code_id_fk',$data[1])
                           ->first();
 
-                         $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
-                         ->where('product_id_fk',$value->product_id_fk)
-                         ->where('order_id',$sRow->id)
-                         ->where('requisition_002_id',@$db_pay_requisition_002->id)
-                         ->first();
+                        //  $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                        //  ->where('product_id_fk',$value->product_id_fk)
+                        //  ->where('order_id',$sRow->id)
+                        //  ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                        //  ->first();
 
-                           if(@$db_pay_requisition_002_item->amt_remain > 0){
-                             $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
-                             // DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
-                           }else{
-                             $r_ch_t = '';
-                           }
+                        //    if(@$db_pay_requisition_002_item->amt_remain > 0){
+                        //      $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
+                        //      // DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                        //    }else{
+                        //      $r_ch_t = '';
+                        //    }
+
+                        $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                        ->select(DB::raw('SUM(amt_get) AS amt_get'), 'amt_need', DB::raw('SUM(amt_remain) AS amt_remain'))
+                        ->where('product_id_fk', $value->product_id_fk)
+                        // ->where('order_id',$value->order_id)
+                        ->where('order_id',  $sRow->id)
+                        // ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                        ->where('pick_pack_requisition_code_id_fk', $data[1])
+                        ->groupBy('product_id_fk')
+                        ->first();
+
+                        if ($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get > 0) {
+                            $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get).' )</span>';
+                            DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                          }else{
+                            $r_ch_t = '';
+                          }
+
 
                          $product_name =
                             '[Pro'.$value->product_code.'] '.$product_name_pro.'
@@ -417,18 +455,36 @@ foreach ($sTable as $key => $row) {
                              ->where('pick_pack_requisition_code_id_fk',$data[1])
                              ->first();
 
+                            // $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
+                            // ->where('product_id_fk',$value->product_id_fk)
+                            // ->where('order_id',$sRow->id)
+                            // ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                            // ->first();
+
+                            //   if(@$db_pay_requisition_002_item->amt_remain > 0){
+                            //     $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
+                            //     // DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                            //   }else{
+                            //     $r_ch_t = '';
+                            //   }
+
                             $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')
-                            ->where('product_id_fk',$value->product_id_fk)
-                            ->where('order_id',$sRow->id)
-                            ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                            ->select(DB::raw('SUM(amt_get) AS amt_get'), 'amt_need', DB::raw('SUM(amt_remain) AS amt_remain'))
+                            ->where('product_id_fk', $value->product_id_fk)
+                            // ->where('order_id',$value->order_id)
+                            ->where('order_id',  $sRow->id)
+                            // ->where('requisition_002_id',@$db_pay_requisition_002->id)
+                            ->where('pick_pack_requisition_code_id_fk', $data[1])
+                            ->groupBy('product_id_fk')
                             ->first();
 
-                              if(@$db_pay_requisition_002_item->amt_remain > 0){
-                                $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.@$db_pay_requisition_002_item->amt_remain.' )</span>';
-                                // DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
+                            if ($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get > 0) {
+                                $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get).' )</span>';
+                                DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
                               }else{
                                 $r_ch_t = '';
                               }
+
 
                        $product_name =
                             '[Pro'.$value->product_code.'] '.$product_name_pro.'

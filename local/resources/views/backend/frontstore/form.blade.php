@@ -4627,29 +4627,27 @@
                         ],
                         rowCallback: function(nRow, aData, dataIndex) {
 
-
-
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);
 
-                            // if (cuase_cannot_buy.length > 0) {
-                            //     $("td:eq(4)", nRow).html(
-                            //         '<input type="hidden" disabled ><div class="input-group inline-group"> ' +
-                            //         ' <div class="input-group-prepend"> ' +
-                            //         '   <button class="btn btn-outline-secondary  " disabled style="background-color:#d9d9d9 !important;" > ' +
-                            //         '     <i class="fa fa-minus"></i> ' +
-                            //         '   </button>' +
-                            //         '   <input class=" quantity xxx " min="0"  type="number" readonly placeholder="-" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ ' +
-                            //         aData['cuase_cannot_buy'] +
-                            //         ' " style="cursor:pointer;background-color:#d9d9d9 !important;" >' +
-                            //         '   <div class="input-group-append"> ' +
-                            //         '   <button  class="btn btn-outline-secondary  " disabled style="background-color:#d9d9d9 !important;" > ' +
-                            //         '     <i class="fa fa-plus"></i> ' +
-                            //         '    </button> ' +
-                            //         '  </div> ' +
-                            //         ' </div> '
-                            //     );
-                            // }
+                            if (cuase_cannot_buy.length > 0) {
+                                $("td:eq(4)", nRow).html(
+                                    '<input type="hidden" disabled ><div class="input-group inline-group"> ' +
+                                    ' <div class="input-group-prepend"> ' +
+                                    '   <button class="btn btn-outline-secondary  " disabled style="background-color:#d9d9d9 !important;" > ' +
+                                    '     <i class="fa fa-minus"></i> ' +
+                                    '   </button>' +
+                                    '   <input class=" quantity xxx " min="0"  type="number" readonly placeholder="-" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ ' +
+                                    aData['cuase_cannot_buy'] +
+                                    ' " style="cursor:pointer;background-color:#d9d9d9 !important;" >' +
+                                    '   <div class="input-group-append"> ' +
+                                    '   <button  class="btn btn-outline-secondary  " disabled style="background-color:#d9d9d9 !important;" > ' +
+                                    '     <i class="fa fa-plus"></i> ' +
+                                    '    </button> ' +
+                                    '  </div> ' +
+                                    ' </div> '
+                                );
+                            }
 
                             $(".myloading").hide();
 

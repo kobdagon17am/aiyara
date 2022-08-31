@@ -58,6 +58,7 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         ordering: false,
+        search:true,
         scrollY: ''+($(window).height()-370)+'px',
         iDisplayLength: 25,
         ajax: {
@@ -147,7 +148,7 @@ $(function() {
           //       + ' <a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อนุมัติแล้ว ห้ามลบ" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
           //     ).addClass('input');
 
-          // }else{ 
+          // }else{
 
           //     $('td:last-child', nRow).html(''
           //       + '<a href="{{ route('backend.general_receive.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"  ><i class="bx bx-edit font-size-16 align-middle"></i></a>'
@@ -171,7 +172,7 @@ $(function() {
 
 
   <script>
-      
+
       $(document).on('click', '.remove_01', function(event) {
 
             var id = $(this).data('id');
@@ -188,13 +189,13 @@ $(function() {
             $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               url: " {{ url('backend/ajaxDelFunction') }} ",
                data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      location.reload();
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 }

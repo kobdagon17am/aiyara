@@ -137,7 +137,14 @@ class General {
 							->where('requisition_002_id',@$db_pay_requisition_002->id)
 							->first();
 
-								if($db_pay_requisition_002_item->amt_remain > 0){
+              $db_pay_requisition_002_remain_check = DB::table('db_pay_requisition_002')
+              ->select('amt_remain')
+							->where('id',$db_pay_requisition_002_item->requisition_002_id)
+              ->where('product_id_fk',$db_pay_requisition_002_item->product_id_fk)
+							->first();
+
+              // วุฒิเพิ่มมา && $db_pay_requisition_002_remain_check->amt_remain > 0
+								if($db_pay_requisition_002_item->amt_remain > 0 && $db_pay_requisition_002_remain_check->amt_remain > 0){
 									 $check = $check+1;
 									array_push($arr_re_002_item, $db_pay_requisition_002_item->order_id);
 									array_push($arr_re_002, $db_pay_requisition_002->pick_pack_requisition_code_id_fk);
@@ -1779,6 +1786,7 @@ class General {
 					   $product_amt_get = $data_002->amt_get;
 					   $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->select('id','orders_id_fk')->where('id',$pick_pack_requisition_code_id_fk)->first();
 					   $arr_order = explode(',',$db_pick_pack_packing_code_data->orders_id_fk);
+
 					   $promotions_products_arr = DB::table('promotions_products')->select('promotion_id_fk')
 					   ->where('product_id_fk',$data_002->product_id_fk)->pluck('promotion_id_fk')->toArray();
 					   $db_order_products_list_data1 = DB::table('db_order_products_list')
@@ -1786,6 +1794,8 @@ class General {
 					   ->whereIn('frontstore_id_fk',$arr_order)
 					   ->where('type_product','product')
 					   ->where('product_id_fk',$data_002->product_id_fk);
+
+
 					   $db_order_products_list_data2 = DB::table('db_order_products_list')
 					   ->select('frontstore_id_fk')
 					   ->whereIn('frontstore_id_fk',$arr_order)
@@ -1794,6 +1804,7 @@ class General {
 					   ->union($db_order_products_list_data1)
 					   ->orderBy('frontstore_id_fk','asc')
 					   ->get();
+
 					   foreach($db_order_products_list_data2 as $data2){
 							 $order_product1 = DB::table('db_order_products_list')
 							 ->where('frontstore_id_fk',$data2->frontstore_id_fk)
@@ -1824,18 +1835,44 @@ class General {
 							 $amt_remain_data = 0;
 							 // จำนวนที่ต้องการหักจากที่ได้รับ
 
-							 if($sum_want_amt <= $product_amt_get){
-							   $product_amt_get = $product_amt_get - $sum_want_amt;
-							   $amt_get_data = $sum_want_amt;
-							   $amt_remain_data = 0;
-							 }else{
-							   $amt_get_data = $product_amt_get;
-							   $amt_remain_data = $sum_want_amt - $product_amt_get;
-							   $product_amt_get = 0;
-							 }
+               $check = DB::table('db_pay_requisition_002_item')
+               ->where('pick_pack_requisition_code_id_fk',$data_002->pick_pack_requisition_code_id_fk)
+               ->where('product_id_fk',$data_002->product_id_fk)
+               ->where('order_id',$data2->frontstore_id_fk)
+               ->orderBy('id','desc')->first();
+
+               if($check){
+
+                 $sum_want_amt = $check->amt_remain;
+
+                 if($sum_want_amt <= $product_amt_get){
+                   $product_amt_get = $product_amt_get - $sum_want_amt;
+                   $amt_get_data = $sum_want_amt;
+                   $amt_remain_data = 0;
+                 }else{
+                   $amt_get_data = $product_amt_get;
+                   $amt_remain_data = $sum_want_amt - $product_amt_get;
+                   $product_amt_get = 0;
+                 }
+
+               }else{
+                 if($sum_want_amt <= $product_amt_get){
+                   $product_amt_get = $product_amt_get - $sum_want_amt;
+                   $amt_get_data = $sum_want_amt;
+                   $amt_remain_data = 0;
+                 }else{
+                   $amt_get_data = $product_amt_get;
+                   $amt_remain_data = $sum_want_amt - $product_amt_get;
+                   $product_amt_get = 0;
+                 }
+
+               }
+
+
 
 								 DB::table('db_pay_requisition_002_item')->insert([
 								   'requisition_002_id' => $data_002->id,
+                   'pick_pack_requisition_code_id_fk' => $data_002->pick_pack_requisition_code_id_fk,
 								   'order_id' => $data2->frontstore_id_fk,
 								   'product_id_fk' => $data_002->product_id_fk,
 								   'amt_need' => $sum_want_amt,

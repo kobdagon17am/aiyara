@@ -359,6 +359,10 @@
           </div>
         </div>
 
+        {{-- <div class="row">
+          <div class="col-md-12"><button type="button" class="btn btn-primary excel_export"> Excel <i class="fa fa-print"></i></button></div>
+        </div> --}}
+
         <table id="data-table" class="table table-bordered" style="width: 100%;">
         </table>
 
@@ -481,7 +485,7 @@ $(function() {
         scrollCollapse: true,
         scrollX: true,
         paging:   true,
-        iDisplayLength: 25,
+        iDisplayLength: 2000,
         ordering: false,
         scrollY: ''+($(window).height()-370)+'px',
         ajax: {
@@ -491,6 +495,12 @@ $(function() {
           },
           method: 'POST'
         },
+
+        dom: 'Bfrtip',
+        buttons: [
+            // 'copy', 'csv', 'excel', 'pdf', 'print'
+            'excel', 'print'
+        ],
 
         columns: [
             {data: 'id', title :'ID', className: 'text-center w15'},
@@ -800,6 +810,8 @@ $(function() {
 <script>
 $(document).ready(function() {
 
+
+
        $(document).on('click', '.btnSentMoney', function(e) {
 
                  Swal.fire({
@@ -990,7 +1002,7 @@ $(document).ready(function() {
                                                   searching: false,
                                                   bLengthChange: false ,
                                                   destroy: true,
-                                                  iDisplayLength: 25,
+                                                  iDisplayLength: 2000,
                                                   scrollY: ''+($(window).height()-370)+'px',
                                                   // iDisplayLength: 35,
                                                   ajax: {
@@ -1010,6 +1022,11 @@ $(document).ready(function() {
                                                           },
                                                         method: 'POST',
                                                       },
+                                                      dom: 'Bfrtip',
+        buttons: [
+            // 'copy', 'csv', 'excel', 'pdf', 'print'
+            'excel', 'print'
+        ],
                                                     columns: [
                                                     {data: 'id', title :'ID', className: 'text-center w15'},
                                                     {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},
@@ -1362,7 +1379,7 @@ $(document).ready(function() {
           					        searching: false,
           					        bLengthChange: false ,
           					        destroy: true,
-                            iDisplayLength: 25,
+                            iDisplayLength: 2000,
                             scrollY: ''+($(window).height()-370)+'px',
                             // iDisplayLength: 35,
           					        ajax: {
@@ -1381,6 +1398,11 @@ $(document).ready(function() {
           		                            },
           		                          method: 'POST',
           		                        },
+                                      dom: 'Bfrtip',
+        buttons: [
+            // 'copy', 'csv', 'excel', 'pdf', 'print'
+            'excel', 'print'
+        ],
           					          columns: [
                                       {data: 'id', title :'ID', className: 'text-center w15'},
                                       {data: 'created_at', title :'<center>วันสร้าง </center>', className: 'text-center w60'},

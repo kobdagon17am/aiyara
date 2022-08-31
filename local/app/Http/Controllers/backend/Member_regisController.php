@@ -269,7 +269,7 @@ class Member_regisController extends Controller
                 ".$w07."
 
        GROUP BY customer_id
-       ORDER BY id DESC
+       ORDER BY id asc
 
 
          ");
@@ -284,7 +284,7 @@ where 1
         ".$w07."
 
         GROUP BY customer_id
-        ORDER BY id DESC
+        ORDER BY id asc
 ";
 // dd($text);
       $sQuery = \DataTables::of($sTable);
@@ -417,10 +417,15 @@ where 1
         ->groupBy('type')
         ->get();
         $f = [] ;
+        // if($row->id==65){
+        //   dd($d);
+        //           }
         foreach ($d as $key => $value) {
             $c = DB::select("select * from ck_users_admin where id = ".(@$value->approver?$value->approver:0));
             if(count($c)!=0){
-              array_push($f,isset($c) ? $c[0]->name : '');
+              array_push($f,isset($c) ? $c[0]->name : '-');
+            }else{
+              array_push($f,'-');
             }
 
         }
@@ -441,9 +446,12 @@ where 1
         ->orderBy('id', 'desc')
         ->groupBy('type')
         ->get();
+        if($row->id==65){
+
+        }
         $f = [] ;
         foreach ($d as $key => $value) {
-            array_push($f,(@$value->approve_date?$value->approve_date:''));
+            array_push($f,(@$value->approve_date?$value->approve_date:'-'));
         }
 
         $f = implode('<br>',$f);
@@ -451,6 +459,10 @@ where 1
 
       })
       ->escapeColumns('approve_date')
+      ->addColumn('no', function($row) {
+      return '';
+            })
+
 // เอาไว้ไปเช็คในตาราง Datatable สมาชิกลงทะเบียน ตรวจเอกสาร
       // ->addColumn('regis_status_02', function($row) {
       //   // สถานะกรณีนี้ ต้อง ดึงมาจากตาราง customers

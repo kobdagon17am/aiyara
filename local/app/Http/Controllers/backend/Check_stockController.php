@@ -19,7 +19,7 @@ class Check_stockController extends Controller
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
-      WHERE lang_id=1 
+      WHERE lang_id=1
       order by products.product_code
 
       ");
@@ -53,7 +53,7 @@ class Check_stockController extends Controller
           return $query->where('id', auth()->user()->branch_id_fk);
         })->get();
       }
-      
+
       $Warehouse = \App\Models\Backend\Warehouse::get();
       // dd($Warehouse);
       // dd(\Auth::user()->branch_id_fk);
@@ -183,11 +183,11 @@ class Check_stockController extends Controller
 
            $p_name = @$Products[0]->product_code." : ".@$Products[0]->product_name;
 
-           $Amt= DB::select(" SELECT amt 
-            FROM `db_stocks` 
-            where 1 
+           $Amt= DB::select(" SELECT amt
+            FROM `db_stocks`
+            where 1
 
-            AND product_id_fk=".@$Stock[0]->product_id_fk." 
+            AND product_id_fk=".@$Stock[0]->product_id_fk."
 
             $w_business_location_id_fk
             $w_branch_id_fk
@@ -202,7 +202,7 @@ class Check_stockController extends Controller
             ");
 
         }
-        
+
         $sBalance = 0;
         if(@$Amt){
             foreach ($Amt as $key => $value) {
@@ -329,35 +329,75 @@ class Check_stockController extends Controller
            $w09 = "";
         }
 
-       $sTable = DB::select("
+      //  $sTable = DB::select("
 
-        SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
-        '$w01' as w01,
-        '$w02' as w02,
-        '$w03' as w03,
-        '$w04' as w04,
-        '$w05' as w05,
-        '$w06' as w06,
-        '$w07' as w07,
-        '$w08' as w08,
-        '$w09' as w09
-         FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
-         WHERE 1
-         AND db_stocks.amt <> 0
-          $w01
-          $w02
-          $w03
-          $w04
-          $w05
-          $w06
-          $w07
-          $w08
-          $w09
-         
-        GROUP BY db_stocks.product_id_fk
-        ORDER BY products.product_code
+      //   SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
+      //   '$w01' as w01,
+      //   '$w02' as w02,
+      //   '$w03' as w03,
+      //   '$w04' as w04,
+      //   '$w05' as w05,
+      //   '$w06' as w06,
+      //   '$w07' as w07,
+      //   '$w08' as w08,
+      //   '$w09' as w09
+      //    FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
+      //    WHERE 1
+      //    AND db_stocks.amt <> 0
+      //     $w01
+      //     $w02
+      //     $w03
+      //     $w04
+      //     $w05
+      //     $w06
+      //     $w07
+      //     $w08
+      //     $w09
 
-        ");
+      //   GROUP BY db_stocks.product_id_fk
+      //   ORDER BY products.product_code
+
+      //   ");
+
+
+
+
+      $sTable = DB::select("
+
+      SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
+      '$w01' as w01,
+      '$w02' as w02,
+      '$w03' as w03,
+      '$w04' as w04,
+      '$w05' as w05,
+      '$w06' as w06,
+      '$w07' as w07,
+      '$w08' as w08,
+      '$w09' as w09
+       FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
+       WHERE 1
+        $w01
+        $w02
+        $w03
+        $w04
+        $w05
+        $w06
+        $w07
+        $w08
+        $w09
+
+      GROUP BY db_stocks.product_id_fk
+      ORDER BY products.product_code
+
+      ");
+
+
+
+
+
+
+
+
 // date(lot_expired_date) >= CURDATE()
 
       $sQuery = \DataTables::of($sTable);
@@ -377,7 +417,7 @@ class Check_stockController extends Controller
       })
 // date(lot_expired_date) >= CURDATE()
       ->addColumn('lot_number', function($row) {
-            $d = DB::select(" SELECT lot_number FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+            $d = DB::select(" SELECT lot_number FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
 
           ".$row->w01."
           ".$row->w02."
@@ -388,7 +428,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -396,11 +436,11 @@ class Check_stockController extends Controller
             }
             $f = implode('<br><br>',$f);
             return $f;
-
+            // AND amt <> 0
       })
       ->addColumn('lot_expired_date', function($row) {
         // $d = strtotime($row->lot_expired_date);
-            $d = DB::select(" SELECT lot_expired_date FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
+            $d = DB::select(" SELECT lot_expired_date FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
 
           ".$row->w01."
           ".$row->w02."
@@ -411,7 +451,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+
             GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -419,11 +459,12 @@ class Check_stockController extends Controller
             }
             $f = implode('<br><br>',$f);
             return $f.'';
+            // AND amt <> 0
       })
        ->addColumn('amt_desc', function($row) {
         // $d = strtotime($row->lot_expired_date);
-            $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
-          
+            $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
+
           ".$row->w01."
           ".$row->w02."
           ".$row->w03."
@@ -433,7 +474,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+
 
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
@@ -443,11 +484,12 @@ class Check_stockController extends Controller
             $f = implode('<br><br>',$f);
             // dd($f);
             return $f;
+            // AND amt <> 0
       })
       ->addColumn('amt', function($row) {
         // $d = strtotime($row->lot_expired_date);
-            $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
-          
+            $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
+
           ".$row->w01."
           ".$row->w02."
           ".$row->w03."
@@ -457,13 +499,14 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = 0 ;
             foreach ($d as $key => $v) {
                $f+=$v->amt;
             }
             return $f;
+            // AND amt <> 0
       })
       ->addColumn('warehouses', function($row) {
         // $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
@@ -484,11 +527,11 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+
            GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
-                    
+
                     $sBranchs = DB::select(" select * from branchs where id=".$v->branch_id_fk." ");
                     $warehouse = DB::select(" select * from warehouse where id=".($v->warehouse_id_fk?$v->warehouse_id_fk:0)." ");
                     $zone = DB::select(" select * from zone where id=".($v->zone_id_fk?$v->zone_id_fk:0)." ");
@@ -499,14 +542,14 @@ class Check_stockController extends Controller
             }
             $f = implode('<br><br>',$f);
             return $f;
-
+            // AND amt <> 0
 
       })
       ->addColumn('stock_card', function($row) {
         // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
 // date(lot_expired_date) >= CURDATE()
-            $d = DB::select(" SELECT id FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk." 
-          
+            $d = DB::select(" SELECT id FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
+
           ".$row->w01."
           ".$row->w02."
           ".$row->w03."
@@ -516,7 +559,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -526,6 +569,7 @@ class Check_stockController extends Controller
 
            return $f;
            // return '* อยู่ระหว่างปรับปรุง';
+          //  AND amt <> 0
 
       })
       ->escapeColumns('stock_card')
@@ -537,14 +581,14 @@ class Check_stockController extends Controller
 
 
               $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk);
-              
+
               $sQuery = \DataTables::of($sTable);
               return $sQuery
               ->addColumn('product_name', function($row) {
-                
+
                   $Products = DB::select("SELECT products.id as product_id,
                     products.product_code,
-                    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+                    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
                     FROM
                     products_details
                     Left Join products ON products_details.product_id_fk = products.id
@@ -559,7 +603,7 @@ class Check_stockController extends Controller
                 $zone = DB::select(" select * from zone where id=".($row->zone_id_fk?$row->zone_id_fk:0)." ");
                 $shelf = DB::select(" select * from shelf where id=".($row->shelf_id_fk?$row->shelf_id_fk:0)." ");
                 return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
-              })      
+              })
               ->addColumn('stock_card', function($row) {
                 // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
               })
@@ -575,14 +619,14 @@ class Check_stockController extends Controller
 
 
               $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk);
-              
+
               $sQuery = \DataTables::of($sTable);
               return $sQuery
               ->addColumn('product_name', function($row) {
-                
+
                   $Products = DB::select("SELECT products.id as product_id,
                     products.product_code,
-                    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+                    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
                     FROM
                     products_details
                     Left Join products ON products_details.product_id_fk = products.id
@@ -597,7 +641,7 @@ class Check_stockController extends Controller
                 $zone = DB::select(" select * from zone where id=".($row->zone_id_fk?$row->zone_id_fk:0)." ");
                 $shelf = DB::select(" select * from shelf where id=".($row->shelf_id_fk?$row->shelf_id_fk:0)." ");
                 return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
-              })      
+              })
               ->addColumn('stock_card', function($row) {
                 // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
               })
@@ -627,14 +671,14 @@ Inner Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfe
 
 
               $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk);
-              
+
               $sQuery = \DataTables::of($sTable);
               return $sQuery
               ->addColumn('product_name', function($row) {
-                
+
                   $Products = DB::select("SELECT products.id as product_id,
                     products.product_code,
-                    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+                    (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
                     FROM
                     products_details
                     Left Join products ON products_details.product_id_fk = products.id
@@ -667,7 +711,7 @@ Inner Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfe
                 return @$sBranchs[0]->b_name.'/'.@$warehouse.'/'.@$zone.'/'.@$shelf.'/ชั้น>'.(@$row->shelf_floor?@$row->shelf_floor:"-");
                 // return @$sBranchs[0]->b_name.'/'.@$warehouse;
                 // return $row->warehouse_id_fk;
-              })      
+              })
               ->addColumn('stock_card', function($row) {
                 // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
               })
