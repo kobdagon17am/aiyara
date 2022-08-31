@@ -83,7 +83,7 @@ class Orders extends InitModel
 
         // promotion
          $Pro_amt = DB::table('db_order_products_list')
-         ->select('*',DB::raw('SUM(db_order_products_list.amt) AS sum_amt'))
+         ->select('db_order_products_list.promotion_id_fk',DB::raw('SUM(db_order_products_list.amt) AS sum_amt'))
          ->whereIn('db_order_products_list.frontstore_id_fk',$arr_order)
          ->where('db_order_products_list.type_product','promotion')
          ->groupBy('db_order_products_list.promotion_id_fk')

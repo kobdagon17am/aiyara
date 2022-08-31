@@ -84,7 +84,7 @@ class Pick_warehouse_fifoController extends Controller
 
       if(!empty($picking)){
 
-          $r_db_pick_pack_packing_code = DB::select(" SELECT * FROM db_pick_pack_packing_code WHERE id in ($picking) ; ");
+          $r_db_pick_pack_packing_code = DB::select(" SELECT orders_id_fk,receipt FROM db_pick_pack_packing_code WHERE id in ($picking) ; ");
 
           // return $r_db_pick_pack_packing_code;
           // dd();
@@ -101,7 +101,7 @@ class Pick_warehouse_fifoController extends Controller
           $orders_id_fk = implode(",",$orders_id_fk);
           // return $orders_id_fk;
 
-          $r_db_order_products_list = DB::select(" SELECT * FROM db_order_products_list WHERE frontstore_id_fk in ($orders_id_fk) ");
+          $r_db_order_products_list = DB::select(" SELECT product_id_fk,promotion_id_fk FROM db_order_products_list WHERE frontstore_id_fk in ($orders_id_fk) ");
           // return $r_db_order_products_list;
           // return ($id);
 

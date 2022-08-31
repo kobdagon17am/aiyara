@@ -223,17 +223,18 @@ class Pick_packPackingCodeController extends Controller
            return @$DP->packing_code;
       })
       ->addColumn('customer_name', function($row) {
-          $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
-          $array = array();
-          if(@$DP){
-            foreach ($DP as $key => $value) {
-              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-              $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
-              array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
-            }
-            $arr = implode(',', $array);
-            return $arr;
-          }
+          // $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+          // $array = array();
+          // if(@$DP){
+          //   foreach ($DP as $key => $value) {
+          //     $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+          //     $Customer = DB::select(" select customers.prefix_name,customers.first_name,customers.last_name from customers where id=".@$rs[0]->customer_id." ");
+          //     array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
+          //   }
+          //   $arr = implode(',', $array);
+          //   return $arr;
+          // }
+          return '';
       })
 
       ->addColumn('approver', function($row) {
@@ -707,16 +708,16 @@ class Pick_packPackingCodeController extends Controller
       return $sQuery
       ->addColumn('packing_code_02', function($row) {
         // return "P2".sprintf("%05d",$row->id);
-           $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
+           $DP = DB::table('db_pick_pack_packing')->select('packing_code')->where('packing_code_id_fk',$row->id)->first();
            return $DP->packing_code;
       })
       ->addColumn('customer_name', function($row) {
-          $DP = DB::table('db_pick_pack_packing')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
+          $DP = DB::table('db_pick_pack_packing')->select('delivery_id_fk')->where('packing_code',$row->id)->orderBy('id', 'asc')->get();
           $array = array();
           if(@$DP){
             foreach ($DP as $key => $value) {
-              $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-              $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
+              $rs = DB::table('db_delivery')->select('customer_id')->where('id',$value->delivery_id_fk)->get();
+              $Customer = DB::select(" select prefix_name,first_name,last_name from customers where id=".@$rs[0]->customer_id." ");
               array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
             }
             $arr = implode(',', $array);
@@ -725,7 +726,7 @@ class Pick_packPackingCodeController extends Controller
       })
       ->addColumn('action_user_name', function($row) {
         if(@$row->action_user!=''){
-          $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
+          $sD = DB::select(" select name from ck_users_admin where id=".$row->action_user." ");
            return @$sD[0]->name;
         }else{
           return '';

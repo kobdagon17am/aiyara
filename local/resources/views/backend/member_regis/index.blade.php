@@ -781,7 +781,8 @@
                 serverSide: true,
                 scroller: true,
                 destroy: true,
-                ordering: false,
+                ordering: true,
+                order: [[1, 'desc']],
                 iDisplayLength: 100,
                 ajax: {
                     url: '{{ route('backend.member_regis.datatable') }}',
@@ -810,7 +811,7 @@
                 },
 
                 columns: [{
-                        data: 'no',
+                        data: 'DT_RowIndex',
                         title: 'NO.',
                         className: 'text-center w50'
                     },
@@ -858,7 +859,7 @@
                 ],
 
                 rowCallback: function(nRow, aData, dataIndex) {
-                    $('td:first-child', nRow).html(dataIndex + 1);
+                    // $('td:first-child', nRow).html(dataIndex + 1);
                     //  if(sU!=''&&sD!=''){
                     //     $('td:last-child', nRow).html('-');
                     //  }else{
@@ -871,7 +872,6 @@
                     //       ).addClass('input');
                     //   }
                     // }
-
 
                 }
             });
@@ -1106,7 +1106,9 @@
                         serverSide: true,
                         scroller: true,
                         destroy: true,
-                        ordering: false,
+                          ordering: true,
+                order: [[1, 'desc']],
+                iDisplayLength: 100,
                         iDisplayLength: 100,
 
                         ajax: {

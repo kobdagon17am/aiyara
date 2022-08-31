@@ -1641,7 +1641,6 @@ class Check_money_dailyController extends Controller
 
     public function DatatableTotal(Request $req){
 
-
       // if(isset($req->business_location)){
       //    $w_b =  " AND db_orders.business_location_id_fk=".$req->business_location;
       // }else{
@@ -1895,7 +1894,9 @@ class Check_money_dailyController extends Controller
          // $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$row->id.") GROUP BY frontstore_id_fk ");
          //  $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$arr.") ");
 
-         $r = DB::select(" SELECT sum(cash_pay) as total_money FROM db_orders WHERE id in (".$arr.") ");
+         $r = DB::select(" SELECT sum(cash_pay) as total_money FROM db_orders WHERE id in (".$arr.")
+         AND approve_status in (2,4,9)
+         AND approve_status not in (5,6)");
 
              if($r){
              if($row->remark==1){
@@ -1965,7 +1966,9 @@ class Check_money_dailyController extends Controller
          // $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$row->id.") GROUP BY frontstore_id_fk ");
          //  $r = DB::select(" SELECT sum(total_price) as total_money FROM db_order_products_list WHERE frontstore_id_fk in (".$arr.") ");
          $cash_pay_total = 0;
-         $r = DB::select(" SELECT sum(cash_pay) as cash_pay , sum(transfer_price) as transfer_price ,sum(sum_credit_price) as sum_credit_price ,sum(aicash_price) as aicash_price FROM db_orders WHERE id in (".$arr.") ");
+         $r = DB::select(" SELECT sum(cash_pay) as cash_pay , sum(transfer_price) as transfer_price ,sum(sum_credit_price) as sum_credit_price ,sum(aicash_price) as aicash_price FROM db_orders WHERE id in (".$arr.")
+         AND approve_status in (2,4,9)
+         AND approve_status not in (5,6)");
 
              if($r){
              if($row->remark==1){

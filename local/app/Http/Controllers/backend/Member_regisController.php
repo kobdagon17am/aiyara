@@ -288,9 +288,8 @@ where 1
 ";
 // dd($text);
       $sQuery = \DataTables::of($sTable);
-
       return $sQuery
-
+      ->addIndexColumn()
        ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
           $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
