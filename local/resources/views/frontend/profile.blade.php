@@ -189,7 +189,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
             </div>
 
-            @if(@$data->business_name and @$data->business_name != '-')
+            @if(@$data->business_name and @$data->business_name != '-' )
               <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
             @else
               <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
@@ -225,7 +225,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   <span>@lang('message.namesurname') : {{ Str::of($data->prefix_name)->append($data->first_name .' '. $data->last_name) }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>@lang('message.birthdate') :>@if(empty($data->birth_day) ||  $data->birth_day == '0000-00-00 00:00:00')
+                  <span>@lang('message.birthdate') :>@if(empty($data->birth_day) ||  $data->birth_day == '0000-00-00 00:00:00' ||  $data->birth_day == '1900-01-01')
                     -
                     @else
                     {{ date('d/m/Y',strtotime($data->birth_day)) }}
