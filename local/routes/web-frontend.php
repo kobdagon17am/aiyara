@@ -59,6 +59,10 @@ Route::get('logout', function () {
 })->name('logout');
 
 
+
+Route::get('RunError','Frontend\Fc\RunErrorController@index')->name('RunError');
+
+
 Route::get('payment_test_type_1','Frontend\CartController@payment_test_type_1')->name('payment_test_type_1');
 Route::get('add_gif','Frontend\CartController@add_gif')->name('add_gif');
 Route::get('course_register','Frontend\CartController@course_register')->name('course_register');
