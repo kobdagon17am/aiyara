@@ -225,7 +225,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   <span>@lang('message.namesurname') : {{ Str::of($data->prefix_name)->append($data->first_name .' '. $data->last_name) }}</span>
                 </div>
                 <div class="col-sm-6">
-                  <span>@lang('message.birthdate') :>@if(empty($data->birth_day) ||  $data->birth_day == '0000-00-00 00:00:00' ||  $data->birth_day == '1900-01-01')
+                  <span>@lang('message.birthdate') : @if(empty($data->birth_day) ||  $data->birth_day == '0000-00-00 00:00:00' ||  $data->birth_day == '1900-01-01')
                     -
                     @else
                     {{ date('d/m/Y',strtotime($data->birth_day)) }}
