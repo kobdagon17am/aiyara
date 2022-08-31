@@ -125,7 +125,9 @@ input[type="text"]:disabled {
 
     require(app_path().'/Models/MyFunction.php');
     $arr_order_id = [];
-    $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$data[0])->orderBy('delivery_id_fk','asc')->get();
+    $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
+    ->select('delivery_id_fk')
+    ->where('packing_code_id_fk',$data[0])->orderBy('delivery_id_fk','asc')->get();
     foreach( $db_pick_pack_packing_data as $pick_pack_packing_data){
       $delivery = DB::select(" SELECT
       db_delivery.set_addr_send_this,
@@ -145,8 +147,8 @@ input[type="text"]:disabled {
         $receipt = '';
       if(@$delivery[0]->status_pack==1){
 
-        $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$delivery[0]->delivery_id_fk."");
-        $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+        $d1 = DB::select(" SELECT packing_code from db_delivery WHERE id=".$delivery[0]->delivery_id_fk."");
+        $d2 = DB::select(" SELECT receipt,orders_id_fk from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
         $arr1 = [];
         foreach ($d2 as $key => $v) {
           array_push( $arr1 ,$v->receipt);
@@ -206,10 +208,10 @@ $limit = 10;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
 
-$cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
-$cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
-$cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
+// $cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
+// $cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
+// $cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
 
 // promotions_products
 $promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
@@ -221,7 +223,7 @@ foreach ($promotion_id_fk as $key => $value) {
 $arr_promotion_id = implode(',', $arr_promotion_id_fk);
 // echo $arr_promotion_id;
 $arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
-$cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
+// $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
 // echo $cnt01[0]->cnt;
 // echo $cnt02[0]->cnt;
 // echo $cnt03[0]->cnt;
@@ -250,14 +252,12 @@ DB::select("
 ");
 
 
-$sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstoreData = DB::select(" select * from db_order_products_list ");
+// $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
-
-
 
 $shipping = DB::select("
     SELECT

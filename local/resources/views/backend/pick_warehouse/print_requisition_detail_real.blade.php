@@ -232,6 +232,7 @@
 </style>
 <?php
 $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
+    ->select('delivery_id_fk')
     ->where('packing_code_id_fk', $data[0])
     ->orderBy('delivery_id_fk', 'asc')
     ->get();
@@ -273,7 +274,7 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
     </div>
 
     <?php
-    $packing = DB::select(' SELECT * FROM db_pick_pack_packing WHERE delivery_id_fk=' . $pick_pack_packing_data->delivery_id_fk . ' and packing_code_id_fk=' . $data[0] . '  GROUP BY packing_code ');
+    $packing = DB::select(' SELECT packing_code,created_at FROM db_pick_pack_packing WHERE delivery_id_fk=' . $pick_pack_packing_data->delivery_id_fk . ' and packing_code_id_fk=' . $data[0] . '  GROUP BY packing_code ');
     // $packing = DB::select(" SELECT * FROM db_pick_pack_packing WHERE id = $pick_pack_packing_data->id ");
 
     $recipient_name = '';
@@ -325,14 +326,17 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
               if ($delivery0) {
                 // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
                         $order_this = DB::table('db_orders')
+                            ->select('bill_transfer_other')
                             ->where('id', $delivery0[0]->orders_id_fk)
                             ->first();
                         if ($order_this) {
                             $order_send = DB::table('db_orders')
+                            ->select('id')
                                 ->where('code_order', 'like', '%' . $order_this->bill_transfer_other . '%')
                                 ->first();
                             if ($order_send) {
                                 $delivery2 = DB::table('db_delivery')
+                                ->select('recipient_name','addr_send','postcode','mobile','tel_home')
                                     ->where('orders_id_fk', $order_send->id)
                                     ->first();
                                 if ($delivery2) {
@@ -371,15 +375,14 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
             }
             }
 
-
     $recipient_name = @$delivery[0]->recipient_name ? @$delivery[0]->recipient_name : '';
     $addr_send = @$delivery[0]->addr_send . ' ' . @$delivery[0]->postcode;
     $tel = @$delivery[0]->mobile . ' ' . @$delivery[0]->tel_home;
     $receipt = '';
 
     if (@$delivery[0]->status_pack == 1) {
-        $d1 = DB::select(' SELECT * from db_delivery WHERE id=' . $delivery[0]->delivery_id_fk . '');
-        $d2 = DB::select(' SELECT * from db_delivery WHERE packing_code=' . $d1[0]->packing_code . '');
+        $d1 = DB::select(' SELECT packing_code from db_delivery WHERE id=' . $delivery[0]->delivery_id_fk . '');
+        $d2 = DB::select(' SELECT receipt from db_delivery WHERE packing_code=' . $d1[0]->packing_code . '');
         $arr1 = [];
         foreach ($d2 as $key => $v) {
             array_push($arr1, $v->receipt);
