@@ -468,9 +468,10 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                         //alert(data['status']);
 
                     } else {
-
+                     // console.log(data['data']['message']);
                         Swal.fire({
-                            title: data['message'],
+                            title: data['data']['message'],
+
                             // text: "You won't be able to revert this!",
                             icon: 'warning',
                             showConfirmButton: false,

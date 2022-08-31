@@ -339,12 +339,14 @@ class AipocketController extends Controller
   public function check_customer_id(Request $request)
   {
 
+
     $user_name = Auth::guard('c_user')->user()->user_name;
     $kyc = \App\Helpers\Frontend::check_kyc($request->user_name);
     if($kyc['status'] == 'fail'){
       return $kyc;
     }
     $resule = LineModel::check_line_backend($user_name, $request->user_name);
+
     if ($resule['status'] == 'success') {
 
       if (empty($resule['data']->pv_mt_active) || (strtotime($resule['data']->pv_mt_active) < strtotime(date('Ymd')))) {
@@ -410,6 +412,7 @@ class AipocketController extends Controller
 
   public function use_aipocket(Request $request)
   {
+
     $type = $request->type;
     $pv = str_replace(',', '', $request->pv);
     $to_customer_user = $request->username;
