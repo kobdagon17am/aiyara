@@ -430,7 +430,31 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
                 <tr>
                     <td colspan="2" style="width:30%;vertical-align: top;font-weight: bold">
-                        เลขที่ใบเสร็จ : {{ @$receipt }}
+                      <?php
+                           $r_num = explode(',',@$receipt);
+                           $text_receipt = "";
+                           $r_i = 0;
+                           foreach($r_num as $index_r => $r){
+                            $r_i ++;
+                            if($r_i==7){
+                              $text_receipt.='<br>';
+                              if(count($r_num)==$index_r+1){
+                                $text_receipt.=$r;
+                              }else{
+                                $text_receipt.=$r.',';
+                              }
+                              $r_i = 0;
+                            }else{
+                              if(count($r_num)==$index_r+1){
+                                $text_receipt.=$r;
+                              }else{
+                                $text_receipt.=$r.',';
+                              }
+                            }
+                           }
+                        ?>
+                        {{-- เลขที่ใบเสร็จ : {{ @$receipt }} --}}
+                        เลขที่ใบเสร็จ : {!! @$text_receipt !!}
                     </td>
 
                 </tr>

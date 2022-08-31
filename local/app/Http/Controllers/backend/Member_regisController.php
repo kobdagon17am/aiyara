@@ -208,7 +208,11 @@ class Member_regisController extends Controller
         if(!empty($req->business_location_id_fk)){
            $w01 = " AND register_files.business_location_id_fk=".$req->business_location_id_fk ;
         }else{
-           $w01 = "";
+           if(auth()->user()->permission == 1){
+            $w01 = "";
+          }else{
+            $w01 = " AND register_files.business_location_id_fk=".auth()->user()->business_location_id_fk;
+          }
         }
 
         if(!empty($req->branch_id_fk)){

@@ -123,6 +123,8 @@ input[type="text"]:disabled {
 
 <?php
 
+ini_set('memory_limit', '384M');
+
     require(app_path().'/Models/MyFunction.php');
     $arr_order_id = [];
     $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
@@ -328,7 +330,8 @@ if(!empty($gift_voucher)){
 // ");
 
 $sTable = DB::select("
-SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
+SELECT *
+from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
 SELECT
 id,user_id_fk,frontstore_id_fk,code_order,customers_id_fk,distribution_channel_id_fk,purchase_type_id_fk,pay_type_id_fk,selling_price,
 member_price,product_id_fk,product_name,
@@ -338,7 +341,6 @@ course_id_fk,action_date,action_user,approve_status,approver,approve_date,qr_cod
 from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
 ORDER BY add_from,id
 ");
-
 
 
 
@@ -913,7 +915,7 @@ if(!empty($db_orders[0]->action_user)){
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("
-                SELECT db_orders.*,branchs.b_code as branch_code,customers.user_name
+                SELECT db_orders.action_user,branchs.b_code as branch_code,customers.user_name
                 FROM
                 db_orders
                 Left Join branchs ON db_orders.branch_id_fk = branchs.id

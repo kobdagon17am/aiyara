@@ -508,6 +508,7 @@ class FrontstorelistController extends Controller
 
 
                 if(!empty(request('amt_apply')[$i])){
+
                     $Course_event = \App\Models\Backend\Course_event::find($id[$i]);
                     $sRow->course_id_fk    = $id[$i];
                     $sRow->product_name    = $Course_event->ce_name;
@@ -761,16 +762,10 @@ class FrontstorelistController extends Controller
 
         }
 
-
         if(isset($request->product_plus_pro)){
-
-
 
           // dd($request->product_plus_pro);
                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk)->get();
-
-
-
                 if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
                 }else{
@@ -779,11 +774,18 @@ class FrontstorelistController extends Controller
         //     return @$Promotions_cost[0]->pv;
                 // dd($pv);
                 $sPromotions = \App\Models\Backend\Promotions::find(@$request->promotion_id_fk);
+                // dd($sPromotions);
                 if(@$request->quantity>$sPromotions->limited_amt_person){
                   $amt = @$sPromotions->limited_amt_person;
                 }else{
                   $amt = @$request->quantity;
                 }
+
+                if($sPromotions->limited_amt_person == ''){
+                  $amt = @$request->quantity;
+                }
+
+                // dd($sPromotions->limited_amt_person);
                 // วุฒิเพิ่มมาว่าโปรซ้ำไหม
                 // $check_promotion_same = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',@$request->frontstore_id)->where('promotion_id_fk',@$request->promotion_id_fk)->first();
                 // วุฒิเช็คว่าเคยมีโปคูปองไหม

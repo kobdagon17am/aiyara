@@ -99,6 +99,10 @@ class Pick_warehouse_fifoController extends Controller
 
           $orders_id_fk = array_filter($arr_00);
           $orders_id_fk = implode(",",$orders_id_fk);
+          // $orders_id_fk = explode(",",$orders_id_fk);
+          // dd($orders_id_fk);
+          // $orders_id_fk = implode(",",$orders_id_fk);
+
           // return $orders_id_fk;
 
           $r_db_order_products_list = DB::select(" SELECT product_id_fk,promotion_id_fk FROM db_order_products_list WHERE frontstore_id_fk in ($orders_id_fk) ");
