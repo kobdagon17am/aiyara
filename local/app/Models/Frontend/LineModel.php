@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 use Laraveldaily\Quickadmin\Observers\UserActionsObserver;
 use DB;
 use Auth;
+use PhpParser\Node\Stmt\Return_;
+
 class LineModel extends Model
 {
 
@@ -417,6 +419,9 @@ public static function check_line_backend($username_buy,$username_check){
   ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 	->where('user_name','=',$username_check)
 	->first();
+
+  $resule = ['status'=>'success','message'=>'Under line','data'=>$data_user];
+  return $resule;
 
 	if(!empty($data_user)){
 
