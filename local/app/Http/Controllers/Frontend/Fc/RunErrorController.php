@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\DB;
 class RunErrorController extends Controller
 {
   public static function index(){
-    dd('qqq');
-    $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A1298102',2500,1, $order_code = null);
-    dd($rs);
+    // dd('qqq');
+    // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A1298102',2500,1, $order_code = null);
+    // dd($rs);
+
+  //  $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code(1,'product');
+  //  dd($rs);
   }
 
     public static function Runpv($username, $pv, $type, $order_code = null)
