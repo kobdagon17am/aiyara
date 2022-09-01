@@ -8,6 +8,7 @@ use DB;
 use File;
 use App\Http\Controllers\backend\AjaxController;
 use App\Helpers\General;
+use Session;
 
 class General_takeoutController extends Controller
 {
@@ -15,6 +16,26 @@ class General_takeoutController extends Controller
     public function index(Request $request)
     {
       General::gen_id_url();
+
+          // วุฒิสร้าง session
+          $menus = DB::table('ck_backend_menu')->select('id')->where('id',30)->first();
+          Session::put('session_menu_id', $menus->id);
+          Session::put('menu_id', $menus->id);
+          $role_group_id = \Auth::user()->role_group_id_fk;
+          $menu_permit = DB::table('role_permit')->where('role_group_id_fk',@$role_group_id)->where('menu_id_fk',@$menus->id)->first();
+          $sC = @$menu_permit->c;
+          $sU = @$menu_permit->u;
+          $sD = @$menu_permit->d;
+          Session::put('sC', $sC);
+          Session::put('sU', $sU);
+          Session::put('sD', $sD);
+          $can_cancel_bill = @$menu_permit->can_cancel_bill;
+          $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
+          $can_approve = @$menu_permit->can_approve;
+          Session::put('can_cancel_bill', $can_cancel_bill);
+          Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
+          Session::put('can_approve', $can_approve);
+
       return view('backend.general_takeout.index');
 
     }
@@ -264,7 +285,7 @@ class General_takeoutController extends Controller
                 'updated_at' => date('Y-m-d H:i:s'),
               ]);
             }
-        
+
           }
 
           // if(request('approve_status')=='1'){
@@ -399,7 +420,7 @@ class General_takeoutController extends Controller
 
           if(request('approve_status')=='1'){
             $items = DB::table('db_general_takeout_item')->where('general_takeout_id',$sRow->id)->get();
-   
+
             foreach($items as $item){
 
               DB::select(" UPDATE db_stocks SET amt = (amt - ".$item->amt." ) WHERE id = ".$item->stocks_id_fk." ");
@@ -520,7 +541,7 @@ class General_takeoutController extends Controller
             $sTable = \App\Models\Backend\General_takeout::where('branch_id_fk',$User_branch_id)->where('recipient',@\Auth::user()->id)->orderBy('id', 'desc');
 
           }
-           
+
         }
 
 
@@ -571,7 +592,7 @@ class General_takeoutController extends Controller
         return response()->json('success');
       }
 
-        
+
     }
 
 
