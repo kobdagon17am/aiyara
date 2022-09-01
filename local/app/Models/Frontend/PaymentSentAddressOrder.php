@@ -30,6 +30,8 @@ class PaymentSentAddressOrder extends Model
       $insert_db_orders->purchase_type_id_fk = $rs->type;
       $insert_db_orders->branch_id_fk = 12;
       $insert_db_orders->check_press_save = 2;
+      $insert_db_orders->created_at = date('Y-m-d H:i:s');
+      $insert_db_orders->updated_at = date('Y-m-d H:i:s');
 
       if ($rs->aistockist_id_fk) {
         $insert_db_orders->aistockist = $rs->aistockist_id_fk;

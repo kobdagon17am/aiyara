@@ -6,17 +6,91 @@ use App\Http\Controllers\Controller;
 use App\Models\Frontend\Customer;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\Frontend\RunNumberPayment;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Db_Ai_stockist;
+use App\Http\Controllers\Frontend\Fc\RunPvController;
+
 class RunErrorController extends Controller
 {
   public static function index(){
-    dd('qqq');
-    $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A1298102',2500,1, $order_code = null);
-    dd($rs);
+
+    // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::run_invoice_code();
+    // dd($rs);
+
+    // dd('qqq');
+    // $x = 1350*4;
+    // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A684135',$x,1, $order_code = null);
+    // dd($rs);
+
+  //  $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code(1,'product');
+  //  dd($rs);
+
+
+  // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist(4,2438,'A223356','A223356','O122083000964',1089);
+  // dd($rs);
+  }
+
+  public static function run_invoice_code(){
+    $order = DB::table('db_orders') //อัพ Pv ของตัวเอง
+    ->where('invoice_code_id_fk', '!=', '')
+    ->orwhere('invoice_code_id_fk', '!=', null)
+    ->orderBy('id')
+    ->get();
+
+    $i = 0;
+    foreach($order as $value){
+      $i++;
+      $check_payment_code = DB::table('db_invoice_code') //เจนเลข payment order
+      ->where('order_id', '=', $value->id)
+      ->first();
+
+
+      if ($check_payment_code) {
+
+        $update_order_payment_code = DB::table('db_invoice_code')
+            ->where('order_id', $value->id)
+            ->update(['order_payment_status' => 'Success',
+                'order_payment_code' => $value->invoice_code_id_fk,
+                'business_location_id' => $value->business_location_id_fk,
+                'date_setting_code' => $value->date_setting_code,
+                'type_order' => 'product']); //ลงข้อมูลบิลชำระเงิน
+
+              $order_update = DB::table('db_orders')
+              ->where('id', $value->id)
+              ->update(['invoice_code_id_fk' => $check_payment_code->order_payment_code]); //ลงข้อมูลบิลชำระเงิน
+
+
+
+    } else {
+
+
+      $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code($value->business_location_id_fk,'product');
+
+
+        $inseart_order_payment_code = DB::table('db_invoice_code')->insert([
+            'order_id' => $value->id,
+            'order_payment_code' => $rs['code_order'],
+            'order_payment_status' => 'Success',
+            'business_location_id' => $value->business_location_id_fk,
+            'date_setting_code' =>$value->date_setting_code,
+            'type_order' => 'product']); //ลงข้อมูลบิลชำระเงิน
+
+            $order_update = DB::table('db_orders')
+            ->where('id', $value->id)
+            ->update(['invoice_code_id_fk' => $rs['code_order']]); //ลงข้อมูลบิลชำระเงิน
+
+    }
+  }
+
+  return 'success'.' '.$i;
+
   }
 
     public static function Runpv($username, $pv, $type, $order_code = null)
     {
       // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv($username, $pv, $type, $order_code = null)
+
 
         // RunPv ทำคุณสมบัติ
 
@@ -562,4 +636,69 @@ class RunErrorController extends Controller
             return $resule;
         }
     }
+
+
+
+
+    public static function add_pv_aistockist($type, $pv, $to_customer_user, $username, $code_order = '', $order_id_fk = '')
+    {
+      try {
+        DB::BeginTransaction();
+
+        $user = DB::table('customers')
+          ->select('id', 'pv_aistockist', 'user_name')
+          ->where('user_name', '=', $username)
+          ->first();
+
+        $to_customer = DB::table('customers')
+          ->select('id', 'pv_aistockist', 'user_name', 'pv_mt_active', 'status_pv_mt', 'pv_mt', 'pv_tv', 'pv')
+          ->where('user_name', '=', $to_customer_user)
+          ->first();
+
+        if (empty($user) || empty($to_customer)) {
+          $resule = ['status' => 'fail', 'message' => 'ไม่มี User นี้ในระบบ'];
+          return $resule;
+        } else {
+
+          $update_use = Customer::find($user->id);
+          $update_to_customer = Customer::find($to_customer->id);
+
+          $pv_total = $user->pv_aistockist + $pv;
+
+          $update_use->pv_aistockist = $pv_total;
+          $transection_code = RunNumberPayment::run_number_aistockis();
+          $update_ai_stockist = new Db_Ai_stockist();
+          $update_ai_stockist->customer_id = $user->id;
+          $update_ai_stockist->to_customer_id = $to_customer->id;
+          $update_ai_stockist->transection_code = $transection_code;
+          $update_ai_stockist->set_transection_code = date('ym');
+          $update_ai_stockist->pv = $pv;
+          $update_ai_stockist->status_add_remove = 'add';
+          $update_ai_stockist->status = 'success';
+          $update_ai_stockist->type_id = $type;
+          $update_ai_stockist->banlance = $pv_total;
+          $update_ai_stockist->code_order = $code_order;
+          $update_ai_stockist->order_id_fk = $order_id_fk;
+          $resule = ['status' => 'success', 'message' => 'ซื้อเพื่อเติม เก็บ log + PV AiStockist '];
+        }
+
+        if ($resule['status'] == 'success') {
+          $update_ai_stockist->save();
+          $update_use->save();
+          DB::commit();
+          //DB::rollback();
+          return $resule;
+        } else {
+          DB::rollback();
+          return $resule;
+        }
+      } catch (Exception $e) {
+        DB::rollback();
+        $resule = ['status' => 'fail', 'message' => 'Update PvPayment Fail'];
+        return $resule;
+      }
+      $resule = ['status' => 'success', 'message' => 'Yess'];
+      return $resule;
+    }
+
 }
