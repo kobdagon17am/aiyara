@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 class RunErrorController extends Controller
 {
   public static function index(){
+    $order = DB::table('customers') //อัพ Pv ของตัวเอง
+    ->select('id', 'pv')
+    ->where('user_name', '=', $username)
+    ->first();
     // dd('qqq');
     // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A1298102',2500,1, $order_code = null);
     // dd($rs);
@@ -20,6 +24,7 @@ class RunErrorController extends Controller
     public static function Runpv($username, $pv, $type, $order_code = null)
     {
       // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv($username, $pv, $type, $order_code = null)
+
 
         // RunPv ทำคุณสมบัติ
 
