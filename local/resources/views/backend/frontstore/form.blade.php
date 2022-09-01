@@ -766,8 +766,9 @@
                                     <div style="text-align: right;">
 
 
-                                        @if (!empty(@$sRow->pay_type_id_fk))
+                                        @if (!empty(@$sRow->pay_type_id_fk) && @$sRow->approve_status!=6)
                                             <!-- ไม่ต้องแสดงปุ่ม เพิ่มต่างๆ  -->
+
                                         @ELSE
                                             @if (@$sRow->purchase_type_id_fk == 6)
                                                 <a class="btn btn-success btn-aigreen btn-sm mt-1 btnCourse "
@@ -3031,7 +3032,8 @@
                     if (aData['type_product'] == 'course') {
                         $("td:eq(4)", nRow).html("คอร์ส");
                     }
-                    if (aData['check_press_save'] == "2") {
+                    var r_approve_status = "{{@$sRow->approve_status}}";
+                    if (aData['check_press_save'] == "2" && r_approve_status != "6") {
 
                         $('td:last-child', nRow).html('-');
 
@@ -8065,7 +8067,7 @@
         $(document).ready(function() {
 
             var ch_Disabled = "{{ @$ch_Disabled }}";
-            // console.log(ch_Disabled);
+            console.log('ch_Disabled :' +ch_Disabled);
             if (ch_Disabled == '1') {
                 $('.class_btnSave').remove();
                 $('.btnAddFromPromotion').remove();

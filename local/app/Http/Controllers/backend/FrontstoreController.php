@@ -20,6 +20,7 @@ use App\Models\Backend\DatasetOrderHistoryStatus;
 use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\CancelOrderController;
 use App\Helpers\General;
+use Session;
 
 class FrontstoreController extends Controller
 {
@@ -72,6 +73,27 @@ class FrontstoreController extends Controller
   {
 
     General::gen_id_url();
+
+      // วุฒิสร้าง session
+        $menus = DB::table('ck_backend_menu')->select('id')->where('id',6)->first();
+        Session::put('session_menu_id', $menus->id);
+        Session::put('menu_id', $menus->id);
+        $role_group_id = \Auth::user()->role_group_id_fk;
+        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',@$role_group_id)->where('menu_id_fk',@$menus->id)->first();
+        $sC = @$menu_permit->c;
+        $sU = @$menu_permit->u;
+        $sD = @$menu_permit->d;
+        Session::put('sC', $sC);
+        Session::put('sU', $sU);
+        Session::put('sD', $sD);
+        $can_cancel_bill = @$menu_permit->can_cancel_bill;
+        $can_cancel_bill_across_day = @$menu_permit->can_cancel_bill_across_day;
+        $can_approve = @$menu_permit->can_approve;
+        Session::put('can_cancel_bill', $can_cancel_bill);
+        Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
+        Session::put('can_approve', $can_approve);
+
+
     // dump($request->all());
     // dd(\Auth::user()->position_level);
     // dd(\Auth::user()->branch_id_fk);

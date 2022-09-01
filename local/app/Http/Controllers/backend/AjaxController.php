@@ -5265,11 +5265,12 @@ class AjaxController extends Controller
            // return $request->product_id_fk;
            if($r1){
                 if($r1[0]->remain > 0){
-                    if($request->amt_get > $r1[0]->remain){
-                        return 1;
-                    }else{
+                  // ปลดชั่วคราว
+                    // if($request->amt_get > $r1[0]->remain){
+                    //     return 1;
+                    // }else{
                         return 0;
-                    }
+                    // }
                 }else{
                     return 0;
                 }
