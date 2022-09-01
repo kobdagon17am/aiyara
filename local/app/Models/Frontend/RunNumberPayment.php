@@ -199,7 +199,7 @@ class RunNumberPayment extends Model
   }
 
 
-  public static function run_payment_code($business_location_id, $type_order)
+  public static function run_payment_code($business_location_id,$type_order)
   {
     //R = Payment
     //E = Course/Event
@@ -213,6 +213,8 @@ class RunNumberPayment extends Model
       ->first();
 
 
+
+
     if ($type_order == 'product') {
       $type_code = 'R';
     } elseif ($type_order == 'course_event') {
@@ -222,8 +224,9 @@ class RunNumberPayment extends Model
       return  $resule;
     }
 
-    if (@$data->invoice_code_id_fk) {
-      $last_code = $data->invoice_code_id_fk;
+    if (@$data->order_payment_code) {
+
+      $last_code = $data->order_payment_code;
       $code = substr($last_code, -5);
       $last_code = $code + 1;
 

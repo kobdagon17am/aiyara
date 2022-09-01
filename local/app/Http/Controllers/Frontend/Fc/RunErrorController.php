@@ -9,16 +9,72 @@ use Illuminate\Support\Facades\DB;
 class RunErrorController extends Controller
 {
   public static function index(){
-    $order = DB::table('customers') //อัพ Pv ของตัวเอง
-    ->select('id', 'pv')
-    ->where('user_name', '=', $username)
-    ->first();
+
+    $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::run_invoice_code();
+    dd($rs);
+
     // dd('qqq');
     // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A1298102',2500,1, $order_code = null);
     // dd($rs);
 
   //  $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code(1,'product');
   //  dd($rs);
+  }
+
+  public static function run_invoice_code(){
+    $order = DB::table('db_orders') //อัพ Pv ของตัวเอง
+    ->where('invoice_code_id_fk', '!=', '')
+    ->orwhere('invoice_code_id_fk', '!=', null)
+    ->orderBy('id')
+    ->get();
+
+    $i = 0;
+    foreach($order as $value){
+      $i++;
+      $check_payment_code = DB::table('db_invoice_code') //เจนเลข payment order
+      ->where('order_id', '=', $value->id)
+      ->first();
+
+
+      if ($check_payment_code) {
+
+        $update_order_payment_code = DB::table('db_invoice_code')
+            ->where('order_id', $value->id)
+            ->update(['order_payment_status' => 'Success',
+                'order_payment_code' => $value->invoice_code_id_fk,
+                'business_location_id' => $value->business_location_id_fk,
+                'date_setting_code' => $value->date_setting_code,
+                'type_order' => 'product']); //ลงข้อมูลบิลชำระเงิน
+
+              $order_update = DB::table('db_orders')
+              ->where('id', $value->id)
+              ->update(['invoice_code_id_fk' => $check_payment_code->order_payment_code]); //ลงข้อมูลบิลชำระเงิน
+
+
+
+    } else {
+
+
+      $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code($value->business_location_id_fk,'product');
+
+
+        $inseart_order_payment_code = DB::table('db_invoice_code')->insert([
+            'order_id' => $value->id,
+            'order_payment_code' => $rs['code_order'],
+            'order_payment_status' => 'Success',
+            'business_location_id' => $value->business_location_id_fk,
+            'date_setting_code' =>$value->date_setting_code,
+            'type_order' => 'product']); //ลงข้อมูลบิลชำระเงิน
+
+            $order_update = DB::table('db_orders')
+            ->where('id', $value->id)
+            ->update(['invoice_code_id_fk' => $rs['code_order']]); //ลงข้อมูลบิลชำระเงิน
+
+    }
+  }
+
+  return 'success'.' '.$i;
+
   }
 
     public static function Runpv($username, $pv, $type, $order_code = null)
