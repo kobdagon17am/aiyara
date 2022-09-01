@@ -139,14 +139,30 @@ class RequisitionBetweenBranchController extends Controller
                 $csrfToken
                 $methodField
                 <input type='hidden' name='is_approve' value='2'>
-                <input type='submit' class='btn btn-danger btn-sm' value='ไม่อนุมัติ'>
+                <input type='submit' class='btn btn-warning btn-sm' value='ไม่อนุมัติ'>
               </form>
+              <form action='".url('backend/requisition_between_branch_cancel')."' method='post' enctype='multipart/form-data' class='d-inline'>
+              $csrfToken
+              <input type='hidden' name='is_cacel' value='3'>
+              <input type='hidden' name='data_id' value='".$wait_approve->id."'>
+              <input type='submit' class='btn btn-danger btn-sm' value='ยกเลิก'>
+            </form>
             ";
             }else{
-              return "<span class='badge badge-secondary font-size-15'>รอยืนยันการอนุมัติ</span>";
+              return "
+              <span class='badge badge-secondary font-size-15'>รอยืนยันการอนุมัติ</span>
+              <form action='".url('backend/requisition_between_branch_cancel')."' method='post' enctype='multipart/form-data' class='d-inline'>
+              $csrfToken
+              <input type='hidden' name='is_cacel' value='3'>
+              <input type='hidden' name='data_id' value='".$wait_approve->id."'>
+              <input type='submit' class='btn btn-danger btn-sm' value='ยกเลิก'>
+            </form>
+              ";
+
             }
 
           } else {
+
             return "
               <form action='$routeUpdate' method='POST' class='d-inline form-approve'>
                 $csrfToken
@@ -160,10 +176,30 @@ class RequisitionBetweenBranchController extends Controller
                 <input type='hidden' name='is_approve' value='2'>
                 <input type='submit' class='btn btn-danger btn-sm' value='ไม่อนุมัติ'>
               </form>
+              <form action='".url('backend/requisition_between_branch_cancel')."' method='post' enctype='multipart/form-data' class='d-inline'>
+              $csrfToken
+              <input type='hidden' name='is_cacel' value='3'>
+              <input type='hidden' name='data_id' value='".$wait_approve->id."'>
+              <input type='submit' class='btn btn-danger btn-sm' value='ยกเลิก'>
+            </form>
             ";
           }
         })
         ->rawColumns(['button_products', 'actions'])
         ->make(true);
+    }
+
+
+    public function requisition_between_branch_cancel(Request $request)
+    {
+      // dd($request->all());
+      $data = RequisitionBetweenBranch::select('is_approve','id')->where('id',$request->data_id)->first();
+      if(@$data->is_approve!=1){
+        $data = RequisitionBetweenBranch::select('is_approve','id')->where('id',$request->data_id)->delete();
+      }else{
+        return redirect()->back()->with('error','รายการนี้ถูกอนุมัติแล้ว ไม่สามารถยกเลิกได้');
+      }
+
+      return redirect()->back()->with('success','ทำรายการสำเร็จ');
     }
 }

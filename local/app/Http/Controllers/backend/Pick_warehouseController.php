@@ -1303,7 +1303,7 @@ GROUP BY db_order_products_list.product_id_fk
 
                    if(@$Products){
                         foreach ($Products as $key => $value) {
-                            $r_ch_t .= $value->code_order.'<br>';
+                            $r_ch_t .= ($key+1).')  '.$value->code_order.'<br>';
                       }}
 
         if(@$row->lists){
@@ -1420,7 +1420,7 @@ GROUP BY db_order_products_list.product_id_fk
                   $amt_scan = @$value->amt_get;
 
                   if($key==0){
-                                // for ($i=0; $i < $amt_scan ; $i++) {
+                                // for ($i=0; $i < $amt_scan ; $i++) { บันทึกสแกน
 
                                   $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and invoice_code='".$value->code_order."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
 

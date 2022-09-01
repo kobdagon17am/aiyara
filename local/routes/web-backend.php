@@ -1023,7 +1023,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::patch('requisition_between_branch/{requisition_between_branch}', 'RequisitionBetweenBranchController@update')->name('requisition_between_branch.update');
     Route::post('requisition_between_branch/datatable-list-approve', 'RequisitionBetweenBranchController@dtListApprove')->name('requisition_between_branch.dt-list-approve');
     Route::post('requisition_between_branch/datatable-list-wait-approve', 'RequisitionBetweenBranchController@dtListWaitApprove')->name('requisition_between_branch.dt-list-wait-approve');
-
+    Route::post('requisition_between_branch_cancel', 'RequisitionBetweenBranchController@requisition_between_branch_cancel');
 
     // รายงานต่างๆ วุฒิเพิ่มมา
     Route::get('report_data', 'ReportDataController@index')->name('report_data.index');

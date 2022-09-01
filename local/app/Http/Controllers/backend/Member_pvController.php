@@ -171,34 +171,87 @@ class Member_pvController extends Controller
 
       if(isset($request->file_bank)){
         if($request->file_bank!=null){
+
+      //     $file_4 = $request->file_bank;
+      //     if(isset($file_4)){
+      //      $url='local/public/files_register/4/'.date('Ym');
+      //      $f_name =  date('YmdHis').'_'.$id.'_4'.'.'.$file_4->getClientOriginalExtension();
+      //      $f_name =strtolower($f_name);
+      //      if($file_4->move($url,$f_name)){
+      //         DB::table('register_files')
+      //         ->insert(['customer_id'=>$id,'type'=>'4','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0','business_location_id_fk'=>$business_location]);
+      //     }
+      // }
+
+      $cus = DB::table('customers')
+                      ->select('business_location_id','id')
+                      ->where('id',$customer_id)
+                      ->first();
+
           $file_4 = $request->file_bank;
                   // $f_name = $file_3->getClientOriginalName().'_'.date('YmdHis').'.'.$file_3->getClientOriginalExtension();
             $url='local/public/files_register/4/'.date('Ym');
-            $f_name =  date('YmdHis').'_'.Auth::user()->id.'_4'.'.'.$file_4->getClientOriginalExtension();
+            // $f_name =  date('YmdHis').'_'.Auth::user()->id.'_4'.'.'.$file_4->getClientOriginalExtension();
+            $f_name =  date('YmdHis').'_'.$cus->id.'_4'.'.'.$file_4->getClientOriginalExtension();
+            $f_name =strtolower($f_name);
             if($file_4->move($url,$f_name)){
              $data = DB::table('register_files')
              ->select('comment')
               ->where('customer_id',$customer_id)->where('type',4)->first();
-            DB::table('register_files')
-            ->where('customer_id',$customer_id)->where('type',4)
-            ->update(
-           [
-            'url' => $url,
-           'file' => $f_name,
-           'approve_date' => null,
-           'comment' => $data->comment.' (ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดยพนักงาน)',
-           'approver' => null,
-           'regis_doc_status' => 0,
-           'created_at' => date('Y-m-d H:i:s'),
-           'updated_at' => date('Y-m-d H:i:s')
-           ]
-            );
+// dd($customer_id);
+                    if($data){
 
-            DB::table('customers')
-            ->where('id',$customer_id)
-            ->update([
-              'regis_doc4_status' => 0
-            ]);
+                      DB::table('register_files')
+                      ->where('customer_id',$customer_id)->where('type',4)
+                      ->update(
+                    [
+                      'url' => $url,
+                    'file' => $f_name,
+                    'approve_date' => null,
+                    'comment' => $data->comment.' (ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดยพนักงาน)',
+                    'approver' => null,
+                    'regis_doc_status' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                    ]
+                      );
+
+                      DB::table('customers')
+                      ->where('id',$customer_id)
+                      ->update([
+                        'regis_doc4_status' => 0
+                      ]);
+                    }else{
+                      if($cus->business_location_id==''){
+                        $cus->business_location_id = 1;
+                      }
+                      DB::table('register_files')
+                      ->insert(
+                    [
+
+                    'business_location_id_fk' => $cus->business_location_id,
+                    'branch_id_fk' => 0,
+                    'customer_id' => $cus->id,
+                    'type' => 4,
+                    'url' => $url,
+                    'file' => $f_name,
+                    'comment' => '(ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดยพนักงาน)',
+                    'approve_date' => null,
+                    'approver' => null,
+                    'regis_doc_status' => 0,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'item_checked' => 0
+                    ]
+                      );
+
+                      DB::table('customers')
+                      ->where('id',$customer_id)
+                      ->update([
+                        'regis_doc4_status' => 0
+                      ]);
+                    }
+
 
                   // $update_use->regis_doc4_status = 0;
             }
