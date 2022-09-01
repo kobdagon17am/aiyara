@@ -64,12 +64,12 @@
     color: black ;
     background-color: #cfc ;
     z-index: 9999 ;
-  } 
+  }
 
     .divTable{
         display: table;
         width: 100%;
-        
+
       }
       .divTableRow {
         display: table-row;
@@ -89,7 +89,7 @@
       }
       div.divTableBody>div:nth-of-type(even) {
         background: white;
-      }      
+      }
       .divTableHeading {
         background-color: #EEE;
         display: table-header-group;
@@ -113,7 +113,7 @@
       div.divTableBody>div:nth-of-type(even):hover {
         background-color: #e6e6e6;
         /*cursor: pointer;*/
-      } 
+      }
 
 
 </style>
@@ -129,7 +129,7 @@
           <div class="col-6">
             <h4 class="font-size-18 "> จ่ายสินค้าตามใบเสร็จ  </h4>
           </div>
-          
+
           <div class="col-4" style="padding: 5px;text-align: center;font-weight: bold;margin-left: 5%;">
             <span >
               <?php $role = DB::select("SELECT * FROM `role_group` where id=".(@\Auth::user()->role_group_id_fk)." "); ?>
@@ -146,11 +146,11 @@
 
         </div>
     </div>
-    
+
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       // $menu_id = @$_REQUEST['menu_id'];
       $menu_id = Session::get('session_menu_id');
@@ -165,7 +165,7 @@
       }else{
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
-        // echo $menu_id;     
+        // echo $menu_id;
         $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
         // print_r($menu_permit);
         $sC = @$menu_permit->c==1?'':'display:none;';
@@ -203,19 +203,19 @@
                     </div>
                   </div>
 
-         
+
                     <div class="form-group row div_data_table ">
                       <div class="col-md-12">
 
                         <?php //print_r($sUser[0]->address_send_type); ?>
                         <?php //print_r($sUser[0]->status_sent); ?>
-                        
+
                     {{--     @IF(@$sUser[0]->address_send_type==1 && @$sUser[0]->status_sent!=3) --}}
                         @IF(@$sUser[0]->status_sent!=3)
                           <div style="background-color:#ffeecc;padding-top: 10px;">
-                        @ELSE 
+                        @ELSE
                           <div style="background-color:#ffe6ff;padding-top: 10px;">
-                        @ENDIF 
+                        @ENDIF
 
                             <div class="row">
                               <div class="col-lg-2">
@@ -231,7 +231,7 @@
                                     <li class="list-inline-item ">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="รับสินค้าที่"><i class="bx bx-home mr-1 text-primary" ></i>รับสินค้าที่ : <b><span class="user_address">{{@$sUser[0]->user_address}}</span></b></h5>
                                     </li>
-                                    
+
                                   @if(@$sUser[0]->status_sent!=3)
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="วันที่ดำเนินการ"><i class="bx bx-calendar mr-1 text-primary"></i>วันที่ดำเนินการ : <b><span class="action_date">{{@$sUser[0]->action_date}}</span></b></h5>
@@ -240,8 +240,8 @@
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14 " data-toggle="tooltip" data-placement="top" title="ผู้ดำเนินการ"><i class="bx bx-user-check font-size-18 mr-1 text-primary"></i>ผู้ดำเนินการ : <b><span class="user_action">{{@$sUser[0]->user_action}}</span></b></h5>
                                     </li>
-                                    @ENDIF 
-                                                                
+                                    @ENDIF
+
                                     <li class="list-inline-item ">
                                       <h5 class="font-size-14  " data-toggle="tooltip" data-placement="top" title="สถานะ"><i class="bx bx-task mr-1 text-primary" ></i> STATUS : <span style="color:red;font-weight: bold;font-size: 16px;" class="bill_status" >{{@$sUser[0]->bill_status}}</span></h5>
                                     </li>
@@ -254,7 +254,7 @@
                                     <li class="list-inline-item">
                                       <h5 class="font-size-14 " data-toggle="tooltip" data-placement="top" title="ผู้จ่าย"><i class="bx bx-user-check font-size-18 mr-1 text-primary"></i>ผู้จ่าย : <b><span class="pay_user">{{@$sUser[0]->pay_user}}</span></b></h5>
                                     </li>
-                                  @ENDIF 
+                                  @ENDIF
 
                                   </ul>
                               </div>
@@ -267,12 +267,12 @@
 
                         <div class=" div_datatables_003 " style="display: none;" >
                            <table id="data-table-0003" class="table table-bordered " style="width: 100%;" ></table>
-                        </div>     
+                        </div>
 
                         <div class=" div_datatables_004 " style="display: none;" >
                            <table id="data-table-0004" class="table table-bordered " style="width: 100%;" ></table>
-                        </div>  
-                
+                        </div>
+
                         <div class="col-md-12 text-center div_btn_save " style="display: none;" >
                           <br>
                           <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave " >
@@ -280,7 +280,7 @@
                           </button>
                         </div>
 
-                
+
                         <div class="col-md-12 text-center div_btn_save_004 " style="display: none;" >
                           <br>
                           <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave004 " >
@@ -294,8 +294,8 @@
                           <i class="bx bx-lock font-size-16 align-middle mr-1"></i> ปลดล็อคเพื่อจ่ายสินค้าอีกครั้ง
                           </a>
                         </div>
-                        
-                        
+
+
 
                   </div>
 
@@ -395,7 +395,7 @@ $(document).on('click', '.btnCancel', function(){
                     }
                 });
 
-           
+
             });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
@@ -406,7 +406,7 @@ $(document).on('click', '.btnCancel', function(){
 <script type="text/javascript">
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-            
+
             var txtSearch = "{{@$sRow->invoice_code}}"; //console.log(txtSearch);
             $.fn.dataTable.ext.errMode = 'throw';
             var oTable0002;
@@ -431,7 +431,7 @@ $(document).on('click', '.btnCancel', function(){
                         {data: 'column_001', title :'<center> รายการครั้งที่จ่ายสินค้า </center> ', className: 'text-center '},
                         {data: 'column_002', title :'<center> รายการสินค้า </center> ', className: ''},
                         {data: 'column_003', title :'<center> ยกเลิก </center> ', className: 'text-center'},
-                                             
+
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
@@ -458,7 +458,7 @@ $(document).on('click', '.btnCancel', function(){
               oTable0002.on( 'draw', function () {
                 $('[data-toggle="tooltip"]').tooltip();
               });
-           
+
             });
 // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
   </script>
@@ -516,7 +516,7 @@ $(document).on('click', '.btnCancel', function(){
                   }
               });
 
-        
+
       });
 
 
@@ -548,7 +548,7 @@ $(document).on('click', '.btnCancel', function(){
           $(this).prev().css({ 'background-color' : 'blanchedalmond'});
           $(this).prev().val('');
 
-        
+
       });
 
 
@@ -558,21 +558,21 @@ $(document).on('click', '.btnCancel', function(){
   </script>
 
     <script>
-          
+
           $(".myloading").show();
 
                 var invoice_code = "{{@$sRow->invoice_code}}"; //console.log(txtSearch);
-                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                  $.ajax({
 
-                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                       method: "post",
                       data: {
                         txtSearch:invoice_code,
-                        "_token": "{{ csrf_token() }}", 
+                        "_token": "{{ csrf_token() }}",
                       },
                       success:function(data)
-                      { 
+                      {
                           console.log(data);
                           // return false;
                           if(data==0){
@@ -588,7 +588,7 @@ $(document).on('click', '.btnCancel', function(){
                           }else{
 
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
+                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO
                                   $.fn.dataTable.ext.errMode = 'throw';
                                   var oTable0003;
                                   $(function() {
@@ -613,7 +613,7 @@ $(document).on('click', '.btnCancel', function(){
                                               {data: 'column_001', title :'<center> 3 </center> ', className: 'text-center '},
                                               {data: 'column_002', title :'<center>  </center> ', className: ''},
                                               {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
-                                                                   
+
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
 
@@ -639,7 +639,7 @@ $(document).on('click', '.btnCancel', function(){
 
                                               }else{
 
-                                                  // ถ้ามีการยกเลิกเมื่อไร ให้แสดงตาราง 4 กรณีอื่นๆ แสดงตาราง 3 
+                                                  // ถ้ามีการยกเลิกเมื่อไร ให้แสดงตาราง 4 กรณีอื่นๆ แสดงตาราง 3
                                                       if(aData['status_cancel_all']==1 ){ //มีการยกเลิก
 
                                                             $(".div_datatables_003").hide();
@@ -653,9 +653,12 @@ $(document).on('click', '.btnCancel', function(){
                                                             // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
                                                             // ถ้าไม่มีสินค้าในคลังเลย
                                                             if(aData['ch_amt_lot_wh']<=0){
-                                                                $(".div_btn_save").hide();
+                                                                // $(".div_btn_save").hide();
+                                                                $(".div_btn_save").show();
+                                                                console.log('not has');
                                                             }else{
                                                                 $(".div_btn_save").show();
+                                                                console.log('as');
                                                             }
 
                                                       }
@@ -664,12 +667,12 @@ $(document).on('click', '.btnCancel', function(){
 
                                           }
                                       });
-                                 
+
                                   });
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
                       // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
-                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO 
+                      // ตารางนี้เกิดจากการดึงข้อมูล FIFO
                                   $.fn.dataTable.ext.errMode = 'throw';
                                   var oTable0004;
                                   $(function() {
@@ -694,7 +697,7 @@ $(document).on('click', '.btnCancel', function(){
                                               {data: 'column_001', title :'<center> 4 </center> ', className: 'text-center '},
                                               {data: 'column_002', title :'<center>  </center> ', className: ''},
                                               {data: 'column_003', title :'<center>  </center> ', className: 'text-center'},
-                                                                   
+
                                           ],
                                           rowCallback: function(nRow, aData, dataIndex){
 
@@ -723,7 +726,7 @@ $(document).on('click', '.btnCancel', function(){
                                                                 $(".div_btn_save_004").hide();
                                                                 $(".div_btn_save_cancel").hide();
                                                               }
-                                                          
+
                                                       }else{  //มีการยกเลิก
                                                             // เช็ค สต๊อก ว่ามีสินค้าหรือไม่
                                                             // ถ้าไม่มีสินค้าในคลังเลย
@@ -738,47 +741,47 @@ $(document).on('click', '.btnCancel', function(){
                                                               if(aData['status_sent']!=4){
                                                                 $(".div_btn_save_004").show();
                                                               }
-                                                               
+
                                                             }
 
                                                       }
 
                                               }
 
-                            
+
 
                                           }
                                       });
-                                 
+
                                   });
-                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@                      
+                      // @@@@@@@@@@@@@@@@@@@@@@@@@ DataTable @@@@@@@@@@@@@@@@@@@@@@@
 
                           } // ปิด if(data==0){
 
                       } // ปิด success:function(data)
-                
+
                 }); // ปิด $.ajax({
 
 
  </script>
- 
+
     <script>
 
        $(document).on('click', '.btnSave', function(e) {
 
                 $(".myloading").show();
                 var invoice_code = "{{@$sRow->invoice_code}}";
-                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                  $.ajax({
 
-                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                       method: "post",
                       data: {
                         txtSearch:invoice_code,
-                        "_token": "{{ csrf_token() }}", 
+                        "_token": "{{ csrf_token() }}",
                       },
                       success:function(data)
-                      { 
+                      {
                           // console.log(data);
                           if(data==0){
                             Swal.fire({
@@ -797,7 +800,7 @@ $(document).on('click', '.btnCancel', function(){
                             $('#data-table-0003').DataTable().clear().draw();
 
                              setTimeout(function(){
-                                    
+
                                       $.ajax({
                                            type:'POST',
                                            url: " {{ url('backend/ajaxSearch_bill_db_orders002') }} ",
@@ -817,7 +820,7 @@ $(document).on('click', '.btnCancel', function(){
                                                             cancelButtonColor: "#f46a6a"
                                                             }).then(function (result) {
                                                                 if (result.value) {
-                                                                      
+
                                                                     $(".myloading").show();
 
                                                                      var txtSearch = "{{@$sRow->invoice_code}}";
@@ -829,7 +832,7 @@ $(document).on('click', '.btnCancel', function(){
                                                                           success:function(d2){
                                                                                console.log(d2);
                                                                                // return false;
-                                                                       
+
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
 
                                                                              $(".myloading").hide();
@@ -853,16 +856,16 @@ $(document).on('click', '.btnCancel', function(){
                                                       })
 
                                                       var txtSearch = $("input[name='txtSearch']").val();
-                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                                                        // $.ajax({
-                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                                                        //        method: "post",
                                                        //        data: {
                                                        //          txtSearch:txtSearch,
-                                                       //          "_token": "{{ csrf_token() }}", 
+                                                       //          "_token": "{{ csrf_token() }}",
                                                        //        },
                                                        //        success:function(data)
-                                                       //        { 
+                                                       //        {
                                                        //          console.log(data);
                                                        //          $(".myloading").hide();
                                                        //        }
@@ -871,16 +874,16 @@ $(document).on('click', '.btnCancel', function(){
                                                  } // ปิด if(data=="No_changed"){
 
                                               }, // ปิด success:function(data){
-                                        
+
                                         }); // ปิด $.ajax({
 
                                   }, 500); // ปิด setTimeout(function(){
-                                          
+
 
                           } // ปิด if(data==0){
 
                       } // ปิด success:function(data)
-                
+
                 }); // ปิด $.ajax({
 
          }); // ปิด $(document).on('click', '.btnSave'
@@ -894,17 +897,17 @@ $(document).on('click', '.btnCancel', function(){
 
                 $(".myloading").show();
                 var invoice_code = "{{@$sRow->invoice_code}}";
-                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                  $.ajax({
 
-                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                      url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                       method: "post",
                       data: {
                         txtSearch:invoice_code,
-                        "_token": "{{ csrf_token() }}", 
+                        "_token": "{{ csrf_token() }}",
                       },
                       success:function(data)
-                      { 
+                      {
                           // console.log(data);
                           if(data==0){
                             Swal.fire({
@@ -923,7 +926,7 @@ $(document).on('click', '.btnCancel', function(){
                             $('#data-table-0004').DataTable().clear().draw();
 
                              setTimeout(function(){
-                                    
+
                                       $.ajax({
                                            type:'POST',
                                            url: " {{ url('backend/ajaxSearch_bill_db_orders002') }} ",
@@ -943,7 +946,7 @@ $(document).on('click', '.btnCancel', function(){
                                                             cancelButtonColor: "#f46a6a"
                                                             }).then(function (result) {
                                                                 if (result.value) {
-                                                                      
+
                                                                     $(".myloading").show();
 
                                                                      var txtSearch = "{{@$sRow->invoice_code}}";
@@ -955,7 +958,7 @@ $(document).on('click', '.btnCancel', function(){
                                                                           success:function(d2){
                                                                                console.log(d2);
                                                                                // return false;
-                                                                       
+
                                                                           location.replace('{{ url("backend/pay_product_receipt") }}/'+d2+'/edit');
 
                                                                              $(".myloading").hide();
@@ -979,16 +982,16 @@ $(document).on('click', '.btnCancel', function(){
                                                       })
 
                                                       var txtSearch = $("input[name='txtSearch']").val();
-                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+                                                      // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
                                                        // $.ajax({
-                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ", 
+                                                       //        url: " {{ url('backend/ajaxSearch_bill_db_orders') }} ",
                                                        //        method: "post",
                                                        //        data: {
                                                        //          txtSearch:txtSearch,
-                                                       //          "_token": "{{ csrf_token() }}", 
+                                                       //          "_token": "{{ csrf_token() }}",
                                                        //        },
                                                        //        success:function(data)
-                                                       //        { 
+                                                       //        {
                                                        //          console.log(data);
                                                        //          $(".myloading").hide();
                                                        //        }
@@ -997,16 +1000,16 @@ $(document).on('click', '.btnCancel', function(){
                                                  } // ปิด if(data=="No_changed"){
 
                                               }, // ปิด success:function(data){
-                                        
+
                                         }); // ปิด $.ajax({
 
                                   }, 500); // ปิด setTimeout(function(){
-                                          
+
 
                           } // ปิด if(data==0){
 
                       } // ปิด success:function(data)
-                
+
                 }); // ปิด $.ajax({
 
          }); // ปิด $(document).on('click', '.btnSave'
@@ -1014,7 +1017,7 @@ $(document).on('click', '.btnCancel', function(){
     </script>
 
    <script type="text/javascript">
-     
+
     $(document).ready(function() {
 
            $(document).on('click', '.cDelete2', function(){
@@ -1035,15 +1038,15 @@ $(document).on('click', '.btnCancel', function(){
                           if (result.value) {
 
                              $.ajax({
-                                url: " {{ url('backend/cancel-some-pay_product_receipt_001') }} ", 
+                                url: " {{ url('backend/cancel-some-pay_product_receipt_001') }} ",
                                 method: "post",
                                 data: {
                                   invoice_code:invoice_code,
                                   time_pay:time_pay,
-                                  "_token": "{{ csrf_token() }}", 
+                                  "_token": "{{ csrf_token() }}",
                                 },
                                 success:function(data)
-                                { 
+                                {
                                   // console.log(data);
                                       Swal.fire({
                                         type: 'success',
@@ -1062,18 +1065,18 @@ $(document).on('click', '.btnCancel', function(){
                                           }else{
                                             location.reload();
                                           }
-                                          
+
                                       }, 1000);
                                 }
                               })
-                            
+
 
 
 
                           }
                     });
 
-             });   
+             });
 
     });
    </script>
@@ -1092,9 +1095,9 @@ $(document).on('click', '.btnCancel', function(){
                  window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
                  $(".myloading").hide();
               }, 500);
-              
+
             });
-                
+
       });
 
     </script>
