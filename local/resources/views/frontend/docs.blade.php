@@ -15,8 +15,8 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
             </div>
             <div class="card-block table-border-style">
 
-                {{-- @if ($check_kyc['status'] == 'fail') --}}
-                @if ($check_kyc['status'] == '99999')
+                @if ($check_kyc['status'] == 'fail')
+                {{-- @if ($check_kyc['status'] == '99999') --}}
                     <h4 class="sub-title"><i class="fa fa-upload"></i> @lang('message.send_additional_documents') </h4>
                     <form action="{{ route('docs_upload') }}" method="post" enctype="multipart/form-data">
                         @csrf
