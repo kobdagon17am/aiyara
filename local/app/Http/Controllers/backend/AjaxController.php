@@ -1264,6 +1264,8 @@ class AjaxController extends Controller
         $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
         $shipping_special = 0;
 
+
+
         // if($delivery_location == 0){//รับสินค้าด้วยตัวเอง
         //   $delivery_location_frontend = 'sent_office';
         // }elseif($delivery_location == 1){//ที่อยู่ตามบัตร ปชช.
@@ -1313,6 +1315,12 @@ class AjaxController extends Controller
             $province_id = 0 ;
         }
 
+        // กรณีค่าส่งฟรีชำระรวม
+        // if($frontstore_id=='1576'){
+        //   DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
+        //   return 0 ;
+        // }
+
         if(!empty($request->shipping_special)){
 
             // return $province_id;
@@ -1339,6 +1347,7 @@ class AjaxController extends Controller
                 // dd('dda');
                  if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น
                     // dd($delivery_location);
+
                 }else{
 // dd('k');
                         $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
@@ -1387,6 +1396,8 @@ class AjaxController extends Controller
           $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
 
           return   @$frontstore[0]->shipping_price;
+
+
 
 }else{
 
@@ -1453,7 +1464,7 @@ class AjaxController extends Controller
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
                 return 0 ;
             }else{
-
+              // shipping_cost
                 DB::select(" UPDATE db_orders SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
 
                  if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น

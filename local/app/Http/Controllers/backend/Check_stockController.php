@@ -329,67 +329,67 @@ class Check_stockController extends Controller
            $w09 = "";
         }
 
-      //  $sTable = DB::select("
+       $sTable = DB::select("
 
-      //   SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
-      //   '$w01' as w01,
-      //   '$w02' as w02,
-      //   '$w03' as w03,
-      //   '$w04' as w04,
-      //   '$w05' as w05,
-      //   '$w06' as w06,
-      //   '$w07' as w07,
-      //   '$w08' as w08,
-      //   '$w09' as w09
-      //    FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
-      //    WHERE 1
-      //    AND db_stocks.amt <> 0
-      //     $w01
-      //     $w02
-      //     $w03
-      //     $w04
-      //     $w05
-      //     $w06
-      //     $w07
-      //     $w08
-      //     $w09
+        SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
+        '$w01' as w01,
+        '$w02' as w02,
+        '$w03' as w03,
+        '$w04' as w04,
+        '$w05' as w05,
+        '$w06' as w06,
+        '$w07' as w07,
+        '$w08' as w08,
+        '$w09' as w09
+         FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
+         WHERE 1
+         AND db_stocks.amt <> 0
+          $w01
+          $w02
+          $w03
+          $w04
+          $w05
+          $w06
+          $w07
+          $w08
+          $w09
 
-      //   GROUP BY db_stocks.product_id_fk
-      //   ORDER BY products.product_code
+        GROUP BY db_stocks.product_id_fk
+        ORDER BY products.product_code
 
-      //   ");
-
-
+        ");
 
 
-      $sTable = DB::select("
 
-      SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
-      '$w01' as w01,
-      '$w02' as w02,
-      '$w03' as w03,
-      '$w04' as w04,
-      '$w05' as w05,
-      '$w06' as w06,
-      '$w07' as w07,
-      '$w08' as w08,
-      '$w09' as w09
-       FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
-       WHERE 1
-        $w01
-        $w02
-        $w03
-        $w04
-        $w05
-        $w06
-        $w07
-        $w08
-        $w09
 
-      GROUP BY db_stocks.product_id_fk
-      ORDER BY products.product_code
+      // $sTable = DB::select("
 
-      ");
+      // SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
+      // '$w01' as w01,
+      // '$w02' as w02,
+      // '$w03' as w03,
+      // '$w04' as w04,
+      // '$w05' as w05,
+      // '$w06' as w06,
+      // '$w07' as w07,
+      // '$w08' as w08,
+      // '$w09' as w09
+      //  FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
+      //  WHERE 1
+      //   $w01
+      //   $w02
+      //   $w03
+      //   $w04
+      //   $w05
+      //   $w06
+      //   $w07
+      //   $w08
+      //   $w09
+
+      // GROUP BY db_stocks.product_id_fk
+      // ORDER BY products.product_code
+
+      // ");
 
 
 
@@ -428,7 +428,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-
+          AND amt <> 0
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -451,7 +451,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-
+          AND amt <> 0
             GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -474,7 +474,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-
+          AND amt <> 0
 
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
@@ -499,7 +499,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-
+          AND amt <> 0
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = 0 ;
             foreach ($d as $key => $v) {
@@ -527,7 +527,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-
+          AND amt <> 0
            GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -559,7 +559,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-
+          AND amt <> 0
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -665,12 +665,9 @@ Inner Join db_transfer_warehouses_code ON db_transfer_warehouses_details.transfe
               ->make(true);
             }
 
-
-
         public function DatatableTransfer_branch(Request $req){
 
-
-              $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk);
+              $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk)->where('amt','!=',0);
 
               $sQuery = \DataTables::of($sTable);
               return $sQuery

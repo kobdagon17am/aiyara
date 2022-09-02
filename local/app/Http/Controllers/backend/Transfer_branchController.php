@@ -230,12 +230,16 @@ class Transfer_branchController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
+
+      $data_code = DB::table('db_transfer_branch_code')->where('id',$id)->first();
+
       if(!empty($request->approve_transfer_branch_code)){
-        // dd('ok');
+
             return $this->form($id);
 
       }else
-      if(!empty($request->approve_status_cutstock) && $request->approve_status==1){
+      // if(!empty($request->approve_status_cutstock) && $request->approve_status==1){
+        if(!empty($request->approve_status_cutstock) && $request->sub_approve_status==1 &&  $data_code->cut_off==0){
         // dd('ok2');
         $rsBranch_details = DB::select("
            select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
@@ -330,8 +334,9 @@ class Transfer_branchController extends Controller
           $Transfer_branch_get->created_at    = $sRow1->created_at;
 
 // อนุมัติ เท่านั้น
-          if($sRow1->approve_status==1){
-
+          // if($sRow1->approve_status==1){
+            if($sRow1->sub_approve_status==1 && $sRow1->cut_off!=1){
+// dd('ok');
     // สาขาปลายทางที่รับ
               $Transfer_branch_get->save();
               DB::select("  UPDATE `db_transfer_branch_details_log` SET remark=1 WHERE transfer_branch_code_id=".$sRow1->id."  ");
@@ -362,7 +367,8 @@ class Transfer_branchController extends Controller
 
           // เมื่อมีการอนุมัติแล้ว ต้องตัดออกจาก Stock
 
-           if($sRow1->approve_status==1){
+          //  if($sRow1->approve_status==1){
+            if($sRow1->sub_approve_status==1 && $sRow1->cut_off!=1){
 
                // ตัด Stock
               $db_select = DB::select("
@@ -630,7 +636,8 @@ class Transfer_branchController extends Controller
                          }
                       }
 
-
+                      $sRow1->cut_off = 1;
+                      $sRow1->save();
 
            }
 
@@ -840,7 +847,7 @@ class Transfer_branchController extends Controller
 
       foreach ($stocks as $stock) {
 
-        $displayName = "$stock->b_name / $stock->w_name / $stock->z_name / $stock->s_name ชั้น > $stock->shelf_floor (จำนวน : $stock->amt)";
+        $displayName = "$stock->lot_number / $stock->b_name / $stock->w_name / $stock->z_name / $stock->s_name ชั้น > $stock->shelf_floor (จำนวน : $stock->amt)";
 
         $options .= "<option value='$stock->id' data-amt='$stock->amt'>$displayName</option>";
 

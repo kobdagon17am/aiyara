@@ -240,7 +240,9 @@ class Po_approveController extends Controller
                 }
 
                      // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
-                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')->where('approve_status',1)->get();
+                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')
+                ->where('approve_status',1)
+                ->get();
 
                 foreach($other_bill as $b){
                     $sRow2 = \App\Models\Backend\Orders::find($b->id);
