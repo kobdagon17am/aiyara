@@ -37,7 +37,7 @@
 
               @if( empty(@$sRow) )
               <form action="{{ route('backend.transfer_branch.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-               
+
 
               @else
               <form action="{{ route('backend.transfer_branch.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
@@ -47,7 +47,7 @@
               @endif
                 {{ csrf_field() }}
 
-     
+
       @if( @$sRow->approve_status!='2' )
 
             <div class="myBorder div_confirm_transfer_branch ">
@@ -55,27 +55,84 @@
               <h4><i class="bx bx-play"></i> อนุมัติโอนสินค้า</h4>
 
                  <div class="form-group row">
-                      <label for="example-text-input" class="col-md-3 col-form-label"><i class="bx bx-play"></i>ผู้อนุมัติ (Admin Login) :</label>
+                      <label for="example-text-input" class="col-md-3 col-form-label"><i class="bx bx-play"></i>ผู้อนุมัติโอนสินค้า  :</label>
                       <div class="col-md-6">
                         @if( empty(@$sRow) )
                           <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                             <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="approver" >
                             @else
-                              <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                            <?php
+                            $approve_name = \DB::table('ck_users_admin')->select('name')->where('id',@$sRow->approver)->first();
+                            if($approve_name){
+                              $approve_name = $approve_name->name;
+                            }else{
+                              $approve_name = \Auth::user()->name;
+                            }
+                            ?>
+                              <input class="form-control" type="text" value="{{ $approve_name }}" readonly style="background-color: #f2f2f2;" >
                             <input class="form-control" type="hidden" value="{{ @$sRow->approver?@$sRow->approver:@\Auth::user()->id }}" name="approver" >
                          @endif
-                          
+
                       </div>
                   </div>
 
-                <div class="form-group row">
-                    <label class="col-md-3 col-form-label"><i class="bx bx-play"></i>สถานะการอนุมัติ :</label>
+                  <div class="form-group row">
+                    <label for="example-text-input" class="col-md-3 col-form-label"><i class="bx bx-play"></i>ผู้อนุมัติโอนสินค้าเอกสาร  :</label>
+                    <div class="col-md-6">
+                      @if( empty(@$sRow) )
+                        <input class="form-control" type="text" value="{{ \Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
+                          <input class="form-control" type="hidden" value="{{ \Auth::user()->id }}" name="sub_approver" >
+                          @else
+                          <?php
+                          $sub_approve_name = \DB::table('ck_users_admin')->select('name')->where('id',@$sRow->sub_approver)->first();
+                          if($sub_approve_name){
+                            $sub_approve_name = $sub_approve_name->name;
+                          }else{
+                            $sub_approve_name = \Auth::user()->name;
+                          }
+                          ?>
+                            <input class="form-control" type="text" value="{{ $sub_approve_name }}" readonly style="background-color: #f2f2f2;" >
+                          <input class="form-control" type="hidden" value="{{ @$sRow->sub_approver?@$sRow->sub_approver:@\Auth::user()->id }}" name="sub_approver" >
+                       @endif
+
+                    </div>
+                </div>
+
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label"><i class="bx bx-play"></i>สถานะการอนุมัติเอกสาร :</label>
                     <div class="col-md-3 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" required  >
+                          <input type="radio" class="" id="customSwitch11" name="sub_approve_status" value="1" required  >
                         @else
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" required {{ ( @$sRow->approve_status=='1')?'checked':'' }}>
+                          <input type="radio" class="" id="customSwitch11" name="sub_approve_status" value="1" required {{ ( @$sRow->sub_approve_status=='1')?'checked':'' }}>
+                        @endif
+                          <label for="customSwitch11">อนุมัติ / Aproved</label>
+                      </div>
+                    </div>
+                     <div class="col-md-6 mt-2">
+                      <div class=" ">
+                        @if( empty($sRow) )
+                          <input type="radio" class="" id="customSwitch22" name="sub_approve_status" value="3" required >
+                        @else
+                          <input type="radio" class="" id="customSwitch22" name="sub_approve_status" value="3" required {{ ( @$sRow->sub_approve_status=='3')?'checked':'' }}>
+                        @endif
+                          <label class="" for="customSwitch22">ไม่อนุมัติ / No Aproved</label>
+                      </div>
+                    </div>
+
+                </div>
+
+                @if( @$sRow->sub_approve_status=='1')
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label"><i class="bx bx-play"></i>สถานะการอนุมัติโอนสินค้า :</label>
+                    <div class="col-md-3 mt-2">
+                      <div class=" ">
+                        @if( empty($sRow) )
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1"  >
+                        @else
+                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }}>
                         @endif
                           <label for="customSwitch1">อนุมัติ / Aproved</label>
                       </div>
@@ -83,15 +140,17 @@
                      <div class="col-md-6 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" required >
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" >
                         @else
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" required {{ ( @$sRow->approve_status=='3')?'checked':'' }}>
+                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" {{ ( @$sRow->approve_status=='3')?'checked':'' }}>
                         @endif
                           <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
                       </div>
                     </div>
 
                 </div>
+
+                @endif
 
                         <div class="form-group row">
                           {{-- required_star_red  --}}
@@ -109,8 +168,8 @@
                     </a>
                   </div>
                   <div class="col-md-6 text-right">
-                  
-                  @if( @$sRow->approve_status=='0' )  
+
+                  @if( @$sRow->approve_status=='0' )
                     <button type="submit" class="btn btn-primary btn-sm waves-effect">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                     </button>
@@ -131,7 +190,7 @@
                           </div>
             @endif
 
- 
+
             </div>
         </div>
     </div> <!-- end col -->
@@ -195,7 +254,7 @@
               rowCallback: function(nRow, aData, dataIndex){
               }
           });
-       
+
       });
 
 
@@ -243,7 +302,7 @@
                 },
 
           });
-        
+
       });
 
 
