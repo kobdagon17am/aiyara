@@ -982,10 +982,40 @@
                                                                     @ENDIF
                                                                     {{-- วุฒิเพิ่ม --}}
                                                                     <div class="col-md-6">
-                                                                        <input name="bill_transfer_other"
+                                                                        {{-- <input name="bill_transfer_other"
                                                                             id="bill_transfer_other" class="form-control"
                                                                             placeholder="(ระบุ) หมายเหตุ * กรณีจัดส่งพร้อมบิลอื่น "
-                                                                            value="{{ @$sRow->bill_transfer_other }}">
+                                                                            value="{{ @$sRow->bill_transfer_other }}"> --}}
+                                                                            <?php
+                                                                        $r_invoice_code = \DB::table('db_orders')
+                                                                            ->select('code_order')
+                                                                            ->orderBy('code_order', 'desc')
+                                                                            ->get();
+                                                                        ?>
+                                                                        @if (@$r_invoice_code)
+                                                                            <select id="bill_transfer_other"
+                                                                                name="bill_transfer_other"
+                                                                                class="form-control bill_transfer_other_select2 ch_Disabled"
+                                                                                order_id="{{ @$sRow->id }}">
+                                                                                <option value="">
+                                                                                    กรุณาเลือกเลขบิลที่จัดส่งร่วม</option>
+                                                                                @foreach (@$r_invoice_code as $r)
+                                                                                    <option value="{{ $r->code_order }}"
+                                                                                        <?php if ($r->code_order == @$sRow->bill_transfer_other) {
+                                                                                            echo 'selected';
+                                                                                        } ?>>
+                                                                                        {{ $r->code_order }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        @else
+                                                                            <select
+                                                                                class="form-control select2-templating ">
+                                                                                <option value="">
+                                                                                    กรุณาเลือกเลขบิลที่ชำระร่วม</option>
+                                                                            </select>
+                                                                        @endif
+
                                                                     </div>
                                                                 </th>
                                                             </tr>
@@ -1738,7 +1768,7 @@
                                                                             order_id="{{ @$sRow->id }}"
                                                                             {{ @$sRow->pay_with_other_bill == 1 ? 'checked' : '' }}>
                                                                         <label
-                                                                            for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น</label>
+                                                                            for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น <span style="color:red;">(หากเป็นบิลหลักไม่ต้องเลือก)</span></label>
                                                                         <br>
 
                                                                         {{-- <input {{ @$disAfterSave }} type="text"
@@ -2900,6 +2930,7 @@
 
 
             $('.order_id_select2').select2();
+            $('.bill_transfer_other_select2').select2();
 
         });
     </script>

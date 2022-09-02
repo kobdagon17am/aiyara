@@ -8,7 +8,7 @@
     .border-left-0 {height: 67%;}
 
     .form-group {
-        margin-bottom: 0rem  !important; 
+        margin-bottom: 0rem  !important;
      }
 
     .btn-outline-secondary {
@@ -38,7 +38,7 @@
 
            <?php if(!empty(@$sTransfer_chooseAll) && count($sTransfer_chooseAll)==0){ ?>
               <button type="button" class="btn btn-primary btn-sm btnAddTransferItem " style="font-size: 14px !important;" >
-               + เพิ่มรายการโอนสินค้า 
+               + เพิ่มรายการโอนสินค้า
               </button>
           <?php } ?>
 
@@ -118,11 +118,11 @@
                                  @if(@$sBranchs)
                                   @foreach(@$sBranchs AS $r)
                                    @if($sPermission==1)
-                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
-                                    @else 
-                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk)) 
+                                    @else
+                                     @if($r->business_location_id_fk==(\Auth::user()->business_location_id_fk))
                                     <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
                                     @endif
                                     @endif
@@ -146,7 +146,7 @@
                                  @if(@$toBranchs)
                                   @foreach(@$toBranchs AS $r)
                                     <option value="{{$r->id}}"  >
-                                      {{$r->b_name}} 
+                                      {{$r->b_name}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -164,7 +164,7 @@
                                  @if(@$Transfer_branch_status)
                                   @foreach(@$Transfer_branch_status AS $r)
                                     <option value="{{$r->id}}"  >
-                                      {{$r->txt_from}} 
+                                      {{$r->txt_from}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -202,7 +202,7 @@
                   </div>
                 </div>
               </div>
-              
+
 
             <div class="row div_TransferList " style="margin-bottom: 2% !important;"  >
                 <div class="col-md-6 " style="margin-top: -1% !important;" >
@@ -223,7 +223,7 @@
                   </div>
                 </div>
 
-    
+
                 <div class="col-md-6 " style="margin-top: -0.5% !important;" >
                   <div class="form-group row">
                     <label for="branch_id_fk" class="col-md-3 col-form-label">  </label>
@@ -303,7 +303,7 @@
                                  @if(@$toBranchs)
                                   @foreach(@$toBranchs AS $r)
                                     <option value="{{$r->id}}"  >
-                                      {{$r->b_name}} 
+                                      {{$r->b_name}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -356,7 +356,7 @@
                   <div class="row" style="" >
                     <div class="col-md-12 text-center divBtnSave "  >
                       <button type="submit" class="btn btn-primary btn-sm waves-effect btnSave " style="font-size: 14px !important;" >
-                      <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก สร้างใบโอน 
+                      <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก สร้างใบโอน
                       </button>
                     </div>
                   </div>
@@ -461,7 +461,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
                 <div class="row" >
                     <div class="col-md-6 " >
                       <div class="form-group row">
@@ -548,7 +548,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-               
+
                 <div class="row" >
                     <div class="col-md-6 " >
                       <div class="form-group row">
@@ -665,14 +665,14 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -687,7 +687,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -698,14 +698,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -719,7 +719,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -730,14 +730,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -750,7 +750,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -762,14 +762,14 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -784,7 +784,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -795,14 +795,14 @@
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -816,7 +816,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -827,14 +827,14 @@
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -847,7 +847,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -912,7 +912,7 @@
                   }},
                   {data: 'tr_status_from', title :'<center> ฝั่งส่ง </center>', className: 'text-center'},
                   {data: 'tr_status_to', title :'<center> ฝั่งรับ </center>', className: 'text-center'},
-                  {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                  {data: 'id', title :'Tools', className: 'text-center w80'},
               ],
               rowCallback: function(nRow, aData, dataIndex){
 
@@ -934,10 +934,10 @@
 
               }
           });
-     
+
       });
 
-    
+
 
     $(document).ready(function() {
         $(document).on('click', '.btnSearch', function(event) {
@@ -950,7 +950,7 @@
 
           $("#branch_id_select_to_transfer").val(branch_id_fk);
           $("#branch_id_select_to_transfer_to").val(branch_id_fk_to);
-          
+
           if(branch_id_fk==''){
             $("#branch_id_fk").select2('open');
             return false;
@@ -1000,19 +1000,19 @@
 
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
-                                                
+
                       var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
                     }
 
                 });
-              
+
             });
 
                   $('#exampleModalCenter').modal('show');
           }
-          
+
         });
     });
 
@@ -1033,6 +1033,7 @@
             "info":     false,
             destroy: true,
             searching: false,
+            iDisplayLength: 500,
             // paging: false,
             ajax: {
               url: '{{ route('backend.transfer_choose_branch.datatable') }}',
@@ -1074,23 +1075,24 @@
                           return  "<span style='color:red;'>* รอเลือกสาขาปลายทาง </span>";
                        }
                   }},
-                  {data: 'id', title :'Tools', className: 'text-center w150'}, 
+                  {data: 'id', title :'Tools', className: 'text-center w150'},
                 ],
                 rowCallback: function(nRow, aData, dataIndex){
 
                   var info = $(this).DataTable().page.info();
                       $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
-               
+
 
                       $('td:last-child', nRow).html(''
                         + '<input type="hidden" name="transfer_choose_id[]" value="'+aData['id']+'"> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose_branch.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        // + '<a href="javascript: void(0);" data-url="{{ route('backend.transfer_choose_branch.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="{{url('backend/transfer_choose_branch_delete/')}}/'+aData['id']+'" class="btn btn-sm btn-danger " onclick="return confirm(\'ยืนยันการทำรายการ\');"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
-                      
+
 
           });
-        
+
       });
 
 
@@ -1115,7 +1117,7 @@
            event.preventDefault();
            var v = $(this).val();
            $("#branch_id_select_to_transfer_to").val(v);
-        
+
        });
     });
 
@@ -1155,7 +1157,7 @@
                     return false;
                   }
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
-                      
+
                       var oTable;
                       $(function() {
                           oTable = $('#data-table-transfer-list').DataTable({
@@ -1169,7 +1171,7 @@
                               destroy: true,
                               // scrollY: ''+($(window).height()-370)+'px',
                               iDisplayLength: 25,
-                              
+
                               ajax: {
                                       url: '{{ route('backend.transfer_branch_code.datatable') }}',
                                       data :{
@@ -1181,7 +1183,7 @@
                                             startDate:startDate,
                                             endDate:endDate,
                                             tr_number:tr_number,
-                                            action_user:action_user,                                 
+                                            action_user:action_user,
                                           },
                                         method: 'POST',
                                       },
@@ -1209,7 +1211,7 @@
                                     }},
                                     {data: 'tr_status_from', title :'<center> ฝั่งส่ง </center>', className: 'text-center'},
                                     {data: 'tr_status_to', title :'<center> ฝั่งรับ </center>', className: 'text-center'},
-                                    {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                                    {data: 'id', title :'Tools', className: 'text-center w80'},
                                 ],
                                 rowCallback: function(nRow, aData, dataIndex){
 
@@ -1238,19 +1240,19 @@
                    $(".myloading").hide();
                 }, 1500);
 
-               
+
             });
           });
 
     </script>
-    
+
 
 <script type="text/javascript">
 
     $(document).ready(function() {
 
       // $("#exampleModalCenter").modal({ show : true });
-      
+
 
        $(window).keydown(function(event){
           if(event.keyCode == 13) {
@@ -1335,14 +1337,14 @@
 
              if(branch_id_fk != ''){
                $.ajax({
-                     url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                     url: " {{ url('backend/ajaxGetWarehouse') }} ",
                     method: "post",
                     data: {
                       branch_id_fk:branch_id_fk,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                      if(data == ''){
                          alert('ไม่พบข้อมูลคลัง !!.');
                      }else{
@@ -1361,7 +1363,7 @@
                 $('#zone_id_fk_c').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
                 $('#shelf_id_fk_c').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
              }
-  
+
              $("#id_set_to_warehouse").val(id);
              $('#branch_id_fk_c').attr("disabled", true);
              $('#setToWarehouseModal').modal('show');
@@ -1384,11 +1386,11 @@
                  $.ajax({
 
                        type:'POST',
-                       url: " {{ url('backend/ajaxGetSetToWarehouseBranch') }} ", 
+                       url: " {{ url('backend/ajaxGetSetToWarehouseBranch') }} ",
                        data:{ _token: '{{csrf_token()}}',id:id },
                         success:function(data){
-                             
-                             console.log(data); 
+
+                             console.log(data);
 
                                 var obj = JSON.parse(data);
                                 $.each(obj, function( index, value ) {
@@ -1406,13 +1408,13 @@
                                 $('#setToWarehouseModalEdit').modal('show');
 
                           },
-                        error: function(jqXHR, textStatus, errorThrown) { 
+                        error: function(jqXHR, textStatus, errorThrown) {
                             console.log(JSON.stringify(jqXHR));
                             console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                         }
                   });
 
-       
+
            }
 
 
@@ -1443,7 +1445,7 @@
         $(document).on('click', '.cDelete', function(event) {
               setTimeout(function(){
                 location.reload();
-              }, 3000);  
+              }, 3000);
         });
 
         $(document).on('click', '.cCancel', function(event) {
@@ -1451,7 +1453,7 @@
               var id = $(this).data('id');
               $('#id_to_cancel').val(id);
               $('#modalNote').modal('show');
-           
+
         });
 
 
@@ -1462,17 +1464,17 @@
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
-                       alert('ไม่พบข้อมูลคลัง !!.'); 
-                       $("#warehouse_id_search").val('').trigger('change'); 
+                       alert('ไม่พบข้อมูลคลัง !!.');
+                       $("#warehouse_id_search").val('').trigger('change');
                        $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
                    }else{
                        var layout = '<option value="" selected>- เลือกคลัง -</option>';
@@ -1484,7 +1486,7 @@
                   }
                 })
            }
- 
+
       });
 
 
@@ -1525,26 +1527,26 @@
           $('#endDate').val($(this).val());
         }
 
-      });   
+      });
 
 
      $(document).on('click', '.test_clear_data_transfer_branch', function(event) {
-      
+
 
           if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? ")){
               return false;
           }else{
-          
+
                 location.replace( window.location.href+"?test_clear_data_transfer_branch=test_clear_data_transfer_branch ");
           }
 
-   
+
       });
 
 
     </script>
 
-    <?php 
+    <?php
     if(isset($_REQUEST['test_clear_data_transfer_branch'])){
 
           DB::select("TRUNCATE `db_transfer_choose_branch`;");
@@ -1598,7 +1600,7 @@
 
           });
 
-    </script> 
+    </script>
 
     <!-- Scripts For Requisition -->
     <script>
@@ -1636,11 +1638,11 @@
           <input type='hidden' name='branch_id_fk' value='${toBranchId}' />
           <input type='hidden' name='to_branch_id_fk' value='${fromBranchId}' />
           <tr>
-            <td>${detail.product_name}</td>  
+            <td>${detail.product_name}</td>
             <td>
               <input type='hidden' name='lists[${detail.id}][product_id]' value='${detail.product_id}' />
-              <input type='number' name='lists[${detail.id}][amount]' class='form-control product-amount-${detail.product_id}' value='${detail.amount}'>  
-            </td>  
+              <input type='number' name='lists[${detail.id}][amount]' class='form-control product-amount-${detail.product_id}' value='${detail.amount}'>
+            </td>
             <td>
               <select class='form-control product-stock-${detail.product_id} select-stock' name='lists[${detail.id}][stock]' data-product_id='${detail.product_id}'>
               </select>
@@ -1692,7 +1694,7 @@
             $('#requisitionSubmitBtn').attr('disabled', true)
           }
         })
-      } 
+      }
     </script>
 @endsection
 

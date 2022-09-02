@@ -13,7 +13,7 @@ class Transfer_branch_get_productsController extends Controller
     public function index(Request $request)
     {
 
-      
+
     }
 
  public function create(Request $request)
@@ -34,10 +34,10 @@ class Transfer_branch_get_productsController extends Controller
                       `amt_get`,
                       `product_unit_id_fk`,
                       `branch_id_fk`,
-                      `warehouse_id_fk`, 
-                      `zone_id_fk`, 
-                      `shelf_id_fk`, 
-                      `shelf_floor`, 
+                      `warehouse_id_fk`,
+                      `zone_id_fk`,
+                      `shelf_id_fk`,
+                      `shelf_floor`,
                       `action_user`,
                       `action_date`
                       ) VALUES (
@@ -80,16 +80,16 @@ class Transfer_branch_get_productsController extends Controller
               $ch2 = DB::select("SELECT sum(product_amt_receive + defective) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
                      //  วุฒิเพิ่ม || $ch1[0]->r < $ch2[0]->r
               if($ch1[0]->r == $ch2[0]->r || $ch1[0]->r < $ch2[0]->r){
-              
+
                   DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=4 where id=".$request->transfer_branch_get_id_fk." ");
 
                   $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
                  DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from=4 where tr_number='".$r[0]->tr_number."' ");
-              
+
               }else{
                       DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=3 where id=".$request->transfer_branch_get_id_fk." ");
                 //  DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
-      
+
               }
 
               return redirect()->to(url("backend/transfer_branch_get/".$request->transfer_branch_get_id_fk."/edit"));
@@ -105,10 +105,10 @@ class Transfer_branch_get_productsController extends Controller
                       `amt_get`,
                       `product_unit_id_fk`,
                       `branch_id_fk`,
-                      `warehouse_id_fk`, 
-                      `zone_id_fk`, 
-                      `shelf_id_fk`, 
-                      `shelf_floor`, 
+                      `warehouse_id_fk`,
+                      `zone_id_fk`,
+                      `shelf_id_fk`,
+                      `shelf_floor`,
                       `action_user`,
                       `action_date`
                       ) VALUES (
@@ -142,15 +142,15 @@ class Transfer_branch_get_productsController extends Controller
                    $ch2 = DB::select("SELECT sum(product_amt_receive + defective) as r FROM `db_transfer_branch_get_products`  WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." GROUP BY transfer_branch_get_id_fk ; ");
                          //  วุฒิเพิ่ม || $ch1[0]->r < $ch2[0]->r
                    if($ch1[0]->r == $ch2[0]->r || $ch1[0]->r < $ch2[0]->r){
-              
+
               // รออนุมัติก่อน
               // $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
               // DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='6' where tr_number='".$r[0]->tr_number."' ");
 
                 DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
-              
+
               }else{
-                
+
                 $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
                 DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='5' where tr_number='".$r[0]->tr_number."' ");
 
@@ -163,7 +163,7 @@ class Transfer_branch_get_productsController extends Controller
         }else{
             return $this->form();
         }
-      // 
+      //
     }
 
     public function transfer_branch_get_products_defective(Request $request)
@@ -180,10 +180,10 @@ class Transfer_branch_get_productsController extends Controller
             `amt_get`,
             `product_unit_id_fk`,
             `branch_id_fk`,
-            `warehouse_id_fk`, 
-            `zone_id_fk`, 
-            `shelf_id_fk`, 
-            `shelf_floor`, 
+            `warehouse_id_fk`,
+            `zone_id_fk`,
+            `shelf_id_fk`,
+            `shelf_floor`,
             `action_user`,
             `action_date`
             ) VALUES (
@@ -212,7 +212,7 @@ class Transfer_branch_get_productsController extends Controller
               $db_transfer_branch_get_products = DB::table('db_transfer_branch_get_products')->where('id',$request->transfer_branch_get_products_id_fk)->first();
               $amt_balance = 0;
               $amt_balance += $db_transfer_branch_get_products->product_amt_receive+$db_transfer_branch_get_products->defective;
-     
+
               DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt=".$amt_balance."; ");
               DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='1' where id=".$request->transfer_branch_get_products_id_fk." AND product_amt<".$amt_balance." ; ");
               DB::select(" UPDATE `db_transfer_branch_get_products` SET `product_amt_receive`='0' WHERE `product_amt_receive` is null ; ");
@@ -228,17 +228,17 @@ class Transfer_branch_get_productsController extends Controller
 
                   $r =  DB::select(" SELECT tr_number from `db_transfer_branch_get`  where id=".$request->transfer_branch_get_id_fk." ");
                  DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from=4 where tr_number='".$r[0]->tr_number."' ");
-              
+
               }else{
                 // dd($request->transfer_branch_get_id_fk.' ok2'.' '.$ch1[0]->r.' < '.$ch2[0]->r);
                  DB::select(" UPDATE `db_transfer_branch_get` SET tr_status_get=3 where id=".$request->transfer_branch_get_id_fk." ");
                 //  DB::select(" UPDATE `db_transfer_branch_get_products` SET `get_status`='2' WHERE transfer_branch_get_id_fk=".$request->transfer_branch_get_id_fk." ");
-      
+
               }
               return redirect()->to(url("backend/transfer_branch_get/".$request->transfer_branch_get_id_fk."/edit"));
 
         }
-      // 
+      //
     }
 
     public function edit($id)
@@ -289,7 +289,7 @@ class Transfer_branch_get_productsController extends Controller
           \DB::commit();
 
            return redirect()->to(url("backend/transfer_branch_get/".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -314,12 +314,12 @@ class Transfer_branch_get_productsController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
- 
+
       ->addColumn('product_name', function($row) {
                   // return $row->product_unit_id_fk;
         if(!empty($row->product_id_fk)){
 
-          $Products = DB::select(" 
+          $Products = DB::select("
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
@@ -367,12 +367,12 @@ class Transfer_branch_get_productsController extends Controller
           }else{
             return 0 ;
           }
-          
+
       })
       ->addColumn('product_details', function($row) {
             if(!empty($row->product_id_fk)){
 
-                $Products = DB::select(" 
+                $Products = DB::select("
                       SELECT products.id as product_id,
                         products.product_code,
                         (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
@@ -408,14 +408,14 @@ class Transfer_branch_get_productsController extends Controller
           $db_transfer_branch_details = DB::select(" select branch_id_fk from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
           $sBranchs = DB::select(" select * from branchs where id=".$db_transfer_branch_details[0]->branch_id_fk." ");
           return @$sBranchs[0]->b_name;
-      }) 
+      })
       ->escapeColumns('branch_name')
       ->addColumn('branch_id_this', function($row) {
           $db_transfer_branch_get = DB::select(" select tr_number from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
           $db_transfer_branch_code = DB::select(" select id from `db_transfer_branch_code` where tr_number='".$db_transfer_branch_get[0]->tr_number."' ");
           $db_transfer_branch_details = DB::select(" select branch_id_fk from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
           return @$db_transfer_branch_details[0]->branch_id_fk;
-      }) 
+      })
       ->escapeColumns('branch_id_this')
       ->addColumn('product_unit_id_fk', function($row) {
           if($row->product_unit) return $row->product_unit;
@@ -432,7 +432,7 @@ class Transfer_branch_get_productsController extends Controller
             $db_transfer_branch_details = DB::select(" select lot_number,lot_expired_date from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
             return $db_transfer_branch_details[0]->lot_expired_date;
       })
-      
+
       ->addColumn('lot_number_desc', function($row) {
             $db_transfer_branch_get = DB::select(" select tr_number from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
             $db_transfer_branch_code = DB::select(" select id from `db_transfer_branch_code` where tr_number='".$db_transfer_branch_get[0]->tr_number."' ");
@@ -498,7 +498,7 @@ class Transfer_branch_get_productsController extends Controller
       ->addColumn('product_name', function($row) {
         if(!empty($row->product_id_fk)){
 
-          $Products = DB::select(" 
+          $Products = DB::select("
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
@@ -529,7 +529,7 @@ class Transfer_branch_get_productsController extends Controller
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         // return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
         return @$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
-      })   
+      })
       ->addColumn('tr_status_get', function($row) {
           $d = DB::select(" select tr_status_get from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
           if($d){
@@ -537,7 +537,7 @@ class Transfer_branch_get_productsController extends Controller
           }else{
             return 0 ;
           }
-          
+
       })
       ->make(true);
     }
@@ -545,14 +545,12 @@ class Transfer_branch_get_productsController extends Controller
 
     public function Datatable03(Request $req){
 
-
-
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
 
         if($sPermission==1){
-            
-          $sTable = \App\Models\Backend\Transfer_branch_code::whereIn('tr_status_from',[2,3,5]) 
+
+          $sTable = \App\Models\Backend\Transfer_branch_code::whereIn('tr_status_from',[2,3,5])
           // ->where(function ($query) use ($w01,$w02) {
           //     $query->whereIn('transfer_branch_get_id_fk', $w01)
           //           ->orWhereIn('transfer_branch_get_id_fk', $w02);
@@ -567,16 +565,16 @@ class Transfer_branch_get_productsController extends Controller
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-         
+
          $sP = DB::select("SELECT * FROM `db_transfer_branch_details` where transfer_branch_code_id=$row->id ");
-        
+
          $pn = '';
 
          foreach ($sP as $key => $v) {
-            
+
                    if(!empty($v->product_id_fk)){
 
-                    $Products = DB::select(" 
+                    $Products = DB::select("
                           SELECT products.id as product_id,
                             products.product_code,
                             (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
@@ -591,7 +589,7 @@ class Transfer_branch_get_productsController extends Controller
                      ");
 
                     $sPunit = \App\Models\Backend\Product_unit::find($v->product_unit_id_fk);
-                  
+
 
                       $pn .= @$Products[0]->product_code." : ".@$Products[0]->product_name
                       ."<br>[".@$v->lot_number." :Expr. ".@$v->lot_expired_date."]"
@@ -622,16 +620,16 @@ class Transfer_branch_get_productsController extends Controller
 
              $Transfer_branch_status = \App\Models\Backend\Transfer_branch_status::where('id',$row->tr_status_from)->get();
              $t1 .= @$Transfer_branch_status[0]->txt_from;
-            
+
 
               $sD = DB::select(" select approve_status,note2,tr_status_get,note3,updated_at from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
 
               if(@$sD){
-                
+
                        // if(@$sD[0]->tr_status_get==4 || @$sD[0]->tr_status_get==5){
 
                        //  $t2 .= '<span style="color:red">ปฏิเสธรับ</span><br>';
-       
+
                        // }
 
                     // $t2 .= '<span style="color:green">Note: '.@$sD[0]->note2.'</span><br>';
@@ -657,16 +655,16 @@ class Transfer_branch_get_productsController extends Controller
 
              $Transfer_branch_status = \App\Models\Backend\Transfer_branch_status::where('id',$row->tr_status_to)->get();
              $t1 .= @$Transfer_branch_status[0]->txt_to;
-            
+
 
               $sD = DB::select(" select approve_status,note2,tr_status_get,note3,updated_at from `db_transfer_branch_get` where tr_number='".$row->tr_number."' ");
 
               if(@$sD){
-                
+
                        // if(@$sD[0]->tr_status_get==4 || @$sD[0]->tr_status_get==5){
 
                        //  $t2 .= '<span style="color:red">ปฏิเสธรับ</span><br>';
-       
+
                        // }
 
                     // $t2 .= '<span style="color:green">Note: '.@$sD[0]->note2.'</span><br>';
@@ -712,7 +710,7 @@ class Transfer_branch_get_productsController extends Controller
 
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
-      })               
+      })
       ->make(true);
     }
 
@@ -725,12 +723,12 @@ class Transfer_branch_get_productsController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
- 
+
       ->addColumn('product_name', function($row) {
                   // return $row->product_unit_id_fk;
         if(!empty($row->product_id_fk)){
 
-          $Products = DB::select(" 
+          $Products = DB::select("
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
@@ -776,12 +774,12 @@ class Transfer_branch_get_productsController extends Controller
           }else{
             return 0 ;
           }
-          
+
       })
       ->addColumn('product_details', function($row) {
             if(!empty($row->product_id_fk)){
 
-                $Products = DB::select(" 
+                $Products = DB::select("
                       SELECT products.id as product_id,
                         products.product_code,
                         (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
@@ -818,7 +816,7 @@ class Transfer_branch_get_productsController extends Controller
           // $sBranchs = DB::select(" select * from branchs where id=".$db_transfer_branch_details[0]->branch_id_fk." ");
           $sBranchs = DB::select(" select * from branchs where id=". @\Auth::user()->branch_id_fk." ");
           return @$sBranchs[0]->b_name;
-      }) 
+      })
       ->escapeColumns('branch_name')
       ->addColumn('branch_id_this', function($row) {
           $db_transfer_branch_get = DB::select(" select tr_number from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
@@ -826,7 +824,7 @@ class Transfer_branch_get_productsController extends Controller
           $db_transfer_branch_details = DB::select(" select branch_id_fk from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
           // return @$db_transfer_branch_details[0]->branch_id_fk;
           return @\Auth::user()->branch_id_fk;
-      }) 
+      })
       ->escapeColumns('branch_id_this')
       ->addColumn('product_unit_id_fk', function($row) {
           if($row->product_unit) return $row->product_unit;
@@ -843,7 +841,7 @@ class Transfer_branch_get_productsController extends Controller
             $db_transfer_branch_details = DB::select(" select lot_number,lot_expired_date from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
             return $db_transfer_branch_details[0]->lot_expired_date;
       })
-      
+
       ->addColumn('lot_number_desc', function($row) {
             $db_transfer_branch_get = DB::select(" select tr_number from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
             $db_transfer_branch_code = DB::select(" select id from `db_transfer_branch_code` where tr_number='".$db_transfer_branch_get[0]->tr_number."' ");

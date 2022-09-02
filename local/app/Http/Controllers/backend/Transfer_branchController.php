@@ -62,7 +62,7 @@ class Transfer_branchController extends Controller
           $User_branch_id = @$User_branch_id?$User_branch_id:0;
           $toBranchs = DB::select("SELECT * from branchs where id not in($User_branch_id) ");
         }
-        
+
         // dd($toBranchs);
 
         $Zone = \App\Models\Backend\Zone::get();
@@ -230,13 +230,17 @@ class Transfer_branchController extends Controller
     public function update(Request $request, $id)
     {
       // dd($request->all());
+
+      $data_code = DB::table('db_transfer_branch_code')->where('id',$id)->first();
+
       if(!empty($request->approve_transfer_branch_code)){
+
             return $this->form($id);
 
       }else
-      if(!empty($request->approve_status_cutstock) && $request->approve_status==1){
-          // dd($request->approve_status);
-
+      // if(!empty($request->approve_status_cutstock) && $request->approve_status==1){
+        if(!empty($request->approve_status_cutstock) && $request->sub_approve_status==1 &&  $data_code->cut_off==0){
+        // dd('ok2');
         $rsBranch_details = DB::select("
            select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
         $arr1 = [];
@@ -263,7 +267,7 @@ class Transfer_branchController extends Controller
 
 
       }else{
-
+        // dd('ok3');
         return $this->form($id);
 
       }
@@ -310,16 +314,15 @@ class Transfer_branchController extends Controller
 
           // }
 
-
-
-          $sRow1->approver    = \Auth::user()->id;
-          $sRow1->approve_status    = request('approve_status');
+          $sRow1->approver    = (request('approve_status'))?\Auth::user()->id:null;
+          $sRow1->sub_approver    =  (request('sub_approve_status'))?\Auth::user()->id:null;
+          $sRow1->approve_status    = (request('approve_status'))?request('approve_status'):0;
+          $sRow1->sub_approve_status    = (request('sub_approve_status'))?request('sub_approve_status'):0;
           $sRow1->approve_note    = request('approve_note');
           $sRow1->tr_status_from    = 2 ;
-          $sRow1->approve_date = date('Y-m-d H:i:s');
-
+          $sRow1->approve_date = (request('approve_status'))?date('Y-m-d H:i:s'):null;
+          $sRow1->sub_approve_date = (request('sub_approve_status'))?date('Y-m-d H:i:s'):null;
           $sRow1->save();
-
 
           $Transfer_branch_get = new \App\Models\Backend\Transfer_branch_get;
           $Transfer_branch_get->business_location_id_fk    = $sRow1->business_location_id_fk;
@@ -331,13 +334,14 @@ class Transfer_branchController extends Controller
           $Transfer_branch_get->created_at    = $sRow1->created_at;
 
 // อนุมัติ เท่านั้น
-          if($sRow1->approve_status==1){
-
+          // if($sRow1->approve_status==1){
+            if($sRow1->sub_approve_status==1 && $sRow1->cut_off!=1){
+// dd('ok');
     // สาขาปลายทางที่รับ
               $Transfer_branch_get->save();
               DB::select("  UPDATE `db_transfer_branch_details_log` SET remark=1 WHERE transfer_branch_code_id=".$sRow1->id."  ");
               // เมื่อมีการรับเข้าแล้ว นำเข้า Stock ด้วย
-         
+
             // ส่วนของสินค้า ก็รับเข้ามาจากใบโอนสินค้าจากสาชาต้นทางเลย
               $r_product = DB::select("  SELECT * FROM `db_transfer_branch_details` WHERE transfer_branch_code_id=".$sRow1->id."  ");
 
@@ -363,14 +367,15 @@ class Transfer_branchController extends Controller
 
           // เมื่อมีการอนุมัติแล้ว ต้องตัดออกจาก Stock
 
-           if($sRow1->approve_status==1){
+          //  if($sRow1->approve_status==1){
+            if($sRow1->sub_approve_status==1 && $sRow1->cut_off!=1){
 
                // ตัด Stock
               $db_select = DB::select("
-                select 
+                select
                   db_transfer_branch_details.*,db_transfer_branch_code.tr_number,db_transfer_branch_code.business_location_id_fk,db_transfer_branch_code.note
-                  from db_transfer_branch_details 
-                  LEFT JOIN db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id=db_transfer_branch_code.id 
+                  from db_transfer_branch_details
+                  LEFT JOIN db_transfer_branch_code ON db_transfer_branch_details.transfer_branch_code_id=db_transfer_branch_code.id
                   where db_transfer_branch_details.transfer_branch_code_id =".$sRow1->id."
                  ");
 
@@ -495,13 +500,13 @@ class Transfer_branchController extends Controller
                 db_transfer_branch_details_log
                 left Join db_transfer_branch_code ON db_transfer_branch_details_log.transfer_branch_code_id = db_transfer_branch_code.id
                 WHERE db_transfer_branch_code.tr_number='$ref_doc' ");
-           
+
                if(!empty($branch_get)){
 
 
                      foreach ($branch_get as $key => $sRow) {
 
-      // ฝั่นรับโอน ถ้ามี บวกยอดคลังเข้า ถ้ายังไม่มี สร้างรายการคลังเพิ่ม 
+      // ฝั่นรับโอน ถ้ามี บวกยอดคลังเข้า ถ้ายังไม่มี สร้างรายการคลังเพิ่ม
                       // $value=DB::table('db_stocks')
                       // ->where('business_location_id_fk', $sRow->business_location_id_fk )
                       // ->where('branch_id_fk', $sRow->branch_id_fk )
@@ -576,7 +581,7 @@ class Transfer_branchController extends Controller
                           // $General_takeout = \App\Models\Backend\General_takeout::find($sRow->id);
                           // @$ref_doc = @$General_takeout[0]->ref_doc;
          // ฝั่งรับโอน
-                  
+
                           $value=DB::table('db_stock_movement')
                           ->where('stock_type_id_fk', @$stock_type_id_fk?$stock_type_id_fk:0 )
                           ->where('stock_id_fk', @$stock_id_fk?$stock_id_fk:0 )
@@ -631,7 +636,8 @@ class Transfer_branchController extends Controller
                          }
                       }
 
-
+                      $sRow1->cut_off = 1;
+                      $sRow1->save();
 
            }
 
@@ -668,7 +674,7 @@ class Transfer_branchController extends Controller
 
         if(@\Auth::user()->permission==1){
 
-                             
+
                 if(isset($req->id)){
                       $sTable = \App\Models\Backend\Transfer_branch::where('id',$req->id)->search()->orderBy('id', 'asc');
                 }else{
@@ -678,7 +684,7 @@ class Transfer_branchController extends Controller
 
         }else{
 
-                             
+
                 if(isset($req->id)){
                       $sTable = \App\Models\Backend\Transfer_branch::where('branch_id_fk',$User_branch_id)->where('id',$req->id)->search()->orderBy('id', 'asc');
                 }else{
@@ -816,7 +822,7 @@ class Transfer_branchController extends Controller
         })
         ->addColumn('actions', function ($requisition) {
           // dd($requisition->requisition_details);
-          return 
+          return
             "<button type='button' class='btn btn-primary btn-sm waves-effect waves-light' data-toggle='modal' data-target='.modal-requisition-details' data-details='$requisition->requisition_details' data-to_branch_id='$requisition->to_branch_id' data-from_branch_id='$requisition->from_branch_id'>
               <i class='fas fa-edit'></i>
             </button>";
@@ -841,7 +847,7 @@ class Transfer_branchController extends Controller
 
       foreach ($stocks as $stock) {
 
-        $displayName = "$stock->b_name / $stock->w_name / $stock->z_name / $stock->s_name ชั้น > $stock->shelf_floor (จำนวน : $stock->amt)";
+        $displayName = "$stock->lot_number / $stock->b_name / $stock->w_name / $stock->z_name / $stock->s_name ชั้น > $stock->shelf_floor (จำนวน : $stock->amt)";
 
         $options .= "<option value='$stock->id' data-amt='$stock->amt'>$displayName</option>";
 
@@ -872,13 +878,13 @@ class Transfer_branchController extends Controller
         $transferBranchCode->update([
           'tr_number' => $ref_doc,
         ]);
-        
+
         foreach ($request->lists as $key => $value) {
 
-        if($value['stock']!=null && $value['stock']!=''){  
+        if($value['stock']!=null && $value['stock']!=''){
           $requisitionBetweenBranchDetail = RequisitionBetweenBranchDetail::find($key);
           $requisitionBetweenBranchDetail->update([
-            'amount' => $value['amount'] 
+            'amount' => $value['amount']
           ]);
           $requisitionBetweenBranchDetail->requisition->update(['is_transfer' => 1]);
 
@@ -905,7 +911,7 @@ class Transfer_branchController extends Controller
           DB::table('db_transfer_branch_details_log')->insert($dataDetails);
         }
         }
-        
+
         DB::commit();
         return redirect()->route('backend.transfer_branch.edit', $transferBranchCode->id);
       } catch (\Exception $e) {

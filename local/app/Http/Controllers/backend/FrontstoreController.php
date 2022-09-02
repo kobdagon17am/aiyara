@@ -1710,8 +1710,6 @@ class FrontstoreController extends Controller
     }
   }
 
-
-
   public static function fncUpdateDeliveryAddress($id)
   {
     $sRow = \App\Models\Backend\Frontstore::find($id);

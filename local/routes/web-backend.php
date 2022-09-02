@@ -932,6 +932,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('transfer_choose_branch', 'Transfer_choose_branchController');
     Route::post('transfer_choose_branch/datatable', 'Transfer_choose_branchController@Datatable')->name('transfer_choose_branch.datatable');
+    Route::get('transfer_choose_branch_delete/{id}', 'Transfer_choose_branchController@destroy');
 
     Route::resource('general_takeout', 'General_takeoutController');
     Route::post('general_takeout/datatable', 'General_takeoutController@Datatable')->name('general_takeout.datatable');
