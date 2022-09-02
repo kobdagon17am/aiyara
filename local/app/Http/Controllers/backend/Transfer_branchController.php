@@ -122,7 +122,7 @@ class Transfer_branchController extends Controller
     public function store(Request $request)
     {
       if(isset($request->save_select_to_transfer)){
-        // dd($request->all());
+        // dd($request->all()); save_select_to_cancel
 
         for ($i=0; $i < count($request->id) ; $i++) {
             $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
@@ -196,6 +196,36 @@ class Transfer_branchController extends Controller
               return redirect()->to(url("backend/transfer_branch"));
 
       }else if(isset($request->save_select_to_cancel)){
+
+
+        $can_data = DB::table('db_transfer_branch_code')->where('id',$request->id_to_cancel)->first();
+        if($can_data){
+          // dd($can_data);
+        // ยกเลิกรายการ
+        if($can_data->sub_approve_status==1 && $can_data->cut_off==1){
+          if($can_data->tr_status_to<=2){
+              $item_log = DB::table('db_transfer_branch_details')->select('stocks_id_fk','product_id_fk','amt')->where('transfer_branch_code_id',$can_data->id)->get();
+              foreach($item_log as $item){
+                $stock_data = DB::table('db_stocks')->select('amt')->where('id',$item->stocks_id_fk)->where('product_id_fk',$item->product_id_fk)->first();
+                if($stock_data){
+                  DB::table('db_stocks')->where('id',$item->stocks_id_fk)->where('product_id_fk',$item->product_id_fk)->update([
+                    'amt' => ($stock_data->amt + $item->amt),
+                  ]);
+                   // ถ้าลบ movement
+                   $stock_movement = DB::table('db_stock_movement')->where('ref_doc',$can_data->tr_number)->where('in_out',2)->delete();
+
+                  //ถ้าอัพเดท
+                  // $stock_movement = DB::table('db_stock_movement')->where('ref_doc',$can_data->tr_number)->where('in_out',2)->get();
+                  // foreach($stock_movement as ){
+
+                  // }
+
+                }
+              }
+          }
+
+      }
+    }
 
           DB::update(" UPDATE db_transfer_branch_code
             SET
@@ -661,6 +691,10 @@ class Transfer_branchController extends Controller
     public function destroy($id)
     {
       $sRow = \App\Models\Backend\Transfer_branch::find($id);
+// dd($sRow);
+      // if(){
+
+      // }
       if( $sRow ){
         $sRow->forceDelete();
       }

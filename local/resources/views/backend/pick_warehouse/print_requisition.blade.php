@@ -526,3 +526,37 @@ if(!empty($Products)){
     </div>
 
 </div>
+
+
+<br>
+
+<b>ส่วนงานคลังสินค้า</b>
+
+<div class="NameAndAddress" >
+
+  <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
+    <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
+
+      <tr>
+        <td  style="border-left: 1px solid #ccc; text-align: center;"> ผู้อนุมัติเบิกสินค้า
+        <br>       <br>
+        วันที่ ...............................
+         </td>
+
+
+        <td style="border-left: 1px solid #ccc; text-align:center;"> ผู้จ่ายสินค้า
+        <br>       <br>
+        วันที่ ...............................
+        </td>
+
+        <td style="border-left: 1px solid #ccc; text-align:center;"> ผู้ตรวจสอบสินค้า
+        <br>       <br>
+        วันที่ ...............................
+        </td>
+
+      </tr>
+
+    </table>
+  </div>
+
+</div>
