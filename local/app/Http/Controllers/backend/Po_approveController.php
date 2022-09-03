@@ -25,11 +25,11 @@ class Po_approveController extends Controller
 
 
         if(@\Auth::user()->permission==1){
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order,created_at desc limit 500 ");
+            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order,created_at desc limit 5000 ");
         }else{
             // $code_order = DB::select(" select code_order from db_orders where action_user=".\Auth::user()->id." order by code_order,created_at desc limit 500 ");
             // $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 and branch_id_fk=".\Auth::user()->branch_id_fk." OR pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 and action_user=".\Auth::user()->id." order by code_order,created_at desc limit 500 ");
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 AND branch_id_fk=".\Auth::user()->branch_id_fk." order by code_order,created_at desc limit 500 ");
+            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 AND branch_id_fk=".\Auth::user()->branch_id_fk." order by code_order,created_at desc limit 1000 ");
         }
 // dd($code_order);
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
@@ -226,8 +226,20 @@ class Po_approveController extends Controller
                   // dd('lk');
                     if ($sRow->order_channel == 'VIP') {
                       $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
+                      if($data['status']!='fail'){
+                        $sRow->order_status_id_fk = '5';
+                        // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+                        // return false;
+                      }
+
                     } else {
                       $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+
+                      if($data['status']!='fail'){
+                        $sRow->order_status_id_fk = '5';
+                        // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+                        // return false;
+                      }
                     }
                 }
 
@@ -251,7 +263,7 @@ class Po_approveController extends Controller
                     $sRow2->updated_at = now();
                     if (@request('approved') != null) {
                         $sRow2->status_slip = 'true';
-                        $sRow2->order_status_id_fk = '5';
+                        // $sRow2->order_status_id_fk = '5';
                         $sRow2->approve_status  = 2;
                         $sRow2->transfer_bill_status  = 2;
                         if(!empty($request->slip_ids)){
@@ -301,8 +313,18 @@ class Po_approveController extends Controller
                       // dd($sRow);
                         if ($sRow2->order_channel == 'VIP') {
                           $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($b->id, \Auth::user()->id, '1', 'admin');
+                          if($data['status']!='fail'){
+                            $sRow2->order_status_id_fk = '5';
+                            // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+                            // return false;
+                          }
                         } else {
                           $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($b->id, \Auth::user()->id, '1', 'admin');
+                          if($data['status']!='fail'){
+                            $sRow2->order_status_id_fk = '5';
+                            // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+                            // return false;
+                          }
                         }
                     }
 
