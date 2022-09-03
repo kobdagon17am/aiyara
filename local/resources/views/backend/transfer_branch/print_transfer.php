@@ -476,60 +476,28 @@ tr.border_bottom td {
 
 <br>
 
+<b>ส่วนงานคลังสินค้า</b>
+
 <div class="NameAndAddress" >
 
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
 
       <tr>
-
-        <td  style="border-left: 1px solid #ccc;"> ผู้ทำรายการโอน
-
-        <br>
-        <?=@$action_user?>
-        <br>
-           วันที่ <?=@$action_date?>
+        <td  style="border-left: 1px solid #ccc; text-align: center;"> ผู้อนุมัติเบิกสินค้า
+        <br>       <br>
+        วันที่ ...............................
          </td>
 
 
-        <td style="border-left: 1px solid #ccc;"> ผู้อนุมัติ
-        <br>
-        <?=@$approver?>
-        <br>
-        วันที่ <?=@$approve_date?>
+        <td style="border-left: 1px solid #ccc; text-align:center;"> ผู้จ่ายสินค้า
+        <br>       <br>
+        วันที่ ...............................
         </td>
 
-
-            <?php
-                 @$tr_number = $tr_number[0]->tr_number?$tr_number[0]->tr_number:0;
-                 $branch_get = DB::select("
-                    SELECT
-                        db_transfer_branch_get.approve_date,
-                        ck_users_admin.`name` as who_get
-                        FROM
-                        db_transfer_branch_get
-                        LEFT Join ck_users_admin ON db_transfer_branch_get.approver = ck_users_admin.id
-                        WHERE
-                        tr_number =  '".@$tr_number."'
-                 ");
-
-
-            if(@$branch_get[0]->approve_date!=''){
-              // $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date)+543);
-              $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date));
-            }else{
-              $get_date =  ' * รอฝั่งรับโอน รับสินค้า * ';
-            }
-
-
-            ?>
-
-
-        <td style="border-left: 1px solid #ccc;"> ผู้รับ
-        <br>
-        <?=@$branch_get[0]->who_get?$branch_get[0]->who_get:''?>
-        <br>
-         <?=@$get_date?>
+        <td style="border-left: 1px solid #ccc; text-align:center;"> ผู้ตรวจสอบสินค้า
+        <br>       <br>
+        วันที่ ...............................
         </td>
 
       </tr>

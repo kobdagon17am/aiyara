@@ -982,39 +982,11 @@
                                                                     @ENDIF
                                                                     {{-- วุฒิเพิ่ม --}}
                                                                     <div class="col-md-6">
-                                                                        {{-- <input name="bill_transfer_other"
+                                                                        <input name="bill_transfer_other"
                                                                             id="bill_transfer_other" class="form-control"
                                                                             placeholder="(ระบุ) หมายเหตุ * กรณีจัดส่งพร้อมบิลอื่น "
-                                                                            value="{{ @$sRow->bill_transfer_other }}"> --}}
-                                                                            <?php
-                                                                        $r_invoice_code = \DB::table('db_orders')
-                                                                            ->select('code_order')
-                                                                            ->orderBy('code_order', 'desc')
-                                                                            ->get();
-                                                                        ?>
-                                                                        @if (@$r_invoice_code)
-                                                                            <select id="bill_transfer_other"
-                                                                                name="bill_transfer_other"
-                                                                                class="form-control bill_transfer_other_select2 ch_Disabled"
-                                                                                order_id="{{ @$sRow->id }}">
-                                                                                <option value="">
-                                                                                    กรุณาเลือกเลขบิลที่จัดส่งร่วม</option>
-                                                                                @foreach (@$r_invoice_code as $r)
-                                                                                    <option value="{{ $r->code_order }}"
-                                                                                        <?php if ($r->code_order == @$sRow->bill_transfer_other) {
-                                                                                            echo 'selected';
-                                                                                        } ?>>
-                                                                                        {{ $r->code_order }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        @else
-                                                                            <select
-                                                                                class="form-control select2-templating ">
-                                                                                <option value="">
-                                                                                    กรุณาเลือกเลขบิลที่ชำระร่วม</option>
-                                                                            </select>
-                                                                        @endif
+                                                                            value="{{ @$sRow->bill_transfer_other }}">
+
 
                                                                     </div>
                                                                 </th>
