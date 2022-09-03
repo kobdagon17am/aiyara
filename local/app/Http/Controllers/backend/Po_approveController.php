@@ -223,6 +223,7 @@ class Po_approveController extends Controller
 
 
                 if (@request('approved') != null) {
+                  // dd('lk');
                     if ($sRow->order_channel == 'VIP') {
                       $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
                     } else {
@@ -267,7 +268,7 @@ class Po_approveController extends Controller
                         // $sRow2->approval_amount_transfer = $sRow2->transfer_price;
                         $sRow2->approval_amount_transfer = 0;
                         $sRow2->approval_amount_transfer_over = 0;
-                        $sRow->approval_amount_transfer_over_status = 0;
+                        $sRow2->approval_amount_transfer_over_status = 0;
                         $sRow2->account_bank_name_customer = $request->account_bank;
                         $sRow2->transfer_amount_approver = \Auth::user()->id;
                         $sRow2->transfer_bill_date  = $request->transfer_bill_date;
@@ -284,7 +285,7 @@ class Po_approveController extends Controller
                         $sRow2->status_slip = 'true';
                         $sRow2->approval_amount_transfer = 0 ;
                         $sRow2->approval_amount_transfer_over = 0;
-                        $sRow->approval_amount_transfer_over_status = 0;
+                        $sRow2->approval_amount_transfer_over_status = 0;
                         $sRow2->account_bank_name_customer = 0;
                         $sRow2->transfer_amount_approver =  \Auth::user()->id;
                         $sRow2->transfer_bill_date  = NULL;
@@ -297,10 +298,11 @@ class Po_approveController extends Controller
 
 
                     if (@request('approved') != null) {
+                      // dd($sRow);
                         if ($sRow2->order_channel == 'VIP') {
-                          $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
+                          $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($b->id, \Auth::user()->id, '1', 'admin');
                         } else {
-                          $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+                          $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($b->id, \Auth::user()->id, '1', 'admin');
                         }
                     }
 
