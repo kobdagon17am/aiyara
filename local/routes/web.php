@@ -35,3 +35,4 @@ require_once('web-frontend.php');
 require_once('web-backend.php');
 
 Route::get('lang/{lang}', 'LocaleController@lang');
+
