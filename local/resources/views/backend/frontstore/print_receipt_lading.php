@@ -916,7 +916,7 @@ if(!empty($db_orders[0]->action_user)){
                       }
 
   //  $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
-  $address = !empty($address) ? $address . ' ' .'<br>'.$tel : NULL;
+  $address = !empty($address) ? $address . ' ' .$tel : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("
@@ -1284,8 +1284,11 @@ for ($j=0; $j < $amt_page ; $j++) {
         </tr>
     </table>
 
-    <table
-        style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;">
+    <!-- <table
+        style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;"> -->
+
+        <table
+        style="margin-left:10px !important;margin-top:25px !important;border-collapse: collapse;height: 150px !important;">
 
 
         <!-- รายการสินค้า -->
@@ -1353,7 +1356,8 @@ for ($j=0; $j < $amt_page ; $j++) {
     </table>
 
 
-    <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;">
+    <!-- <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;"> -->
+    <table style="">
         <tr>
             <td colspan="2" style="margin-left:33px !important;width:80%;font-size: 14px;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+16) ; "); ?>
