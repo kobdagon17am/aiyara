@@ -19,16 +19,26 @@ class RunErrorController extends Controller
     // dd($rs);
 
     // dd('qqq');
-    // $x = 1350*4;
-    // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A684135',$x,1, $order_code = null);
+    // $x = 1350*2;
+    // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A873120',$x,1, $order_code = null);
     // dd($rs);
+    //Cancle_pv
+    //Runpv
 
   //  $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code(1,'product');
   //  dd($rs);
 
+//   $order_data = DB::table('db_orders')
+//   ->where('code_order', '=', 'O122082800679')
+//   ->first();
 
-  // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist(4,2438,'A223356','A223356','O122083000964',1089);
-  // dd($rs);
+//   $user = DB::table('customers')
+//   ->select('id', 'pv_aistockist', 'user_name')
+//   ->where('id', '=',$order_data->customers_id_fk)
+//   ->first();
+
+//   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
+//   dd($rs,$user->user_name);
   }
 
   public static function run_invoice_code(){
@@ -649,6 +659,8 @@ class RunErrorController extends Controller
           ->select('id', 'pv_aistockist', 'user_name')
           ->where('user_name', '=', $username)
           ->first();
+
+        //   dd($user);
 
         $to_customer = DB::table('customers')
           ->select('id', 'pv_aistockist', 'user_name', 'pv_mt_active', 'status_pv_mt', 'pv_mt', 'pv_tv', 'pv')
