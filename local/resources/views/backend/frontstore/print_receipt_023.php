@@ -704,6 +704,9 @@ if(!empty($db_orders[0]->action_user)){
       //
 
             if(!empty(@$address_in_order[0]->provname)){
+
+              @$address_in_order[0]->house_no = str_replace("(ตย.)"," ",@$address_in_order[0]->house_no);
+
               @$cus_address = @$address_in_order[0]->house_no." ". @$address_in_order[0]->house_name." ". @$address_in_order[0]->moo."";
               @$cus_address .= @$address_in_order[0]->soi." ". @$address_in_order[0]->road;
               @$cus_address .= ", ต.". @$address_in_order[0]->tamname. " ";
@@ -950,7 +953,8 @@ if(!empty($db_orders[0]->action_user)){
                         }
 
                       }
-   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
+  //  $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
+  $address = !empty($address) ? ' '. $address . ' ' . $tel : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("

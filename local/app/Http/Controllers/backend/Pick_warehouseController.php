@@ -169,6 +169,15 @@ class Pick_warehouseController extends Controller
     }
 
 
+    public function delete_test($id)
+    {
+          $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->select('id')->where('pick_pack_requisition_code_id_fk',15)->get();
+          foreach( $db_pay_requisition_002 as $data ){
+              $item_data = DB::table('db_pay_requisition_002_item')->select('id')->where('requisition_002_id',$data->id)->where('pick_pack_requisition_code_id_fk',15)->first();
+          }
+    }
+
+
     public function qr($id)
     {
       // return $id;
