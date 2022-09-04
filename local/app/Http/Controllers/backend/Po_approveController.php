@@ -174,7 +174,7 @@ class Po_approveController extends Controller
                           ]);
                         }
                     }
-                    // approval_amount_transfer
+                    // approval_amount_transfer payment_slip
                     $sRow->approval_amount_transfer = $request->approval_amount_transfer;
                     $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
                     $sRow->approval_amount_transfer_over_status = $request->approval_amount_transfer_over_status;
@@ -266,16 +266,16 @@ class Po_approveController extends Controller
                         // $sRow2->order_status_id_fk = '5';
                         $sRow2->approve_status  = 2;
                         $sRow2->transfer_bill_status  = 2;
-                        if(!empty($request->slip_ids)){
-                            for ($i=0; $i < count($request->slip_ids) ; $i++) {
-                              DB::table('payment_slip')->where('id',$request->slip_ids[$i])->update([
-                                  'note' => $request->slip_note[$i],
-                                  'code_order' => $sRow2->code_order,
-                                  'status' => 2,
-                                  'transfer_bill_date' => $request->transfer_bill_date[$i],
-                              ]);
-                            }
-                        }
+                        // if(!empty($request->slip_ids)){
+                        //     for ($i=0; $i < count($request->slip_ids) ; $i++) {
+                        //       DB::table('payment_slip')->where('id',$request->slip_ids[$i])->update([
+                        //           'note' => $request->slip_note[$i],
+                        //           'code_order' => $sRow2->code_order,
+                        //           'status' => 2,
+                        //           'transfer_bill_date' => $request->transfer_bill_date[$i],
+                        //       ]);
+                        //     }
+                        // }
                         // วุฒ็เปลี่ยนเป็น 0
                         // $sRow2->approval_amount_transfer = $sRow2->transfer_price;
                         $sRow2->approval_amount_transfer = 0;

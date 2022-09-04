@@ -2090,10 +2090,10 @@
                                                                                 {{-- <img src="{{ $slip->url }}/{{ @$slip->file }}"
                                                                                     style="margin-top: 5px;height: 180px;"> --}}
 
-                                                                                <button type="button"
+                                                                                {{-- <button type="button"
                                                                                     data-id="{{ @$slip->id }}"
                                                                                     class="btn btn-danger btn-sm font-size-10 btnDelSlip ch_Disabled "
-                                                                                    style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                                                                                    style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> --}}
 
                                                                                 <input {{ @$disAfterSave }}
                                                                                     type="text"
