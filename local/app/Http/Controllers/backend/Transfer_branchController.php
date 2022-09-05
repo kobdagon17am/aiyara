@@ -198,6 +198,7 @@ class Transfer_branchController extends Controller
       }else if(isset($request->save_select_to_cancel)){
 
 
+        // วุฒิเพิ่มมายกเลิก
         $can_data = DB::table('db_transfer_branch_code')->where('id',$request->id_to_cancel)->first();
         if($can_data){
           // dd($can_data);
