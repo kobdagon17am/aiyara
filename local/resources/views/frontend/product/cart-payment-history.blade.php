@@ -1,8 +1,8 @@
 @extends('frontend.layouts.customer.customer_app')
-@section('css')
-@endsection
+
 @section('conten')
     <!-- Invoice card start -->
+
     <div class="card">
 
         <div class="card-block">
@@ -40,6 +40,7 @@
                     }
 
                     ?>
+
                     <h6>ที่อยู่การจัดส่ง : <span class="label label-{{ $order->css_class }}">{{ $address_sent }}</span>
                     </h6>
                     @if ($address)
@@ -98,6 +99,7 @@
                             {{ $sent_to_customer_data->last_name }} ({{ $sent_to_customer_data->user_name }})
                         </p>
                     @endif
+
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6>Order Information :</h6>
@@ -220,6 +222,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+
                                 @foreach ($order_items as $index => $value)
                                     <tr>
                                         <td>
@@ -297,6 +300,8 @@
 
                                     </tr>
                                 @endforeach
+
+
 
 
                             </tbody>
@@ -388,6 +393,7 @@
 
 
                 </div>
+
                 <div class="col-sm-6">
                     <table class="table table-responsive invoice-table invoice-total">
                         <tbody>
@@ -475,6 +481,7 @@
 
 
                 </div>
+
             </div>
 
         </div>
@@ -499,6 +506,7 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     @foreach ($file_slip as $value)
                     <tr>
                         <td>
@@ -511,7 +519,7 @@
                           <?php
                           if ($value->status == '2') {
 
-                              $status = "<span class='badge badge-success> อนุมัติ </span>";
+                              $status = "<span class='badge badge-success'> อนุมัติ </span>";
                           } elseif ($value->status == '3') {
                               $status = "<span class='badge badge-danger'> ไม่อนุมัติ </span>";
                           }else{
@@ -526,6 +534,7 @@
                         </td>
                     </tr>
                 @endforeach
+
                 </tbody>
             </table>
           </div>
@@ -535,5 +544,4 @@
   @endif
 
 @endsection
-@section('js')
-@endsection
+

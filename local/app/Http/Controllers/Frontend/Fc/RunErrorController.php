@@ -37,7 +37,7 @@ class RunErrorController extends Controller
   //  dd($rs);
 
 //   $order_data = DB::table('db_orders')
-//   ->where('code_order', '=', 'O122082800679')
+//   ->where('code_order', '=', 'O122083101256')
 //   ->first();
 
 //   $user = DB::table('customers')
@@ -49,12 +49,22 @@ class RunErrorController extends Controller
 //   dd($rs,$user->user_name);
 
 
-  $order_data = DB::table('db_orders')
-  ->where('code_order', '=', 'O122090201518')
-  ->first();
+ $order_data = DB::table('db_orders')
+  ->wherein('code_order',
+  ['O122083101194'])
+  ->where('status_run_pv','=','not_run_pv')
+  ->get(); 
+dd($order_data);
+  $i=0;
+  
+  foreach($order_data as $value){
+    $i++;
+    $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'');
+    $data[][$i]=$rs;
+  }
 
-  $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($order_data->id, $order_data->approver, $order_data->distribution_channel_id_fk,'');
-  dd($rs,$order_data->code_order);
+ 
+dd($data);
   }
 
   public static function run_invoice_code(){
@@ -63,6 +73,7 @@ class RunErrorController extends Controller
     // ->orwhere('invoice_code_id_fk', '!=', null)
     ->orderBy('id')
     ->get();
+
 
     $i = 0;
     foreach($order as $value){
@@ -768,14 +779,15 @@ class RunErrorController extends Controller
 
         $type_id = $order_data->purchase_type_id_fk;
         $business_location_id = $order_data->business_location_id_fk;
-
+       
         if (empty($order_id) || empty($admin_id)) {
+            
             $resule = ['status' => 'fail', 'message' => 'Data is Null'];
             DB::rollback();
             return $resule;
 
         } else {
-
+      
             try {
 
                 if ($order_data->delivery_location_frontend == 'sent_office') {
@@ -1353,7 +1365,7 @@ class RunErrorController extends Controller
                             $customer_update->date_mt_first = date('Y-m-d h:i:s');
                             $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
                         }
-
+                        $order_update->status_run_pv = 'success';
 
 
                 } elseif ($type_id == 5) { // Ai Voucher
