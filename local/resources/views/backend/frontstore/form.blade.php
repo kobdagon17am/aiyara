@@ -1740,7 +1740,7 @@
                                                                             order_id="{{ @$sRow->id }}"
                                                                             {{ @$sRow->pay_with_other_bill == 1 ? 'checked' : '' }}>
                                                                         <label
-                                                                            for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น <span style="color:red;">(หากเป็นบิลหลักไม่ต้องเลือก)</span></label>
+                                                                            for="pay_with_other_bill">&nbsp;&nbsp;ชำระพร้อมบิลอื่น <span style="color:red;">(หากเป็นบิลหลักไม่ต้องติ๊กเครื่องหมายถูก)</span></label>
                                                                         <br>
 
                                                                         {{-- <input {{ @$disAfterSave }} type="text"
