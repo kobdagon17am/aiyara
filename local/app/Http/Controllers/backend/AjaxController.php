@@ -785,7 +785,7 @@ class AjaxController extends Controller
        $id = $data_id->id;
        $data = [$id];
 
-       $pdf = PDF::loadView('backend.transfer_branch.print_transfer',compact('data'));
+       $pdf = PDF::loadView('backend.transfer_branch.print_transfer_tr',compact('data'));
        // $pdf->setPaper('A4', 'landscape');
        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
