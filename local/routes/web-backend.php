@@ -743,6 +743,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('po_supplier', 'Po_supplierController');
     Route::post('po_supplier/datatable', 'Po_supplierController@Datatable')->name('po_supplier.datatable');
+    Route::get('po_supplier_delete_list/{id}', 'Po_supplierController@po_supplier_delete_list');
 
     Route::resource('po_supplier_products', 'Po_supplier_productsController');
     Route::post('po_supplier_products/datatable', 'Po_supplier_productsController@Datatable')->name('po_supplier_products.datatable');

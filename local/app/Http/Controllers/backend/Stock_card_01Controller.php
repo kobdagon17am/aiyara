@@ -241,14 +241,14 @@ class Stock_card_01Controller extends Controller
             DB::select(" SET @csum := 0; ");
             $sTable = DB::select("
                 SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain
-                FROM $temp_db_stock_card
+                FROM $temp_db_stock_card ORDER BY created_at asc
             ");
       }else{
 
         DB::select(" SET @csum := 0; ");
         $sTable = DB::select("
             SELECT $temp_db_stock_card.*,(@csum := @csum + ( CASE WHEN amt_out>0 THEN -(amt_out) ELSE amt_in END )) as remain
-            FROM $temp_db_stock_card
+            FROM $temp_db_stock_card ORDER BY created_at asc
         ");
 
       }

@@ -52,7 +52,7 @@ class Po_supplierController extends Controller
            'po_number'=>$po_number,
         ) );
       // return view('backend.po_supplier.index');
-      
+
     }
 
  public function create()
@@ -123,7 +123,7 @@ class Po_supplierController extends Controller
       }else{
             return $this->form($id);
       }
-      
+
     }
 
    public function form($id=NULL)
@@ -151,7 +151,7 @@ class Po_supplierController extends Controller
           \DB::commit();
 
            return redirect()->to(url("backend/po_supplier/".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -167,6 +167,16 @@ class Po_supplierController extends Controller
         $sRow->forceDelete();
       }
       return response()->json(\App\Models\Alert::Msg('success'));
+    }
+
+    public function po_supplier_delete_list($id)
+    {
+      $sRow = \App\Models\Backend\Po_supplier_products::find($id);
+      if( $sRow ){
+        $sRow->forceDelete();
+      }
+      // return response()->json(\App\Models\Alert::Msg('success'));
+      return redirect()->back()->with('success','success');
     }
 
     public function Datatable(Request $req){
