@@ -344,7 +344,11 @@ class Check_money_dailyController extends Controller
             $sRow->save();
 //  `approve_status` int(11) DEFAULT '0' COMMENT ' 0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)''',
 // `status_sent_money` int(1) DEFAULT '0' COMMENT '0= - (รอดำเนินการ) , 1=In process (cs กดปุ่มส่งเงินแล้ว)  , 2=Success (พ.เงิน กดรับเงินแล้ว)',
-            DB::update(" UPDATE db_orders SET approve_status=9,status_sent_money=2 WHERE id in($sRow->orders_ids) ");
+
+            // DB::update(" UPDATE db_orders SET approve_status=9,status_sent_money=2 WHERE id in($sRow->orders_ids) ");
+
+            // วุฒิแก้ไม่ให้เปลี่ยนสถานะ
+            DB::update(" UPDATE db_orders SET status_sent_money=2 WHERE id in($sRow->orders_ids) ");
 
             // // wut ai cash
             // $ai = DB::table('db_add_ai_cash')->where('sent_money_daily_id_fk',request('id'))->first();
