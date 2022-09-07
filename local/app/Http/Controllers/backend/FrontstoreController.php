@@ -430,7 +430,7 @@ class FrontstoreController extends Controller
 
   public function edit($id)
   {
-    // sBranchs
+    // sBranchs customer_pv
 
     // กำลังเบิกสินค้า ไม่ให้แก้บิล
     $ch_Disabled = 0;
@@ -735,6 +735,7 @@ class FrontstoreController extends Controller
         'customers.aistockist_status',
         'customers.pv_tv',
         'customers.pv',
+        'customers.business_location_id',
         'dataset_package.dt_package',
         'dataset_qualification.code_name',
         'q_max.code_name as max_code_name',

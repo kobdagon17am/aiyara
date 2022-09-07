@@ -613,6 +613,22 @@
                                                 value="{{ $customer_pv->dt_package }}" readonly>
                                         </div>
                                     </div>
+
+
+                                    <div class="form-group row">
+                                      <label for="" class="col-md-4 col-form-label"> Business location : </label>
+                                      <div class="col-md-6">
+                                        <?php
+                                          if($customer_pv->business_location_id==3){
+                                            $business_location_data = "CAMBODIA";
+                                          }
+                                          ?>
+                                          <input type="text" id="business_location_data" class="form-control"
+                                              value="{{@$business_location_data}}" readonly>
+                                      </div>
+                                  </div>
+
+
                                 @else
                                     <div class="form-group row">
                                         <label for="" class="col-md-4 col-form-label"> ทำคุณสมบัติ :</label>
@@ -673,6 +689,15 @@
                                                 value=" " readonly>
                                         </div>
                                     </div>
+
+                                    <div class="form-group row">
+                                      <label for="" class="col-md-4 col-form-label"> Business location : </label>
+                                      <div class="col-md-6">
+                                          <input type="text" id="business_location_data" class="form-control"
+                                              value=" " readonly>
+                                      </div>
+                                  </div>
+
                                 @endif
                             </div>
                         </div>
@@ -7822,6 +7847,12 @@
                         $('#view_customer_q').val(data['customer']['qualification_name']);
                         $('#view_customer_package').val(data['customer']['dt_package']);
 
+                        var business_location_data = "THAI";
+                        if(data['customer']['business_location_id']==3){
+                          business_location_data = "CAMBODIA";
+                        }
+
+                        $('#business_location_data').val(business_location_data);
                         $.each(data, function(index, value) {
 
                             if (value.regis_date_doc == null) {
