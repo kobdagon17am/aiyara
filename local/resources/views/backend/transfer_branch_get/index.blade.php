@@ -314,9 +314,13 @@ $(function() {
 
               }
 
+
               if(sU!='1'){
                  $('td:last-child', nRow).html('-');
               }else{
+
+                str_U += '<a href="{{ URL('backend/transfer_branch/print_transfer_tr') }}/'+aData['tr_number']+'" target="_blank" class="btn btn-sm btn-success" title="พิมพ์ใบโอน" ><i class="fa fa-print font-size-16 align-middle"></i></a> ';
+
                 $('td:last-child', nRow).html( str_U ).addClass('input');
               }
 
@@ -420,6 +424,7 @@ $(function() {
                                             if(sU!='1'){
                                                $('td:last-child', nRow).html('-');
                                             }else{
+                                              str_U += '<a href="{{ URL('backend/transfer_branch/print_transfer_tr') }}/'+aData['tr_number']+'" target="_blank" class="btn btn-sm btn-success" title="พิมพ์ใบโอน" ><i class="fa fa-print font-size-16 align-middle"></i></a> ';
                                               $('td:last-child', nRow).html( str_U ).addClass('input');
                                             }
 

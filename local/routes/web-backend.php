@@ -692,6 +692,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // ใบโอน
     Route::get('transfer_warehouses/print_transfer/{id}', 'AjaxController@createPDFTransfer');
     Route::get('transfer_branch/print_transfer/{id}', 'AjaxController@createPDFTransfer_branch');
+    Route::get('transfer_branch/print_transfer_tr/{id}', 'AjaxController@createPDFTransfer_branch_tr');
 
     Route::resource('check_orders', 'Check_ordersController');
     Route::post('check_orders/datatable', 'Check_ordersController@Datatable')->name('check_orders.datatable');
