@@ -388,7 +388,8 @@ class Transfer_branch_get_productsController extends Controller
 
                 $db_transfer_branch_get = DB::select(" select tr_number from db_transfer_branch_get where id=".$row->transfer_branch_get_id_fk." ");
                 $db_transfer_branch_code = DB::select(" select id from `db_transfer_branch_code` where tr_number='".$db_transfer_branch_get[0]->tr_number."' ");
-                $db_transfer_branch_details = DB::select(" select lot_number,lot_expired_date from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."' ");
+                $db_transfer_branch_details = DB::select(" select lot_number,lot_expired_date from `db_transfer_branch_details` where transfer_branch_code_id='".$db_transfer_branch_code[0]->id."'
+                AND product_id_fk='".@$row->product_id_fk."' AND amt=".@$row->product_amt." ");
 
                 $Product_unit = \App\Models\Backend\Product_unit::find($row->product_unit);
 
