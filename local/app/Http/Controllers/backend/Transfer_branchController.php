@@ -389,6 +389,9 @@ class Transfer_branchController extends Controller
                        $Transfer_branch_get_products->product_amt = $value->amt;
                        $Transfer_branch_get_products->product_unit = $value->product_unit_id_fk;
                        $Transfer_branch_get_products->created_at    = date("Y-m-d H:i:s");
+
+                       $Transfer_branch_get_products->transfer_branch_details_id = $value->id;
+
                        $Transfer_branch_get_products->save();
 
                 }
