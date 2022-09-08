@@ -555,13 +555,13 @@
                                                                 id="text_email"></span></label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
+                                                {{-- <div class="col-md-4">
                                                     <div class="form-group row">
                                                         <label for="comment" class="col-form-label">
                                                             {{ __('message.upline') }} : <span
                                                                 id="text_upline"></span></label>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <br>
                                             <div class="row">
@@ -572,6 +572,14 @@
                                                                 id="text_Referral_UserName"></span> </label>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-md-4">
+                                                  <div class="form-group row">
+                                                      <label for="comment" class="col-form-label">
+                                                          {{ __('message.upline') }} : <span
+                                                              id="text_upline"></span></label>
+                                                  </div>
+                                              </div>
                                             </div>
                                             <br>
                                             <hr>
