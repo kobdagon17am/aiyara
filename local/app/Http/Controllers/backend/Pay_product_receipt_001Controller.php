@@ -915,7 +915,10 @@ class Pay_product_receipt_001Controller extends Controller
            //              db_pay_product_receipt_001.branch_id_fk=".(\Auth::user()->branch_id_fk)." OR
            //              db_pay_product_receipt_001.branch_id_fk_tosent=".(\Auth::user()->branch_id_fk)."
            //              ) " ;
-           $w02 = " AND db_pay_product_receipt_001.branch_id_fk = ".$req->branch_id_fk." " ;
+
+          //  วุฒฺปรับให้หาจากสาขาที่รับ
+            $w02 = " AND db_pay_product_receipt_001.branch_id_fk_tosent = ".$req->branch_id_fk." " ;
+
         }else{
            // $w02 = " AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." " ;
            $w02 = "" ;
@@ -995,6 +998,8 @@ class Pay_product_receipt_001Controller extends Controller
                     db_pay_product_receipt_001.address_send_type
                     FROM
                     db_pay_product_receipt_001
+
+
                     WHERE db_pay_product_receipt_001.address_send_type in (1,2)
                    ".$w01."
                    ".$w02."
@@ -1026,8 +1031,12 @@ class Pay_product_receipt_001Controller extends Controller
                         db_pay_product_receipt_001.address_send_type
                         FROM
                         db_pay_product_receipt_001
+
+
                         WHERE db_pay_product_receipt_001.address_send_type in (1,2)
-                       AND (db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." OR db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)." AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." )
+
+                        AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)."
+
                        ".$w01."
                        ".$w02."
                        ".$w03."
@@ -1040,6 +1049,10 @@ class Pay_product_receipt_001Controller extends Controller
                        GROUP BY invoice_code
                        ORDER BY db_pay_product_receipt_001.pay_date DESC
                      ");
+
+                    //  AND (db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)."
+                    // OR
+                    //  db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)." AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." )
 
         }
       $sQuery = \DataTables::of($sTable);
