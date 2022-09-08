@@ -232,7 +232,7 @@ class Pay_product_receipt_001Controller extends Controller
                                 WHERE db_stocks_return.invoice_code = '".$request->invoice_code."'
                           ");
                          }
-                          
+
 
                               if(@$Data){
                                 DB::table('db_stock_movement_tmp')->truncate();
@@ -269,7 +269,7 @@ class Pay_product_receipt_001Controller extends Controller
 
                                     }
                                     $tmp = DB::table('db_stock_movement_tmp')->where('doc_no',$request->invoice_code)->where('warehouse_id_fk','!=',0)->orderBy('updated_at','desc')->groupBy('product_id_fk')->get();
-                            
+
                                     foreach($tmp as $t){
                                       DB::table('db_stock_movement')->insertOrignore(array(
                                         // ไม่เหมือน tmp
@@ -596,7 +596,7 @@ class Pay_product_receipt_001Controller extends Controller
           DB::beginTransaction();
           try
           {
-            
+
         // หา time+pay ครั้งที่จ่าย
           $rs_time_pay = DB::select(" SELECT * FROM `db_pay_product_receipt_001` WHERE invoice_code='$invoice_code' order by time_pay DESC limit 1 ");
           if(count($rs_time_pay)>0){
@@ -988,7 +988,7 @@ class Pay_product_receipt_001Controller extends Controller
                     db_pay_product_receipt_001.pay_date,
                     db_pay_product_receipt_001.invoice_code,
                     db_pay_product_receipt_001.bill_date,
-                    db_pay_product_receipt_001.customer_id_fk,  
+                    db_pay_product_receipt_001.customer_id_fk,
                     db_pay_product_receipt_001.branch_id_fk,
                     db_pay_product_receipt_001.branch_id_fk_tosent,
                     db_pay_product_receipt_001.business_location_id_fk,
@@ -1028,15 +1028,15 @@ class Pay_product_receipt_001Controller extends Controller
                         db_pay_product_receipt_001
                         WHERE db_pay_product_receipt_001.address_send_type in (1,2)
                        AND (db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." OR db_pay_product_receipt_001.branch_id_fk = ".(\Auth::user()->branch_id_fk)." AND db_pay_product_receipt_001.branch_id_fk_tosent = ".(\Auth::user()->branch_id_fk)." )
-                       ".$w01." 
-                       ".$w02." 
-                       ".$w03." 
-                       ".$w04." 
-                       ".$w05." 
-                       ".$w06." 
-                       ".$w07." 
-                       ".$w08." 
-                       ".$w09." 
+                       ".$w01."
+                       ".$w02."
+                       ".$w03."
+                       ".$w04."
+                       ".$w05."
+                       ".$w06."
+                       ".$w07."
+                       ".$w08."
+                       ".$w09."
                        GROUP BY invoice_code
                        ORDER BY db_pay_product_receipt_001.pay_date DESC
                      ");
@@ -1182,8 +1182,10 @@ class Pay_product_receipt_001Controller extends Controller
   }
 
   $startDate = "";
+  $app_status = "AND db_orders.approve_status = 2";
   if(isset($req->startDate)){
     $startDate = " AND DATE(db_orders.approve_date) >= '".$req->startDate."' " ;
+    $app_status = "";
   }
 
   $endDate = "";
@@ -1203,7 +1205,7 @@ if(count($sTable_re)!=0){
             $action_user_011_2
             $startDate
             $endDate
-            AND db_orders.approve_status = 2
+            $app_status
             AND delivery_location = 0
             AND db_orders.code_order not in ($sw)
 
@@ -1211,7 +1213,7 @@ if(count($sTable_re)!=0){
             $action_user_011_1
             $startDate
             $endDate
-            AND db_orders.approve_status = 2
+            $app_status
             AND delivery_location = 0
             AND db_orders.code_order not in ($sw)
 
@@ -1258,14 +1260,14 @@ if(count($sTable_re)!=0){
               $action_user_011_2
               $startDate
               $endDate
-              AND db_orders.approve_status = 2
+              $app_status
               AND delivery_location = 0
-  
+
               OR 1
               $action_user_011_1
               $startDate
               $endDate
-              AND db_orders.approve_status = 2
+              $app_status
               AND delivery_location = 0
               UNION ALL
               SELECT
@@ -2066,7 +2068,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
       $sTable = DB::select(" SELECT * FROM db_pay_product_receipt_001  WHERE  db_pay_product_receipt_001.invoice_code='".$req->txtSearch."' group by time_pay order By time_pay ");
       $sQuery = \DataTables::of($sTable);
-  
+
       return $sQuery
       ->addColumn('column_001', function($row) {
 
@@ -2166,7 +2168,7 @@ foreach($temp_ppr_0021_data as $tmp){
          $pn .= '</div>';
          $pn .= '</div>';
                 }
-                
+
           }
 
           $pn .= '</div>';
@@ -2190,7 +2192,7 @@ foreach($temp_ppr_0021_data as $tmp){
       ->addColumn('ch_amt_lot_wh', function($row) {
           // ดูว่าไม่มีสินค้าคลังเลย
           // ดูในใบซื้อว่ามีรยการสินค้าใดบ้างที่ยังค้างส่งอยู่
-       
+
           $Products = DB::select("
             SELECT * from db_pay_product_receipt_002 WHERE invoice_code='".$row->invoice_code."'
             AND amt_remain > 0 GROUP BY product_id_fk ORDER BY time_pay,amt_get DESC limit 1 ;

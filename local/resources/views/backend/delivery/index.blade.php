@@ -841,14 +841,14 @@
                             if (shipping_price > 0 || shipping_special > 0) {
                                 $('.divBtnSave').show();
                             } else {
-                                $('.divBtnSave').hide();
-                                var shipping_cost = "{{ @$shipping_cost }}";
-                                console.log('xxx : ' + total_price);
-                                if (total_price >= shipping_cost) {
+                                // $('.divBtnSave').hide();
+                                // var shipping_cost = "{{ @$shipping_cost }}";
+                                // console.log('xxx : ' + total_price);
+                                // if (total_price >= shipping_cost) {
                                     $('.divBtnSave').show();
-                                } else {
-                                    $('.divBtnSave').hide();
-                                }
+                                // } else {
+                                //     $('.divBtnSave').hide();
+                                // }
                             }
 
                         } else {

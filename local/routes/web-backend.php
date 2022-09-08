@@ -692,6 +692,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // ใบโอน
     Route::get('transfer_warehouses/print_transfer/{id}', 'AjaxController@createPDFTransfer');
     Route::get('transfer_branch/print_transfer/{id}', 'AjaxController@createPDFTransfer_branch');
+    Route::get('transfer_branch/print_transfer_tr/{id}', 'AjaxController@createPDFTransfer_branch_tr');
 
     Route::resource('check_orders', 'Check_ordersController');
     Route::post('check_orders/datatable', 'Check_ordersController@Datatable')->name('check_orders.datatable');
@@ -742,6 +743,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('po_supplier', 'Po_supplierController');
     Route::post('po_supplier/datatable', 'Po_supplierController@Datatable')->name('po_supplier.datatable');
+    Route::get('po_supplier_delete_list/{id}', 'Po_supplierController@po_supplier_delete_list');
 
     Route::resource('po_supplier_products', 'Po_supplier_productsController');
     Route::post('po_supplier_products/datatable', 'Po_supplier_productsController@Datatable')->name('po_supplier_products.datatable');

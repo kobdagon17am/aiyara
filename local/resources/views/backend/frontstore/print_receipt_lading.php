@@ -1288,7 +1288,7 @@ for ($j=0; $j < $amt_page ; $j++) {
         style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;"> -->
 
         <table
-        style="margin-left:10px !important;margin-top:25px !important;border-collapse: collapse;height: 150px !important;">
+        style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;">
 
 
         <!-- รายการสินค้า -->

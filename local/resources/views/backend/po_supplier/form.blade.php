@@ -33,7 +33,7 @@
               @endif
                 {{ csrf_field() }}
 
-    
+
                 <div class="form-group row">
                   <label for="po_number" class="col-md-3 col-form-label">รหัสใบ PO :</label>
                   <div class="col-md-6">
@@ -61,7 +61,7 @@
                             </div>
                           </div>
 
-                        
+
                         <div class="form-group row">
                           <label for="" class="col-md-3 col-form-label"> สาขา : * </label>
                           <div class="col-md-6">
@@ -83,7 +83,7 @@
 
                                       </select>
                               @endif
-                                
+
 
                           </div>
                         </div>
@@ -96,7 +96,7 @@
                                 @if(@$Supplier)
                                   @foreach(@$Supplier AS $r)
                                     <option value="{{$r->id}}" {{ (@$r->id==@$sRow->supplier_id_fk)?'selected':'' }} >
-                                      {{$r->txt_desc}} 
+                                      {{$r->txt_desc}}
                                     </option>
                                   @endforeach
                                 @endif
@@ -139,13 +139,13 @@
                                @endif
                             </div>
                        </div>
-                          
-  
+
+
                   <div class="form-group row">
                     <label class="col-md-3 col-form-label">สถานะ :</label>
                     <div class="col-md-9 mt-2">
                       <div class="custom-control custom-switch">
-                      
+
                           <input type="checkbox" class="custom-control-input" id="customSwitch" name="buy_status" value="1" {{ ( @$sRow->buy_status=='1')?'checked':'' }}>
                           <label class="custom-control-label" for="customSwitch">ดำเนินการสั่งซื้อแล้ว</label>
 
@@ -179,11 +179,13 @@
             <div class="col-md-12">
               <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการสินค้าในใบ PO </span>
 
+              @if(@$sRow->buy_status!=1)
               <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.po_supplier_products.create') }}/{{@$sRow->id}}" style="float: right;" >
                 <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
               </a>
+              @endif
 
-               <a href="{{ URL::to('backend/po_supplier_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i> 
+               <a href="{{ URL::to('backend/po_supplier_products/print_receipt') }}/{{@$sRow->id}}" target=_blank ><i class="bx bx-printer grow " style="font-size:26px;cursor:pointer;color:#0099cc;float: right;padding: 1%;margin-right: 1%;"></i>
                </a>
 
             </div>
@@ -308,19 +310,20 @@
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
                         {data: 'product_amt', title :'จำนวนที่สั่งซื้อ', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'get_status', title :'สถานะการรับสินค้าจาก Supplier', className: 'text-center'},
-                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w80'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.po_supplier_products.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.po_supplier_products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                         // + '<a href="javascript: void(0);" data-url="{{ route('backend.po_supplier_products.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="{{ url('backend/po_supplier_delete_list') }}/'+aData['id']+'" onclick="return confirm(\'ยืนยันการลบรายการ?\')" class="btn btn-sm btn-danger"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
                 });
@@ -332,7 +335,7 @@
 
             </script>
 
-            
+
   <script>
 
     var po_supplier_id_fk = "{{@$sRow->id?@$sRow->id:0}}";

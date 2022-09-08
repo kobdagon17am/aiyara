@@ -329,6 +329,12 @@ class Check_stockController extends Controller
            $w09 = "";
         }
 
+        $stock_0 = "AND amt <> 0";
+        $sPermission = \Auth::user()->permission ;
+        if($sPermission==1){
+          $stock_0 = "";
+        }
+
        $sTable = DB::select("
 
         SELECT db_stocks.id,db_stocks.product_id_fk,sum(db_stocks.amt) as amt,
@@ -343,7 +349,7 @@ class Check_stockController extends Controller
         '$w09' as w09
          FROM `db_stocks` LEFT JOIN products ON db_stocks.product_id_fk=products.id
          WHERE 1
-         AND db_stocks.amt <> 0
+         $stock_0
           $w01
           $w02
           $w03
@@ -391,13 +397,6 @@ class Check_stockController extends Controller
 
       // ");
 
-
-
-
-
-
-
-
 // date(lot_expired_date) >= CURDATE()
 
       $sQuery = \DataTables::of($sTable);
@@ -416,7 +415,7 @@ class Check_stockController extends Controller
 
       })
 // date(lot_expired_date) >= CURDATE()
-      ->addColumn('lot_number', function($row) {
+      ->addColumn('lot_number', function($row) use($stock_0) {
             $d = DB::select(" SELECT lot_number FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
 
           ".$row->w01."
@@ -428,7 +427,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+          ". $stock_0."
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -438,7 +437,7 @@ class Check_stockController extends Controller
             return $f;
             // AND amt <> 0
       })
-      ->addColumn('lot_expired_date', function($row) {
+      ->addColumn('lot_expired_date', function($row) use($stock_0) {
         // $d = strtotime($row->lot_expired_date);
             $d = DB::select(" SELECT lot_expired_date FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
 
@@ -451,7 +450,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+             ". $stock_0."
             GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -461,7 +460,7 @@ class Check_stockController extends Controller
             return $f.'';
             // AND amt <> 0
       })
-       ->addColumn('amt_desc', function($row) {
+       ->addColumn('amt_desc', function($row)  use($stock_0){
         // $d = strtotime($row->lot_expired_date);
             $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
 
@@ -474,7 +473,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+           ". $stock_0."
 
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
@@ -486,7 +485,7 @@ class Check_stockController extends Controller
             return $f;
             // AND amt <> 0
       })
-      ->addColumn('amt', function($row) {
+      ->addColumn('amt', function($row) use($stock_0) {
         // $d = strtotime($row->lot_expired_date);
             $d = DB::select(" SELECT amt FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
 
@@ -499,7 +498,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+             ". $stock_0."
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = 0 ;
             foreach ($d as $key => $v) {
@@ -508,7 +507,7 @@ class Check_stockController extends Controller
             return $f;
             // AND amt <> 0
       })
-      ->addColumn('warehouses', function($row) {
+      ->addColumn('warehouses', function($row) use($stock_0) {
         // $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
         // $warehouse = DB::select(" select * from warehouse where id=".$row->warehouse_id_fk." ");
         // $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
@@ -527,7 +526,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+              ". $stock_0."
            GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -545,7 +544,7 @@ class Check_stockController extends Controller
             // AND amt <> 0
 
       })
-      ->addColumn('stock_card', function($row) {
+      ->addColumn('stock_card', function($row) use($stock_0) {
         // return "<a class='btn btn-outline-success waves-effect waves-light' style='padding: initial;padding-left: 2px;padding-right: 2px;'  > STOCK CARD </a> ";
 // date(lot_expired_date) >= CURDATE()
             $d = DB::select(" SELECT id FROM `db_stocks` where 1 AND product_id_fk=".$row->product_id_fk."
@@ -559,7 +558,7 @@ class Check_stockController extends Controller
           ".$row->w07."
           ".$row->w08."
           ".$row->w09."
-          AND amt <> 0
+            ". $stock_0."
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
@@ -618,7 +617,7 @@ class Check_stockController extends Controller
         public function DatatableTransfer_warehouses(Request $req){
 
 
-              $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk);
+              $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('amt','>',0)->where('product_id_fk',$req->product_id_fk);
 
               $sQuery = \DataTables::of($sTable);
               return $sQuery

@@ -778,6 +778,21 @@ class AjaxController extends Controller
 
     }
 
+    public function createPDFTransfer_branch_tr($id)
+    {
+       // dd($id);
+       $data_id =  DB::table('db_transfer_branch_code')->select('id')->where('tr_number',$id)->first();
+       $id = $data_id->id;
+       $data = [$id];
+
+       $pdf = PDF::loadView('backend.transfer_branch.print_transfer_tr',compact('data'));
+       // $pdf->setPaper('A4', 'landscape');
+       // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+       return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+
+   }
+
+
 
 
     public function createPDFBorrow($id)
