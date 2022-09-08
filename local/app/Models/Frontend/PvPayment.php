@@ -636,6 +636,8 @@ class PvPayment extends Model
                             $customer_update->date_mt_first = date('Y-m-d h:i:s');
                             $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
                         }
+                        $order_update->status_run_pv = 'success';
+
 
 
 

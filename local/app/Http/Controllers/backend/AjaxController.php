@@ -5388,9 +5388,12 @@ class AjaxController extends Controller
                 customers.business_name,
                 customers.id_card,
                 customers.email,
-                customers.upline_id,
-                (SELECT CONCAT(introduce.first_name, ' ', introduce.last_name) FROM customers as introduce
+
+                (SELECT CONCAT(upline.first_name, ' ', upline.last_name,'(',upline.user_name,')') FROM customers as upline
+                WHERE upline.user_name = customers.upline_id) as upline_id,
+                (SELECT CONCAT(introduce.first_name, ' ', introduce.last_name,'(',introduce.user_name,')') FROM customers as introduce
             WHERE introduce.user_name = customers.introduce_id) as introduce_name,
+
 
             customers_address_card.card_house_no,
             customers_address_card.card_house_name,

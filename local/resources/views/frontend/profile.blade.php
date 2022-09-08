@@ -257,9 +257,9 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     @if($customer_upline)
                     <div class="col-md-12">
                   <span>ภายใต้สายงาน : @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
-                    {{ $customer_upline->business_name }}
+                    {{ $customer_upline->business_name }} ({{$customer_upline->user_name}})
                     @else
-                    {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }}
+                    {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }} ({{$customer_upline->user_name}})
                     @endif
                   </span>
                     </div>
@@ -284,9 +284,9 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   @if($customer_introduce)
                   <div class="col-md-12">
                 <span>ผู้แนะนำ : @if ($customer_introduce->business_name and $customer_introduce->business_name  != '-')
-                  {{ $customer_introduce->business_name }}
+                  {{ $customer_introduce->business_name }} ({{$customer_introduce->user_name}})
                   @else
-                  {{$customer_introduce->prefix_name.' '.$customer_introduce->first_name.' '.$customer_introduce->last_name }}
+                  {{$customer_introduce->prefix_name.' '.$customer_introduce->first_name.' '.$customer_introduce->last_name }} ({{$customer_introduce->user_name}})
                   @endif
                 </span>
                   </div>

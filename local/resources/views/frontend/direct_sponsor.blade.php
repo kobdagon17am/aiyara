@@ -32,7 +32,7 @@ $count_sponser = 0;
                             <thead>
                                 <tr class="info" style='text-align:center;'>
                                     <th class="text-center" rowspan="2">#</th>
-                                    <th class="text-center" rowspan="2">ID</th>
+                                    {{-- <th class="text-center" rowspan="2">ID</th> --}}
                                     <th class="text-center" rowspan="2">Line</th>
                                     <th class="text-center" rowspan="2">Buniness Name</th>
                                     <th class="text-center" rowspan="2">Package</th>

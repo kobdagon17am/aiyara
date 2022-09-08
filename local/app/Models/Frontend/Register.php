@@ -8,7 +8,7 @@ use App\Models\Frontend\LineModel;
 class Register extends Model
 {
 	public static function register($req,$introduce_id=''){
-
+    //dd($req->all());
         $type_introduce = LineModel::check_type_introduce($introduce_id,$req->upline_id);
 
         if( $type_introduce['status'] == 'success'){
@@ -127,7 +127,14 @@ class Register extends Model
     $bank_account= (trim($req->input('bank_account')) == '') ? null : $req->input('bank_account');
     $bank_type= (trim($req->input('bank_type')) == '') ? null : $req->input('bank_type');
     $bank_branch= (trim($req->input('bank_branch')) == '') ? null : $req->input('bank_branch');
-    $bank_name= (trim($req->input('bank_name')) == '') ? null : $req->input('bank_name');
+
+    if($business_location == 1){
+      $bank_name= (trim($req->input('bank_name')) == '') ? null : $req->input('bank_name');
+    }else{
+      $bank_name= (trim($req->input('bank_name_cam')) == '') ? null : $req->input('bank_name_cam');
+
+    }
+
     $tel_home= (trim($req->input('tel_home')) == '') ? null : $req->input('tel_home');
     $tel_mobile= (trim($req->input('tel_mobile')) == '') ? null : $req->input('tel_mobile');
 
@@ -223,7 +230,7 @@ class Register extends Model
              'tel_home'=>$tel_home,
              'tel_mobile'=>$tel_mobile,
              'customer_id'=>$id];
-       //dd($data_customer_detail);
+      //  dd($data_customer_detail);
              DB::table('customers_detail')->insert($data_customer_detail);
              $customer_address_card = [
               'user_name'=>$username,
