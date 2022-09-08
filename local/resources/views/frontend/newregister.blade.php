@@ -371,7 +371,7 @@
                           <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
                       </select>
 
-                      <select class="form-control" id="bank_name_cam" name="bank_name">
+                      <select class="form-control" id="bank_name_cam" name="bank_name_cam">
                         <option value=""> Select </option>
                         <option value="ABA Bank" @if ('ABA Bank' == old('bank_name')) selected="" @endif> ABA Bank </option>
                         <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name')) selected="" @endif> Acleda Bank </option>
