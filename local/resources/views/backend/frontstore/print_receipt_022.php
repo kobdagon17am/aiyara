@@ -836,6 +836,9 @@ if(!empty($db_orders[0]->action_user)){
 
 
    $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address  . ' ' . $tel : NULL;
+  //  $address = preg_replace('/[^\_\- ]/i', '', $address);
+  // $address = preg_replace('/[^A-Za-z0-9ก-ฮ.:, " " \-]/', '', $address);
+
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("

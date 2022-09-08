@@ -260,6 +260,12 @@ class Member_regisController extends Controller
         // $w07 = "";
       // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');
       //
+
+      $all = "AND regis_doc_status = 0";
+      if($w05!=""){
+        $all = "";
+      }
+
       $sTable = DB::select("
 
         SELECT * FROM `register_files`
@@ -271,26 +277,14 @@ class Member_regisController extends Controller
                 ".$w05."
                 ".$w06."
                 ".$w07."
+                ".$all."
 
        GROUP BY customer_id
        ORDER BY id asc
 
 
          ");
-$text = "      SELECT * FROM `register_files`
-where 1
-        ".$w01."
-        ".$w02."
-        ".$w03."
-        ".$w04."
-        ".$w05."
-        ".$w06."
-        ".$w07."
 
-        GROUP BY customer_id
-        ORDER BY id asc
-";
-// dd($text);
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addIndexColumn()

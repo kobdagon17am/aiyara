@@ -2855,16 +2855,35 @@ class AjaxController extends Controller
             WHERE
             db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."'
             AND ( date(db_promotion_code.pro_edate) < curdate() OR date(promotions.show_enddate) < curdate() )
-
+            ORDER BY pro_status ASC
              ;
 
             ");
 
-        if(!empty($p2)){
+        $p2_2 = DB::select("
+
+        select * from db_promotion_cus
+        Left Join db_promotion_code ON db_promotion_cus.promotion_code_id_fk = db_promotion_code.id
+        Left Join promotions ON db_promotion_code.promotion_id_fk = promotions.id
+        WHERE
+        db_promotion_cus.promotion_code='".trim($request->txtSearchPro)."'
+        AND ( date(db_promotion_code.pro_edate) > curdate() OR date(promotions.show_enddate) > curdate() )
+        ORDER BY pro_status ASC
+         ;
+
+        ");
+
+        if(!$p2_2){
+          if(!empty($p2)){
             $msg[] = 'รหัสคูปองนี้ หมดอายุการใช้งานแล้ว ';
             // return "InActive";
             return $msg;
         }
+        }
+
+
+
+
 
        $p3 = DB::select("
 
@@ -3151,7 +3170,8 @@ class AjaxController extends Controller
     {
         // return $request->txtSearchPro;
         // $rs = DB::select(" SELECT promotions.*, name_thai as pro_name FROM promotions WHERE id=(SELECT promotion_code_id_fk FROM db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."')  ");
-        $rs = DB::select(" SELECT promotions.*, name_thai as pro_name FROM promotions WHERE id=(SELECT promotion_id_fk from db_promotion_code WHERE id=(SELECT promotion_code_id_fk FROM db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."')) ");
+        // dd($request->txtSearchPro);
+        $rs = DB::select(" SELECT promotions.*, name_thai as pro_name FROM promotions WHERE id=(SELECT promotion_id_fk from db_promotion_code WHERE id=(SELECT promotion_code_id_fk FROM db_promotion_cus WHERE promotion_code='".$request->txtSearchPro."' AND pro_status=1))  ");
 
         return response()->json($rs);
 
