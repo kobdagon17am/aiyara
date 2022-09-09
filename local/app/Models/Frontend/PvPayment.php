@@ -19,6 +19,8 @@ class PvPayment extends Model
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
+// dd('ok');
+            // dd($order_data);
 
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
