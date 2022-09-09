@@ -905,13 +905,17 @@ class DeliveryController extends Controller
 
     public function delivery_approve_to_wh($id)
     {
-      $data =  DB::table('db_delivery')->select('tel_home','mobile')->where('id',$id)->first();
+      $data =  DB::table('db_delivery')->select('tel_home','mobile','packing_code_desc')->where('id',$id)->first();
+      $data_2  = DB::table('db_delivery')->select('tel_home','mobile')->where('packing_code_desc',$data->packing_code_desc)->where('addr_send','!=','')->first();
       // dd($data);
-      // if($data->mobile == '' && $data->tel_home == ''){
+      if(@$data_2->mobile == '' && @$data_2->tel_home == ''){
 
-      //   echo '<script>alert("ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!")</script>';
-      //   return redirect()->back()->with('error','ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!');
-      // }
+        echo '<script language="javascript">';
+        echo 'alert("ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!")';  //not showing an alert box.
+        echo '</script>';
+
+        return redirect()->back()->with('error','ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!');
+      }
 
       DB::table('db_delivery')->where('id',$id)->update([
         'status_to_wh' => 1,
