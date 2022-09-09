@@ -1695,8 +1695,8 @@ class FrontstoreController extends Controller
         // }
 
         DB::commit();
-        // return redirect()->to(url("backend/frontstore"));
-        return redirect()->back()->with('success','success');
+        return redirect()->to(url("backend/frontstore"));
+        // return redirect()->back()->with('success','success');
       } else {
 
         DB::commit();

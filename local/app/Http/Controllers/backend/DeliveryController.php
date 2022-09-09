@@ -907,9 +907,12 @@ class DeliveryController extends Controller
     {
       $data =  DB::table('db_delivery')->select('tel_home','mobile')->where('id',$id)->first();
       // dd($data);
-      if($data->mobile == '' && $data->tel_home == ''){
-        return redirect()->back()->with('error','ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!');
-      }
+      // if($data->mobile == '' && $data->tel_home == ''){
+
+      //   echo '<script>alert("ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!")</script>';
+      //   return redirect()->back()->with('error','ที่อยู่จัดส่งไม่ระบุเบอร์โทร ไม่สามารถยืนยันการทำรายการได้!');
+      // }
+
       DB::table('db_delivery')->where('id',$id)->update([
         'status_to_wh' => 1,
         'status_to_wh_by' => @\Auth::user()->id,

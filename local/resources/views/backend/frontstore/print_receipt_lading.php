@@ -131,6 +131,7 @@ ini_set('memory_limit', '384M');
     ->select('delivery_id_fk')
     ->where('packing_code_id_fk',$data[0])->orderBy('delivery_id_fk','asc')->get();
     foreach( $db_pick_pack_packing_data as $pick_pack_packing_data){
+
       $delivery = DB::select(" SELECT
       db_delivery.set_addr_send_this,
       db_delivery.recipient_name,
@@ -146,7 +147,8 @@ ini_set('memory_limit', '384M');
       db_delivery
       WHERE
       db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." AND set_addr_send_this=1 ");
-        $receipt = '';
+
+      $receipt = '';
       if(@$delivery[0]->status_pack==1){
 
         $d1 = DB::select(" SELECT packing_code from db_delivery WHERE id=".$delivery[0]->delivery_id_fk."");
@@ -163,43 +165,8 @@ ini_set('memory_limit', '384M');
       }
     }
 
-    // $arr_order_id = [];
-    // $arr_all_order = \App\Models\Backend\Pick_packPackingCode::where('id',$data[0])->first();
-    // if($arr_all_order){
-    //   $arr_order_id = explode(',',$arr_all_order->orders_id_fk);
-    // }
-
     $arr_orders_id = $arr_order_id;
-    // sort($arr_orders_id);
 
-
-//////////////
-// if(substr($data[0],0,1)=="O"){
-//     $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' ");
-//     $arr_orders_id = [];
-//     foreach ($d1 as $key => $v) {
-//         array_push($arr_orders_id,$v->id);
-//     }
-// }else{
-
-//         $id = intval(substr($data[0],2));
-
-//         $d1 = DB::select(" SELECT orders_id_fk FROM `db_delivery` WHERE `packing_code`='".$id."' ");
-
-//         if($d1){
-
-//            $arr_orders_id = [];
-//             foreach ($d1 as $key => $v) {
-//                 array_push($arr_orders_id,$v->orders_id_fk);
-//             }
-
-//         }
-
-// }
-//////////////
-
-
-// echo count($arr3);
 for ($z=0; $z < count($arr_orders_id) ; $z++) {
     // code...
 
@@ -209,11 +176,6 @@ $n = 22;
 $limit = 10;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
-
-// $cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
-// $cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-// $cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
-// $cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
 
 // promotions_products
 $promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
@@ -225,16 +187,6 @@ foreach ($promotion_id_fk as $key => $value) {
 $arr_promotion_id = implode(',', $arr_promotion_id_fk);
 // echo $arr_promotion_id;
 $arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
-// $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
-// echo $cnt01[0]->cnt;
-// echo $cnt02[0]->cnt;
-// echo $cnt03[0]->cnt;
-// echo $cnt04[0]->cnt;
-// echo $cnt05[0]->cnt;
-
-// $cnt_all = $cnt01[0]->cnt + $cnt02[0]->cnt + $cnt03[0]->cnt + $cnt04[0]->cnt + $cnt05[0]->cnt ;
-// $amt_page = ceil($cnt_all/10);
-// echo $amt_page;
 
 // Product List All
 $TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.\Auth::user()->id;
@@ -252,12 +204,6 @@ DB::select("
       PRIMARY KEY (`id`) USING BTREE
     ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='เป็นตารางชั่วคราว ';
 ");
-
-
-// $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-// $sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-// $sFrontstoreData = DB::select(" select * from db_order_products_list ");
-
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
 
@@ -277,7 +223,6 @@ $shipping = DB::select("
  ");
 
 $shipping_desc = @$shipping[0]->shipping_price?@$shipping[0]->shipping_price:0;
-// $shipping_desc = $shipping_desc==0 ? '0':@$shipping[0]->txt_desc.'/ ค่าจัดส่ง '.(number_format(@$shipping_price,0));
 
 if(@$shipping[0]->delivery_location==4){
     $shipping_desc = 'จัดส่งพร้อมบิลอื่น';
@@ -317,17 +262,9 @@ if(!empty($gift_voucher)){
 
 }else{
 
-    // $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
      $vat = $sRow->tax;
 
 }
-
-
-//  $sTable = DB::select("
-//     SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
-//     SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
-//     ORDER BY add_from,id
-// ");
 
 $sTable = DB::select("
 SELECT *
@@ -341,8 +278,6 @@ course_id_fk,action_date,action_user,approve_status,approver,approve_date,qr_cod
 from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
 ORDER BY add_from,id
 ");
-
-
 
 foreach ($sTable as $key => $row) {
 
@@ -373,7 +308,6 @@ foreach ($sTable as $key => $row) {
                       $r_ch_t = '';
 
             }else{
-
 
                 $Products = DB::select("
                   SELECT

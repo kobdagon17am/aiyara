@@ -528,13 +528,12 @@ if(!empty($Products)){
 </div>
 
 
-<br>
 
-<b>ส่วนงานคลังสินค้า</b>
 
 <div class="NameAndAddress" >
-
+  <b>ส่วนงานคลังสินค้า</b>
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
+
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
 
       <tr>
