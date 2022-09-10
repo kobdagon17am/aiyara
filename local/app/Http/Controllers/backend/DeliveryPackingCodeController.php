@@ -203,8 +203,9 @@ class DeliveryPackingCodeController extends Controller
                   Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
                   Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
                   WHERE
-                  db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
-                  // dd($addr);
+                  db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr)  ");
+                  // AND set_addr_send_this=1
+
                 // $de = "<br>(ที่อยู่จัดส่งกำหนดเอง)";
                 $de = "";
 
@@ -272,7 +273,8 @@ class DeliveryPackingCodeController extends Controller
               Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
               Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
               WHERE
-              db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
+              db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr)  ");
+              // AND set_addr_send_this=1
 
         if(@$addr[0]->mobile == '' && @$addr[0]->tel_home == ''){
           $p = '<label style="color:red;">กรุณาระบุเบอร์โทรก่อนทำรายการ!</label>';
@@ -488,7 +490,8 @@ class DeliveryPackingCodeController extends Controller
                    Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
                    Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
                    WHERE
-                   db_delivery_packing_code.id = ".$row->packing_code." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
+                   db_delivery_packing_code.id = ".$row->packing_code." and db_delivery.receipt in ($arr)  ");
+                  //  AND set_addr_send_this=1
              if($addr){
                    return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send."<br>".@$addr[0]->postcode." ".@$addr[0]->mobile."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
              }else{

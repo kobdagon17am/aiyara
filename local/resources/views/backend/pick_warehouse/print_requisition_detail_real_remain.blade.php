@@ -231,7 +231,8 @@ foreach($db_pick_pack_packing_data as $index => $pick_pack_packing_data){
               FROM
               db_delivery
               WHERE
-              db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." AND set_addr_send_this=1 ");
+              db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." ");
+              // AND set_addr_send_this=1
 
 
               $delivery0 = DB::select(" SELECT
@@ -459,7 +460,8 @@ E-MAIL : info@aiyara.co.th
               FROM
               db_delivery
               WHERE
-              db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." AND set_addr_send_this=1 ");
+              db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk."  ");
+              // AND set_addr_send_this=1
 
               $recipient_name = @$delivery[0]->recipient_name?@$delivery[0]->recipient_name:'';
               $addr_send = @$delivery[0]->addr_send." ".@$delivery[0]->postcode;

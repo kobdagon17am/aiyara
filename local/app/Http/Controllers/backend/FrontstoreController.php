@@ -4064,7 +4064,7 @@ ORDER BY created_at DESC
       ->escapeColumns('created_at')
       ->addColumn('customer_name', function ($row) {
         if ($row->customers_id_fk) {
-          $Customer = DB::select(" select * from customers where id=" . $row->customers_id_fk . " ");
+          $Customer = DB::select(" select user_name, prefix_name, first_name, last_name from customers where id=" . $row->customers_id_fk . " ");
           return "[" . @$Customer[0]->user_name . '] <br>' . @$Customer[0]->prefix_name . @$Customer[0]->first_name . " " . @$Customer[0]->last_name;
         }
       })

@@ -146,7 +146,10 @@ ini_set('memory_limit', '384M');
       FROM
       db_delivery
       WHERE
-      db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." AND set_addr_send_this=1 ");
+      db_delivery.id = ".$pick_pack_packing_data->delivery_id_fk." ");
+
+//  วุฒิเอาออกมา
+      // AND set_addr_send_this=1
 
       $receipt = '';
       if(@$delivery[0]->status_pack==1){
@@ -160,12 +163,16 @@ ini_set('memory_limit', '384M');
         }
         $receipt = implode(',',$arr1);
 
+
+
       }else{
         $receipt = @$delivery[0]->receipt;
       }
     }
 
     $arr_orders_id = $arr_order_id;
+
+
 
 for ($z=0; $z < count($arr_orders_id) ; $z++) {
     // code...
