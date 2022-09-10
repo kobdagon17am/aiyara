@@ -55,7 +55,8 @@ class General {
 		FROM
 		db_delivery
 		WHERE
-		db_delivery.id = ".@$id." AND set_addr_send_this=1 ");
+		db_delivery.id = ".@$id."  ");
+    // AND set_addr_send_this=1
 		$recipient_name = @$delivery[0]->recipient_name?@$delivery[0]->recipient_name:'';
 		$addr_send = @$delivery[0]->addr_send." ".@$delivery[0]->postcode;
 		$tel = @$delivery[0]->mobile." ".@$delivery[0]->tel_home;

@@ -1420,6 +1420,7 @@ class FrontstoreController extends Controller
         // dd("1233");
         // dd(request('purchase_type_id_fk'));
         if ($sRow->purchase_type_id_fk == 5) {
+          // dd($sRow);
           //dd($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order,$sRow->gift_voucher_price);
           $rs_log_gift = \App\Models\Frontend\GiftVoucher::log_gift($sRow->total_price, $sRow->customers_id_fk, $sRow->code_order, $sRow->gift_voucher_price);
           DB::commit();
@@ -1473,8 +1474,7 @@ class FrontstoreController extends Controller
                                       Left Join customers ON customers_address_card.customer_id = customers.id
                                       where customers_address_card.customer_id = " . (@$sRow->customers_id_fk ? @$sRow->customers_id_fk : 0) . "
                                  ");
-
-
+                                //  gift_voucher_price
           $rs = DB::select(" INSERT IGNORE INTO customers_addr_sent (invoice_code,customer_id, recipient_name, house_no, zipcode, amphures_id_fk, district_id_fk, province_id_fk, from_table, from_table_id, receipt_no) VALUES ('" . @$db_orders[0]->code_order . "','" . @$request->customers_id_fk . "', '" . @$addr[0]->first_name . " " . @$addr[0]->last_name . "','" . @$addr[0]->card_house_no . "','" . @$addr[0]->card_zipcode . "', '" . @$addr[0]->card_amphures_id_fk . "', '" . @$addr[0]->card_district_id_fk . "', '" . @$addr[0]->card_province_id_fk . "', 'customers_address_card', '" . @$addr[0]->id . "','" . @$db_orders[0]->code_order . "') ");
 
 
@@ -1696,6 +1696,7 @@ class FrontstoreController extends Controller
 
         DB::commit();
         return redirect()->to(url("backend/frontstore"));
+        // return redirect()->back()->with('success','success');
       } else {
 
         DB::commit();
@@ -4063,7 +4064,7 @@ ORDER BY created_at DESC
       ->escapeColumns('created_at')
       ->addColumn('customer_name', function ($row) {
         if ($row->customers_id_fk) {
-          $Customer = DB::select(" select * from customers where id=" . $row->customers_id_fk . " ");
+          $Customer = DB::select(" select user_name, prefix_name, first_name, last_name from customers where id=" . $row->customers_id_fk . " ");
           return "[" . @$Customer[0]->user_name . '] <br>' . @$Customer[0]->prefix_name . @$Customer[0]->first_name . " " . @$Customer[0]->last_name;
         }
       })

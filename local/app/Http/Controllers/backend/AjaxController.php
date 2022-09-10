@@ -718,8 +718,8 @@ class AjaxController extends Controller
        $pdf = PDF::loadView('backend.pick_warehouse.print_requisition_detail_real',compact('data'));
        // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
-
    }
+
 
    public function createPDFRequisitionDetailRealRemain($packing_code_id)
    {

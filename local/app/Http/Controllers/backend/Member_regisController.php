@@ -264,6 +264,20 @@ class Member_regisController extends Controller
       $all = "AND regis_doc_status = 0";
       if($w05!=""){
         $all = "";
+        $get_all_date = "";
+      }else{
+        // $get_all_date = " and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'   ";
+        $get_all_date = "
+        OR 1
+        ".$w01."
+        ".$w02."
+        ".$w03."
+        ".$w04."
+        ".$w05."
+        ".$w06."
+        ".$w07."
+        and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'
+        ";
       }
 
       $sTable = DB::select("
@@ -278,6 +292,7 @@ class Member_regisController extends Controller
                 ".$w06."
                 ".$w07."
                 ".$all."
+                ".$get_all_date."
 
        GROUP BY customer_id
        ORDER BY id asc

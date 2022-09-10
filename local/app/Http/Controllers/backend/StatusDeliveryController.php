@@ -237,7 +237,8 @@ class StatusDeliveryController extends Controller
                  Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
                  Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
                  WHERE
-                 db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr) AND set_addr_send_this=1 ");
+                 db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr)  ");
+                //  AND set_addr_send_this=1
            if($addr){
              if($row->status_to_wh==0){
                return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>";
