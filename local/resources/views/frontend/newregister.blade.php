@@ -502,7 +502,7 @@
                          <div class="form-group row text-center">
                              <label class="col-sm-2"></label>
                              <div class="col-sm-12">
-                                 <button type="submit" class="btn btn-primary m-b-0">@lang('message.register_submit')</button>
+                                 <button type="submit" class="btn btn-primary m-b-0" onclick="return confirm('ยืนยันการทำรายการ?')">@lang('message.register_submit')</button>
                              </div>
                          </div>
                      </div>
