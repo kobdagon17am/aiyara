@@ -54,7 +54,7 @@ class PvPayment extends Model
         $type_id = $order_data->purchase_type_id_fk;
         $business_location_id = $order_data->business_location_id_fk;
 
-        if (empty($order_id) || empty($admin_id)) {
+        if (empty($order_id)) {
             $resule = ['status' => 'fail', 'message' => 'Data is Null'];
             DB::rollback();
             return $resule;
