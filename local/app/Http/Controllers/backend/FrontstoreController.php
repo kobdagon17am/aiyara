@@ -2633,6 +2633,7 @@ class FrontstoreController extends Controller
         if($r->action_user_name == ''){
           $r->action_user_name = 'V3';
         }
+
         $show .= '
                     <tr>
                       <td>' . $r->action_user_name . '</td>
@@ -2703,6 +2704,55 @@ class FrontstoreController extends Controller
 
         ");
 
+        $text = " SELECT
+        SUM(CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) AS credit_price,
+        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
+        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
+        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
+        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
+        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
+
+        SUM(CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) AS fee_amt_charger_in,
+
+        db_orders.code_order,
+
+        SUM(
+        (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+        /*  (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +  */
+        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
+
+        (CASE WHEN db_orders.charger_type = 2 THEN 0 WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END)
+
+        /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
+        ) as total_price,
+
+        SUM(
+         CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
+        ) AS shipping_price
+
+
+
+        FROM
+        db_orders
+        WHERE 1
+        AND approve_status <> 5
+        AND approve_status <> 0
+        $action_user_011
+        $startDate1
+        $endDate1
+        $invoice_code
+        $purchase_type_id_fk
+        $customer_username
+        $customer_name
+        $action_user_02
+        $status_sent_money
+        $approve_status
+        $viewcondition_01
+        $business_location_id_fk";
+        // echo $text;
+
 
 //       $sDBFrontstoreTOTAL = DB::select("
 //       SELECT
@@ -2732,6 +2782,9 @@ class FrontstoreController extends Controller
         // dd($sDBFrontstoreTOTAL[0]->fee_amt_charger_in);
 
   //  วุฒิเพิ่มมา + $sDBFrontstoreTOTAL[0]->fee_amt วุฒิบวกค่าธรรมเนียม
+
+
+
 
       $show .= '
                     <tr>
