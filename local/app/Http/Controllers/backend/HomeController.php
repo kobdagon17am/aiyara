@@ -29,9 +29,20 @@ class HomeController extends Controller
               ->where('is_transfer', RequisitionBetweenBranch::WAIT_TRANSFER)->count();
             }
 
-      $customer_doc = DB::table('register_files')->select('id')->where('regis_doc_status',0)
-      // ->where('type','!=',4)
-      ->groupBy('customer_id')->get();
+            $sPermission = \Auth::user()->permission ;
+            $business_location_id_fk = \Auth::user()->business_location_id_fk;
+            if($sPermission==1){
+              $customer_doc = DB::table('register_files')->select('id')->where('regis_doc_status',0)
+              // ->where('type','!=',4)
+              ->groupBy('customer_id')->get();
+            }else{
+              $customer_doc = DB::table('register_files')->select('id')->where('regis_doc_status',0)
+              // ->where('type','!=',4)
+              ->where('business_location_id_fk',$business_location_id_fk)
+              ->groupBy('customer_id')->get();
+            }
+
+
 
       $wait_approve_customer_doc = count($customer_doc);
       // return view('backend.index');
