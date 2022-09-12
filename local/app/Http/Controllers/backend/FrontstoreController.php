@@ -1177,6 +1177,25 @@ class FrontstoreController extends Controller
       $this->fnManageGiveaway(@$request->frontstore_id);
       $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
 
+      if($sRow->approve_status==2){
+        if($sRow->pay_with_other_bill_note!=''){
+          $other_bill1 = DB::table('db_orders')->select('id','code_order')->where('code_order',$sRow->pay_with_other_bill_note)->update([
+            'approve_status' => 1,
+          ]);
+          $other_bill2 = DB::table('db_orders')->select('id','code_order')->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->update([
+            'approve_status' => 1,
+          ]);
+        }else{
+          $other_bill2 = DB::table('db_orders')->select('id','code_order')->where('pay_with_other_bill_note',$sRow->code_order)->update([
+            'approve_status' => 1,
+          ]);
+        }
+      }
+
+
+
+
+
       $delivery_location = request('delivery_location');
       $shipping_special = $request->shipping_special;
 
