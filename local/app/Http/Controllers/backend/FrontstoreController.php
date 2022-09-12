@@ -389,9 +389,23 @@ class FrontstoreController extends Controller
   public function store(Request $request)
   {
 
-    $customers = DB::table('customers')->select('user_name')->where('id',@$request->customers_id_fk)->first();
+    $customers = DB::table('customers')->select('user_name','business_location_id')->where('id',@$request->customers_id_fk)->first();
     if($customers){
+
+      if($request->purchase_type_id_fk==4){
+        $branchs = DB::table('branchs')->select('business_location_id_fk')->where('id',$request->branch_id_fk)->first();
+        if(!$branchs){
+          return redirect()->back()->with('error','ไม่พบข้อมูลสาขา');
+        }
+        if($customers->business_location_id==3 && $branchs->business_location_id_fk!=3 || $customers->business_location_id==1 && $branchs->business_location_id_fk!=1 || $customers->business_location_id=='' && $branchs->business_location_id_fk!=1){
+          return redirect()->back()->with('error','ลูกค้าต่างพื้นที่ไม่สามารถทำรายการเติม Ai Stock ได้');
+        }
+      }
+
      $result = \App\Helpers\Frontend::check_kyc($customers->user_name);
+
+
+
     if($result['status']=='fail'){
       return redirect()->back()->with('error',$customers->user_name.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน');
     }
