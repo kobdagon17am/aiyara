@@ -110,6 +110,14 @@ class Member_pvController extends Controller
 
    public function update(Request $request, $customer_id)
     {
+      $detail = DB::table('customers_detail')->select('id')->where('customer_id',$customer_id)->first();
+      if(!$detail){
+        DB::table('customers_detail')->insert([
+          'customer_id' => $customer_id,
+          'created_at' => date('Y-m-d H:i:s'),
+          'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+      }
 
       if ($request->type == 'customer') {
 

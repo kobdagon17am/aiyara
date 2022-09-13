@@ -1109,7 +1109,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
                    // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
-                   $w_arr2 = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+                   $w_arr2 = DB::table('warehouse')->select('id')->where('w_code','WH02')->pluck('id')->toArray();
                    $w_str2 = '';
                    foreach($w_arr2 as $key => $w){
                      if($key+1==count($w_arr2)){
@@ -1120,10 +1120,22 @@ class Pick_warehouse_fifoController extends Controller
 
                    }
 
+                   $zone_arr2 = DB::table('zone')->select('id')->where('z_code','Zone-1')->pluck('id')->toArray();
+                   $zone_str2 = '';
+                   foreach($zone_arr2 as $key => $w){
+                     if($key+1==count($zone_arr2)){
+                       $zone_str2.=$w;
+                     }else{
+                       $zone_str2.=$w.',';
+                     }
+
+                   }
+
+// dd($zone_str2);
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                 // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
-                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND zone_id_fk in (".$zone_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
 
@@ -1165,8 +1177,20 @@ class Pick_warehouse_fifoController extends Controller
                       }
 
                     }
+
+                    $zone_arr2 = DB::table('zone')->select('id')->where('z_code','Zone-1')->pluck('id')->toArray();
+                    $zone_str2 = '';
+                    foreach($zone_arr2 as $key => $w){
+                      if($key+1==count($zone_arr2)){
+                        $zone_str2.=$w;
+                      }else{
+                        $zone_str2.=$w.',';
+                      }
+
+                    }
+
                     // wut อันนี้แก้ จ่ายผิดคลัง
-                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
+                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
@@ -1316,8 +1340,21 @@ class Pick_warehouse_fifoController extends Controller
                        }
 
                      }
+
+                     $zone_arr2 = DB::table('zone')->select('id')->where('z_code','Zone-1')->pluck('id')->toArray();
+                     $zone_str2 = '';
+                     foreach($zone_arr2 as $key => $w){
+                       if($key+1==count($zone_arr2)){
+                         $zone_str2.=$w;
+                       }else{
+                         $zone_str2.=$w.',';
+                       }
+
+                     }
+
+
                      // wut อันนี้แก้ จ่ายผิดคลัง
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") ORDER BY lot_expired_date ASC  ");
+                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                      $i = 1;
