@@ -210,7 +210,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
 
-                        <button class="btn btn-success" type="submit">Confirm</button>
+                        <button class="btn btn-success" onclick="return confirm('ยืนยันการทำรายการ?')" type="submit">Confirm</button>
 
                     </div>
 

@@ -48,18 +48,21 @@ class RunErrorController extends Controller
 //   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
 //   dd($rs,$user->user_name);
 
-
+//O122083101093
  $order_data = DB::table('db_orders')
-  ->wherein('code_order',
-  ['O122083101194'])
+  ->wherein('code_order', 
+  ['O122091003188'])
   ->where('status_run_pv','=','not_run_pv')
+  //->where('invoice_code_id_fk','=',null)
   ->get(); 
-dd($order_data);
+// dd($order_data);
   $i=0;
-  
+   
   foreach($order_data as $value){
     $i++;
-    $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'');
+    //$rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'customer');
+    $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
+
     $data[][$i]=$rs;
   }
 
@@ -780,7 +783,7 @@ dd($data);
         $type_id = $order_data->purchase_type_id_fk;
         $business_location_id = $order_data->business_location_id_fk;
        
-        if (empty($order_id) || empty($admin_id)) {
+        if (empty($order_id)) {
             
             $resule = ['status' => 'fail', 'message' => 'Data is Null'];
             DB::rollback();
