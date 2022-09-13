@@ -357,7 +357,7 @@
 
                      <div class="col-sm-3">
                       <label>@lang('message.bank')</label>
-                      <select class="form-control" id="bank_name_th" name="bank_name">
+                      <select class="form-control" id="bank_name_th" name="bank_name" >
                           <option value=""> Select </option>
                           <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
                           <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
@@ -373,8 +373,8 @@
 
                       <select class="form-control" id="bank_name_cam" name="bank_name_cam">
                         <option value=""> Select </option>
-                        <option value="ABA Bank" @if ('ABA Bank' == old('bank_name')) selected="" @endif> ABA Bank </option>
-                        <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name')) selected="" @endif> Acleda Bank </option>
+                        <option value="ABA Bank" @if ('ABA Bank' == old('bank_name_cam')) selected="" @endif> ABA Bank </option>
+                        <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name_cam')) selected="" @endif> Acleda Bank </option>
                     </select>
 
                   </div>
