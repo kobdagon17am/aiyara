@@ -177,19 +177,20 @@ class RunNumberPayment extends Model
   {
 
     $id = DB::table('ai_stockist')
-      ->where('set_transection_code', '=', date('ym'))
       ->orderby('id', 'desc')
       ->first();
+      // dd($id);
 
 
-    if (@$id->transection_code) {
-      $last_code = $id->transection_code;
-      $code = substr($last_code, -5);
-      $last_code = $code + 1;
+    if (@$id->id) {
+      $last_code = $id->id;
+      // $code = substr($last_code, -5);
+      $last_code = $last_code + 1;
 
       $num_code = substr("00000" . $last_code, -5);
       $code_order = 'T' . date('ymd') . '' . $num_code;
     } else {
+
       $last_code = 1;
       $num_code = substr("00000" . $last_code, -5);
       $code_order = 'T' . date('ymd') . '' . $num_code;
