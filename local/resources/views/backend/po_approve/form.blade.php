@@ -306,7 +306,7 @@
                                                                         @foreach (@$TransferBank as $r)
                                                                             <option value="{{ $r->id }}"
                                                                                 {{ @$r->id == @$sRow->account_bank_name_customer ? 'selected' : '' }}>
-                                                                                {{ $r->txt_bank_name }}
+                                                                                {{ $r->txt_account_name }}
                                                                             </option>
                                                                         @endforeach
                                                                     @endif

@@ -107,7 +107,7 @@ class StatusDeliveryController extends Controller
       if(!empty($req->bill_sdate) && !empty($req->bill_edate)){
          $delivery_date = " and date(db_delivery_packing_code.updated_at) BETWEEN '".$req->bill_sdate."' AND '".$req->bill_edate."'  " ;
       }else{
-         $delivery_date = "";
+         $delivery_date = " and date(db_delivery_packing_code.updated_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."' ";
       }
 
         if(!empty( $req->business_location_id_fk) ){

@@ -523,13 +523,13 @@
 
                                 } else {
                                     console.log("aData['pay_with_other_bill'] == 1");
-                                    $('td:last-child', nRow).html('' + '').addClass('input');
+                                    $('td:last-child', nRow).html('' + '<label style="color:red">ชำระพร้อมบิลอื่น</label>').addClass('input');
                                 }
 
 
                                 if (aData['price'] <= 0) {
                                     console.log("aData['price'] <= 0");
-                                    $('td:last-child', nRow).html('-');
+                                    $('td:last-child', nRow).html('<label style="color:red">บิลไม่ระบุยอดโอน</label>');
                                 }
 
                             }
@@ -673,7 +673,7 @@
                                         });
                                     }
                                     // $('td:last-child', nRow).html('-ยกเลิก-');
-                                    $('td:last-child', nRow).html('-');
+                                    $('td:last-child', nRow).html('<label style="color:red">บิลถูกจ่ายสินค้าแล้ว</label>');
 
                                 } else {
 
@@ -697,7 +697,7 @@
                                     //   str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
                                     // }
                                     if (sU != '1' && sD != '1') {
-                                        $('td:last-child', nRow).html('-');
+                                        $('td:last-child', nRow).html('<label style="color:red">ไม่มีสิทธิ์อนุมัติ</label>');
                                     } else {
                                         $('td:last-child', nRow).html(str_U).addClass('input');
                                     }
@@ -986,7 +986,7 @@
                                                         ).addClass('input');
                                                     } else {
                                                         console.log("aData['pay_with_other_bill'] == 1");
-                                                        $('td:last-child', nRow).html('' + '').addClass(
+                                                        $('td:last-child', nRow).html('' + '<label style="color:red">ชำระพร้อมบิลอื่น</label>').addClass(
                                                             'input');
                                                     }
                                                 },
@@ -1142,7 +1142,7 @@
                                                                     });
                                                                 }
                                                                 // $('td:last-child', nRow).html('-ยกเลิก-');
-                                                                $('td:last-child', nRow).html('-');
+                                                                $('td:last-child', nRow).html('<label style="color:red">บิลถูกจ่ายสินค้าแล้ว</label>');
 
                                                             } else {
 
@@ -1170,7 +1170,7 @@
                                                                     //   str_D = ' <a href="javascript: void(0);" data-url="{{ route('backend.add_ai_cash.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDeleteX cDelete " customer_id_fk="'+aData['customer_id_fk']+'"  data-id="'+aData['id']+'"  ><i class="bx bx-trash font-size-16 align-middle"></i></a> ';
                                                                     // }
                                                                     if (sU != '1' && sD != '1') {
-                                                                        $('td:last-child', nRow).html('-');
+                                                                        $('td:last-child', nRow).html('<label style="color:red">ไม่มีสิทธิ์อนุมัติ</label>');
                                                                     } else {
                                                                         $('td:last-child', nRow).html(str_U).addClass(
                                                                             'input');
@@ -1353,7 +1353,7 @@
                                                 });
                                             }
                                             // $('td:last-child', nRow).html('-ยกเลิก-');
-                                            $('td:last-child', nRow).html('-');
+                                            $('td:last-child', nRow).html('<label style="color:red">บิลถูกจ่ายสินค้าแล้ว</label>');
 
                                         } else {
 

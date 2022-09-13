@@ -123,7 +123,9 @@ input[type="text"]:disabled {
 
 <?php
 
-ini_set('memory_limit', '384M');
+ini_set("memory_limit","9999999M");
+ini_set('max_execution_time', '9999999');
+set_time_limit(9999999);
 
     require(app_path().'/Models/MyFunction.php');
     $arr_order_id = [];

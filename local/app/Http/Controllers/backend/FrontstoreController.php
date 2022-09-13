@@ -389,9 +389,23 @@ class FrontstoreController extends Controller
   public function store(Request $request)
   {
 
-    $customers = DB::table('customers')->select('user_name')->where('id',@$request->customers_id_fk)->first();
+    $customers = DB::table('customers')->select('user_name','business_location_id')->where('id',@$request->customers_id_fk)->first();
     if($customers){
+
+      if($request->purchase_type_id_fk==4){
+        $branchs = DB::table('branchs')->select('business_location_id_fk')->where('id',$request->branch_id_fk)->first();
+        if(!$branchs){
+          return redirect()->back()->with('error','ไม่พบข้อมูลสาขา');
+        }
+        if($customers->business_location_id==3 && $branchs->business_location_id_fk!=3 || $customers->business_location_id==1 && $branchs->business_location_id_fk!=1 || $customers->business_location_id=='' && $branchs->business_location_id_fk!=1){
+          return redirect()->back()->with('error','ลูกค้าต่างพื้นที่ไม่สามารถทำรายการเติม Ai Stock ได้');
+        }
+      }
+
      $result = \App\Helpers\Frontend::check_kyc($customers->user_name);
+
+
+
     if($result['status']=='fail'){
       return redirect()->back()->with('error',$customers->user_name.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน');
     }
@@ -1162,6 +1176,25 @@ class FrontstoreController extends Controller
 
       $this->fnManageGiveaway(@$request->frontstore_id);
       $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
+
+      if($sRow->approve_status==2){
+        if($sRow->pay_with_other_bill_note!=''){
+          $other_bill1 = DB::table('db_orders')->select('id','code_order')->where('code_order',$sRow->pay_with_other_bill_note)->update([
+            'approve_status' => 1,
+          ]);
+          $other_bill2 = DB::table('db_orders')->select('id','code_order')->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->update([
+            'approve_status' => 1,
+          ]);
+        }else{
+          $other_bill2 = DB::table('db_orders')->select('id','code_order')->where('pay_with_other_bill_note',$sRow->code_order)->update([
+            'approve_status' => 1,
+          ]);
+        }
+      }
+
+
+
+
 
       $delivery_location = request('delivery_location');
       $shipping_special = $request->shipping_special;
@@ -2633,6 +2666,7 @@ class FrontstoreController extends Controller
         if($r->action_user_name == ''){
           $r->action_user_name = 'V3';
         }
+
         $show .= '
                     <tr>
                       <td>' . $r->action_user_name . '</td>
@@ -2703,6 +2737,55 @@ class FrontstoreController extends Controller
 
         ");
 
+        $text = " SELECT
+        SUM(CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) AS credit_price,
+        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
+        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
+        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
+        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
+        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
+
+        SUM(CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) AS fee_amt_charger_in,
+
+        db_orders.code_order,
+
+        SUM(
+        (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
+        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+        /*  (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +  */
+        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
+
+        (CASE WHEN db_orders.charger_type = 2 THEN 0 WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END)
+
+        /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
+        ) as total_price,
+
+        SUM(
+         CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
+        ) AS shipping_price
+
+
+
+        FROM
+        db_orders
+        WHERE 1
+        AND approve_status <> 5
+        AND approve_status <> 0
+        $action_user_011
+        $startDate1
+        $endDate1
+        $invoice_code
+        $purchase_type_id_fk
+        $customer_username
+        $customer_name
+        $action_user_02
+        $status_sent_money
+        $approve_status
+        $viewcondition_01
+        $business_location_id_fk";
+        // echo $text;
+
 
 //       $sDBFrontstoreTOTAL = DB::select("
 //       SELECT
@@ -2732,6 +2815,9 @@ class FrontstoreController extends Controller
         // dd($sDBFrontstoreTOTAL[0]->fee_amt_charger_in);
 
   //  วุฒิเพิ่มมา + $sDBFrontstoreTOTAL[0]->fee_amt วุฒิบวกค่าธรรมเนียม
+
+
+
 
       $show .= '
                     <tr>

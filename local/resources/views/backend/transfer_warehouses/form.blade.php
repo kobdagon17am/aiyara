@@ -18,7 +18,7 @@
 </div>
 <!-- end page title -->
 
-  <?php 
+  <?php
     $sPermission = \Auth::user()->permission ;
     // $menu_id = @$_REQUEST['menu_id'];
     $menu_id = Session::get('session_menu_id');
@@ -38,7 +38,7 @@
 
       //   echo $sPermission;
       // echo $role_group_id;
-      // echo $menu_id;  
+      // echo $menu_id;
 
    ?>
 <div class="row">
@@ -86,7 +86,7 @@
                               <input class="form-control" type="text" value="{{ @$approver?@$approver:\Auth::user()->name }}" readonly style="background-color: #f2f2f2;" >
                               <input class="form-control" type="hidden" value="{{ @$sRow->approver?@$sRow->approver:\Auth::user()->id }}" name="approver" >
                          @endif
-                          
+
                       </div>
                   </div>
 
@@ -95,9 +95,9 @@
                     <div class="col-md-3 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1"  >
+                          <input type="radio" class="" required id="customSwitch1" name="approve_status" value="1"  >
                         @else
-                          <input type="radio" class="" id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }}>
+                          <input type="radio" class="" required id="customSwitch1" name="approve_status" value="1" {{ ( @$sRow->approve_status=='1')?'checked':'' }}>
                         @endif
                           <label for="customSwitch1">อนุมัติ / Aproved</label>
                       </div>
@@ -105,9 +105,9 @@
                      <div class="col-md-6 mt-2">
                       <div class=" ">
                         @if( empty($sRow) )
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3"  >
+                          <input type="radio" class="" required id="customSwitch2" name="approve_status" value="3"  >
                         @else
-                          <input type="radio" class="" id="customSwitch2" name="approve_status" value="3" {{ ( @$sRow->approve_status=='3')?'checked':'' }}>
+                          <input type="radio" class="" required id="customSwitch2" name="approve_status" value="3" {{ ( @$sRow->approve_status=='3')?'checked':'' }}>
                         @endif
                           <label class="" for="customSwitch2">ไม่อนุมัติ / No Aproved</label>
                       </div>
@@ -130,7 +130,7 @@
                     </a>
                   </div>
                   <div class="col-md-6 text-right">
-                    @if( @$sRow->approve_status=='0' )  
+                    @if( @$sRow->approve_status=='0' || @$sRow->approve_status=='')
                     <button type="submit" class="btn btn-primary btn-sm waves-effect">
                     <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                     </button>
@@ -166,7 +166,7 @@
 
     var list_id = "{{@$_REQUEST['list_id']}}";
 
-  
+
     var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
     var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
     var sU = "{{@$sU}}"; //alert(sU);
@@ -216,7 +216,7 @@
                 },
 
           });
-        
+
       });
 
       // alert(list_id);
