@@ -879,6 +879,7 @@ class Transfer_branchController extends Controller
         ->leftJoin('shelf', 'shelf.id', '=', 'db_stocks.shelf_id_fk')
         ->where('db_stocks.branch_id_fk', $request->to_branch_id)
         ->where('db_stocks.product_id_fk', $request->product_id)
+        ->where('db_stocks.amt','>',0)
         ->get();
 
       $options = "<option value=''>เลือกคลัง</option>";
@@ -921,10 +922,14 @@ class Transfer_branchController extends Controller
 
         if($value['stock']!=null && $value['stock']!=''){
           $requisitionBetweenBranchDetail = RequisitionBetweenBranchDetail::find($key);
-          $requisitionBetweenBranchDetail->update([
-            'amount' => $value['amount']
-          ]);
-          $requisitionBetweenBranchDetail->requisition->update(['is_transfer' => 1]);
+
+          if($requisitionBetweenBranchDetail){
+                // $requisitionBetweenBranchDetail->update([
+          //   'amount' => $value['amount']
+          // ]);
+            $requisitionBetweenBranchDetail->requisition->update(['is_transfer' => 1]);
+          }
+
 
           $stocks = DB::table('db_stocks')->where('id', $value['stock'])->first();
 

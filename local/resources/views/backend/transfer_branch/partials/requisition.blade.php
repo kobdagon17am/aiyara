@@ -24,12 +24,13 @@
             <div class="modal-body">
                 <form action="{{ route('backend.transfer_branch.store-from-requisition') }}" method="POST">
                     {{ csrf_field() }}
-                    <table class='table table-bordered table-sm'>
+                    <table class='table table-bordered table-sm' id="table-details">
                         <thead>
                             <tr>
                                 <td>สินค้า</td>
                                 <td>จำนวน</td>
                                 <td width="60%">คลังสินค้า</td>
+                                <td></td>
                             </tr>
                         </thead>
                         <tbody id="tbodyDetails"></tbody>
@@ -39,6 +40,8 @@
                         <label for="remark">หมายเหตุ</label>
                         <textarea name="note" class="form-control" rows="3"></textarea>
                     </div>
+
+
 
                     <div class="text-center mt-3">
                         <button class="btn btn-primary" id="requisitionSubmitBtn">
