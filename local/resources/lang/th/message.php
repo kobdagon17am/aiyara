@@ -293,7 +293,7 @@ return [
 
 'myprofile' => 'ข้อมูลส่วนตัว',
 'jobstructure' => 'โครงสร้างสายงาน',
-'directsponsor' => 'ผู้สนับสนุน',
+'directsponsor' => 'การแนะนำตรง',
 'commission' => 'ค่าคอมมิชชั่น',
 'order' => 'สั่งซื้อสินค้า',
 'Ai-Cash' => 'Ai-Cash',
