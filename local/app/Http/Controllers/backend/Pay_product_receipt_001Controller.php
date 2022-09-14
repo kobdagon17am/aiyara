@@ -1978,6 +1978,7 @@ foreach($temp_ppr_0021_data as $tmp){
     }
 
 // เก็บประวัติการเลือก
+// 	ชื่อสินค้า รายการสินค้าตามใบเสร็จ Scan Qr-code
     public function Datatable007(Request $req){
 
       if(isset($req->txtSearch)){
@@ -2011,10 +2012,10 @@ foreach($temp_ppr_0021_data as $tmp){
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=
             '<div class="divTableRow">
-              <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+              <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า ..</div>
               <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
               <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
-              <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
+              <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;"> Scan Qr-code .. </div>
             </div>
             ';
 
@@ -2070,7 +2071,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
               $pn .=
               '<div class="divTableRow">
-              <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม </div>
+              <div class="divTableCell" style="text-align:right;font-weight:bold;"> รวม .. </div>
               <div class="divTableCell" style="text-align:center;font-weight:bold;">'.$sum_amt.'</div>
               <div class="divTableCell" style="text-align:center;"> </div>
               <div class="divTableCell" style="text-align:center;"> </div>
@@ -2144,7 +2145,7 @@ foreach($temp_ppr_0021_data as $tmp){
           $pn = '<div class="divTable"><div class="divTableBody">';
           $pn .=
           '<div class="divTableRow">
-            <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+            <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า </div>
             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
             <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
             <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;">
