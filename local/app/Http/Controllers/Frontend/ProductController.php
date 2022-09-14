@@ -65,6 +65,7 @@ class ProductController extends Controller
             $c_id = $request->category_id;
 
             if ($c_id == 8) {
+
                 $html = Product::product_list_select_promotion($type, Auth::guard('c_user')->user()->user_name);
                 return $html;
             } else {
