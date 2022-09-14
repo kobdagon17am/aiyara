@@ -213,10 +213,10 @@ class Member_pvController extends Controller
                       ->where('customer_id',$customer_id)->where('type',4)
                       ->update(
                     [
-                      'url' => $url,
+                    'url' => $url,
                     'file' => $f_name,
                     'approve_date' => null,
-                    'comment' => $data->comment.' (ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดยพนักงาน)',
+                    'comment' => $data->comment.' (ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดย '.\Auth::user()->name.')',
                     'approver' => null,
                     'regis_doc_status' => 0,
                     'created_at' => date('Y-m-d H:i:s'),

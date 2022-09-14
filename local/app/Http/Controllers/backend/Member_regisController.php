@@ -305,7 +305,11 @@ class Member_regisController extends Controller
       ->addIndexColumn()
        ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
-          $Customer = DB::select(" select * from customers where id=".@$row->customer_id." ");
+          $Customer = DB::select(" select
+          user_name,
+          prefix_name,
+          first_name,
+          last_name from customers where id=".@$row->customer_id." ");
 
           return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
         }else{
@@ -335,7 +339,7 @@ class Member_regisController extends Controller
       ->escapeColumns('filetype')
 
       ->addColumn('regis_status', function($row) {
-
+        $Customers = \App\Models\Backend\Customers::where('id',$row->customer_id)->first();
         // $d = DB::select(" select type from register_files where customer_id=".$row->customer_id." group by type order by id desc");
         $d = DB::table('register_files')
         ->select(DB::raw('max(id) as id'),'type')
@@ -350,7 +354,6 @@ class Member_regisController extends Controller
         $r4 = '' ;
         foreach ($d as $key => $value) {
             $filetype = DB::select(" select id from dataset_regis_filetype where id=".$value->type." order by id  ");
-            $Customers = \App\Models\Backend\Customers::where('id',$row->customer_id)->first();
 
             if($filetype[0]->id==1){
 
@@ -378,7 +381,6 @@ class Member_regisController extends Controller
                }else{
                 $r2 = '';
               }
-
 
             if($filetype[0]->id==3){
 
