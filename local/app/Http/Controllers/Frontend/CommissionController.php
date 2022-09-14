@@ -383,7 +383,7 @@ class CommissionController extends Controller
 
             ->addColumn('deep', function ($row) {
                 if ($row->deep) {
-                    return $row->deep;
+                    return  number_format($row->deep);
                 } else {
                     return '-';
                 }
