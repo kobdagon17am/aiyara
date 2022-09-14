@@ -282,7 +282,7 @@
             </a>
         @endif
         @if ($rs['data']->url_line)
-            <a href="{{ $rs['data']->url_line }}" class="buttons" title="line" data-toggle="tooltip"
+        <a href="https://line.me/ti/p/{{ $rs['data']->url_line }}" class="buttons" title="line" data-toggle="tooltip"
                 data-placement="left">
                 <img src="{{ asset('frontend/salepage/img/line.png') }}" style="margin-top: -16px;" class="img-fluid"
                     width="50" alt="...">
