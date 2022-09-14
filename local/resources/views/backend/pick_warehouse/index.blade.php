@@ -269,7 +269,7 @@
                                                         <button type="button"
                                                             class="btn btn-primary btn-sm waves-effect font-size-16 btnSave ">
                                                             <i class="bx bx-save font-size-16 align-middle mr-1"></i>
-                                                            บันทึกการเบิกสินค้า
+                                                            ผู้อนุมัติเบิกสินค้า
                                                         </button>
 
                                                     </div>
@@ -316,7 +316,7 @@
           <span class="close">&times;</span>
           <p>Some text in the Modal..</p>
         </div>
-      
+
       </div>
 
 @endsection
@@ -559,7 +559,7 @@
 
             //               var ids = rows_selected.rows( { selected: true } ).data().pluck( 'id' ).toArray();
 
-            //               // // console.log(ids); 
+            //               // // console.log(ids);
 
             //       }, 500);
 
@@ -742,7 +742,7 @@
 
             // return false;
 
-            // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว 
+            // ก่อนบันทึก recheck อีกรอบ เผื่อมีสินค้าเข้ามาเติมเต็มแล้ว
             setTimeout(function() {
 
                 if (picking_id != "") {
@@ -912,8 +912,8 @@
     </script>
 
 
-    <?php 
-    
+    <?php
+
     if(isset($_REQUEST['test_clear_data'])){
 
       DB::select("TRUNCATE db_pay_product_receipt_001;");
@@ -928,19 +928,19 @@
 
       DB::select("TRUNCATE `db_pick_pack_packing`;");
       DB::select("TRUNCATE `db_pick_pack_packing_code`;");
-      
+
       DB::select("TRUNCATE `db_pick_pack_requisition_code`;");
 
       DB::select("TRUNCATE db_pick_warehouse_qrcode;");
       DB::select("TRUNCATE db_stocks_return;");
       DB::select("TRUNCATE db_stock_card;");
       DB::select("TRUNCATE db_stock_card_tmp;");
-          
-      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id; 
-      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id; 
-      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id; 
-      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id; 
-      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id; 
+
+      $temp_db_stocks_check = "temp_db_stocks_check".\Auth::user()->id;
+      $temp_db_stocks_check002 = "temp_db_stocks_check002".\Auth::user()->id;
+      $temp_db_stocks_compare = "temp_db_stocks_compare".\Auth::user()->id;
+      $temp_db_stocks_compare002 = "temp_db_stocks_compare002".\Auth::user()->id;
+      $temp_db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ; ");
