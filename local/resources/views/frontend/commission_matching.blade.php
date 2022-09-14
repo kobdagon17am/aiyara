@@ -100,7 +100,7 @@
               {data: 'bns_strong_leg'},
               {data: 'benefit'},
               {data: 'reward_bonus'},
-          ],order:[[0,'DESC']],
+          ],order:[[0,'ASC']],
           "footerCallback": function(row, data, start, end, display) {
                 var api = this.api(),
                     data;
