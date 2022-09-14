@@ -425,7 +425,7 @@ class Member_regisController extends Controller
 
         // $d = DB::select(" select approver from register_files where customer_id=".$row->customer_id." group by type order by id desc");
         $d = DB::table('register_files')
-        ->select(DB::raw('max(id) as id'),'approver')
+        ->select(DB::raw('max(id) as id'),'approver','type')
         ->where('customer_id',$row->customer_id)
         ->orderBy('id', 'desc')
         ->groupBy('type')
@@ -435,7 +435,15 @@ class Member_regisController extends Controller
         //   dd($d);
         //           }
         foreach ($d as $key => $value) {
-            $c = DB::select("select * from ck_users_admin where id = ".(@$value->approver?$value->approver:0));
+          $r_real = DB::table('register_files')
+          ->select('approver')
+          ->where('customer_id',$row->customer_id)
+          ->where('type',$value->type)
+          ->orderBy('id', 'desc')
+          ->first();
+
+            // $c = DB::select("select * from ck_users_admin where id = ".(@$value->approver?$value->approver:0));
+            $c = DB::select("select * from ck_users_admin where id = ".(@$r_real->approver?@$r_real->approver:0));
             if(count($c)!=0){
               array_push($f,isset($c) ? $c[0]->name : '-');
             }else{
@@ -455,17 +463,23 @@ class Member_regisController extends Controller
 
         // $d = DB::select(" select approve_date from register_files where customer_id=".$row->customer_id." group by type order by id desc");
         $d = DB::table('register_files')
-        ->select(DB::raw('max(id) as id'),'approve_date')
+        ->select(DB::raw('max(id) as id'),'approve_date','type')
         ->where('customer_id',$row->customer_id)
         ->orderBy('id', 'desc')
         ->groupBy('type')
         ->get();
-        if($row->id==65){
 
-        }
         $f = [] ;
         foreach ($d as $key => $value) {
-            array_push($f,(@$value->approve_date?$value->approve_date:'-'));
+          $r_real = DB::table('register_files')
+          ->select('approve_date')
+          ->where('customer_id',$row->customer_id)
+          ->where('type',$value->type)
+          ->orderBy('id', 'desc')
+          ->first();
+
+            // array_push($f,(@$value->approve_date?$value->approve_date:'-'));
+            array_push($f,(@$r_real->approve_date?$r_real->approve_date:'-'));
         }
 
         $f = implode('<br>',$f);
