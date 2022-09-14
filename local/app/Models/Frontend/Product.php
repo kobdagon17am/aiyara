@@ -80,7 +80,7 @@ class Product extends Model
             ->whereRaw(('case WHEN ' . $c_id . ' != 1 THEN products.category_id = ' . $c_id . ' else products.category_id != ' . $c_id . ' END'))
         // ->where('products.category_id', '=',$c_id)
             ->where('products_images.image_default', '=', 1)
-            ->where('promotions.status', '=', 1)
+            ->where('products.status', '=', 1)
             ->where('products_details.lang_id', '=', $business_location_id)
             ->where('products_cost.business_location_id', '=', $business_location_id)
             ->orderby('products.id')
