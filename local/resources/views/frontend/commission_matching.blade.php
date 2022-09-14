@@ -14,7 +14,7 @@
 
          <div class="card-header">
             <h4 class="m-b-10">Matching Bonus Detail</h4>
-             <h5 class="m-b-10">User::ID : A0001 วันที่:2021/01/01</h5>
+             <h5 class="m-b-10">{{$data['user_name']}} วันที่: ( {{ date('d/m/Y',strtotime($data['date'])) }} ) </h5>
         </div>
 
         <div class="card-block">
@@ -26,11 +26,26 @@
                         <th class="text-center" >Deep</th>
                         <th class="text-center" >Gen</th>
                         <th class="text-center" >UserName</th>
+                        <th class="text-center" >Name</th>
                         <th class="text-center" >Bns_strong_leg</th>
                         <th class="text-center" >Benefit</th>
                         <th class="text-center" >Reward Bonus</th>
                     </tr>
                 </thead>
+                <tfoot>
+                  <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>Total</td>
+                      <td></td>
+
+                  </tr>
+              </tfoot>
+
+
 
             </table>
         </div>
@@ -57,27 +72,60 @@
 <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
 <!-- Custom js -->
 <script type="text/javascript">
+ function numberWithCommas(x) {
+        // x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        rs = parseFloat(x).toFixed(2);
+        return rs;
+
+    }
   $(function() {
       var oTable = $('#multi-colum-dt').DataTable({
           processing: true,
           serverSide: true,
           searching: true,
+          paging: false,
           ajax: {
               url: "{!! route('dt_commission_matching') !!}",
               type:'GET',
               data: function (d) {
-                d.customer_id = "{{ $data['customer_id'] }}";
+                d.user_name = "{{ $data['user_name'] }}";
                 d.date =  "{{ $data['date'] }}";
             }
               },
 
-          columns: [{data: 'gen'},
-              {data: 'deep'},
+          columns: [{data: 'deep'},
+              {data: 'gen'},
               {data: 'username'},
+              {data: 'name'},
               {data: 'bns_strong_leg'},
               {data: 'benefit'},
               {data: 'reward_bonus'},
-          ],order:[[0,'DESC']]
+          ],order:[[0,'DESC']],
+          "footerCallback": function(row, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+
+                sum = api
+                    .column(6, {
+                        page: 'current'
+                    })
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                $(api.column(6).footer()).html(numberWithCommas(sum));
+
+            }
       });
   });
 </script>

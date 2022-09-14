@@ -12,7 +12,8 @@
     <div class="col-md-12">
         <div class="card">
          <div class="card-header">
-            <h4 class="m-b-10">FastStart Bonus Detail  ( {{ date('d/m/Y',strtotime($data['date'])) }} ) </h4>
+            <h4 class="m-b-10">FastStart Bonus Detail  </h4>
+            <h5 class="m-b-10">{{$data['customer_username']}} วันที่: ( {{ date('d/m/Y',strtotime($data['date'])) }} ) </h5>
         </div>
 
         <div class="card-block">
@@ -28,6 +29,17 @@
                         <th class="text-center" >Invtype</th>
                     </tr>
                 </thead>
+                <tfoot>
+                  <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>Total</td>
+                      <td></td>
+                      <td></td>
+
+                  </tr>
+              </tfoot>
 
             </table>
         </div>
@@ -52,6 +64,12 @@
 <script src="{{asset('frontend/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
 <!-- Custom js -->
 <script type="text/javascript">
+    function numberWithCommas(x) {
+        // x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        rs = parseFloat(x).toFixed(2);
+        return rs;
+
+    }
 
   $(function() {
 
@@ -59,6 +77,7 @@
           processing: true,
           serverSide: true,
           searching: true,
+          paging: false,
           ajax: {
               url: "{!! route('dt_commission_faststart') !!}",
               type:'GET',
@@ -74,7 +93,35 @@
               {data: 'benefit'},
               {data: 'faststart_bonus'},
               {data: 'invtype'},
-          ],order:[[0,'DESC']]
+          ],order:[[0,'DESC']],
+
+          "footerCallback": function(row, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+
+                sum = api
+                    .column(4, {
+                        page: 'current'
+                    })
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+
+
+                $(api.column(4).footer()).html(numberWithCommas(sum));
+
+            }
       });
   });
 </script>

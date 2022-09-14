@@ -216,17 +216,17 @@ class CommissionController extends Controller
                 }
             })
             ->addColumn('faststart', function ($row) {
-                if ($row->faststart) {
+                if ($row->faststart and $row->faststart > 0 ) {
                     // $row->action_date
-                    $url = route('commission_faststart', ['customer_id' => $row->customer_username, 'date' => $row->action_date]);
+                    $url = route('commission_faststart', ['user_name' => $row->customer_username, 'date' => $row->action_date]);
                     return "<a href='" . $url . "' class='text-primary'>" . number_format($row->faststart) . "</a>";
                 } else {
                     return '-';
                 };
             })
             ->addColumn('matching', function ($row) {
-                if ($row->matching) {
-                    $url = route('commission_matching', ['customer_id' => $row->customer_username, 'date' => $row->action_date]);
+                if ($row->matching and $row->matching > 0) {
+                    $url = route('commission_matching', ['user_name' => $row->customer_username, 'date' => $row->action_date]);
                     return "<a href='" . $url . "' class='text-primary'>" . number_format($row->matching) . "</a>";
 
                 } else {
@@ -282,14 +282,12 @@ class CommissionController extends Controller
 
     public function dt_commission_faststart(Request $rs)
     {
+
         $db_commission_faststart = DB::table('db_report_bonus_faststart')
             ->where('customer_username', '=', $rs->customer_username)
             ->wheredate('action_date', '=', $rs->date)
             ->orderby('action_date', 'DESC')
             ->get();
-
-
-
 
         //$customer_data = Frontend::get_customer('8');
         //dd($db_commission_faststart);
@@ -316,16 +314,16 @@ class CommissionController extends Controller
             })
             ->addColumn('benefit', function ($row) {
                 if ($row->benefit) {
-                    return $row->benefit;
+                    return $row->benefit.'%';
                 } else {
                     return '-';
                 }
             })
             ->addColumn('faststart_bonus', function ($row) {
                 if ($row->faststart_bonus) {
-                    return number_format($row->faststart_bonus);
+                    return number_format($row->faststart_bonus,2);
                 } else {
-                    return '-';
+                    return '0';
                 }
             })
             ->addColumn('invtype', function ($row) {
@@ -338,13 +336,13 @@ class CommissionController extends Controller
             ->make(true);
     }
 
-    public function commission_matching($customer_id, $date)
+    public function commission_matching($user_name, $date)
     {
-        if ($customer_id == '' || $date == '') {
+        if ($user_name == '' || $date == '') {
             return redirect('commission_per_day')->withError('Data Is Null');
         } else {
             $date = date('Y-m-d', strtotime($date));
-            $data = ['customer_id' => $customer_id, 'date' => $date];
+            $data = ['user_name' => $user_name, 'date' => $date];
         }
 
         return view('frontend/commission_matching', compact('data'));
@@ -353,33 +351,58 @@ class CommissionController extends Controller
     public function dt_commission_matching(Request $rs)
     {
         $db_commission_matching = DB::table('db_report_bonus_matching')
-            ->where('customer_username', '=', $rs->customer_username)
+            ->where('customer_username', '=', $rs->user_name)
             ->wheredate('action_date', '=', $rs->date)
-            ->orderby('action_date', 'DESC')
+            ->orderby('deep')
             ->get();
 
         //$customer_data = Frontend::get_customer('8');
         $sQuery = Datatables::of($db_commission_matching);
         return $sQuery
             ->addColumn('username', function ($row) {
-                $customer_data = Frontend::get_customer($row->customer_id_fk);
-                return $customer_data->user_name;
+
+                return $row->customer_matching_username;
+
+            })
+
+            ->addColumn('name', function ($row) {
+
+              $user = DB::table('customers')
+              ->select('business_name','prefix_name','first_name','last_name')
+              ->where('user_name', '=', $row->customer_matching_username)
+              ->first();
+
+              if( $user->business_name and  $user->business_name  != '-'){
+                return $user->business_name;
+              }else{
+                $name = $user->prefix_name.' '. $user->first_name.' '. $user->last_name;
+                return $name;
+              }
+
             })
 
             ->addColumn('deep', function ($row) {
                 if ($row->deep) {
-                    return number_format($row->deep, 2);
+                    return $row->deep;
                 } else {
                     return '-';
                 }
             })
+            ->addColumn('gen', function ($row) {
+              if ($row->gen) {
+                  return 'G-'.$row->gen;
+              } else {
+                  return '-';
+              }
+          })
             ->addColumn('benefit', function ($row) {
                 if ($row->benefit) {
-                    return $row->benefit;
+                    return $row->benefit.'%';
                 } else {
                     return '-';
                 }
             })
+
             ->addColumn('bns_strong_leg', function ($row) {
                 if ($row->bns_strong_leg) {
                     return number_format($row->bns_strong_leg, 2);
@@ -391,7 +414,7 @@ class CommissionController extends Controller
                 if ($row->reward_bonus) {
                     return number_format($row->reward_bonus, 2);
                 } else {
-                    return '-';
+                    return '0';
                 }
             })
             ->make(true);
