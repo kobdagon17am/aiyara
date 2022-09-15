@@ -30,7 +30,8 @@ class DirectSponsorController extends Controller
         $id = Auth::guard('c_user')->user()->id;
 
         $sTable = DB::table('customers')
-            ->select('customers.id', 'customers.user_name', 'customers.introduce_id', 'customers.upline_id', 'customers.pv_mt_active', 'customers.introduce_type', 'customers.business_name',
+            ->select('customers.id', 'customers.user_name', 'customers.introduce_id', 'customers.upline_id',
+            'customers.pv_mt_active', 'customers.introduce_type', 'customers.business_name',
                 'customers.reward_max_id', 'customers.line_type','customers.team_active_a','customers.team_active_b','customers.team_active_c',
                 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name')
             ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
@@ -38,7 +39,8 @@ class DirectSponsorController extends Controller
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             ->where('customers.introduce_id', '=', $user_name)
             ->orwhere('customers.user_name', '=', $user_name)
-            ->orderbyraw('(customers.id = ' . $id . ') DESC')
+            ->orderbyraw('(customers.id = ' . $id . '),customers.introduce_type,customers.id ASC')
+            // ->orderbyraw('customers.introduce_type ASC')
             ->get();
 
         $sQuery = DataTables::of($sTable);
@@ -54,14 +56,26 @@ class DirectSponsorController extends Controller
                 return $row->user_name;
             })
             ->addColumn('business_name', function ($row) {
-                return $row->business_name;
+
+
+                if( $row->business_name and  $row->business_name  != '-'){
+                  return $row->business_name.' <b>('.$row->user_name.')</b>';
+                }else{
+                  $name = $row->prefix_name.' '. $row->first_name.' '. $row->last_name.' <b>('.$row->user_name.')</b>';
+                  return $name;
+                }
             })
             ->addColumn('dt_package', function ($row) {
                 return $row->dt_package;
             })
 
             ->addColumn('upline', function ($row) {
-                return $row->user_name . '/' . $row->line_type;
+              $user = DB::table('customers')
+              ->select('line_type')
+              ->where('user_name', '=', $row->upline_id)
+              ->first();
+
+                return $row->upline_id . '/' . $user->line_type;
             })
 
             ->addColumn('pv_mt_active', function ($row) {
@@ -122,7 +136,7 @@ class DirectSponsorController extends Controller
             return $row->max_code_name;
           })
 
-            ->rawColumns(['upline','pv_mt_active'])
+            ->rawColumns(['upline','pv_mt_active','business_name'])
             ->make(true);
     }
 
