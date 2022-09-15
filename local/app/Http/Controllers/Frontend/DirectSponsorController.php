@@ -95,26 +95,26 @@ class DirectSponsorController extends Controller
             })
 
             ->addColumn('count_directsponsor_a', function ($row) {
-              if(empty($row->month_pv_a)){
+              if(empty($row->team_active_a)){
                 $a = 0;
               }else{
-                $a = $row->month_pv_a;
+                $a = $row->team_active_a;
               }
                 return $a = 0;
             })
             ->addColumn('count_directsponsor_b', function ($row) {
-              if(empty($row->month_pv_b)){
+              if(empty($row->team_active_b)){
                 $b = 0;
               }else{
-                $b = $row->month_pv_b;
+                $b = $row->team_active_b;
               }
                 return $b = 0;
             })
             ->addColumn('count_directsponsor_c', function ($row) {
-              if(empty($row->month_pv_c)){
+              if(empty($row->team_active_c)){
                 $c = 0;
               }else{
-                $c = $row->month_pv_c;
+                $c = $row->team_active_c;
               }
                 return $c = 0;
             })
