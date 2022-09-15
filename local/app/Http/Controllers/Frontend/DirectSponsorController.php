@@ -39,6 +39,8 @@ class DirectSponsorController extends Controller
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             ->where('customers.introduce_id', '=', $user_name)
             ->orwhere('customers.user_name', '=', $user_name)
+            // ->where('customers.user_name', '=', 'A10263')
+
             ->orderbyraw('(customers.id = ' . $id . '),customers.introduce_type,customers.id ASC')
             // ->orderbyraw('customers.introduce_type ASC')
             ->get();
@@ -95,12 +97,13 @@ class DirectSponsorController extends Controller
             })
 
             ->addColumn('count_directsponsor_a', function ($row) {
+
               if(empty($row->team_active_a)){
                 $a = 0;
               }else{
                 $a = $row->team_active_a;
               }
-                return $a = 0;
+                return $a;
             })
             ->addColumn('count_directsponsor_b', function ($row) {
               if(empty($row->team_active_b)){
@@ -108,7 +111,7 @@ class DirectSponsorController extends Controller
               }else{
                 $b = $row->team_active_b;
               }
-                return $b = 0;
+                return $b;
             })
             ->addColumn('count_directsponsor_c', function ($row) {
               if(empty($row->team_active_c)){
@@ -116,7 +119,7 @@ class DirectSponsorController extends Controller
               }else{
                 $c = $row->team_active_c;
               }
-                return $c = 0;
+                return $c ;
             })
 
             ->addColumn('reward_bonus', function ($row) {
