@@ -19,7 +19,7 @@ class Transfer_branch_codeController extends Controller
 
         $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -42,7 +42,7 @@ class Transfer_branch_codeController extends Controller
            'User_branch_id'=>$User_branch_id,
            'Transfer_branch_status'=>$Transfer_branch_status,
         ) );
-      
+
     }
 
  public function create()
@@ -64,8 +64,8 @@ class Transfer_branch_codeController extends Controller
 
               // return $this->form();
               if($request->save_set_to_warehouse_c_e==1){
-              
-   
+
+
                       $Transfer_branch_code = new \App\Models\Backend\Transfer_branch_code;
                       $Transfer_branch_code->business_location_id_fk = request('business_location_id_fk');
                       $Transfer_branch_code->branch_id_fk = request('branch_id_fk');
@@ -96,25 +96,25 @@ class Transfer_branch_codeController extends Controller
                       DB::update(" update db_transfer_branch_code set tr_number=? where id=? ",[$ref_doc,$Transfer_branch_code->id]);
 
 
-                      for ($i=0; $i < count($request->transfer_choose_id) ; $i++) { 
+                      for ($i=0; $i < count($request->transfer_choose_id) ; $i++) {
                           $Transfer_choose = \App\Models\Backend\Transfer_choose_branch::find($request->transfer_choose_id[$i]);
-                          DB::insert("  
-                             insert into db_transfer_branch_details set  
-                             transfer_branch_code_id=? 
-                             ,stocks_id_fk=? 
-                             ,product_id_fk=? 
-                             ,lot_number=? 
-                             ,lot_expired_date=? 
-                             ,amt=? 
-                             ,product_unit_id_fk=? 
-                             ,branch_id_fk=? 
-                             ,warehouse_id_fk=? 
-                             ,zone_id_fk=? 
-                             ,shelf_id_fk=? 
-                             ,shelf_floor=? 
-                             ,action_user=? 
-                             ,action_date=? 
-                             ,created_at=? 
+                          DB::insert("
+                             insert into db_transfer_branch_details set
+                             transfer_branch_code_id=?
+                             ,stocks_id_fk=?
+                             ,product_id_fk=?
+                             ,lot_number=?
+                             ,lot_expired_date=?
+                             ,amt=?
+                             ,product_unit_id_fk=?
+                             ,branch_id_fk=?
+                             ,warehouse_id_fk=?
+                             ,zone_id_fk=?
+                             ,shelf_id_fk=?
+                             ,shelf_floor=?
+                             ,action_user=?
+                             ,action_date=?
+                             ,created_at=?
                              ",
                             [
                               $Transfer_branch_code->id
@@ -135,23 +135,23 @@ class Transfer_branch_codeController extends Controller
                             ]);
 
 
-                           DB::insert("  
-                             insert into db_transfer_branch_details_log set  
-                             transfer_branch_code_id=? 
-                             ,stocks_id_fk=? 
-                             ,product_id_fk=? 
-                             ,lot_number=? 
-                             ,lot_expired_date=? 
-                             ,amt=? 
-                             ,product_unit_id_fk=? 
-                             ,branch_id_fk=? 
-                             ,warehouse_id_fk=? 
-                             ,zone_id_fk=? 
-                             ,shelf_id_fk=? 
-                             ,shelf_floor=? 
-                             ,action_user=? 
-                             ,action_date=? 
-                             ,created_at=? 
+                           DB::insert("
+                             insert into db_transfer_branch_details_log set
+                             transfer_branch_code_id=?
+                             ,stocks_id_fk=?
+                             ,product_id_fk=?
+                             ,lot_number=?
+                             ,lot_expired_date=?
+                             ,amt=?
+                             ,product_unit_id_fk=?
+                             ,branch_id_fk=?
+                             ,warehouse_id_fk=?
+                             ,zone_id_fk=?
+                             ,shelf_id_fk=?
+                             ,shelf_floor=?
+                             ,action_user=?
+                             ,action_date=?
+                             ,created_at=?
                              ",
                             [
                               $Transfer_branch_code->id
@@ -181,9 +181,9 @@ class Transfer_branch_codeController extends Controller
               }
 
               return redirect()->to(url("backend/transfer_branch"));
-        
 
-      
+
+
     }
 
     public function edit($id)
@@ -237,7 +237,7 @@ class Transfer_branch_codeController extends Controller
           \DB::commit();
 
            return redirect()->to(url("backend/.transfer_branch_code./".$sRow->id."/edit"));
-           
+
 
       } catch (\Exception $e) {
         echo $e->getMessage();
@@ -253,7 +253,7 @@ class Transfer_branch_codeController extends Controller
       // if( $sRow ){
       //   $sRow->forceDelete();
       // }
-      // ไม่ได้ลบจริง 
+      // ไม่ได้ลบจริง
       DB::update(" UPDATE db_transfer_branch_code SET approve_status=2 WHERE id=$id ; ");
       // เอาไว้เปิดดูใบโอนได้
       // DB::update(" UPDATE db_transfer_warehouses_details SET deleted_at=now() WHERE transfer_branch_code_id=$id ; ");
@@ -271,7 +271,8 @@ class Transfer_branch_codeController extends Controller
 
 
        if(!empty($req->business_location_id_fk)){
-           $w01 = " AND db_transfer_branch_code.business_location_id_fk=".$req->business_location_id_fk ;
+          //  $w01 = " AND db_transfer_branch_code.business_location_id_fk=".$req->business_location_id_fk ;
+          $w01 = "";
         }else{
            $w01 = "";
         }
@@ -279,8 +280,9 @@ class Transfer_branch_codeController extends Controller
 // สาขาที่ดำเนินการ
         if(!empty($req->branch_id_fk)){
            $w02 = " AND db_transfer_branch_code.branch_id_fk = ".$req->branch_id_fk." " ;
+          //  dd($w01);
         }else{
-           if($sPermission==1){
+           if($sPermission==1 || auth()->user()->position_level != 5){
               $w02 = "";
           }else{
              //  $w02 = "AND (db_transfer_branch_code.branch_id_fk = ".\Auth::user()->branch_id_fk.")" ;
@@ -289,9 +291,10 @@ class Transfer_branch_codeController extends Controller
           }
         }
 
- // โอนไปให้สาขา 
+ // โอนไปให้สาขา
         if(!empty($req->to_branch)){
            $w03 = " AND db_transfer_branch_code.to_branch_id_fk = ".$req->to_branch." " ;
+
         }else{
            $w03 = "" ;
         }
@@ -307,29 +310,31 @@ class Transfer_branch_codeController extends Controller
       }else{
           $w05 = "";
       }
-   
+
       if(!empty($req->tr_number)){
           $w06 =  " AND db_transfer_branch_code.tr_number = '".$req->tr_number."' " ;
       }else{
           $w06 = "";
       }
-   
+
       if(!empty($req->action_user)){
           $w07 =  " AND db_transfer_branch_code.action_user = '".$req->action_user."' " ;
       }else{
           $w07 = "";
       }
 
-      $sTable = DB::select(" SELECT * FROM db_transfer_branch_code 
-          WHERE 1 
-          ".$w00." 
-          ".$w01." 
-          ".$w02." 
-          ".$w03." 
-          ".$w04." 
-          ".$w05." 
-          ".$w06." 
-          ".$w07." 
+      // dd( $w02);
+
+      $sTable = DB::select(" SELECT * FROM db_transfer_branch_code
+          WHERE 1
+          ".$w00."
+          ".$w01."
+          ".$w02."
+          ".$w03."
+          ".$w04."
+          ".$w05."
+          ".$w06."
+          ".$w07."
           ORDER BY updated_at DESC ");
 
       $sQuery = \DataTables::of($sTable);
@@ -361,7 +366,7 @@ class Transfer_branch_codeController extends Controller
         }else{
           return '';
         }
-      })  
+      })
 
       ->addColumn('approver', function($row) {
         if(@$row->approver!=''){
@@ -370,8 +375,8 @@ class Transfer_branch_codeController extends Controller
         }else{
           return '-';
         }
-      })  
-     
+      })
+
       ->addColumn('tr_status_from', function($row) {
          $sD = \App\Models\Backend\Transfer_branch_status::where('id',$row->tr_status_from)->get();
          return @$sD[0]->txt_from;
@@ -397,7 +402,7 @@ class Transfer_branch_codeController extends Controller
             $data = $b->b_name;
           }
           return $data;
-      })  
+      })
 
       ->make(true);
     }

@@ -397,9 +397,9 @@ class FrontstoreController extends Controller
         if(!$branchs){
           return redirect()->back()->with('error','ไม่พบข้อมูลสาขา');
         }
-        if($customers->business_location_id==3 && $branchs->business_location_id_fk!=3 || $customers->business_location_id==1 && $branchs->business_location_id_fk!=1 || $customers->business_location_id=='' && $branchs->business_location_id_fk!=1){
-          return redirect()->back()->with('error','ลูกค้าต่างพื้นที่ไม่สามารถทำรายการเติม Ai Stock ได้');
-        }
+        // if($customers->business_location_id==3 && $branchs->business_location_id_fk!=3 || $customers->business_location_id==1 && $branchs->business_location_id_fk!=1 || $customers->business_location_id=='' && $branchs->business_location_id_fk!=1){
+        //   return redirect()->back()->with('error','ลูกค้าต่างพื้นที่ไม่สามารถทำรายการเติม Ai Stock ได้');
+        // }
       }
 
      $result = \App\Helpers\Frontend::check_kyc($customers->user_name);

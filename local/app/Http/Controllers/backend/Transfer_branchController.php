@@ -49,19 +49,22 @@ class Transfer_branchController extends Controller
 
         $sPermission  = \Auth::user()->permission ;
         $User_branch_id = \Auth::user()->branch_id_fk;
-        $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
-          return $query->where('id', auth()->user()->branch_id_fk);
-        })->get();
+        // $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1 && auth()->user()->position_level == 5, function ($query) {
+        //   return $query->where('id', auth()->user()->branch_id_fk);
+        // })->get();
+
+        $sBranchs = \App\Models\Backend\Branchs::get();
+
         $Warehouse = \App\Models\Backend\Warehouse::get();
 
         // $toBranchs = \App\Models\Backend\Branchs::get();
         // dd($User_branch_id);
-        if($sPermission==1){
+        // if($sPermission==1){
           $toBranchs = \App\Models\Backend\Branchs::get();
-        }else{
-          $User_branch_id = @$User_branch_id?$User_branch_id:0;
-          $toBranchs = DB::select("SELECT * from branchs where id not in($User_branch_id) ");
-        }
+        // }else{
+        //   $User_branch_id = @$User_branch_id?$User_branch_id:0;
+        //   $toBranchs = DB::select("SELECT * from branchs where id not in($User_branch_id) ");
+        // }
 
         // dd($toBranchs);
 

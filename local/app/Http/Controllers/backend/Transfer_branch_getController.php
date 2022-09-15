@@ -20,7 +20,7 @@ class Transfer_branch_getController extends Controller
        $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
          return $query->where('id', auth()->user()->business_location_id_fk);
        })->get();
-       $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1, function ($query) {
+       $sBranchs = \App\Models\Backend\Branchs::when(auth()->user()->permission !== 1 && auth()->user()->position_level == 5, function ($query) {
          return $query->where('id', auth()->user()->branch_id_fk);
        })->get();
        $Supplier = DB::select(" select * from dataset_supplier ");
@@ -842,11 +842,12 @@ class Transfer_branch_getController extends Controller
     public function Datatable(Request $req){
 
         if(!empty($req->business_location_id_fk)){
-           $w01 = " AND db_transfer_branch_get.business_location_id_fk=".$req->business_location_id_fk ;
+          //  $w01 = " AND db_transfer_branch_get.business_location_id_fk=".$req->business_location_id_fk ;
+          $w01 = "";
         }else{
            $w01 = "";
         }
-
+// dd($w01);
         if(!empty($req->branch_id_fk)){
            $w02 = " AND db_transfer_branch_get.branch_id_fk = ".$req->branch_id_fk." " ;
         }else{
@@ -927,7 +928,7 @@ class Transfer_branch_getController extends Controller
             $cancel_txt
             ORDER BY updated_at DESC
          ");
-
+// dd($sTable);
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('get_from_branch', function($row) {
