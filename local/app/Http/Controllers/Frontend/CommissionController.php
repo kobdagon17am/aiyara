@@ -372,7 +372,7 @@ class CommissionController extends Controller
               ->where('user_name', '=', $row->customer_matching_username)
               ->first();
 
-              if( $user->business_name and  $user->business_name  != '-'){
+              if( $user->business_name ||  $user->business_name  != '-'){
                 return $user->business_name;
               }else{
                 $name = $user->prefix_name.' '. $user->first_name.' '. $user->last_name;

@@ -58,10 +58,10 @@ class DirectSponsorController extends Controller
             ->addColumn('business_name', function ($row) {
 
 
-                if( $row->business_name and  $row->business_name  != '-'){
+                if( empty($row->business_name) ||  $row->business_name  != '-'){
                   return $row->business_name.' <b>('.$row->user_name.')</b>';
                 }else{
-                  $name = $row->first_name.' '. $row->last_name.' <b>('.$row->user_name.')</b>';
+                  $name = @$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b>';
                   return $name;
                 }
             })
