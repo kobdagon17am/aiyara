@@ -53,6 +53,90 @@ $count_sponser = 0;
                                     <th class="text-center" style="font-size: 12px;">สูงสุด</th>
 
                                 </tr>
+                                <?php
+                                      $row = DB::table('customers')
+            ->select('customers.id', 'customers.user_name', 'customers.introduce_id', 'customers.upline_id',
+            'customers.pv_mt_active', 'customers.introduce_type', 'customers.business_name',
+                'customers.reward_max_id', 'customers.line_type','customers.team_active_a','customers.team_active_b','customers.team_active_c',
+                'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name')
+            ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
+            ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
+            ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
+            // ->where('customers.introduce_id', '=', $user_name)
+            // ->orwhere('customers.user_name', '=', $user_name)
+            ->where('customers.user_name', '=', Auth::guard('c_user')->user()->user_name)
+
+            ->orderbyraw('customers.introduce_type,customers.id ASC')
+            // ->orderbyraw('customers.introduce_type ASC')
+            ->first();
+
+
+                                ?>
+
+                                <tr class="info" style='text-align:center;'>
+                                  <td  >0</td>
+                                  {{-- <td rowspan="2">ID</td> --}}
+                                  <td >{{$row->introduce_type}}</td>
+                                  <td > @if( empty($row->business_name) ||  $row->business_name  != '-')
+                                     {{$row->business_name}}<b>({{$row->user_name}})</b>
+                                  @else
+                                    <?php $name = @$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b>';?>
+                                    {{$name}}
+                                  @endif
+                                  </td>
+                                  <td >{{ $row->dt_package}}</td>
+                                  <td >
+                                    <?php $user = DB::table('customers')
+                                    ->select('line_type')
+                                    ->where('user_name', '=', $row->upline_id)
+                                    ->first();
+                                    if($user){
+                                      $user_text = $row->upline_id . '/' . $user->line_type;
+                                    }else{
+                                      $user_text = '-';
+                                    }
+                                    ?>
+                                    {{$user_text}}
+                                  </td>
+
+                                  <td >
+                                    <?php
+                                    $check_active_mt =  \App\Helpers\Frontend::check_mt_active($row->pv_mt_active);
+                                    if ($check_active_mt['status'] == 'success') {
+                                        if ($check_active_mt['type'] == 'Y') {
+                                            $active_mt = "<span class='label label-inverse-success'><b>"
+                                                . $check_active_mt['date'] . "</b></span>";
+                                        } else {
+                                            $active_mt = "<span class='label label-inverse-info-border'><b>"
+                                                . $check_active_mt['date'] . "</b></span>";
+                                        }
+                                    } else {
+                                        $active_mt = "<span class='label label-inverse-info-border'><b> Not Active </b></span>";
+                                    }
+
+                                    ?>
+                                    {!!$active_mt!!}
+                                  </td>
+                                  <td >{{$row->team_active_a}}</td>
+                                  <td >{{$row->team_active_b}}</td>
+                                  <td >{{$row->team_active_c}}</td>
+
+
+                                  <td>
+                                    <?php
+                                     $count_directsponsor = \App\Helpers\Frontend::check_customer_directsponsor($row->team_active_a,$row->team_active_b,$row->team_active_c);
+
+                                    ?>
+                                    {{$count_directsponsor['reward_bonus']}}
+                                  </td>
+
+
+                                  <td>{{$row->reward_max_id}}</td>
+                                  <td>{{$row->code_name}}</td>
+                                  <td>{{$row->max_code_name}}</td>
+
+
+                              </tr>
                             </thead>
                             <tbody>
 

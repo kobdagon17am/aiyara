@@ -38,10 +38,10 @@ class DirectSponsorController extends Controller
             ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             ->where('customers.introduce_id', '=', $user_name)
-            ->orwhere('customers.user_name', '=', $user_name)
+            // ->orwhere('customers.user_name', '=', $user_name)
             // ->where('customers.user_name', '=', 'A10263')
 
-            ->orderbyraw('(customers.id = ' . $id . '),customers.introduce_type,customers.id ASC')
+            ->orderbyraw('customers.introduce_type,customers.id ASC')
             // ->orderbyraw('customers.introduce_type ASC')
             ->get();
 
@@ -76,8 +76,13 @@ class DirectSponsorController extends Controller
               ->select('line_type')
               ->where('user_name', '=', $row->upline_id)
               ->first();
-
+              if($user){
                 return $row->upline_id . '/' . $user->line_type;
+              }else{
+                return '-';
+              }
+
+
             })
 
             ->addColumn('pv_mt_active', function ($row) {
