@@ -335,7 +335,7 @@
                                 </div>
                                 <div class="col-md-6 text-right">
                                     @if (@$sRow->approve_status == '')
-                                        <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 ">
+                                        <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 " onclick="return confirm('ยืนยันการบันทึกรายการ?')">
                                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก
                                         </button>
                                     @ENDIF
