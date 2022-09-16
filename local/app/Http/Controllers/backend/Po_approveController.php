@@ -149,7 +149,7 @@ class Po_approveController extends Controller
 
     public function update(Request $request, $id)
     {
-
+// dd($request->all());
         \DB::beginTransaction();
         try {
 
@@ -254,7 +254,8 @@ class Po_approveController extends Controller
 
                      // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
                 $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')
-                ->where('approve_status',1)
+                // ->where('approve_status',1)
+                ->whereIn('approve_status',[1,2,6])
                 ->get();
 
                 foreach($other_bill as $b){
@@ -305,7 +306,7 @@ class Po_approveController extends Controller
                         $sRow2->transfer_bill_note = @request('detail');
                         DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                         $sRow2->approve_status = 6;
-                        $sRow->status_slip = false;
+                        $sRow2->status_slip = false;
                     }
 
 
