@@ -30,7 +30,7 @@ class DirectSponsorController extends Controller
         $id = Auth::guard('c_user')->user()->id;
 
         $sTable = DB::table('customers')
-            ->select('customers.id', 'customers.user_name', 'customers.introduce_id', 'customers.upline_id',
+            ->select('customers.id','customers.first_name','customers.last_name','customers.user_name', 'customers.introduce_id', 'customers.upline_id',
             'customers.pv_mt_active', 'customers.introduce_type', 'customers.business_name',
                 'customers.reward_max_id', 'customers.line_type','customers.team_active_a','customers.team_active_b','customers.team_active_c',
                 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name')

@@ -74,14 +74,14 @@ $count_sponser = 0;
                                 ?>
 
                                 <tr class="info" style='text-align:center;'>
-                                  <td  >0</td>
+                                  <td>0</td>
                                   {{-- <td rowspan="2">ID</td> --}}
                                   <td >{{$row->introduce_type}}</td>
                                   <td > @if( empty($row->business_name) ||  $row->business_name  != '-')
                                      {{$row->business_name}}<b>({{$row->user_name}})</b>
                                   @else
                                     <?php $name = @$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b>';?>
-                                    {{$name}}
+                                    {!!$name!!}
                                   @endif
                                   </td>
                                   <td >{{ $row->dt_package}}</td>

@@ -21,6 +21,10 @@ class RunErrorController extends Controller
 {
   public static function index(){
 
+
+    $rs= RunErrorController::check_type_introduce('A787338','A872520');
+
+
     // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::run_invoice_code();
     // dd($rs);
 
@@ -50,14 +54,14 @@ class RunErrorController extends Controller
 
 //O122083101093
  $order_data = DB::table('db_orders')
-  ->wherein('code_order', 
+  ->wherein('code_order',
   ['O122091003188'])
   ->where('status_run_pv','=','not_run_pv')
   //->where('invoice_code_id_fk','=',null)
-  ->get(); 
+  ->get();
 // dd($order_data);
   $i=0;
-   
+
   foreach($order_data as $value){
     $i++;
     //$rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'customer');
@@ -66,7 +70,7 @@ class RunErrorController extends Controller
     $data[][$i]=$rs;
   }
 
- 
+
 dd($data);
   }
 
@@ -782,15 +786,15 @@ dd($data);
 
         $type_id = $order_data->purchase_type_id_fk;
         $business_location_id = $order_data->business_location_id_fk;
-       
+
         if (empty($order_id)) {
-            
+
             $resule = ['status' => 'fail', 'message' => 'Data is Null'];
             DB::rollback();
             return $resule;
 
         } else {
-      
+
             try {
 
                 if ($order_data->delivery_location_frontend == 'sent_office') {
@@ -1461,5 +1465,123 @@ dd($data);
         }
 
     }
+
+
+    public static function check_type_introduce($introduce_id,$under_line_id){//คนแนะนำ//สร้างภายใต้ id
+
+
+      $data_user = DB::table('customers')
+      ->select('upline_id','user_name','upline_id','line_type')
+      ->where('user_name','=',$under_line_id)
+      ->first();
+
+      if(!empty($data_user)){
+        $upline_id = $data_user->upline_id;
+        if($upline_id == $introduce_id){
+          $resule = ['status'=>'success','message'=>'My Account','data'=>$data_user];
+          return $resule;
+        }
+
+        //group 1 หาภายใต้ตัวเอง
+
+        $username = $data_user->upline_id;
+        $j = 2;
+        for ($i=1; $i <= $j ; $i++){
+          if($i == 1){
+            $data = DB::table('customers')
+            ->select('upline_id','user_name','upline_id','line_type')
+            ->where('user_name','=',$username)
+          //->where('upline_id','=',$use_id)
+            ->first();
+
+
+          }
+
+          if($data){
+            if($data->user_name == $introduce_id || $data->upline_id == $introduce_id ){
+              $resule = ['status'=>'success','message'=>'Under line','data'=>$data];
+              $j =0;
+              return $resule;
+
+            }elseif($data->upline_id == 'AA'){
+
+              $resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
+              $j =0;
+            }else{
+
+              $data = DB::table('customers')
+              ->select('upline_id','user_name','upline_id','line_type')
+              ->where('id','=',$data->upline_id)
+              ->first();
+
+              $j = $j+1;
+            }
+
+          }else{
+            $resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
+            $j =0;
+          }
+        }
+
+        //end group 1 หาภายใต้ตัวเอง
+        /////////////////////////////////////////////////////////////////////////////////////
+
+        //หาด้านบนตัวเอง
+        $upline_id_arr = array();
+
+        if($resule['status'] == 'fail'){
+
+          $data_account = DB::table('customers')
+          ->select('upline_id','user_name','upline_id','line_type')
+          ->where('user_name','=',$introduce_id)
+          ->first();
+
+          if(empty($data_account)){
+              $username = null;
+            $j = 0;
+          }else{
+              $username = $data_account->upline_id;
+            $j = 2;
+          }
+
+          for ($i=1; $i <= $j ; $i++){
+            if($username == 'AA'){
+              $upline_id_arr[] = $data_account->user_name;
+              $j =0;
+            }else{
+              $data_account = DB::table('customers')
+              ->select('upline_id','user_name','upline_id','line_type')
+              ->where('user_name','=',$username)
+              ->first();
+
+              if(empty($data_account)){
+                $j = 0;
+              }else{
+                $upline_id_arr[] = $data_account->user_name;
+                $username = $data_account->upline_id;
+                $j = $j+1;
+              }
+
+
+            }
+          }
+
+          //return $resule;
+        }
+        if (in_array($introduce_id, $upline_id_arr)) {
+          $resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
+        }else{
+          $resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน','data'=>null];
+
+        }
+        return $resule;
+
+      }else{
+        $resule = ['status'=>'fail','message'=>'ไม่พบข้อมูลผู้ใช้งานรหัสนี้'];
+        return $resule;
+
+      }
+    }
+
 
 }
