@@ -5544,6 +5544,18 @@ class AjaxController extends Controller
             if(empty($request->term)){
                 $customers = DB::table('customers')->take(15)->get();
             }else{
+              if(strpos($request->term, ' ')){
+                $customers = DB::table('customers')
+                ->select('id','user_name','first_name','last_name','business_name')
+                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                // ->Where('first_name','LIKE', '%'.$request->term.'%')
+                // ->Where('last_name','LIKE', '%'.$request->term.'%')
+                ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'LIKE', "%".$request->term."%")
+                ->take(500)
+                // ->orderBy('user_name', 'asc')
+                ->orderBy('id', 'asc')
+                ->get();
+              }else{
                 $customers = DB::table('customers')
                 ->select('id','user_name','first_name','last_name','business_name')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
@@ -5553,6 +5565,8 @@ class AjaxController extends Controller
                 // ->orderBy('user_name', 'asc')
                 ->orderBy('id', 'asc')
                 ->get();
+              }
+
             }
 
             $json_result = [];

@@ -1799,6 +1799,9 @@ group by $temp_ppr_002.product_id_fk
 // สินค้าโปรโมชั่น
 // วุฒิเพิ่ม
 $temp_ppr_0021_data = DB::table($temp_ppr_002)->get();
+// if($temp_ppr_002=='temp_ppr_0021'){
+// dd($temp_ppr_0021_data);
+// }
 // dd($temp_ppr_0021_data);
 foreach($temp_ppr_0021_data as $tmp){
   $p_unit = 'ชิ้น';
@@ -1806,8 +1809,13 @@ foreach($temp_ppr_0021_data as $tmp){
   $p_name = '';
   $p_id = 0;
   $p_amt = 0;
+
   if($tmp->type_product=='promotion'){
   $data_promos = DB::table('promotions_products')->where('promotion_id_fk',$tmp->promotion_id_fk)->get();
+  // if($temp_ppr_002=='temp_ppr_0021'){
+  //   dd($tmp->promotion_id_fk);
+  //   }
+
     foreach($data_promos as $data_promo){
       $p_id = $data_promo->product_id_fk;
       $data_unit  = DB::table('dataset_product_unit')->where('id',$data_promo->product_unit)->first();
@@ -1823,6 +1831,8 @@ foreach($temp_ppr_0021_data as $tmp){
         $p_name = $data_product->product_name;
       }
       $p_amt = $tmp->amt*$data_promo->product_amt;
+
+
         $id = DB::table('temp_product_fifo')->insertOrIgnore([
           'product_id_fk' =>$p_id,
           'amt' => $p_amt,
@@ -1857,12 +1867,13 @@ foreach($temp_ppr_0021_data as $tmp){
       			$pn = '<div class="divTable"><div class="divTableBody">';
       			$pn .=
       			'<div class="divTableRow">
-              <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า</div>
+              <div class="divTableCell" style="width:240px;font-weight:bold;">ชื่อสินค้า...</div>
               <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">จ่ายครั้งนี้</div>
               <div class="divTableCell" style="width:80px;text-align:center;font-weight:bold;">ค้างจ่าย</div>
               <div class="divTableCell" style="width:450px;text-align:center;font-weight:bold;"> Scan Qr-code </div>
       			</div>
       			';
+
 
       			$sum_amt = 0 ;
 
