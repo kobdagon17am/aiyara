@@ -243,7 +243,7 @@ class Member_pvController extends Controller
                     'type' => 4,
                     'url' => $url,
                     'file' => $f_name,
-                    'comment' => '(ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดยพนักงาน)',
+                    'comment' => $data->comment.' (ถูกแก้ไขจากหน้าข้อมูลส่วนตัวโดย '.\Auth::user()->name.')',
                     'approve_date' => null,
                     'approver' => null,
                     'regis_doc_status' => 0,
