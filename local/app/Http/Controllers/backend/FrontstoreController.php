@@ -1177,7 +1177,7 @@ class FrontstoreController extends Controller
       $this->fnManageGiveaway(@$request->frontstore_id);
       $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
 
-      if($sRow->approve_status==2){
+      if($sRow->approve_status==2 || $sRow->approve_status==6){
         if($sRow->pay_with_other_bill_note!=''){
           $other_bill1 = DB::table('db_orders')->select('id','code_order')->where('code_order',$sRow->pay_with_other_bill_note)->update([
             'approve_status' => 1,
