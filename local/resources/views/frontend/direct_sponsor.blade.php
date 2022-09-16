@@ -55,7 +55,7 @@ $count_sponser = 0;
                                 </tr>
                                 <?php
                                       $row = DB::table('customers')
-            ->select('customers.id', 'customers.user_name', 'customers.introduce_id', 'customers.upline_id',
+            ->select('customers.id','customers.first_name','customers.last_name','customers.user_name', 'customers.introduce_id', 'customers.upline_id',
             'customers.pv_mt_active', 'customers.introduce_type', 'customers.business_name',
                 'customers.reward_max_id', 'customers.line_type','customers.team_active_a','customers.team_active_b','customers.team_active_c',
                 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name')
@@ -77,11 +77,11 @@ $count_sponser = 0;
                                   <td  >0</td>
                                   {{-- <td rowspan="2">ID</td> --}}
                                   <td >{{$row->introduce_type}}</td>
-                                  <td > @if( !empty($row->business_name) ||  $row->business_name  != '-')
+                                  <td > @if( empty($row->business_name) ||  $row->business_name  != '-')
                                      {{$row->business_name}}<b>({{$row->user_name}})</b>
                                   @else
                                     <?php $name = @$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b>';?>
-                                    {!!$name!!}
+                                    {{$name}}
                                   @endif
                                   </td>
                                   <td >{{ $row->dt_package}}</td>
