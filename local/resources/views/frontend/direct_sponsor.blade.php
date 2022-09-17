@@ -148,7 +148,7 @@ $count_sponser = 0;
             </div>
         </div>
     </div>
-    {{-- <div class="row">
+    <div class="row">
     <div class="col-md-12">
         <div class="card">
 
@@ -202,7 +202,12 @@ $count_sponser = 0;
                         <th {{ $rowspan_index }} style="font-size: 13px;"  class="text-center">{{ $i }}</th>
                         <th style="font-size: 13px;"  class="text-center">{{ $value_sponser->introduce_type }}</th>
                         <th style="font-size: 15px;"><label class="label label-inverse-info-border">{{ $value_sponser->user_name }}</label></th>
-                        <th style="font-size: 13px;">{{ $value_sponser->prefix_name.' '.$value_sponser->first_name.' '.$value_sponser->last_name }} ({{ $value_sponser->business_name}})</th>
+                        <th style="font-size: 13px;"> @if( empty($value_sponser->business_name) ||  $value_sponser->business_name  != '-')
+                          {{$value_sponser->business_name}}<b>({{$value_sponser->user_name}})</b>
+                       @else
+                         <?php $name = $value_sponser->first_name.' '.$value_sponser->last_name.' <b>('.$value_sponser->user_name.')</b>';?>
+                         {!!$name!!}
+                       @endif</th>
 
 
                         <th style="font-size: 13px;"  class="text-center">{{ number_format($value_sponser->pv) }}</th>
@@ -259,7 +264,7 @@ $count_sponser = 0;
 </div>
 </div>
 </div>
-</div> --}}
+</div>
 
 @endsection
 @section('js')
@@ -278,8 +283,8 @@ $count_sponser = 0;
     </script>
 
     <script>
-        // var data = {{ $count_sponser }};
-        // $('#count_sponser').html(data);
+        var data = {{ $count_sponser }};
+        $('#count_sponser').html(data);
     </script>
 
     <script type="text/javascript">
