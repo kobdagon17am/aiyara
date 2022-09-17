@@ -111,13 +111,13 @@ class Transfer_branch_getController extends Controller
 
     public function update(Request $request, $id)
     {
-
+      // dd($request->all());
       if(isset($request->approved_getproduct)){
 
         return $this->form($id);
 
       }elseif(isset($request->save_from_firstform)){
-            dd($request->all());
+
             // dd($id);
             $sRow = \App\Models\Backend\Transfer_branch_get::find($id);
             $sRow->note    = request('note');
@@ -125,9 +125,8 @@ class Transfer_branch_getController extends Controller
             $sRow->save();
             return redirect()->to(url("backend/transfer_branch_get/".$id."/edit"));
 
+            // ถ้ายืนยันอนุมัติจะไม่เข้าเงื่อนไขนี้ $request->approve_getback
       }elseif(isset($request->approve_getback)){
-
-
             // $sRow = \App\Models\Backend\Transfer_branch_get::find($request->id);
             // $sRow->approve_status    = $request->approve_status;
             // $sRow->approver    = $request->approver;
@@ -136,15 +135,11 @@ class Transfer_branch_getController extends Controller
             // $sRow->tr_status_get    = 6;
             // $sRow->created_at = date('Y-m-d H:i:s');
             // $sRow->save();
-
-
             // DB::select(" UPDATE `db_transfer_branch_code` SET tr_status_from='6' where tr_number='".$sRow->tr_number."' ");
-
             // เมื่ออนุมัติ == 1 ตัดเข้าคลังอีกครั้ง
           // ดึงเข้าคลัง สาขาที่รับโอนมา กรณี อนุมัติเท่านั้น
             if(request('approve_status')==1){
-
-// นำเข้า Stock
+          // นำเข้า Stock
                  $products = DB::select("
 
                     SELECT
@@ -173,11 +168,9 @@ class Transfer_branch_getController extends Controller
                     from db_transfer_branch_get_products_receive
                     WHERE transfer_branch_get_id_fk in ($request->id)
                     GROUP BY transfer_branch_get_id_fk,branch_id_fk,warehouse_id_fk,zone_id_fk,shelf_floor
-
                     ");
 
-// check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
-
+              // check ก่อนว่ามีใน ชั้นนั้นๆ หรือยัง ถ้ามี update ถ้ายังไม่มี add
                  foreach ($products as $key => $p) {
                           $branch_data = DB::table('branchs')->where('id',$p->branch_id_fk)->first();
                           if($branch_data){
@@ -214,10 +207,7 @@ class Transfer_branch_getController extends Controller
                               $stock->date_in_stock = date("Y-m-d");
                               $stock->created_at = date("Y-m-d H:i:s");
                               $stock->save();
-
-
                           }else{
-
                                 DB::table('db_stocks')
                                 ->where('business_location_id_fk', $business_location_id_fk)
                                   ->where('branch_id_fk', $p->branch_id_fk)
@@ -231,20 +221,12 @@ class Transfer_branch_getController extends Controller
                                 ->update(array(
                                   'amt' => DB::raw( ' amt + '.$p->sum_amt )
                                 ));
-
-
                           }
-
-
-
                  }
-
-
             }
 
                // ดึงเข้าคลัง สาขาที่รับโอนมา กรณี อนุมัติเท่านั้น (ชำรุด)
                if(request('approve_status')==1){
-
                 // นำเข้า Stock
                                  $products = DB::select("
 
@@ -353,6 +335,7 @@ class Transfer_branch_getController extends Controller
 
    public function form($id=NULL)
     {
+      // dd($id);
       \DB::beginTransaction();
       try {
           if( $id ){
@@ -457,10 +440,12 @@ class Transfer_branch_getController extends Controller
                               $stock->created_at = date("Y-m-d H:i:s");
                               $stock->save();
 
-                              $lastID = DB::getPdo()->lastInsertId();
+                              // $lastID = DB::getPdo()->lastInsertId();
+                              $lastID = $stock->id;
 
 
                           }else{
+
                               DB::table('db_stocks')
                                   ->where('business_location_id_fk', $business_location_id_fk)
                                   ->where('branch_id_fk', $p->branch_id_fk)
@@ -477,7 +462,18 @@ class Transfer_branch_getController extends Controller
                                   // 'amt' => DB::raw( ' amt + '.$p->sum_amt )
                                 ));
 
-                                $lastID = DB::table('db_stocks')->latest()->first();
+                                $lastID = DB::table('db_stocks')
+                                ->select('id')
+                                ->where('business_location_id_fk', $business_location_id_fk)
+                                ->where('branch_id_fk', $p->branch_id_fk)
+                                ->where('product_id_fk', $p->product_id_fk)
+                                ->where('lot_number', $p->lot_number)
+                                ->where('lot_expired_date', $p->lot_expired_date)
+                                ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                                ->where('zone_id_fk', $p->zone_id_fk)
+                                ->where('shelf_id_fk', $p->shelf_id_fk)
+                                ->where('shelf_floor', $p->shelf_floor)
+                                ->first();
                                $lastID = $lastID->id;
 
                           }
@@ -591,8 +587,6 @@ class Transfer_branch_getController extends Controller
                             db_transfer_branch_get_products_receive_defective.deleted_at
                             from db_transfer_branch_get_products_receive_defective
                             WHERE transfer_branch_get_id_fk in ($id)
-
-
                             ");
                             // วุฒิเปลี่ยนเป็นแบบไม่ sum และไม่กรุ๊ป
                             // sum(amt_get) AS sum_amt,
@@ -620,8 +614,6 @@ class Transfer_branch_getController extends Controller
                                         ->where('shelf_floor', $p->shelf_floor)
                                         ->get();
 
-
-
                                         if($_check->count() == 0){
 
                                             $stock = new  \App\Models\Backend\Check_stock;
@@ -642,8 +634,8 @@ class Transfer_branch_getController extends Controller
                                             $stock->created_at = date("Y-m-d H:i:s");
                                             $stock->save();
 
-                                            $lastID = DB::getPdo()->lastInsertId();
-
+                                            // $lastID = DB::getPdo()->lastInsertId();
+                                            $lastID = $stock->id;
 
                                         }else{
                                             DB::table('db_stocks')
@@ -662,7 +654,18 @@ class Transfer_branch_getController extends Controller
                                                 // 'amt' => DB::raw( ' amt + '.$p->sum_amt )
                                               ));
 
-                                              $lastID = DB::table('db_stocks')->latest()->first();
+                                              $lastID = DB::table('db_stocks')
+                                              ->select('id')
+                                              ->where('business_location_id_fk', $business_location_id_fk)
+                                              ->where('branch_id_fk', $p->branch_id_fk)
+                                              ->where('product_id_fk', $p->product_id_fk)
+                                              ->where('lot_number', $p->lot_number)
+                                              ->where('lot_expired_date', $p->lot_expired_date)
+                                              ->where('warehouse_id_fk', $p->warehouse_id_fk)
+                                              ->where('zone_id_fk', $p->zone_id_fk)
+                                              ->where('shelf_id_fk', $p->shelf_id_fk)
+                                              ->where('shelf_floor', $p->shelf_floor)
+                                              ->first();
                                              $lastID = $lastID->id;
 
                                         }
@@ -737,9 +740,6 @@ class Transfer_branch_getController extends Controller
 
                                             }
                                             // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-
 
                                }
 

@@ -101,8 +101,9 @@
 				$sheet->setCellValue('Q1', 'HCR (Y/N)');
 				$sheet->setCellValue('R1', 'INVR (Y/N)');
 				$sheet->setCellValue('S1', 'Service Code (รหัสบริการ)');
+        $sheet->setCellValue('T1', 'Consignment Type (ประเภทพัสดุ)');
 
-				$sheet->getStyle('A1:S1')->applyFromArray($styleArray);
+				$sheet->getStyle('A1:T1')->applyFromArray($styleArray);
 
 				$p_i = 0;
 				for ($i=0; $i < count($sRow) ; $i++) {
@@ -167,6 +168,7 @@
 										// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
 										// $sheet->setCellValue('S'.($i+2), $request->id);
 										$sheet->setCellValue('S'.($i+2+$p_i), '');
+                    $sheet->setCellValue('T'.($i+2+$p_i), '');
 										$p_i++;
 									}
 
@@ -195,6 +197,7 @@
 									// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
 									// $sheet->setCellValue('S'.($i+2), $request->id);
 									$sheet->setCellValue('S'.($i+2+$p_i), '');
+                  $sheet->setCellValue('T'.($i+2+$p_i), '');
 								}
 								$p_i = $p_i-1;
 							}else{
@@ -220,6 +223,7 @@
 								// $sheet->setCellValue('S'.($i+2), $sRow[$i]->service_code);
 								// $sheet->setCellValue('S'.($i+2), $request->id);
 								$sheet->setCellValue('S'.($i+2+$p_i), '');
+                $sheet->setCellValue('T'.($i+2+$p_i), '');
 							}
 						}
 						// test

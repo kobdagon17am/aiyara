@@ -77,8 +77,6 @@ class Check_stockController extends Controller
 
     public function stock_card(Request $request,$product_id_fk)
     {
-        // dd($product_id_fk);
-        // dd($request->business_location_id_fk);
         // dd($request->branch_id_fk);
              // return View('backend.stock_card_01.index');
           $business_location_id_fk = $request->business_location_id_fk;
@@ -186,9 +184,7 @@ class Check_stockController extends Controller
            $Amt= DB::select(" SELECT amt
             FROM `db_stocks`
             where 1
-
             AND product_id_fk=".@$Stock[0]->product_id_fk."
-
             $w_business_location_id_fk
             $w_branch_id_fk
             $w_warehouse_id_fk
@@ -211,7 +207,6 @@ class Check_stockController extends Controller
         }
         // dd($w_business_location_id_fk);
         // dd($w_branch_id_fk);
-        // dd($sBalance);
         // dd($sBalance);
 
          return View('backend.check_stock.stock_card')->with(
