@@ -29,6 +29,7 @@ class DirectSponsorController extends Controller
       ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=','customers.qualification_max_id')
       ->where('customers.introduce_id','=',Auth::guard('c_user')->user()->user_name)
         ->whereRaw('DATE_ADD(customers.created_at, INTERVAL +60 DAY) >= NOW()')
+        ->orderbyraw('customers.introduce_type,customers.id ASC')
       ->get();
 
 

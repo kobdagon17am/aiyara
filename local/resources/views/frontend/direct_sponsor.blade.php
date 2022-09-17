@@ -166,7 +166,7 @@ $count_sponser = 0;
                           <tr class="info" style='text-align:center;'>
                             <th class="text-center" >#</th>
                             <th class="text-center" >Line</th>
-                            <th class="text-center" >ID</th>
+                            <th class="text-center" >ID/Line</th>
                             <th class="text-center" >Name (Buniness)</th>
                             <th class="text-center" >OwnPV</th>
                             <th class="text-center" >Package</th>
@@ -195,32 +195,34 @@ $count_sponser = 0;
                             $rowspan_index = '';
                         }
 
+                        // dd($rowspan_index);
+
                         ?>
 
                     <tr class="table-warning">
 
-                        <th {{ $rowspan_index }} style="font-size: 13px;"  class="text-center">{{ $i }}</th>
-                        <th style="font-size: 13px;"  class="text-center">{{ $value_sponser->introduce_type }}</th>
-                        <th style="font-size: 15px;"><label class="label label-inverse-info-border">{{ $value_sponser->user_name }}</label></th>
-                        <th style="font-size: 13px;"> @if( empty($value_sponser->business_name) ||  $value_sponser->business_name  != '-')
+                        <td {{$rowspan_index}} style="font-size: 13px;"  class="text-center">{{ $i }}</td>
+                        <td style="font-size: 13px;"  class="text-center">{{ $value_sponser->introduce_type }}</td>
+                        <td style="font-size: 15px;"><label class="label label-inverse-info-border">{{ $value_sponser->user_name }}</label></td>
+                        <td style="font-size: 13px;"> @if( empty($value_sponser->business_name) ||  $value_sponser->business_name  != '-')
                           {{$value_sponser->business_name}}<b>({{$value_sponser->user_name}})</b>
                        @else
                          <?php $name = $value_sponser->first_name.' '.$value_sponser->last_name.' <b>('.$value_sponser->user_name.')</b>';?>
                          {!!$name!!}
-                       @endif</th>
+                       @endif</td>
 
 
-                        <th style="font-size: 13px;"  class="text-center">{{ number_format($value_sponser->pv) }}</th>
-                        <th style="font-size: 14px;">
+                        <td style="font-size: 13px;"  class="text-center">{{ number_format($value_sponser->pv) }}</td>
+                        <td style="font-size: 14px;">
                          @if (empty($value_sponser->dt_package))
                          -
                          @else
                          {{ $value_sponser->dt_package }}
                          @endif
-                     </th>
-                     <th style="font-size: 13px;"  class="text-center"><span class='label label-inverse-info-border'><b>{{ date('Y/m/d',strtotime($value_sponser->created_at)) }}</b></span></th>
+                     </td>
+                     <td style="font-size: 13px;"  class="text-center"><span class='label label-inverse-info-border'><b>{{ date('Y/m/d',strtotime($value_sponser->created_at)) }}</b></span></td>
 
-                     <th style="font-size: 13px;"  class="text-center">{{  $remine  }}</th>
+                     <td style="font-size: 13px;"  class="text-center">{{  $remine  }}</td>
 
                  </tr>
 
@@ -228,19 +230,17 @@ $count_sponser = 0;
                  @if ($count_directsponsor > 0)
                  @foreach ($directsponsor as $directsponsor_value)
 
-                 <?php
-                 $count_sponser++;
-                 $end_date = strtotime($directsponsor_value->end_date);
-                 $start_date = strtotime(date('Y-m-d'));
-                 $date_remine_sponsor = ($end_date - $start_date) / (60 * 60 * 24); // 1 day = 60*60*24
-                 $remine_sponsor = ceil($date_remine_sponsor);
-                 ?>
 
-                 <tr class="table-active">
+                 <tr>
                     <td></td>
-                    <td style="font-size: 13px;"  class="text-center">{{ $directsponsor_value->introduce_type }}</td>
-                    <td style="font-size: 15px;"><span class='label label-inverse-info-border'>{{ $directsponsor_value->user_name }}</span></td>
-                    <td style="font-size: 13px;">{{ $directsponsor_value->prefix_name.' '.$directsponsor_value->first_name.' '.$directsponsor_value->last_name }} ({{ $directsponsor_value->business_name}})</td>
+                    <td style="font-size: 13px;"  class="text-center"></td>
+                    <td style="font-size: 15px;"  class="text-center"> {{ $directsponsor_value->introduce_type }} </td>
+                    <td style="font-size: 13px;"> @if( empty($directsponsor_value->business_name) ||  $directsponsor_value->business_name  != '-')
+                      {{$directsponsor_value->business_name}}<b>({{$directsponsor_value->user_name}})</b>
+                   @else
+                     <?php $name = $directsponsor_value->first_name.' '.$directsponsor_value->last_name.' <b>('.$directsponsor_value->user_name.')</b>';?>
+                     {!!$name!!}
+                   @endif</td>
                     <td style="font-size: 13px;"  class="text-center">{{ number_format($directsponsor_value->pv) }}</td>
                     <td style="font-size: 14px;">
                      @if (empty($directsponsor_value->dt_package))
@@ -251,7 +251,7 @@ $count_sponser = 0;
                  </td>
                  <td style="font-size: 13px;"  class="text-center"><span class='label label-inverse-info-border'><b>{{ date('Y/m/d',strtotime($directsponsor_value->created_at)) }}</b></span></td>
 
-                 <td  class="text-center">{{ $remine_sponsor }}</td>
+                 <td  class="text-center">-</td>
              </tr>
              @endforeach
              @endif

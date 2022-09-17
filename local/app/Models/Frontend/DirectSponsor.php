@@ -15,7 +15,10 @@ class DirectSponsor extends Model
 		->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
 		->where('customers.introduce_id','=',$user_name)
     	//->whereRaw('DATE_ADD(customers.created_at, INTERVAL +60 DAY) >= NOW()')
+      ->orderbyraw('customers.introduce_type,customers.id ASC')
 		->get();
+
+    // dd($sponser);
 
 		return $sponser;
 	}
