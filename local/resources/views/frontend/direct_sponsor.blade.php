@@ -203,7 +203,7 @@ $count_sponser = 0;
 
                         <td {{$rowspan_index}} style="font-size: 13px;"  class="text-center">{{ $i }}</td>
                         <td style="font-size: 13px;"  class="text-center">{{ $value_sponser->introduce_type }}</td>
-                        <td style="font-size: 15px;"><label class="label label-inverse-info-border">{{ $value_sponser->user_name }}</label></td>
+                        <td style="font-size: 15px;"  class="text-center"><label class="label label-inverse-info-border">{{ $value_sponser->user_name }}</label></td>
                         <td style="font-size: 13px;"> @if( empty($value_sponser->business_name) ||  $value_sponser->business_name  != '-')
                           {{$value_sponser->business_name}}<b>({{$value_sponser->user_name}})</b>
                        @else
@@ -229,8 +229,7 @@ $count_sponser = 0;
 
                  @if ($count_directsponsor > 0)
                  @foreach ($directsponsor as $directsponsor_value)
-
-
+                 <?php $count_sponser++;  ?>
                  <tr>
                     <td></td>
                     <td style="font-size: 13px;"  class="text-center"></td>
