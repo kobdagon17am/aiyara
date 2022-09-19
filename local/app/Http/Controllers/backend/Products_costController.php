@@ -94,7 +94,7 @@ class Products_costController extends Controller
           $sRow->member_price    = request('member_price');
           $sRow->pv    = request('pv');
           $sRow->status    = request('status')?request('status'):0;
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
@@ -120,6 +120,15 @@ class Products_costController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
+    public function delete($id)
+    {
+      $sRow = \App\Models\Backend\Products_cost::find($id);
+      if( $sRow ){
+        $sRow->forceDelete();
+      }
+      return redirect()->back()->with('msg','success');
+    }
+
     public function Datatable(){
       $sTable = \App\Models\Backend\Products_cost::search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
@@ -139,7 +148,7 @@ class Products_costController extends Controller
       ->addColumn('currency', function($row) {
           $sP = \App\Models\Backend\Currency::find($row->currency_id);
           return $sP->txt_desc;
-      })      
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

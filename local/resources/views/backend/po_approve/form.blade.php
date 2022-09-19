@@ -145,6 +145,10 @@
                                             <button type="button" data-id="{{ @$r->id }}"
                                                 class="btn btn-danger btn-sm font-size-10 btnDelSlip "
                                                 style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                                        @else
+                                        <button type="button" data-id="{{ @$r->id }}"
+                                          class="btn btn-warning btn-sm font-size-10 btn_cancel_approve"
+                                          style="vertical-align: bottom;margin-bottom: 5px;">ยกเลิกอนุมัติ</button>
                                         @endif
                                     </div>
 
@@ -1008,6 +1012,24 @@
         $(document).on('click', '.btn_not_approve', function(event) {
             var id = $(this).data('id');
             var status = 3;
+            $.ajax({
+                type: "POST",
+                url: " {{ url('backend/ajaxApproveFileSlip_04') }} ",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: id,
+                    status: status
+                },
+                success: function(data) {
+                    // console.log(data);
+                    location.reload();
+                }
+            });
+        });
+
+        $(document).on('click', '.btn_cancel_approve', function(event) {
+            var id = $(this).data('id');
+            var status = 1;
             $.ajax({
                 type: "POST",
                 url: " {{ url('backend/ajaxApproveFileSlip_04') }} ",

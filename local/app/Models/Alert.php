@@ -12,16 +12,16 @@ class Alert extends Model
     if($sMode =='success' && $sCode==NULL){
       $method = \Request::method();
       if($method=='PATCH'){
-        return array('status'=>'success', 'msg'=>'บันทึกข้อมูลเรียบร้อย');
+        return array('status'=>'success', 'msg'=>'บันทึกข้อมูลเรียบร้อย', 'mode'=>'reload');
       }
       if($method=='PUT'){
-        return array('status'=>'success', 'msg'=>'บันทึกข้อมูลเรียบร้อย');
+        return array('status'=>'success', 'msg'=>'บันทึกข้อมูลเรียบร้อย', 'mode'=>'reload');
       }
       if($method=='POST'){
-        return array('status'=>'success', 'msg'=>'เพิ่มข้อมูลเรียบร้อย');
+        return array('status'=>'success', 'msg'=>'เพิ่มข้อมูลเรียบร้อย', 'mode'=>'reload');
       }
       if($method=='DELETE'){
-        return array('status'=>'success', 'msg'=>'ลบข้อมูลเรียบร้อย');
+        return array('status'=>'success', 'msg'=>'ลบข้อมูลเรียบร้อย', 'mode'=>'reload');
       }
     }
 
