@@ -155,12 +155,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('products_cost', 'Products_costController');
     Route::post('products_cost/datatable', 'Products_costController@Datatable')->name('products_cost.datatable');
     Route::get('products_cost/create/{id}', 'Products_costController@create');
-    Route::get('products_cost/create/{id}', 'Products_costController@create');
-    Route::get('products_cost_delete/{id}', 'Products_costController@delete');
+
 
     Route::resource('promotions_cost', 'Promotions_costController');
     Route::post('promotions_cost/datatable', 'Promotions_costController@Datatable')->name('promotions_cost.datatable');
-
+    Route::get('promotions_cost/create/{id}', 'Promotions_costController@create');
 
 
     Route::resource('products_units', 'Products_unitsController');
