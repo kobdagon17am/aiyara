@@ -162,7 +162,9 @@ class Po_approveController extends Controller
                 if (@request('approved') != null) {
                     $sRow->status_slip = 'true';
                     $sRow->order_status_id_fk = '5';
-                    $sRow->approve_status  = 2;
+                    if($sRow->approve_status!=9){
+                      $sRow->approve_status  = 2;
+                    }
                     $sRow->transfer_bill_status  = 2;
                     if(!empty($request->slip_ids)){
                         for ($i=0; $i < count($request->slip_ids) ; $i++) {
@@ -265,7 +267,9 @@ class Po_approveController extends Controller
                     if (@request('approved') != null) {
                         $sRow2->status_slip = 'true';
                         // $sRow2->order_status_id_fk = '5';
+                        if($sRow2->approve_status!=9){
                         $sRow2->approve_status  = 2;
+                        }
                         $sRow2->transfer_bill_status  = 2;
                         // if(!empty($request->slip_ids)){
                         //     for ($i=0; $i < count($request->slip_ids) ; $i++) {
