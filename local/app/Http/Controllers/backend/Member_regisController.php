@@ -458,9 +458,9 @@ class Member_regisController extends Controller
                   ".$get_all_date."
 
          GROUP BY customer_id
-         ORDER BY id asc
+         ORDER BY id asc , regis_doc_status asc
            ");
-
+          //  ORDER BY id asc , regis_doc_status asc
          }
 
       $sQuery = \DataTables::of($sTable);
