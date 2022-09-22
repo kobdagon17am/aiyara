@@ -1291,6 +1291,17 @@ class FrontstoreController extends Controller
         $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
         $sRow->sentto_branch_id = request('sentto_branch_id');
         $sRow->check_press_save = 2;
+        $sRow->number_bill = request('number_bill');
+        if($sRow->pay_with_other_bill==1){
+            $ot_bill = DB::table('db_orders')->select('id')->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->whereNotIn('id',[$sRow->id])->get();
+            $number_bill_curr = 1;
+            foreach($ot_bill as $ot){
+              $number_bill_curr++;
+            }
+            DB::table('db_orders')->where('code_order',$sRow->pay_with_other_bill_note)->update([
+              'number_bill_curr' => $number_bill_curr,
+            ]);
+        }
 
         if (empty(request('shipping_price'))) {
 
@@ -1323,11 +1334,13 @@ class FrontstoreController extends Controller
           DB::commit();
         }
 
+        $sRow->number_bill = @$request->number_bill;
+
         $sRow->save();
 
         $this->fncUpdateDeliveryAddress($sRow->id);
         $orderHistoryLog->store($sRow->id, DatasetOrderHistoryStatus::CREATE_ORDER, \Auth::user()->id);
-        // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit"));
+        // return redirect()->to(url("backend/frontstore/".$request->frontstore_id."/edit")); pay_with_other_bill_note
         return redirect()->to(url("backend/frontstore"));
       } else if (isset($request->receipt_save_list)) {
 
@@ -1366,6 +1379,20 @@ class FrontstoreController extends Controller
 
         $sRow->pay_with_other_bill = request('pay_with_other_bill');
         $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
+
+        $sRow->number_bill = request('number_bill');
+        if($sRow->pay_with_other_bill==1){
+            $ot_bill = DB::table('db_orders')->select('id')->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->whereNotIn('id',[$sRow->id])->get();
+            $number_bill_curr = 1;
+            foreach($ot_bill as $ot){
+              $number_bill_curr++;
+            }
+            DB::table('db_orders')->where('code_order',$sRow->pay_with_other_bill_note)->update([
+              'number_bill_curr' => $number_bill_curr,
+            ]);
+        }
+
+
         $sRow->gift_voucher_price = request('gift_voucher_price') ? request('gift_voucher_price') : 0;
         $sRow->bill_transfer_other = request('bill_transfer_other');
 

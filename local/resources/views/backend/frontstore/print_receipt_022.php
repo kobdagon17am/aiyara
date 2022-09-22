@@ -558,6 +558,13 @@ if(!empty($db_orders[0]->action_user)){
           //
 
            if(!empty(@$address_in_order[0]->provname)){
+
+            $r = strpos(@$address_in_order[0]->house_no,"ตย");
+              if($r!=''){
+                @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';
+              }else{
+                @$address_in_order[0]->house_no = str_replace("(ตย.)"," ",@$address_in_order[0]->house_no);
+
               @$cus_address = @$address_in_order[0]->house_no." ". @$address_in_order[0]->house_name." ". @$address_in_order[0]->moo."";
               @$cus_address .= @$address_in_order[0]->soi." ". @$address_in_order[0]->road;
               @$cus_address .= ", ต.". @$address_in_order[0]->tamname. " ";
@@ -568,6 +575,11 @@ if(!empty($db_orders[0]->action_user)){
               @$cus_address .= ", ". @$address_in_order[0]->tel_home;
 
               @$cus_address = @$cus_address;
+
+              }
+
+
+
 
            }else{
               @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';

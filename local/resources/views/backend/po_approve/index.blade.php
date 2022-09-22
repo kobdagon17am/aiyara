@@ -532,6 +532,11 @@
                                     $('td:last-child', nRow).html('<label style="color:red">บิลไม่ระบุยอดโอน</label>');
                                 }
 
+                                if (aData['number_bill_curr'] < aData['number_bill']) {
+                                    console.log("aData['number_bill_curr'] < aData['number_bill']");
+                                    $('td:last-child', nRow).html('<label style="color:red">บิลยังไม่ครบ</label>');
+                                }
+
                             }
 
                         });

@@ -176,7 +176,7 @@ class Po_approveController extends Controller
                           ]);
                         }
                     }
-                    // approval_amount_transfer payment_slip
+                    // approval_amount_transfer payment_slip transfer_bill_status
                     $sRow->approval_amount_transfer = $request->approval_amount_transfer;
                     $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
                     $sRow->approval_amount_transfer_over_status = $request->approval_amount_transfer_over_status;
@@ -257,7 +257,7 @@ class Po_approveController extends Controller
                      // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
                 $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')
                 // ->where('approve_status',1)
-                ->whereIn('approve_status',[1,2,6])
+                ->whereIn('approve_status',[1,2,6,9])
                 ->get();
 
                 foreach($other_bill as $b){

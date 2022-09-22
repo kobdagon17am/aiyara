@@ -2185,6 +2185,23 @@
                                                                 </div>
                                                             </div>
 
+                                                            <div class="divTableRow">
+                                                              <div class="divTableCell">
+                                                              </div>
+                                                              <div class="divTH">
+                                                                  <label for="">จำนวนบิลทั้งหมดที่ชำระร่วมกับบิลนี้</label>
+                                                              </div>
+                                                              <div class="divTableCell">
+                                                                <input type="number" name="number_bill" class="form-control text-right f-ainumber-18  in-tx" required value="<?php
+                                                                  if(@$sRow){
+                                                                    echo @$sRow->number_bill;
+                                                                  }else{
+                                                                    echo 0;
+                                                                  }
+                                                                  ?>">
+                                                              </div>
+                                                          </div>
+
 
                                                             <div class="divTableRow">
                                                                 <div class="divTableCell">

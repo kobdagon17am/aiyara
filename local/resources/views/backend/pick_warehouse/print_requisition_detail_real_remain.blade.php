@@ -649,6 +649,61 @@ echo $pn;
     </table>
   </div>
 
+  <br>
+  <table style="border-collapse: collapse;">
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+              ผู้จัดทำเอกสาร ............................
+          </th>
+          <th style="text-align: left;font-size: 18px;">
+              ผู้บันทึกใบส่งสินค้า ...........................
+          </th>
+          <th style="text-align: left;font-size: 18px;">
+            ผู้บันทึกระบบ ................................
+        </th>
+      </tr>
+      <tr>
+        <th style="text-align: left;font-size: 18px;">
+            ผู้ตรวจสอบเอกสาร ........................
+        </th>
+        <th style="text-align: left;font-size: 18px;">
+            ผู้ตรวจสอบเลขที่ใบส่ง ...............................
+        </th>
+        <th style="text-align: left;font-size: 18px;">
+          ผู้จัดสินค้า ................................
+      </th>
+    </tr>
+    <tr>
+      <th style="text-align: left;font-size: 18px;">
+          จำนวน ............ ลัง
+      </th>
+      <th style="text-align: left;font-size: 18px;">
+          ขนาด .............. น้ำหนัก ............... เวลา
+      </th>
+      <th style="text-align: left;font-size: 18px;">
+        ถุงใหญ่ ............. ถุงเล็ก ...............
+    </th>
+  </tr>
+      {{-- <tr>
+          <th style="text-align: center;font-size: 18px;">
+              เวลาที่จัด ...................................
+          </th>
+          <th style="text-align: center;font-size: 18px;">
+              ถุงใหญ๋ ...................................
+          </th>
+      </tr>
+
+      <tr>
+          <th style="text-align: center;font-size: 18px;">
+              ผู้จัดสินค้า ...................................
+          </th>
+          <th style="text-align: center;font-size: 18px;">
+              ถุงเล็ก ...................................
+          </th>
+      </tr> --}}
+
+  </table>
+
   @if($index<count($db_pick_pack_packing_data)-1)
   <div class="page-break"></div>
   @endif
