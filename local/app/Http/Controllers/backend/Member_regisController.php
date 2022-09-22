@@ -458,7 +458,7 @@ class Member_regisController extends Controller
                   ".$get_all_date."
 
          GROUP BY customer_id
-         ORDER BY id asc , regis_doc_status asc
+         ORDER BY id asc
            ");
           //  ORDER BY id asc , regis_doc_status asc
          }
@@ -745,7 +745,7 @@ class Member_regisController extends Controller
         $f = [] ;
         foreach ($d as $key => $value) {
             // if($value->item_checked==1){
-              array_push($f,'<a href="#" class="btn btn-sm btn-primary btnCheckRegis " data-id="'.$value->id.'"  ><i class="bx bx-edit font-size-14 align-middle"></i> </a>');
+              array_push($f,'<a href="#" class="btn btn-sm btn-primary btnCheckRegis " data-id="'.$value->id.'"  ><i class="bx bx-edit font-size-14 align-middle"></i> ('.$value->id.') </a>');
             // }
         }
         $f = implode('<br>',$f);

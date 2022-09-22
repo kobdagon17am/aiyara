@@ -1338,6 +1338,9 @@
             $('#file_path3').hide();
             $('#file_path4').hide();
 
+            console.log('id2 = '+id);
+            // console.log('url' + ' : ' + value.file_path);
+            // ajaxGetFilepath
             $.ajax({
                 url: " {{ url('backend/ajaxGetFilepath') }} ",
                 method: "post",
@@ -1523,6 +1526,8 @@
                                 });
                             }
 
+
+
                             // $('.file_path_desc').hide();
                             // var id = $(this).data('id');
                             // $('#id').val(id);
@@ -1559,6 +1564,7 @@
                                             console.log(value.type);
 
                                             if (value.type == "1") {
+
                                                 $('#file_path1').attr("src",
                                                     value.file_path);
                                                 $('#file_path1').show();

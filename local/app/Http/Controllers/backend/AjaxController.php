@@ -5432,7 +5432,7 @@ class AjaxController extends Controller
 
                 where register_files.id= '".$request->id."'
              ");
-
+// dd($rs);
             return response()->json($rs);
 
       }

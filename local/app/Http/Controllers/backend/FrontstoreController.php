@@ -2331,16 +2331,48 @@ class FrontstoreController extends Controller
         if(date('Y-m-d', strtotime(request('date_create'))) == date('Y-m-d') || date('Y-m-d', strtotime(request('date_create'))) > date('Y-m-d')){
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->action_date = date('Y-m-d');
-          $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+          // $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+          $x = 'start';
+          $code_order = "";
+          while ($x == 'start') {
+            $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+            $code_order_check = DB::table('db_orders')->where('code_order',$code_order)->first();
+            if(!$code_order_check){
+              $code_order = $code_order;
+              $x = 'end';
+            }
+          }
         }else{
           $sRow->created_at = request('date_create').' 21:30:00';
           $sRow->action_date = request('date_create');
-          $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk,request('date_create'));
+          // $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk,request('date_create'));
+          $x = 'start';
+          $code_order = "";
+          while ($x == 'start') {
+            $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk,request('date_create'));
+            $code_order_check = DB::table('db_orders')->where('code_order',$code_order)->first();
+            if(!$code_order_check){
+              $code_order = $code_order;
+              $x = 'end';
+            }
+          }
+
         }
       }else{
         $sRow->created_at = date('Y-m-d H:i:s');
         $sRow->action_date = date('Y-m-d');
-        $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+        // $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+        $x = 'start';
+        $code_order = "";
+        while ($x == 'start') {
+          $code_order = RunNumberPayment::run_number_order($Branchs->business_location_id_fk);
+          $code_order_check = DB::table('db_orders')->where('code_order',$code_order)->first();
+          if(!$code_order_check){
+            $code_order = $code_order;
+            $x = 'end';
+          }
+        }
+
       }
 
 
