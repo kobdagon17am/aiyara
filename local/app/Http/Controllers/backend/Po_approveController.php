@@ -724,6 +724,9 @@ ORDER BY code_order DESC
                     //     return '-';
                     // }
                     $str = "<label style='color:".$row->color.";'>".$row->txt_desc."</label>";
+                    if($row->approve_status==1 && $row->approve_one_more == 1){
+                      $str .= '<br><label style="color:red;">บิลแก้ไขหลังจากอนุมัติ</label>';
+                    }
                     return $str;
 
                 // }

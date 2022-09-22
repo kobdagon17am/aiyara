@@ -1177,10 +1177,14 @@ class FrontstoreController extends Controller
       $this->fnManageGiveaway(@$request->frontstore_id);
       $sRow = \App\Models\Backend\Frontstore::find($request->frontstore_id);
 
-      if($sRow->approve_status==2 || $sRow->approve_status==6){
+
+
+      if($sRow->approve_status==2 || $sRow->approve_status==6 || $sRow->approve_status==0){
         if($sRow->pay_with_other_bill_note!=''){
           $other_bill1 = DB::table('db_orders')->select('id','code_order')->where('code_order',$sRow->pay_with_other_bill_note)->update([
             'approve_status' => 1,
+            'approve_one_more' => 1,
+            'gv_before' => 0,
           ]);
           $other_bill2 = DB::table('db_orders')->select('id','code_order')->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->update([
             'approve_status' => 1,
@@ -1191,10 +1195,6 @@ class FrontstoreController extends Controller
           ]);
         }
       }
-
-
-
-
 
       $delivery_location = request('delivery_location');
       $shipping_special = $request->shipping_special;
@@ -1291,6 +1291,9 @@ class FrontstoreController extends Controller
         $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
         $sRow->sentto_branch_id = request('sentto_branch_id');
         $sRow->check_press_save = 2;
+        if(request('gv_before')){
+          $sRow->gv_before = request('gv_before');
+        }
         $sRow->number_bill = request('number_bill');
         if($sRow->pay_with_other_bill==1){
             $ot_bill = DB::table('db_orders')->select('id')->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->whereNotIn('id',[$sRow->id])->get();
@@ -1379,6 +1382,9 @@ class FrontstoreController extends Controller
 
         $sRow->pay_with_other_bill = request('pay_with_other_bill');
         $sRow->pay_with_other_bill_note = request('pay_with_other_bill_note');
+        if(request('gv_before')){
+          $sRow->gv_before = request('gv_before');
+        }
 
         $sRow->number_bill = request('number_bill');
         if($sRow->pay_with_other_bill==1){
@@ -2419,22 +2425,21 @@ class FrontstoreController extends Controller
       //    $branchs = DB::select("SELECT * FROM branchs where id=".$request->this_branch_id_fk."");
       //   DB::select(" UPDATE `db_orders` SET date_setting_code='".date('ym')."' WHERE (`id`=".$sRow->id.") ");
 
-      $sRow->code_order    = $code_order;
-      $sRow->date_setting_code    = date('ym');
+      if($id){
+        // ไม่ทำอะไร
+      }else{
+        $sRow->code_order = $code_order;
+        $sRow->date_setting_code    = date('ym');
+      }
 
       //   DB::select(" UPDATE `db_orders` SET `code_order`='$code_order' WHERE (`id`=".$sRow->id.") ");
 
       // }
-        // dd($sRow);
       $sRow->save();
 
       DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
       DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
-
-
       // return "to this";
-      // dd($sRow->id);
-
       \DB::commit();
 
       return redirect()->to(url("backend/frontstore/" . $sRow->id . "/edit"));
