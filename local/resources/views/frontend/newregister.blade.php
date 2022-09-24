@@ -162,7 +162,7 @@
 
                      <div class="col-sm-3">
                          <label>Email </label>
-                         <input type="email" class="form-control" autocomplete="off" placeholder="Email@email.com" name="email"
+                         <input type="text" class="form-control" autocomplete="off" placeholder="Email@email.com" name="email"
                              value="{{ old('email') }}" >
                      </div>
                  </div>
@@ -432,7 +432,7 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.ID_card_number')</label>
-                         <input type="text" class="form-control" minlength="8" maxlength="14"  name="benefit_id"
+                         <input type="text" class="form-control"  name="benefit_id"
                              value="{{ old('benefit_id') }}">
                      </div>
 

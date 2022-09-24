@@ -136,7 +136,14 @@ class RegisterController extends Controller
         return view('frontend/register_success',compact('data'));
 
       }else{
-        return redirect('register/'.$req->upline_id.'/'.$req->line_type_back)->withInput()->withError($data['massage']);
+        if($data['eror'] == 1){
+
+          return redirect('tree_view');
+
+        }else{
+          return redirect('register/'.$req->upline_id.'/'.$req->line_type_back)->withInput()->withError($data['massage']);
+        }
+
       }
 
     }else{

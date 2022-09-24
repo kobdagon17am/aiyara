@@ -110,7 +110,7 @@
                             style="margin: 5px;" class="img-fluid" width="30" alt="..."> </a>
                 @endif
                 @if ($rs['data']->url_line)
-                    <a href="{{ $rs['data']->url_line }}"> <img
+                    <a href="https://line.me/ti/p/{{ $rs['data']->url_line }}"> <img
                             src="{{ asset('frontend/salepage/img/line.png') }}" style="margin: 5px;"
                             class="img-fluid" width="30" alt="..."> </a>
                 @endif

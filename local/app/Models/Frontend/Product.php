@@ -37,6 +37,7 @@ class Product extends Model
             ->leftjoin('dataset_currency', 'dataset_currency.id', '=', 'products_cost.currency_id')
             ->where('products.orders_type_id', 'LIKE', '%' . $type . '%')
             ->where('products_images.image_default', '=', 1)
+            ->where('products.status','=', 1)
             ->where('products_details.lang_id', '=', $business_location_id)
             ->where('products_cost.business_location_id', '=',  $business_location_id)
             ->orderby('products.id')
@@ -80,6 +81,7 @@ class Product extends Model
             ->whereRaw(('case WHEN ' . $c_id . ' != 1 THEN products.category_id = ' . $c_id . ' else products.category_id != ' . $c_id . ' END'))
         // ->where('products.category_id', '=',$c_id)
             ->where('products_images.image_default', '=', 1)
+            ->where('products.status','=', 1)
             ->where('products_details.lang_id', '=', $business_location_id)
             ->where('products_cost.business_location_id', '=', $business_location_id)
             ->orderby('products.id')
@@ -122,9 +124,11 @@ class Product extends Model
             ->where('promotions.business_location', '=', $business_location_id)
             ->where('promotions_cost.business_location_id', '=', $business_location_id)
             ->where('promotions_cost.status', '=', 1)
+            ->where('promotions.status', '=', 1)
+            ->where('promotions.promotion_coupon_status', '=', 0)
             ->wheredate('promotions.show_startdate', '<=', date('Y-m-d'))
             ->wheredate('promotions.show_enddate', '>=', date('Y-m-d'))
-            ->where('promotions.status', '=', 1)
+
             ->orderby('id', 'DESC')
             ->get();
 

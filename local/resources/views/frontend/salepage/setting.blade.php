@@ -55,7 +55,7 @@
                             {{-- <i class="icofont icofont-volume-off"></i> --}}
                             Line
                         </span>
-                        <input type="text" id="line" class="form-control" placeholder="http://line.me/ti/p/Lineid"
+                        <input type="text" id="line" class="form-control" placeholder="LineID"
                             value="{{ @$data->url_line }}">
                     </div>
 

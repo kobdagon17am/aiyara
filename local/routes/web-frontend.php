@@ -230,7 +230,7 @@ Route::get('dt_sponsor','Frontend\DirectSponsorController@dt_sponsor')->name('dt
 Route::get('commission-per-day','Frontend\CommissionController@commission_per_day')->name('commission-per-day');
 Route::post('dt_commission_perday','Frontend\CommissionController@dt_commission_perday')->name('dt_commission_perday');
 
-Route::get('commission_faststart/{customer_id?}/{date?}','Frontend\CommissionController@commission_faststart')->name('commission_faststart');
+Route::get('commission_faststart/{user_name?}/{date?}','Frontend\CommissionController@commission_faststart')->name('commission_faststart');
 Route::get('dt_commission_faststart','Frontend\CommissionController@dt_commission_faststart')->name('dt_commission_faststart');
 
 Route::get('commission_bonus_transfer','Frontend\CommissionController@commission_bonus_transfer')->name('commission_bonus_transfer');
@@ -247,7 +247,7 @@ Route::get('dt_commission_bonus_transfer_af','Frontend\CommissionController@dt_c
 Route::get('commission_bonus_transfer_member','Frontend\CommissionController@commission_bonus_transfer_member')->name('commission_bonus_transfer_member');
 Route::get('dt_commission_bonus_transfer_member','Frontend\CommissionController@dt_commission_bonus_transfer_member')->name('dt_commission_bonus_transfer_member');
 
-Route::get('commission_matching/{customer_id?}/{date?}','Frontend\CommissionController@commission_matching')->name('commission_matching');
+Route::get('commission_matching/{user_name?}/{date?}','Frontend\CommissionController@commission_matching')->name('commission_matching');
 Route::get('dt_commission_matching','Frontend\CommissionController@dt_commission_matching')->name('dt_commission_matching');
 
 Route::get('coupon','Frontend\CouponCodeController@coupon')->name('coupon');

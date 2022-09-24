@@ -51,19 +51,21 @@ class Register extends Model
         ->count();
 
         if($check_user_name>0){
-
-          $customer_code_id =DB::table('customers')
-          ->select('id')
-          ->orderby('id','DESC')
-          //->limit('1')
-          ->first();
-          $AUTO_INCREMENT = "ALTER TABLE customer_code AUTO_INCREMENT = $customer_code_id->id;";
-          $customer_code_id =  $customer_code_id->id+1;
-          $c_code = 'A'.$customer_code_id;
-          $username = $c_code;
+          $data = ['status'=>'fail','eror'=>'1','massage'=>'มีรหัสนี้ในระบบแล้วกรุณาเช็คข้อมูลก่อนการสมัครอีกครั้ง '];
+          return $data;
+          // $customer_code_id =DB::table('customers')
+          // ->select('id')
+          // ->orderby('id','DESC')
+          // //->limit('1')
+          // ->first();
+          // $AUTO_INCREMENT = "ALTER TABLE customer_code AUTO_INCREMENT = $customer_code_id->id;";
+          // $customer_code_id =  $customer_code_id->id+1;
+          // $c_code = 'A'.$customer_code_id;
+          // $username = $c_code;
         }
 
-        $alphabet = 'abcdefghjkmnopqrstuvwxyz23456789';
+
+        $alphabet = '123456789';
         $pass = array(); //remember to declare $pass as an array
 
     $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
@@ -174,13 +176,13 @@ class Register extends Model
   //  }
 
    if($check_id_card > 0 ){
-       $data = ['status'=>'fail','massage'=>'ID Card already exists in the system.'];
+       $data = ['status'=>'fail','eror'=>'0','massage'=>'ID Card already exists in the system.'];
        DB::rollback();
        return $data;
    }
 
    if($count_user > 0 ){
-       $data = ['status'=>'fail','massage'=>'Username or MobileNumber already exists in the system.'];
+       $data = ['status'=>'fail','eror'=>'0','massage'=>'Username or MobileNumber already exists in the system.'];
    }else{
        try {
           DB::BeginTransaction();
@@ -307,7 +309,7 @@ class Register extends Model
          $data = ['status'=>'success','massage'=>'Add User Success','data'=>$data_customer,'pass'=>$pass,'search_id'=>$id];
 
      } catch (Exception $e) {
-       $data = ['status'=>'fail','massage'=>'Add User Error'];
+       $data = ['status'=>'fail','eror'=>'0','massage'=>'Add User Error'];
 
    }
 
