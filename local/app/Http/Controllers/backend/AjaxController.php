@@ -5363,6 +5363,79 @@ class AjaxController extends Controller
 
       if($request->ajax()){
 
+    //     $text = "
+    //     SELECT
+    //     register_files.id,
+    //     register_files.business_location_id_fk,
+    //     register_files.branch_id_fk,
+    //     register_files.customer_id,
+    //     register_files.type,
+    //     register_files.url,
+    //     register_files.file,
+    //     register_files.`comment`,
+    //     register_files.regis_doc_status as status,
+    //     register_files.approve_date,
+    //     register_files.approver,
+    //     register_files.item_checked,
+    //     register_files.created_at,
+    //     register_files.updated_at,
+    //     register_files.deleted_at,
+    //     concat(url,'/',file) AS file_path,
+    //     customers.user_name,
+
+    //     customers.first_name as name_first,
+    //     customers.last_name as name_last,
+    //     customers.business_name,
+    //     customers.id_card,
+    //     customers.email,
+
+    //     (SELECT CONCAT(upline.first_name, ' ', upline.last_name,'(',upline.user_name,')') FROM customers as upline
+    //     WHERE upline.user_name = customers.upline_id) as upline_id,
+    //     (SELECT CONCAT(introduce.first_name, ' ', introduce.last_name,'(',introduce.user_name,')') FROM customers as introduce
+    // WHERE introduce.user_name = customers.introduce_id) as introduce_name,
+
+
+    // customers_address_card.card_house_no,
+    // customers_address_card.card_house_name,
+    // customers_address_card.card_moo,
+    // customers_address_card.card_soi,
+    // customers_address_card.card_road,
+    // customers_address_card.card_province_id_fk,
+    // customers_address_card.card_zipcode,
+    // customers_address_card.tel,
+    // customers_address_card.tel_home,
+    // dataset_provinces.name_th as pro_name,
+    // dataset_amphures.name_th as amp_name,
+    // dataset_districts.name_th as dis_name,
+
+    // customers_detail.bank_account,
+    // customers_detail.bank_branch,
+    // customers_detail.bank_type,
+
+    //     concat(
+    //     customers.user_name,' : ',
+    //     customers.prefix_name,
+    //     customers.first_name,' ',
+    //     customers.last_name) as cus_name,
+    //     customers.id_card,
+    //     customers_detail.bank_no,
+    //     customers_detail.bank_name
+    //     FROM
+    //     register_files
+    //     LEFT Join customers ON register_files.customer_id = customers.id
+    //     Left Join customers_detail ON register_files.customer_id = customers_detail.customer_id
+
+    //     Left Join customers_address_card ON register_files.customer_id = customers_address_card.customer_id
+    //     Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+    //     Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+    //     Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+
+    //     where register_files.id= '".$request->id."'
+    //  ";
+      //   if($request->id==3504){
+      //    dd($text);
+      // }
+
           $rs =  DB::select("
                 SELECT
                 register_files.id,
@@ -5388,11 +5461,8 @@ class AjaxController extends Controller
                 customers.business_name,
                 customers.id_card,
                 customers.email,
+                customers.upline_id,
 
-                (SELECT CONCAT(upline.first_name, ' ', upline.last_name,'(',upline.user_name,')') FROM customers as upline
-                WHERE upline.user_name = customers.upline_id) as upline_id,
-                (SELECT CONCAT(introduce.first_name, ' ', introduce.last_name,'(',introduce.user_name,')') FROM customers as introduce
-            WHERE introduce.user_name = customers.introduce_id) as introduce_name,
 
 
             customers_address_card.card_house_no,
@@ -5432,8 +5502,22 @@ class AjaxController extends Controller
 
                 where register_files.id= '".$request->id."'
              ");
+
+            //  (SELECT CONCAT(upline.first_name, ' ', upline.last_name,'(',upline.user_name,')') FROM customers as upline
+            //     WHERE upline.user_name = customers.upline_id) as upline_id,
+            //     (SELECT CONCAT(introduce.first_name, ' ', introduce.last_name,'(',introduce.user_name,')') FROM customers as introduce
+            // WHERE introduce.user_name = customers.introduce_id) as introduce_name,
+
+            $upline_data = DB::table('customers')->select('first_name','last_name','user_name')->where('user_name',$rs[0]->upline_id)->first();
+
+            if(!$upline_data){
+                $upline_data = 0;
+            }
 // dd($rs);
-            return response()->json($rs);
+            return response()->json([
+              'rs' => $rs,
+              'upline_data' => $upline_data,
+          ]);
 
       }
 

@@ -1352,7 +1352,7 @@
 
                     console.log(data);
 
-                    $.each(data, function(key, value) {
+                    $.each(data.rs, function(key, value) {
                         // if(value.file_path!=null){
                         // console.log(value.file_path);
                         // console.log(value.type);
@@ -1366,8 +1366,15 @@
                         $('#text_name_business').html(value.business_name);
                         $('#text_ID_card_number').html(value.id_card);
                         $('#text_email').html(value.email);
-                        $('#text_upline').html(value.upline_id);
-                        $('#text_Referral_UserName').html(value.introduce_name);
+                        console.log('upline '+data.upline_data.user_name);
+                        if(data.upline_data!=0){
+
+                                 $('#text_upline').html(data.upline_data.user_name);
+                                 $('#text_Referral_UserName').html(data.upline_data.first_name+' '+data.upline_data.last_name);
+                        }
+
+
+
 
                         $('#text_no').html(value.card_house_no);
                         $('#text_building').html(value.card_house_name);
