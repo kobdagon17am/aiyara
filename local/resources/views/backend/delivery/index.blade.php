@@ -988,8 +988,10 @@
                 rowCallback: function(nRow, aData, dataIndex) {
 
                     var sPermission = "<?= \Auth::user()->permission ?>";
-                    var sU = sessionStorage.getItem("sU");
-                    var sD = sessionStorage.getItem("sD");
+                    // var sU = sessionStorage.getItem("sU");
+                    var sU = "{{ Session::get('sU') }}";
+                    // var sD = sessionStorage.getItem("sD");
+                    var sD = "{{ Session::get('sD') }}";
                     if (sPermission == 1) {
                         sU = 1;
                         sD = 1;

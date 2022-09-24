@@ -86,7 +86,7 @@ class Promotions_costController extends Controller
           $sRow->pv    = request('pv');
           // $sRow->lang_id    = request('lang_id');
           $sRow->status    = request('status')?request('status'):0;
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
@@ -119,7 +119,7 @@ class Promotions_costController extends Controller
       }else{
         $sTable = \App\Models\Backend\Promotions_cost::search()->orderBy('id', 'asc');
       }
-      
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('business_location', function($row) {
@@ -137,7 +137,7 @@ class Promotions_costController extends Controller
       ->addColumn('currency', function($row) {
           $sP = \App\Models\Backend\Currency::find($row->currency_id);
           return $sP->txt_desc;
-      })      
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

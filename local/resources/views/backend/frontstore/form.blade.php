@@ -1994,8 +1994,8 @@
                                                                 </div>
                                                             </div>
 
-
-                                                            <?php $show_div_cash_pay = @$sRow->pay_type_id_fk == '' || @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 4 || @$sRow->pay_type_id_fk == 12 || @$sRow->pay_type_id_fk == 13 || @$sRow->pay_type_id_fk == 14 ? 'display: none;' : ''; ?>
+                                                            {{-- || @$sRow->pay_type_id_fk == 12 --}}
+                                                            <?php $show_div_cash_pay = @$sRow->pay_type_id_fk == '' || @$sRow->pay_type_id_fk == 8 || @$sRow->pay_type_id_fk == 9 || @$sRow->pay_type_id_fk == 11 || @$sRow->pay_type_id_fk == 4  || @$sRow->pay_type_id_fk == 13 || @$sRow->pay_type_id_fk == 14 ? 'display: none;' : ''; ?>
                                                             <div class="divTableRow show_div_cash_pay "
                                                                 style="<?= $show_div_cash_pay ?>">
                                                                 <div class="divTableCell">
@@ -2184,6 +2184,39 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="divTableRow">
+                                                              <div class="divTableCell">
+                                                              </div>
+                                                              <div class="divTH">
+                                                                  <label for="">จำนวนบิลทั้งหมดที่ชำระร่วมกับบิลนี้ <label style="color:red;" for="">(เฉพาะบิลหลัก)</label></label>
+                                                              </div>
+                                                              <div class="divTableCell">
+                                                                <input type="number" name="number_bill" class="form-control text-right f-ainumber-18  in-tx" required value="<?php
+                                                                  if(@$sRow){
+                                                                    echo @$sRow->number_bill;
+                                                                  }else{
+                                                                    echo 0;
+                                                                  }
+                                                                  ?>">
+                                                              </div>
+                                                          </div>
+
+                                                          <div class="divTableRow">
+                                                            <div class="divTableCell">
+                                                            </div>
+                                                            <div class="divTH">
+                                                            </div>
+                                                            <div class="divTableCell">
+                                                              <input
+                                                              class="" type="checkbox"
+                                                              name="gv_before" value="1"
+                                                              order_id="{{ @$sRow->id }}"
+                                                              {{ @$sRow->gv_before == 1 ? 'checked' : '' }}>
+                                                          <label
+                                                              for="gv_before">&nbsp;&nbsp;บิล GV ขออนุมัติก่อน <span style="color:red;">(สำหรับบิลที่จะขออนุมัติเพื่ออก GV ก่อนชำระร่วม)</span></label>
+                                                            </div>
+                                                        </div>
 
 
                                                             <div class="divTableRow">
@@ -6580,7 +6613,7 @@
                                                         $('.class_btnSave').show();
 
                                                     } else
-                                                        // Gift Voucher + โอน
+                                                        // Gift Voucher + โอน show_div_cash_pay
                                                         if (pay_type_id_fk == 12) {
                                                             // เงินโอน
                                                             $(".show_div_transfer_price")
@@ -6609,7 +6642,7 @@
                                                             // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
                                                             $('.class_btnSave').prop('disabled',
                                                                 true);
-
+                                                                $(".show_div_cash_pay").show();
                                                         } else
                                                             // 13 Gift Voucher + บัตรเครดิต
                                                             if (pay_type_id_fk == 13) {
@@ -6881,6 +6914,7 @@
                                     $("#gift_voucher_price").val(value.gift_voucher_price);
                                     total_sum = total_sum - value.gift_voucher_price;
                                     $('#transfer_price').val(parseFloat(total_sum).toFixed(2));
+                                    $('.show_div_cash_pay').show();
                                 } else
                                     // ถ้า Gift Voucher + บัตรเครดิต
                                     if (pay_type_id_fk == 13) {
@@ -8025,7 +8059,6 @@
 
             }
 
-
             if (pay_type_id_fk == 5) {
                 // ยอดเงินสดที่ต้องชำระ ต้องไม่เป็น 0 ถ้าเป็น 0 ให้ pay_type_id reset
                 if (cash_pay == "0.00") {
@@ -8041,6 +8074,7 @@
                     }
                 }
             }
+
 
             if (pay_type_id_fk == 4) {
                 // ยอด gif ต้องไม่เป็น 0 ถ้าเป็น 0 ให้ pay_type_id reset
@@ -8061,7 +8095,7 @@
             }
 
             if (pay_type_id_fk == 5 || pay_type_id_fk == 6 || pay_type_id_fk == 7 || pay_type_id_fk == 10 ||
-                pay_type_id_fk == 19) {
+                pay_type_id_fk == 19 || pay_type_id_fk == 12) {
                 $(".show_div_cash_pay ").show();
             } else {
                 $(".show_div_cash_pay ").hide();

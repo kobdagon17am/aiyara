@@ -5432,7 +5432,7 @@ class AjaxController extends Controller
 
                 where register_files.id= '".$request->id."'
              ");
-
+// dd($rs);
             return response()->json($rs);
 
       }
@@ -7756,9 +7756,9 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
 
             elseif(@$request->table == 'db_general_receive'){
               // $orders = DB::table($request->table)->where('id',$request->id)->delete();
-          }
+          }elseif(@$request->table == 'promotions_cost'){
 
-            else{
+          }else{
                 $orders = DB::table($request->table)->where('id',$request->id)->first();
                 if($orders){
                     $arr = explode( ',', $orders->receipt );

@@ -448,7 +448,7 @@
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.products_cost.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                        + '<a href="javascript: void(0);" data-url="{{ route('backend.products_cost.index') }}/'+aData['id']+'" class="btn btn-sm btn-danger cDelete"><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                        + '<a href="{{url('backend/products_cost_delete')}}/'+aData['id']+'" data-url="{{ route('backend.products_cost.index') }}/'+aData['id']+'" onclick="return confirm(\'ยืนยันการลบรายการ?\')" class="btn btn-sm btn-danger "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                       ).addClass('input');
                     }
                 });

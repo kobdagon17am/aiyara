@@ -145,6 +145,10 @@
                                             <button type="button" data-id="{{ @$r->id }}"
                                                 class="btn btn-danger btn-sm font-size-10 btnDelSlip "
                                                 style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
+                                        @else
+                                            <button type="button" data-id="{{ @$r->id }}"
+                                                class="btn btn-warning btn-sm font-size-10 btn_cancel_approve"
+                                                style="vertical-align: bottom;margin-bottom: 5px;">ยกเลิกอนุมัติ</button>
                                         @endif
                                     </div>
 
@@ -205,6 +209,11 @@
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
                         </button> --}}
 
+                                    </div>
+                                @elseif(@$sRow->approve_status == 9)
+                                    <div class="div_confirm_transfer_slip">
+                                        <button type="button" class="btn btn-primary waves-effect waves-light"
+                                            data-toggle="modal" data-target="#confirm">อนุมัติ</button>
                                     </div>
                                 @ELSE
                                     {{-- <div class="div_confirm_transfer_slip">
@@ -337,10 +346,11 @@
                                                             <div class="col-md-6 text-left">
                                                                 <h5 class="font-size-14 ">
                                                                     สถานะโอนคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
-                                                               <select class="form-control"  name="approval_amount_transfer_over_status">
-                                                                <option value="0">ยังไม่โอนยอดคืน</option>
-                                                                <option value="1">โอนยอดคืนแล้ว</option>
-                                                               </select>
+                                                                <select class="form-control"
+                                                                    name="approval_amount_transfer_over_status">
+                                                                    <option value="0">ยังไม่โอนยอดคืน</option>
+                                                                    <option value="1">โอนยอดคืนแล้ว</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1008,6 +1018,24 @@
         $(document).on('click', '.btn_not_approve', function(event) {
             var id = $(this).data('id');
             var status = 3;
+            $.ajax({
+                type: "POST",
+                url: " {{ url('backend/ajaxApproveFileSlip_04') }} ",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: id,
+                    status: status
+                },
+                success: function(data) {
+                    // console.log(data);
+                    location.reload();
+                }
+            });
+        });
+
+        $(document).on('click', '.btn_cancel_approve', function(event) {
+            var id = $(this).data('id');
+            var status = 1;
             $.ajax({
                 type: "POST",
                 url: " {{ url('backend/ajaxApproveFileSlip_04') }} ",

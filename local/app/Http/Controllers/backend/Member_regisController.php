@@ -207,12 +207,14 @@ class Member_regisController extends Controller
 
         if(!empty($req->business_location_id_fk)){
            $w01 = " AND register_files.business_location_id_fk=".$req->business_location_id_fk ;
+           $business_location_id_fk = $req->business_location_id_fk;
         }else{
            if(auth()->user()->permission == 1){
             $w01 = "";
           }else{
             $w01 = " AND register_files.business_location_id_fk=".auth()->user()->business_location_id_fk;
           }
+          $business_location_id_fk = auth()->user()->business_location_id_fk;
         }
 
         if(!empty($req->branch_id_fk)){
@@ -282,7 +284,11 @@ class Member_regisController extends Controller
 
       $sTable = DB::select("
 
-        SELECT * FROM `register_files`
+        SELECT id,
+        type,
+        regis_doc_status,
+        customer_id
+         FROM `register_files`
         where 1
                 ".$w01."
                 ".$w02."
@@ -299,6 +305,163 @@ class Member_regisController extends Controller
 
 
          ");
+
+         if($w05==''){
+          $arr_not = [];
+          foreach($sTable as $c){
+
+            // type_1
+            $c_null = DB::table('register_files')->select('id')
+            ->where('business_location_id_fk',$business_location_id_fk)
+            ->where('customer_id',$c->customer_id)
+            ->where('regis_doc_status',0)
+            ->where('type',1)
+            ->orderBy('id','desc')
+            ->get();
+            foreach($c_null as $c_null_item){
+              $c_data = DB::table('register_files')->select('id')
+              ->where('business_location_id_fk',$business_location_id_fk)
+              ->where('customer_id',$c->customer_id)
+              ->where('regis_doc_status',1)
+              ->where('type',1)
+              ->orderBy('id','desc')
+              ->first();
+              $c_data2 = DB::table('register_files')->select('id','type')
+              ->where('business_location_id_fk',$business_location_id_fk)
+              ->where('customer_id',$c->customer_id)
+              ->where('regis_doc_status',2)
+              ->where('type',1)
+              ->orderBy('id','desc')
+              ->first();
+              if($c_data){
+                array_push($arr_not,$c_null_item->id);
+              }
+              if($c_data2){
+                if($c_data2->id > $c_null_item->id){
+                  array_push($arr_not,$c_null_item->id);
+                }
+              }
+            }
+
+             // type_2
+             $c_null = DB::table('register_files')->select('id')
+             ->where('business_location_id_fk',$business_location_id_fk)
+             ->where('customer_id',$c->customer_id)
+             ->where('regis_doc_status',0)
+             ->where('type',2)
+             ->orderBy('id','desc')
+             ->get();
+             foreach($c_null as $c_null_item){
+               $c_data = DB::table('register_files')->select('id')
+               ->where('business_location_id_fk',$business_location_id_fk)
+               ->where('customer_id',$c->customer_id)
+               ->where('regis_doc_status',1)
+               ->where('type',2)
+               ->orderBy('id','desc')
+               ->first();
+               $c_data2 = DB::table('register_files')->select('id','type')
+               ->where('business_location_id_fk',$business_location_id_fk)
+               ->where('customer_id',$c->customer_id)
+               ->where('regis_doc_status',2)
+               ->where('type',2)
+               ->orderBy('id','desc')
+               ->first();
+               if($c_data){
+                 array_push($arr_not,$c_null_item->id);
+               }
+               if($c_data2){
+                 if($c_data2->id > $c_null_item->id){
+                   array_push($arr_not,$c_null_item->id);
+                 }
+               }
+             }
+
+              // type_3
+              $c_null = DB::table('register_files')->select('id')
+              ->where('business_location_id_fk',$business_location_id_fk)
+              ->where('customer_id',$c->customer_id)
+              ->where('regis_doc_status',0)
+              ->where('type',3)
+              ->orderBy('id','desc')
+              ->get();
+              foreach($c_null as $c_null_item){
+                $c_data = DB::table('register_files')->select('id')
+                ->where('business_location_id_fk',$business_location_id_fk)
+                ->where('customer_id',$c->customer_id)
+                ->where('regis_doc_status',1)
+                ->where('type',3)
+                ->orderBy('id','desc')
+                ->first();
+                $c_data2 = DB::table('register_files')->select('id','type')
+                ->where('business_location_id_fk',$business_location_id_fk)
+                ->where('customer_id',$c->customer_id)
+                ->where('regis_doc_status',2)
+                ->where('type',3)
+                ->orderBy('id','desc')
+                ->first();
+                if($c_data){
+                  array_push($arr_not,$c_null_item->id);
+                }
+                if($c_data2){
+                  if($c_data2->id > $c_null_item->id){
+                    array_push($arr_not,$c_null_item->id);
+                  }
+                }
+              }
+
+               // type_4
+            $c_null = DB::table('register_files')->select('id')
+            ->where('business_location_id_fk',$business_location_id_fk)
+            ->where('customer_id',$c->customer_id)
+            ->where('regis_doc_status',0)
+            ->where('type',4)
+            ->orderBy('id','desc')
+            ->get();
+            foreach($c_null as $c_null_item){
+              $c_data = DB::table('register_files')->select('id')
+              ->where('business_location_id_fk',$business_location_id_fk)
+              ->where('customer_id',$c->customer_id)
+              ->where('regis_doc_status',1)
+              ->where('type',4)
+              ->orderBy('id','desc')
+              ->first();
+              $c_data2 = DB::table('register_files')->select('id','type')
+              ->where('business_location_id_fk',$business_location_id_fk)
+              ->where('customer_id',$c->customer_id)
+              ->where('regis_doc_status',2)
+              ->where('type',4)
+              ->orderBy('id','desc')
+              ->first();
+              if($c_data){
+                array_push($arr_not,$c_null_item->id);
+              }
+              if($c_data2){
+                if($c_data2->id > $c_null_item->id){
+                  array_push($arr_not,$c_null_item->id);
+                }
+              }
+            }
+          }
+
+          $sTable = DB::select("
+          SELECT * FROM `register_files`
+          where 1
+                  ".$w01."
+                  ".$w02."
+                  ".$w03."
+                  ".$w04."
+                  ".$w05."
+                  ".$w06."
+                  ".$w07."
+                  ".$all."
+                  AND id NOT IN (".implode(",",$arr_not).")
+                  ".$get_all_date."
+
+         GROUP BY customer_id
+         ORDER BY id asc
+           ");
+          //  ORDER BY id asc , regis_doc_status asc
+         }
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
@@ -582,7 +745,7 @@ class Member_regisController extends Controller
         $f = [] ;
         foreach ($d as $key => $value) {
             // if($value->item_checked==1){
-              array_push($f,'<a href="#" class="btn btn-sm btn-primary btnCheckRegis " data-id="'.$value->id.'"  ><i class="bx bx-edit font-size-14 align-middle"></i> </a>');
+              array_push($f,'<a href="#" class="btn btn-sm btn-primary btnCheckRegis " data-id="'.$value->id.'"  ><i class="bx bx-edit font-size-14 align-middle"></i> ('.$value->id.') </a>');
             // }
         }
         $f = implode('<br>',$f);

@@ -1205,10 +1205,16 @@ class FrontstorelistController extends Controller
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 6), ',', -1) OR
               ".$req->order_type." = SUBSTRING_INDEX(SUBSTRING_INDEX(orders_type_id, ',', 7), ',', -1)
             )
+
             AND curdate() BETWEEN promotions.show_startdate and promotions.show_enddate
+
              AND business_location = ".@$branchs[0]->business_location_id_fk."
 
       ");
+      // AND curdate() >= promotions.show_startdate AND curdate() <= promotions.show_enddate
+    //
+
+
 
 
 // AND promotions.all_available_purchase > 0
