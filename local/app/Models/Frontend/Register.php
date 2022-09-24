@@ -51,7 +51,7 @@ class Register extends Model
         ->count();
 
         if($check_user_name>0){
-          $data = ['status'=>'fail','massage'=>'มีรหัสนี้ในระบบแล้วกรุณาเช็คข้อมูลก่อนการสมัครอีกครั้ง '];
+          $data = ['status'=>'fail','eror'=>'1','massage'=>'มีรหัสนี้ในระบบแล้วกรุณาเช็คข้อมูลก่อนการสมัครอีกครั้ง '];
           return $data;
           // $customer_code_id =DB::table('customers')
           // ->select('id')
@@ -176,13 +176,13 @@ class Register extends Model
   //  }
 
    if($check_id_card > 0 ){
-       $data = ['status'=>'fail','massage'=>'ID Card already exists in the system.'];
+       $data = ['status'=>'fail','eror'=>'0','massage'=>'ID Card already exists in the system.'];
        DB::rollback();
        return $data;
    }
 
    if($count_user > 0 ){
-       $data = ['status'=>'fail','massage'=>'Username or MobileNumber already exists in the system.'];
+       $data = ['status'=>'fail','eror'=>'0','massage'=>'Username or MobileNumber already exists in the system.'];
    }else{
        try {
           DB::BeginTransaction();
@@ -309,7 +309,7 @@ class Register extends Model
          $data = ['status'=>'success','massage'=>'Add User Success','data'=>$data_customer,'pass'=>$pass,'search_id'=>$id];
 
      } catch (Exception $e) {
-       $data = ['status'=>'fail','massage'=>'Add User Error'];
+       $data = ['status'=>'fail','eror'=>'0','massage'=>'Add User Error'];
 
    }
 
