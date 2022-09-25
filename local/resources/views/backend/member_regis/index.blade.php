@@ -1369,8 +1369,8 @@
                         console.log('upline '+data.upline_data.user_name);
                         if(data.upline_data!=0){
 
-                                 $('#text_upline').html(data.upline_data.user_name);
-                                 $('#text_Referral_UserName').html(data.upline_data.first_name+' '+data.upline_data.last_name);
+                                 $('#text_upline').html(data.upline_data.first_name+' '+data.upline_data.last_name+' ('+data.upline_data.user_name+')');
+                                 $('#text_Referral_UserName').html(data.introduce_data.first_name+' '+data.introduce_data.last_name+' ('+data.introduce_data.user_name+')');
                         }
 
 

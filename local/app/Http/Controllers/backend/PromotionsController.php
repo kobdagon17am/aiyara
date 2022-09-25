@@ -152,6 +152,8 @@ class PromotionsController extends Controller
           $sRow->status    = request('status')?request('status'):0;
 
           $sRow->created_at = date('Y-m-d H:i:s');
+          $sRow->order_by_member    = request('order_by_member')?request('order_by_member'):0;
+          $sRow->order_by_staff    = request('order_by_staff')?request('order_by_staff'):0;
           $sRow->save();
 
 

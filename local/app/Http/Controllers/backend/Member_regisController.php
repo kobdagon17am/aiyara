@@ -263,6 +263,8 @@ class Member_regisController extends Controller
       // $sTable = \App\Models\Backend\Member_regis::search()->orderBy('id', 'asc');
       //
 
+      // regis_doc3_status
+
       $all = "AND regis_doc_status = 0";
       if($w05!=""){
         $all = "";

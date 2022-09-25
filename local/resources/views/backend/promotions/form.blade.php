@@ -323,6 +323,26 @@
                 </div>
 
                 <div class="form-group row">
+                  <label class="col-md-3 col-form-label">  </label>
+                  <div class="col-md-8 mt-2">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch2" name="order_by_member" value="1" {{ ( @$sRow->order_by_member=='1')?'checked':'' }}>
+                        <label class="custom-control-label" for="customSwitch2">สั่งซื้อโดยสมาชิก</label>
+                    </div>
+                  </div>
+            </div>
+
+            <div class="form-group row">
+                  <label class="col-md-3 col-form-label"> </label>
+                  <div class="col-md-8 mt-2">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch3" name="order_by_staff" value="1" {{ ( @$sRow->order_by_staff=='1')?'checked':'' }}>
+                        <label class="custom-control-label" for="customSwitch3">สั่งซื้อโดยพนักงาน</label>
+                    </div>
+                  </div>
+            </div>
+
+                <div class="form-group row">
                     <label class="col-md-3 col-form-label">สถานะ :</label>
                     <div class="col-md-8 mt-2">
                       <div class="custom-control custom-switch">
@@ -346,7 +366,7 @@
                       </div>
                     </div>
                 </div>
-                                
+
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
                         <a class="btn btn-secondary btn-sm waves-effect" href="{{ url("backend/promotions") }}">
@@ -366,7 +386,7 @@
 
 
                 @if( !empty($sRow) )
-                    
+
                     <div class="myBorder">
 
                       <div style="">
@@ -430,7 +450,7 @@
                       <div style="">
                         <div class="form-group row">
                           <div class="col-md-12">
-                            
+
                             <a class="btn btn-info btn-sm mt-1" href="{{ route('backend.promotions_images.create') }}/{{@$sRow->id}}" style="float: right;" >
                               <i class="bx bx-plus align-middle mr-1"></i><span style="font-size: 14px;">เพิ่ม</span>
                             </a>
@@ -495,13 +515,13 @@
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'product_name', title :'รหัส : ชื่อสินค้า', className: 'text-left'},
                         {data: 'product_amt', title :'จำนวน', className: 'text-center'},
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
-                        {data: 'id', title :'Tools', className: 'text-center w80'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w80'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
@@ -553,7 +573,7 @@
                         {data: 'status',   title :'<center>สถานะ</center>', className: 'text-center',render: function(d) {
                            return d==1?'<span style="color:blue">เปิดใช้งาน</span>':'<span style="color:red">ปิด</span>';
                         }},
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
@@ -567,7 +587,7 @@
                   oTable.draw();
                 });
             });
-              
+
 
 
             var promotion_id_fk = "{{@$sRow->id?@$sRow->id:0}}";
@@ -593,7 +613,7 @@
                                   },
                               method: 'POST',
                             },
-                 
+
                     columns: [
                         {data: 'id', title :'ID', className: 'text-center w50'},
                         {data: 'img_path',   title :'<center>IMAGE</center>', className: 'text-center',render: function(d) {
@@ -607,7 +627,7 @@
                              return d==1?'Yes':'';
                         }},
 
-                        {data: 'id', title :'Tools', className: 'text-center w60'}, 
+                        {data: 'id', title :'Tools', className: 'text-center w60'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
@@ -633,18 +653,18 @@
           $(document).on('click', '.cCancel', function(event) {
 
             var id = $(this).data('id');
-         
+
               if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
                   return false;
               }else{
               $.ajax({
-                  url: " {{ url('backend/ajaxDelPromoProduct') }} ", 
+                  url: " {{ url('backend/ajaxDelPromoProduct') }} ",
                   method: "post",
                   data: {
                     "_token": "{{ csrf_token() }}", id:id,
                   },
                   success:function(data)
-                  { 
+                  {
                     // console.log(data);
                     // return false;
                         Swal.fire({
@@ -663,9 +683,9 @@
 
             }
 
-              
+
             });
-                
+
       });
 
 
@@ -685,13 +705,13 @@
             $.ajax({
 
                type:'POST',
-               url: " {{ url('backend/ajaxDelFunction') }} ", 
+               url: " {{ url('backend/ajaxDelFunction') }} ",
                data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
                 success:function(data){
-                     console.log(data); 
+                     console.log(data);
                      location.reload();
                   },
-                error: function(jqXHR, textStatus, errorThrown) { 
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR));
                     console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                 }

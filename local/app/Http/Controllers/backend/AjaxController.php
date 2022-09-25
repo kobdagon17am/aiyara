@@ -5462,7 +5462,7 @@ class AjaxController extends Controller
                 customers.id_card,
                 customers.email,
                 customers.upline_id,
-
+                customers.introduce_id,
 
 
             customers_address_card.card_house_no,
@@ -5509,14 +5509,20 @@ class AjaxController extends Controller
             // WHERE introduce.user_name = customers.introduce_id) as introduce_name,
 
             $upline_data = DB::table('customers')->select('first_name','last_name','user_name')->where('user_name',$rs[0]->upline_id)->first();
+            $introduce_data = DB::table('customers')->select('first_name','last_name','user_name')->where('user_name',$rs[0]->introduce_id)->first();
 
             if(!$upline_data){
                 $upline_data = 0;
             }
+
+            if(!$introduce_data){
+              $introduce_data = 0;
+          }
 // dd($rs);
             return response()->json([
               'rs' => $rs,
               'upline_data' => $upline_data,
+              'introduce_data' => $introduce_data,
           ]);
 
       }
