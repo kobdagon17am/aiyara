@@ -1181,16 +1181,16 @@ class FrontstoreController extends Controller
 
       if($sRow->approve_status==2 || $sRow->approve_status==6 || $sRow->approve_status==0){
         if($sRow->pay_with_other_bill_note!=''){
-          $other_bill1 = DB::table('db_orders')->select('id','code_order')->where('code_order',$sRow->pay_with_other_bill_note)->update([
+          $other_bill1 = DB::table('db_orders')->select('id','code_order')->whereIn('approve_status',[1,2,6])->where('code_order',$sRow->pay_with_other_bill_note)->update([
             'approve_status' => 1,
             'approve_one_more' => 1,
             'gv_before' => 0,
           ]);
-          $other_bill2 = DB::table('db_orders')->select('id','code_order')->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->update([
+          $other_bill2 = DB::table('db_orders')->select('id','code_order')->whereIn('approve_status',[1,2,6])->where('pay_with_other_bill_note',$sRow->pay_with_other_bill_note)->update([
             'approve_status' => 1,
           ]);
         }else{
-          $other_bill2 = DB::table('db_orders')->select('id','code_order')->where('pay_with_other_bill_note',$sRow->code_order)->update([
+          $other_bill2 = DB::table('db_orders')->select('id','code_order')->whereIn('approve_status',[1,2,6])->where('pay_with_other_bill_note',$sRow->code_order)->update([
             'approve_status' => 1,
           ]);
         }

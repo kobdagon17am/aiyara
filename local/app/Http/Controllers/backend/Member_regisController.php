@@ -517,7 +517,8 @@ class Member_regisController extends Controller
         $r2 = '' ;
         $r3 = '' ;
         $r4 = '' ;
-        foreach ($d as $key => $value) {
+        // if($Customers){
+          foreach ($d as $key => $value) {
             $filetype = DB::select(" select id from dataset_regis_filetype where id=".$value->type." order by id  ");
 
             if($filetype[0]->id==1){
@@ -578,6 +579,8 @@ class Member_regisController extends Controller
             // array_push($f,$filetype[0]->id.' : '.$r1.$r2.$r3.$r4);
             array_push($f,$r1.$r2.$r3.$r4);
         }
+        // }
+
 
         $f = implode('<br>',$f);
         return @$f;
