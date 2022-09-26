@@ -516,7 +516,13 @@ class RunPvController extends Controller
                     'message' => 'Not Update Package',
                 ];
                 return $resule;
-            } else {
+            }else if(@$user->package_id > @$package->id){
+              $resule = [
+                'status' => 'success',
+                'message' => 'Not Update Package',
+            ];
+            return $resule;
+            }else {
 
               if(@$package->id){
                 $update_package = DB::table('customers')
