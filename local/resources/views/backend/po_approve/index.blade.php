@@ -743,10 +743,10 @@
 
                 <script>
                     $(document).ready(function() {
-                        setTimeout(function() {
-                            //  $(".myloading").hide();
-                            location.reload();
-                        }, 135000);
+                        // setTimeout(function() {
+                        //     //  $(".myloading").hide();
+                        //     location.reload();
+                        // }, 135000);
                     });
                 </script>
 

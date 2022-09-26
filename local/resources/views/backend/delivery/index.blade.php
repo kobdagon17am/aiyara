@@ -350,8 +350,7 @@
                         <div style="">
                             <div class="form-group row">
                                 <div class="col-md-12">
-                                    <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ
-                                        Packing List </span>
+                                    <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ Packing List </span>
                                 </div>
                             </div>
                             <div class="form-group row">

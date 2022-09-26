@@ -829,7 +829,7 @@ class DeliveryController extends Controller
 
         SELECT db_delivery.* , db_orders.shipping_special , db_orders.gift_voucher_price, db_orders.delivery_location, db_orders.charger_type, db_orders.fee_amt, db_orders.distribution_channel_id_fk ,db_orders.approve_status from db_delivery
         Left Join db_orders ON db_orders.code_order = db_delivery.receipt
-        WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1 AND db_delivery.status_to_wh=0 AND db_orders.approve_status<>5
+        WHERE db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1 AND db_delivery.status_to_wh=0 AND db_orders.approve_status=2
         $branch_id_fk
         $business_location_id
         $receipt
@@ -839,7 +839,7 @@ class DeliveryController extends Controller
 
         OR
 
-        db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1 AND db_delivery.status_to_wh=0 AND db_orders.approve_status<>5
+        db_delivery.status_pack=0 AND db_delivery.approver=0 AND db_delivery.status_delivery<>1 AND db_delivery.status_pick_pack<>1 AND db_delivery.status_to_wh=0 AND db_orders.approve_status=2
         $business_location_id
         $receipt
         $customer_id_fk

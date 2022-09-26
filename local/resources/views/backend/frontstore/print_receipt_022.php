@@ -1312,7 +1312,7 @@ for ($j=0; $j < $amt_page ; $j++) {
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php
                 if(@$DB[0]->c==""){ ?>
-                    <td colspan="2" style="width:28%;text-align: left;">
+                    <td colspan="2" style="width:28%;text-align: left; font-size:18px;">
                     <?php echo @$DB[0]->b ; ?>
                      </td>
                     <?php
