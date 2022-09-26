@@ -200,10 +200,22 @@
                                         <button type="button" class="btn btn-primary waves-effect waves-light"
                                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
 
+                                            <?php
+                                            $db_delivery = \DB::table('db_delivery')->select('packing_code')->where('orders_id_fk',@$sRow->id)->first();
+                                            $status_d = 0;
+                                            if($db_delivery){
+                                              if($db_delivery->packing_code!=0){
+                                                $status_d = 1;
+                                              }
+                                            }
+                                            ?>
+
+                                          @if($status_d==0)
                                         <button type="button"
                                             class="btn btn-danger waves-effect waves-light btnNotAprrove"
                                             data-toggle="modal" data-target="#cancel"
                                             order_id="{{ @$sRow->id }}">ไม่อนุมัติ</button>
+                                          @endif
                                         {{-- <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
                             data-toggle="modal" data-target="#cancel">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่

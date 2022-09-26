@@ -102,7 +102,9 @@
 
 $id = $data[0];
 $n = 22;
+// $n = 22;
 $limit = 10;
+// $limit = 10;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
 if(@$sRow->business_location_id_fk == 1){
@@ -1249,9 +1251,13 @@ for ($j=0; $j < $amt_page ; $j++) {
 <div class="NameAndAddress " >
     <table >
       <tr>
-        <td style="width: 60% ;margin-left:35px !important;">
-
-          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
+        <td style="width: 60% ;margin-left:100px !important;">
+  <?php
+  $DB = DB::select(" SELECT * FROM $TABLE");
+  // dd($DB);
+  ?>
+          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; ");
+          ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+3) ; "); ?>
@@ -1294,7 +1300,7 @@ for ($j=0; $j < $amt_page ; $j++) {
       </tr>
     </table>
 
-    <table style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;" >
+    <table style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 130px !important;" >
 
 
 <!-- รายการสินค้า -->
@@ -1379,7 +1385,7 @@ for ($j=0; $j < $amt_page ; $j++) {
       // dd($amt_page);
       $str = "";
       $n = 22;
-      $limit = 10;
+       $limit = 10;
 
               for($z =0; $z <= $amt_page; $z++){
                 $DB1 = DB::select(" SELECT * FROM $TABLE where id = ($z*$n)+22; ");
