@@ -1303,6 +1303,8 @@ for ($j=0; $j < $amt_page ; $j++) {
     <table style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 130px !important;" >
 
 
+    <!-- <a href="backend/pick_warehouse_del_packing/P100896" onclick="return confirm('คุณต้องการยกเลิกรายการ P100896 ? (หลังจากนั้นจะไม่สามารถแก้ไขได้อีก)')"><i class="bx bx-trash grow " data-toggle="tooltip" data-placement="left" title="" style="font-size:24px;cursor:pointer;color:red;" data-original-title="ยกเลิกรายการ P100896"></i></a> -->
+
 <!-- รายการสินค้า -->
 
  <?php $runno = 1; for ($i= ($j*$n)+6; $i <= ($j*$n)+15 ; $i++) {  ?>

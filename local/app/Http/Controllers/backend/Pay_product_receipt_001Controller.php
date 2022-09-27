@@ -1188,7 +1188,7 @@ class Pay_product_receipt_001Controller extends Controller
           }
 
           // รับแล้ว
-          $sTable_re = DB::table('db_pay_product_receipt_001')->whereIn('address_send_type',[1,2])->select('invoice_code')->pluck('invoice_code')->toArray();
+          $sTable_re = DB::table('db_pay_product_receipt_001')->select('invoice_code')->whereIn('address_send_type',[1,2])->pluck('invoice_code')->toArray();
       //     $sTable_re = DB::select("
       //     SELECT
       //     db_pay_product_receipt_001.invoice_code,
@@ -1214,11 +1214,15 @@ class Pay_product_receipt_001Controller extends Controller
   if(isset($req->startDate)){
     $startDate = " AND DATE(db_orders.approve_date) >= '".$req->startDate."' " ;
     $app_status = "";
+  }else{
+    $startDate = " AND DATE(db_orders.approve_date) >= '".date('Y-m').'-01'."' " ;
   }
 
   $endDate = "";
   if(isset($req->endDate)){
     $endDate = " AND DATE(db_orders.approve_date) <= '".$req->endDate."' " ;
+  }else{
+    $endDate = " AND DATE(db_orders.approve_date) <= '".date('Y-m').'-31'."' " ;
   }
   // sentto_branch_id
 
