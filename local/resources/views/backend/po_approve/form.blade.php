@@ -210,11 +210,15 @@
                                             }
                                             ?>
 
+                                @if(@$sRow->approve_status==1 )
+                                @if (@$sRow->transfer_bill_status != 2)
                                           @if($status_d==0)
                                         <button type="button"
                                             class="btn btn-danger waves-effect waves-light btnNotAprrove"
                                             data-toggle="modal" data-target="#cancel"
                                             order_id="{{ @$sRow->id }}">ไม่อนุมัติ</button>
+                                          @endif
+                                          @endif
                                           @endif
                                         {{-- <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
                             data-toggle="modal" data-target="#cancel">

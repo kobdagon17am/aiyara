@@ -311,6 +311,8 @@ class Po_approveController extends Controller
                         DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
                         $sRow2->approve_status = 6;
                         $sRow2->status_slip = false;
+
+
                     }
 
 
@@ -560,12 +562,17 @@ $created_at
 $transfer_bill_approvedate
 $customer_id
 
-ORDER BY code_order DESC
 
+ORDER BY CASE
+              WHEN approve_status = 1 THEN 1
+              ELSE 99 END ASC,
+         approve_status,
+         code_order desc
 
                 ");
+                // ORDER BY code_order DESC
 
-                // $sTable =     DB::select("
+                // $sTable =  DB::select("
 
                 // select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
                 // `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
