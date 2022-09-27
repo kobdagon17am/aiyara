@@ -1337,7 +1337,10 @@ class FrontstoreController extends Controller
           DB::commit();
         }
 
-        $sRow->number_bill = @$request->number_bill;
+        if(request('number_bill')){
+          $sRow->number_bill = request('number_bill');
+        }
+
 
         $sRow->save();
 

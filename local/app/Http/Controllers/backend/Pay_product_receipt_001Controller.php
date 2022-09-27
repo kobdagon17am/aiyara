@@ -908,7 +908,7 @@ class Pay_product_receipt_001Controller extends Controller
     }
 
     public function Datatable001(Request $req){
-
+      // status_sent
        $w01 = "";
        $w02 = "";
        $w03 = "";
@@ -954,7 +954,10 @@ class Pay_product_receipt_001Controller extends Controller
              }
         }else{
            // $w08 = " and db_pay_product_receipt_001.status_sent=3 AND date(db_pay_product_receipt_001.pay_date)=CURDATE() ";
-           $w08 = " AND ( date(db_pay_product_receipt_001.pay_date)=CURDATE() OR date(db_pay_product_receipt_001.action_date)=CURDATE() ) ";
+
+          //  ไม่เอา ให้แสดงทั้งหมด
+          //  $w08 = " AND ( date(db_pay_product_receipt_001.pay_date)=CURDATE() OR date(db_pay_product_receipt_001.action_date)=CURDATE() ) ";
+          $w08 = "";
         }
 
         if(!empty($req->startDate) && !empty($req->endDate)){
@@ -979,7 +982,8 @@ class Pay_product_receipt_001Controller extends Controller
         if(!empty($req->startPayDate) && !empty($req->endPayDate)){
            $w07 = " and date(db_pay_product_receipt_001.pay_date) BETWEEN '".$req->startPayDate."' AND '".$req->endPayDate."'  " ;
         }else{
-           $w07 = "";
+          //  $w07 = "";
+           $w07 = " AND ( date(db_pay_product_receipt_001.pay_date)=CURDATE() OR date(db_pay_product_receipt_001.action_date)=CURDATE() ) ";
         }
 
         if(!empty($req->action_user)){
