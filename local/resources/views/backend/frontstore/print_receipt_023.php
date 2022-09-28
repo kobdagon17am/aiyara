@@ -477,7 +477,7 @@ foreach ($sTable as $key => $row) {
                             ->where('pick_pack_requisition_code_id_fk', $data[1])
                             ->groupBy('product_id_fk')
                             ->first();
-
+// dd($db_pay_requisition_002_item);
                             if ($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get > 0) {
                                 $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ จำนวน '.($db_pay_requisition_002_item->amt_need - $db_pay_requisition_002_item->amt_get).' )</span>';
                                 DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$r_ch_t',  null, null, null, null, null); ");
