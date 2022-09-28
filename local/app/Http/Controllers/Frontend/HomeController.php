@@ -42,7 +42,7 @@ class HomeController extends Controller
     $user_name = $request->user_name;
 
     $data = DB::table('customers')
-    ->select('customers.business_name','customers.date_order_first','customers.prefix_name','customers.first_name','customers.last_name','customers.user_name','customers.created_at','customers.date_mt_first','customers.pv_mt_active',
+    ->select('customers.pv_team_center','customers.team_center','customers.business_name','customers.date_order_first','customers.prefix_name','customers.first_name','customers.last_name','customers.user_name','customers.created_at','customers.date_mt_first','customers.pv_mt_active',
     'customers.pv_mt','customers.pv_mt','customers.bl_a','customers.bl_b','customers.bl_c','customers.pv_a','customers.pv_b','customers.pv_c',
     'customers.pv','dataset_package.dt_package','dataset_qualification.code_name','q_max.code_name as max_code_name',
     'q_max.business_qualifications as max_q_name','customers.team_active_a','customers.team_active_b','customers.team_active_c')
@@ -52,7 +52,14 @@ class HomeController extends Controller
     ->where('customers.user_name','=',$user_name)
     ->first();
 
-    return view('frontend/modal/modal_tree',['data'=>$data]);
+    $bonus_per_day = DB::table('db_report_bonus_per_day')
+     ->selectRaw('sum(new_pv_a) as sum_a , sum(new_pv_b) as sum_b ,sum(new_pv_c) as sum_c')
+    ->where('customer_username','=',$user_name)
+    ->whereBetween('action_date',[date('Y-m-01'),now()])
+    ->first();
+
+
+    return view('frontend/modal/modal_tree',['data'=>$data,'bonus_per_day'=>$bonus_per_day]);
   }
 
   public function modal_add(Request $request){
