@@ -85,9 +85,9 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
 
  </div>
  <div class="col-6">
-  <strong>@lang('message.Middle')</strong><br>
+  {{-- <strong>@lang('message.Middle')</strong><br>
   [ {{$data->team_center}} ] <font class="font-red">{{number_format($data->pv_team_center)}}</font>
- </div>
+ </div> --}}
  </div>
 
 <div class="b-t-default transection-footer row">
