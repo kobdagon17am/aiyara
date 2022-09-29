@@ -702,7 +702,7 @@
                     scrollX: false,
                     ordering: false,
                     // scrollY: ''+($(window).height()-370)+'px',
-                    // iDisplayLength: 25,
+                    iDisplayLength: 1000,
                     ajax: {
                         url: '{{ route('backend.po_approve_edit_other.datatable') }}',
                         data: {
@@ -806,7 +806,7 @@
                     scrollX: false,
                     ordering: false,
                     // scrollY: ''+($(window).height()-370)+'px',
-                    // iDisplayLength: 25,
+                    iDisplayLength: 1000,
                     ajax: {
                         url: '{{ route('backend.po_approve_edit_other_ai.datatable') }}',
                         data: {
