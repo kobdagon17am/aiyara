@@ -61,7 +61,7 @@ class CouponCodeController extends Controller
           }else{
             $pro_edate =$coupon->pro_edate;
             $now_date = date('Y-m-d');
-            if(strtotime($pro_edate) <= strtotime($now_date)){
+            if(strtotime($pro_edate) < strtotime($now_date)){
               $resule = ['status'=>'fail','message'=>'Promotions หมดอายุการใช้งานแล้ว'];
             }else{
                $category_id = 9;//coupon type
