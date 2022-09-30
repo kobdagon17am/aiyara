@@ -224,7 +224,7 @@ class PvPayment extends Model
                                         'approve_status' => 1,
                                         'approve_date' => date('Y-m-d H:i:s')]);
 
-                                $expiry_date = date("Y-m-d", strtotime("+1 month", strtotime(now())));
+                                $expiry_date = date("Y-m-d", strtotime("+30 day"));
 
                                 $inseart_gift_voucher = DB::table('gift_voucher')->insert([
 

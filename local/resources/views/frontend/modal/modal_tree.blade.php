@@ -67,28 +67,29 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
       <td></td>
     </tr>
     <tr class="table-success">
-      <td><strong>@lang('message.Count_qualifications') Count_qualifications</strong></td>
+      <td><strong>@lang('message.Count_qualifications') </strong></td>
       <td>{{ date('01/m/Y') }} ถึง {{ date('t/m/Y') }}</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><strong>@lang('message.Middle')</strong></td>
-
-    <?php $get_month_pv = MonthPv::get_month_pv($data->user_name); ?>
-      <td>
-        @if($get_month_pv['data_avg_pv']['pv_month'] <= 0)
-        -
-        @else
-         <b class="text-danger">{{ $get_month_pv['data_avg_pv']['type'] }}  @lang('message.add')มีคะแนนสะสม {{ number_format($get_month_pv['data_avg_pv']['pv_month']) }} PV</b>
-        @endif
-
-      </td>
       <td></td>
     </tr>
 
   </tbody>
 </table>
 </div>
+
+<div class="row">
+  <div class="col-6  b-r-default">
+
+    <strong>คะแนนเคลื่อนไหวรายเดือน</strong><br>
+    [ A ] <font class="font-red">{{ number_format(@$bonus_per_day->sum_a) }}</font> [ B ] <font class="font-red">{{ number_format(@$bonus_per_day->sum_b) }}</font> [ C ] <font class="font-red">{{ number_format(@$bonus_per_day->sum_c) }}</font>
+
+
+ </div>
+ <div class="col-6">
+  {{-- <strong>@lang('message.Middle')</strong><br>
+  [ {{$data->team_center}} ] <font class="font-red">{{number_format($data->pv_team_center)}}</font> --}}
+ </div>
+ </div>
+
 <div class="b-t-default transection-footer row">
  <div class="col-6  b-r-default">
   <strong>@lang('message.Remaining')</strong><br>
