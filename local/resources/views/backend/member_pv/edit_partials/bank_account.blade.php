@@ -43,7 +43,7 @@
                   <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' ==$customer->bank_name) selected="" @endif> ธนาคารกสิกรไทย </option>
                   <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' ==$customer->bank_name) selected="" @endif> ธนาคารทหารไทยธนชาต </option>
                   <option value="ธนาคารไทยพาณิชย์" @if ('ธนาคารไทยพาณิชย์' ==$customer->bank_name) selected="" @endif> ธนาคารไทยพาณิชย์ </option>
-
+                  <option value="ธนาคารซีไอเอ็มบีไทย" @if ('ธนาคารซีไอเอ็มบีไทย' ==$customer->bank_name) selected="" @endif> ธนาคารซีไอเอ็มบีไทย </option>
                   <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' ==$customer->bank_name) selected="" @endif> ธนาคารยูโอบี </option>
                   <option value="ธนาคารอิสลาม" @if ('ธนาคารอิสลาม' ==$customer->bank_name) selected="" @endif> ธนาคารอิสลาม </option>
                   <option value="ACLEDA fo cambodian" @if ('ACLEDA fo cambodian' ==$customer->bank_name) selected="" @endif> ACLEDA fo cambodian </option>
