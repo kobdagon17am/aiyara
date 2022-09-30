@@ -652,7 +652,7 @@ echo $pn;
   <br>
   <table style="border-collapse: collapse;">
     <tr>
-      <th colspan="3" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
+      <th colspan="2" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
     </tr>
       <tr>
           <th style="text-align: left;font-size: 18px;">
@@ -663,7 +663,6 @@ echo $pn;
               ถุงใหญ่(ใบ) ...........................
               ถุงเล็ก(ใบ) ................................
           </th>
-          <th style="text-align: left;font-size: 18px;"> </th>
       </tr>
 
       <tr>
@@ -675,7 +674,6 @@ echo $pn;
             ขนาดลัง ...........................
             จำนวน/ลัง .....................................
         </th>
-        <th style="text-align: left;font-size: 18px;"> </th>
     </tr>
 
     <tr>
@@ -683,8 +681,7 @@ echo $pn;
         <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
           &nbsp;รายการสินค้าถูกต้อง
       </th>
-      <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ................................. </th>
-      <th style="text-align: left;font-size: 18px;"> </th>
+      <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... ผู้ดำเนินการ .................................. </th>
   </tr>
 
   <tr>
@@ -692,16 +689,14 @@ echo $pn;
       <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
         &nbsp;จำนวนสินค้าถูกต้อง
     </th>
-    <th style="text-align: left;font-size: 18px;"> ผู้ดำเนินการ .................................. </th>
-    <th style="text-align: left;font-size: 18px;"> </th>
+    <th style="text-align: left;font-size: 18px;">  </th>
 </tr>
 
 <tr>
   <th style="text-align: left;font-size: 18px;">
     <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
-      &nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉักขาด
+      &nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด
   </th>
-  <th style="text-align: left;font-size: 18px;"> </th>
   <th style="text-align: left;font-size: 18px;"> </th>
 </tr>
 
@@ -711,20 +706,11 @@ echo $pn;
     &nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย
 </th>
 <th style="text-align: left;font-size: 18px;"> </th>
-<th style="text-align: left;font-size: 18px;"> </th>
 </tr>
 <tr>
-<th style="text-align: left;font-size: 18px;">
-  &nbsp;เวลา .............................................................
+  <th style="text-align: left;font-size: 18px;">
+    &nbsp;ผู้ตรวจ ........................ เวลา ........................
 </th>
-<th style="text-align: left;font-size: 18px;"> </th>
-<th style="text-align: left;font-size: 18px;"> </th>
-</tr>
-<tr>
-<th style="text-align: left;font-size: 18px;">
-&nbsp;ผู้ตรวจ .........................................................
-</th>
-<th style="text-align: left;font-size: 18px;"> </th>
 <th style="text-align: left;font-size: 18px;"> </th>
 </tr>
   </table>
