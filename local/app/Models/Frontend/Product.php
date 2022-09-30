@@ -125,6 +125,7 @@ class Product extends Model
             ->where('promotions_cost.business_location_id', '=', $business_location_id)
             ->where('promotions_cost.status', '=', 1)
             ->where('promotions.status', '=', 1)
+            ->where('promotions.order_by_member', '=', 1)
             ->where('promotions.promotion_coupon_status', '=', 0)
             ->wheredate('promotions.show_startdate', '<=', date('Y-m-d'))
             ->wheredate('promotions.show_enddate', '>=', date('Y-m-d'))

@@ -424,7 +424,7 @@
       </li>
 
 
-    @if($canAccess)
+    @if(1==1)
 		<li class="pcoded-hasmenu {{ (request()->is('cart/*') || request()->is('product-detail/*') || request()->is('product-list/*')  || request()->is('product-status') || request()->is('cart_payment/*') ) ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-shopping-cart text-success"></i><b> @lang('message.order')</b></span>
