@@ -1043,7 +1043,11 @@ else if(@$pay_type[0]->pay_type_id_fk==19){ // 19  Gift Voucher + เงิน�
         DB::select(" UPDATE $TABLE SET a = '$cus_user_name' WHERE id = (($n*$i)+2) ; ");
         DB::select(" UPDATE $TABLE SET a = '$cus_name' WHERE id = (($n*$i)+3) ; ");
         DB::select(" UPDATE $TABLE SET a = '$sRow->code_order' WHERE id = (($n*$i)+4) ; ");
-        DB::select(" UPDATE $TABLE SET a = '".date("d-m-Y",strtotime(@$sRow->created_at))."' WHERE id = (($n*$i)+5) ; ");
+        if(@$sRow->approve_date!=''){
+DB::select(" UPDATE $TABLE SET a = '".date("d-m-Y",strtotime(@$sRow->approve_date))."' WHERE id = (($n*$i)+5) ; ");
+}else{
+DB::select(" UPDATE $TABLE SET a = 'บิลยังไม่อนุมัติ' WHERE id = (($n*$i)+5) ; ");
+}
 
         // รายการสินค้า
         if($m==1){
