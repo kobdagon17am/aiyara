@@ -771,7 +771,7 @@ if (@$delivery[0]->status_pack == 1) {
 </tr>
 <tr>
   <th style="text-align: left;font-size: 18px;">
-    &nbsp;ผู้ตรวจ ........................ เวลา ........................
+    ผู้ตรวจสอบ ...................... เวลา ...................
 </th>
 <th style="text-align: left;font-size: 18px;"> </th>
 </tr>

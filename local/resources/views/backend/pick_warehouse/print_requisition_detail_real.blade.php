@@ -658,7 +658,7 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
   </tr>
   <tr>
     <th style="text-align: left;font-size: 18px;">
-        &nbsp;ผู้ตรวจ ........................ เวลา ........................
+      ผู้ตรวจสอบ ...................... เวลา ...................
     </th>
     <th style="text-align: left;font-size: 18px;"> </th>
 </tr>
