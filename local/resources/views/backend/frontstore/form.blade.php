@@ -2115,10 +2115,10 @@
                                                                                 {{-- <img src="{{ $slip->url }}/{{ @$slip->file }}"
                                                                                     style="margin-top: 5px;height: 180px;"> --}}
 
-                                                                                {{-- <button type="button"
+                                                                                <button type="button"
                                                                                     data-id="{{ @$slip->id }}"
                                                                                     class="btn btn-danger btn-sm font-size-10 btnDelSlip ch_Disabled "
-                                                                                    style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button> --}}
+                                                                                    style="vertical-align: bottom;margin-bottom: 5px;">ลบไฟล์</button>
 
                                                                                 <input {{ @$disAfterSave }}
                                                                                     type="text"
@@ -2961,6 +2961,31 @@
 
             $('.order_id_select2').select2();
             $('.bill_transfer_other_select2').select2();
+
+        });
+    </script>
+
+    <script>
+         $(document).on('click', '.btnDelSlip', function(event) {
+            var id = $(this).data('id');
+            if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")) {
+                return false;
+            } else {
+
+                $.ajax({
+                    type: "POST",
+                    url: " {{ url('backend/ajaxDelFileSlip_04') }} ",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        location.reload();
+                    }
+                });
+
+            }
 
         });
     </script>
@@ -6008,31 +6033,31 @@
         }
 
 
-        $(document).on('click', '.btnDelSlip', function(event) {
-            var id = $(this).data('id');
-            if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")) {
-                return false;
-            } else {
+        // $(document).on('click', '.btnDelSlip', function(event) {
+        //     var id = $(this).data('id');
+        //     if (!confirm("ยืนยันการลบ ! / Confirm to delete ? ")) {
+        //         return false;
+        //     } else {
 
-                $.ajax({
-                    type: "POST",
-                    url: " {{ url('backend/ajaxDelFileSlip') }} ",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        id: id
-                    },
-                    success: function(data) {
-                        // / // console.log(data);
-                        // $(".span_file_slip").hide();
-                        // $(".transfer_money_datetime").val('');
-                        // $("#note_fullpayonetime").val('');
-                        location.reload();
-                    }
-                });
+        //         $.ajax({
+        //             type: "POST",
+        //             url: " {{ url('backend/ajaxDelFileSlip') }} ",
+        //             data: {
+        //                 _token: '{{ csrf_token() }}',
+        //                 id: id
+        //             },
+        //             success: function(data) {
+        //                 // / // console.log(data);
+        //                 // $(".span_file_slip").hide();
+        //                 // $(".transfer_money_datetime").val('');
+        //                 // $("#note_fullpayonetime").val('');
+        //                 location.reload();
+        //             }
+        //         });
 
-            }
+        //     }
 
-        });
+        // });
 
 
         $(document).on('click', '.btnDelSlip_02', function(event) {
