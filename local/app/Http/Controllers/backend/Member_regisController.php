@@ -271,6 +271,7 @@ class Member_regisController extends Controller
         $get_all_date = "";
       }else{
         // $get_all_date = " and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'   ";
+
         $get_all_date = "
         OR 1
         ".$w01."
@@ -307,6 +308,8 @@ class Member_regisController extends Controller
 
 
          ");
+
+        //  dd( $sTable );
 
          if($w05==''){
           $arr_not = [];
@@ -444,7 +447,11 @@ class Member_regisController extends Controller
               }
             }
           }
-
+          if(count($arr_not)!=0){
+            $not_in = "AND id NOT IN (".implode(",",$arr_not).")";
+          }else{
+            $not_in = "";
+          }
           $sTable = DB::select("
           SELECT * FROM `register_files`
           where 1
@@ -456,9 +463,8 @@ class Member_regisController extends Controller
                   ".$w06."
                   ".$w07."
                   ".$all."
-                  AND id NOT IN (".implode(",",$arr_not).")
+                  $not_in
                   ".$get_all_date."
-
          GROUP BY customer_id
          ORDER BY id asc
            ");
