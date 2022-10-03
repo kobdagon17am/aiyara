@@ -181,7 +181,7 @@
                         </div>
                         <div class="col-md-6 ">
                             <div class="form-group row">
-                                <label for="" class="col-md-3 col-form-label"> เลขที่เอกสาร : </label>
+                                <label for="" class="col-md-3 col-form-label"> ชื่อลูกค้า : </label>
                                 <div class="col-md-9">
                                     <select id="customer_id" name="customer_id" class="form-control select2-templating "
                                         required="">
