@@ -17,8 +17,24 @@ class DirectSponsorController extends Controller
         $this->middleware('customer');
     }
 
-    public function index()
+    public function index($user_name = '')
     {
+      if(empty($user_name)){
+        $user_name = Auth::guard('c_user')->user()->user_name;
+      }
+
+      $data = DB::table('customers')
+      ->select('customers.*', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
+          'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name',
+           'customers.team_active_a', 'customers.team_active_b', 'customers.team_active_c','dataset_business_location.txt_desc')
+      ->leftjoin('dataset_package', 'dataset_package.id', '=', 'customers.package_id')
+      ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=', 'customers.qualification_id')
+      ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
+      ->leftjoin('dataset_business_location','dataset_business_location.id', '=', 'customers.business_location_id')
+      ->where('customers.user_name', '=', $user_name)
+      ->first();
+
+
 
       $customers_sponser =  DB::table('customers')
       ->select('customers.id','customers.pv','customers.created_at','customers.first_name','customers.last_name','customers.user_name', 'customers.introduce_id', 'customers.upline_id',
@@ -27,20 +43,24 @@ class DirectSponsorController extends Controller
       ->leftjoin('dataset_package','dataset_package.id','=','customers.package_id')
       ->leftjoin('dataset_qualification', 'dataset_qualification.id', '=','customers.qualification_id')
       ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=','customers.qualification_max_id')
-      ->where('customers.introduce_id','=',Auth::guard('c_user')->user()->user_name)
+      ->where('customers.introduce_id','=',$user_name)
         ->whereRaw('DATE_ADD(customers.created_at, INTERVAL +60 DAY) >= NOW()')
         ->orderbyraw('customers.introduce_type,customers.id ASC')
       ->get();
 
 
-        return view('frontend/direct_sponsor',compact('customers_sponser'));
+        return view('frontend/direct_sponsor',compact('customers_sponser','data'));
     }
 
     public function dt_sponsor(Request $rs)
     {
 
+      if($rs->user_name){
+        $user_name = $rs->user_name;
+      }else{
         $user_name = Auth::guard('c_user')->user()->user_name;
-        $id = Auth::guard('c_user')->user()->id;
+
+      }
 
         $sTable = DB::table('customers')
             ->select('customers.id','customers.pv','customers.first_name','customers.last_name','customers.user_name', 'customers.introduce_id', 'customers.upline_id',
@@ -74,9 +94,9 @@ class DirectSponsorController extends Controller
 
 
                 if( !empty($row->business_name) and  $row->business_name  != '-'){
-                  return $row->business_name.' <b>('.$row->user_name.')</b>';
+                  return ' <a href="'.route('direct-sponsor',['user_name'=>$row->user_name]).'" target="_blank">'.$row->business_name.' <b>('.$row->user_name.')</b></a>';
                 }else{
-                  $name = @$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b>';
+                  $name = ' <a href="'.route('direct-sponsor',['user_name'=>$row->user_name]).'" target="_blank">'.@$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b></a>';
                   return $name;
                 }
             })

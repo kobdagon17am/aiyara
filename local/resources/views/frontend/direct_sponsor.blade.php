@@ -23,6 +23,11 @@ $count_sponser = 0;
 
                 <div class="card-header">
                     <h4 class="m-b-10">{{trans('message.p_direct sponsor reccom')}}</h4>
+                    {{-- @if(@$data->business_name and @$data->business_name != '-' )
+                    <h6 class="f-w-600 m-t-25 m-b-10">{{$data->business_name}} ({{$data->user_name}})</h4>
+                  @else
+                    <h6 class="f-w-600 m-t-25 m-b-10">{{$data->prefix_name.' '.$data->first_name.' '.$data->last_name }} ({{$data->user_name}}) </h6>
+                  @endif --}}
 
                 </div>
                 <div class="card-block">
@@ -64,7 +69,7 @@ $count_sponser = 0;
             ->leftjoin('dataset_qualification as q_max', 'q_max.id', '=', 'customers.qualification_max_id')
             // ->where('customers.introduce_id', '=', $user_name)
             // ->orwhere('customers.user_name', '=', $user_name)
-            ->where('customers.user_name', '=', Auth::guard('c_user')->user()->user_name)
+            ->where('customers.user_name', '=', $data->user_name)
 
             ->orderbyraw('customers.introduce_type,customers.id ASC')
             // ->orderbyraw('customers.introduce_type ASC')
@@ -296,10 +301,10 @@ $count_sponser = 0;
                 paging: false,
                 ajax: {
                     url: '{{ route('dt_sponsor') }}',
-                    // data: function(d) {
-                    //     d.startDate = $('#startDate').val();
-                    //     d.endDate = $('#endDate').val();
-                    // },
+                    data: function(d) {
+                        d.user_name = '{{$data->user_name}}';
+
+                    },
                     method: 'get'
                 },
 
