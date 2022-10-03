@@ -25,11 +25,11 @@ class Po_approveController extends Controller
 
 
         if(@\Auth::user()->permission==1){
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order,created_at desc limit 5000 ");
+            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order desc limit 500 ");
         }else{
             // $code_order = DB::select(" select code_order from db_orders where action_user=".\Auth::user()->id." order by code_order,created_at desc limit 500 ");
             // $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 and branch_id_fk=".\Auth::user()->branch_id_fk." OR pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 and action_user=".\Auth::user()->id." order by code_order,created_at desc limit 500 ");
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 AND branch_id_fk=".\Auth::user()->branch_id_fk." order by code_order,created_at desc limit 1000 ");
+            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 AND branch_id_fk=".\Auth::user()->branch_id_fk." order by code_order desc limit 500 ");
         }
 // dd($code_order);
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
@@ -270,7 +270,7 @@ class Po_approveController extends Controller
                         if($sRow2->approve_status!=9){
                         $sRow2->approve_status  = 2;
                         }
-                        $sRow2->transfer_bill_status  = 2;
+                        $sRow2->transfer_bill_status = 2;
                         // if(!empty($request->slip_ids)){
                         //     for ($i=0; $i < count($request->slip_ids) ; $i++) {
                         //       DB::table('payment_slip')->where('id',$request->slip_ids[$i])->update([

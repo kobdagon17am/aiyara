@@ -714,23 +714,25 @@ if (@$delivery[0]->status_pack == 1) {
     <br> <br>
     <table style="border-collapse: collapse;">
       <tr>
-        <th colspan="2" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
+          <th colspan="2" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
       </tr>
-        <tr>
-            <th style="text-align: left;font-size: 18px;">
-              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
-                &nbsp;ตรวจสอบเอกสารโดย ............................
-            </th>
-            <th style="text-align: left;font-size: 18px;">
-                ถุงใหญ่(ใบ) ...........................
-                ถุงเล็ก(ใบ) ................................
-            </th>
-        </tr>
-
-        <tr>
+      <tr>
           <th style="text-align: left;font-size: 18px;">
-            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
-              &nbsp;บันทึกจ่ายระบบโดย ..............................
+              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย ............................
+          </th>
+          <th style="text-align: left;font-size: 18px;">
+              ถุงใหญ่(ใบ) ...........................
+              ถุงเล็ก(ใบ) ................................
+          </th>
+      </tr>
+
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;บันทึกจ่ายระบบโดย ....................................................
           </th>
           <th style="text-align: left;font-size: 18px;">
               ขนาดลัง ...........................
@@ -739,40 +741,56 @@ if (@$delivery[0]->status_pack == 1) {
       </tr>
 
       <tr>
-        <th style="text-align: left;font-size: 18px;">
-          <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
-            &nbsp;รายการสินค้าถูกต้อง
-        </th>
-        <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... ผู้ดำเนินการ .................................. </th>
-    </tr>
+          <th style="text-align: left;font-size: 18px;">
+              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;รายการสินค้าถูกต้อง
+          </th>
+          <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... ผู้ดำเนินการ
+              .................................. </th>
+      </tr>
 
-    <tr>
-      <th style="text-align: left;font-size: 18px;">
-        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
-          &nbsp;จำนวนสินค้าถูกต้อง
-      </th>
-      <th style="text-align: left;font-size: 18px;">  </th>
-  </tr>
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;จำนวนสินค้าถูกต้อง
+          </th>
+          <th style="text-align: left;font-size: 18px;"> </th>
+      </tr>
 
-  <tr>
-    <th style="text-align: left;font-size: 18px;">
-      <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
-        &nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด
-    </th>
-    <th style="text-align: left;font-size: 18px;"> </th>
-</tr>
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด
+          </th>
+          <th style="text-align: left;font-size: 18px;"> </th>
+      </tr>
 
-<tr>
-  <th style="text-align: left;font-size: 18px;">
-    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" style="transform : scale(1.3);">
-      &nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย
-  </th>
-  <th style="text-align: left;font-size: 18px;"> </th>
-</tr>
-<tr>
-  <th style="text-align: left;font-size: 18px;">
-    ผู้ตรวจสอบ ...................... เวลา ...................
-</th>
-<th style="text-align: left;font-size: 18px;"> </th>
-</tr>
-    </table>
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย
+          </th>
+          <th style="text-align: left;font-size: 18px;"> </th>
+      </tr>
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;ผ่าน
+              &nbsp;&nbsp; <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              &nbsp;ไม่ผ่าน
+          </th>
+          <th style="text-align: left;font-size: 18px;"></th>
+      </tr>
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+              &nbsp; &nbsp; &nbsp; ผู้ตรวจสอบ ............................ เวลา ..........................
+          </th>
+          <th style="text-align: left;font-size: 18px;"> </th>
+      </tr>
+  </table>
