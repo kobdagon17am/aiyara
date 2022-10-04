@@ -38,10 +38,13 @@ class PvPayment extends Model
             $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
             return $resule;
         }
+
         if($order_update->approve_status){
           if($order_update->status_run_pv == 'success'){
-            $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
-            return $resule;
+            if($order_update->pay_type_id_fk==1||$order_update->pay_type_id_fk==8||$order_update->pay_type_id_fk==10||$order_update->pay_type_id_fk==11||$order_update->pay_type_id_fk==12){
+              $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
+              return $resule;
+            }
           }
 
         }
