@@ -496,6 +496,16 @@ if(!empty($Products)){
 
     <div>&nbsp;</div>
 
+    <?php
+$db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->select('approver','action_user','created_at','aprove_date')->where('id',@$packing[0]->packing_code_id_fk)->first();
+if($db_pick_pack_packing_code){
+  $admin = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->approver)->first();
+  $action_user = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->action_user)->first();
+}
+
+?>
+
+
     <div style="border-radius: 5px; height: 28mm; border: 1px solid grey;padding:-1px; ">
         <table style="border-collapse: collapse;vertical-align: top;text-align: center;">
 
@@ -504,10 +514,10 @@ if(!empty($Products)){
                 <td style="border-left: 1px solid #ccc;"> ผู้เบิกสินค้า
 
                     <br>
-                    <img src="" width="100">
-                    <br>
-                    <br>
-                    วันที่ .........................................
+                   {{$action_user->name}}
+                   <br>
+                    {{-- วันที่ ......................................... --}}
+                    วันที่ @if($db_pick_pack_packing_code->created_at!=''){{date('d/m/Y', strtotime($db_pick_pack_packing_code->created_at))}}@endif
                 </td>
 
 
@@ -527,9 +537,6 @@ if(!empty($Products)){
 
 </div>
 
-
-
-
 <div class="NameAndAddress" >
   <b>ส่วนงานคลังสินค้า</b>
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
@@ -538,8 +545,9 @@ if(!empty($Products)){
 
       <tr>
         <td  style="border-left: 1px solid #ccc; text-align: center;"> ผู้อนุมัติเบิกสินค้า
-        <br>       <br>
-        วันที่ ...............................
+        <br>   {{@$admin->name}}    <br>
+        {{-- วันที่ ............................... --}}
+        วันที่ @if($db_pick_pack_packing_code->aprove_date!=''){{date('d/m/Y', strtotime($db_pick_pack_packing_code->aprove_date))}}@endif
          </td>
 
 

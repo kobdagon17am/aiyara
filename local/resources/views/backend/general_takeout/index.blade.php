@@ -145,7 +145,7 @@
                     {
                         data: 'id',
                         title: 'Tools',
-                        className: 'text-center w80'
+                        className: 'text-center w100'
                     },
                 ],
                 rowCallback: function(nRow, aData, dataIndex) {
@@ -176,12 +176,16 @@
                     str_V =
                         '<a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อนุมัติแล้ว ห้ามลบ" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>';
 
+                      var print = '&nbsp;<a href="{{ url('backend/general_takeout_print') }}/' + aData[
+                            'id'] +
+                            '" title="print" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-print font-size-16 align-middle"></i></a> ';
+
                     if (sU != '1' && sD != '1') {
-                        $('td:last-child', nRow).html('-');
+                        $('td:last-child', nRow).html('-'+print);
                     } else if (aData['approve_status'] == '1') {
-                        $('td:last-child', nRow).html(str_U + str_V).addClass('input');
+                        $('td:last-child', nRow).html(str_U + str_V + print).addClass('input');
                     } else {
-                        $('td:last-child', nRow).html(str_U + str_D).addClass('input');
+                        $('td:last-child', nRow).html(str_U + str_D + print).addClass('input');
                     }
 
 
@@ -196,7 +200,7 @@
                     //       + ' <a href="javascript:void(0);" class="btn btn-sm" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="อนุมัติแล้ว ห้ามลบ" disabled style="background-color:grey;color:white;" ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                     //     ).addClass('input');
 
-                    // }else{ 
+                    // }else{
 
                     //     $('td:last-child', nRow).html(''
                     //       + '<a href="{{ route('backend.general_takeout.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '

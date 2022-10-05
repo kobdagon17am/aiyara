@@ -9,6 +9,8 @@ use File;
 use App\Http\Controllers\backend\AjaxController;
 use App\Helpers\General;
 use Session;
+use Storage;
+use PDF;
 
 class General_takeoutController extends Controller
 {
@@ -39,6 +41,16 @@ class General_takeoutController extends Controller
       return view('backend.general_takeout.index');
 
     }
+
+    public function general_takeout_print($id)
+    {
+       $data = [$id];
+       // $pdf = PDF::loadView('backend.delivery_packing.print_receipt',compact('data'));
+       $pdf = PDF::loadView('backend.general_takeout.print_general_takeout',compact('data'));
+       // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+       return $pdf->stream('general_takeout_sheet.pdf'); // เปิดไฟลฺ์
+
+   }
 
  public function create()
     {
