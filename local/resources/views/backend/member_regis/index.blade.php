@@ -790,7 +790,7 @@
                 scroller: true,
                 destroy: true,
                 ordering: true,
-                order: [[1, 'desc']],
+                // order: [[1, 'desc']],
                 iDisplayLength: 100,
                 ajax: {
                     url: '{{ route('backend.member_regis.datatable') }}',
@@ -1115,7 +1115,7 @@
                         scroller: true,
                         destroy: true,
                           ordering: true,
-                order: [[1, 'desc']],
+                // order: [[1, 'desc']],
                 iDisplayLength: 100,
                         iDisplayLength: 100,
 

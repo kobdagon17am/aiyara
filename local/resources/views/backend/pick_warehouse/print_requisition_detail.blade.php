@@ -720,7 +720,8 @@ if (@$delivery[0]->status_pack == 1) {
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย ............................
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย
+                  ............................</label>
           </th>
           <th style="text-align: left;font-size: 18px;">
               ถุงใหญ่(ใบ) ...........................
@@ -732,7 +733,7 @@ if (@$delivery[0]->status_pack == 1) {
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;บันทึกจ่ายระบบโดย ....................................................
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;บันทึกจ่ายระบบโดย ....................................................</label>
           </th>
           <th style="text-align: left;font-size: 18px;">
               ขนาดลัง ...........................
@@ -744,7 +745,7 @@ if (@$delivery[0]->status_pack == 1) {
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;รายการสินค้าถูกต้อง
+             <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;"> &nbsp;รายการสินค้าถูกต้อง</label>
           </th>
           <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... ผู้ดำเนินการ
               .................................. </th>
@@ -754,7 +755,7 @@ if (@$delivery[0]->status_pack == 1) {
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;จำนวนสินค้าถูกต้อง
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;จำนวนสินค้าถูกต้อง</label>
           </th>
           <th style="text-align: left;font-size: 18px;"> </th>
       </tr>
@@ -763,7 +764,7 @@ if (@$delivery[0]->status_pack == 1) {
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด</label>
           </th>
           <th style="text-align: left;font-size: 18px;"> </th>
       </tr>
@@ -772,7 +773,7 @@ if (@$delivery[0]->status_pack == 1) {
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย</label>
           </th>
           <th style="text-align: left;font-size: 18px;"> </th>
       </tr>
@@ -780,10 +781,10 @@ if (@$delivery[0]->status_pack == 1) {
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;ผ่าน
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ผ่าน</label>
               &nbsp;&nbsp; <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
-              &nbsp;ไม่ผ่าน
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ไม่ผ่าน</label>
           </th>
           <th style="text-align: left;font-size: 18px;"></th>
       </tr>

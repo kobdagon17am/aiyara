@@ -452,6 +452,7 @@ class Member_regisController extends Controller
           }else{
             $not_in = "";
           }
+
           $sTable = DB::select("
           SELECT * FROM `register_files`
           where 1
@@ -466,9 +467,13 @@ class Member_regisController extends Controller
                   $not_in
                   ".$get_all_date."
          GROUP BY customer_id
-         ORDER BY id asc
+         ORDER BY CASE
+         WHEN regis_doc_status = 0 THEN 1
+         ELSE 99 END ASC,
+         regis_doc_status,
+         id asc
            ");
-          //  ORDER BY id asc , regis_doc_status asc
+
          }
 
       $sQuery = \DataTables::of($sTable);
