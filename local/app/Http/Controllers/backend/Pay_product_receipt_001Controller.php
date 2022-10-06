@@ -590,7 +590,7 @@ class Pay_product_receipt_001Controller extends Controller
     public function ajaxCHECKPay_product_receipt(Request $request)
     {
       // temp_db_stocks
-         $r =  DB::select(" select * from db_pay_product_receipt_001 WHERE invoice_code='".$request->txtSearch."' ");
+         $r =  DB::select(" select id from db_pay_product_receipt_001 WHERE invoice_code='".$request->txtSearch."' ");
          if($r){
             return  $r[0]->id;
          }else{

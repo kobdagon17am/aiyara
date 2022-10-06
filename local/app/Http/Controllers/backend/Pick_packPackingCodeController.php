@@ -72,18 +72,18 @@ class Pick_packPackingCodeController extends Controller
       return $sQuery
       ->addColumn('packing_code_02', function($row) {
         // return "P2".sprintf("%05d",$row->id);
-            $DP = DB::table('db_pick_pack_packing')->where('packing_code_id_fk',$row->id)->first();
+            $DP = DB::table('db_pick_pack_packing')->select('packing_code')->where('packing_code_id_fk',$row->id)->first();
             return @$DP->packing_code;
       })
       ->addColumn('customer_name', function($row) {
         if($row->orders_id_fk==""){
           $row->orders_id_fk = "0";
         }
-          $DP = DB::select(" select * from db_orders where id in (".$row->orders_id_fk.") ");
+          $DP = DB::select(" select customers_id_fk from db_orders where id in (".$row->orders_id_fk.") ");
           $array = array();
           if(@$DP){
             foreach ($DP as $key => $value) {
-              $Customer = DB::select(" select * from customers where id=".@$value->customers_id_fk." ");
+              $Customer = DB::select(" select prefix_name,first_name,last_name from customers where id=".@$value->customers_id_fk." ");
               array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
             }
             $arr = implode('<br>', $array);
@@ -94,7 +94,7 @@ class Pick_packPackingCodeController extends Controller
       ->escapeColumns('customer_name')
       ->addColumn('action_user_name', function($row) {
         if(@$row->action_user!=''){
-          $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
+          $sD = DB::select(" select name from ck_users_admin where id=".$row->action_user." ");
            return @$sD[0]->name;
         }else{
           return '';
