@@ -69,6 +69,10 @@ class ProfileController extends Controller
 
     public function profile_address()
     {
+      $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
 
         $customer = DB::table('customers_detail')
             ->select('customers_detail.*','customers.business_location_id', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id',
@@ -82,8 +86,9 @@ class ProfileController extends Controller
 
         $provinces = DB::table('dataset_provinces')
             ->select('*')
-            ->where('business_location_id','=',$customer->business_location_id)
+            ->where('business_location_id','=',$business_location_id)
             ->get();
+
 
         return view('frontend/profile_address', compact('customer', 'provinces'));
     }
