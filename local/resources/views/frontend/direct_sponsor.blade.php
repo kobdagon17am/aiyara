@@ -40,6 +40,7 @@ $count_sponser = 0;
                                     {{-- <th class="text-center" rowspan="2">ID</th> --}}
                                     <th class="text-center" rowspan="2">Line</th>
                                     <th class="text-center" rowspan="2">Buniness Name</th>
+
                                     <th class="text-center" rowspan="2">Package</th>
                                     <th class="text-center" rowspan="2">Upline</th>
                                     <th class="text-center" rowspan="2">Personal Active</th>
@@ -270,6 +271,13 @@ $count_sponser = 0;
 </div>
 </div>
 
+
+<form action="{{ route('search') }}" method="post" id="home_search">
+  @csrf
+  <input type="hidden" id="home_search_id" name="home_search_id" value="">
+
+</form>
+
 @endsection
 @section('js')
     <!-- data-table js -->
@@ -289,6 +297,7 @@ $count_sponser = 0;
     <script>
         var data = {{ $count_sponser }};
         $('#count_sponser').html(data);
+
     </script>
 
     <script type="text/javascript">
@@ -319,6 +328,9 @@ $count_sponser = 0;
                     {
                         data: 'business_name',
                     },
+
+
+
                     {
                         data: 'dt_package',
                     },
@@ -362,5 +374,11 @@ $count_sponser = 0;
                 e.preventDefault();
             });
         });
+
+
+        function search_tree(user_name){
+          $('#home_search_id').val(user_name);
+          $('#home_search').submit();
+        }
     </script>
 @endsection
