@@ -110,7 +110,7 @@ $count_sponser = 0;
                                     $check_active_mt =  \App\Helpers\Frontend::check_mt_active($row->pv_mt_active);
                                     if ($check_active_mt['status'] == 'success') {
                                         if ($check_active_mt['type'] == 'Y') {
-                                            $active_mt = "<span class='label label-inverse-success'><b>"
+                                            $active_mt = "<span class='label label-success'><b>"
                                                 . $check_active_mt['date'] . "</b></span>";
                                         } else {
                                             $active_mt = "<span class='label label-inverse-info-border'><b>"
