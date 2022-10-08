@@ -91,18 +91,19 @@ class DirectSponsorController extends Controller
                 return $row->user_name;
             })
             ->addColumn('business_name', function ($row) {
-
-
+              $html = '<button class="btn btn-sm btn-primary" onclick="search_tree(\''.$row->user_name.'\')"><i class="fa fa-sitemap "></i></button>';
                 if( !empty($row->business_name) and  $row->business_name  != '-'){
-                  return ' <a href="'.route('direct-sponsor',['user_name'=>$row->user_name]).'" target="_blank">'.$row->business_name.' <b>('.$row->user_name.')</b></a>';
+                  return $html.'  <a href="'.route('direct-sponsor',['user_name'=>$row->user_name]).'" target="_blank">'.$row->business_name.' <b>('.$row->user_name.')</b></a>';
                 }else{
-                  $name = ' <a href="'.route('direct-sponsor',['user_name'=>$row->user_name]).'" target="_blank">'.@$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b></a>';
+                  $name = $html.'  <a href="'.route('direct-sponsor',['user_name'=>$row->user_name]).'" target="_blank">'.@$row->first_name.' '. @$row->last_name.' <b>('.$row->user_name.')</b></a>';
                   return $name;
                 }
             })
             ->addColumn('dt_package', function ($row) {
                 return $row->dt_package;
             })
+
+
 
             ->addColumn('upline', function ($row) {
               $user = DB::table('customers')
@@ -122,7 +123,7 @@ class DirectSponsorController extends Controller
                 $check_active_mt = Frontend::check_mt_active($row->pv_mt_active);
                 if ($check_active_mt['status'] == 'success') {
                     if ($check_active_mt['type'] == 'Y') {
-                        $active_mt = "<span class='label label-inverse-success'><b>"
+                        $active_mt = "<span class='label label-success'><b>"
                             . $check_active_mt['date'] . "</b></span>";
                     } else {
                         $active_mt = "<span class='label label-inverse-info-border'><b>"
