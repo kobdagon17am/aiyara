@@ -1148,9 +1148,6 @@ foreach($temp_ppr_0021_data as $tmp){
         return 0;
       }
 
-      // return $request->txtSearch;
-      // temp_db_stocks
-
       $business_location_id_fk = \Auth::user()->business_location_id_fk;
       $branch_id_fk = \Auth::user()->branch_id_fk;
       $temp_ppr_001 = "temp_ppr_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -1163,19 +1160,14 @@ foreach($temp_ppr_0021_data as $tmp){
 
 
       $TABLES = DB::select(" SHOW TABLES ");
-      // return $TABLES;
       $array_TABLES = [];
       foreach($TABLES as $t){
-        // print_r($t->Tables_in_aiyaraco_v3);
         array_push($array_TABLES, $t->Tables_in_aiyaraco_v3);
       }
 
       DB::select(" DROP TABLE IF EXISTS $temp_db_stocks_check ");
       DB::select(" CREATE TABLE $temp_db_stocks_check LIKE temp_db_stocks_check_template ");
 
-      // return $temp_db_stocks_check ; // temp_db_stocks_check1
-
-    // return $request;
     // หาในตาราง db_orders ว่ามีมั๊ย
     // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
@@ -1264,7 +1256,7 @@ foreach($temp_ppr_0021_data as $tmp){
         }
 
         foreach($product_id_fk as $p){
-          $data_p = DB::table($temp_db_stocks)->where('product_id_fk',$p)->first();
+          $data_p = DB::table($temp_db_stocks)->select('id')->where('product_id_fk',$p)->first();
           if(!$data_p){
             $warehouse_arr = DB::table('warehouse')->select('id')->where('w_code','WH02')->where('status',1)->pluck('id')->toArray();
             $data_p_clone = DB::table($temp_db_stocks)->whereIn('warehouse_id_fk',$warehouse_arr)->first();
