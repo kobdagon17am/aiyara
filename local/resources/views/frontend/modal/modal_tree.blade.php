@@ -82,14 +82,14 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
     <strong>@lang('message.Middle')</strong><br>
     [ {{$data->team_center}} ] <font class="font-red">{{number_format($data->pv_team_center)}}</font>
    </div>
+   <div class="col-6">
 
+    <strong>คะแนนแนะนำตรงส่วนตัว</strong><br>
+      [ A ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_a) }}</font> [ B ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_b) }}</font> [ C ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_c) }}</font>
+
+   </div>
  </div>
- <div class="col-6">
 
-  <strong>คะแนนแนะนำตรงส่วนตัว</strong><br>
-    [ A ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_a) }}</font> [ B ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_b) }}</font> [ C ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_c) }}</font>
-
- </div>
 
 <div class="b-t-default transection-footer row">
  <div class="col-6  b-r-default">
