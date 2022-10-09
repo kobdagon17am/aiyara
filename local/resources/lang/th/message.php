@@ -454,7 +454,7 @@ return [
 'Highest_Qualifications'=> 'คุณวุฒิสูงสุด',
 'Reward_Bonus'=> 'สิทธิ Reward Bonus',
 'Count_qualifications'=> 'นับคุณวุฒิจาก',
-'Middle'=> 'ทีมกลางคือทีม',
+'Middle'=> 'คะแนนทีมกลาง',
 'Remaining'=> 'คะแนนคงเหลือยกมา',
 'Today_score'=> 'คะแนนวันนี้',
 'date_information'=> 'ข้อมูลวันที่',

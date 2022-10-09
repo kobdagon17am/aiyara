@@ -248,6 +248,14 @@ class CommissionController extends Controller
                     return '-';
                 }
             })
+
+            ->addColumn('tm', function ($row) {
+              if ($row->team_maker) {
+                  return number_format($row->team_maker, 2);
+              } else {
+                  return '-';
+              }
+          })
             ->addColumn('bonus_total', function ($row) {
                 if ($row->bonus_total) {
                     return number_format($row->bonus_total, 2);

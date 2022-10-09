@@ -49,6 +49,7 @@ use App\Models\Frontend\DirectSponsor;
 
                         <th class="text-center"  rowspan="2">Faststart</th>
                         <th class="text-center"  rowspan="2">Pro.</th>
+                        <th class="text-center"  rowspan="2">TM</th>
                         <th class="text-center"  rowspan="2">TMB</th>
                         <th class="text-center"  rowspan="2">Booster</th>
                         <th class="text-center"  rowspan="2">Matching</th>
@@ -124,6 +125,7 @@ use App\Models\Frontend\DirectSponsor;
               {data: 'old_pv_c'},
               {data: 'faststart'},
               {data: 'pro'},
+              {data: 'tm'},
               {data: 'tmb'},
               {data: 'booster'},
               {data: 'matching'},
