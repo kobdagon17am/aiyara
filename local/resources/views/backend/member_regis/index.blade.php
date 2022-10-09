@@ -1373,9 +1373,6 @@
                                  $('#text_Referral_UserName').html(data.introduce_data.first_name+' '+data.introduce_data.last_name+' ('+data.introduce_data.user_name+')');
                         }
 
-
-
-
                         $('#text_no').html(value.card_house_no);
                         $('#text_building').html(value.card_house_name);
                         $('#text_villageno').html(value.card_moo);
@@ -1398,14 +1395,14 @@
                         //
 
                         var strArray = value.file.split(".");
-                        // console.log(strArray[1]);
-
+                        console.log(strArray);
                         // var arrXls = ['xls', 'xlsx'];
                         var arrXls = ['png','JPG','jpg', 'jpeg', 'gif'];
 
                         // console.log(arrXls.includes(strArray[1]));
 
                         let ch = arrXls.includes(strArray[1]);
+                        console.log(ch);
                         if (ch == true) {
                             // $('#file_path').hide();
                             // $('#file_path_a').attr("href", value.file_path);
@@ -1532,8 +1529,6 @@
                                     "background-color": "bisque"
                                 });
                             }
-
-
 
                             // $('.file_path_desc').hide();
                             // var id = $(this).data('id');
