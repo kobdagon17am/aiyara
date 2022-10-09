@@ -84,7 +84,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
    </div>
    <div class="col-6">
 
-    <strong>คะแนนแนะนำตรงส่วนตัว</strong><br>
+    <strong>คะแนนแนะนำตรงส่วนตัวเดือนนี้</strong><br>
       [ A ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_a) }}</font> [ B ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_b) }}</font> [ C ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_c) }}</font>
 
    </div>
