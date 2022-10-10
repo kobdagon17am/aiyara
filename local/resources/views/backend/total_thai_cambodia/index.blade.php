@@ -178,6 +178,19 @@
 </div>
 <div class="table-responsive">
     <table id="thai_cambodia" class="table table-bordered  thai_cambodia" style="width: 100%;">
+      <tfoot>
+        <tr>
+            <th colspan="4" style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+            <th style="text-align: right !important"></th>
+        </tr>
+    </tfoot>
     </table>
 </div>
 <br>
@@ -190,7 +203,21 @@
   </div>
 </div>
 
-<table id="data-table-thai" class="table table-bordered  mt-0" style="width: 100%;"> </table>
+<table id="data-table-thai" class="table table-bordered  mt-0" style="width: 100%;">
+  <tfoot>
+    <tr>
+        <th colspan="4" style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+    </tr>
+</tfoot>
+</table>
 <br>
 
 <div class="row mt-2 mb-0">
@@ -202,7 +229,21 @@
   </div>
 </div>
 
-<table id="data-table-thai_branch" class="table table-bordered  mt-0" style="width: 100%;"> </table>
+<table id="data-table-thai_branch" class="table table-bordered  mt-0" style="width: 100%;">
+  <tfoot>
+    <tr>
+        <th colspan="4" style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+        <th style="text-align: right !important"></th>
+    </tr>
+</tfoot>
+</table>
 <br>
 
   </div>
@@ -322,7 +363,7 @@
                 // scrollX: true,
                 // ordering: false,
                 // scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
+                iDisplayLength: 10000,
                 ajax: {
                     url: '{{ route('backend.total_thai_cambodia.datatable') }}',
                     data: function(d) {
@@ -398,6 +439,89 @@
                     },
                 ],
                 "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    all_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_cash = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_transfer = api
+                        .column(6, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_credit = api
+                        .column(7, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_aicash = api
+                        .column(8, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_sum = api
+                        .column(9, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_pv = api
+                        .column(10, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(all_total));
+                    $(api.column(5).footer()).html(numberWithCommas(all_cash));
+                    $(api.column(6).footer()).html(numberWithCommas(all_transfer));
+                    $(api.column(7).footer()).html(numberWithCommas(all_credit));
+                    $(api.column(8).footer()).html(numberWithCommas(all_aicash));
+                    $(api.column(9).footer()).html(numberWithCommas(all_sum));
+                    $(api.column(10).footer()).html(numberWithCommas(all_pv));
                 }
             });
 
@@ -420,7 +544,7 @@
                 // scrollX: true,
                 // ordering: false,
                 // scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
+                iDisplayLength: 10000,
                 ajax: {
                     url: '{{ route('backend.total_thai_cambodia_aicash.datatable') }}',
                     data: function(d) {
@@ -504,7 +628,7 @@
                 // scrollX: true,
                 // ordering: false,
                 // scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
+                iDisplayLength: 10000,
                 ajax: {
                     url: '{{ route('backend.total_thai_cambodia.datatable') }}',
                     data: function(d) {
@@ -580,7 +704,88 @@
                     },
                 ],
                 "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
 
+                    all_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_cash = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_transfer = api
+                        .column(6, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_credit = api
+                        .column(7, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_aicash = api
+                        .column(8, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_sum = api
+                        .column(9, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_pv = api
+                        .column(10, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(all_total));
+                    $(api.column(5).footer()).html(numberWithCommas(all_cash));
+                    $(api.column(6).footer()).html(numberWithCommas(all_transfer));
+                    $(api.column(7).footer()).html(numberWithCommas(all_credit));
+                    $(api.column(8).footer()).html(numberWithCommas(all_aicash));
+                    $(api.column(9).footer()).html(numberWithCommas(all_sum));
+                    $(api.column(10).footer()).html(numberWithCommas(all_pv));
                 }
             });
 
@@ -603,7 +808,7 @@
                 // scrollX: true,
                 // ordering: false,
                 // scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
+                iDisplayLength: 10000,
                 ajax: {
                     url: '{{ route('backend.total_thai_cambodia_branch.datatable') }}',
                     data: function(d) {
@@ -679,7 +884,88 @@
                     },
                 ],
                 "footerCallback": function(row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
 
+                    all_total = api
+                        .column(4, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_cash = api
+                        .column(5, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_transfer = api
+                        .column(6, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_credit = api
+                        .column(7, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_aicash = api
+                        .column(8, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_sum = api
+                        .column(9, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        all_pv = api
+                        .column(10, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Update footer
+                    $(api.column(1).footer()).html('Total');
+                    $(api.column(4).footer()).html(numberWithCommas(all_total));
+                    $(api.column(5).footer()).html(numberWithCommas(all_cash));
+                    $(api.column(6).footer()).html(numberWithCommas(all_transfer));
+                    $(api.column(7).footer()).html(numberWithCommas(all_credit));
+                    $(api.column(8).footer()).html(numberWithCommas(all_aicash));
+                    $(api.column(9).footer()).html(numberWithCommas(all_sum));
+                    $(api.column(10).footer()).html(numberWithCommas(all_pv));
                 }
             });
 
@@ -702,7 +988,7 @@
                   // scrollX: true,
                   // ordering: false,
                   // scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
+                  iDisplayLength: 10000,
                 ajax: {
                     url: '{{ route('backend.total_thai_cambodia_aicash.datatable') }}',
                     data: function(d) {

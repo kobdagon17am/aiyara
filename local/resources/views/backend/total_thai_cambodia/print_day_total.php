@@ -427,6 +427,8 @@ set_time_limit(9999999);
               $cash_transfer_price_total = 0;
               $cash_sum_credit_price_total = 0;
               $aicash_price_total = 0;
+              $fee_amt_total = 0;
+              $shipping_total = 0;
 
             foreach($sTable as $order){
               if($order->action_user_name == ''){
@@ -453,6 +455,8 @@ set_time_limit(9999999);
               $cash_transfer_price_total += $order->transfer_price;
               $cash_sum_credit_price_total += $order->sum_credit_price;
               $aicash_price_total += $order->aicash_price;
+              $shipping_total += $order->shipping_price;
+              $fee_amt_total += $order->fee_amt;
 
               if($report_type == 'day'){
                 $action_date = date('d/m/Y', strtotime($order->action_date));
@@ -550,26 +554,23 @@ set_time_limit(9999999);
             <td style="border-left: 1px solid #ccc;"> เงินโอน &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_total,2,".",","); ?>&nbsp;
             </td>
-            <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
-            <td style="text-align: right;"><?php echo number_format($tax_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> ค่าธรรมเนียม&nbsp;</td>
+            <td style="text-align: right;"><?php echo number_format($fee_amt_total,2,".",","); ?> &nbsp;</td>
         </tr>
-
         <tr>
             <td style="border-left: 1px solid #ccc;"> เครดิต &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?> &nbsp;
             </td>
-            <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระ</u></b> &nbsp;</td>
-            <td style="text-align: right;">
-                <u style="text-align: right;">
-                    <?php echo number_format($sum_price_total,2,".",","); ?></u>
-                &nbsp;
-            </td>
+            <td style="border-left: 1px solid #ccc;"> ค่าจัดส่ง&nbsp;</td>
+            <td style="text-align: right;"><?php echo number_format($shipping_total,2,".",","); ?> &nbsp;</td>
         </tr>
         <tr>
             <td style="border-left: 1px solid #ccc;"> Ai-Cash &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($aicash_price_total,2,".",","); ?> &nbsp;
             </td>
 
+            <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
+            <td style="text-align: right;"><?php echo number_format($tax_total,2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
@@ -577,6 +578,12 @@ set_time_limit(9999999);
             <td style="text-align: right;"><u style="text-align: right;">
                     <?php echo number_format($cash_pay_total+$cash_transfer_price_total+$cash_sum_credit_price_total+$aicash_price_total,2,".",","); ?></u>
                 &nbsp;</td>
+
+                <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระ</u></b> </td>
+            <td style="text-align: right;"><u style="text-align: right;">
+                    <?php echo number_format($sum_price_total+$shipping_total+$fee_amt_total,2,".",","); ?></u>
+                &nbsp;</td>
+
         </tr>
 
     </table>
