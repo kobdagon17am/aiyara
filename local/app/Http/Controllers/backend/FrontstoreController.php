@@ -2650,12 +2650,15 @@ class FrontstoreController extends Controller
                 SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
                 SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
                 SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-
+                SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
+                SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
                 SUM(
                 (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
                 (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                 -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) +
+                (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) +
                 (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                 -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                 ) as total_price,
@@ -2700,6 +2703,8 @@ class FrontstoreController extends Controller
                   <th width="5%" class="text-right">' . trans('message.ai_cash') . '</th>
                   <th width="5%" class="text-right">' . trans('message.transfer_cash') . '</th>
                   <th width="5%" class="text-right">' . trans('message.credit_card') . '</th>
+                  <th width="5%" class="text-right">TrueMoney</th>
+                  <th width="5%" class="text-right">PromptPay</th>
                   <th width="10%" class="text-right">' . trans('message.total') . '</th>
                   <th width="5%" class="text-right">(' . trans('message.fee') . ')</th>
                   <th width="5%" class="text-right">(' . trans('message.transportor_fee') . ')</th>
@@ -2720,6 +2725,8 @@ class FrontstoreController extends Controller
                       <td class="text-right"> ' . number_format($r->aicash_price, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->transfer_price, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->credit_price, 2) . ' </td>
+                      <td class="text-right"> ' . number_format($r->true_money_price, 2) . ' </td>
+                      <td class="text-right"> ' . number_format($r->prompt_pay_price, 2) . ' </td>
                       <th class="text-right"> ' . number_format($r->total_price, 2) . ' </th>
                       <td class="text-right"> ' . number_format($r->fee_amt, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->shipping_price, 2) . ' </td>
@@ -2737,7 +2744,8 @@ class FrontstoreController extends Controller
                 SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
                 SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
                 SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-
+                SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
+                SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
                 SUM(CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) AS fee_amt_charger_in,
 
                 db_orders.code_order,
@@ -2748,7 +2756,8 @@ class FrontstoreController extends Controller
                 /*  (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +  */
                 (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
                 (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
-
+                (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END)   /* + */ +
+                (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END)   /* + */ +
                 (CASE WHEN db_orders.charger_type = 2 THEN 0 WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END)
 
                 /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
@@ -2777,46 +2786,6 @@ class FrontstoreController extends Controller
                 $business_location_id_fk
         ");
 
-        $text = " SELECT
-        SUM(CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) AS credit_price,
-        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
-        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
-        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
-        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
-        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-        SUM(CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) AS fee_amt_charger_in,
-        db_orders.code_order,
-        SUM(
-        (CASE WHEN db_orders.credit_price is null THEN 0 ELSE db_orders.credit_price END) +
-        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-        /*  (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +  */
-        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
-        (CASE WHEN db_orders.charger_type = 2 THEN 0 WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END)
-        /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
-        ) as total_price,
-        SUM(
-         CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
-        ) AS shipping_price
-
-        FROM
-        db_orders
-        WHERE 1
-        AND approve_status <> 5
-        AND approve_status <> 0
-        $action_user_011
-        $startDate1
-        $endDate1
-        $invoice_code
-        $purchase_type_id_fk
-        $customer_username
-        $customer_name
-        $action_user_02
-        $status_sent_money
-        $approve_status
-        $viewcondition_01
-        $business_location_id_fk";
-
   //  วุฒิเพิ่มมา + $sDBFrontstoreTOTAL[0]->fee_amt วุฒิบวกค่าธรรมเนียม
       $show .= '
                     <tr>
@@ -2825,6 +2794,8 @@ class FrontstoreController extends Controller
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->aicash_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->transfer_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->credit_price+ $sDBFrontstoreTOTAL[0]->fee_amt_charger_in, 2) . ' </th>
+                      <td class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->true_money_price, 2) . ' </td>
+                      <td class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->prompt_pay_price, 2) . ' </td>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->total_price, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
                       <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->shipping_price, 2) . ' </th>
@@ -3454,6 +3425,8 @@ class FrontstoreController extends Controller
                         (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                         -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                         (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                        (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) +
+                        (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) +
                         (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                         -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                         ) as sum_price,
@@ -3478,16 +3451,18 @@ class FrontstoreController extends Controller
                     $business_location_id_fk
                     ");
 
-    $cnt_01 = $d1[0]->cnt;
-    $sum_price_01 = $d1[0]->sum_price;
-    $pv_total_01 = $d1[0]->pv_total;
-    $d3 = DB::select("
+                $cnt_01 = $d1[0]->cnt;
+                $sum_price_01 = $d1[0]->sum_price;
+                $pv_total_01 = $d1[0]->pv_total;
+                $d3 = DB::select("
                 SELECT count(db_orders.id) as cnt,
                 SUM(
                   (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
                   (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                   -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                   (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                  (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) +
+                  (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) +
                   (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                   -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                   ) as sum_price,
@@ -3522,6 +3497,8 @@ class FrontstoreController extends Controller
                   (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                   -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                   (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                  (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) +
+                  (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) +
                   (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                   -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                   ) as sum_price,
@@ -3560,6 +3537,8 @@ class FrontstoreController extends Controller
                   (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                   -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                   (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                  (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) +
+                  (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) +
                   (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                   -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                   ) as sum_price,
@@ -3596,6 +3575,8 @@ class FrontstoreController extends Controller
                   (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
                   -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
                   (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+                  (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) +
+                  (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) +
                   (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
                   -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
                   ) as sum_price,
@@ -3832,6 +3813,7 @@ class FrontstoreController extends Controller
 
     $sTable = DB::select("
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
+                db_orders.true_money_price,db_orders.prompt_pay_price,
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
                 status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
@@ -3923,6 +3905,14 @@ class FrontstoreController extends Controller
           $tootip_price .= ' Gift Voucher: ' . $row->gift_voucher_price;
         }
 
+        if ($row->true_money_price > 0) {
+          $tootip_price .= ' TrueMoney: ' . $row->true_money_price;
+        }
+
+        if ($row->prompt_pay_price > 0) {
+          $tootip_price .= ' PromptPay: ' . $row->prompt_pay_price;
+        }
+
         return $tootip_price;
       })
       ->addColumn('total_price', function ($row) {
@@ -3940,6 +3930,14 @@ class FrontstoreController extends Controller
 
         if (@$row->aicash_price != 0) {
           $total_price += $row->aicash_price;
+        }
+
+        if (@$row->true_money_price != 0) {
+          $total_price += $row->true_money_price;
+        }
+
+        if (@$row->prompt_pay_price != 0) {
+          $total_price += $row->prompt_pay_price;
         }
 
         if (@$row->pay_type_id_fk != 10) {
