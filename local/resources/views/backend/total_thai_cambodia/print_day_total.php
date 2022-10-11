@@ -368,7 +368,7 @@ set_time_limit(9999999);
                         Left Join branchs ON branchs.id = db_orders.branch_id_fk
                         Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
                         Left Join customers ON customers.id = db_orders.customers_id_fk
-                        WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+                        WHERE db_orders.approve_status not in (0,5,1,6,3)
                         $startDate
                         $endDate
                         $action_user
@@ -408,7 +408,7 @@ set_time_limit(9999999);
                         Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
                         Left Join branchs ON branchs.id = db_orders.branch_id_fk
                         Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-                        WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+                        WHERE db_orders.approve_status not in (0,5,1,6,3)
                         $startDate
                         $endDate
                         $action_user

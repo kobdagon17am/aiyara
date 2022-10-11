@@ -86,9 +86,6 @@ class PvPayment extends Model
                 if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
 
-
-
-
                     $check_aicash = DB::table('customers') //อัพ Pv ของตัวเอง
                         ->select('ai_cash','id','user_name')
                         ->where('id', '=', $order_data->member_id_aicash)
