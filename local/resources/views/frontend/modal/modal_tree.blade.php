@@ -26,9 +26,43 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
   <div class="table-responsive">
    <table class="table">
     <tbody>
+      <tr class="">
+        <td><strong>Upline</strong></td>
+        <?php
+        $customer_introduce = Frontend::get_customer($data->introduce_id);
+        ?>
+
+        <td>
+          @if($customer_introduce)
+            @if ($customer_introduce->business_name and $customer_introduce->business_name  != '-')
+            {{ $customer_introduce->business_name }} ({{$customer_introduce->user_name}})
+          @else
+            {{$customer_introduce->prefix_name.' '.$customer_introduce->first_name.' '.$customer_introduce->last_name }} ({{$customer_introduce->user_name}})
+          @endif
+
+        @else
+           -
+        @endif
+      </td>
+        <td></td>
+      </tr>
      <tr class="table-success">
-      <td><strong>@lang('message.Register_Date') </strong></td>
-      <td>{{ date('d/m/Y',strtotime($data->created_at)) }}</td>
+      <td><strong> Sponsor </strong></td>
+      <?php
+        $customer_upline = Frontend::get_customer($data->upline_id);
+        ?>
+
+        <td>
+          @if($customer_upline)
+            @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
+            {{ $customer_upline->business_name }} ({{$customer_upline->user_name}})
+          @else
+            {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }} ({{$customer_upline->user_name}})
+          @endif
+
+        @else
+           -
+        @endif
       <td></td>
     </tr>
     <tr>
