@@ -29,15 +29,15 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
       <tr class="">
         <td><strong>Upline</strong></td>
         <?php
-        $customer_introduce = Frontend::get_customer($data->introduce_id);
+        $customer_upline = Frontend::get_customer($data->upline_id);
         ?>
 
         <td>
-          @if($customer_introduce)
-            @if ($customer_introduce->business_name and $customer_introduce->business_name  != '-')
-            {{ $customer_introduce->business_name }} ({{$customer_introduce->user_name}})
+          @if($customer_upline)
+            @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
+            {{ $customer_upline->business_name }} ({{$customer_upline->user_name}})
           @else
-            {{$customer_introduce->prefix_name.' '.$customer_introduce->first_name.' '.$customer_introduce->last_name }} ({{$customer_introduce->user_name}})
+            {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }} ({{$customer_upline->user_name}})
           @endif
 
         @else
@@ -49,7 +49,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
      <tr class="table-success">
       <td><strong> Sponsor </strong></td>
       <?php
-        $customer_upline = Frontend::get_customer($data->upline_id);
+        $customer_upline customer_introduce = Frontend::get_customer($data->introduce_id);
         ?>
 
         <td>
