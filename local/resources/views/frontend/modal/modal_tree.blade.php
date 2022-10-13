@@ -49,7 +49,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
      <tr class="table-success">
       <td><strong> Sponsor </strong></td>
       <?php
-        $customer_upline customer_introduce = Frontend::get_customer($data->introduce_id);
+        $customer_upline  = Frontend::get_customer($data->introduce_id);
         ?>
 
         <td>
