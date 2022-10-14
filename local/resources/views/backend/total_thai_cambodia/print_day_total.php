@@ -355,6 +355,8 @@ set_time_limit(9999999);
                         db_orders.product_value,
                         db_orders.tax,
                         db_orders.sum_price,
+                        db_orders.true_money_price,
+                        db_orders.prompt_pay_price,
 
                         customers.first_name as action_first_name,
                         customers.last_name as action_last_name,
@@ -400,6 +402,9 @@ set_time_limit(9999999);
                         SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
                         SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
 
+                        SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
+                        SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
+
                         db_orders.code_order
 
                         FROM
@@ -429,6 +434,13 @@ set_time_limit(9999999);
               $aicash_price_total = 0;
               $fee_amt_total = 0;
               $shipping_total = 0;
+              $gift_voucher_price_total = 0;
+              $true_money_price_total = 0;
+              $prompt_pay_price_total = 0;
+
+
+              $shipping_vat_total = 0;
+              $fee_vat_total = 0;
 
             foreach($sTable as $order){
               if($order->action_user_name == ''){
@@ -447,6 +459,42 @@ set_time_limit(9999999);
                 $order->aicash_price = 0.00;
               }
 
+              if($order->gift_voucher_price == ''){
+                $order->gift_voucher_price = 0.00;
+              }
+
+              if($order->true_money_price == ''){
+                $order->true_money_price = 0.00;
+              }
+
+              if($order->prompt_pay_price == ''){
+                $order->prompt_pay_price = 0.00;
+              }
+
+              if($order->shipping_price == ''){
+                $order->shipping_price = 0.00;
+              }
+
+              if($order->fee_amt == ''){
+                $order->fee_amt = 0.00;
+              }
+
+              $shipping_vat = 0;
+              $fee_vat = 0;
+
+              if($order->shipping_price>0){
+                $shipping_vat =  $order->shipping_price * (7.00 / (100+ 7.00) );
+                $order->shipping_price = $order->shipping_price - $shipping_vat;
+                $order->tax = $order->tax + $shipping_vat;
+              }
+
+              if($order->fee_amt>0){
+                $fee_vat =  $order->fee_amt * (7.00 / (100+ 7.00) );
+                $order->fee_amt = $order->fee_amt - $fee_vat;
+                $order->tax = $order->tax + $fee_vat;
+              }
+
+              $gift_voucher_price_total += $order->gift_voucher_price;
               $product_value_total += $order->product_value;
               $tax_total += $order->tax;
               $sum_price_total += $order->sum_price;
@@ -457,6 +505,12 @@ set_time_limit(9999999);
               $aicash_price_total += $order->aicash_price;
               $shipping_total += $order->shipping_price;
               $fee_amt_total += $order->fee_amt;
+
+              $true_money_price_total += $order->true_money_price;
+              $prompt_pay_price_total += $order->prompt_pay_price;
+
+              $shipping_vat_total += $shipping_vat;
+              $fee_vat_total += $fee_vat;
 
               if($report_type == 'day'){
                 $action_date = date('d/m/Y', strtotime($order->action_date));
@@ -574,14 +628,32 @@ set_time_limit(9999999);
         </tr>
 
         <tr>
+            <td style="border-left: 1px solid #ccc;"> TrueMoney &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($true_money_price_total,2,".",","); ?> &nbsp;
+            </td>
+
+            <td style="border-left: 1px solid #ccc;"> คูปองส่วนลด &nbsp;</td>
+            <td style="text-align: right;"><?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
+        </tr>
+
+        <tr>
+            <td style="border-left: 1px solid #ccc;"> PromptPay &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;
+            </td>
+
+            <td style="border-left: 1px solid #ccc;">  &nbsp;</td>
+            <td style="text-align: right;"> &nbsp;</td>
+        </tr>
+
+        <tr>
             <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระทั้งสิ้น</u></b> </td>
             <td style="text-align: right;"><u style="text-align: right;">
-                    <?php echo number_format($cash_pay_total+$cash_transfer_price_total+$cash_sum_credit_price_total+$aicash_price_total,2,".",","); ?></u>
+                    <?php echo number_format($cash_pay_total+$cash_transfer_price_total+$cash_sum_credit_price_total+$aicash_price_total +$true_money_price_total +$prompt_pay_price_total,2,".",","); ?></u>
                 &nbsp;</td>
 
                 <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระ</u></b> </td>
             <td style="text-align: right;"><u style="text-align: right;">
-                    <?php echo number_format($sum_price_total+$shipping_total+$fee_amt_total,2,".",","); ?></u>
+                    <?php echo number_format(($sum_price_total+$shipping_total+$fee_amt_total+$shipping_vat_total+$fee_vat_total)-$gift_voucher_price_total,2,".",","); ?></u>
                 &nbsp;</td>
 
         </tr>

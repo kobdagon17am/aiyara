@@ -184,7 +184,8 @@ class Total_thai_cambodiaController extends Controller
             db_orders.tax,
             db_orders.sum_price,
             db_orders.pv_total,
-
+            db_orders.true_money_price,
+            db_orders.prompt_pay_price,
             db_orders.code_order
 
             FROM
@@ -225,6 +226,9 @@ class Total_thai_cambodiaController extends Controller
             SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
             SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
             SUM(CASE WHEN db_orders.pv_total is null THEN 0 ELSE db_orders.pv_total END) AS pv_total,
+
+            SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
+            SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
 
             db_orders.code_order
 
@@ -282,6 +286,12 @@ class Total_thai_cambodiaController extends Controller
         ->addColumn('total_price', function ($row) {
             return number_format($row->cash_pay, 2);
         })
+        ->addColumn('total_true', function ($row) {
+          return number_format($row->true_money_price, 2);
+      })
+      ->addColumn('total_promtpay', function ($row) {
+        return number_format($row->prompt_pay_price, 2);
+    })
         ->addColumn('total_transfer', function ($row) {
             return number_format($row->transfer_price, 2);
         })
@@ -301,6 +311,8 @@ class Total_thai_cambodiaController extends Controller
             return number_format($row->cash_pay+
             $row->transfer_price+
             $row->sum_credit_price+
+            $row->true_money_price+
+            $row->prompt_pay_price+
             $row->aicash_price, 2);
         })
         ->addColumn('total_add_aicash', function ($row) {
@@ -379,6 +391,9 @@ class Total_thai_cambodiaController extends Controller
             SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
             SUM(CASE WHEN db_orders.pv_total is null THEN 0 ELSE db_orders.pv_total END) AS pv_total,
 
+            SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
+            SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
+
             db_orders.code_order
 
             FROM
@@ -387,7 +402,7 @@ class Total_thai_cambodiaController extends Controller
             Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
             Left Join branchs ON branchs.id = db_orders.branch_id_fk
             Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-            WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
+            WHERE db_orders.approve_status not in (0,5,1,6,3)
             $startDate
             $endDate
             $action_user
@@ -445,6 +460,13 @@ class Total_thai_cambodiaController extends Controller
             return number_format($row->aicash_price, 2);
         })
 
+        ->addColumn('total_true', function ($row) {
+          return number_format($row->true_money_price, 2);
+      })
+      ->addColumn('total_promtpay', function ($row) {
+        return number_format($row->prompt_pay_price, 2);
+    })
+
         ->addColumn('pv_total', function ($row) {
             return number_format($row->pv_total, 2);
         })
@@ -453,6 +475,8 @@ class Total_thai_cambodiaController extends Controller
             return number_format($row->cash_pay+
             $row->transfer_price+
             $row->sum_credit_price+
+            $row->true_money_price+
+            $row->prompt_pay_price+
             $row->aicash_price, 2);
         })
         ->addColumn('total_add_aicash', function ($row) {

@@ -14,8 +14,6 @@
         .border-left-0 {
             height: 67%;
         }
-
-
     </style>
 @endsection
 
@@ -126,166 +124,157 @@
     </div> <!-- end row -->
 
     <div class="row">
-      <div class="col-lg-12">
-          <div class="card">
-              <div class="card-body">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
 
 
-<!-- Tabs navs -->
-<ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
-  <li class="nav-item " role="presentation">
-    <a
-      class="nav-link tablinks active"
-      data-mdb-toggle="tab"
-      href="javascript:;"
-      role="tab"
-      aria-controls="ex1-tabs-1"
-      aria-selected="false"
-      onclick="openCity(event, 'sale')"
-      >ยอดขาย</a
-    >
-  </li>
-  <li class="nav-item " role="presentation">
-    <a
-      class="nav-link tablinks"
-      data-mdb-toggle="tab"
-      href="javascript:;"
-      role="tab"
-      aria-controls="ex1-tabs-2"
-      aria-selected="false"
-      onclick="openCity(event, 'aicash')"
-      >ยอดเติม AI Cash</a
-    >
-  </li>
-</ul>
-<!-- Tabs navs -->
+                    <!-- Tabs navs -->
+                    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                        <li class="nav-item " role="presentation">
+                            <a class="nav-link tablinks active" data-mdb-toggle="tab" href="javascript:;" role="tab"
+                                aria-controls="ex1-tabs-1" aria-selected="false"
+                                onclick="openCity(event, 'sale')">ยอดขาย</a>
+                        </li>
+                        <li class="nav-item " role="presentation">
+                            <a class="nav-link tablinks" data-mdb-toggle="tab" href="javascript:;" role="tab"
+                                aria-controls="ex1-tabs-2" aria-selected="false" onclick="openCity(event, 'aicash')">ยอดเติม
+                                AI Cash</a>
+                        </li>
+                    </ul>
+                    <!-- Tabs navs -->
 
-<!-- Tabs content -->
-<div class="tab-content" id="ex1-content">
-  <div
-    class="tab-pane fade show active tabcontent"
-    id="sale"
-    role="tabpanel"
-    aria-labelledby="ex1-tabs-1"
-  >
-  <div class="row mt-2 mb-0">
-    <div class="col-12">
-        <div class="page-title-box d-flex align-items-center justify-content-between"
-            style="padding-bottom: 0px;">
-            <h4 class="mb-0 font-size-18"> <u>รายวัน</u></h4>
+                    <!-- Tabs content -->
+                    <div class="tab-content" id="ex1-content">
+                        <div class="tab-pane fade show active tabcontent" id="sale" role="tabpanel"
+                            aria-labelledby="ex1-tabs-1">
+                            <div class="row mt-2 mb-0">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between"
+                                        style="padding-bottom: 0px;">
+                                        <h4 class="mb-0 font-size-18"> <u>รายวัน</u></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="thai_cambodia" class="table table-bordered  thai_cambodia" style="width: 100%;">
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                            <th style="text-align: right !important"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <br>
+                            <div class="row mt-2 mb-0">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between"
+                                        style="padding-bottom: 0px;">
+                                        <h4 class="font-size-18"> <u>รายเดือน</u></h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table id="data-table-thai" class="table table-bordered  mt-0" style="width: 100%;">
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4" style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <br>
+
+                            <div class="row mt-2 mb-0">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between"
+                                        style="padding-bottom: 0px;">
+                                        <h4 class="font-size-18"> <u>รายเดือนแบ่งตามสาขา</u></h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table id="data-table-thai_branch" class="table table-bordered  mt-0" style="width: 100%;">
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4" style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                        <th style="text-align: right !important"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <br>
+
+                        </div>
+
+                        <div class="tab-pane fade tabcontent" id="aicash" role="tabpanel"
+                            aria-labelledby="ex1-tab-2">
+                            {{--  --}}
+                            <div class="row mt-2 mb-0">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between"
+                                        style="padding-bottom: 0px;">
+                                        <h4 class="mb-0 font-size-18"> <u>รายวัน</u></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="thai_cambodia_aicash" class="table table-bordered  thai_cambodia"
+                                    style="width: 100%;">
+                                </table>
+                            </div>
+                            <br>
+                            <div class="row mt-2 mb-0">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between"
+                                        style="padding-bottom: 0px;">
+                                        <h4 class="font-size-18"> <u>รายเดือน</u></h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table id="data-table-thai_aicash" class="table table-bordered  mt-0" style="width: 100%;">
+                            </table>
+                            <br>
+
+                            {{--  --}}
+                        </div>
+                    </div>
+                    <!-- Tabs content -->
+
+
+
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="table-responsive">
-    <table id="thai_cambodia" class="table table-bordered  thai_cambodia" style="width: 100%;">
-      <tfoot>
-        <tr>
-            <th colspan="4" style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-            <th style="text-align: right !important"></th>
-        </tr>
-    </tfoot>
-    </table>
-</div>
-<br>
-<div class="row mt-2 mb-0">
-  <div class="col-12">
-      <div class="page-title-box d-flex align-items-center justify-content-between"
-          style="padding-bottom: 0px;">
-          <h4 class="font-size-18"> <u>รายเดือน</u></h4>
-      </div>
-  </div>
-</div>
-
-<table id="data-table-thai" class="table table-bordered  mt-0" style="width: 100%;">
-  <tfoot>
-    <tr>
-        <th colspan="4" style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-    </tr>
-</tfoot>
-</table>
-<br>
-
-<div class="row mt-2 mb-0">
-  <div class="col-12">
-      <div class="page-title-box d-flex align-items-center justify-content-between"
-          style="padding-bottom: 0px;">
-          <h4 class="font-size-18"> <u>รายเดือนแบ่งตามสาขา</u></h4>
-      </div>
-  </div>
-</div>
-
-<table id="data-table-thai_branch" class="table table-bordered  mt-0" style="width: 100%;">
-  <tfoot>
-    <tr>
-        <th colspan="4" style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-        <th style="text-align: right !important"></th>
-    </tr>
-</tfoot>
-</table>
-<br>
-
-  </div>
-
-  <div class="tab-pane fade tabcontent" id="aicash" role="tabpanel" aria-labelledby="ex1-tab-2">
-{{--  --}}
-<div class="row mt-2 mb-0">
-  <div class="col-12">
-      <div class="page-title-box d-flex align-items-center justify-content-between"
-          style="padding-bottom: 0px;">
-          <h4 class="mb-0 font-size-18"> <u>รายวัน</u></h4>
-      </div>
-  </div>
-</div>
-<div class="table-responsive">
-  <table id="thai_cambodia_aicash" class="table table-bordered  thai_cambodia" style="width: 100%;">
-  </table>
-</div>
-<br>
-<div class="row mt-2 mb-0">
-<div class="col-12">
-    <div class="page-title-box d-flex align-items-center justify-content-between"
-        style="padding-bottom: 0px;">
-        <h4 class="font-size-18"> <u>รายเดือน</u></h4>
-    </div>
-</div>
-</div>
-
-<table id="data-table-thai_aicash" class="table table-bordered  mt-0" style="width: 100%;"> </table>
-<br>
-
-{{--  --}}
-  </div>
-</div>
-<!-- Tabs content -->
-
-
-
-              </div>
-          </div>
-      </div>
-  </div>
 
 
     <form id="action_form" action="{{ url('backend/total_thai_cambodia_pdf') }}" method="POST" target="_blank"
@@ -326,24 +315,23 @@
 @endsection
 
 @section('script')
-
-<script>
-  function openCity(evt, cityName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-      tabcontent[i].className.replace("show active", "");
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace("active", "");
-    }
-    document.getElementById(cityName).style.display = "block";
-    document.getElementById(cityName).className += " show active";
-    evt.currentTarget.className += " active";
-  }
-  </script>
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].className.replace("show active", "");
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace("active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            document.getElementById(cityName).className += " show active";
+            evt.currentTarget.className += " active";
+        }
+    </script>
 
     <script>
         function numberWithCommas(x) {
@@ -423,6 +411,16 @@
                         className: 'text-right'
                     },
                     {
+                        data: 'total_true',
+                        title: '<center>TrueMoney</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_promtpay',
+                        title: '<center>PromptPay</center>',
+                        className: 'text-right'
+                    },
+                    {
                         data: 'total_balance',
                         title: '<center>รวมการชำระ</center>',
                         className: 'text-right'
@@ -459,7 +457,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_cash = api
+                    all_cash = api
                         .column(5, {
                             page: 'current'
                         })
@@ -468,7 +466,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_transfer = api
+                    all_transfer = api
                         .column(6, {
                             page: 'current'
                         })
@@ -477,7 +475,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_credit = api
+                    all_credit = api
                         .column(7, {
                             page: 'current'
                         })
@@ -486,7 +484,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_aicash = api
+                    all_aicash = api
                         .column(8, {
                             page: 'current'
                         })
@@ -495,7 +493,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_sum = api
+                    all_true = api
                         .column(9, {
                             page: 'current'
                         })
@@ -504,8 +502,26 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_pv = api
+                    all_promtpay = api
                         .column(10, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_sum = api
+                        .column(11, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_pv = api
+                        .column(12, {
                             page: 'current'
                         })
                         .data()
@@ -520,13 +536,15 @@
                     $(api.column(6).footer()).html(numberWithCommas(all_transfer));
                     $(api.column(7).footer()).html(numberWithCommas(all_credit));
                     $(api.column(8).footer()).html(numberWithCommas(all_aicash));
-                    $(api.column(9).footer()).html(numberWithCommas(all_sum));
-                    $(api.column(10).footer()).html(numberWithCommas(all_pv));
+                    $(api.column(9).footer()).html(numberWithCommas(all_true));
+                    $(api.column(10).footer()).html(numberWithCommas(all_promtpay));
+                    $(api.column(11).footer()).html(numberWithCommas(all_sum));
+                    $(api.column(12).footer()).html(numberWithCommas(all_pv));
                 }
             });
 
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-              total_thai_cambodia.draw();
+                total_thai_cambodia.draw();
             });
 
         });
@@ -536,7 +554,7 @@
         var total_thai_cambodia_aicash;
         $(function() {
             total_thai_cambodia_aicash = $('#thai_cambodia_aicash').DataTable({
-              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                 processing: true,
                 serverSide: true,
                 // scroller: true,
@@ -604,12 +622,11 @@
                         className: 'text-left'
                     },
                 ],
-                "footerCallback": function(row, data, start, end, display) {
-                }
+                "footerCallback": function(row, data, start, end, display) {}
             });
 
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-              total_thai_cambodia_aicash.draw();
+                total_thai_cambodia_aicash.draw();
             });
 
         });
@@ -688,6 +705,16 @@
                         className: 'text-right'
                     },
                     {
+                        data: 'total_true',
+                        title: '<center>TrueMoney</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_promtpay',
+                        title: '<center>PromptPay</center>',
+                        className: 'text-right'
+                    },
+                    {
                         data: 'total_balance',
                         title: '<center>รวมการชำระ</center>',
                         className: 'text-right'
@@ -723,7 +750,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_cash = api
+                    all_cash = api
                         .column(5, {
                             page: 'current'
                         })
@@ -732,7 +759,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_transfer = api
+                    all_transfer = api
                         .column(6, {
                             page: 'current'
                         })
@@ -741,7 +768,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_credit = api
+                    all_credit = api
                         .column(7, {
                             page: 'current'
                         })
@@ -750,7 +777,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_aicash = api
+                    all_aicash = api
                         .column(8, {
                             page: 'current'
                         })
@@ -759,7 +786,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_sum = api
+                    all_true = api
                         .column(9, {
                             page: 'current'
                         })
@@ -768,8 +795,26 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_pv = api
+                    all_promtpay = api
                         .column(10, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_sum = api
+                        .column(11, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_pv = api
+                        .column(12, {
                             page: 'current'
                         })
                         .data()
@@ -784,13 +829,15 @@
                     $(api.column(6).footer()).html(numberWithCommas(all_transfer));
                     $(api.column(7).footer()).html(numberWithCommas(all_credit));
                     $(api.column(8).footer()).html(numberWithCommas(all_aicash));
-                    $(api.column(9).footer()).html(numberWithCommas(all_sum));
-                    $(api.column(10).footer()).html(numberWithCommas(all_pv));
+                    $(api.column(9).footer()).html(numberWithCommas(all_true));
+                    $(api.column(10).footer()).html(numberWithCommas(all_promtpay));
+                    $(api.column(11).footer()).html(numberWithCommas(all_sum));
+                    $(api.column(12).footer()).html(numberWithCommas(all_pv));
                 }
             });
 
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-              total_thai_cambodia_month.draw();
+                total_thai_cambodia_month.draw();
             });
 
         });
@@ -868,6 +915,16 @@
                         className: 'text-right'
                     },
                     {
+                        data: 'total_true',
+                        title: '<center>TrueMoney</center>',
+                        className: 'text-right'
+                    },
+                    {
+                        data: 'total_promtpay',
+                        title: '<center>PromptPay</center>',
+                        className: 'text-right'
+                    },
+                    {
                         data: 'total_balance',
                         title: '<center>รวมการชำระ</center>',
                         className: 'text-right'
@@ -903,7 +960,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_cash = api
+                    all_cash = api
                         .column(5, {
                             page: 'current'
                         })
@@ -912,7 +969,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_transfer = api
+                    all_transfer = api
                         .column(6, {
                             page: 'current'
                         })
@@ -921,7 +978,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_credit = api
+                    all_credit = api
                         .column(7, {
                             page: 'current'
                         })
@@ -930,7 +987,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_aicash = api
+                    all_aicash = api
                         .column(8, {
                             page: 'current'
                         })
@@ -939,7 +996,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_sum = api
+                    all_true = api
                         .column(9, {
                             page: 'current'
                         })
@@ -948,8 +1005,26 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                        all_pv = api
+                    all_promtpay = api
                         .column(10, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_sum = api
+                        .column(11, {
+                            page: 'current'
+                        })
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    all_pv = api
+                        .column(12, {
                             page: 'current'
                         })
                         .data()
@@ -964,13 +1039,15 @@
                     $(api.column(6).footer()).html(numberWithCommas(all_transfer));
                     $(api.column(7).footer()).html(numberWithCommas(all_credit));
                     $(api.column(8).footer()).html(numberWithCommas(all_aicash));
-                    $(api.column(9).footer()).html(numberWithCommas(all_sum));
-                    $(api.column(10).footer()).html(numberWithCommas(all_pv));
+                    $(api.column(9).footer()).html(numberWithCommas(all_true));
+                    $(api.column(10).footer()).html(numberWithCommas(all_promtpay));
+                    $(api.column(11).footer()).html(numberWithCommas(all_sum));
+                    $(api.column(12).footer()).html(numberWithCommas(all_pv));
                 }
             });
 
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-              total_thai_cambodia_month_branch.draw();
+                total_thai_cambodia_month_branch.draw();
             });
 
         });
@@ -980,15 +1057,15 @@
         var total_thai_cambodia_month_aicash;
         $(function() {
             total_thai_cambodia_month_aicash = $('#data-table-thai_aicash').DataTable({
-              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i><'col-sm-12'p>>",
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-12'i><'col-sm-12'p>>",
                 processing: true,
                 serverSide: true,
-                  // scroller: true,
-                  // scrollCollapse: true,
-                  // scrollX: true,
-                  // ordering: false,
-                  // scrollY: '' + ($(window).height() - 370) + 'px',
-                  iDisplayLength: 10000,
+                // scroller: true,
+                // scrollCollapse: true,
+                // scrollX: true,
+                // ordering: false,
+                // scrollY: '' + ($(window).height() - 370) + 'px',
+                iDisplayLength: 10000,
                 ajax: {
                     url: '{{ route('backend.total_thai_cambodia_aicash.datatable') }}',
                     data: function(d) {
@@ -1054,13 +1131,13 @@
             });
 
             $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-              total_thai_cambodia_month_aicash.draw();
+                total_thai_cambodia_month_aicash.draw();
             });
 
         });
     </script>
 
-   <script>
+    <script>
         $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
             total_thai_cambodia.draw();
             total_thai_cambodia_month.draw();
@@ -1071,13 +1148,13 @@
 
         $('#search-form').on('click', function(e) {
 
-          total_thai_cambodia.draw();
-          total_thai_cambodia_month.draw();
+            total_thai_cambodia.draw();
+            total_thai_cambodia_month.draw();
 
-          total_thai_cambodia_aicash.draw();
-          total_thai_cambodia_month_aicash.draw();
-          total_thai_cambodia_month_branch.draw();
-        e.preventDefault();
+            total_thai_cambodia_aicash.draw();
+            total_thai_cambodia_month_aicash.draw();
+            total_thai_cambodia_month_branch.draw();
+            e.preventDefault();
         });
     </script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
