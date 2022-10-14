@@ -671,6 +671,7 @@ class FrontstoreController extends Controller
       $vat_data = $vat_data->vat;
       //vatใน 7%
       $vat = floatval(@$sFrontstoreDataTotal[0]->total) * ($vat_data / (100 + $vat_data));
+      // dd(floatval(@$sFrontstoreDataTotal[0]->total));
       //มูลค่าสินค้า
       // $price_vat = floatval(@$sFrontstoreDataTotal[0]->total) - $p_vat;
       // $price_total = $price + $shipping;
