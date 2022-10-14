@@ -26,9 +26,43 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
   <div class="table-responsive">
    <table class="table">
     <tbody>
+      <tr class="">
+        <td><strong>Upline</strong></td>
+        <?php
+        $customer_upline = Frontend::get_customer($data->upline_id);
+        ?>
+
+        <td>
+          @if($customer_upline)
+            @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
+            {{ $customer_upline->business_name }} ({{$customer_upline->user_name}})
+          @else
+            {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }} ({{$customer_upline->user_name}})
+          @endif
+
+        @else
+           -
+        @endif
+      </td>
+        <td></td>
+      </tr>
      <tr class="table-success">
-      <td><strong>@lang('message.Register_Date') </strong></td>
-      <td>{{ date('d/m/Y',strtotime($data->created_at)) }}</td>
+      <td><strong> Sponsor </strong></td>
+      <?php
+        $customer_upline  = Frontend::get_customer($data->introduce_id);
+        ?>
+
+        <td>
+          @if($customer_upline)
+            @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
+            {{ $customer_upline->business_name }} ({{$customer_upline->user_name}})
+          @else
+            {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }} ({{$customer_upline->user_name}})
+          @endif
+
+        @else
+           -
+        @endif
       <td></td>
     </tr>
     <tr>
@@ -82,14 +116,14 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
     <strong>@lang('message.Middle')</strong><br>
     [ {{$data->team_center}} ] <font class="font-red">{{number_format($data->pv_team_center)}}</font>
    </div>
+   <div class="col-6">
 
+    <strong>คะแนนแนะนำตรงส่วนตัวเดือนนี้</strong><br>
+      [ A ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_a) }}</font> [ B ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_b) }}</font> [ C ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_c) }}</font>
+
+   </div>
  </div>
- <div class="col-6">
 
-  <strong>คะแนนแนะนำตรงส่วนตัว</strong><br>
-    [ A ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_a) }}</font> [ B ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_b) }}</font> [ C ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_c) }}</font>
-
- </div>
 
 <div class="b-t-default transection-footer row">
  <div class="col-6  b-r-default">
