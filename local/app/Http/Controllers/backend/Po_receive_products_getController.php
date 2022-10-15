@@ -80,11 +80,13 @@ class Po_receive_products_getController extends Controller
                 WHERE id=".$request->po_supplier_products_id_fk." ;
                 ");
 
-              DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='1' where id=".$request->po_supplier_products_id_fk." AND product_amt=product_amt_receive; ");
+              DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='1' where id=".$request->po_supplier_products_id_fk." AND product_amt<=product_amt_receive; ");
               DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='2' where id=".$request->po_supplier_products_id_fk." AND product_amt>product_amt_receive; ");
+              // วุฒิเพิ่มมา
+              // DB::select(" UPDATE `db_po_supplier_products` SET `get_status`='1' where id=".$request->po_supplier_products_id_fk." AND product_amt<product_amt_receive; ");
 
               $r = DB::select("SELECT * FROM `db_po_supplier_products` where id=".$request->po_supplier_products_id_fk." ");
-
+              // dd($r );
               // วุฒิเพิ่มมาไว้ตัดสต็อคเลย
         //       $sRow_po_sup = DB::table('db_po_supplier_products')->where('id',$request->po_supplier_products_id_fk)->first();
         //       $sRow_po = DB::table('db_po_supplier')->where('id',$sRow_po_sup->po_supplier_id_fk)->first();
@@ -189,7 +191,7 @@ class Po_receive_products_getController extends Controller
     {
       \DB::beginTransaction();
       try {
-        // dd($id);
+
           if( $id ){
             $sRow = \App\Models\Backend\Po_supplier_products_get::find($id);
           }else{

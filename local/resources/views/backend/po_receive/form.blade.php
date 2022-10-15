@@ -610,7 +610,10 @@
                       // console.log(aData['product_amt_receive']);
 
                       // if(aData['get_status_2']==2){
-                      if(aData['product_amt']>aData['product_amt_receive']){
+
+
+                      // if(aData['product_amt']>aData['product_amt_receive']){
+                        if(aData['approve_status']!=1 && aData['approve_status']!=5){
 
                         $('td:last-child', nRow).html(''
                           + '<a href="#" class="btn btn-sm btn-primary btnSetToWarehouse " data-id="'+aData['id']+'" product_name="'+aData['product_name']+'" product_id_fk="'+aData['product_id_fk']+'"  ><i class="bx bx-plus font-size-16 align-middle"></i> เพิ่มการรับ </a> '

@@ -82,7 +82,7 @@ class Po_supplier_productsController extends Controller
           $sRow->product_unit    = request('product_unit');
           // $sRow->product_unit    = 4 ;
           $sRow->get_status    = request('get_status');
-          
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
@@ -107,14 +107,15 @@ class Po_supplier_productsController extends Controller
     }
 
     public function Datatable(){
-      $sTable = \App\Models\Backend\Po_supplier_products::search()->orderBy('id', 'asc');
+      // $sTable = \App\Models\Backend\Po_supplier_products::search()->orderBy('id', 'asc');
+      $sTable = \App\Models\Backend\Po_supplier_products::select('db_po_supplier_products.*','db_po_supplier.approve_status')->join('db_po_supplier','db_po_supplier.id','db_po_supplier_products.po_supplier_id_fk')->search()->orderBy('id', 'asc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
                   // return $row->product_unit_id_fk;
         if(!empty($row->product_id_fk)){
 
-          $Products = DB::select(" 
+          $Products = DB::select("
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
@@ -137,8 +138,9 @@ class Po_supplier_productsController extends Controller
           return $sP->product_unit;
       })
       ->addColumn('get_status', function($row) {
-        if($row->product_amt==$row->product_amt_receive) @$get_status=1;
-        if($row->product_amt>$row->product_amt_receive) @$get_status=2;
+        // if($row->product_amt==$row->product_amt_receive) @$get_status=1;
+        // if($row->product_amt>$row->product_amt_receive) @$get_status=2;
+        @$get_status = $row->get_status;
         if(@$get_status==1){
           return '<font color=green>ได้รับสินค้าครบแล้ว</font>';
         }else if(@$get_status==2){
