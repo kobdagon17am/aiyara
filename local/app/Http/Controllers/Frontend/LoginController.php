@@ -16,7 +16,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class LoginController extends Controller
 {
     public function login(Request $req){
-
+// dd(md5(123456));
         // $get_users = DB::table('customers')
         // ->where('user_name','=',$req->username)
         // ->where('password','=',md5($req->password))

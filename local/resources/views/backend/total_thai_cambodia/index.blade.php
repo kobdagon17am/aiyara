@@ -335,7 +335,8 @@
 
     <script>
         function numberWithCommas(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.00';
+            x = x.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
         var sU = "{{ @$sU }}";
@@ -539,6 +540,7 @@
                     $(api.column(9).footer()).html(numberWithCommas(all_true));
                     $(api.column(10).footer()).html(numberWithCommas(all_promtpay));
                     $(api.column(11).footer()).html(numberWithCommas(all_sum));
+                    // $(api.column(11).footer()).html(all_sum);
                     $(api.column(12).footer()).html(numberWithCommas(all_pv));
                 }
             });

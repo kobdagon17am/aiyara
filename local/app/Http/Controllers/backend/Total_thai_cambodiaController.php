@@ -140,8 +140,11 @@ class Total_thai_cambodiaController extends Controller
         }
 
         if ($rs->action_user) {
-            $action_user = " AND db_orders.action_user = $rs->action_user ";
-
+            if($rs->action_user=='v3'){
+              $action_user = " AND db_orders.distribution_channel_id_fk = 3 ";
+            }else{
+              $action_user = " AND db_orders.action_user = $rs->action_user ";
+            }
         } else {
             $action_user = '';
         }
@@ -347,11 +350,14 @@ class Total_thai_cambodiaController extends Controller
         }
 
         if ($rs->action_user) {
+          if($rs->action_user=='v3'){
+            $action_user = " AND db_orders.distribution_channel_id_fk = 3 ";
+          }else{
             $action_user = " AND db_orders.action_user = $rs->action_user ";
-
-        } else {
-            $action_user = '';
-        }
+          }
+      } else {
+          $action_user = '';
+      }
 
         if ($rs->business_location) {
             $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $rs->business_location . " ";
@@ -513,11 +519,15 @@ class Total_thai_cambodiaController extends Controller
         }
 
         if ($rs->action_user) {
+          if($rs->action_user=='v3'){
+            // $action_user = " AND db_add_ai_cash.distribution_channel_id_fk = 3 ";
+            $action_user = "";
+          }else{
             $action_user = " AND db_add_ai_cash.action_user = $rs->action_user ";
-
-        } else {
-            $action_user = '';
-        }
+          }
+      } else {
+          $action_user = '';
+      }
 
         if ($rs->business_location) {
             $business_location_id_fk = " AND db_add_ai_cash.business_location_id_fk = " . $rs->business_location . " ";
