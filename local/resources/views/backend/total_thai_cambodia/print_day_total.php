@@ -340,7 +340,7 @@ set_time_limit(9999999);
                         ck_users_admin.`name` as action_user_name,
                         db_orders.pay_type_id_fk,
                         dataset_pay_type.detail AS pay_type,
-                        date(db_orders.action_date) AS action_date,
+                        date(db_orders.created_at) AS created_at,
                         db_orders.branch_id_fk,
                         branchs.b_name as branchs_name,
                         dataset_business_location.txt_desc as business_location_name,
@@ -375,35 +375,77 @@ set_time_limit(9999999);
                         $endDate
                         $action_user
                         $business_location_id_fk
-                        ORDER BY action_date ASC
+                        ORDER BY created_at ASC
                   ");
                       }else{
+                        // $sTable =DB::select("
+                        // SELECT
+                        // db_orders.action_user,
+                        // ck_users_admin.`name` as action_user_name,
+                        // ck_users_admin.`first_name` as action_first_name,
+                        // ck_users_admin.`last_name` as action_last_name,
+                        // db_orders.pay_type_id_fk,
+                        // dataset_pay_type.detail AS pay_type,
+                        // date_format(db_orders.action_date, '%M') AS action_date,
+                        // db_orders.branch_id_fk,
+                        // branchs.b_name as branchs_name,
+                        // dataset_business_location.txt_desc as business_location_name,
+
+                        // SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS sum_credit_price,
+                        // SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
+                        // SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
+                        // SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
+                        // SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
+                        // SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
+                        // SUM(CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) AS shipping_price,
+                        // SUM(CASE WHEN db_orders.product_value is null THEN 0 ELSE db_orders.product_value END) AS product_value,
+                        // SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
+                        // SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
+
+                        // SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
+                        // SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
+
+                        // db_orders.code_order
+
+                        // FROM
+                        // db_orders
+                        // Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+                        // Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                        // Left Join branchs ON branchs.id = db_orders.branch_id_fk
+                        // Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+                        // WHERE db_orders.approve_status not in (0,5,1,6,3)
+                        // $startDate
+                        // $endDate
+                        // $action_user
+                        // $business_location_id_fk
+                        // GROUP BY action_user , date_format(db_orders.action_date, '%M')
+                        // ORDER BY action_date ASC
                         $sTable =DB::select("
                         SELECT
                         db_orders.action_user,
                         ck_users_admin.`name` as action_user_name,
-                        ck_users_admin.`first_name` as action_first_name,
-                        ck_users_admin.`last_name` as action_last_name,
                         db_orders.pay_type_id_fk,
                         dataset_pay_type.detail AS pay_type,
-                        date_format(db_orders.action_date, '%M') AS action_date,
+                        date(db_orders.created_at) AS created_at,
                         db_orders.branch_id_fk,
                         branchs.b_name as branchs_name,
                         dataset_business_location.txt_desc as business_location_name,
 
-                        SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS sum_credit_price,
-                        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
-                        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
-                        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
-                        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
-                        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-                        SUM(CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) AS shipping_price,
-                        SUM(CASE WHEN db_orders.product_value is null THEN 0 ELSE db_orders.product_value END) AS product_value,
-                        SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
-                        SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
+                        db_orders.sum_credit_price,
+                        db_orders.transfer_price,
+                        db_orders.fee_amt,
+                        db_orders.aicash_price,
+                        db_orders.cash_pay,
+                        db_orders.gift_voucher_price,
+                        db_orders.shipping_price,
+                        db_orders.product_value,
+                        db_orders.tax,
+                        db_orders.sum_price,
+                        db_orders.true_money_price,
+                        db_orders.prompt_pay_price,
 
-                        SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
-                        SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
+                        customers.first_name as action_first_name,
+                        customers.last_name as action_last_name,
 
                         db_orders.code_order
 
@@ -413,13 +455,13 @@ set_time_limit(9999999);
                         Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
                         Left Join branchs ON branchs.id = db_orders.branch_id_fk
                         Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+                        Left Join customers ON customers.id = db_orders.customers_id_fk
                         WHERE db_orders.approve_status not in (0,5,1,6,3)
                         $startDate
                         $endDate
                         $action_user
                         $business_location_id_fk
-                        GROUP BY action_user , date_format(db_orders.action_date, '%M')
-                        ORDER BY action_date ASC
+                        ORDER BY created_at ASC
                   ");
                       }
 
@@ -442,7 +484,20 @@ set_time_limit(9999999);
               $shipping_vat_total = 0;
               $fee_vat_total = 0;
 
-            foreach($sTable as $order){
+              $arr_date = [];
+
+              $total_date_product_value = 0;
+              $total_date_tax = 0;
+              $total_date_sum_price = 0;
+              $total_date_cash_pay = 0;
+              $total_date_transfer_price = 0;
+              $total_date_sum_credit_price = 0;
+              $total_date_aicash_price = 0;
+
+              $arr_data = [];
+              $arr_data2 = [];
+
+            foreach($sTable as $key => $order){
               if($order->action_user_name == ''){
                 $order->action_user_name = 'V3';
               }
@@ -512,29 +567,60 @@ set_time_limit(9999999);
               $shipping_vat_total += $shipping_vat;
               $fee_vat_total += $fee_vat;
 
-              if($report_type == 'day'){
-                $action_date = date('d/m/Y', strtotime($order->action_date));
-              }else{
-                $action_date = date('m/Y', strtotime($order->action_date));
-              }
+              // if($report_type == 'day'){
+                $created_at = date('d/m/Y', strtotime($order->created_at));
+              // }else{
+              //   $action_date = date('m/Y', strtotime($order->action_date));
+              // }
 
-              if($report_type == 'day'){
+              // if($report_type == 'day'){
                 $code_order = $order->code_order;
-              }else{
-                $code_order = '-';
-              }
+              // }else{
+              //   $code_order = '-';
+              // }
 
 
-              if($report_type == 'day'){
+              // if($report_type == 'day'){
                 $cus_name = $order->action_first_name.' '.$order->action_last_name;
-              }else{
-                $cus_name = '-';
+              // }else{
+              //   $cus_name = '-';
+              // }
+
+              if(!isset($arr_date[$created_at])){
+                if(count($arr_date)==0){
+                  $total_date_product_value += $order->product_value;
+                  $total_date_tax += $order->tax;
+                  $total_date_sum_price += $order->sum_price;
+                  $total_date_cash_pay += $order->cash_pay;
+                  $total_date_transfer_price += $order->transfer_price;
+                  $total_date_sum_credit_price += $order->sum_credit_price;
+                  $total_date_aicash_price += $order->aicash_price;
+                  $arr_data[$code_order] = $code_order;
+                }
               }
 
+              if(count($arr_date) > 0){
+                if(!isset($arr_date[$created_at])){
+                  $p.= '
+                  <tr>
+                  <td style="text-align: center;"></td>
+                  <td style="text-align: left;"></td>
+                  <td style="text-align: right;"></td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_product_value,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_tax,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_cash_pay,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_credit_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
+              </tr>
+                  ';
+                }
+              }
 
               $p.= '
               <tr>
-              <td style="text-align: center;">'.$action_date.'</td>
+              <td style="text-align: center;">'.$created_at.'</td>
               <td style="text-align: left;">'.$code_order.'</td>
               <td style="text-align: left;">'.$cus_name.'</td>
               <td style="text-align: right;">'.number_format($order->product_value,2,".",",").'</td>
@@ -546,6 +632,67 @@ set_time_limit(9999999);
               <td style="text-align: right;">'.number_format($order->aicash_price,2,".",",").'</td>
           </tr>
               ';
+
+              if(count($sTable)==$key+1){
+
+                $total_date_product_value += $order->product_value;
+                $total_date_tax += $order->tax;
+                $total_date_sum_price += $order->sum_price;
+                $total_date_cash_pay += $order->cash_pay;
+                $total_date_transfer_price += $order->transfer_price;
+                $total_date_sum_credit_price += $order->sum_credit_price;
+                $total_date_aicash_price += $order->aicash_price;
+                $arr_data[$code_order] = $code_order;
+                // dd($total_date_product_value);
+                $p.= '
+                <tr>
+                <td style="text-align: center;"></td>
+                <td style="text-align: left;"></td>
+                <td style="text-align: right;"></td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_product_value,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_tax,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_cash_pay,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_credit_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
+            </tr>
+                ';
+                // dd($arr_data);
+              }
+
+              if(!isset($arr_date[$created_at])){
+                $arr_date[$created_at] = $created_at;
+                if(count($arr_date)!=0){
+                  $total_date_product_value = 0;
+                  $total_date_tax = 0;
+                  $total_date_sum_price = 0;
+                  $total_date_cash_pay = 0;
+                  $total_date_transfer_price = 0;
+                  $total_date_sum_credit_price = 0;
+                  $total_date_aicash_price = 0;
+
+                  $total_date_product_value += $order->product_value;
+                  $total_date_tax += $order->tax;
+                  $total_date_sum_price += $order->sum_price;
+                  $total_date_cash_pay += $order->cash_pay;
+                  $total_date_transfer_price += $order->transfer_price;
+                  $total_date_sum_credit_price += $order->sum_credit_price;
+                  $total_date_aicash_price += $order->aicash_price;
+                }
+              }else{
+                $total_date_product_value += $order->product_value;
+                $total_date_tax += $order->tax;
+                $total_date_sum_price += $order->sum_price;
+                $total_date_cash_pay += $order->cash_pay;
+                $total_date_transfer_price += $order->transfer_price;
+                $total_date_sum_credit_price += $order->sum_credit_price;
+                $total_date_aicash_price += $order->aicash_price;
+
+                $arr_data2[$code_order] = $code_order;
+              }
+
+
             }
               echo $p;
               ?>

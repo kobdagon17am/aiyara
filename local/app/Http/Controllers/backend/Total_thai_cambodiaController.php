@@ -171,7 +171,7 @@ class Total_thai_cambodiaController extends Controller
             ck_users_admin.`last_name` as action_last_name,
             db_orders.pay_type_id_fk,
             dataset_pay_type.detail AS pay_type,
-            date(db_orders.action_date) AS action_date,
+            date(db_orders.created_at) AS created_at,
             db_orders.branch_id_fk,
             branchs.b_name as branchs_name,
             dataset_business_location.txt_desc as business_location_name,
@@ -202,7 +202,7 @@ class Total_thai_cambodiaController extends Controller
             $endDate
             $action_user
             $business_location_id_fk
-            ORDER BY action_date ASC
+            ORDER BY created_at ASC
         ");
         }else{
             $sTable =DB::select("
@@ -213,7 +213,7 @@ class Total_thai_cambodiaController extends Controller
             ck_users_admin.`last_name` as action_last_name,
             db_orders.pay_type_id_fk,
             dataset_pay_type.detail AS pay_type,
-            date_format(db_orders.action_date, '%M') AS action_date,
+            date_format(db_orders.created_at, '%M') AS created_at,
             db_orders.branch_id_fk,
             branchs.b_name as branchs_name,
             dataset_business_location.txt_desc as business_location_name,
@@ -246,8 +246,8 @@ class Total_thai_cambodiaController extends Controller
             $endDate
             $action_user
             $business_location_id_fk
-            GROUP BY action_user , date_format(db_orders.action_date, '%M')
-            ORDER BY action_date ASC
+            GROUP BY action_user , date_format(db_orders.created_at, '%M')
+            ORDER BY created_at ASC
         ");
         }
 
@@ -262,12 +262,12 @@ class Total_thai_cambodiaController extends Controller
         ->addColumn('action_date', function ($row) use($report_type) {
 
             if($report_type == 'day'){
-                $action_date = date('d/m/Y', strtotime($row->action_date));
+                $created_at = date('d/m/Y', strtotime($row->created_at));
               }else{
-                $action_date = date('m/Y', strtotime($row->action_date));
+                $created_at = date('m/Y', strtotime($row->created_at));
               }
 
-            return $action_date;
+            return $created_at;
         })
 
         ->addColumn('invoice' , function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk,$report_type) {
@@ -380,7 +380,7 @@ class Total_thai_cambodiaController extends Controller
             ck_users_admin.`last_name` as action_last_name,
             db_orders.pay_type_id_fk,
             dataset_pay_type.detail AS pay_type,
-            date_format(db_orders.action_date, '%M') AS action_date,
+            date_format(db_orders.created_at, '%M') AS created_at,
             db_orders.branch_id_fk,
             branchs.b_name as branchs_name,
             dataset_business_location.txt_desc as business_location_name,
@@ -413,8 +413,8 @@ class Total_thai_cambodiaController extends Controller
             $endDate
             $action_user
             $business_location_id_fk
-            GROUP BY branch_id_fk , date_format(db_orders.action_date, '%M')
-            ORDER BY action_date ASC
+            GROUP BY branch_id_fk , date_format(db_orders.created_at, '%M')
+            ORDER BY created_at ASC
         ");
 
     $sQuery = \DataTables::of($sTable);
@@ -428,12 +428,12 @@ class Total_thai_cambodiaController extends Controller
         ->addColumn('action_date', function ($row) use($report_type) {
 
             if($report_type == 'day'){
-                $action_date = date('d/m/Y', strtotime($row->action_date));
+                $created_at = date('d/m/Y', strtotime($row->created_at));
               }else{
-                $action_date = date('m/Y', strtotime($row->action_date));
+                $created_at = date('m/Y', strtotime($row->created_at));
               }
 
-            return $action_date;
+            return $created_at;
         })
 
         ->addColumn('invoice' , function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk,$report_type) {
@@ -551,7 +551,7 @@ class Total_thai_cambodiaController extends Controller
             ck_users_admin.`last_name` as action_last_name,
             db_add_ai_cash.pay_type_id_fk,
             dataset_pay_type.detail AS pay_type,
-            date(db_add_ai_cash.created_at) AS action_date,
+            date(db_add_ai_cash.created_at) AS created_at,
             db_add_ai_cash.branch_id_fk,
             branchs.b_name as branchs_name,
             dataset_business_location.txt_desc as business_location_name,
@@ -575,7 +575,7 @@ class Total_thai_cambodiaController extends Controller
             $endDate
             $action_user
             $business_location_id_fk
-            ORDER BY action_date ASC
+            ORDER BY created_at ASC
         ");
 
 
@@ -588,7 +588,7 @@ class Total_thai_cambodiaController extends Controller
             ck_users_admin.`last_name` as action_last_name,
             db_add_ai_cash.pay_type_id_fk,
             dataset_pay_type.detail AS pay_type,
-            date_format(db_add_ai_cash.created_at, '%M') AS action_date,
+            date_format(db_add_ai_cash.created_at, '%M') AS created_at,
             db_add_ai_cash.branch_id_fk,
             branchs.b_name as branchs_name,
             dataset_business_location.txt_desc as business_location_name,
@@ -613,7 +613,7 @@ class Total_thai_cambodiaController extends Controller
             $action_user
             $business_location_id_fk
             GROUP BY action_user , date_format(db_add_ai_cash.created_at, '%M')
-            ORDER BY action_date ASC
+            ORDER BY created_at ASC
         ");
 
         }
@@ -629,12 +629,12 @@ class Total_thai_cambodiaController extends Controller
         ->addColumn('action_date', function ($row) use($report_type) {
 
             if($report_type == 'day'){
-                $action_date = date('d/m/Y', strtotime($row->action_date));
+                $created_at = date('d/m/Y', strtotime($row->created_at));
               }else{
-                $action_date = date('m/Y', strtotime($row->action_date));
+                $created_at = date('m/Y', strtotime($row->created_at));
               }
 
-            return $action_date;
+            return $created_at;
         })
 
         ->addColumn('invoice' , function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk,$report_type) {
