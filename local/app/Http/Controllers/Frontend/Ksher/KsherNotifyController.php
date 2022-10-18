@@ -101,8 +101,8 @@ class KsherNotifyController extends Controller
       if($getKsherData->channel == 'ktbcard'){
         $pay_type_id_fk = 2;
         $payInfo = [
-            'prompt_pay_price' =>  $pay_type_id_fk,
-            'true_money_price' => $this->formatPrice($getKsherData->total_fee),
+            'pay_type_id_fk' =>  $pay_type_id_fk,
+            'credit_price' => $this->formatPrice($getKsherData->total_fee),
         ];
     }
 
