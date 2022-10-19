@@ -465,6 +465,50 @@ set_time_limit(9999999);
                   ");
                       }
 
+                //       dd("
+                //       SELECT
+                //       db_orders.action_user,
+                //       ck_users_admin.`name` as action_user_name,
+                //       db_orders.pay_type_id_fk,
+                //       dataset_pay_type.detail AS pay_type,
+                //       date(db_orders.created_at) AS created_at,
+                //       db_orders.branch_id_fk,
+                //       branchs.b_name as branchs_name,
+                //       dataset_business_location.txt_desc as business_location_name,
+
+                //       db_orders.sum_credit_price,
+                //       db_orders.transfer_price,
+                //       db_orders.fee_amt,
+                //       db_orders.aicash_price,
+                //       db_orders.cash_pay,
+                //       db_orders.gift_voucher_price,
+                //       db_orders.shipping_price,
+                //       db_orders.product_value,
+                //       db_orders.tax,
+                //       db_orders.sum_price,
+                //       db_orders.true_money_price,
+                //       db_orders.prompt_pay_price,
+
+                //       customers.first_name as action_first_name,
+                //       customers.last_name as action_last_name,
+
+                //       db_orders.code_order
+
+                //       FROM
+                //       db_orders
+                //       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+                //       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                //       Left Join branchs ON branchs.id = db_orders.branch_id_fk
+                //       Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+                //       Left Join customers ON customers.id = db_orders.customers_id_fk
+                //       WHERE db_orders.approve_status not in (0,5,1,6,3)
+                //       $startDate
+                //       $endDate
+                //       $action_user
+                //       $business_location_id_fk
+                //       ORDER BY created_at ASC
+                // ");
+
 
               $p = "";
               $product_value_total = 0;
@@ -548,6 +592,12 @@ set_time_limit(9999999);
                 $order->fee_amt = $order->fee_amt - $fee_vat;
                 $order->tax = $order->tax + $fee_vat;
               }
+
+              // วุฒิปรับ tax คำนวณใหม่
+              if($order->sum_price>0){
+                $order->tax = $order->sum_price * (7.00 / (100+ 7.00) );
+                $order->product_value = $order->sum_price - $order->tax;
+              } //
 
               $gift_voucher_price_total += $order->gift_voucher_price;
               $product_value_total += $order->product_value;

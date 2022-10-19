@@ -228,7 +228,7 @@
                                     <label for="">{{ __('message.receipt_no') }} : </label>
                                 </div>
                                 <div class="divTableCell" style="width: 15%">
-                                    @if (@$r_invoice_code)
+                                    {{-- @if (@$r_invoice_code)
                                         <select id="invoice_code" name="invoice_code"
                                             class="form-control order_id_select2" multiple="multiple">
                                             <option value="">Select</option>
@@ -242,7 +242,16 @@
                                         <select class="form-control select2-templating ">
                                             <option value="">Select</option>
                                         </select>
-                                    @endif
+                                    @endif --}}
+                                    <select id="invoice_code" name="invoice_code" class="form-control order_id_select2"
+                                        multiple="multiple">
+                                        <option value="">Select</option>
+                                        {{-- @foreach (@$r_invoice_code as $r)
+                                        <option value="{{ $r->code_order }}">
+                                            {{ $r->code_order }}
+                                        </option>
+                                    @endforeach --}}
+                                    </select>
                                 </div>
                                 <div class="divTableCell">
                                     <button type="button" class="btn btn-primary btnSearchSub " data-attr="invoice_code"
@@ -254,15 +263,15 @@
 
                             <div class="divTableRow">
                                 <!--
-                          <div class="divTH">
-                        <label for="" >เลขที่ใบสั่งซื้อ : </label>
-                      </div>
-                      <div class="divTableCell" style="width: 15%">
-                        <input class="form-control"  />
-                      </div>
-                      <div class="divTableCell">
-                        <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-                      </div> -->
+                              <div class="divTH">
+                            <label for="" >เลขที่ใบสั่งซื้อ : </label>
+                          </div>
+                          <div class="divTableCell" style="width: 15%">
+                            <input class="form-control"  />
+                          </div>
+                          <div class="divTableCell">
+                            <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                          </div> -->
 
                                 <div class="divTH">
                                     <label for="">{{ __('message.creator') }} : </label>
@@ -336,11 +345,11 @@
                                 </div>
                                 <div class="divTableCell" style="width: 15%">
                                     <!--  	   <select name="" class="form-control select2-templating "  >
-                          <option value="">Select</option>
-                              <option value="0"> - </option>
-                              <option value="1"> In Process </option>
-                              <option value="1"> Success </option>
-                        </select> -->
+                              <option value="">Select</option>
+                                  <option value="0"> - </option>
+                                  <option value="1"> In Process </option>
+                                  <option value="1"> Success </option>
+                            </select> -->
                                 </div>
                                 <div class="divTableCell">
                                     <!-- <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button> -->
@@ -369,16 +378,16 @@
                         </div>
                     </div>
                     <!--       </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
 
 
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body"> -->
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body"> -->
                     <hr>
                     <div class="divTable">
                         <div class="divTableBody">
@@ -519,7 +528,33 @@
                 $('.ttt').hide();
 
             });
+        });
 
+        $(document).ready(function(){
+          // $('.order_id_select2').select2();
+          $(".order_id_select2").select2({
+                minimumInputLength: 3,
+                allowClear: true,
+                placeholder: 'Select',
+                ajax: {
+                    url: " {{ url('backend/ajaxGetOrder') }} ",
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 250,
+                    cache: false,
+                    data: function(params) {
+                        return {
+                            term: params.term || '', // search term
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
         });
     </script>
 
@@ -1095,8 +1130,6 @@
                 $('.btnSearchTotal').trigger('click');
             });
 
-            $('.order_id_select2').select2();
-
         });
     </script>
 
@@ -1429,8 +1462,7 @@
 
                                                     if (aData[
                                                             'status_delivery_packing'
-                                                            ] == 1
-                                                    ) {
+                                                        ] == 1) {
                                                         $('td:last-child', nRow).html(
                                                                 str_U + str_V3)
                                                             .addClass('input');

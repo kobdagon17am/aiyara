@@ -27,17 +27,17 @@ class Member_regisController extends Controller
 
        // dd($regis_doc_status);
 
-        $customer = DB::select(" SELECT
-              customers.user_name AS cus_code,
-              customers.prefix_name,
-              customers.first_name,
-              customers.last_name,
-              register_files.customer_id
-              FROM
-              register_files
-              left Join customers ON register_files.customer_id = customers.id
-              GROUP BY register_files.customer_id
-              ");
+        // $customer = DB::select(" SELECT
+        //       customers.user_name AS cus_code,
+        //       customers.prefix_name,
+        //       customers.first_name,
+        //       customers.last_name,
+        //       register_files.customer_id
+        //       FROM
+        //       register_files
+        //       left Join customers ON register_files.customer_id = customers.id
+        //       GROUP BY register_files.customer_id
+        //       ");
 
       // $sPay_product_status = \App\Models\Backend\Pay_product_status::get();
       $sInvoice_code = DB::select(" SELECT
@@ -53,7 +53,7 @@ class Member_regisController extends Controller
            'sBusiness_location'=>$sBusiness_location,'sBranchs'=>$sBranchs,'Supplier'=>$Supplier,
            'sApprover'=>$sApprover,
            'po_number'=>$po_number,
-           'customer'=>$customer,
+          //  'customer'=>$customer,
            'filetype'=>$filetype,
            'regis_doc_status'=>$regis_doc_status,
 
@@ -889,7 +889,8 @@ class Member_regisController extends Controller
           if(!empty($req->startDate) && !empty($req->endDate)){
              $w01 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
           }else{
-             $w01 = "";
+            //  $w01 = "";
+            $w01 = " and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'  " ;
           }
 
 

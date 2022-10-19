@@ -105,11 +105,10 @@ class DeliveryController extends Controller
          // สิ้นสุดการนำเข้าแบบ manual
   */
 
-
-
       // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
       // $receipt = \App\Models\Backend\Delivery::where('approver','NULL')->get();
         $receipt = DB::select(" select receipt from `db_delivery` where approver is null ; ");
+
         // dd($sDelivery);
         $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
 
@@ -392,7 +391,7 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
-
+dd($request->all());
         if(isset($request->update_delivery_custom)){
 
             $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)." ");

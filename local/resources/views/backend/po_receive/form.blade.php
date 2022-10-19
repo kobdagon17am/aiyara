@@ -243,6 +243,23 @@
               </table>
             </div>
           </div>
+
+          <form id="frm-main" action="{{url('backend/po_receive_update_note3')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <input name="id" type="hidden" value="{{@$sRow->id}}">
+            {{ csrf_field() }}
+          <div class="row" >
+            <div class="col-md-6 " >
+               <div class="form-group row">
+                    <label for="zone_id_fk_c" class="col-md-3 col-form-label"> หมายเหตุ : </label>
+                    <div class="col-md-7">
+                     <input type="text" class="form-control" name="note3" value="{{@$sRow->note3}}">
+                     <button type="submit" class="btn btn-sm btn-primary">บันทึก</button>
+                    </div>
+                  </div>
+            </div>
+          </div>
+          </form>
+
         </div>
 
         <div class="form-group mb-0 row">
@@ -492,6 +509,17 @@
                     </div>
                   </div>
 
+                  <div class="row" >
+                    <div class="col-md-6 " >
+                       <div class="form-group row">
+                            <label for="zone_id_fk_c" class="col-md-3 col-form-label"> หมายเหตุ : </label>
+                            <div class="col-md-7">
+                             <input type="text" class="form-control" name="remark" value="">
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+
 
               </div>
             </div>
@@ -666,6 +694,7 @@
                         {data: 'product_unit_desc', title :'หน่วยนับ', className: 'text-center'},
                         {data: 'warehouses', title :'สินค้าอยู่ที่', className: 'text-center'},
                         {data: 'lot_detail', title :'Lot', className: 'text-center'},
+                        {data: 'remark', title :'หมายเหตุ', className: 'text-center'},
                         {data: 'id', title :'<center>Tools', className: 'text-center w80'},
                     ],
                     rowCallback: function(nRow, aData, dataIndex){

@@ -94,9 +94,13 @@
                                     </div>
 
                                     <div class="col-md-4 d-flex  ">
-                                        <input id="startDate" autocomplete="off" value="{{ date('1/m/Y') }}"
+                                        {{-- <input id="startDate" autocomplete="off" value="{{ date('1/m/Y') }}"
                                             placeholder="วันเริ่ม" />
                                         <input id="endDate" autocomplete="off" value="{{ date('t/m/Y') }}"
+                                            placeholder="วันสิ้นสุด" /> --}}
+                                            <input id="startDate" autocomplete="off" value="{{ date('d/m/Y') }}"
+                                            placeholder="วันเริ่ม" />
+                                        <input id="endDate" autocomplete="off" value="{{ date('d/m/Y') }}"
                                             placeholder="วันสิ้นสุด" />
                                     </div>
                                     <div class="col-md-2">
@@ -176,7 +180,7 @@
                                 </table>
                             </div>
                             <br>
-                            <div class="row mt-2 mb-0">
+                            {{-- <div class="row mt-2 mb-0">
                                 <div class="col-12">
                                     <div class="page-title-box d-flex align-items-center justify-content-between"
                                         style="padding-bottom: 0px;">
@@ -230,7 +234,7 @@
                                     </tr>
                                 </tfoot>
                             </table>
-                            <br>
+                            <br> --}}
 
                         </div>
 
@@ -251,7 +255,7 @@
                                 </table>
                             </div>
                             <br>
-                            <div class="row mt-2 mb-0">
+                            {{-- <div class="row mt-2 mb-0">
                                 <div class="col-12">
                                     <div class="page-title-box d-flex align-items-center justify-content-between"
                                         style="padding-bottom: 0px;">
@@ -262,7 +266,7 @@
 
                             <table id="data-table-thai_aicash" class="table table-bordered  mt-0" style="width: 100%;">
                             </table>
-                            <br>
+                            <br> --}}
 
                             {{--  --}}
                         </div>
@@ -275,6 +279,8 @@
             </div>
         </div>
     </div>
+
+    <div class="myloading"></div>
 
 
     <form id="action_form" action="{{ url('backend/total_thai_cambodia_pdf') }}" method="POST" target="_blank"
@@ -304,7 +310,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success" id="print_submit">Print</button>
+                        <button type="submit" class="btn btn-success" id="print_submit">Print PDF</button>
+                        <button type="button" class="btn btn-success btnExportElsx" id="print_submit">Print Excel</button>
                     </div>
                 </div>
 
@@ -331,6 +338,49 @@
             document.getElementById(cityName).className += " show active";
             evt.currentTarget.className += " active";
         }
+    </script>
+
+    <script>
+        // ปุ่ม export excel ก่อนเอาไปใส่ kerry
+        $(document).on('click', '.btnExportElsx', function(event) {
+            /* Act on the event */
+            $(".myloading").show();
+            var modal_business_location = $('#modal_business_location').val();
+            var modal_status_search = $('#modal_status_search').val();
+            var modal_startDate = $('#modal_startDate').val();
+            var modal_endDate = $('#modal_endDate').val();
+            var modal_action_user = $('#modal_action_user').val();
+            var report_type = $('#report_type').val();
+            $.ajax({
+
+                type: 'POST',
+                url: " {{ url('backend/total_thai_cambodia_excel') }} ",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    business_location: modal_business_location,
+                    status_search: modal_status_search,
+                    startDate: modal_startDate,
+                    endDate: modal_endDate,
+                    action_user: modal_action_user,
+                    report_type: report_type
+                },
+                success: function(data) {
+                    console.log(data);
+                    // location.reload();
+                    setTimeout(function() {
+                        var url = 'local/public/excel_files/report.xlsx';
+                        window.open(url, 'Download');
+                        $(".myloading").hide();
+                    }, 3000);
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR));
+                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                    $(".myloading").hide();
+                }
+            });
+        });
     </script>
 
     <script>

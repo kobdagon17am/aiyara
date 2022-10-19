@@ -25,11 +25,10 @@ class Po_approveController extends Controller
 
 
         if(@\Auth::user()->permission==1){
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order desc limit 500 ");
+            // $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 order by code_order desc limit 10 ");
         }else{
-            // $code_order = DB::select(" select code_order from db_orders where action_user=".\Auth::user()->id." order by code_order,created_at desc limit 500 ");
-            // $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 and branch_id_fk=".\Auth::user()->branch_id_fk." OR pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 and action_user=".\Auth::user()->id." order by code_order,created_at desc limit 500 ");
-            $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 AND branch_id_fk=".\Auth::user()->branch_id_fk." order by code_order desc limit 500 ");
+
+            // $code_order = DB::select(" select code_order from db_orders where pay_type_id_fk in (1,8,10,11,12) and  LENGTH(code_order)>3 AND branch_id_fk=".\Auth::user()->branch_id_fk." order by code_order desc limit 10 ");
         }
 // dd($code_order);
         $sApprover = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." AND id in (select transfer_amount_approver from db_orders) ");
@@ -39,7 +38,7 @@ class Po_approveController extends Controller
            'sBusiness_location'=>$sBusiness_location,
            'sBranchs'=>$sBranchs,
            'sApprover'=>$sApprover,
-           'code_order'=>$code_order,
+          //  'code_order'=>$code_order,
         ) );
 
     }

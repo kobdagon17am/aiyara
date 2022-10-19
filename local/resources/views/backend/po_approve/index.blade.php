@@ -168,13 +168,13 @@
                             <div class="form-group row">
                                 <label for="" class="col-md-3 col-form-label"> เลขที่เอกสาร : </label>
                                 <div class="col-md-9">
-                                    <select id="doc_id" name="doc_id" class="form-control select2-templating ">
+                                    <select id="doc_id" name="doc_id" class="form-control order_id_select2">
                                         <option value="">-Select-</option>
-                                        @if (@$code_order)
+                                        {{-- @if (@$code_order)
                                             @foreach (@$code_order as $r)
                                                 <option value="{{ @$r->code_order }}">{{ $r->code_order }}</option>
                                             @endforeach
-                                        @endif
+                                        @endif --}}
                                     </select>
                                 </div>
                             </div>
@@ -241,9 +241,9 @@
                                     $last_day = date('Y-m-d');
                                     ?>
                                     <!-- <=
-                                                             $first_day
-                                                             $last_day
-                                                             ?> -->
+                                                                 $first_day
+                                                                 $last_day
+                                                                 ?> -->
                                     <input id="bill_sdate" autocomplete="off" placeholder="Begin Date"
                                         style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black"
                                         value="" />
@@ -283,8 +283,8 @@
 
                                     <!-- บิลเติม Ai-cash -->
                                     <!--     <a class="btn btn-info btn-sm btnSearch02 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
-                                                            <i class="bx bx-search align-middle "></i> SEARCH
-                                                          </a> -->
+                                                                <i class="bx bx-search align-middle "></i> SEARCH
+                                                              </a> -->
 
 
                                 </div>
@@ -359,6 +359,31 @@
                                 }
                             }
                         });
+
+                        $(".order_id_select2").select2({
+                            minimumInputLength: 3,
+                            allowClear: true,
+                            placeholder: 'Select',
+                            ajax: {
+                                url: " {{ url('backend/ajaxGetOrder') }} ",
+                                type: 'POST',
+                                dataType: 'json',
+                                delay: 250,
+                                cache: false,
+                                data: function(params) {
+                                    return {
+                                        term: params.term || '', // search term
+                                        page: params.page || 1
+                                    };
+                                },
+                                processResults: function(data, params) {
+                                    return {
+                                        results: data
+                                    };
+                                }
+                            }
+                        });
+
                     });
 
                     var oTable;
@@ -1010,7 +1035,7 @@
                                             console.log("aData['pay_with_other_bill'] == 1");
                                             $('td:last-child', nRow).html('' +
                                                 '<label style="color:red">ชำระพร้อมบิลอื่น</label>'
-                                                ).addClass(
+                                            ).addClass(
                                                 'input');
                                         }
 
@@ -1018,13 +1043,13 @@
                                             console.log("aData['price'] <= 0");
                                             $('td:last-child', nRow).html(
                                                 '<label style="color:red">บิลไม่ระบุยอดโอน</label>'
-                                                );
+                                            );
                                         }
 
                                         if (aData['number_bill_curr'] < aData['number_bill']) {
                                             console.log(
                                                 "aData['number_bill_curr'] < aData['number_bill']"
-                                                );
+                                            );
                                             $('td:last-child', nRow).html(
                                                 '<label style="color:red">บิลยังไม่ครบ</label>');
                                         }
@@ -1196,7 +1221,7 @@
                                             // $('td:last-child', nRow).html('-ยกเลิก-');
                                             $('td:last-child', nRow).html(
                                                 '<label style="color:red">บิลถูกจ่ายสินค้าแล้ว</label>'
-                                                );
+                                            );
 
                                         } else {
 
@@ -1227,7 +1252,7 @@
                                             if (sU != '1' && sD != '1') {
                                                 $('td:last-child', nRow).html(
                                                     '<label style="color:red">ไม่มีสิทธิ์อนุมัติ</label>'
-                                                    );
+                                                );
                                             } else {
                                                 $('td:last-child', nRow).html(str_U).addClass(
                                                     'input');
@@ -1412,7 +1437,7 @@
                                             // $('td:last-child', nRow).html('-ยกเลิก-');
                                             $('td:last-child', nRow).html(
                                                 '<label style="color:red">บิลถูกจ่ายสินค้าแล้ว</label>'
-                                                );
+                                            );
 
                                         } else {
 
@@ -1505,9 +1530,9 @@
 
 
                 <!-- <audio autoplay>
-                                      <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
-                                    </audio>
-                                     -->
+                                          <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
+                                        </audio>
+                                         -->
 
                 <script type="text/javascript">
                     $(document).ready(function() {
