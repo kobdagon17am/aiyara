@@ -33,6 +33,16 @@ class PaymentSentAddressOrder extends Model
       $insert_db_orders->created_at = date('Y-m-d H:i:s');
       $insert_db_orders->updated_at = date('Y-m-d H:i:s');
 
+      $data_customer = DB::table('customers')
+      ->select('user_name','first_name','last_name','business_name')
+      ->where('id','=',$customer_id)
+      ->first();
+
+      $insert_db_orders->user_name = $data_customer->user_name;
+      $insert_db_orders->name_customer = $data_customer->first_name.' '.$data_customer->last_name;
+      $insert_db_orders->name_customer_business = $data_customer->business_name;
+
+
       if ($rs->aistockist_id_fk) {
         $insert_db_orders->aistockist = $rs->aistockist_id_fk;
       }
