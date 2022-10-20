@@ -113,22 +113,22 @@ if(@$sRow->business_location_id_fk == 1){
   $curr = 'ดอลล่าร์';
 }
 
-$cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
-$cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
-$cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
+// $cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
+// $cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
+// $cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
 
 // promotions_products
-$promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$arr_promotion_id_fk = [];
-foreach ($promotion_id_fk as $key => $value) {
-  array_push($arr_promotion_id_fk, $value->promotion_id_fk);
-}
+// $promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $arr_promotion_id_fk = [];
+// foreach ($promotion_id_fk as $key => $value) {
+//   array_push($arr_promotion_id_fk, $value->promotion_id_fk);
+// }
 
-$arr_promotion_id = implode(',', $arr_promotion_id_fk);
+// $arr_promotion_id = implode(',', $arr_promotion_id_fk);
 // echo $arr_promotion_id;
-$arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
-$cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
+// $arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
+// $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
 
 // $cnt_all = $cnt01[0]->cnt + $cnt02[0]->cnt + $cnt03[0]->cnt + $cnt04[0]->cnt + $cnt05[0]->cnt ;
 // $amt_page = ceil($cnt_all/10);
@@ -152,9 +152,9 @@ DB::select("
 ");
 
 
-$sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstoreData = DB::select(" select * from db_order_products_list ");
+// $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
@@ -372,7 +372,7 @@ if(!empty($gift_voucher)){
 }
 
 
-$ThisCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
+$ThisCustomer = DB::select(" select user_name from customers where id=".$sRow->customers_id_fk." ");
 // ของแถม
 $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$sRow->pv_total);
 // dd(@$check_giveaway);

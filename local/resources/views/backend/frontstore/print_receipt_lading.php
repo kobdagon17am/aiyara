@@ -187,15 +187,15 @@ $limit = 10;
 $sRow = \App\Models\Backend\Frontstore::find($id);
 
 // promotions_products
-$promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$arr_promotion_id_fk = [];
-foreach ($promotion_id_fk as $key => $value) {
-  array_push($arr_promotion_id_fk, $value->promotion_id_fk);
-}
+// $promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $arr_promotion_id_fk = [];
+// foreach ($promotion_id_fk as $key => $value) {
+//   array_push($arr_promotion_id_fk, $value->promotion_id_fk);
+// }
 
-$arr_promotion_id = implode(',', $arr_promotion_id_fk);
-// echo $arr_promotion_id;
-$arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
+// $arr_promotion_id = implode(',', $arr_promotion_id_fk);
+// // echo $arr_promotion_id;
+// $arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
 
 // Product List All
 $TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.\Auth::user()->id;
@@ -406,7 +406,7 @@ if(!empty($gift_voucher)){
 }
 
 
-$ThisCustomer = DB::select(" select * from customers where id=".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
+$ThisCustomer = DB::select(" select user_name from customers where id=".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
 // ของแถม
 $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(@$sRow->purchase_type_id_fk?@$sRow->purchase_type_id_fk:0,@$ThisCustomer[0]->user_name,@$sRow->pv_total);
 // dd(@$check_giveaway);

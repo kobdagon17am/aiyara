@@ -102,7 +102,7 @@
 
 
 if(substr($data[0],0,1)=="O"){
-    $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' ");
+    $d1 = DB::select(" SELECT id FROM `db_orders` WHERE `code_order`='".$data[0]."' ");
     $arr_orders_id = [];
     foreach ($d1 as $key => $v) {
         array_push($arr_orders_id,$v->id);
@@ -137,23 +137,21 @@ $limit = 10;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
 
-
-$cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
-$cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
-$cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
+// $cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
+// $cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
+// $cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
 
 // promotions_products
-$promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$arr_promotion_id_fk = [];
-foreach ($promotion_id_fk as $key => $value) {
-  array_push($arr_promotion_id_fk, $value->promotion_id_fk);
-}
-
-$arr_promotion_id = implode(',', $arr_promotion_id_fk);
+// $promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $arr_promotion_id_fk = [];
+// foreach ($promotion_id_fk as $key => $value) {
+//   array_push($arr_promotion_id_fk, $value->promotion_id_fk);
+// }
+// $arr_promotion_id = implode(',', $arr_promotion_id_fk);
 // echo $arr_promotion_id;
-$arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
-$cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
+// $arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
+// $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
 // echo $cnt01[0]->cnt;
 // echo $cnt02[0]->cnt;
 // echo $cnt03[0]->cnt;
@@ -183,8 +181,8 @@ DB::select("
 
 
 $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstoreData = DB::select(" select * from db_order_products_list ");
+// $sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
@@ -515,7 +513,7 @@ if(!empty($gift_voucher)){
 }
 
 
-$ThisCustomer = DB::select(" select * from customers where id=".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
+$ThisCustomer = DB::select(" select user_name from customers where id=".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
 // ของแถม
 $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(@$sRow->purchase_type_id_fk?@$sRow->purchase_type_id_fk:0,@$ThisCustomer[0]->user_name,@$sRow->pv_total);
 // dd(@$check_giveaway);
