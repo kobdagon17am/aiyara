@@ -11,11 +11,11 @@ class RunPvController extends Controller
 
     public static function Runpv($username, $pv, $type, $order_code = null)
     {
-    //   $resule = [
-    //     'status' => 'success',
-    //     'message' => 'success',
-    // ];
-    // return $resule;
+      $resule = [
+        'status' => 'success',
+        'message' => 'success',
+    ];
+    return $resule;
 
         // RunPv ทำคุณสมบัติ
 
