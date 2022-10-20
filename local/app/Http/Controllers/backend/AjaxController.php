@@ -1667,50 +1667,11 @@ class AjaxController extends Controller
 
    public function ajaxShippingCalculate(Request $request)
     {
-        // return $request;
-        // dd($request->delivery_location);
         $sum_price = str_replace(',','',$request->sum_price);
         $frontstore_id = $request->frontstore_id;
         $delivery_location = $request->delivery_location;
-        $frontstore = DB::select(" SELECT * FROM db_orders WHERE id=$frontstore_id ");
+        $frontstore = DB::select(" SELECT check_press_save,business_location_id_fk,shipping_price FROM db_orders WHERE id=$frontstore_id ");
         $shipping_special = 0;
-
-
-
-        // if($delivery_location == 0){//รับสินค้าด้วยตัวเอง
-        //   $delivery_location_frontend = 'sent_office';
-        // }elseif($delivery_location == 1){//ที่อยู่ตามบัตร ปชช.
-        //   $delivery_location_frontend = 'sent_address_card';
-
-        // }elseif($delivery_location == 2){//ที่อยู่จัดส่งไปรษณีย์
-        //   $delivery_location_frontend = 'sent_address';
-
-        // }elseif($delivery_location == 3){//ที่อยู่กำหนดเอง
-        //   $delivery_location_frontend = 'sent_address_other';
-
-        // }elseif($delivery_location == 4){//จัดส่งพร้อมบิลอื่น
-        //   $delivery_location_frontend = 'sent_another_bill';
-
-        // }elseif($delivery_location == 5){//ส่งแบบพิเศษ/พรีเมี่ยม
-        //   $delivery_location_frontend = 'shipping_special';
-        //   $shipping_special = 1;
-        // }else{
-        //   $delivery_location_frontend = '';
-        //   $shipping_special = 0;
-        // }
-
-        // $update_orders = DB::table('db_orders')
-        // ->where('id',$frontstore_id)
-        // ->update(['delivery_location_frontend' => $delivery_location_frontend,
-        //     'shipping_special' => $shipping_special]); delivery_location
-
-
-
-        // return $sum_price;
-        // return $frontstore_id;
-        // return $delivery_location;
-        // return $frontstore;
-        // return $frontstore[0]->check_press_save;
 
         if($frontstore[0]->check_press_save==2){
 
@@ -1726,41 +1687,24 @@ class AjaxController extends Controller
             $province_id = 0 ;
         }
 
-        // กรณีค่าส่งฟรีชำระรวม
-        // if($frontstore_id=='1576'){
-        //   DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
-        //   return 0 ;
-        // }
-
         if(!empty($request->shipping_special)){
-
-            // return $province_id;
-            // dd();
 
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=4 ");
             DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price='".$shipping[0]->shipping_cost."', shipping_free=0 ,shipping_special=1,transfer_price=(transfer_price+".$shipping[0]->shipping_cost.") WHERE id=$frontstore_id ");
-
-
         }else{
-
             // shipping_price delivery_location
             DB::select(" UPDATE db_orders SET shipping_special=0  WHERE id=$frontstore_id ");
-
             // กรณีส่งฟรี
             $shipping = DB::select(" SELECT * FROM dataset_shipping_cost WHERE business_location_id_fk='".$frontstore[0]->business_location_id_fk."' AND shipping_type_id=1 ");
 
             if($sum_price>=$shipping[0]->purchase_amt){
-// dd('ok');
                 DB::select(" UPDATE db_orders SET delivery_location=$delivery_location , delivery_province_id=$province_id , shipping_price=0, shipping_free=1 WHERE id=$frontstore_id ");
             }else{
 
                 DB::select(" UPDATE db_orders SET shipping_price=0,shipping_free=0  WHERE id=$frontstore_id ");
-                // dd('dda');
                  if($delivery_location==0 || $delivery_location==4){ //รับสินค้าด้วยตัวเอง / จัดส่งพร้อมบิลอื่น
-                    // dd($delivery_location);
 
                 }else{
-// dd('k');
                         $branchs = DB::select("SELECT * FROM branchs WHERE id=".$request->branch_id_fk." ");
 
                         if($province_id==$branchs[0]->province_id_fk){
@@ -1786,14 +1730,11 @@ class AjaxController extends Controller
                             }
 
                         }
-                        // dd($shipping_cost[0]->shipping_cost);
-
                 }
 
             }
 
         }
-
          // if(กรณีเงินโอน ได้แก่ 1,8,10,11,12)
 
         if(@$request->pay_type_id_fk){

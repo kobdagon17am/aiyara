@@ -464,8 +464,8 @@ class FrontstoreController extends Controller
     if ($sRow->approve_status == 9 ) {
       $ch_Disabled = 1;
     }
-
-    $sCustomer = DB::select(" select * from customers where id=" . $sRow->customers_id_fk . " ");
+    $sCustomer = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=" . $sRow->customers_id_fk . " ");
+    // $sCustomer = DB::select(" select * from customers where id=" . $sRow->customers_id_fk . " ");
     @$CusName = (@$sCustomer[0]->user_name . " : " . @$sCustomer[0]->prefix_name . $sCustomer[0]->first_name . " " . @$sCustomer[0]->last_name);
     @$user_name = @$sCustomer[0]->user_name;
 
@@ -474,21 +474,21 @@ class FrontstoreController extends Controller
     }
 
     if (@$sRow->aistockist) {
-      $sCusAistockist = DB::select(" select * from customers where id=" . $sRow->aistockist . " ");
+      $sCusAistockist = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=" . $sRow->aistockist . " ");
       @$CusAistockistName = @$sCusAistockist[0]->user_name . " : " . @$sCusAistockist[0]->prefix_name . $sCusAistockist[0]->first_name . " " . @$sCusAistockist[0]->last_name;
     } else {
       @$CusAistockistName = '';
     }
 
     if (@$sRow->agency) {
-      $sCusAgency = DB::select(" select * from customers where id=" . $sRow->agency . " ");
+      $sCusAgency = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=" . $sRow->agency . " ");
       @$CusAgencyName = @$sCusAgency[0]->user_name . " : " . @$sCusAgency[0]->prefix_name . $sCusAgency[0]->first_name . " " . @$sCusAgency[0]->last_name;
     } else {
       @$CusAgencyName = '';
     }
 
     if (!empty($sRow->member_id_aicash)) {
-      $sAicash = DB::select(" select * from customers where id=" . $sRow->member_id_aicash . " ");
+      $sAicash = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=" . $sRow->member_id_aicash . " ");
       $Cus_Aicash = @$sAicash[0]->ai_cash;
       $Customer_id_Aicash = @$sRow->member_id_aicash;
       $Customer_name_Aicash = (@$sAicash[0]->user_name . " : " . @$sAicash[0]->prefix_name . $sAicash[0]->first_name . " " . @$sAicash[0]->last_name);
@@ -619,7 +619,7 @@ class FrontstoreController extends Controller
     $sBranchs = DB::select(" select * from branchs where business_location_id_fk = ".$sBranchs[0]->business_location_id_fk."  ");
     // dd($sBranchs);
 
-    $ThisCustomer = DB::select(" select * from customers where id=" . $sRow->customers_id_fk . " ");
+    $ThisCustomer = DB::select(" select user_name from customers where id=" . $sRow->customers_id_fk . " ");
     // dd($ThisCustomer[0]->user_name);
     $aistockist = DB::select(" select * from customers_aistockist_agency where aistockist=1 AND user_name <> '" . $ThisCustomer[0]->user_name . "' ");
     $agency = DB::select(" select * from customers_aistockist_agency where agency=1 AND user_name <> '" . $ThisCustomer[0]->user_name . "' ");
@@ -719,7 +719,7 @@ class FrontstoreController extends Controller
       }
     }
 
-    $PaymentSlip = DB::select(" select * from payment_slip where code_order='" . $sRow->code_order . "' ");
+    $PaymentSlip = DB::select(" select id,note2, status,transfer_bill_date,order_channel,url,file from payment_slip where code_order='" . $sRow->code_order . "' ");
 
     $cnt_slip = count($PaymentSlip);
 
