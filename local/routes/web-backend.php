@@ -287,6 +287,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetLotnumber2', 'AjaxController@ajaxGetLotnumber2');
     Route::post('ajaxGetLotnumber3', 'AjaxController@ajaxGetLotnumber3');
 
+    Route::post('ajaxGetOrder', 'AjaxController@ajaxGetOrder');
     Route::post('ajaxGetCustomer', 'AjaxController@ajaxGetCustomer');
     Route::post('ajaxGetCustomerDelivery', 'AjaxController@ajaxGetCustomerDelivery');
     Route::post('ajaxGetCustomerCode', 'AjaxController@ajaxGetCustomerCode');
@@ -730,6 +731,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('total_thai_cambodia/datatable_total_cambodia', 'Total_thai_cambodiaController@DatatableTotalCambodia')->name('total_thai_cambodia.datatable_total_cambodia');
 
     Route::post('total_thai_cambodia_pdf', 'AjaxController@total_thai_cambodia_pdf');
+    Route::post('total_thai_cambodia_excel', 'AjaxController@total_thai_cambodia_excel');
     Route::post('total_thai_cambodia_ai_pdf', 'AjaxController@total_thai_cambodia_ai_pdf');
 
     Route::resource('cambodia_account', 'Cambodia_accountController');
@@ -760,6 +762,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // Start ใบ PO รับสินค้า
     Route::resource('po_receive', 'Po_receiveController');
     Route::post('po_receive/datatable', 'Po_receiveController@Datatable')->name('po_receive.datatable');
+    Route::post('po_receive_update_note3', 'Po_receiveController@po_receive_update_note3');
 
     Route::resource('po_receive_products', 'Po_receive_productsController');
     Route::post('po_receive_products/datatable', 'Po_receive_productsController@Datatable')->name('po_receive_products.datatable');

@@ -57,7 +57,8 @@ class Po_receive_products_getController extends Controller
                       `shelf_id_fk`,
                       `shelf_floor`,
                       `action_user`,
-                      `action_date`
+                      `action_date`,
+                      `remark`
                       ) VALUES (
                       '$request->po_supplier_products_id_fk',
                       '$request->product_id_fk',
@@ -71,7 +72,8 @@ class Po_receive_products_getController extends Controller
                       '$request->shelf_id_fk_c',
                       '$request->shelf_floor_c',
                       '". \Auth::user()->id."',
-                       now())
+                       now(),
+                       '$request->remark')
                       ");
 
               DB::select("

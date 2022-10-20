@@ -75,6 +75,7 @@ class FrontstoreController extends Controller
     General::gen_id_url();
 
       // วุฒิสร้าง session
+      // r_invoice_code
         $menus = DB::table('ck_backend_menu')->select('id')->where('id',6)->first();
         Session::put('session_menu_id', $menus->id);
         Session::put('menu_id', $menus->id);
@@ -262,7 +263,7 @@ class FrontstoreController extends Controller
         ");
 
 
-    $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
+    // $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
     // dd($r_invoice_code);
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
@@ -303,7 +304,7 @@ class FrontstoreController extends Controller
         'sDBFrontstoreUserAddAiCash' => $sDBFrontstoreUserAddAiCash,
 
         'sDBSentMoneyDaily' => $sDBSentMoneyDaily,
-        'r_invoice_code' => $r_invoice_code,
+        // 'r_invoice_code' => $r_invoice_code,
 
       )
     );

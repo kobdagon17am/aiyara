@@ -18,7 +18,10 @@ use App\Models\Frontend\PvPayment;
 use App\Models\Frontend\LineModel;
 use App\Http\Controllers\Frontend\Fc\CancelOrderController;
 use App\Models\Frontend\Order;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use File;
 
 class AjaxController extends Controller
 {
@@ -354,6 +357,399 @@ class AjaxController extends Controller
        return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
 
    }
+
+   public function total_thai_cambodia_excel(Request $rs)
+   {
+    $report_type = $rs->report_type;
+    if ($rs->startDate) {
+        $date = str_replace('/', '-', $rs->startDate);
+        $s_date = date('Y-m-d', strtotime($date));
+           $startDate = " AND DATE(db_orders.created_at) >= '" . $s_date . "' ";
+           $startDate2 = $s_date;
+    } else {
+        $startDate = '';
+        $startDate2 = '';
+    }
+    if ($rs->endDate) {
+        $date = str_replace('/', '-', $rs->endDate);
+        $e_date = date('Y-m-d', strtotime($date));
+         $endDate = " AND DATE(db_orders.created_at) <= '" . $e_date . "' ";
+         $endDate2 = $e_date;
+    } else {
+        $endDate = '';
+        $endDate2 = '';
+    }
+    if ($rs->action_user) {
+                  $action_user = " AND db_orders.action_user = $rs->action_user ";
+    } else {
+        $action_user = '';
+    }
+    if ($rs->business_location) {
+        $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $rs->business_location . " ";
+    } else {
+        $business_location_id_fk = "";
+    }
+
+    $spreadsheet = new Spreadsheet();
+    $amt_sheet = 1;
+     $styleArray = array(
+       'font'  => array(
+            'bold'  => true,
+            // 'color' => array('rgb' => '002699'),
+            // 'size'  => 16,
+            'name'  => 'Verdana'
+        ));
+
+    for ($j=0; $j < $amt_sheet ; $j++) {
+
+      if($j>0){
+        $spreadsheet->createSheet();
+      }
+
+      $spreadsheet->setActiveSheetIndex($j);
+      $sheet = $spreadsheet->getActiveSheet();
+      $sheet->setTitle("Sheet".($j+1));
+
+      $sTable = DB::select("
+      SELECT
+      db_orders.action_user,
+      ck_users_admin.`name` as action_user_name,
+      db_orders.pay_type_id_fk,
+      dataset_pay_type.detail AS pay_type,
+      date(db_orders.created_at) AS created_at,
+      db_orders.branch_id_fk,
+      branchs.b_name as branchs_name,
+      dataset_business_location.txt_desc as business_location_name,
+      db_orders.sum_credit_price,
+      db_orders.transfer_price,
+      db_orders.fee_amt,
+      db_orders.aicash_price,
+      db_orders.cash_pay,
+      db_orders.gift_voucher_price,
+      db_orders.shipping_price,
+      db_orders.product_value,
+      db_orders.tax,
+      db_orders.sum_price,
+      db_orders.true_money_price,
+      db_orders.prompt_pay_price,
+      customers.first_name as action_first_name,
+      customers.last_name as action_last_name,
+      db_orders.code_order
+      FROM
+      db_orders
+      Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+      Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+      Left Join branchs ON branchs.id = db_orders.branch_id_fk
+      Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
+      Left Join customers ON customers.id = db_orders.customers_id_fk
+      WHERE db_orders.approve_status not in (0,5,1,6,3)
+      $startDate
+      $endDate
+      $action_user
+      $business_location_id_fk
+      ORDER BY created_at ASC
+");
+
+      $sheet->setCellValue('A1', 'วันเดือนปี');
+      $sheet->setCellValue('B1', 'เลขที่เอกสาร');
+      $sheet->setCellValue('C1', 'ชื่อ-นามสกุล');
+      $sheet->setCellValue('D1', 'มูลค่าสินค้า');
+      $sheet->setCellValue('E1', 'ภาษีมูลค่าเพิ่ม');
+      $sheet->setCellValue('F1', 'รวม');
+      $sheet->setCellValue('G1', 'เงินสด');
+      $sheet->setCellValue('H1', 'เงินโอน');
+      $sheet->setCellValue('I1', 'เครดิต');
+      $sheet->setCellValue('J1', 'Ai-Cash');
+      // $sheet->setCellValue('K1', '');
+      // $sheet->setCellValue('L1', '');
+      // $sheet->setCellValue('M1', '');
+      // $sheet->setCellValue('N1', '');
+      // $sheet->setCellValue('O1', '');
+      // $sheet->setCellValue('P1', '');
+      // $sheet->setCellValue('Q1', '');
+      // $sheet->setCellValue('R1', '');
+      // $sheet->setCellValue('S1', '');
+      // $sheet->setCellValue('T1', '');
+
+      $sheet->getStyle('A1:J1')->applyFromArray($styleArray);
+
+      $p = "";
+      $product_value_total = 0;
+      $tax_total = 0;
+      $sum_price_total = 0;
+      $cash_pay_total = 0;
+      $cash_transfer_price_total = 0;
+      $cash_sum_credit_price_total = 0;
+      $aicash_price_total = 0;
+      $fee_amt_total = 0;
+      $shipping_total = 0;
+      $gift_voucher_price_total = 0;
+      $true_money_price_total = 0;
+      $prompt_pay_price_total = 0;
+      $shipping_vat_total = 0;
+      $fee_vat_total = 0;
+      $arr_date = [];
+      $total_date_product_value = 0;
+      $total_date_tax = 0;
+      $total_date_sum_price = 0;
+      $total_date_cash_pay = 0;
+      $total_date_transfer_price = 0;
+      $total_date_sum_credit_price = 0;
+      $total_date_aicash_price = 0;
+      $arr_data = [];
+      $arr_data2 = [];
+      // for ($i=0; $i < count($sRow) ; $i++) {
+        $k = 2;
+        foreach($sTable as $key => $order){
+          if($order->action_user_name == ''){
+            $order->action_user_name = 'V3';
+          }
+          if($order->cash_pay == ''){
+            $order->cash_pay = 0.00;
+          }
+          if($order->transfer_price == ''){
+            $order->transfer_price = 0.00;
+          }
+          if($order->sum_credit_price == ''){
+            $order->sum_credit_price = 0.00;
+          }
+          if($order->aicash_price == ''){
+            $order->aicash_price = 0.00;
+          }
+          if($order->gift_voucher_price == ''){
+            $order->gift_voucher_price = 0.00;
+          }
+          if($order->true_money_price == ''){
+            $order->true_money_price = 0.00;
+          }
+          if($order->prompt_pay_price == ''){
+            $order->prompt_pay_price = 0.00;
+          }
+          if($order->shipping_price == ''){
+            $order->shipping_price = 0.00;
+          }
+          if($order->fee_amt == ''){
+            $order->fee_amt = 0.00;
+          }
+          $shipping_vat = 0;
+          $fee_vat = 0;
+          if($order->shipping_price>0){
+            $shipping_vat =  $order->shipping_price * (7.00 / (100+ 7.00) );
+            $order->shipping_price = $order->shipping_price - $shipping_vat;
+            $order->tax = $order->tax + $shipping_vat;
+          }
+          if($order->fee_amt>0){
+            $fee_vat =  $order->fee_amt * (7.00 / (100+ 7.00) );
+            $order->fee_amt = $order->fee_amt - $fee_vat;
+            $order->tax = $order->tax + $fee_vat;
+          }
+          $gift_voucher_price_total += $order->gift_voucher_price;
+          $product_value_total += $order->product_value;
+          $tax_total += $order->tax;
+          $sum_price_total += $order->sum_price;
+          $cash_pay_total += $order->cash_pay;
+          $cash_transfer_price_total += $order->transfer_price;
+          $cash_sum_credit_price_total += $order->sum_credit_price;
+          $aicash_price_total += $order->aicash_price;
+          $shipping_total += $order->shipping_price;
+          $fee_amt_total += $order->fee_amt;
+          $true_money_price_total += $order->true_money_price;
+          $prompt_pay_price_total += $order->prompt_pay_price;
+          $shipping_vat_total += $shipping_vat;
+          $fee_vat_total += $fee_vat;
+          $created_at = date('d/m/Y', strtotime($order->created_at));
+          $code_order = $order->code_order;
+          $cus_name = $order->action_first_name.' '.$order->action_last_name;
+
+          if(!isset($arr_date[$created_at])){
+            if(count($arr_date)==0){
+              $total_date_product_value += $order->product_value;
+              $total_date_tax += $order->tax;
+              $total_date_sum_price += $order->sum_price;
+              $total_date_cash_pay += $order->cash_pay;
+              $total_date_transfer_price += $order->transfer_price;
+              $total_date_sum_credit_price += $order->sum_credit_price;
+              $total_date_aicash_price += $order->aicash_price;
+              $arr_data[$code_order] = $code_order;
+            }
+          }
+
+          if(count($arr_date) > 0){
+            if(!isset($arr_date[$created_at])){
+              $sheet->setCellValue('A'.($key+$k), '');
+              $sheet->setCellValue('B'.($key+$k), '');
+              $sheet->setCellValue('C'.($key+$k), '');
+              $sheet->setCellValue('D'.($key+$k), number_format($total_date_product_value,2,".",","));
+              $sheet->setCellValue('E'.($key+$k), number_format($total_date_tax,2,".",","));
+              $sheet->setCellValue('F'.($key+$k), number_format($total_date_sum_price,2,".",","));
+              $sheet->setCellValue('G'.($key+$k), number_format($total_date_cash_pay,2,".",","));
+              $sheet->setCellValue('H'.($key+$k), number_format($total_date_transfer_price,2,".",","));
+              $sheet->setCellValue('I'.($key+$k), number_format($total_date_sum_credit_price,2,".",","));
+              $sheet->setCellValue('J'.($key+$k), number_format($total_date_aicash_price,2,".",","));
+              $k++;
+            }
+          }
+
+          $sheet->setCellValue('A'.($key+$k), $created_at);
+          $sheet->setCellValue('B'.($key+$k), $code_order);
+          $sheet->setCellValue('C'.($key+$k), $cus_name);
+          $sheet->setCellValue('D'.($key+$k), number_format($order->product_value,2,".",","));
+          $sheet->setCellValue('E'.($key+$k), number_format($order->tax,2,".",","));
+          $sheet->setCellValue('F'.($key+$k), number_format($order->sum_price,2,".",","));
+          $sheet->setCellValue('G'.($key+$k), number_format($order->cash_pay,2,".",","));
+          $sheet->setCellValue('H'.($key+$k), number_format($order->transfer_price,2,".",","));
+          $sheet->setCellValue('I'.($key+$k), number_format($order->sum_credit_price,2,".",","));
+          $sheet->setCellValue('J'.($key+$k), number_format($order->aicash_price,2,".",","));
+
+          if(count($sTable)==$key+1){
+            $total_date_product_value += $order->product_value;
+            $total_date_tax += $order->tax;
+            $total_date_sum_price += $order->sum_price;
+            $total_date_cash_pay += $order->cash_pay;
+            $total_date_transfer_price += $order->transfer_price;
+            $total_date_sum_credit_price += $order->sum_credit_price;
+            $total_date_aicash_price += $order->aicash_price;
+            $arr_data[$code_order] = $code_order;
+            $k++;
+            $sheet->setCellValue('A'.($key+$k), '');
+            $sheet->setCellValue('B'.($key+$k), '');
+            $sheet->setCellValue('C'.($key+$k), '');
+            $sheet->setCellValue('D'.($key+$k), number_format($total_date_product_value,2,".",","));
+            $sheet->setCellValue('E'.($key+$k), number_format($total_date_tax,2,".",","));
+            $sheet->setCellValue('F'.($key+$k), number_format($total_date_sum_price,2,".",","));
+            $sheet->setCellValue('G'.($key+$k), number_format($total_date_cash_pay,2,".",","));
+            $sheet->setCellValue('H'.($key+$k), number_format($total_date_transfer_price,2,".",","));
+            $sheet->setCellValue('I'.($key+$k), number_format($total_date_sum_credit_price,2,".",","));
+            $sheet->setCellValue('J'.($key+$k), number_format($total_date_aicash_price,2,".",","));
+
+          }
+
+          if(!isset($arr_date[$created_at])){
+            $arr_date[$created_at] = $created_at;
+            if(count($arr_date)!=0){
+              $total_date_product_value = 0;
+              $total_date_tax = 0;
+              $total_date_sum_price = 0;
+              $total_date_cash_pay = 0;
+              $total_date_transfer_price = 0;
+              $total_date_sum_credit_price = 0;
+              $total_date_aicash_price = 0;
+
+              $total_date_product_value += $order->product_value;
+              $total_date_tax += $order->tax;
+              $total_date_sum_price += $order->sum_price;
+              $total_date_cash_pay += $order->cash_pay;
+              $total_date_transfer_price += $order->transfer_price;
+              $total_date_sum_credit_price += $order->sum_credit_price;
+              $total_date_aicash_price += $order->aicash_price;
+            }
+          }else{
+            $total_date_product_value += $order->product_value;
+            $total_date_tax += $order->tax;
+            $total_date_sum_price += $order->sum_price;
+            $total_date_cash_pay += $order->cash_pay;
+            $total_date_transfer_price += $order->transfer_price;
+            $total_date_sum_credit_price += $order->sum_credit_price;
+            $total_date_aicash_price += $order->aicash_price;
+
+            $arr_data2[$code_order] = $code_order;
+          }
+
+          // $sheet->setCellValue('A'.($key+2), $sRow[$i]->consignment_no);
+          // $sheet->setCellValue('B'.($key+2), $sRow[$i]->customer_ref_no);
+          // $sheet->setCellValue('C'.($key+2), $sRow[$i]->sender_code);
+          // $sheet->setCellValue('D'.($key+2), $sRow[$i]->recipient_code);
+          // $sheet->setCellValue('E'.($key+2), $sRow[$i]->recipient_name);
+          // $sheet->setCellValue('F'.($key+2), $sRow[$i]->address);
+          // $sheet->setCellValue('G'.($key+2), $sRow[$i]->postcode);
+          // $sheet->setCellValue('H'.($key+2), $sRow[$i]->mobile);
+          // $sheet->setCellValue('I'.($key+2), $sRow[$i]->recipient_name);
+          // $sheet->setCellValue('J'.($key+2), $sRow[$i]->phone_no);
+          // $sheet->setCellValue('K'.($i+2), $sRow[$i]->email);
+          // $sheet->setCellValue('L'.($i+2), $sRow[$i]->declare_value);
+          // $sheet->setCellValue('M'.($i+2), $sRow[$i]->cod_amount);
+          // $sheet->setCellValue('N'.($i+2), $sRow[$i]->remark);
+          // $sheet->setCellValue('O'.($i+2), $sRow[$i]->total_box);
+          // $sheet->setCellValue('P'.($i+2), $sRow[$i]->sat_del);
+          // $sheet->setCellValue('Q'.($i+2), $sRow[$i]->hrc);
+          // $sheet->setCellValue('R'.($i+2), $sRow[$i]->invr);
+          // $sheet->setCellValue('S'.($i+2), '');
+          // $sheet->setCellValue('T'.($i+2), '');
+      }
+
+            $sheet->setCellValue('A'.(count($sTable)+$k), '');
+            $sheet->setCellValue('B'.(count($sTable)+$k), '');
+            $sheet->setCellValue('C'.(count($sTable)+$k), '');
+            $sheet->setCellValue('D'.(count($sTable)+$k), number_format($product_value_total,2,".",","));
+            $sheet->setCellValue('E'.(count($sTable)+$k), number_format($tax_total,2,".",","));
+            $sheet->setCellValue('F'.(count($sTable)+$k), number_format($sum_price_total,2,".",","));
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($cash_pay_total,2,".",","));
+            $sheet->setCellValue('H'.(count($sTable)+$k), number_format($cash_transfer_price_total,2,".",","));
+            $sheet->setCellValue('I'.(count($sTable)+$k), number_format($cash_sum_credit_price_total,2,".",","));
+            $sheet->setCellValue('J'.(count($sTable)+$k), number_format($aicash_price_total,2,".",","));
+            $k++;
+            $k++;
+
+            $sheet->setCellValue('F'.(count($sTable)+$k), 'เงินสด');
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($cash_pay_total,2,".",","));
+            $sheet->setCellValue('H'.(count($sTable)+$k), 'มูลค่าสินค้า');
+            $sheet->setCellValue('I'.(count($sTable)+$k), number_format($product_value_total,2,".",","));
+            $k++;
+
+            $sheet->setCellValue('F'.(count($sTable)+$k), 'เงินโอน');
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($cash_transfer_price_total,2,".",","));
+            $sheet->setCellValue('H'.(count($sTable)+$k), 'ค่าธรรมเนียม');
+            $sheet->setCellValue('I'.(count($sTable)+$k), number_format($fee_amt_total,2,".",","));
+            $k++;
+
+            $sheet->setCellValue('F'.(count($sTable)+$k), 'เครดิต');
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($cash_sum_credit_price_total,2,".",","));
+            $sheet->setCellValue('H'.(count($sTable)+$k), 'ค่าจัดส่ง');
+            $sheet->setCellValue('I'.(count($sTable)+$k), number_format($shipping_total,2,".",","));
+            $k++;
+
+            $sheet->setCellValue('F'.(count($sTable)+$k), 'Ai-Cash');
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($aicash_price_total,2,".",","));
+            $sheet->setCellValue('H'.(count($sTable)+$k), 'VAT 7%');
+            $sheet->setCellValue('I'.(count($sTable)+$k), number_format($tax_total,2,".",","));
+            $k++;
+
+            $sheet->setCellValue('F'.(count($sTable)+$k), 'TrueMoney');
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($gift_voucher_price_total,2,".",","));
+            $sheet->setCellValue('H'.(count($sTable)+$k), 'คูปองส่วนลด');
+            $sheet->setCellValue('I'.(count($sTable)+$k), number_format($prompt_pay_price_total,2,".",","));
+            $k++;
+
+            $sheet->setCellValue('F'.(count($sTable)+$k), 'PromptPay');
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($prompt_pay_price_total,2,".",","));
+            $k++;
+
+            $sheet->setCellValue('F'.(count($sTable)+$k), 'รวมยอดชำระทั้งสิ้น');
+            $sheet->setCellValue('G'.(count($sTable)+$k), number_format($cash_pay_total+$cash_transfer_price_total+$cash_sum_credit_price_total+$aicash_price_total +$true_money_price_total +$prompt_pay_price_total,2,".",","));
+            $sheet->setCellValue('H'.(count($sTable)+$k), 'รวมยอดชำระ');
+            $sheet->setCellValue('I'.(count($sTable)+$k), number_format(($sum_price_total+$shipping_total+$fee_amt_total+$shipping_vat_total+$fee_vat_total)-$gift_voucher_price_total,2,".",","));
+          }
+
+
+
+    // $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+    // $cellIterator->setIterateOnlyExistingCells( true );
+    // foreach( $cellIterator as $cell ) {
+    //     $sheet->getColumnDimension( $cell->getColumn() )->setAutoSize( true );
+    // }
+    foreach ($sheet->getColumnIterator() as $column) {
+        $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+    }
+
+    $file = 'report.xlsx';
+    header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-disposition: attachment; filename='.$file);
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('local/public/excel_files/'.$file);
+
+
+   }
+
 
    public function total_thai_cambodia_ai_pdf(Request $rs)
    {
@@ -7770,7 +8166,33 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
 
 
 
-  public function insertStockMovement_Final(Request $request)
+  public function ajaxGetOrder(Request $request)
+    {
+      if($request->ajax()){
+        if(empty($request->term)){
+            $customers = DB::table('db_orders')->where('code_order','!=','')->take(15)->orderBy('id', 'asc')->get();
+        }else{
+            $customers = DB::table('db_orders')
+            ->select('id','code_order')
+            ->where('code_order', 'LIKE', '%'.$request->term.'%')
+            ->where('code_order','!=','')
+            ->take(100)
+            ->orderBy('id', 'asc')
+            ->get();
+        }
+
+        $json_result = [];
+        foreach($customers as $k => $v){
+            $json_result[] = [
+                'id'    => $v->code_order,
+                'text'  => $v->code_order,
+            ];
+        }
+        return json_encode($json_result);
+       }
+  }
+
+    public function insertStockMovement_Final(Request $request)
     {
 
       if($request->ajax()){
@@ -7780,7 +8202,6 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
 
       }
     }
-
 
 
   public function ajaxGetOrdersIDtoDeliveryAddr(Request $request)

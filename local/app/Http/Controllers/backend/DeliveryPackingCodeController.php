@@ -172,6 +172,7 @@ class DeliveryPackingCodeController extends Controller
 
            if($row->id!==""){
               $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+              // dd($DP);
               $array = array();
               if(@$DP){
                 foreach ($DP as $key => $value) {

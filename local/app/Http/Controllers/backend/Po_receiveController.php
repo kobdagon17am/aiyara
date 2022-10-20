@@ -86,6 +86,15 @@ class Po_receiveController extends Controller
         ) );
     }
 
+
+    public function po_receive_update_note3(Request $request)
+    {
+      $sRow = \App\Models\Backend\Po_supplier::find($request->id);
+      $sRow->note3 = request('note3');
+      $sRow->save();
+      return redirect()->back()->with('success','บันทึกรายการสำเร็จ');
+    }
+
     public function update(Request $request, $id)
     {
        if(isset($request->approved)){
@@ -302,7 +311,7 @@ class Po_receiveController extends Controller
             ".$w07."
             ORDER BY
             po_number
-            DESC 
+            DESC
          ");
 
       $sQuery = \DataTables::of($sTable);

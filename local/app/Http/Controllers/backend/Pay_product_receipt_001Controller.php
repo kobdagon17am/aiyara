@@ -41,17 +41,17 @@ class Pay_product_receipt_001Controller extends Controller
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
-      $customer = DB::select(" SELECT
-              customers.user_name AS cus_code,
-              customers.prefix_name,
-              customers.first_name,
-              customers.last_name,
-              db_pay_product_receipt_001.customer_id_fk
-              FROM
-              db_pay_product_receipt_001
-              left Join customers ON db_pay_product_receipt_001.customer_id_fk = customers.id
-              GROUP BY db_pay_product_receipt_001.customer_id_fk
-              ");
+      // $customer = DB::select(" SELECT
+      //         customers.user_name AS cus_code,
+      //         customers.prefix_name,
+      //         customers.first_name,
+      //         customers.last_name,
+      //         db_pay_product_receipt_001.customer_id_fk
+      //         FROM
+      //         db_pay_product_receipt_001
+      //         left Join customers ON db_pay_product_receipt_001.customer_id_fk = customers.id
+      //         GROUP BY db_pay_product_receipt_001.customer_id_fk
+      //         ");
       $sPay_product_status = \App\Models\Backend\Pay_product_status::get();
 
       $sAdmin = DB::select(" select * from ck_users_admin where isActive='Y' AND branch_id_fk=".\Auth::user()->branch_id_fk." ");
@@ -60,7 +60,7 @@ class Pay_product_receipt_001Controller extends Controller
         array(
            'sBusiness_location'=>$sBusiness_location,
            'sBranchs'=>$sBranchs,
-           'customer'=>$customer,
+          //  'customer'=>$customer,
            'sPay_product_status'=>$sPay_product_status,
            'sAdmin'=>$sAdmin,
         ) );
@@ -1085,7 +1085,7 @@ class Pay_product_receipt_001Controller extends Controller
       })
       ->escapeColumns('invoice_code')
       ->addColumn('customer', function($row) {
-            $rs = DB::select(" select * from customers where id=".@$row->customer_id_fk." ");
+            $rs = DB::select(" select user_name,prefix_name,first_name,last_name from customers where id=".@$row->customer_id_fk." ");
             return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
       })
       ->addColumn('status_sent', function($row) {

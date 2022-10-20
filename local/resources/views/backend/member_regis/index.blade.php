@@ -226,9 +226,9 @@
                                                 {{ __('message.info_member') }} : </label>
                                             <div class="col-md-9">
                                                 <select id="customer_id" name="customer_id"
-                                                    class="form-control select2-templating ">
+                                                    class="form-control customer_id_fk">
                                                     <option value="">-Select-</option>
-                                                    @if (@$customer)
+                                                    {{-- @if (@$customer)
                                                         @foreach (@$customer as $r)
                                                             <option value="{{ $r->customer_id }}">
                                                                 {{ $r->cus_code }} :
@@ -236,7 +236,7 @@
                                                                 {{ $r->last_name }}
                                                             </option>
                                                         @endforeach
-                                                    @endif
+                                                    @endif --}}
                                                 </select>
                                             </div>
                                         </div>
@@ -895,92 +895,92 @@
         var sU = "{{ @$sU }}"; //alert(sU);
         var sD = "{{ @$sD }}"; //alert(sD);
         var oTable;
-        $(function() {
-            oTable = $('#data-table-02').DataTable({
-                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                processing: true,
-                serverSide: true,
-                scroller: true,
-                destroy: true,
-                ordering: false,
-                iDisplayLength: 25,
-                searching: false,
-                ajax: {
-                    url: '{{ route('backend.member_regis02.datatable') }}',
-                    data: function(d) {
-                        d.Where = {};
-                        $('.myWhere').each(function() {
-                            if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
-                                d.Where[$(this).attr('name')] = $.trim($(this).val());
-                            }
-                        });
-                        d.Like = {};
-                        $('.myLike').each(function() {
-                            if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
-                                d.Like[$(this).attr('name')] = $.trim($(this).val());
-                            }
-                        });
-                        d.Custom = {};
-                        $('.myCustom').each(function() {
-                            if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
-                                d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                            }
-                        });
-                        oData = d;
-                    },
-                    method: 'POST'
-                },
+        // $(function() {
+        //     oTable = $('#data-table-02').DataTable({
+        //         "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+        //         processing: true,
+        //         serverSide: true,
+        //         scroller: true,
+        //         destroy: true,
+        //         ordering: false,
+        //         iDisplayLength: 25,
+        //         searching: false,
+        //         ajax: {
+        //             url: '{{ route('backend.member_regis02.datatable') }}',
+        //             data: function(d) {
+        //                 d.Where = {};
+        //                 $('.myWhere').each(function() {
+        //                     if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
+        //                         d.Where[$(this).attr('name')] = $.trim($(this).val());
+        //                     }
+        //                 });
+        //                 d.Like = {};
+        //                 $('.myLike').each(function() {
+        //                     if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
+        //                         d.Like[$(this).attr('name')] = $.trim($(this).val());
+        //                     }
+        //                 });
+        //                 d.Custom = {};
+        //                 $('.myCustom').each(function() {
+        //                     if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
+        //                         d.Custom[$(this).attr('name')] = $.trim($(this).val());
+        //                     }
+        //                 });
+        //                 oData = d;
+        //             },
+        //             method: 'POST'
+        //         },
 
-                dom: 'frtipB',
-                buttons: [{
-                        extend: 'excelHtml5',
-                        title: 'รายการตรวจเอกสาร'
-                    },
+        //         dom: 'frtipB',
+        //         buttons: [{
+        //                 extend: 'excelHtml5',
+        //                 title: 'รายการตรวจเอกสาร'
+        //             },
 
-                ],
-                columns: [{
-                        data: 'id',
-                        title: 'No.',
-                        className: 'text-center w50'
-                    },
-                    {
-                        data: 'created_at',
-                        title: '<center>{{ __('message.date_register') }}</center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'customer_name',
-                        title: '<center>{{ __('message.info_member') }}</center>',
-                        className: 'text-left'
-                    },
-                    {
-                        data: 'icon',
-                        title: '<center> {{ __('message.doc') }} </center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'regis_date_doc',
-                        title: '<center>{{ __('message.date_of_file_approved') }} </center>',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'updated_at',
-                        title: '<center>{{ __('message.latest_editing') }} </center>',
-                        className: 'text-center'
-                    },
-                ],
-                rowCallback: function(nRow, aData, dataIndex) {
+        //         ],
+        //         columns: [{
+        //                 data: 'id',
+        //                 title: 'No.',
+        //                 className: 'text-center w50'
+        //             },
+        //             {
+        //                 data: 'created_at',
+        //                 title: '<center>{{ __('message.date_register') }}</center>',
+        //                 className: 'text-center'
+        //             },
+        //             {
+        //                 data: 'customer_name',
+        //                 title: '<center>{{ __('message.info_member') }}</center>',
+        //                 className: 'text-left'
+        //             },
+        //             {
+        //                 data: 'icon',
+        //                 title: '<center> {{ __('message.doc') }} </center>',
+        //                 className: 'text-center'
+        //             },
+        //             {
+        //                 data: 'regis_date_doc',
+        //                 title: '<center>{{ __('message.date_of_file_approved') }} </center>',
+        //                 className: 'text-center'
+        //             },
+        //             {
+        //                 data: 'updated_at',
+        //                 title: '<center>{{ __('message.latest_editing') }} </center>',
+        //                 className: 'text-center'
+        //             },
+        //         ],
+        //         rowCallback: function(nRow, aData, dataIndex) {
 
-                    var info = $(this).DataTable().page.info();
-                    $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+        //             var info = $(this).DataTable().page.info();
+        //             $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
 
 
-                }
-            });
-            $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
-                oTable.draw();
-            });
-        });
+        //         }
+        //     });
+        //     $('.myWhere,.myLike,.myCustom,#onlyTrashed').on('change', function(e) {
+        //         oTable.draw();
+        //     });
+        // });
     </script>
 
 
@@ -1076,6 +1076,31 @@
 
     <script>
         $(document).ready(function() {
+
+          $(".customer_id_fk").select2({
+                            minimumInputLength: 3,
+                            allowClear: true,
+                            placeholder: '-Select-',
+                            ajax: {
+                                url: " {{ url('backend/ajaxGetCustomer') }} ",
+                                type: 'POST',
+                                dataType: 'json',
+                                delay: 250,
+                                cache: false,
+                                data: function(params) {
+                                    return {
+                                        term: params.term || '', // search term
+                                        page: params.page || 1
+                                    };
+                                },
+                                processResults: function(data, params) {
+                                    return {
+                                        results: data
+                                    };
+                                }
+                            }
+                        });
+
 
             $(document).on('click', '.btnSearch01', function(event) {
                 event.preventDefault();
