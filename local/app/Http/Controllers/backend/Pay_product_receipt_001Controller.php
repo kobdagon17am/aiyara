@@ -37,8 +37,6 @@ class Pay_product_receipt_001Controller extends Controller
         Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
         Session::put('can_approve', $can_approve);
 
-
-
       $sBusiness_location = \App\Models\Backend\Business_location::get();
       $sBranchs = \App\Models\Backend\Branchs::get();
       // $customer = DB::select(" SELECT
@@ -1257,36 +1255,6 @@ if(count($sTable_re)!=0){
 
           ");
 }else{
-  // $sTable = DB::select("
-  //           SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
-  //           FROM db_orders
-  //           Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-  //           WHERE 1
-  //           $action_user_011
-  //           AND db_orders.approve_status = 2
-  //           AND delivery_location = 0
-  //           UNION ALL
-  //           SELECT
-  //           gift_voucher_price,
-  //           code_order,
-  //           db_add_ai_cash.id,
-  //           db_add_ai_cash.created_at as d2,
-  //           0 as purchase_type_id_fk,
-  //           'เติม Ai-Cash' AS type,
-  //           db_add_ai_cash.customer_id_fk as c2,
-  //           db_add_ai_cash.aicash_amt,
-  //           db_add_ai_cash.id as inv_no,approve_status
-  //           ,'',
-  //           db_add_ai_cash.updated_at as ud2,
-  //           'ai_cash' as pay_type,cash_price,
-  //           credit_price,fee_amt,transfer_price,
-  //           0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user,''
-  //           FROM db_add_ai_cash
-  //           WHERE 1 AND db_add_ai_cash.approve_status<>4
-  //           $action_user_01
-  //           ORDER BY created_at DESC
-
-  //         ");
               $sTable = DB::select("
               SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
               FROM db_orders
@@ -1329,19 +1297,6 @@ if(count($sTable_re)!=0){
             ");
 }
 
-
-/*
-SELECT code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user  FROM db_orders  Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id  WHERE 1
-AND db_orders.branch_id_fk = '1'
-AND DATE(db_orders.created_at) >= CURDATE()
-UNION ALL
-SELECT  '' as code_order,  db_add_ai_cash.id,  db_add_ai_cash.created_at as d2,  0 as purchase_type_id_fk,  '\u0e40\u0e15\u0e34\u0e21 Ai-Cash' AS type,  db_add_ai_cash.customer_id_fk as c2,  db_add_ai_cash.aicash_amt,  db_add_ai_cash.id as inv_no,approve_status  ,'',  db_add_ai_cash.updated_at as ud2,  'ai_cash' as pay_type,cash_price,  credit_price,fee_amt,transfer_price,  0 as aicash_price,total_amt as total_price,db_add_ai_cash.created_at ,status_sent_money,'',action_user  FROM db_add_ai_cash  WHERE 1
-AND db_add_ai_cash.approve_status<>4
-AND DATE(db_add_ai_cash.created_at) >= CURDATE()
-
-ORDER BY created_at DESC
-*/
-      //  dd($sTable);
      $sQuery = \DataTables::of($sTable);
      return $sQuery
      ->addColumn('invoice_code_2', function($row) {
@@ -1384,75 +1339,12 @@ ORDER BY created_at DESC
       return date("Y-m-d",$d)."<br/>".date("H:i:s",$d);
     })
     ->escapeColumns('created_at')
-     ->addColumn('customer', function($row) {
-           $rs = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
-           return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
-     })
-    //  ->addColumn('status_sent', function($row) {
-    //        $rs = DB::select(" select * from dataset_pay_product_status where id=".@$row->approve_status." ");
-    //        if(@$row->status_sent==3){
-    //          return '<span class="badge badge-pill badge-success font-size-16">'.@$rs[0]->txt_desc.'</span>';
-    //        }elseif(@$row->status_sent==1||@$row->status_sent==2||@$row->status_sent==4){
-    //          return '<span class="badge badge-pill badge-warning font-size-16" style="color:black;">'.@$rs[0]->txt_desc.'</span>';
-    //        }else{
-    //          return '<span class="badge badge-pill badge-info font-size-16">'.@$rs[0]->txt_desc.'</span>';
-    //        }
 
+    //  ->addColumn('customer', function($row) {
+    //        $rs = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
+    //        return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
     //  })
-    //  ->addColumn('status_sent_2', function($row) {
-    //        return $row->status_sent;
-    //  })
-    //  ->addColumn('status_cancel_all', function($row) {
-    //        $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=0 ");
-    //        if(count($P)>0){
-    //          return 1;
-    //        }else{
-    //          return 0;
-    //        }
-    //  })
-    //  ->addColumn('status_cancel_some', function($row) {
-    //        $P = DB::select(" select status_cancel from db_pay_product_receipt_002 where invoice_code='".@$row->invoice_code."' AND status_cancel=1 ");
-    //        if(count($P)>0){
-    //          return 1;
-    //        }else{
-    //          return 0;
-    //        }
-    //  })
-    //  ->addColumn('action_user', function($row) {
-    //    if(@$row->action_user){
-    //      $P = DB::select(" select * from ck_users_admin where id=".@$row->action_user." ");
-    //        return @$P[0]->name." <br> ".@$row->action_date;
-    //    }else{
-    //      return '-';
-    //    }
-    //  })
-    //  ->escapeColumns('action_user')
-    //  ->addColumn('pay_user', function($row) {
-    //    if(@$row->pay_user){
-    //       $P = DB::select(" select * from ck_users_admin where id=".@$row->pay_user." ");
-    //      return @$P[0]->name." <br> ".@$row->pay_date;
-    //    }else{
-    //      return '-';
-    //    }
-    //  })
-    //  ->escapeColumns('pay_user')
-    //   ->addColumn('branch', function($row) {
-    //         $P = DB::select(" select * from branchs where id=".@$row->branch_id_fk." ");
-    //         return @$P[0]->b_name;
-    //  })
-    //   ->addColumn('address_send_type', function($row) {
-    //        if(@$row->address_send_type==1){
-    //             return 'รับสินค้าด้วยตนเอง';
-    //        }else if(@$row->address_send_type==2){
-    //          if(@$row->branch_id_fk_tosent==(\Auth::user()->branch_id_fk)){
-    //            return 'รับที่สาขานี้';
-    //          }else{
-    //            return 'รับที่สาขาอื่น';
-    //          }
-    //        }else if(@$row->address_send_type==3){
-    //            return 'จัดส่งพัสดุ';
-    //        }
-    //  })
+
      ->make(true);
    }
 

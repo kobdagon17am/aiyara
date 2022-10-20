@@ -521,48 +521,41 @@ class Po_approveController extends Controller
 // qry อันที่สองที่มา UNION ALL เอาไว้แสดงผลรวม
 
        $sTable =     DB::select("
-
-select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
-`dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
-
-`dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`
-from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk`
-left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk`
-left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
-left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
-left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
-where
-pay_type_id_fk in (1,8,10,11,12) and
-`dataset_order_status`.`lang_id` = 1 and
-(`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
-`db_orders`.`id` != 0
-
-$business_location_id_fk
-$branch_id_fk
-$doc_id
-$transfer_amount_approver
-$transfer_bill_status
-$created_at
-$transfer_bill_approvedate
-$customer_id
-
-or
-pay_type_id_fk in (1,8,10,11,12) and
-`dataset_order_status`.`lang_id` = 1 and
-(`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
-`db_orders`.`id` != 0
-
-$business_location_id_fk
-$action_user
-$doc_id
-$transfer_amount_approver
-$transfer_bill_status
-$created_at
-$transfer_bill_approvedate
-$customer_id
-
-
-ORDER BY CASE
+            select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
+            `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
+            `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`
+            from `db_orders` left join `dataset_order_status` on `dataset_order_status`.`orderstatus_id` = `db_orders`.`order_status_id_fk`
+            left join `dataset_orders_type` on `dataset_orders_type`.`group_id` = `db_orders`.`purchase_type_id_fk`
+            left join `dataset_pay_type` on `dataset_pay_type`.`id` = `db_orders`.`pay_type_id_fk`
+            left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
+            left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
+            where
+            pay_type_id_fk in (1,8,10,11,12) and
+            `dataset_order_status`.`lang_id` = 1 and
+            (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
+            `db_orders`.`id` != 0
+            $business_location_id_fk
+            $branch_id_fk
+            $doc_id
+            $transfer_amount_approver
+            $transfer_bill_status
+            $created_at
+            $transfer_bill_approvedate
+            $customer_id
+            or
+            pay_type_id_fk in (1,8,10,11,12) and
+            `dataset_order_status`.`lang_id` = 1 and
+            (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
+            `db_orders`.`id` != 0
+            $business_location_id_fk
+            $action_user
+            $doc_id
+            $transfer_amount_approver
+            $transfer_bill_status
+            $created_at
+            $transfer_bill_approvedate
+            $customer_id
+            ORDER BY CASE
               WHEN approve_status = 1 THEN 1
               ELSE 99 END ASC,
          approve_status,
@@ -600,30 +593,18 @@ ORDER BY CASE
          ->escapeColumns('approval_amount_transfer_over')
 
             ->addColumn('price', function ($row) {
-                // วุฒิเปลี่ยนเป็นยอดที่ต้องโอน
-                // if (@$row->purchase_type_id_fk == 7) {
-                //     return number_format($row->sum_price, 2);
-                // } else if (@$row->purchase_type_id_fk == 5) {
-                //     $total_price = $row->transfer_price;
-                //     return number_format($total_price, 2);
-                // } else {
-                //     return number_format(@$row->sum_price + $row->shipping_price, 2);
-                // }
-
                 return number_format(@$row->transfer_price, 2);
             })
-            // ->addColumn('date', function ($row) {
-            //     return date('d/m/Y H:i:s', strtotime($row->created_at));
-            // })
+
              ->addColumn('customer_name', function($row) {
-                if (!empty($row->user_id_fk)) {
-                  $user = DB::table('users')->select(DB::raw('CONCAT(name, " ", last_name) as user_full_name'))->where('id', $row->user_id_fk)->first();
-                  return $user->user_full_name;
-                }
-                if(!empty($row->customers_id_fk)){
-                @$Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
-                return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
-                    }
+                // if (!empty($row->user_id_fk)) {
+                //   $user = DB::table('users')->select(DB::raw('CONCAT(name, " ", last_name) as user_full_name'))->where('id', $row->user_id_fk)->first();
+                //   return $user->user_full_name;
+                // }
+                // if(!empty($row->customers_id_fk)){
+                // @$Customer = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
+                // return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+                //     }
               })
 
              ->addColumn('note_fullpayonetime', function($row) {
@@ -669,24 +650,11 @@ ORDER BY CASE
              ->escapeColumns('transfer_amount_approver')
 
             ->addColumn('transfer_bill_status', function ($row) {
-                // if(!empty($row->transfer_bill_status)){
-
-                    // if($row->transfer_bill_status==1){
-                    //     return "รออนุมัติ";
-                    // }else if($row->transfer_bill_status==2){
-                    //     return "อนุมัติแล้ว<br>".@$row->transfer_bill_approvedate;
-                    // }else if($row->transfer_bill_status==3){
-                    //     return "ไม่อนุมัติ";
-                    // }else{
-                    //     return '-';
-                    // }
                     $str = "<label style='color:".$row->color.";'>".$row->txt_desc."</label>";
                     if($row->approve_status==1 && $row->approve_one_more == 1){
                       $str .= '<br><label style="color:red;">บิลแก้ไขหลังจากอนุมัติ</label>';
                     }
                     return $str;
-
-                // }
             })
             ->escapeColumns('transfer_bill_status')
             ->addColumn('transfer_bill_date', function ($row) {
@@ -700,7 +668,7 @@ ORDER BY CASE
                 }else{
 
                     $other_b = DB::table('db_orders')
-                    ->select('db_orders.*')
+                    ->select('db_orders.code_order')
                     ->where('db_orders.approve_status','!=',5)
                     ->where('db_orders.pay_with_other_bill_note','like','%'.$row->code_order.'%')
                     ->get();
