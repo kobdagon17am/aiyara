@@ -702,7 +702,7 @@ function qrcode(id,type='') {
                     },
                 ],
                 order: [
-                    [0, 'DESC']
+                    [1, 'DESC']
                 ]
             });
 
