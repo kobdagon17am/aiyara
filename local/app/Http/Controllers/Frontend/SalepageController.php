@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 class SalepageController extends Controller
 {
 	public function aimmura($user_name='',$type=''){
+    return redirect('salepage/warring');
 			$data = DB::table('customers')
       ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
   'customers.last_name','customers.business_name','customers.profile_img','customers.email')
@@ -27,6 +28,7 @@ class SalepageController extends Controller
 	}
 
   public function cashewy($user_name=''){
+    return redirect('salepage/warring');
 
     $data = DB::table('customers')
     ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
@@ -48,6 +50,7 @@ class SalepageController extends Controller
 }
 
 public function aifacad($user_name=''){
+  return redirect('salepage/warring');
 
     $data = DB::table('customers')
     ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
@@ -71,6 +74,7 @@ public function aifacad($user_name=''){
 
 
 public function ailada($user_name=''){
+  return redirect('salepage/warring');
 
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
@@ -91,6 +95,7 @@ public function ailada($user_name=''){
 }
 
 public function trimmax($user_name=''){
+  return redirect('salepage/warring');
 
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
@@ -111,6 +116,8 @@ public function trimmax($user_name=''){
 }
 
 public function aiyara($user_name=''){
+  return redirect('salepage/warring');
+
 
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
@@ -131,6 +138,7 @@ public function aiyara($user_name=''){
 }
 
 	public static function setting(){
+    return redirect('salepage/warring');
 
 		$customer_id =  Auth::guard('c_user')->user();
 

@@ -263,12 +263,12 @@ Route::get('news_detail/{id}','Frontend\NewsController@news_detail')->name('news
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
 
-// Route::get('{user_name?}/1','Frontend\SalepageController@aiyara')->name('1');
-// Route::get('{user_name?}/2','Frontend\SalepageController@aimmura')->name('2');
-// Route::get('{user_name?}/3','Frontend\SalepageController@cashewy')->name('3');
-// Route::get('{user_name?}/4','Frontend\SalepageController@aifacad')->name('4');
-// Route::get('{user_name?}/5','Frontend\SalepageController@ailada')->name('5');
-// Route::get('{user_name?}/6','Frontend\SalepageController@trimmax')->name('6');
+Route::get('{user_name?}/1','Frontend\SalepageController@aiyara')->name('1');
+Route::get('{user_name?}/2','Frontend\SalepageController@aimmura')->name('2');
+Route::get('{user_name?}/3','Frontend\SalepageController@cashewy')->name('3');
+Route::get('{user_name?}/4','Frontend\SalepageController@aifacad')->name('4');
+Route::get('{user_name?}/5','Frontend\SalepageController@ailada')->name('5');
+Route::get('{user_name?}/6','Frontend\SalepageController@trimmax')->name('6');
 
 Route::get('registermember/{user_name?}','Frontend\RegisterSalepageController@index')->name('registermember');
 
@@ -276,12 +276,12 @@ Route::post('get-location', 'Frontend\RegisterSalepageController@getLocation')->
 
 Route::post('register_member_salepage','Frontend\RegisterSalepageController@register_member_salepage')->name('register_member_salepage');
 
-// Route::get('aiyara/{user_name?}','Frontend\SalepageController@aiyara')->name('aiyara');
-// Route::get('aimmura/{user_name?}','Frontend\SalepageController@aimmura')->name('aimmura');
-// Route::get('cashewy/{user_name?}','Frontend\SalepageController@cashewy')->name('cashewy');
-// Route::get('aifacad/{user_name?}','Frontend\SalepageController@aifacad')->name('aifacad');
-// Route::get('ailada/{user_name?}','Frontend\SalepageController@ailada')->name('ailada');
-// Route::get('trimmax/{user_name?}','Frontend\SalepageController@trimmax')->name('trimmax');
+Route::get('aiyara/{user_name?}','Frontend\SalepageController@aiyara')->name('aiyara');
+Route::get('aimmura/{user_name?}','Frontend\SalepageController@aimmura')->name('aimmura');
+Route::get('cashewy/{user_name?}','Frontend\SalepageController@cashewy')->name('cashewy');
+Route::get('aifacad/{user_name?}','Frontend\SalepageController@aifacad')->name('aifacad');
+Route::get('ailada/{user_name?}','Frontend\SalepageController@ailada')->name('ailada');
+Route::get('trimmax/{user_name?}','Frontend\SalepageController@trimmax')->name('trimmax');
 
 Route::get('salepage/setting','Frontend\SalepageController@setting')->name('salepage/setting');
 
@@ -311,6 +311,10 @@ Route::get('payment/success', function() {
 Route::get('payment/fail', function() {
   return view('frontend.payment.fail');
 })->name('payment/fail');
+
+Route::get('salepage/warring', function() {
+  return view('frontend.salepage.warring');
+})->name('salepage/warring');
 
 Route::get('ksher', 'Frontend\Ksher\KsherController@index')->name('ksher');
 Route::post('gateway_ksher', 'Frontend\Ksher\KsherController@gateway_ksher')->name('gateway_ksher');
