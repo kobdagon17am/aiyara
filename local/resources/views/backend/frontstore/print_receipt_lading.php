@@ -405,11 +405,13 @@ if(!empty($gift_voucher)){
     DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '$gift_voucher_price1' ,  '0pv',  1,  '$gift_voucher_price2'); ");
 }
 
-
-$ThisCustomer = DB::select(" select user_name from customers where id=".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
-// ของแถม
-$check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(@$sRow->purchase_type_id_fk?@$sRow->purchase_type_id_fk:0,@$ThisCustomer[0]->user_name,@$sRow->pv_total);
-// dd(@$check_giveaway);
+if($sRow->user_name==''||$sRow->user_name==null){
+  $ThisCustomer = DB::select(" select user_name from customers where id=".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
+  // ของแถม
+  $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(@$sRow->purchase_type_id_fk?@$sRow->purchase_type_id_fk:0,@$ThisCustomer[0]->user_name,@$sRow->pv_total);
+  }else{
+    $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway(@$sRow->purchase_type_id_fk?@$sRow->purchase_type_id_fk:0,$sRow->user_name,@$sRow->pv_total);
+  }
 
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

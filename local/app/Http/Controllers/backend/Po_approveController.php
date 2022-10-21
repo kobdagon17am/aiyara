@@ -597,6 +597,7 @@ class Po_approveController extends Controller
             })
 
              ->addColumn('customer_name', function($row) {
+              return $row->user_name.' : '.$row->name_customer;
                 // if (!empty($row->user_id_fk)) {
                 //   $user = DB::table('users')->select(DB::raw('CONCAT(name, " ", last_name) as user_full_name'))->where('id', $row->user_id_fk)->first();
                 //   return $user->user_full_name;

@@ -263,12 +263,12 @@ Route::get('news_detail/{id}','Frontend\NewsController@news_detail')->name('news
 
 Route::post('message_reply','Frontend\MessageController@message_reply')->name('message_reply');
 
-Route::get('{user_name?}/1','Frontend\SalepageController@aiyara')->name('1');
-Route::get('{user_name?}/2','Frontend\SalepageController@aimmura')->name('2');
-Route::get('{user_name?}/3','Frontend\SalepageController@cashewy')->name('3');
-Route::get('{user_name?}/4','Frontend\SalepageController@aifacad')->name('4');
-Route::get('{user_name?}/5','Frontend\SalepageController@ailada')->name('5');
-Route::get('{user_name?}/6','Frontend\SalepageController@trimmax')->name('6');
+// Route::get('{user_name?}/1','Frontend\SalepageController@aiyara')->name('1');
+// Route::get('{user_name?}/2','Frontend\SalepageController@aimmura')->name('2');
+// Route::get('{user_name?}/3','Frontend\SalepageController@cashewy')->name('3');
+// Route::get('{user_name?}/4','Frontend\SalepageController@aifacad')->name('4');
+// Route::get('{user_name?}/5','Frontend\SalepageController@ailada')->name('5');
+// Route::get('{user_name?}/6','Frontend\SalepageController@trimmax')->name('6');
 
 Route::get('registermember/{user_name?}','Frontend\RegisterSalepageController@index')->name('registermember');
 

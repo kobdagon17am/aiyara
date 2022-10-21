@@ -405,8 +405,6 @@ class FrontstoreController extends Controller
 
      $result = \App\Helpers\Frontend::check_kyc($customers->user_name);
 
-
-
     if($result['status']=='fail'){
       return redirect()->back()->with('error',$customers->user_name.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน');
     }
@@ -2315,7 +2313,6 @@ class FrontstoreController extends Controller
 
   public function form($id = NULL)
   {
-    // dd($id);
     \DB::beginTransaction();
     try {
       if ($id) {
@@ -2364,6 +2361,14 @@ class FrontstoreController extends Controller
       $sRow->agency    = request('agency');
       $sRow->note    = request('note');
       $sRow->action_user = \Auth::user()->id;
+
+      $data_customer = DB::table('customers')
+      ->select('user_name','first_name','last_name','business_name')
+      ->where('id','=',request('customers_id_fk'))
+      ->first();
+      $sRow->user_name = $data_customer->user_name;
+      $sRow->name_customer = $data_customer->first_name.' '.$data_customer->last_name;
+      $sRow->name_customer_business = $data_customer->business_name;
 
       if(request('date_create')){
         if(date('Y-m-d', strtotime(request('date_create'))) == date('Y-m-d') || date('Y-m-d', strtotime(request('date_create'))) > date('Y-m-d')){
@@ -3815,7 +3820,7 @@ class FrontstoreController extends Controller
 
     $sTable = DB::select("
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
-                db_orders.true_money_price,db_orders.prompt_pay_price,
+                db_orders.true_money_price,db_orders.prompt_pay_price, db_orders.user_name, db_orders.name_customer, db_orders.name_customer_business,
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
                 status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
@@ -3848,10 +3853,15 @@ class FrontstoreController extends Controller
       })
       ->escapeColumns('created_at')
       ->addColumn('customer_name', function ($row) {
-        if ($row->customers_id_fk) {
-          $Customer = DB::select(" select user_name, prefix_name, first_name, last_name from customers where id=" . $row->customers_id_fk . " ");
-          return "[" . @$Customer[0]->user_name . '] <br>' . @$Customer[0]->prefix_name . @$Customer[0]->first_name . " " . @$Customer[0]->last_name;
+        if($row->user_name=='' || $row->user_name==null){
+          if ($row->customers_id_fk) {
+            $Customer = DB::select(" select user_name, prefix_name, first_name, last_name from customers where id=" . $row->customers_id_fk . " ");
+            return "[" . @$Customer[0]->user_name . '] <br>' . @$Customer[0]->prefix_name . @$Customer[0]->first_name . " " . @$Customer[0]->last_name;
+          }
+        }else{
+          return "[" . $row->user_name . '] <br>' . $row->name_customer;
         }
+
       })
       ->addColumn('purchase_type', function ($row) {
         if (@$row->purchase_type_id_fk > 0) {

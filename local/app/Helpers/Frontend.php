@@ -74,6 +74,7 @@ class Frontend{
   public static function check_kyc($user_customer){
 
     $c =  DB::table('customers')
+    ->select('id')
 		->where('user_name','=',$user_customer)
 		->first();
 
@@ -82,10 +83,8 @@ class Frontend{
       return $rs;
     }
 
-
-
 		$customer =  DB::table('customers')
-		->select('*')
+		->select('id')
 		->where('user_name','=',$user_customer)
     ->where('regis_doc1_status','=','1')
     ->where('regis_doc2_status','=','1')
@@ -111,8 +110,6 @@ class Frontend{
     'html'=>$html];
     }
     return $rs;
-
-
 	}
 
 	public static function notifications($customer_id){
