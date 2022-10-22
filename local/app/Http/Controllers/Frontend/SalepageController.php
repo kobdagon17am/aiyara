@@ -138,7 +138,7 @@ public function aiyara($user_name=''){
 }
 
 	public static function setting(){
-    return redirect('salepage/warring');
+    // return redirect('salepage/warring');
 
 		$customer_id =  Auth::guard('c_user')->user();
 
