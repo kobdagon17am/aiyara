@@ -2983,7 +2983,7 @@ class AjaxController extends Controller
     public function ajaxGenPromotionCode(Request $request)
     {
 
-
+            // dd($request->all());
             // if($request->promotion_id_fk){
             // $sRow = \App\Models\Backend\PromotionCode::find($request->promotion_id_fk);
             // }else{
@@ -2996,35 +2996,54 @@ class AjaxController extends Controller
             // $sRow->save();
 
             // return "this";
-            // dd();
-
-        // return ($request->promotion_id_fk);
-
-            $sRow = DB::select("SELECT * FROM `db_promotion_code` where promotion_id_fk = ".$request->promotion_id_fk." order by id desc limit 1 ");
-
-
-              $value=DB::table('db_promotion_code')
+            if( @$request->promotion_code_id_fk ){
+            $sRow = DB::select("SELECT * FROM `db_promotion_code` where promotion_id_fk = ".$request->promotion_id_fk." and id = ".@$request->promotion_code_id_fk." order by id desc limit 1 ");
+            $value=DB::table('db_promotion_code')
               ->where('promotion_id_fk', $request->promotion_id_fk)
+              ->where('id', @$request->promotion_code_id_fk)
               ->get();
-
-              if($value->count() == 0){
-                       DB::table('db_promotion_code')->insert(array(
-                        'promotion_id_fk' =>  $request->promotion_id_fk,
-                        'pro_sdate' =>  $request->pro_sdate,
-                        'pro_edate' =>  $request->pro_edate,
-                        'status' =>  1 ,
-                        'created_at' => date("Y-m-d H:i:s"),
-                      ));
-              }else{
-               $value=   DB::table('db_promotion_code')
+              $value = DB::table('db_promotion_code')
                     ->where('promotion_id_fk', $request->promotion_id_fk)
+                    ->where('id', @$request->promotion_code_id_fk)
                     ->update(array(
                         'pro_sdate' =>  $request->pro_sdate,
                         'pro_edate' =>  $request->pro_edate,
+                        'coupon_terms' => $request->coupon_terms,
                         'status' => 1 ,
                         'created_at' => date("Y-m-d H:i:s"),
                     ));
-              }
+
+            }else{
+              $data_id = DB::table('db_promotion_code')->insertGetId(array(
+                'promotion_id_fk' =>  $request->promotion_id_fk,
+                'pro_sdate' =>  $request->pro_sdate,
+                'pro_edate' =>  $request->pro_edate,
+                'coupon_terms' => $request->coupon_terms,
+                'status' =>  1 ,
+                'created_at' => date("Y-m-d H:i:s"),
+              ));
+              $sRow = DB::select("SELECT * FROM `db_promotion_code` where promotion_id_fk = ".$request->promotion_id_fk." and id = ".$data_id." order by id desc limit 1 ");
+            }
+
+
+              // if($value->count() == 0){
+              //          DB::table('db_promotion_code')->insert(array(
+              //           'promotion_id_fk' =>  $request->promotion_id_fk,
+              //           'pro_sdate' =>  $request->pro_sdate,
+              //           'pro_edate' =>  $request->pro_edate,
+              //           'status' =>  1 ,
+              //           'created_at' => date("Y-m-d H:i:s"),
+              //         ));
+              // }else{
+              //  $value=   DB::table('db_promotion_code')
+              //       ->where('promotion_id_fk', $request->promotion_id_fk)
+              //       ->update(array(
+              //           'pro_sdate' =>  $request->pro_sdate,
+              //           'pro_edate' =>  $request->pro_edate,
+              //           'status' => 1 ,
+              //           'created_at' => date("Y-m-d H:i:s"),
+              //       ));
+              // }
 
             DB::select(" TRUNCATE rand_code ; ");
             $permitted_chars = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
@@ -3032,17 +3051,10 @@ class AjaxController extends Controller
             $amt = $request->GenAmt;
             $percent = $amt * (20/100);
 
-        // return $amt.":".$str_digit.":".$percent;
-        // dd();
-
-
             $arr = [];
             for ($i=1; $i <= ($amt + $percent) ; $i++) {
                 array_push($arr,$this->generate_string($permitted_chars, $str_digit));
             }
-
-        // return $arr;
-        // dd();
 
             $unique = array_unique($arr);
             $duplicates = array_diff_assoc($arr, $unique);
@@ -3064,18 +3076,12 @@ class AjaxController extends Controller
                  DB::select(" INSERT IGNORE INTO rand_code (rand_code) VALUES ('".$value."')  ");
             }
 
-            // return "to this";
-            // dd();
-
         $rand_code = DB::select(" SELECT * FROM rand_code ");
         if(count($rand_code) < $amt){
             // echo " จำนวนหลักไม่พอ";
             return 'x';
         }
 
-
-    // return "to this";
-            // dd();
 
         $rows = DB::select(" SELECT * from rand_code ");
 
