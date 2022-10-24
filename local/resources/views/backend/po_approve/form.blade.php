@@ -939,12 +939,15 @@
             var approval_amount_transfer = $('#approval_amount_transfer').val();
             var total_price_sum = $('#total_price_sum').val();
             total_price_sum = total_price_sum.replace(",", "");
+            total_price_sum = total_price_sum.replace(",", "");
+            total_price_sum = total_price_sum.replace(",", "");
+            // alert(total_price_sum);
             approval_amount_transfer = parseFloat(approval_amount_transfer);
             total_price_sum = parseFloat(total_price_sum);
             if (approval_amount_transfer == total_price_sum) {
                 $('.btn_approve_con_real').trigger('click');
             } else {
-                alert('กรุณาระบุยอดเงินให้ตรงกัน');
+                alert('กรุณาระบุยอดเงินให้ตรงกัน '+'('+approval_amount_transfer+'/'+total_price_sum+')');
             }
 
         });

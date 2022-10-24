@@ -389,7 +389,7 @@ class FrontstoreController extends Controller
   }
   public function store(Request $request)
   {
-
+// dd('ok');
     $customers = DB::table('customers')->select('user_name','business_location_id')->where('id',@$request->customers_id_fk)->first();
     if($customers){
 
@@ -1153,8 +1153,6 @@ class FrontstoreController extends Controller
   public function update(Request $request, $id)
   {
   //  dd($request->all());
-
-
     // dd($request->transfer_money_datetime." : AAAA");
     // db_delivery
 
@@ -1167,6 +1165,16 @@ class FrontstoreController extends Controller
       }
     }
   }
+
+  $check_data = \App\Models\Backend\Frontstore::select('id','code_order')->find($request->frontstore_id);
+  if($check_data){
+    $check = \App\Models\Backend\Frontstore::select('id','code_order')->where('code_order',$check_data->code_order)->where('id','!=',$check_data->id)->get();
+    if(count($check )>0){
+        return redirect()->back()->with('error','ไม่สามารถทำรายการได้เนื่องจากเลขบิลซ้ำ!! ..กรุณาเยิกเลิกและออกรายการใหม่');
+        return false;
+    }
+  }
+
 
     DB::beginTransaction();
     try {
