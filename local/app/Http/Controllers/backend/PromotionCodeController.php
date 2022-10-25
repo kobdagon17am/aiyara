@@ -74,7 +74,7 @@ class PromotionCodeController extends Controller
             } else {
               return $query->where('db_promotion_code.status', $status);
             }
-        });
+        })->orderBy('id','desc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('promotion_name', function($row) {

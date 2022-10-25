@@ -789,7 +789,7 @@ class FrontstorelistController extends Controller
                 // วุฒิเพิ่มมาว่าโปรซ้ำไหม
                 // $check_promotion_same = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',@$request->frontstore_id)->where('promotion_id_fk',@$request->promotion_id_fk)->first();
                 // วุฒิเช็คว่าเคยมีโปคูปองไหม
-                $check_promotion_same = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk',@$request->frontstore_id)->where('promotion_code','!=','')->first();
+                $check_promotion_same = \App\Models\Backend\Frontstorelist::select('id')->where('frontstore_id_fk',@$request->frontstore_id)->where('promotion_code','!=','')->first();
                 if(!$check_promotion_same){
 
                   $sRow = new \App\Models\Backend\Frontstorelist;
