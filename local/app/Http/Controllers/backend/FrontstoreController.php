@@ -717,7 +717,7 @@ class FrontstoreController extends Controller
       }
     }
 
-    $PaymentSlip = DB::select(" select id,note2, status,transfer_bill_date,order_channel,url,file from payment_slip where code_order='" . $sRow->code_order . "' ");
+    $PaymentSlip = DB::select(" select * from payment_slip where code_order='" . $sRow->code_order . "' ");
 
     $cnt_slip = count($PaymentSlip);
 

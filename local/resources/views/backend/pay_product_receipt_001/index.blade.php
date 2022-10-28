@@ -812,34 +812,34 @@ $(function() {
     var sU = "{{@$sU}}";
     var sD = "{{@$sD}}";
     var oTable_003;
-    $(function() {
-    	$.fn.dataTable.ext.errMode = 'throw';
-        oTable_003 = $('#data-table-003').DataTable({
-        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-            processing: true,
-            serverSide: true,
-            scroller: true,
-            destroy:true,
-            ordering: false,
-             ajax: {
-    	        url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
-    	          data :{
-                	_token: '{{csrf_token()}}',
-                      },
-                  method: 'POST',
-                },
-            columns: [
-                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
-                    {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
-                    {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
-                    {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
-                ],
-                rowCallback: function(nRow, aData, dataIndex){
-                }
-        });
+    // $(function() {
+    // 	$.fn.dataTable.ext.errMode = 'throw';
+    //     oTable_003 = $('#data-table-003').DataTable({
+    //     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+    //         processing: true,
+    //         serverSide: true,
+    //         scroller: true,
+    //         destroy:true,
+    //         ordering: false,
+    //          ajax: {
+    // 	        url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
+    // 	          data :{
+    //             	_token: '{{csrf_token()}}',
+    //                   },
+    //               method: 'POST',
+    //             },
+    //         columns: [
+    //                 {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+    //                 {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
+    //                 {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
+    //                 {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
+    //             ],
+    //             rowCallback: function(nRow, aData, dataIndex){
+    //             }
+    //     });
 
 
-    });
+    // });
     </script>
 
 
@@ -865,40 +865,40 @@ $(function() {
 				    	 var sU = "{{@$sU}}";
 					    var sD = "{{@$sD}}";
 					    var oTable_003;
-					    $(function() {
-					    	$.fn.dataTable.ext.errMode = 'throw';
-					        oTable_003 = $('#data-table-003').DataTable({
-					        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-					            processing: true,
-					            serverSide: true,
-					            scroller: true,
-					            destroy:true,
-					            ordering: false,
-					            ajax: {
-	                              url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
-	                              data :{
-	                              	_token: '{{csrf_token()}}',
-	                                    business_location_id_fk:business_location_id_fk,
-	                                    branch_id_fk:branch_id_fk,
-	                                    customer_id_fk:customer_id_fk,
-	                                    startDate:startDate,
-	                                    endDate:endDate,
-	                                    status_sent:status_sent,
-	                                    txtSearch_003:txtSearch_003,
-	                                  },
-	                                method: 'POST',
-	                              },
-					            columns: [
-					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
-					                    {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
-					                    {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
-					                    {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
-					                ],
-					                rowCallback: function(nRow, aData, dataIndex){
-					                }
-					        });
+					    // $(function() {
+					    // 	$.fn.dataTable.ext.errMode = 'throw';
+					    //     oTable_003 = $('#data-table-003').DataTable({
+					    //     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+					    //         processing: true,
+					    //         serverSide: true,
+					    //         scroller: true,
+					    //         destroy:true,
+					    //         ordering: false,
+					    //         ajax: {
+	            //                   url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
+	            //                   data :{
+	            //                   	_token: '{{csrf_token()}}',
+	            //                         business_location_id_fk:business_location_id_fk,
+	            //                         branch_id_fk:branch_id_fk,
+	            //                         customer_id_fk:customer_id_fk,
+	            //                         startDate:startDate,
+	            //                         endDate:endDate,
+	            //                         status_sent:status_sent,
+	            //                         txtSearch_003:txtSearch_003,
+	            //                       },
+	            //                     method: 'POST',
+	            //                   },
+					    //         columns: [
+					    //                 {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+					    //                 {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
+					    //                 {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
+					    //                 {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
+					    //             ],
+					    //             rowCallback: function(nRow, aData, dataIndex){
+					    //             }
+					    //     });
 
-					    });
+					    // });
 					// @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
           			setTimeout(function(){
@@ -968,40 +968,40 @@ $(function() {
  						var sU = "{{@$sU}}";
 					    var sD = "{{@$sD}}";
 					    var oTable_003;
-					    $(function() {
-					    	$.fn.dataTable.ext.errMode = 'throw';
-					        oTable_003 = $('#data-table-003').DataTable({
-					        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-					            processing: true,
-					            serverSide: true,
-					            scroller: true,
-					            destroy:true,
-					            ordering: false,
-					            ajax: {
-	                              url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
-	                              data :{
-	                              	_token: '{{csrf_token()}}',
-	                                    business_location_id_fk:business_location_id_fk,
-	                                    branch_id_fk:branch_id_fk,
-	                                    customer_id_fk:customer_id_fk,
-	                                    startDate:startDate,
-	                                    endDate:endDate,
-	                                    status_sent:status_sent,
-	                                    txtSearch_003:txtSearch_003,
-	                                  },
-	                                method: 'POST',
-	                              },
-					            columns: [
-					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
-					                    {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
-					                    {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
-					                    {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
-					                ],
-					                rowCallback: function(nRow, aData, dataIndex){
-					                }
-					        });
+					    // $(function() {
+					    // 	$.fn.dataTable.ext.errMode = 'throw';
+					    //     oTable_003 = $('#data-table-003').DataTable({
+					    //     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+					    //         processing: true,
+					    //         serverSide: true,
+					    //         scroller: true,
+					    //         destroy:true,
+					    //         ordering: false,
+					    //         ajax: {
+	            //                   url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
+	            //                   data :{
+	            //                   	_token: '{{csrf_token()}}',
+	            //                         business_location_id_fk:business_location_id_fk,
+	            //                         branch_id_fk:branch_id_fk,
+	            //                         customer_id_fk:customer_id_fk,
+	            //                         startDate:startDate,
+	            //                         endDate:endDate,
+	            //                         status_sent:status_sent,
+	            //                         txtSearch_003:txtSearch_003,
+	            //                       },
+	            //                     method: 'POST',
+	            //                   },
+					    //         columns: [
+					    //                 {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+					    //                 {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
+					    //                 {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
+					    //                 {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
+					    //             ],
+					    //             rowCallback: function(nRow, aData, dataIndex){
+					    //             }
+					    //     });
 
-					    });
+					    // });
                   // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                 setTimeout(function(){
                    $(".myloading").hide();
@@ -1365,40 +1365,40 @@ $(function() {
           	 				  	var sU = "{{@$sU}}";
           					    var sD = "{{@$sD}}";
           					    var oTable_003;
-          					    $(function() {
-          					    	$.fn.dataTable.ext.errMode = 'throw';
-          					        oTable_003 = $('#data-table-003').DataTable({
-          					        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-          					            processing: true,
-          					            serverSide: true,
-          					            scroller: true,
-          					            destroy:true,
-          					            ordering: false,
-          					            ajax: {
-          	                              url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
-          	                              data :{
-          	                              	_token: '{{csrf_token()}}',
-          	                                    business_location_id_fk:business_location_id_fk,
-          	                                    branch_id_fk:branch_id_fk,
-          	                                    customer_id_fk:customer_id_fk,
-          	                                    startDate:startDate,
-          	                                    endDate:endDate,
-          	                                    status_sent:status_sent,
-          	                                    txtSearch_003:txtSearch_003,
-          	                                  },
-          	                                method: 'POST',
-          	                              },
-          					            columns: [
-          					                    {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
-          					                    {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
-          					                    {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
-          					                    {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
-          					                ],
-          					                rowCallback: function(nRow, aData, dataIndex){
-          					                }
-          					        });
+          					    // $(function() {
+          					    // 	$.fn.dataTable.ext.errMode = 'throw';
+          					    //     oTable_003 = $('#data-table-003').DataTable({
+          					    //     "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+          					    //         processing: true,
+          					    //         serverSide: true,
+          					    //         scroller: true,
+          					    //         destroy:true,
+          					    //         ordering: false,
+          					    //         ajax: {
+          	            //                   url: '{{ route('backend.pay_product_receipt_tb3.datatable') }}',
+          	            //                   data :{
+          	            //                   	_token: '{{csrf_token()}}',
+          	            //                         business_location_id_fk:business_location_id_fk,
+          	            //                         branch_id_fk:branch_id_fk,
+          	            //                         customer_id_fk:customer_id_fk,
+          	            //                         startDate:startDate,
+          	            //                         endDate:endDate,
+          	            //                         status_sent:status_sent,
+          	            //                         txtSearch_003:txtSearch_003,
+          	            //                       },
+          	            //                     method: 'POST',
+          	            //                   },
+          					    //         columns: [
+          					    //                 {data: 'column_001', title :'<span style="vertical-align: middle;"> เลขที่ใบเสร็จ </span> ', className: 'text-center w100'},
+          					    //                 {data: 'column_002', title :'<center><span style="vertical-align: middle;"> รายการสินค้า </span></center> ', className: 'text-left w600 '},
+          					    //                 {data: 'column_003', title :'<center><span style="vertical-align: middle;"> รหัส:ชื่อสมาชิก </span></center> ', className: 'text-left '},
+          					    //                 {data: 'column_004', title :'<center><span style="vertical-align: middle;"> สาขา </span></center> ', className: 'text-left '},
+          					    //             ],
+          					    //             rowCallback: function(nRow, aData, dataIndex){
+          					    //             }
+          					    //     });
 
-          					    });
+          					    // });
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
