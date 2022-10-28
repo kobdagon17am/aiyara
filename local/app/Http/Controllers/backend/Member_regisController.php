@@ -82,6 +82,14 @@ class Member_regisController extends Controller
     public function store(Request $request)
     {
       // dd($request->all());
+      $register_files = DB::table('register_files')->select('customer_id')->where('id',$request->id)->first();
+      if($register_files){
+        $customers = DB::table('customers')->select('user_name')->where('id',$register_files->customer_id)->first();
+        $customers_arr = DB::table('customers')->select('id')->where('user_name',$customers->user_name)->get();
+        if(count($customers_arr)>1){
+          return redirect()->back()->with(['alert'=>\App\Models\Alert::Msg('error','ลูกค้ามีรหัสสมาชิกซ้ำกันในระบบ ไม่สามารถทำรายการได้')]);
+        }
+      }
       // if(isset($request->save_regis)){
       //       $sRow = \App\Models\Backend\Member_regis::find($id);
       // }else{
