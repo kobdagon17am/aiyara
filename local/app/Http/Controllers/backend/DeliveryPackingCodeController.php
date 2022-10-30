@@ -102,6 +102,7 @@ class DeliveryPackingCodeController extends Controller
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery
+      // แก้ไขที่อยู่
       ->addColumn('status_pick_pack', function($row) {
          $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
          if(@$DP){
@@ -212,9 +213,7 @@ class DeliveryPackingCodeController extends Controller
 
             if($addr){
               if($row->status_to_wh==0){
-
-                  return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile.", ".@$addr[0]->tel_home."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ".$de;
-
+                  return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile.", ".@$addr[0]->tel_home."<br>"."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] [".@$addr[0]->receipt."] </span> ".$de;
               }else{
                 return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile.", ".@$addr[0]->tel_home."<br>".$de;
                 // ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
