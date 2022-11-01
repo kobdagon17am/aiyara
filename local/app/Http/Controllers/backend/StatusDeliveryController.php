@@ -17,9 +17,9 @@ class StatusDeliveryController extends Controller
       // รายที่ยังไม่อนุมัติ และ รอจัดส่ง และ ไม่ได้รอส่งไปสาขาอื่น
       // $receipt = \App\Models\Backend\Delivery::where('approver','NULL')->get();
         // $receipt = DB::select(" select receipt from `db_delivery` where approver is null ; ");
-        $receipt = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
+        // $receipt = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
         // dd($sDelivery);
-        $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
+        // $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
 
         $User_branch_id = \Auth::user()->branch_id_fk;
         $sBranchs = \App\Models\Backend\Branchs::get();
@@ -39,12 +39,12 @@ class StatusDeliveryController extends Controller
 
         return View('backend.status_delivery.index')->with(
           array(
-             'receipt'=>$receipt,
+            //  'receipt'=>$receipt,
              'sBranchs'=>$sBranchs,
              'Warehouse'=>$Warehouse,'Zone'=>$Zone,'Shelf'=>$Shelf,
              'User_branch_id'=>$User_branch_id,
              'sBusiness_location'=>$sBusiness_location,
-             'sPacking'=>$sPacking,
+            //  'sPacking'=>$sPacking,
              'shipping_cost'=>$shipping_cost,
              'sProvince'=>$sProvince,
              'sAmphures'=>$sAmphures,
