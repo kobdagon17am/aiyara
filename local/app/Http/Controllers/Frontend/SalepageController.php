@@ -155,6 +155,7 @@ public function aiyara($user_name=''){
 
 			$count_data = DB::table('db_salepage_setting')
 			->where('customers_id_fk','=',$customer_id)
+      ->orwhere('customers_username','=',Auth::guard('c_user')->user()->user_name)
 			->count();
 
 			if($count_data > 0){
@@ -166,6 +167,7 @@ public function aiyara($user_name=''){
 
 				DB::table('db_salepage_setting')->insert([
 					'customers_id_fk'=>$customer_id,
+          'customers_username'=> Auth::guard('c_user')->user()->user_name,
 					'url_fb'=>$req->fb,
 					'url_ig'=>$req->ig,
 					'url_line'=>$req->line,
