@@ -1507,7 +1507,7 @@ if(count($sTable_re)!=0){
 
     public function Datatable003(Request $req){
 
-
+// dd('ok');
         if(!empty($req->business_location_id_fk)){
            $w01 = " AND db_pay_product_receipt_002.business_location_id_fk=".$req->business_location_id_fk ;
         }else{

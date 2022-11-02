@@ -1716,7 +1716,7 @@
         // ที่อยู่การจัดส่ง (กำหนดเอง)
         $(document).on('click', '.class_add_address', function(event) {
             var id = $(this).data('id');
-            // console.log(id);
+            console.log(id);
             if (id) {
                 // ส่ง ajax ไปเอา orders_id_fk
                 $.ajax({

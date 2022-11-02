@@ -1,1097 +1,1260 @@
 @extends('backend.layouts.master')
 
-@section('title') Aiyara Planet @endsection
+@section('title')
+    Aiyara Planet
+@endsection
 
 @section('css')
-
-<style>
-    .select2-selection {height: 34px !important;margin-left: 3px;}
-    .border-left-0 {height: 67%;}
-
-    .form-group {
-        margin-bottom: 0rem  !important;
-     }
-
-    .btn-outline-secondary {
-        margin-bottom: 36% !important;
-    }
-</style>
-
-<style type="text/css">
-	table.minimalistBlack {
-	  border: 2px solid #000000;
-	  width: 100%;
-	  text-align: left;
-	  border-collapse: collapse;
-	}
-	table.minimalistBlack td, table.minimalistBlack th {
-	  border: 1px solid #000000;
-	  padding: 5px 4px;
-	}
-	table.minimalistBlack tbody td {
-	  font-size: 13px;
-	}
-	table.minimalistBlack thead {
-	  background: #CFCFCF;
-	  background: -moz-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
-	  background: -webkit-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
-	  background: linear-gradient(to bottom, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
-	  border-bottom: 2px solid #000000;
-	}
-	table.minimalistBlack thead th {
-	  font-size: 15px;
-	  font-weight: bold;
-	  color: #000000;
-	  text-align: center;
-	}
-	table.minimalistBlack tfoot td {
-	  font-size: 14px;
-	}
-
-  .dt-checkboxes-select-all{display: none;}
-
-</style>
-<style>
-    @media screen and (min-width: 676px) {
-        .modal-dialog {
-          max-width: 600px !important; /* New width for default modal */
+    <style>
+        .select2-selection {
+            height: 34px !important;
+            margin-left: 3px;
         }
-    }
 
-    .select2-selection {height: 34px !important;margin-left: 3px;}
-    .border-left-0 {height: 67%;}
+        .border-left-0 {
+            height: 67%;
+        }
 
-</style>
+        .form-group {
+            margin-bottom: 0rem !important;
+        }
 
+        .btn-outline-secondary {
+            margin-bottom: 36% !important;
+        }
+    </style>
 
+    <style type="text/css">
+        table.minimalistBlack {
+            border: 2px solid #000000;
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+        }
+
+        table.minimalistBlack td,
+        table.minimalistBlack th {
+            border: 1px solid #000000;
+            padding: 5px 4px;
+        }
+
+        table.minimalistBlack tbody td {
+            font-size: 13px;
+        }
+
+        table.minimalistBlack thead {
+            background: #CFCFCF;
+            background: -moz-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+            background: -webkit-linear-gradient(top, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+            background: linear-gradient(to bottom, #dbdbdb 0%, #d3d3d3 66%, #CFCFCF 100%);
+            border-bottom: 2px solid #000000;
+        }
+
+        table.minimalistBlack thead th {
+            font-size: 15px;
+            font-weight: bold;
+            color: #000000;
+            text-align: center;
+        }
+
+        table.minimalistBlack tfoot td {
+            font-size: 14px;
+        }
+
+        .dt-checkboxes-select-all {
+            display: none;
+        }
+    </style>
+    <style>
+        @media screen and (min-width: 676px) {
+            .modal-dialog {
+                max-width: 600px !important;
+                /* New width for default modal */
+            }
+        }
+
+        .select2-selection {
+            height: 34px !important;
+            margin-left: 3px;
+        }
+
+        .border-left-0 {
+            height: 67%;
+        }
+    </style>
 @endsection
 
 @section('content')
-<div class="myloading"></div>
+    <div class="myloading"></div>
 
-<!-- start page title -->
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0 font-size-18  "> สถานะสินค้าจัดส่ง  </h4>
-             <!-- <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล) </span> -->
-            <!-- test_clear_data -->
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-flex align-items-center justify-content-between">
+                <h4 class="mb-0 font-size-18  "> สถานะสินค้าจัดส่ง </h4>
+                <!-- <span style="font-weight: bold;padding-right: 10px;"> ใบเสร็จรอจัดเบิก (รายบิล) </span> -->
+                <!-- test_clear_data -->
+            </div>
         </div>
     </div>
-</div>
-<!-- end page title -->
+    <!-- end page title -->
 
-  <?php
-      $sPermission = \Auth::user()->permission ;
-      // $menu_id = @$_REQUEST['menu_id'];
-      $menu_id = Session::get('session_menu_id');
-      if($sPermission==1){
+    <?php
+    $sPermission = \Auth::user()->permission;
+    // $menu_id = @$_REQUEST['menu_id'];
+    $menu_id = Session::get('session_menu_id');
+    if ($sPermission == 1) {
         $sC = '';
         $sU = '';
         $sD = '';
         $role_group_id = '%';
         $can_packing_list = '1';
         $can_payproduct = '1';
-      }else{
+    } else {
         $role_group_id = \Auth::user()->role_group_id_fk;
         // echo $role_group_id;
         // echo $menu_id;
-        $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
-        $sC = @$menu_permit->c==1?'':'display:none;';
-        $sU = @$menu_permit->u==1?'':'display:none;';
-        $sD = @$menu_permit->d==1?'':'display:none;';
-        $can_packing_list = @$menu_permit->can_packing_list==1?'1':'0';
-        $can_payproduct = @$menu_permit->can_payproduct==1?'1':'0';
-      }
-      // echo $sPermission;
-      // echo $role_group_id;
-      // echo $menu_id;
-      // echo  @$menu_permit->can_packing_list;
-      // echo  @$menu_permit->can_payproduct;
-      // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";
-   ?>
+        $menu_permit = DB::table('role_permit')
+            ->where('role_group_id_fk', $role_group_id)
+            ->where('menu_id_fk', $menu_id)
+            ->first();
+        $sC = @$menu_permit->c == 1 ? '' : 'display:none;';
+        $sU = @$menu_permit->u == 1 ? '' : 'display:none;';
+        $sD = @$menu_permit->d == 1 ? '' : 'display:none;';
+        $can_packing_list = @$menu_permit->can_packing_list == 1 ? '1' : '0';
+        $can_payproduct = @$menu_permit->can_payproduct == 1 ? '1' : '0';
+    }
+    // echo $sPermission;
+    // echo $role_group_id;
+    // echo $menu_id;
+    // echo  @$menu_permit->can_packing_list;
+    // echo  @$menu_permit->can_payproduct;
+    // echo $can_packing_list."xxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    ?>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
 
 
 
-        <div class="myBorder" >
+                    <div class="myBorder">
 
 
-@if(@\Auth::user()->permission==1)
+                        @if (@\Auth::user()->permission == 1)
 
-              <div class="row" >
-                 <div class="col-md-6 " >
-                      <div class="form-group row">
-                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
-                        <div class="col-md-9">
-                         <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
-                              <option value="">-Business Location-</option>
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                  <option value="{{@$r->id}}"  >{{$r->txt_desc}}</option>
-                                @endforeach
-                              @endif
-                            </select>
-                        </div>
-                      </div>
-                    </div>
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <div class="form-group row">
+                                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business
+                                            Location : </label>
+                                        <div class="col-md-9">
+                                            <select id="business_location_id_fk" name="business_location_id_fk"
+                                                class="form-control select2-templating " required="">
+                                                <option value="">-Business Location-</option>
+                                                @if (@$sBusiness_location)
+                                                    @foreach (@$sBusiness_location as $r)
+                                                        <option value="{{ @$r->id }}">{{ $r->txt_desc }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <div class="col-md-6 " >
-                      <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
-                            <div class="col-md-9">
+                                <div class="col-md-6 ">
+                                    <div class="form-group row">
+                                        <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ :
+                                        </label>
+                                        <div class="col-md-9">
 
-                              <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
-                                 <option disabled selected value="">กรุณาเลือก Business Location ก่อน</option>
-                              </select>
+                                            <select id="branch_id_fk" name="branch_id_fk"
+                                                class="form-control select2-templating ">
+                                                <option disabled selected value="">กรุณาเลือก Business Location ก่อน
+                                                </option>
+                                            </select>
 
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-                    </div>
-               </div>
-@ELSE
+                        @ELSE
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <div class="form-group row">
+                                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business
+                                            Location : </label>
+                                        <div class="col-md-9">
+                                            <select class="form-control select2-templating " disabled="">
+                                                @if (@$sBusiness_location)
+                                                    @foreach (@$sBusiness_location as $r)
+                                                        <option value="{{ @$r->id }}"
+                                                            {{ @$r->id == \Auth::user()->business_location_id_fk ? 'selected' : '' }}>
+                                                            {{ $r->txt_desc }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-6 ">
+                                    <div class="form-group row">
+                                        <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ :
+                                        </label>
+                                        <div class="col-md-9">
 
-              <div class="row" >
-                 <div class="col-md-6 " >
-                      <div class="form-group row">
-                        <label for="business_location_id_fk" class="col-md-3 col-form-label">Business Location : </label>
-                        <div class="col-md-9">
-                         <select  class="form-control select2-templating " disabled="" >
-                              @if(@$sBusiness_location)
-                                @foreach(@$sBusiness_location AS $r)
-                                  <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->business_location_id_fk))?'selected':'' }} >{{$r->txt_desc}}</option>
-                                @endforeach
-                              @endif
-                            </select>
-                        </div>
-                      </div>
-                    </div>
+                                            <select class="form-control select2-templating " disabled="">
+                                                @if (@$sBranchs)
+                                                    @foreach (@$sBranchs as $r)
+                                                        <option value="{{ @$r->id }}"
+                                                            {{ @$r->id == \Auth::user()->branch_id_fk ? 'selected' : '' }}>
+                                                            {{ $r->b_name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
 
-                    <div class="col-md-6 " >
-                      <div class="form-group row">
-                            <label for="branch_id_fk" class="col-md-3 col-form-label"> สาขาที่ดำเนินการ : </label>
-                            <div class="col-md-9">
-
-                                 <select  class="form-control select2-templating " disabled=""  >
-                                 @if(@$sBranchs)
-                                  @foreach(@$sBranchs AS $r)
-                                    <option value="{{@$r->id}}" {{ (@$r->id==(\Auth::user()->branch_id_fk))?'selected':'' }} >{{$r->b_name}}</option>
-                                  @endforeach
-                                 @endif
-                                </select>
-
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-                    </div>
-               </div>
 
-@ENDIF
+                        @ENDIF
 
 
-               <div class="row" >
-                <div class="col-md-6 " >
-                  <div class="form-group row">
-                    <label for="receipt" class="col-md-3 col-form-label"> รหัสใบเสร็จ : </label>
-                    <div class="col-md-9">
-                        <select id="receipt" name="receipt" class="form-control order_id_select2 " required multiple="multiple">
-                        <option value="">-Select-</option>
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="receipt" class="col-md-3 col-form-label"> รหัสใบเสร็จ : </label>
+                                    <div class="col-md-9">
+                                        <select id="receipt" name="receipt" class="form-control order_id_select2 "
+                                            required multiple="multiple">
+                                            <option value="">-Select-</option>
 
-                         @if(@$receipt)
-                          {{-- @foreach(@$receipt AS $r)
-                            <option value="{{$r->receipt}}" >
-                              {{$r->receipt}}
-                            </option>
-                          @endforeach --}}
-                          @foreach(@$receipt AS $r)
+                                            {{-- @if (@$receipt)
+                          @foreach (@$receipt as $r)
                           <option value="{{$r->code_order}}" >
                             {{$r->code_order}}
                           </option>
                         @endforeach
-                        @endif
+                        @endif --}}
 
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 " >
-                  <div class="form-group row">
-                   <!--  <label for="" class="col-md-3 col-form-label"> รหัส Packing :  </label>
-                    <div class="col-md-9">
-                      <select id="" name="" class="form-control select2-templating " >
-                        <option value="">-Select-</option>
-                      </select>
-                    </div> -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <!--  <label for="" class="col-md-3 col-form-label"> รหัส Packing :  </label>
+                        <div class="col-md-9">
+                          <select id="" name="" class="form-control select2-templating " >
+                            <option value="">-Select-</option>
+                          </select>
+                        </div> -->
 
-                    <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส-ชื่อลูกค้า : </label>
-                    <div class="col-md-9">
-                       <select id="customer_id_fk" name="customer_id_fk" class="form-control select2-templating " >
-                        <option value="">-Select-</option>
-                      </select>
-                    </div>
+                                    <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส-ชื่อลูกค้า : </label>
+                                    <div class="col-md-9">
+                                        <select id="customer_id_fk" name="customer_id_fk"
+                                            class="form-control select2-templating ">
+                                            <option value="">-Select-</option>
+                                        </select>
+                                    </div>
 
-                  </div>
-                </div>
-              </div>
-
-              <div class="row" >
-                <div class="col-md-6 " >
-                  <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label"> ช่วงวันที่ออกบิล : </label>
-                     <div class="col-md-9 d-flex">
-                      <input id="bill_sdate"  autocomplete="off" placeholder="Begin Date"  style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black" value="" />
-                      <input id="bill_edate"  autocomplete="off" placeholder="End Date"  style="border: 1px solid grey;font-weight: bold;color: black" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 " >
-                  <div class="form-group row">
-                    <label for="" class="col-md-3 col-form-label">  </label>
-                    <div class="col-md-9 d-flex">
-                      <a class="btn btn-primary btn-sm btnSearch01 " href="javascript: void(0);" style="font-size: 14px !important;margin-left: 0.8%;" >
-                        <i class="bx bx-search align-middle "></i> SEARCH
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
- </div>
-
-              <div class="myBorder">
-                      <div style="">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ Packing List </span>
-                          </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group row">
-                          <div class="col-md-12">
 
-
-              <?php //if($can_payproduct=='1'){ ?>
-
-                    <table id="data-table-packing" class="table table-bordered " style="width: 100%;"></table>
-
-                    <br>
-
-                          </div>
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label"> ช่วงวันที่ออกบิล : </label>
+                                    <div class="col-md-9 d-flex">
+                                        <input id="bill_sdate" autocomplete="off" placeholder="Begin Date"
+                                            style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black"
+                                            value="" />
+                                        <input id="bill_edate" autocomplete="off" placeholder="End Date"
+                                            style="border: 1px solid grey;font-weight: bold;color: black" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label"> </label>
+                                    <div class="col-md-9 d-flex">
+                                        <a class="btn btn-primary btn-sm btnSearch01 " href="javascript: void(0);"
+                                            style="font-size: 14px !important;margin-left: 0.8%;">
+                                            <i class="bx bx-search align-middle "></i> SEARCH
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+
+                    </div>
+
+                    <div class="myBorder">
+                        <div style="">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ
+                                        Packing List </span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+
+
+                                    <?php //if($can_payproduct=='1'){
+                                    ?>
+
+                                    <table id="data-table-packing" class="table table-bordered " style="width: 100%;">
+                                    </table>
+
+                                    <br>
+
+                                </div>
+                            </div>
+                        </div>
                         <div>
-                   <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก ไม่ได้กรอกประวัติที่อยู่ไว้
-                  </div>
+                            <br><b>หมายเหตุ</b> ที่อยู่จัดส่ง กรณี ไม่มีข้อมูลที่อยู่ อาจเป็นไปได้ว่า ฐานข้อมูลสมาชิก
+                            ไม่ได้กรอกประวัติที่อยู่ไว้
+                        </div>
                     </div>
 
+
+
+                </div>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+
+
+
+
+    <div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle"
+        aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง
+                            (กำหนดเอง) </b></h5>
+                    <p style="color:red;">หากต้องการเปลี่ยน ตำบล,อำเภอ กรุณาเลือกจังหวัดใหม่อีกครั้งเป็นจังหวัดอื่นก่อน
+                        หลังจากนั้นกดกลับมาที่จังหวัดของตน</p>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+                    <form action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data"
+                        autocomplete="off">
+                        <input name="update_delivery_custom" type="hidden" value="1">
+                        <input id="customers_addr_frontstore_id" name="customers_addr_frontstore_id" type="hidden"
+                            value="">
+                        <input id="customer_id" name="customer_id" type="hidden" value="">
+
+                        {{ csrf_field() }}
+
+                        <div class="col-12">
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> ชื่อ-นามสกุล (ผู้รับ) : </label>
+                                <div class="col-md-7">
+                                    <input type="text" id="delivery_cusname" name="delivery_cusname"
+                                        class="form-control" value="" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> ที่อยู่ : </label>
+                                <div class="col-md-7">
+                                    <textarea id="delivery_addr" name="delivery_addr" class="form-control" rows="3" required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
+                                <div class="col-md-7">
+                                    <select id="delivery_province" name="delivery_province"
+                                        class="form-control select2-templating ">
+                                        <option value="">Select</option>
+                                        @if (@$sProvince)
+                                            @foreach (@$sProvince as $r)
+                                                <option value="{{ $r->id }}">
+                                                    {{ $r->province_name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
+                                <div class="col-md-7">
+                                    <select id="delivery_amphur" name="delivery_amphur"
+                                        class="form-control select2-templating " required>
+                                        @if (@$CusAddrFrontstore[0]->amphur_code)
+                                            <option value="">Select</option>
+                                            @if (@$sAmphures)
+                                                @foreach (@$sAmphures as $r)
+                                                    <option value="{{ $r->id }}">
+                                                        {{ $r->amphur_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        @else
+                                            <option disabled selected>กรุณาเลือกจังหวัดก่อน</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> ตำบล/แขวง : </label>
+                                <div class="col-md-7">
+                                    <select id="delivery_tambon" name="delivery_tambon"
+                                        class="form-control select2-templating " required>
+                                        @if (@$CusAddrFrontstore[0]->tambon_code)
+                                            <option value="">Select</option>
+                                            @if (@$sTambons)
+                                                @foreach (@$sTambons as $r)
+                                                    <option value="{{ $r->id }}">
+                                                        {{ $r->tambon_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        @else
+                                            <option disabled selected>กรุณาเลือกอำเภอก่อน</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> รหัสไปรษณีย์ : </label>
+                                <div class="col-md-7">
+                                    <input type="text" id="delivery_zipcode" name="delivery_zipcode"
+                                        class="form-control" value="" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> เบอร์มือถือ : </label>
+                                <div class="col-md-7">
+                                    <input type="text" id="delivery_tel" name="delivery_tel" class="form-control"
+                                        value="" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> เบอร์บ้าน : </label>
+                                <div class="col-md-7">
+                                    <input type="text" id="delivery_tel_home" name="delivery_tel_home"
+                                        class="form-control" value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="col-md-4 col-form-label"> </label>
+                                <div class="col-md-7">
+                                    <button type="submit" class="btn btn-primary float-right "><i
+                                            class="bx bx-save font-size-16 align-middle "></i> Save</button>
+                                    <!-- <button type="button" class="btn btn-secondary float-right " data-dismiss="modal">Close</button> -->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </form>
+
+
+                </div>
 
 
             </div>
         </div>
-    </div> <!-- end col -->
-</div> <!-- end row -->
-
-
-
-
-
-<div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-labelledby="modalDeliveryTitle" aria-hidden="true" data-backdrop="static" >
-  <div class="modal-dialog modal-dialog-centered " role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
-        <p style="color:red;">หากต้องการเปลี่ยน ตำบล,อำเภอ กรุณาเลือกจังหวัดใหม่อีกครั้งเป็นจังหวัดอื่นก่อน หลังจากนั้นกดกลับมาที่จังหวัดของตน</p>
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-
-        <form  action="{{ route('backend.delivery.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
-          <input name="update_delivery_custom" type="hidden" value="1">
-          <input id="customers_addr_frontstore_id" name="customers_addr_frontstore_id"  type="hidden" value="">
-          <input id="customer_id" name="customer_id"  type="hidden" value="">
-
-          {{ csrf_field() }}
-
-          <div class="col-12">
-
-                 <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> ชื่อ-นามสกุล (ผู้รับ) : </label>
-                  <div class="col-md-7">
-                    <input type="text" id="delivery_cusname" name="delivery_cusname" class="form-control" value="" required >
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> ที่อยู่ : </label>
-                  <div class="col-md-7">
-                    <textarea id="delivery_addr" name="delivery_addr" class="form-control" rows="3"  required ></textarea>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> จังหวัด : </label>
-                  <div class="col-md-7">
-                    <select id="delivery_province" name="delivery_province" class="form-control select2-templating " >
-                       <option value="">Select</option>
-                       @if(@$sProvince)
-                        @foreach(@$sProvince AS $r)
-                        <option value="{{$r->id}}" >
-                          {{$r->province_name}}
-                        </option>
-                        @endforeach
-                        @endif
-                    </select>
-
-                  </div>
-                </div>
-
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> อำเภอ/เขต : </label>
-                  <div class="col-md-7">
-                    <select id="delivery_amphur" name="delivery_amphur" class="form-control select2-templating " required >
-                      @if(@$CusAddrFrontstore[0]->amphur_code)
-                           <option value="">Select</option>
-                           @if(@$sAmphures)
-                            @foreach(@$sAmphures AS $r)
-                            <option value="{{$r->id}}" >
-                              {{$r->amphur_name}}
-                            </option>
-                            @endforeach
-                            @endif
-                      @else
-                        <option disabled selected>กรุณาเลือกจังหวัดก่อน</option>
-                      @endif
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> ตำบล/แขวง : </label>
-                  <div class="col-md-7">
-                    <select id="delivery_tambon" name="delivery_tambon" class="form-control select2-templating " required >
-                      @if(@$CusAddrFrontstore[0]->tambon_code)
-                           <option value="">Select</option>
-                           @if(@$sTambons)
-                            @foreach(@$sTambons AS $r)
-                            <option value="{{$r->id}}" >
-                              {{$r->tambon_name}}
-                            </option>
-                            @endforeach
-                            @endif
-                      @else
-                        <option disabled selected>กรุณาเลือกอำเภอก่อน</option>
-                      @endif
-                    </select>
-                  </div>
-                </div>
-
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> รหัสไปรษณีย์ : </label>
-                  <div class="col-md-7">
-                    <input type="text" id="delivery_zipcode" name="delivery_zipcode" class="form-control" value="" required >
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> เบอร์มือถือ : </label>
-                  <div class="col-md-7">
-                    <input type="text" id="delivery_tel" name="delivery_tel" class="form-control" value=""  required >
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> เบอร์บ้าน : </label>
-                  <div class="col-md-7">
-                    <input type="text" id="delivery_tel_home" name="delivery_tel_home" class="form-control" value=""  >
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label for="" class="col-md-4 col-form-label"> </label>
-                  <div class="col-md-7">
-                    <button type="submit" class="btn btn-primary float-right "><i class="bx bx-save font-size-16 align-middle "></i> Save</button>
-                    <!-- <button type="button" class="btn btn-secondary float-right " data-dismiss="modal">Close</button> -->
-                  </div>
-                </div>
-
-          </div>
-
-
-        </form>
-
-
-      </div>
-
-
     </div>
-  </div>
-</div>
 
 
-<div class="modal" tabindex="-1" id="modal_con_arr" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">หมายเลขพัสดุ (Consignment number)</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="modal_con_arr_data">
+    <div class="modal" tabindex="-1" id="modal_con_arr" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">หมายเลขพัสดุ (Consignment number)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal_con_arr_data">
 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
     </div>
-  </div>
-</div>
 
 
 
 @endsection
 
 @section('script')
-<link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
-<script type="text/javascript" src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
-<script>
+    <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css"
+        rel="stylesheet" />
+    <script type="text/javascript"
+        src="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/js/dataTables.checkboxes.min.js"></script>
+    <script>
+        $(document).on('click', '.con_arr_data_show', function() {
+            var arr = $(this).attr('con_arr');
+            arr = arr.split(",");
+            var arr_str = '';
+            for (var i = 0; i < arr.length; i++) {
+                arr_str += arr[i] + '<br>';
+            }
+            $('.modal_con_arr_data').html(arr_str);
+            $('#modal_con_arr').modal('show');
+        });
 
-$(document).on('click','.con_arr_data_show',function(){
-        var arr = $(this).attr('con_arr');
-        arr = arr.split(",");
-        var arr_str = '';
-        for(var i=0; i<arr.length;i++){
-          arr_str+=arr[i]+'<br>';
-        }
-        $('.modal_con_arr_data').html(arr_str);
-        $('#modal_con_arr').modal('show');
-      });
-
-var role_group_id = "{{@$role_group_id?@$role_group_id:0}}"; //alert(sU);
-var menu_id = "{{@$menu_id?@$menu_id:0}}"; //alert(sU);
-var sU = "{{@$sU}}"; //alert(sU);
-var sD = "{{@$sD}}"; //alert(sD);
-var oTable;
+        var role_group_id = "{{ @$role_group_id ? @$role_group_id : 0 }}"; //alert(sU);
+        var menu_id = "{{ @$menu_id ? @$menu_id : 0 }}"; //alert(sU);
+        var sU = "{{ @$sU }}"; //alert(sU);
+        var sD = "{{ @$sD }}"; //alert(sD);
+        var oTable;
 
 
-          var oTable2;
-          $(function() {
+        var oTable2;
+        $(function() {
             $.fn.dataTable.ext.errMode = 'throw';
-              oTable2 = $('#data-table-packing').DataTable({
-              "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                  processing: true,
-                  serverSide: true,
-                  scroller: true,
-                  scrollCollapse: true,
-                  scrollX: true,
-                  ordering: false,
-                  scrollY: ''+($(window).height()-370)+'px',
-                  iDisplayLength: 25,
-                  // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
-                  ajax: {
+            oTable2 = $('#data-table-packing').DataTable({
+                "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                processing: true,
+                serverSide: true,
+                scroller: true,
+                scrollCollapse: true,
+                scrollX: true,
+                ordering: false,
+                scrollY: '' + ($(window).height() - 370) + 'px',
+                iDisplayLength: 25,
+                // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
+                ajax: {
                     url: "{{ url('backend/status_delivery/datatable') }}",
 
-                    data: function ( d ) {
-                      d.Where={};
-                      $('.myWhere').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Where[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Like={};
-                      $('.myLike').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Like[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      d.Custom={};
-                      $('.myCustom').each(function() {
-                        if( $.trim($(this).val()) && $.trim($(this).val()) != '0' ){
-                          d.Custom[$(this).attr('name')] = $.trim($(this).val());
-                        }
-                      });
-                      oData = d;
+                    data: function(d) {
+                        d.Where = {};
+                        $('.myWhere').each(function() {
+                            if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
+                                d.Where[$(this).attr('name')] = $.trim($(this).val());
+                            }
+                        });
+                        d.Like = {};
+                        $('.myLike').each(function() {
+                            if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
+                                d.Like[$(this).attr('name')] = $.trim($(this).val());
+                            }
+                        });
+                        d.Custom = {};
+                        $('.myCustom').each(function() {
+                            if ($.trim($(this).val()) && $.trim($(this).val()) != '0') {
+                                d.Custom[$(this).attr('name')] = $.trim($(this).val());
+                            }
+                        });
+                        oData = d;
                     },
                     method: 'POST'
-                  },
-                  columns: [
-                      {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
-                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-                      {data: 'action_user_data',   title :'<center>ผู้ออกบิล</center>', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-                      {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-left ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-left ',render: function(d) {
-                          return d ;
-                      }},
-
-                      {data: 'approve',   title :'ยืนยันที่อยู่จัดส่ง', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-
-                      {data: 'status_tracking',   title :'<center>สถานะรายการ </center>', className: 'text-center ',render: function(d) {
-                        return d ;
-                      }},
-
-                      {data: 'tracking_no',   title :'<center>เลขพัสดุ </center>', className: 'text-center ',render: function(d) {
-                        return d ;
-                      }},
-
-                      {data: 'tranfer_status',   title :'<center>สถานะจัดส่ง</center>', className: 'text-center ',render: function(d) {
-                        return d ;
-                      }},
-
-
-                  ],
-                  rowCallback: function(nRow, aData, dataIndex){
-                  }
-              });
-
-          });
-
-          $(document).ready(function() {
-
-            $('.order_id_select2').select2();
-
-$(document).on('click', '.btnSearch01', function(event) {
-          event.preventDefault();
-          $('#data-table-packing').DataTable().clear();
-          $(".myloading").show();
-          var business_location_id_fk = $('#business_location_id_fk').val();
-          var branch_id_fk = $('#branch_id_fk').val();
-          var receipt = $('#receipt').val();
-
-          var customer_id_fk = $('#customer_id_fk').val();
-          var bill_sdate = $('#bill_sdate').val();
-          var bill_edate = $('#bill_edate').val();
-
-          if(business_location_id_fk==''){
-            $('#business_location_id_fk').select2('open');
-            $(".myloading").hide();
-            return false;
-          }
-          ;
-          if(branch_id_fk=='' || branch_id_fk === null ){
-            $('#branch_id_fk').select2('open');
-            $(".myloading").hide();
-            return false;
-          }
-
-            var sU = "{{@$sU}}";
-            var sD = "{{@$sD}}";
-            var oTable_001;
-            $(function() {
-              $.fn.dataTable.ext.errMode = 'throw';
-                oTable_001 = $('#data-table-packing').DataTable({
-                  "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
-                    processing: true,
-                    serverSide: true,
-                    scroller: true,
-                    scrollCollapse: true,
-                    scrollX: true,
-                    ordering: false,
-                    scrollY: ''+($(window).height()-370)+'px',
-                    iDisplayLength: 10,
-                    destroy:true,
-                    ajax: {
-                      url: "{{ url('backend/status_delivery/datatable') }}",
-                        data :{
-                            _token: '{{csrf_token()}}',
-                              business_location_id_fk:business_location_id_fk,
-                              branch_id_fk:branch_id_fk,
-                              receipt:receipt,
-                              customer_id_fk:customer_id_fk,
-                              bill_sdate:bill_sdate,
-                              bill_edate:bill_edate,
-                            },
-                          method: 'POST',
-                        },
-                        columns: [
-                      {data: 'packing_code_desc', title :'<center>รหัสนำส่ง </center>', className: 'text-center'},
-                      {data: 'receipt',   title :'<center>ใบเสร็จ</center>', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-                      {data: 'action_user_data',   title :'<center>ผู้ออกบิล</center>', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-                      {data: 'shipping_special_detail',   title :'<center>การจัดส่ง</center>', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-                      {data: 'customer_name',   title :'<center>ชื่อลูกค้าตามใบเสร็จ</center>', className: 'text-left ',render: function(d) {
-                          if(d){
-                            return d.replace(/ *, */g, '<br>');
-                          }else{
-                            return '-';
-                          }
-                      }},
-                      {data: 'addr_to_send',   title :'<center>ที่อยู่จัดส่ง</center>', className: 'text-left ',render: function(d) {
-                          return d ;
-                      }},
-
-                      {data: 'approve',   title :'ยืนยันที่อยู่จัดส่ง', className: 'text-center ',render: function(d) {
-                          return d ;
-                      }},
-
-                      {data: 'status_tracking',   title :'<center>สถานะรายการ </center>', className: 'text-center ',render: function(d) {
-                        return d ;
-                      }},
-
-                      {data: 'tracking_no',   title :'<center>เลขพัสดุ </center>', className: 'text-center ',render: function(d) {
-                        return d ;
-                      }},
-
-                      {data: 'tranfer_status',   title :'<center>สถานะจัดส่ง</center>', className: 'text-center ',render: function(d) {
-                        return d ;
-                      }},
-
-                  ],
-                        rowCallback: function(nRow, aData, dataIndex){
-
+                },
+                columns: [{
+                        data: 'packing_code_desc',
+                        title: '<center>รหัสนำส่ง </center>',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'receipt',
+                        title: '<center>ใบเสร็จ</center>',
+                        className: 'text-center ',
+                        render: function(d) {
+                            return d;
                         }
-                    });
-                        oTable.on( 'draw', function () {
-                          $('[data-toggle="tooltip"]').tooltip();
-                        });
-                    });
+                    },
+                    {
+                        data: 'action_user_data',
+                        title: '<center>ผู้ออกบิล</center>',
+                        className: 'text-center ',
+                        render: function(d) {
+                            return d;
+                        }
+                    },
+                    {
+                        data: 'shipping_special_detail',
+                        title: '<center>การจัดส่ง</center>',
+                        className: 'text-center ',
+                        render: function(d) {
+                            return d;
+                        }
+                    },
+                    {
+                        data: 'customer_name',
+                        title: '<center>ชื่อลูกค้าตามใบเสร็จ</center>',
+                        className: 'text-left ',
+                        render: function(d) {
+                            if (d) {
+                                return d.replace(/ *, */g, '<br>');
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+                    {
+                        data: 'addr_to_send',
+                        title: '<center>ที่อยู่จัดส่ง</center>',
+                        className: 'text-left ',
+                        render: function(d) {
+                            return d;
+                        }
+                    },
 
-        setTimeout(function(){
-           $(".myloading").hide();
-        }, 1500);
+                    {
+                        data: 'approve',
+                        title: 'ยืนยันที่อยู่จัดส่ง',
+                        className: 'text-center ',
+                        render: function(d) {
+                            return d;
+                        }
+                    },
+
+                    {
+                        data: 'status_tracking',
+                        title: '<center>สถานะรายการ </center>',
+                        className: 'text-center ',
+                        render: function(d) {
+                            return d;
+                        }
+                    },
+
+                    {
+                        data: 'tracking_no',
+                        title: '<center>เลขพัสดุ </center>',
+                        className: 'text-center ',
+                        render: function(d) {
+                            return d;
+                        }
+                    },
+
+                    {
+                        data: 'tranfer_status',
+                        title: '<center>สถานะจัดส่ง</center>',
+                        className: 'text-center ',
+                        render: function(d) {
+                            return d;
+                        }
+                    },
 
 
-    });
+                ],
+                rowCallback: function(nRow, aData, dataIndex) {}
+            });
 
-});
+        });
 
-          $(document).ready(function() {
+        $(document).ready(function() {
 
-          		$('input[type=checkbox]').click(function(event) {
-
-                 setTimeout(function(){
-                    if($('.select-info').text()!=''){
-                      var str = $('.select-info').text();
-                      var str = str.split(" ");
-                       // วุฒิแก้ให้อันเดียวก็ทำได้
-                      // if(parseInt(str[0])>1){
-                        if(parseInt(str[0])>0){
-                        $('.divBtnSave').show();
-                      }else{
-                        $('.divBtnSave').hide();
-                      }
-                    }else{
-                      $('.divBtnSave').hide();
+            $(".order_id_select2").select2({
+                minimumInputLength: 3,
+                allowClear: true,
+                placeholder: 'Select',
+                ajax: {
+                    url: " {{ url('backend/ajaxGetOrder') }} ",
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 250,
+                    cache: false,
+                    data: function(params) {
+                        return {
+                            term: params.term || '', // search term
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        return {
+                            results: data
+                        };
                     }
-                  }, 500);
+                }
+            });
 
-                });
+            $(document).on('click', '.btnSearch01', function(event) {
+                event.preventDefault();
+                $('#data-table-packing').DataTable().clear();
+                $(".myloading").show();
+                var business_location_id_fk = $('#business_location_id_fk').val();
+                var branch_id_fk = $('#branch_id_fk').val();
+                var receipt = $('#receipt').val();
 
-                $(document).on('click', '.dt-checkboxes', function(event) {
+                var customer_id_fk = $('#customer_id_fk').val();
+                var bill_sdate = $('#bill_sdate').val();
+                var bill_edate = $('#bill_edate').val();
 
-                   setTimeout(function(){
-                      if($('.select-info').text()!=''){
-                        var str = $('.select-info').text();
-                        var str = str.split(" ");
-                        // if(parseInt(str[0])>1){
-                                // วุฒิแก้ให้อันเดียวก็ทำได้
-                                if(parseInt(str[0])>0){
-                          $('.divBtnSave').show();
-                        }else{
-                          $('.divBtnSave').hide();
+                if (business_location_id_fk == '') {
+                    $('#business_location_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                };
+                if (branch_id_fk == '' || branch_id_fk === null) {
+                    $('#branch_id_fk').select2('open');
+                    $(".myloading").hide();
+                    return false;
+                }
+
+                var sU = "{{ @$sU }}";
+                var sD = "{{ @$sD }}";
+                var oTable_001;
+                $(function() {
+                    $.fn.dataTable.ext.errMode = 'throw';
+                    oTable_001 = $('#data-table-packing').DataTable({
+                        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                        processing: true,
+                        serverSide: true,
+                        scroller: true,
+                        scrollCollapse: true,
+                        scrollX: true,
+                        ordering: false,
+                        scrollY: '' + ($(window).height() - 370) + 'px',
+                        iDisplayLength: 10,
+                        destroy: true,
+                        ajax: {
+                            url: "{{ url('backend/status_delivery/datatable') }}",
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                business_location_id_fk: business_location_id_fk,
+                                branch_id_fk: branch_id_fk,
+                                receipt: receipt,
+                                customer_id_fk: customer_id_fk,
+                                bill_sdate: bill_sdate,
+                                bill_edate: bill_edate,
+                            },
+                            method: 'POST',
+                        },
+                        columns: [{
+                                data: 'packing_code_desc',
+                                title: '<center>รหัสนำส่ง </center>',
+                                className: 'text-center'
+                            },
+                            {
+                                data: 'receipt',
+                                title: '<center>ใบเสร็จ</center>',
+                                className: 'text-center ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+                            {
+                                data: 'action_user_data',
+                                title: '<center>ผู้ออกบิล</center>',
+                                className: 'text-center ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+                            {
+                                data: 'shipping_special_detail',
+                                title: '<center>การจัดส่ง</center>',
+                                className: 'text-center ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+                            {
+                                data: 'customer_name',
+                                title: '<center>ชื่อลูกค้าตามใบเสร็จ</center>',
+                                className: 'text-left ',
+                                render: function(d) {
+                                    if (d) {
+                                        return d.replace(/ *, */g, '<br>');
+                                    } else {
+                                        return '-';
+                                    }
+                                }
+                            },
+                            {
+                                data: 'addr_to_send',
+                                title: '<center>ที่อยู่จัดส่ง</center>',
+                                className: 'text-left ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+
+                            {
+                                data: 'approve',
+                                title: 'ยืนยันที่อยู่จัดส่ง',
+                                className: 'text-center ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+
+                            {
+                                data: 'status_tracking',
+                                title: '<center>สถานะรายการ </center>',
+                                className: 'text-center ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+
+                            {
+                                data: 'tracking_no',
+                                title: '<center>เลขพัสดุ </center>',
+                                className: 'text-center ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+
+                            {
+                                data: 'tranfer_status',
+                                title: '<center>สถานะจัดส่ง</center>',
+                                className: 'text-center ',
+                                render: function(d) {
+                                    return d;
+                                }
+                            },
+
+                        ],
+                        rowCallback: function(nRow, aData, dataIndex) {
+
                         }
-                      }else{
-                        $('.divBtnSave').hide();
-                      }
-                    }, 500);
-
+                    });
+                    oTable.on('draw', function() {
+                        $('[data-toggle="tooltip"]').tooltip();
+                    });
                 });
 
-
-                $(document).on('click', '.btnEditAddr', function(event) {
-                	event.preventDefault();
-                	var id = $(this).data('id');
-                  var receipt_no = $(this).data('receipt_no');
-                  console.log(id+":"+receipt_no);
-                	$.ajax({
-		               type:'POST',
-		               url: " {{ url('backend/ajaxSelectAddrEdit') }} ",
-		               data:{ _token: '{{csrf_token()}}',id:id,receipt_no:receipt_no },
-		                success:function(data){
-		                     console.log(data);
-		                     // location.reload();
-		                     $('#select_addr_result_edit').html(data);
-
-		                  },
-		                error: function(jqXHR, textStatus, errorThrown) {
-		                    console.log(JSON.stringify(jqXHR));
-		                    console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-		                    $(".myloading").hide();
-		                }
-		            });
-                });
-
-
-
-		       $('#branch_id_search').change(function(){
-
-		          var branch_id_fk = this.value;
-		          // alert(warehouse_id_fk);
-
-		           if(branch_id_fk != ''){
-		             $.ajax({
-		                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
-		                  method: "post",
-		                  data: {
-		                    branch_id_fk:branch_id_fk,
-		                    "_token": "{{ csrf_token() }}",
-		                  },
-		                  success:function(data)
-		                  {
-		                   if(data == ''){
-		                       alert('ไม่พบข้อมูลคลัง !!.');
-		                       $("#warehouse_id_search").val('').trigger('change');
-		                       $('#warehouse_id_search').html('<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>');
-		                   }else{
-		                       var layout = '<option value="" selected>- เลือกคลัง -</option>';
-		                       $.each(data,function(key,value){
-		                        layout += '<option value='+value.id+'>'+value.w_name+'</option>';
-		                       });
-		                       $('#warehouse_id_search').html(layout);
-		                   }
-		                  }
-		                })
-		           }
-
-		      });
-
-
-
-
-          });
-    </script>
-
-
-
-      <script>
-      $(document).ready(function() {
-
-
-          $(document).on('click', '.cCancel', function(event) {
-
-            var id = $(this).data('id');
-
-              if (!confirm("ยืนยัน ? เพื่อยกลบ ")){
-                  return false;
-              }else{
-              $.ajax({
-                  url: " {{ url('backend/ajaxDelDelivery') }} ",
-                  method: "post",
-                  data: {
-                    "_token": "{{ csrf_token() }}", id:id,
-                  },
-                  success:function(data)
-                  {
-                    // console.log(data);
-                    // return false;
-                        Swal.fire({
-                          type: 'success',
-                          title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
-                          showConfirmButton: false,
-                          timer: 2000
-                        });
-
-                        setTimeout(function () {
-                          location.reload();
-                        }, 1500);
-                  }
-                });
-
-            }
+                setTimeout(function() {
+                    $(".myloading").hide();
+                }, 1500);
 
 
             });
 
-      });
+        });
 
+        $(document).ready(function() {
+
+            $('input[type=checkbox]').click(function(event) {
+
+                setTimeout(function() {
+                    if ($('.select-info').text() != '') {
+                        var str = $('.select-info').text();
+                        var str = str.split(" ");
+                        // วุฒิแก้ให้อันเดียวก็ทำได้
+                        // if(parseInt(str[0])>1){
+                        if (parseInt(str[0]) > 0) {
+                            $('.divBtnSave').show();
+                        } else {
+                            $('.divBtnSave').hide();
+                        }
+                    } else {
+                        $('.divBtnSave').hide();
+                    }
+                }, 500);
+
+            });
+
+            $(document).on('click', '.dt-checkboxes', function(event) {
+
+                setTimeout(function() {
+                    if ($('.select-info').text() != '') {
+                        var str = $('.select-info').text();
+                        var str = str.split(" ");
+                        // if(parseInt(str[0])>1){
+                        // วุฒิแก้ให้อันเดียวก็ทำได้
+                        if (parseInt(str[0]) > 0) {
+                            $('.divBtnSave').show();
+                        } else {
+                            $('.divBtnSave').hide();
+                        }
+                    } else {
+                        $('.divBtnSave').hide();
+                    }
+                }, 500);
+
+            });
+
+
+            $(document).on('click', '.btnEditAddr', function(event) {
+                event.preventDefault();
+                var id = $(this).data('id');
+                var receipt_no = $(this).data('receipt_no');
+                console.log(id + ":" + receipt_no);
+                $.ajax({
+                    type: 'POST',
+                    url: " {{ url('backend/ajaxSelectAddrEdit') }} ",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id,
+                        receipt_no: receipt_no
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        // location.reload();
+                        $('#select_addr_result_edit').html(data);
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(JSON.stringify(jqXHR));
+                        console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+                        $(".myloading").hide();
+                    }
+                });
+            });
+
+
+
+            $('#branch_id_search').change(function() {
+
+                var branch_id_fk = this.value;
+                // alert(warehouse_id_fk);
+
+                if (branch_id_fk != '') {
+                    $.ajax({
+                        url: " {{ url('backend/ajaxGetWarehouse') }} ",
+                        method: "post",
+                        data: {
+                            branch_id_fk: branch_id_fk,
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        success: function(data) {
+                            if (data == '') {
+                                alert('ไม่พบข้อมูลคลัง !!.');
+                                $("#warehouse_id_search").val('').trigger('change');
+                                $('#warehouse_id_search').html(
+                                    '<option disabled selected >(คลัง) กรุณาเลือกสาขาก่อน</option>'
+                                    );
+                            } else {
+                                var layout = '<option value="" selected>- เลือกคลัง -</option>';
+                                $.each(data, function(key, value) {
+                                    layout += '<option value=' + value.id + '>' + value
+                                        .w_name + '</option>';
+                                });
+                                $('#warehouse_id_search').html(layout);
+                            }
+                        }
+                    })
+                }
+
+            });
+
+
+
+
+        });
+    </script>
+
+
+
+    <script>
+        $(document).ready(function() {
+
+
+            $(document).on('click', '.cCancel', function(event) {
+
+                var id = $(this).data('id');
+
+                if (!confirm("ยืนยัน ? เพื่อยกลบ ")) {
+                    return false;
+                } else {
+                    $.ajax({
+                        url: " {{ url('backend/ajaxDelDelivery') }} ",
+                        method: "post",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id: id,
+                        },
+                        success: function(data) {
+                            // console.log(data);
+                            // return false;
+                            Swal.fire({
+                                type: 'success',
+                                title: 'ทำการลบรายชื่อเรียบร้อยแล้ว',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                        }
+                    });
+
+                }
+
+
+            });
+
+        });
     </script>
 
 
     <script type="text/javascript">
+        $('#business_location_id_fk').change(function() {
 
-   $('#business_location_id_fk').change(function(){
+            var business_location_id_fk = this.value;
+            // alert(warehouse_id_fk);
 
-          var business_location_id_fk = this.value;
-          // alert(warehouse_id_fk);
-
-           if(business_location_id_fk != ''){
-             $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ",
-                  method: "post",
-                  data: {
-                    business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}",
-                  },
-                  success:function(data)
-                  {
-                   if(data == ''){
-                       alert('ไม่พบข้อมูลสาขา !!.');
-                   }else{
-                       var layout = '<option value="" selected>- เลือกสาขา -</option>';
-                       $.each(data,function(key,value){
-                        layout += '<option value='+value.id+'>'+value.b_name+'</option>';
-                       });
-                       $('#branch_id_fk').html(layout);
-                       $('#warehouse_id_fk').html('<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
-                       $('#zone_id_fk').html('<option value="" selected>กรุณาเลือกคลังก่อน</option>');
-                       $('#shelf_id_fk').html('<option value="" selected>กรุณาเลือกโซนก่อน</option>');
-                   }
-                  }
+            if (business_location_id_fk != '') {
+                $.ajax({
+                    url: " {{ url('backend/ajaxGetBranch') }} ",
+                    method: "post",
+                    data: {
+                        business_location_id_fk: business_location_id_fk,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(data) {
+                        if (data == '') {
+                            alert('ไม่พบข้อมูลสาขา !!.');
+                        } else {
+                            var layout = '<option value="" selected>- เลือกสาขา -</option>';
+                            $.each(data, function(key, value) {
+                                layout += '<option value=' + value.id + '>' + value.b_name +
+                                    '</option>';
+                            });
+                            $('#branch_id_fk').html(layout);
+                            $('#warehouse_id_fk').html(
+                                '<option value="" selected>กรุณาเลือกสาขาก่อน</option>');
+                            $('#zone_id_fk').html(
+                                '<option value="" selected>กรุณาเลือกคลังก่อน</option>');
+                            $('#shelf_id_fk').html(
+                                '<option value="" selected>กรุณาเลือกโซนก่อน</option>');
+                        }
+                    }
                 })
-           }
+            }
 
-      });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#customer_id_fk").select2({
+                minimumInputLength: 2,
+                allowClear: true,
+                placeholder: '-Select-',
+                ajax: {
+                    url: " {{ url('backend/ajaxGetCustomerDelivery') }} ",
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 250,
+                    cache: false,
+                    data: function(params) {
+                        console.log(params);
+                        return {
+                            term: params.term || '', // search term
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+
+        });
+    </script>
 
 
-</script>
-        <script type="text/javascript">
+    <script>
+        $(document).ready(function() {
 
-   $(document).ready(function(){
+            $(document).on('click', '.print02', function(event) {
 
-      $("#customer_id_fk").select2({
-          minimumInputLength: 2,
-          allowClear: true,
-          placeholder: '-Select-',
-          ajax: {
-          url: " {{ url('backend/ajaxGetCustomerDelivery') }} ",
-          type  : 'POST',
-          dataType : 'json',
-          delay  : 250,
-          cache: false,
-          data: function (params) {
-            console.log(params);
-           return {
-            term: params.term  || '',   // search term
-            page: params.page  || 1
-           };
-          },
-          processResults: function (data, params) {
-           return {
-            results: data
-           };
-          }
-         }
+                event.preventDefault();
+
+                $(".myloading").show();
+
+                var id = $(this).data('id');
+
+                setTimeout(function() {
+                    window.open("{{ url('backend/frontstore/print_receipt_022') }}" + "/" + id);
+                    $(".myloading").hide();
+                }, 500);
+            });
+
         });
 
-   });
-</script>
+        $('#delivery_province').change(function() {
 
+            $(".myloading").show();
 
-      <script>
-      $(document).ready(function() {
+            var province_id = this.value;
+            // alert(province_id);
 
-          $(document).on('click', '.print02', function(event) {
-
-              event.preventDefault();
-
-              $(".myloading").show();
-
-              var id = $(this).data('id');
-
-              setTimeout(function(){
-                 window.open("{{ url('backend/frontstore/print_receipt_022') }}"+"/"+id);
-                 $(".myloading").hide();
-              }, 500);
-            });
-
-      });
-
-               $('#delivery_province').change(function(){
-
-              $(".myloading").show();
-
-                var province_id = this.value;
-                // alert(province_id);
-
-                 if(province_id != ''){
-                   $.ajax({
-                         url: " {{ url('backend/ajaxGetAmphur') }} ",
-                        method: "post",
-                        data: {
-                          province_id:province_id,
-                          "_token": "{{ csrf_token() }}",
-                        },
-                        success:function(data)
-                        {
-                         if(data == ''){
-                             alert('ไม่พบข้อมูลอำเภอ !!.');
-                         }else{
-                             var layout = '<option value="" selected>- เลือกอำเภอ -</option>';
-                             $.each(data,function(key,value){
-                                layout += '<option value='+value.id+'>'+value.amphur_name+'</option>';
-                             });
-                             $('#delivery_amphur').html(layout);
-                             $('#delivery_tambon').html('<option value="" selected >กรุณาเลือกอำเภอก่อน</option>');
-                         }
-                         $(".myloading").hide();
+            if (province_id != '') {
+                $.ajax({
+                    url: " {{ url('backend/ajaxGetAmphur') }} ",
+                    method: "post",
+                    data: {
+                        province_id: province_id,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(data) {
+                        if (data == '') {
+                            alert('ไม่พบข้อมูลอำเภอ !!.');
+                        } else {
+                            var layout = '<option value="" selected>- เลือกอำเภอ -</option>';
+                            $.each(data, function(key, value) {
+                                layout += '<option value=' + value.id + '>' + value
+                                    .amphur_name + '</option>';
+                            });
+                            $('#delivery_amphur').html(layout);
+                            $('#delivery_tambon').html(
+                                '<option value="" selected >กรุณาเลือกอำเภอก่อน</option>');
                         }
-                      })
-                 }
+                        $(".myloading").hide();
+                    }
+                })
+            }
 
-            });
+        });
 
-             $('#delivery_amphur').change(function(){
+        $('#delivery_amphur').change(function() {
 
-              $(".myloading").show();
+            $(".myloading").show();
 
-                var amphur_id = this.value;
-                // alert(amphur_id);
+            var amphur_id = this.value;
+            // alert(amphur_id);
 
-                 if(amphur_id != ''){
-                   $.ajax({
-                         url: " {{ url('backend/ajaxGetTambon') }} ",
-                        method: "post",
-                        data: {
-                          amphur_id:amphur_id,
-                          "_token": "{{ csrf_token() }}",
-                        },
-                        success:function(data)
-                        {
+            if (amphur_id != '') {
+                $.ajax({
+                    url: " {{ url('backend/ajaxGetTambon') }} ",
+                    method: "post",
+                    data: {
+                        amphur_id: amphur_id,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(data) {
 
-                         $('#delivery_zipcode').val('');
+                        $('#delivery_zipcode').val('');
 
-                         if(data == ''){
-                             alert('ไม่พบข้อมูลตำบล !!.');
-                         }else{
-                             var layout = '<option value="" selected>- เลือกตำบล -</option>';
-                             $.each(data,function(key,value){
-                                layout += '<option value='+value.id+'>'+value.tambon_name+'</option>';
-                             });
-                             $('#delivery_tambon').html(layout);
-                         }
-                         $(".myloading").hide();
+                        if (data == '') {
+                            alert('ไม่พบข้อมูลตำบล !!.');
+                        } else {
+                            var layout = '<option value="" selected>- เลือกตำบล -</option>';
+                            $.each(data, function(key, value) {
+                                layout += '<option value=' + value.id + '>' + value
+                                    .tambon_name + '</option>';
+                            });
+                            $('#delivery_tambon').html(layout);
                         }
-                      })
-                 }
+                        $(".myloading").hide();
+                    }
+                })
+            }
 
-            });
+        });
 
 
-             $('#delivery_tambon').change(function(){
+        $('#delivery_tambon').change(function() {
 
-              $(".myloading").show();
+            $(".myloading").show();
 
-                var tambon_id = this.value;
-                // alert(tambon_id);
+            var tambon_id = this.value;
+            // alert(tambon_id);
 
-                 if(tambon_id != ''){
-                   $.ajax({
-                         url: " {{ url('backend/ajaxGetZipcode') }} ",
-                        method: "post",
-                        data: {
-                          tambon_id:tambon_id,
-                          "_token": "{{ csrf_token() }}",
-                        },
-                        success:function(data)
-                        {
-                          //  console.log(data);
-                         if(data == ''){
-                             alert('ไม่พบข้อมูลรหัส ปณ. !!.');
-                         }else{
-                             $.each(data,function(key,value){
+            if (tambon_id != '') {
+                $.ajax({
+                    url: " {{ url('backend/ajaxGetZipcode') }} ",
+                    method: "post",
+                    data: {
+                        tambon_id: tambon_id,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function(data) {
+                        //  console.log(data);
+                        if (data == '') {
+                            alert('ไม่พบข้อมูลรหัส ปณ. !!.');
+                        } else {
+                            $.each(data, function(key, value) {
                                 $('#delivery_zipcode').val(value.zip_code);
-                             });
+                            });
 
-                         }
-                         $(".myloading").hide();
                         }
-                      })
-                 }
+                        $(".myloading").hide();
+                    }
+                })
+            }
 
-            });
-
+        });
+    </script>
 
 
     </script>
 
 
-	</script>
-
-
-   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
 
     <script>
-      var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-      $('#bill_sdate').datepicker({
-          // format: 'dd/mm/yyyy',
-          format: 'yyyy-mm-dd',
-          uiLibrary: 'bootstrap4',
-          iconsLibrary: 'fontawesome',
-          minDate: function () {
+        var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        $('#bill_sdate').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function() {
                 // return today;
-          }
-      });
+            }
+        });
 
-      $('#bill_edate').datepicker({
-          // format: 'dd/mm/yyyy',
-          format: 'yyyy-mm-dd',
-          uiLibrary: 'bootstrap4',
-          iconsLibrary: 'fontawesome',
-          minDate: function () {
-              return $('#bill_sdate').val();
-          }
-      });
+        $('#bill_edate').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            minDate: function() {
+                return $('#bill_sdate').val();
+            }
+        });
 
-      $('#bill_sdate').change(function(event) {
+        $('#bill_sdate').change(function(event) {
 
-        if($('#bill_edate').val()>$(this).val()){
-        }else{
-          $('#bill_edate').val($(this).val());
-        }
+            if ($('#bill_edate').val() > $(this).val()) {} else {
+                $('#bill_edate').val($(this).val());
+            }
 
-      });
-
+        });
     </script>
 
 
-        <script>
+    <script>
+        $(document).ready(function() {
+            $(".test_clear_data").on('click', function() {
 
-      $(document).ready(function() {
-            $(".test_clear_data").on('click',function(){
+                if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสำหรับเมนูนี้ ? ")) {
+                    return false;
+                } else {
 
-                  if (!confirm("โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสำหรับเมนูนี้ ? ")){
-                      return false;
-                  }else{
+                    location.replace(window.location.href + "?test_clear_data=test_clear_data ");
 
-                      location.replace( window.location.href+"?test_clear_data=test_clear_data ");
-
-                  }
+                }
 
             });
 
-      });
-
+        });
     </script>
 
     <?php
@@ -1193,12 +1356,11 @@ $(document).on('click', '.btnSearch01', function(event) {
 
 
       ?>
-          <script>
-          location.replace( "{{ url('backend/delivery') }}");
-          $(".myloading").hide();
-          </script>
-          <?php
+    <script>
+        location.replace("{{ url('backend/delivery') }}");
+        $(".myloading").hide();
+    </script>
+    <?php
       }
     ?>
 @endsection
-

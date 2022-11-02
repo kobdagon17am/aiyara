@@ -13,69 +13,9 @@ class HomeController extends Controller
 
   public function test_sql(Request $request)
   {
-      // ทดสอบดึงสินค้า print_requisition_detail_real
-                                                                        $sTable = DB::select(
-                                                                        "
-                                                                                  SELECT
-                                                                                  db_pick_pack_packing.id,
-                                                                                  db_pick_pack_packing.p_size,
-                                                                                  db_pick_pack_packing.p_weight,
-                                                                                  db_pick_pack_packing.p_amt_box,
-                                                                                  db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-                                                                                  db_pick_pack_packing.packing_code as packing_code,
-                                                                                  db_delivery.id as db_delivery_id,
-                                                                                  db_delivery.receipt,
-                                                                                  db_delivery.packing_code as db_delivery_packing_code
-                                                                                  FROM `db_pick_pack_packing`
-                                                                                  LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-                                                                                  WHERE
-                                                                                  db_pick_pack_packing.packing_code_id_fk = 55
-                                                                                  AND db_pick_pack_packing.delivery_id_fk = 2522
-                                                                                  ORDER BY db_pick_pack_packing.id
-                                                                                ",);
-
-                                                                                $d2 = DB::select(' SELECT receipt from db_delivery WHERE packing_code=798');
-
-                                                                                $receipt = '';
-                                                                                $arr1 = [];
-
-                                                                                foreach ($d2 as $key => $row) {
-                                                                                      array_push($arr1, $row->receipt);
-                                                                                  }
-                                                                                $receipt = implode(',', $arr1);
-
-
-                                                                                $fid_arr = explode(',', $receipt);
-                                                                                $order_arr = DB::table('db_orders')
-                                                                                ->select('code_order')
-                                                                                ->whereIn('code_order', $fid_arr)
-                                                                                ->pluck('code_order')
-                                                                                ->toArray();
-
-
-// dd($order_arr);
-                                                                                foreach ($sTable as $key => $row) {
-                                                                                  $sum_amt = 0;
-                                                                                  $r_ch_t = '';
-                                                                                  $fid_arr = explode(',', $receipt);
-                                                                                  $order_arr = DB::table('db_orders')
-                                                                                      ->select('id')
-                                                                                      ->whereIn('code_order', $fid_arr)
-                                                                                      ->pluck('id')
-                                                                                      ->toArray();
-                                                                                  $Products = Orders::getAllProduct($order_arr);
-                                                                                  if (@$Products) {
-                                                                                    foreach ($Products as $key => $value) {
-                                                                                        if (!empty($value->product_id_fk)) {
-                                                                                         echo 'product_name '.@$value->product_name .' ';
-                                                                                         echo 'amt_sum '.@$value->amt_sum .' ';
-                                                                                          @$sum_amt += @$value->amt_sum;
-                                                                                        }
-                                                                                    }
-                                                                                    echo 'sum_amt '. @$sum_amt .' ';
-                                                                                }
-                                                                              }
-
+     $db_delivery_packing = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code','P101787')->pluck('delivery_id_fk')->toArray();
+     $db_delivery = DB::table('db_delivery')->whereIn('id',$db_delivery_packing)->get();
+     dd( $db_delivery);
   }
 
     public function index(Request $request)
