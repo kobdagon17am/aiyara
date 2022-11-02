@@ -16,7 +16,7 @@ class SalepageController extends Controller
     $data = DB::table('customers')
       ->select(
         'db_salepage_setting.*',
-        'customers_detail.tel_mobile',
+        // 'customers_detail.tel_mobile',
         'customers.user_name',
         'customers.first_name',
         'customers.last_name',
@@ -25,7 +25,7 @@ class SalepageController extends Controller
         'customers.email'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-      ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+      // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
@@ -37,7 +37,7 @@ class SalepageController extends Controller
       $data = DB::table('customers')
         ->select(
           'db_salepage_setting.*',
-          'customers_detail.tel_mobile',
+          // 'customers_detail.tel_mobile',
           'customers.user_name',
           'customers.first_name',
           'customers.last_name',
@@ -46,7 +46,7 @@ class SalepageController extends Controller
           'customers.email'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-        ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+        // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s2', '=', $user_name)
         ->first();
 
@@ -66,7 +66,7 @@ class SalepageController extends Controller
     $data = DB::table('customers')
       ->select(
         'db_salepage_setting.*',
-        'customers_detail.tel_mobile',
+        // 'customers_detail.tel_mobile',
         'customers.user_name',
         'customers.first_name',
         'customers.last_name',
@@ -75,7 +75,7 @@ class SalepageController extends Controller
         'customers.email'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-      ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+      // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->orwhere('db_salepage_setting.name_s3', '=', $user_name)
       ->first();
@@ -94,7 +94,7 @@ class SalepageController extends Controller
     $data = DB::table('customers')
       ->select(
         'db_salepage_setting.*',
-        'customers_detail.tel_mobile',
+        // 'customers_detail.tel_mobile',
         'customers.user_name',
         'customers.first_name',
         'customers.last_name',
@@ -103,7 +103,7 @@ class SalepageController extends Controller
         'customers.email'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-      ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+      // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
@@ -116,7 +116,7 @@ class SalepageController extends Controller
       $data = DB::table('customers')
         ->select(
           'db_salepage_setting.*',
-          'customers_detail.tel_mobile',
+          // 'customers_detail.tel_mobile',
           'customers.user_name',
           'customers.first_name',
           'customers.last_name',
@@ -125,7 +125,7 @@ class SalepageController extends Controller
           'customers.email'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-        ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+        // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s4', '=', $user_name)
         ->first();
 
@@ -147,7 +147,7 @@ class SalepageController extends Controller
     $data = DB::table('customers')
       ->select(
         'db_salepage_setting.*',
-        'customers_detail.tel_mobile',
+        // 'customers_detail.tel_mobile',
         'customers.user_name',
         'customers.first_name',
         'customers.last_name',
@@ -156,7 +156,7 @@ class SalepageController extends Controller
         'customers.email'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-      ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+      // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
@@ -168,7 +168,7 @@ class SalepageController extends Controller
       $data = DB::table('customers')
         ->select(
           'db_salepage_setting.*',
-          'customers_detail.tel_mobile',
+          // 'customers_detail.tel_mobile',
           'customers.user_name',
           'customers.first_name',
           'customers.last_name',
@@ -177,7 +177,7 @@ class SalepageController extends Controller
           'customers.email'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-        ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+        // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s5', '=', $user_name)
         ->first();
 
@@ -197,7 +197,7 @@ class SalepageController extends Controller
     $data = DB::table('customers')
       ->select(
         'db_salepage_setting.*',
-        'customers_detail.tel_mobile',
+        // 'customers_detail.tel_mobile',
         'customers.user_name',
         'customers.first_name',
         'customers.last_name',
@@ -206,7 +206,7 @@ class SalepageController extends Controller
         'customers.email'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-      ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+      // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
@@ -219,7 +219,7 @@ class SalepageController extends Controller
       $data = DB::table('customers')
         ->select(
           'db_salepage_setting.*',
-          'customers_detail.tel_mobile',
+          // 'customers_detail.tel_mobile',
           'customers.user_name',
           'customers.first_name',
           'customers.last_name',
@@ -228,7 +228,7 @@ class SalepageController extends Controller
           'customers.email'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-        ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+        // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s6', '=', $user_name)
         ->first();
 
@@ -249,7 +249,7 @@ class SalepageController extends Controller
     $data = DB::table('customers')
       ->select(
         'db_salepage_setting.*',
-        'customers_detail.tel_mobile',
+        // 'customers_detail.tel_mobile',
         'customers.user_name',
         'customers.first_name',
         'customers.last_name',
@@ -258,7 +258,7 @@ class SalepageController extends Controller
         'customers.email'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-      ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+      // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
 
       ->first();
@@ -272,7 +272,7 @@ class SalepageController extends Controller
       $data = DB::table('customers')
         ->select(
           'db_salepage_setting.*',
-          'customers_detail.tel_mobile',
+          // 'customers_detail.tel_mobile',
           'customers.user_name',
           'customers.first_name',
           'customers.last_name',
@@ -281,7 +281,7 @@ class SalepageController extends Controller
           'customers.email'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
-        ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+        // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s1', '=', $user_name)
         ->first();
       if ($data) {
