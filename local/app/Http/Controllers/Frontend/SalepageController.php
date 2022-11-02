@@ -10,13 +10,13 @@ use App\Http\Controllers\Controller;
 class SalepageController extends Controller
 {
 	public function aimmura($user_name='',$type=''){
-    return redirect('salepage/warring');
+    // return redirect('salepage/warring');
 			$data = DB::table('customers')
       ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
-  'customers.last_name','customers.business_name','customers.profile_img','customers.email')
-			->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
-			->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
-			->where('customers.user_name','=',$user_name)
+      'customers.last_name','customers.business_name','customers.profile_img','customers.email')
+      ->leftjoin('db_salepage_setting','customers.user_nme', '=', 'db_salepage_setting.customers_username')
+      ->leftjoin('customers_detail','customers_detail.user_name', '=', 'customers.user_name')
+      ->where('customers.user_name','=',$user_name)
       ->orwhere('db_salepage_setting.name_s2','=',$user_name)
       ->first();
       if($data){
@@ -28,13 +28,13 @@ class SalepageController extends Controller
 	}
 
   public function cashewy($user_name=''){
-    return redirect('salepage/warring');
+    // return redirect('salepage/warring');
 
     $data = DB::table('customers')
     ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
     'customers.last_name','customers.business_name','customers.profile_img','customers.email')
-    ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
-    ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+    ->leftjoin('db_salepage_setting','customers.user_nme', '=', 'db_salepage_setting.customers_username')
+    ->leftjoin('customers_detail','customers_detail.user_name', '=', 'customers.user_name')
     ->where('customers.user_name','=',$user_name)
     ->orwhere('db_salepage_setting.name_s3','=',$user_name)
     ->first();
@@ -50,13 +50,13 @@ class SalepageController extends Controller
 }
 
 public function aifacad($user_name=''){
-  return redirect('salepage/warring');
+  // return redirect('salepage/warring');
 
     $data = DB::table('customers')
     ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
-  'customers.last_name','customers.business_name','customers.profile_img','customers.email')
-    ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
-    ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+    'customers.last_name','customers.business_name','customers.profile_img','customers.email')
+    ->leftjoin('db_salepage_setting','customers.user_nme', '=', 'db_salepage_setting.customers_username')
+    ->leftjoin('customers_detail','customers_detail.user_name', '=', 'customers.user_name')
     ->where('customers.user_name','=',$user_name)
     ->orwhere('db_salepage_setting.name_s4','=',$user_name)
     ->first();
@@ -74,13 +74,13 @@ public function aifacad($user_name=''){
 
 
 public function ailada($user_name=''){
-  return redirect('salepage/warring');
+  // return redirect('salepage/warring');
 
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
   'customers.last_name','customers.business_name','customers.profile_img','customers.email')
-  ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
-  ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+  ->leftjoin('db_salepage_setting','customers.user_nme', '=', 'db_salepage_setting.customers_username')
+  ->leftjoin('customers_detail','customers_detail.user_name', '=', 'customers.user_name')
   ->where('customers.user_name','=',$user_name)
   ->orwhere('db_salepage_setting.name_s5','=',$user_name)
   ->first();
@@ -95,13 +95,13 @@ public function ailada($user_name=''){
 }
 
 public function trimmax($user_name=''){
-  return redirect('salepage/warring');
+  // return redirect('salepage/warring');
 
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
   'customers.last_name','customers.business_name','customers.profile_img','customers.email')
-  ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
-  ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+  ->leftjoin('db_salepage_setting','customers.user_nme', '=', 'db_salepage_setting.customers_username')
+  ->leftjoin('customers_detail','customers_detail.user_name', '=', 'customers.user_name')
   ->where('customers.user_name','=',$user_name)
   ->orwhere('db_salepage_setting.name_s6','=',$user_name)
   ->first();
@@ -116,14 +116,14 @@ public function trimmax($user_name=''){
 }
 
 public function aiyara($user_name=''){
-  return redirect('salepage/warring');
+  // return redirect('salepage/warring');
 
 
   $data = DB::table('customers')
   ->select('db_salepage_setting.*','customers_detail.tel_mobile','customers.user_name','customers.first_name',
   'customers.last_name','customers.business_name','customers.profile_img','customers.email')
-  ->leftjoin('db_salepage_setting','customers.id', '=', 'db_salepage_setting.customers_id_fk')
-  ->leftjoin('customers_detail','customers_detail.customer_id', '=', 'customers.id')
+  ->leftjoin('db_salepage_setting','customers.user_nme', '=', 'db_salepage_setting.customers_username')
+  ->leftjoin('customers_detail','customers_detail.user_name', '=', 'customers.user_name')
   ->where('customers.user_name','=',$user_name)
   ->orwhere('db_salepage_setting.name_s1','=',$user_name)
   ->first();

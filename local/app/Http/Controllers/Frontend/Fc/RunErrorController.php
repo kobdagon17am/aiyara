@@ -27,7 +27,7 @@ class RunErrorController extends Controller
 
       $c = DB::table('customers') //อัพ Pv ของตัวเอง
       ->select('user_name')
-      ->where('id', '=', $value->cuctomer_id_fk)
+      ->where('id', '=', $value->customers_id_fk)
       ->first();
 
       $salepage_setting = DB::table('db_salepage_setting')
