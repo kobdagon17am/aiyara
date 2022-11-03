@@ -226,12 +226,12 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) >= '{$request->s_date}' and date(db_orders.created_at) <= '{$request->e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
-            ->whereRaw("(db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.customers_sent_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.member_id_aicash = ".Auth::guard('c_user')->user()->id." )")
+            ->whereRaw("(db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.customers_sent_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.member_id_aicash = ".Auth::guard('c_user')->user()->id." )");
 
             // ->whereRaw(("(db_orders.order_status_id_fk != 8 and )")
-            ->groupBy('db_orders.code_order')
-            ->orderby('db_orders.updated_at', 'DESC')
-            ->get();
+            // ->groupBy('db_orders.code_order')
+            // ->orderby('db_orders.updated_at', 'DESC')
+            // ->get();
 
         $sQuery = Datatables::of($orders);
         return $sQuery

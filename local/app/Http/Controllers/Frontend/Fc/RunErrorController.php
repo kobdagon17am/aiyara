@@ -20,9 +20,27 @@ use App\Http\Controllers\Frontend\Fc\RunPvController;
 class RunErrorController extends Controller
 {
   public static function index(){
+    $data = DB::table('db_salepage_setting')
+    ->get();
+    $i = 0;
+    foreach($data as $value){
+
+      $c = DB::table('customers') //อัพ Pv ของตัวเอง
+      ->select('user_name')
+      ->where('id', '=', $value->customers_id_fk)
+      ->first();
+
+      $salepage_setting = DB::table('db_salepage_setting')
+      ->where('id', $value->id)
+      ->update(['customers_username' => $c->user_name]); //ลงข้อมูลบิลชำระเงิน
+    $i++;
+    }
+    dd($i);
 
 
-    $rs= RunErrorController::check_type_introduce('A787338','A872520');
+
+
+    // $rs= RunErrorController::check_type_introduce('A787338','A872520');
 
 
     // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::run_invoice_code();
@@ -53,25 +71,25 @@ class RunErrorController extends Controller
 //   dd($rs,$user->user_name);
 
 //O122083101093
- $order_data = DB::table('db_orders')
-  ->wherein('code_order',
-  ['O122091003188'])
-  ->where('status_run_pv','=','not_run_pv')
-  //->where('invoice_code_id_fk','=',null)
-  ->get();
-// dd($order_data);
-  $i=0;
+//  $order_data = DB::table('db_orders')
+//   ->wherein('code_order',
+//   ['O122091003188'])
+//   ->where('status_run_pv','=','not_run_pv')
+//   //->where('invoice_code_id_fk','=',null)
+//   ->get();
+// // dd($order_data);
+//   $i=0;
 
-  foreach($order_data as $value){
-    $i++;
-    //$rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'customer');
-    $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
+//   foreach($order_data as $value){
+//     $i++;
+//     //$rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'customer');
+//     $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
 
-    $data[][$i]=$rs;
-  }
+//     $data[][$i]=$rs;
+//   }
 
 
-dd($data);
+// dd($data);
   }
 
   public static function run_invoice_code(){

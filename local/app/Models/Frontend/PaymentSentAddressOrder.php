@@ -33,6 +33,8 @@ class PaymentSentAddressOrder extends Model
       $insert_db_orders->created_at = date('Y-m-d H:i:s');
       $insert_db_orders->updated_at = date('Y-m-d H:i:s');
 
+
+
       if ($rs->aistockist_id_fk) {
         $insert_db_orders->aistockist = $rs->aistockist_id_fk;
       }
@@ -72,7 +74,21 @@ class PaymentSentAddressOrder extends Model
 
       if ($rs->sent_type_to_customer == 'sent_type_other') {
         $insert_db_orders->status_payment_sent_other = 1;
+        $data_customer = DB::table('customers')
+        ->select('user_name','first_name','last_name','business_name')
+        ->where('id','=',$rs->address_sent_id_fk)
+        ->first();
+      }else{
+        $data_customer = DB::table('customers')
+        ->select('user_name','first_name','last_name','business_name')
+        ->where('id','=',$customer_id)
+        ->first();
       }
+
+      $insert_db_orders->user_name = $data_customer->user_name;
+      $insert_db_orders->name_customer = $data_customer->first_name.' '.$data_customer->last_name;
+      $insert_db_orders->name_customer_business = $data_customer->business_name;
+
 
       $vat = DB::table('dataset_vat')
         ->where('business_location_id_fk', '=', $business_location_id)

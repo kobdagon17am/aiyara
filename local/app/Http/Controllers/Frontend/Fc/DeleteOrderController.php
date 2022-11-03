@@ -75,7 +75,7 @@ class DeleteOrderController extends Controller
           ->update(['pro_status' => 1,'used_user_name' => null,'used_date' => null]);
         }
 
-        DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
+        // DB::table('db_order_products_list')->where('frontstore_id_fk', '=', $order_id)->delete();
 
         DB::commit();
         $resule = ['status' => 'success', 'message' => 'Delete Oder Success'];
