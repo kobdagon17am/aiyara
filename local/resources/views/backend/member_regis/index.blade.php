@@ -1237,7 +1237,7 @@
 
             $(document).on('click', '.btnSearch02', function(event) {
                 event.preventDefault();
-                $('#data-table-02').DataTable().clear();
+                // $('#data-table-02').DataTable().clear();
                 $(".myloading").show();
                 var startDate02 = $('#startDate02').val();
                 var endDate02 = $('#endDate02').val();
