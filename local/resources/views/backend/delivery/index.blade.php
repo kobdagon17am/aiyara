@@ -1465,7 +1465,7 @@
                                 }
                             },
                             {
-                                data: 'total_price',
+                                data: 'total_price_not_gv',
                                 title: '<center>รวมเงิน</center>',
                                 className: 'text-center'
                             },
