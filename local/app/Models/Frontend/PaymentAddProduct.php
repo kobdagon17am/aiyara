@@ -18,7 +18,13 @@ class PaymentAddProduct extends Model
 
             $cartCollection = Cart::session($type)->getContent();
             $data = $cartCollection->toArray();
+           $check_q = Cart::session($type)->getTotalQuantity();
 
+            if($check_q == 0){
+              $resule = ['status' => 'fail', 'message' => 'Product insert Fail'];
+            DB::rollback();
+            return $resule;
+            }
 
 
             foreach ($data as $value) {
