@@ -77,6 +77,11 @@ class FrontstorelistController extends Controller
 
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = @$request->frontstore_id ;
+
+                $sRow->customers_id_fk  = (@request('customers_id_fk'))?@request('customers_id_fk'): 0 ;
+                $sRow->action_user = (@request('action_user'))?@request('action_user'): 0 ;
+                $sRow->code_order  = (@request('code_order'))?@request('code_order'): 0 ;
+
                 $sRow->amt    =  @$request->quantity[$i];
                 $sRow->add_from    = '2';
                 $sRow->promotion_id_fk    = @$request->promotion_id_fk_pro[$i];
@@ -382,7 +387,6 @@ class FrontstorelistController extends Controller
               }
 
           }else{
-
                 if(request('purchase_type_id_fk')==5){
                   $pv = 0;
                 }else{
@@ -391,6 +395,12 @@ class FrontstorelistController extends Controller
 
                 $sRow = new \App\Models\Backend\Frontstorelist;
                 $sRow->frontstore_id_fk    = request('frontstore_id') ;
+
+                $sRow->frontstore_id_fk  = request('frontstore_id') ;
+                $sRow->customers_id_fk  = (@request('customers_id_fk'))?@request('customers_id_fk'): 0 ;
+                $sRow->action_user = (@request('action_user'))?@request('action_user'): 0 ;
+                $sRow->code_order  = (@request('code_order'))?@request('code_order'): 0 ;
+
                 $sRow->product_id_fk    = @$request->product_id_fk[$i];
                 $sRow->purchase_type_id_fk    = @$sFrontstore->purchase_type_id_fk;
                 $sRow->selling_price    = @$sProducts[0]->member_price;
