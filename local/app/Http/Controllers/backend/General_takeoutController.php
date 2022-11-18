@@ -219,11 +219,14 @@ class General_takeoutController extends Controller
           $sRow->description    = request('description');
 
           if(request('product_out_cause_id_fk')==5){
-              $sRow->description    = request('description');
+              $sRow->description = request('description');
           }else{
-              $description = DB::select("SELECT * FROM `dataset_product_out_cause` where id=".request('product_out_cause_id_fk')."");
-              $sRow->description    = $description[0]->txt_desc;
+              // $description = DB::select("SELECT * FROM `dataset_product_out_cause` where id=".request('product_out_cause_id_fk')."");
+              // $sRow->description    = $description[0]->txt_desc;
+              $sRow->description = request('description');
           }
+
+          // dd( request('description'));
 
           $sRow->product_id_fk    = request('product_id_fk2')[0];
           $sRow->lot_number    =  request('lot_number2')[0];

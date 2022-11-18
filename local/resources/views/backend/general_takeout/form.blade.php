@@ -36,11 +36,11 @@
         $sC = @$menu_permit->c == 1 ? '' : 'display:none;';
         $sA = @$menu_permit->can_answer == 1 ? '' : 'display:none;';
     }
-    
+
     //   echo $sPermission;
     // echo $role_group_id;
     // echo $menu_id;
-    
+
     ?>
     <div class="row">
         <div class="col-10">
@@ -171,21 +171,28 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group row @if (@$sRow->product_in_cause_id_fk != '5') d-none @endif" id="what_export">
+                        {{-- <div class="form-group row @if (@$sRow->product_in_cause_id_fk != '5') d-none @endif" id="what_export">
                             <label for="" class="col-md-3 col-form-label"> หมายเหตุ : * </label>
                             <div class="col-md-8">
                                 <textarea name="description" class='form-control' cols="30" rows="10">{{ @$sRow->description }}</textarea>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        @if (!empty(@$sRow->description))
+                        <div class="form-group row" id="what_export">
+                          <label for="" class="col-md-3 col-form-label"> หมายเหตุ : * </label>
+                          <div class="col-md-8">
+                              <textarea name="description" class='form-control' cols="30" rows="10">{{ @$sRow->description }}</textarea>
+                          </div>
+                      </div>
+
+                        {{-- @if (!empty(@$sRow->description))
                             <div class="form-group row">
                                 <label for="" class="col-md-3 col-form-label"> </label>
                                 <div class="col-md-8">
-                                    <textarea class='form-control' cols="30" rows="10">{{ @$sRow->description }}</textarea>
+                                    <textarea class='form-control' cols="30" rows="10">{{ @$sRow->description }}aaaaaaaaaa</textarea>
                                 </div>
                             </div>
-                        @ENDIF
+                        @ENDIF --}}
 
                         <div class="form-group row">
                             <label for="receive_person" class="col-md-3 col-form-label">ผู้รับ (นำออกไปให้ใคร) : *</label>
@@ -577,12 +584,12 @@
 
         function g_export(id) {
 
-            var a = document.getElementById(id).value; // alert(a);
-            if (a == 5) {
-                $('#what_export').removeClass('d-none');
-            } else {
-                $('#what_export').addClass('d-none');
-            }
+            // var a = document.getElementById(id).value; // alert(a);
+            // if (a == 5) {
+            //     $('#what_export').removeClass('d-none');
+            // } else {
+            //     $('#what_export').addClass('d-none');
+            // }
         }
 
         $('#business_location_id_fk').change(function() {
