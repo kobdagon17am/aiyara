@@ -293,7 +293,7 @@
                                         <br>
 
                                         <div class="col-md-12 ">
-                                            @if (@$sRow->status != 5)
+                                            @if (@$sRow->status != 5 || @\Auth::user()->id==29)
                                                 <span style="font-weight: bold;padding-right: 10px;"><i
                                                         class="bx bx-play"></i> นำเข้าเลขพัสดุจาก Kerry </span>
                                             @endif
@@ -306,7 +306,7 @@
                                                         value="{{ @$requisition_code }}">
                                                     <input type="hidden" name="id" value="{{ @$id }}">
 
-                                                    @if (@$sRow->status != 5)
+                                                    @if (@$sRow->status != 5 || @\Auth::user()->id==29)
                                                         <div class="col-md-2">
                                                             <input type="file" accept=".xlsx" class="form-control"
                                                                 name="fileXLS" required>
