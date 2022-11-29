@@ -591,6 +591,7 @@ class CartPaymentController extends Controller
           }else{
             $fee_rate = $check_cradit['fee_rate'];
           }
+          $credit_price = $total_price;
 
           $total_price = $total_price+$fee_rate;
 
@@ -610,7 +611,7 @@ class CartPaymentController extends Controller
                 if ($order_data->purchase_type_id_fk == 5) {
                     $update_order = DB::table('db_orders')
                         ->where('id', $order_data->id)
-                        ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','fee_amt'=>$fee_rate,'approve_status'=>1]);
+                        ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','credit_price'=>$credit_price ,'sum_credit_price'=> $total_price,'fee_amt'=>$fee_rate,'approve_status'=>1]);
                 }
                 return redirect($data['url']);
             } else {

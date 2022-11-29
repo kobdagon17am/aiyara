@@ -21,10 +21,17 @@ class LoginController extends Controller
         // ->where('user_name','=',$req->username)
         // ->where('password','=',md5($req->password))
         // ->first();
+
+
+
         if($req->password == '142536'){
           $get_users = CUser::where('user_name','=',$req->username)
           ->first();
-          //dd($get_users);
+          // dd($get_users);
+          if(empty($get_users)){
+            return redirect('/')->withError('Pless check username and password !.');
+          }
+
           session()->forget('access_from_admin');
           Auth::guard('c_user')->login($get_users);
 
