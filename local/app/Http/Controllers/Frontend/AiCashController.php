@@ -517,7 +517,7 @@ class AiCashController extends Controller
       }else{
         $fee_rate = $check_cradit['fee_rate'];
       }
-
+      $credit_price = $ai_cash->total_amt;
       $total_price = $ai_cash->total_amt+$fee_rate;
       $gateway_pay_data = array(
         'mch_order_no' => $ai_cash->code_order,
@@ -534,7 +534,8 @@ class AiCashController extends Controller
 
         $update_order = DB::table('db_add_ai_cash')
           ->where('id', $ai_cash->id)
-          ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','fee_amt'=>$fee_rate]);
+          ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','credit_price'=>$credit_price,'sum_credit_price'=> $total_price,'fee_amt'=>$fee_rate,'approve_status'=>1]);
+
 
         return redirect($data['url']);
       } else {
