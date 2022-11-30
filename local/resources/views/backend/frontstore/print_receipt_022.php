@@ -492,20 +492,20 @@ if(!empty($db_orders[0]->action_user)){
 
      $tel = '';
     //  เปลี่ยนบนหัวบิลของพี่กอล์ฟ
-    if($db_orders[0]->status_payment_sent_other==1){
-      $cus = DB::select("
-      SELECT
-      customers.user_name,
-      customers.prefix_name,
-      customers.first_name,
-      customers.last_name,
-      customers.id_card
-      FROM
-      db_orders
-      Left Join customers ON db_orders.customers_sent_id_fk = customers.id
-      where db_orders.id = ".$id."
-        ");
-    }else{
+    // if($db_orders[0]->status_payment_sent_other==1){
+    //   $cus = DB::select("
+    //   SELECT
+    //   customers.user_name,
+    //   customers.prefix_name,
+    //   customers.first_name,
+    //   customers.last_name,
+    //   customers.id_card
+    //   FROM
+    //   db_orders
+    //   Left Join customers ON db_orders.customers_sent_id_fk = customers.id
+    //   where db_orders.id = ".$id."
+    //     ");
+    // }else{
       $cus = DB::select("
       SELECT
       customers.user_name,
@@ -518,7 +518,7 @@ if(!empty($db_orders[0]->action_user)){
       Left Join customers ON db_orders.customers_id_fk = customers.id
       where db_orders.id = ".$id."
         ");
-    }
+    // }
 
        if(@$cus[0]->prefix_name == '0'){
         @$cus[0]->prefix_name = '';
