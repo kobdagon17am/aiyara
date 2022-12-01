@@ -114,7 +114,8 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
   <div class="col-6  b-r-default">
 
     <strong>@lang('message.Middle')</strong><br>
-    [ {{$data->team_center}} ] <font class="font-red">{{number_format($data->pv_team_center)}}</font>
+
+    [ {{$data->team_center}} ] <font class="font-red">@if($data->pv_team_center){{number_format($data->pv_team_center)}} @else - @endif</font>
    </div>
    <div class="col-6">
 
