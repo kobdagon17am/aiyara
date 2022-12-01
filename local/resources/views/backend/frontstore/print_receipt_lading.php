@@ -181,8 +181,11 @@ for ($z=0; $z < count($arr_orders_id) ; $z++) {
 
 $id = @$arr_orders_id[$z];
 
-$n = 22;
-$limit = 10;
+// $n = 22;
+// $limit = 10;
+
+$n = 20;
+$limit = 8;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
 
@@ -529,20 +532,20 @@ if(!empty($db_orders[0]->action_user)){
      $tel = '';
 
           //  เปลี่ยนบนหัวบิลของพี่กอล์ฟ
-    if($db_orders[0]->status_payment_sent_other==1){
-      $cus = DB::select("
-      SELECT
-      customers.user_name,
-      customers.prefix_name,
-      customers.first_name,
-      customers.last_name,
-      customers.id_card
-      FROM
-      db_orders
-      Left Join customers ON db_orders.customers_sent_id_fk = customers.id
-      where db_orders.id = ".$id."
-        ");
-    }else{
+    // if($db_orders[0]->status_payment_sent_other==1){
+    //   $cus = DB::select("
+    //   SELECT
+    //   customers.user_name,
+    //   customers.prefix_name,
+    //   customers.first_name,
+    //   customers.last_name,
+    //   customers.id_card
+    //   FROM
+    //   db_orders
+    //   Left Join customers ON db_orders.customers_sent_id_fk = customers.id
+    //   where db_orders.id = ".$id."
+    //     ");
+    // }else{
       $cus = DB::select("
       SELECT
       customers.user_name,
@@ -555,7 +558,7 @@ if(!empty($db_orders[0]->action_user)){
       Left Join customers ON db_orders.customers_id_fk = customers.id
       where db_orders.id = ".$id."
         ");
-    }
+    // }
 
     //  $cus = DB::select("
     //     SELECT
@@ -1276,7 +1279,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 
         <?php $runno = 1; for ($i= ($j*$n)+6; $i <= ($j*$n)+15 ; $i++) {  ?>
 
-        <tr style="vertical-align: top;line-height: 10px !important;">
+        <tr style="vertical-align: top;line-height: 10px !important; font-size:18px;">
 
             <td style="width:2.6%;text-align: left;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>

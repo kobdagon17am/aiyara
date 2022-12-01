@@ -311,7 +311,7 @@ class Member_regisController extends Controller
                 ".$get_all_date."
 
        GROUP BY customer_id
-       ORDER BY id asc
+       ORDER BY id desc
          ");
 
          if($w05==''){
@@ -474,7 +474,7 @@ class Member_regisController extends Controller
          WHEN regis_doc_status = 0 THEN 1
          ELSE 99 END ASC,
          regis_doc_status,
-         id asc
+         id desc
            ");
          }
 

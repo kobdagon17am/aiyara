@@ -45,7 +45,6 @@
         .dt-checkboxes-select-all {
             display: none;
         }
-
     </style>
     <style>
         @media screen and (min-width: 676px) {
@@ -123,7 +122,6 @@
         .divTH {
             text-align: right;
         }
-
     </style>
 @endsection
 
@@ -207,8 +205,8 @@
 
                                     <div class="form-group row">
                                         <div class="col-md-12">
-                                            <span style="font-weight: bold;padding-right: 10px;"><i
-                                                    class="bx bx-play"></i> ใบเสร็จรอจัดเบิกจากคลัง </span>
+                                            <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i>
+                                                ใบเสร็จรอจัดเบิกจากคลัง </span>
                                         </div>
                                     </div>
                                 </div>
@@ -253,15 +251,15 @@
                                                     style="width: 100%;">
                                                 </table>
                                                 <!--   <div class="form-group row div_btn_save " style="display: none;" >
-                            <div class="col-md-12 text-center ">
-                              <br>
-                              <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave ">
-                              <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการเบิกสินค้า
-                              </button>
+                                <div class="col-md-12 text-center ">
+                                  <br>
+                                  <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 btnSave ">
+                                  <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกการเบิกสินค้า
+                                  </button>
 
-                            </div>
-                          </div>
-     -->
+                                </div>
+                              </div>
+         -->
                                                 <?php if(@\Auth::user()->permission==1 || @$can_approve==1){ ?>
                                                 <div class="form-group row  div_btn_save ">
                                                     <div class="col-md-12 text-center ">
@@ -313,12 +311,11 @@
 
         <!-- Modal content -->
         <div class="modal-content">
-          <span class="close">&times;</span>
-          <p>Some text in the Modal..</p>
+            <span class="close">&times;</span>
+            <p>Some text in the Modal..</p>
         </div>
 
-      </div>
-
+    </div>
 @endsection
 
 @section('script')
@@ -639,6 +636,11 @@
                                     "info": false,
                                     "paging": false,
                                     destroy: true,
+                                    // dom: 'Bfrtip',
+                                    // buttons: [
+                                    //     // 'copy', 'csv', 'excel', 'pdf', 'print'
+                                    //     'excel', 'print'
+                                    // ],
                                     ajax: {
                                         url: '{{ route('backend.pick_warehouse_tb_0002.datatable') }}',
                                         type: "POST",
@@ -665,8 +667,8 @@
                                         dataIndex) {
 
                                         console.log(aData[
-                                                'check_product_instock'
-                                                ]);
+                                            'check_product_instock'
+                                        ]);
 
                                         $(".myloading").hide();
                                         // console.log("xxxxxxx");
@@ -674,7 +676,7 @@
                                         setTimeout(function() {
                                             if (aData[
                                                     'ch_amt_lot_wh'
-                                                    ] == 0) {
+                                                ] == 0) {
                                                 $(".div_btn_save")
                                                     .hide();
                                             } else {
@@ -801,7 +803,7 @@
                                                         location
                                                             .replace(
                                                                 '{{ url('backend/pay_requisition_001') }}'
-                                                                );
+                                                            );
 
                                                         $(".myloading")
                                                             .hide();
@@ -810,7 +812,7 @@
                                                         jqXHR,
                                                         textStatus,
                                                         errorThrown
-                                                        ) {
+                                                    ) {
                                                         $(".myloading")
                                                             .hide();
                                                     }
@@ -898,7 +900,7 @@
 
                 if (!confirm(
                         "โปรดระวัง ยืนยัน ! เพื่อล้างข้อมูลรายการสั่งซื้อทั้งหมดเพื่อเริ่มต้นคีย์ใหม่ ? "
-                        )) {
+                    )) {
                     return false;
                 } else {
 
