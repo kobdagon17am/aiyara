@@ -323,6 +323,8 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 				->first();
 
 
+
+
 			}
 
 			if($data){
@@ -339,13 +341,14 @@ public static function check_type_introduce($introduce_id,$under_line_id){//ค�
 
 					$data = DB::table('customers')
 					->select('upline_id','user_name','upline_id','line_type')
-					->where('id','=',$data->upline_id)
+					->where('user_name','=',$data->upline_id)
 					->first();
 
 					$j = $j+1;
 				}
 
 			}else{
+
 				$resule = ['status'=>'fail','message'=>'ไม่พบรหัสสมาชิกดังกล่าวหรือไม่ได้อยู่ในสายงานเดียวกัน'];
 				$j =0;
 			}
