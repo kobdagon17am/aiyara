@@ -204,8 +204,9 @@
                                                     <div class="col-sm-3">
                                                         <label>เลขที่บัตรประชาชน <font class="text-danger">*</font>
                                                             </label>
-                                                        <input class="form-control" minlength="8" maxlength="14"  type="text" name="id_card"
+                                                        <input class="form-control" id="id_card" type="text" name="id_card"
                                                             value="{{ old('id_card') }}"   required="">
+                                                            <span class="error text-danger"></span>
                                                     </div>
 
 
@@ -692,6 +693,64 @@
 
 
     <script type="text/javascript">
+
+var business_location_id = '{{ $data['data']->business_location_id }}';
+         if (business_location_id == 1 || business_location_id == '') {
+             $('#id_card').attr('maxlength', '13');
+         } else {
+             $('#id_card').attr('maxlength', '15');
+         }
+
+         $('#business_location').change(function() {
+             value = $(this).val();
+             if (value != "1") {
+                 $('#id_card').attr('maxlength', '15');
+                 $('#id_card').val("");
+             } else {
+                 $('#id_card').attr('maxlength', '13');
+                 $('#id_card').val("");
+             }
+         })
+
+         $(document).ready(function() {
+             $('#id_card').on('keyup', function() {
+                 nation_id = $('#business_location').val();
+
+                 if (nation_id == 1) {
+                     if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
+                         id = $(this).val().replace(/-/g, "");
+                         var result = Script_checkID(id);
+                         if (result === false) {
+                             id_card = $('#id_card').val();
+                             $('span.error').removeClass('text-success').text('เลขบัตร ' + id_card + ' ไม่ถูกต้อง');
+                             $('#id_card').val('');
+                         } else {
+                             $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
+                         }
+                     } else {
+                         $('span.error').removeClass('true').text('');
+
+                     }
+
+                 }
+
+             })
+         });
+
+         function Script_checkID(id) {
+             if (!IsNumeric(id)) return false;
+             if (id.substring(0, 1) == 0) return false;
+             if (id.length != 13) return false;
+             for (i = 0, sum = 0; i < 12; i++)
+                 sum += parseFloat(id.charAt(i)) * (13 - i);
+             if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
+             return true;
+         }
+
+         function IsNumeric(input) {
+             var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
+             return (RE.test(input));
+         }
 
 
 

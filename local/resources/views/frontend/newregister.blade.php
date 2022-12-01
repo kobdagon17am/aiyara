@@ -6,18 +6,16 @@
  @extends('frontend.layouts.customer.customer_app')
 
  @section('css')
-<style>
-  .icons-alert:before {
-      top: 11px;
-  }
-
-</style>
-  <link rel="stylesheet" href="{{ asset('frontend/bower_components/select2/css/select2.min.css') }}" />
-  <!-- Multi Select css -->
-  <link rel="stylesheet" type="text/css"
-      href="{{ asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css') }}">
-  <link rel="stylesheet" type="text/css"
-      href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
+     <style>
+         .icons-alert:before {
+             top: 11px;
+         }
+     </style>
+     <link rel="stylesheet" href="{{ asset('frontend/bower_components/select2/css/select2.min.css') }}" />
+     <!-- Multi Select css -->
+     <link rel="stylesheet" type="text/css"
+         href="{{ asset('frontend/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css') }}">
+     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
  @endsection
 
  @section('conten')
@@ -38,8 +36,9 @@
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label><b>  @lang('message.under') </b></label>
-                         <span class=" form-control pcoded-badge label label-success" style="font-size: 15px;padding: 9px 9px;">
+                         <label><b> @lang('message.under') </b></label>
+                         <span class=" form-control pcoded-badge label label-success"
+                             style="font-size: 15px;padding: 9px 9px;">
 
                              <font style="color: #000;"> {{ @$data['data']->business_name }} (
                                  {{ $data['data']->user_name }} ) </font>
@@ -75,7 +74,8 @@
                          <label><b> Business Location </b></label>
                          <select name="business_location" id="business_location" class="form-control">
                              @foreach ($data['business_location'] as $business_location_value)
-                                 <option value="{{ $business_location_value->id }}" @if ($business_location_value->id == $data['data']->business_location_id) selected="" @endif>
+                                 <option value="{{ $business_location_value->id }}"
+                                     @if ($business_location_value->id == $data['data']->business_location_id) selected="" @endif>
                                      {{ $business_location_value->txt_desc }}</option>
                              @endforeach
                          </select>
@@ -84,7 +84,7 @@
                  </div>
                  <div class="form-group row">
                      <div class="col-sm-2">
-                         <label> @lang('message.name_prefix')  </label>
+                         <label> @lang('message.name_prefix') </label>
                          <select class="form-control" name="name_prefix">
                              <option value="@lang('message.mr')"> @lang('message.mr') </option>
                              <option value="@lang('message.mrs')"> @lang('message.mrs') </option>
@@ -130,7 +130,9 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.ID_card_number') <font class="text-danger">*</font></label>
-                         <input class="form-control" type="text" name="id_card" minlength="8" maxlength="14" value="{{ old('id_card') }}" required="">
+                         <input class="form-control" type="text" name="id_card" id="id_card" minlength="13"
+                             value="{{ old('id_card') }}" required="">
+                         <span class="error text-danger"></span>
                      </div>
 
 
@@ -140,7 +142,8 @@
                          <select class="js-example-basic-single col-sm-12" name="nation_id" required="">
                              <option value="">Select</option>
                              @foreach ($data['country'] as $country_value)
-                                 <option value="{{ $country_value->nation_id }}" @if ($country_value->nation_id == $data['data']->nation_id || $country_value->nation_id == old('nation_id')) selected="" @endif>
+                                 <option value="{{ $country_value->nation_id }}"
+                                     @if ($country_value->nation_id == $data['data']->nation_id || $country_value->nation_id == old('nation_id')) selected="" @endif>
                                      {{ $country_value->nation_name_en }}</option>
                              @endforeach
                          </select>
@@ -149,21 +152,21 @@
 
                  <div class="form-group row">
                      <div class="col-sm-3">
-                         <label>@lang('message.Mobile_Phone')  <b class="text-danger">*</b></label>
-                         <input type="text" class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" name="tel_mobile"
-                         value="{{ old('tel_mobile') }}" >
+                         <label>@lang('message.Mobile_Phone') <b class="text-danger">*</b></label>
+                         <input type="text" class="form-control us_telephone" autocomplete="off"
+                             data-mask="999-999-9999" name="tel_mobile" value="{{ old('tel_mobile') }}">
                      </div>
 
                      <div class="col-sm-3">
                          <label>@lang('message.Home_Phone') </label>
                          <input type="text" class="form-control us_telephone" autocomplete="off"
-                          data-mask="999-999-9999" name="tel_home" value="{{ old('tel_home') }}" >
+                             data-mask="999-999-9999" name="tel_home" value="{{ old('tel_home') }}">
                      </div>
 
                      <div class="col-sm-3">
                          <label>Email </label>
-                         <input type="text" class="form-control" autocomplete="off" placeholder="Email@email.com" name="email"
-                             value="{{ old('email') }}" >
+                         <input type="text" class="form-control" autocomplete="off" placeholder="Email@email.com"
+                             name="email" value="{{ old('email') }}">
                      </div>
                  </div>
 
@@ -184,26 +187,27 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.building') <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="@lang('message.building')" id="card_house_name"
-                             name="card_house_name" value="{{ old('card_house_name') }}" required="">
+                         <input type="text" class="form-control" placeholder="@lang('message.building')"
+                             id="card_house_name" name="card_house_name" value="{{ old('card_house_name') }}"
+                             required="">
                      </div>
 
                      <div class="col-sm-3">
                          <label>@lang('message.villageno') <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="@lang('message.villageno')" id="card_moo" name="card_moo"
-                             value="{{ old('card_moo') }}" required="">
+                         <input type="text" class="form-control" placeholder="@lang('message.villageno')" id="card_moo"
+                             name="card_moo" value="{{ old('card_moo') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
                          <label>@lang('message.lane')</label>
-                         <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="card_soi" name="card_soi"
-                             value="{{ old('card_soi') }}" >
+                         <input type="text" class="form-control" placeholder="ตรอก/ซอย" id="card_soi"
+                             name="card_soi" value="{{ old('card_soi') }}">
                      </div>
 
                      <div class="col-sm-3">
                          <label>@lang('message.road')</label>
-                         <input type="text" class="form-control" placeholder="@lang('message.road')" id="card_road" name="card_road"
-                             value="{{ old('card_road') }}"  >
+                         <input type="text" class="form-control" placeholder="@lang('message.road')" id="card_road"
+                             name="card_road" value="{{ old('card_road') }}">
                      </div>
                  </div>
 
@@ -214,7 +218,8 @@
                              required="">
                              <option value="">Select</option>
                              @foreach ($data['provinces'] as $value_provinces)
-                                 <option value="{{ $value_provinces->id }}" @if ($value_provinces->id == old('card_province')) selected @endif>
+                                 <option value="{{ $value_provinces->id }}"
+                                     @if ($value_provinces->id == old('card_province')) selected @endif>
                                      {{ $value_provinces->name_th }}</option>
                              @endforeach
                          </select>
@@ -250,15 +255,14 @@
                  <div class="form-group row">
                      <div class="col-sm-12">
                          <h3 class="sub-title" style="color: #000;font-size: 16px">
-                          @lang('message.Convenient_address') </h3>
+                             @lang('message.Convenient_address') </h3>
                      </div>
                  </div>
 
                  <div class="col-sm-12 col-xl-6 m-b-30">
                      <div class="checkbox-fade fade-in-primary">
                          <label>
-                             <input type="checkbox" id="copy_card_address"
-                                 name="copy_card_address">
+                             <input type="checkbox" id="copy_card_address" name="copy_card_address">
                              <span class="cr">
                                  <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                              </span>
@@ -270,8 +274,8 @@
                  <div class="form-group row">
                      <div class="col-sm-3">
                          <label>@lang('message.no') <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="@lang('message.no')" id="house_no" name="house_no"
-                             value="{{ old('house_no') }}" required="">
+                         <input type="text" class="form-control" placeholder="@lang('message.no')" id="house_no"
+                             name="house_no" value="{{ old('house_no') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
@@ -282,27 +286,28 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.villageno') <font class="text-danger">*</font></label>
-                         <input type="text" class="form-control" placeholder="@lang('message.villageno')" id="moo" name="moo"
-                             value="{{ old('moo') }}" required="">
+                         <input type="text" class="form-control" placeholder="@lang('message.villageno')" id="moo"
+                             name="moo" value="{{ old('moo') }}" required="">
                      </div>
 
                      <div class="col-sm-3">
                          <label>@lang('message.lane') </label>
-                         <input type="text" class="form-control" placeholder="@lang('message.lane')" id="soi" name="soi"
-                             value="{{ old('soi') }}">
+                         <input type="text" class="form-control" placeholder="@lang('message.lane')" id="soi"
+                             name="soi" value="{{ old('soi') }}">
                      </div>
 
                      <div class="col-sm-3">
                          <label>@lang('message.road')</label>
-                         <input type="text" class="form-control" placeholder="@lang('message.road')" id="road" name="road"
-                             value="{{ old('road') }}">
+                         <input type="text" class="form-control" placeholder="@lang('message.road')" id="road"
+                             name="road" value="{{ old('road') }}">
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
                          <label>@lang('message.province') <font class="text-danger">*</font></label>
-                         <select class="js-example-basic-single col-sm-12" id="province" name="province" required="">
+                         <select class="js-example-basic-single col-sm-12" id="province" name="province"
+                             required="">
                              <option value="">Select</option>
                              @foreach ($data['provinces'] as $value_provinces)
                                  <option value="{{ $value_provinces->id }}">{{ $value_provinces->name_th }}</option>
@@ -314,7 +319,8 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.district/area') <font class="text-danger">*</font></label>
-                         <select class="js-example-basic-single col-sm-12" name="amphures" id="amphures" required="">
+                         <select class="js-example-basic-single col-sm-12" name="amphures" id="amphures"
+                             required="">
                              <option value="">Select</option>
                          </select>
                          {{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="amphures" name="amphures" value="{{ old('amphures') }}"> --}}
@@ -322,7 +328,8 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
-                         <select class="js-example-basic-single col-sm-12" name="district" id="district" required="">
+                         <select class="js-example-basic-single col-sm-12" name="district" id="district"
+                             required="">
                              <option value="">Select</option>
                              {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="district" name="district" value="{{ old('district') }}"> --}}
                          </select>
@@ -330,8 +337,8 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.zipcode')</label>
-                         <input type="text" class="form-control" placeholder="@lang('message.zipcode')" id="zipcode" name="zipcode"
-                             value="{{ old('zipcode') }}">
+                         <input type="text" class="form-control" placeholder="@lang('message.zipcode')" id="zipcode"
+                             name="zipcode" value="{{ old('zipcode') }}">
                      </div>
 
                  </div>
@@ -356,28 +363,39 @@
                      </div>
 
                      <div class="col-sm-3">
-                      <label>@lang('message.bank')</label>
-                      <select class="form-control" id="bank_name_th" name="bank_name" >
-                          <option value=""> Select </option>
-                          <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
-                          <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
-                          <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif> ธนาคารกรุงไทย </option>
-                          <option value="ธนาคารไทยพาณิชย์" @if ('ธนาคารไทยพาณิชย์' == old('bank_name')) selected="" @endif> ธนาคารไทยพาณิชย์ </option>
-                          <option value="ธนาคารกรุงศรีอยุธยา" @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif> ธนาคารกรุงศรีอยุธยา </option>
-                          <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif> ธนาคารทหารไทยธนชาต </option>
-                          <option value="ธนาคารออมสิน" @if ('ธนาคารออมสิน' == old('bank_name')) selected="" @endif> ธนาคารออมสิน </option>
-                          <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส." @if ('ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส.' == old('bank_name')) selected="" @endif>
-                              ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส. </option>
-                          <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
-                      </select>
+                         <label>@lang('message.bank')</label>
+                         <select class="form-control" id="bank_name_th" name="bank_name">
+                             <option value=""> Select </option>
+                             <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif>
+                                 ธนาคารกรุงเทพ </option>
+                             <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif>
+                                 ธนาคารกสิกรไทย </option>
+                             <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif>
+                                 ธนาคารกรุงไทย </option>
+                             <option value="ธนาคารไทยพาณิชย์" @if ('ธนาคารไทยพาณิชย์' == old('bank_name')) selected="" @endif>
+                                 ธนาคารไทยพาณิชย์ </option>
+                             <option value="ธนาคารกรุงศรีอยุธยา" @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif>
+                                 ธนาคารกรุงศรีอยุธยา </option>
+                             <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif>
+                                 ธนาคารทหารไทยธนชาต </option>
+                             <option value="ธนาคารออมสิน" @if ('ธนาคารออมสิน' == old('bank_name')) selected="" @endif>
+                                 ธนาคารออมสิน </option>
+                             <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส."
+                                 @if ('ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส.' == old('bank_name')) selected="" @endif>
+                                 ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส. </option>
+                             <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif>
+                                 ธนาคารยูโอบี </option>
+                         </select>
 
-                      <select class="form-control" id="bank_name_cam" name="bank_name_cam">
-                        <option value=""> Select </option>
-                        <option value="ABA Bank" @if ('ABA Bank' == old('bank_name_cam')) selected="" @endif> ABA Bank </option>
-                        <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name_cam')) selected="" @endif> Acleda Bank </option>
-                    </select>
+                         <select class="form-control" id="bank_name_cam" name="bank_name_cam">
+                             <option value=""> Select </option>
+                             <option value="ABA Bank" @if ('ABA Bank' == old('bank_name_cam')) selected="" @endif> ABA Bank
+                             </option>
+                             <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name_cam')) selected="" @endif> Acleda
+                                 Bank </option>
+                         </select>
 
-                  </div>
+                     </div>
 
 
                      <div class="col-sm-3">
@@ -418,22 +436,21 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.Beneficiaries_name-surname')</label>
-                         <input type="text" class="form-control" placeholder="@lang('message.Beneficiaries_name-surname')"
-                             name="benefit_name" value="{{ old('benefit_name') }}">
+                         <input type="text" class="form-control" placeholder="@lang('message.Beneficiaries_name-surname')" name="benefit_name"
+                             value="{{ old('benefit_name') }}">
                      </div>
                  </div>
 
                  <div class="form-group row">
                      <div class="col-sm-3">
                          <label>@lang('message.relationship')</label>
-                         <input type="text" class="form-control" placeholder="@lang('message.relationship')" name="benefit_relation"
-                             value="{{ old('benefit_relation') }}">
+                         <input type="text" class="form-control" placeholder="@lang('message.relationship')"
+                             name="benefit_relation" value="{{ old('benefit_relation') }}">
                      </div>
 
                      <div class="col-sm-3">
                          <label>@lang('message.ID_card_number')</label>
-                         <input type="text" class="form-control"  name="benefit_id"
-                             value="{{ old('benefit_id') }}">
+                         <input type="text" class="form-control" name="benefit_id" value="{{ old('benefit_id') }}">
                      </div>
 
                  </div>
@@ -478,7 +495,7 @@
                          </div>
                          <div class="form-group row">
                              <div class="col-sm-12">
-                                 <label>@lang('message.holding_an_ID_card')   <b class="text-danger">*</b></label>
+                                 <label>@lang('message.holding_an_ID_card') <b class="text-danger">*</b></label>
                                  <input type="file" id="file_3" name="file_3" class="form-control" required>
                              </div>
                          </div>
@@ -498,14 +515,15 @@
                      </div>
 
                      @if ($check_kyc['status'] == 'success')
-                     <div class="col-sm-12">
-                         <div class="form-group row text-center">
-                             <label class="col-sm-2"></label>
-                             <div class="col-sm-12">
-                                 <button type="submit" class="btn btn-primary m-b-0" onclick="return confirm('ยืนยันการทำรายการ?')">@lang('message.register_submit')</button>
+                         <div class="col-sm-12">
+                             <div class="form-group row text-center">
+                                 <label class="col-sm-2"></label>
+                                 <div class="col-sm-12">
+                                     <button type="submit" class="btn btn-primary m-b-0"
+                                         onclick="return confirm('ยืนยันการทำรายการ?')">@lang('message.register_submit')</button>
+                                 </div>
                              </div>
                          </div>
-                     </div>
                      @endif
 
              </form>
@@ -518,20 +536,76 @@
      <!-- Select 2 js -->
      <script src="{{ asset('frontend/bower_components/select2/js/select2.full.min.js') }}"></script>
      <!-- Multiselect js -->
-     <script src="{{ asset('frontend/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js') }}">
-     </script>
+     <script src="{{ asset('frontend/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js') }}"></script>
      <script src="{{ asset('frontend/bower_components/multiselect/js/jquery.multi-select.js') }}"></script>
      <script src="{{ asset('frontend/assets/js/jquery.quicksearch.js') }}"></script>
      <!-- Custom js -->
      <script src="{{ asset('frontend/assets/pages/advance-elements/select2-custom.js') }}"></script>
 
-        <!-- Masking js -->
-    <script src="{{asset('frontend/assets/pages/form-masking/inputmask.js')}}"></script>
-    <script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
-    <script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
-    <script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
+     <!-- Masking js -->
+     <script src="{{ asset('frontend/assets/pages/form-masking/inputmask.js') }}"></script>
+     <script src="{{ asset('frontend/assets/pages/form-masking/jquery.inputmask.js') }}"></script>
+     <script src="{{ asset('frontend/assets/pages/form-masking/autoNumeric.js') }}"></script>
+     <script src="{{ asset('frontend/assets/pages/form-masking/form-mask.js') }}"></script>
 
      <script type="text/javascript">
+         var business_location_id = '{{ $data['data']->business_location_id }}';
+         if (business_location_id == 1 || business_location_id == '') {
+             $('#id_card').attr('maxlength', '13');
+         } else {
+             $('#id_card').attr('maxlength', '15');
+         }
+
+         $('#business_location').change(function() {
+             value = $(this).val();
+             if (value != "1") {
+                 $('#id_card').attr('maxlength', '15');
+                 $('#id_card').val("");
+             } else {
+                 $('#id_card').attr('maxlength', '13');
+                 $('#id_card').val("");
+             }
+         })
+
+         $(document).ready(function() {
+             $('#id_card').on('keyup', function() {
+                 nation_id = $('#business_location').val();
+
+                 if (nation_id == 1) {
+                     if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
+                         id = $(this).val().replace(/-/g, "");
+                         var result = Script_checkID(id);
+                         if (result === false) {
+                             id_card = $('#id_card').val();
+                             $('span.error').removeClass('text-success').text('เลขบัตร ' + id_card + ' ไม่ถูกต้อง');
+                             $('#id_card').val('');
+                         } else {
+                             $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
+                         }
+                     } else {
+                         $('span.error').removeClass('true').text('');
+
+                     }
+
+                 }
+
+             })
+         });
+
+         function Script_checkID(id) {
+             if (!IsNumeric(id)) return false;
+             if (id.substring(0, 1) == 0) return false;
+             if (id.length != 13) return false;
+             for (i = 0, sum = 0; i < 12; i++)
+                 sum += parseFloat(id.charAt(i)) * (13 - i);
+             if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
+             return true;
+         }
+
+         function IsNumeric(input) {
+             var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
+             return (RE.test(input));
+         }
 
          function check_user() {
              var user_name = $('#introduce').val();
@@ -605,7 +679,7 @@
          });
 
          $('#file_4').change(function() {
-            var fileExtension = ['jpg', 'png', 'pdf', 'jpeg'];
+             var fileExtension = ['jpg', 'png', 'pdf', 'jpeg'];
              if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
                  alert("This is not an allowed file type. Only JPG, PNG and PDF files are allowed.");
                  this.value = '';
@@ -613,11 +687,9 @@
              }
          });
      </script>
-    <script>
-        const routeGetLocation = "{{ route('get-location') }}";
-        const token = "{{ csrf_token() }}";
-    </script>
-    <script src="{{ asset('frontend/address.js') }}"></script>
-
-
+     <script>
+         const routeGetLocation = "{{ route('get-location') }}";
+         const token = "{{ csrf_token() }}";
+     </script>
+     <script src="{{ asset('frontend/address.js') }}"></script>
  @endsection
