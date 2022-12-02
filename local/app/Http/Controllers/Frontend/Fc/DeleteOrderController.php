@@ -26,8 +26,15 @@ class DeleteOrderController extends Controller
           foreach($db_order_products_list as $pl){
             DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$pl->promotion_code."') ");
           }
+
+            // วุฒิเพิ่มมาเอาไว้ลบ packing list ออก
+          $db_delivery = DB::table('db_delivery')->select('id')->where('orders_id_fk',$order_wut->id)->first();
+          DB::table('db_pick_pack_packing')->where('delivery_id_fk',$db_delivery->id)->delete();
+          DB::table('db_delivery')->where('orders_id_fk',$order_wut->id)->delete();
         }
         //-------------
+
+
 
 
 
