@@ -29,8 +29,11 @@ class DeleteOrderController extends Controller
 
             // วุฒิเพิ่มมาเอาไว้ลบ packing list ออก
           $db_delivery = DB::table('db_delivery')->select('id')->where('orders_id_fk',$order_wut->id)->first();
-          DB::table('db_pick_pack_packing')->where('delivery_id_fk',$db_delivery->id)->delete();
-          DB::table('db_delivery')->where('orders_id_fk',$order_wut->id)->delete();
+          if($db_delivery){
+            DB::table('db_pick_pack_packing')->where('delivery_id_fk',$db_delivery->id)->delete();
+            DB::table('db_delivery')->where('orders_id_fk',$order_wut->id)->delete();
+          }
+
         }
         //-------------
 
