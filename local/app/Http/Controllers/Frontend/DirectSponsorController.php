@@ -23,6 +23,9 @@ class DirectSponsorController extends Controller
         $user_name = Auth::guard('c_user')->user()->user_name;
       }
 
+      // $data =  \App\Models\Frontend\LineModel::check_type_introduce(Auth::guard('c_user')->user()->user_name,'A1299102');
+      // dd($data);
+
       $data = DB::table('customers')
       ->select('customers.*', 'dataset_package.dt_package', 'dataset_qualification.code_name', 'q_max.code_name as max_code_name',
           'q_max.business_qualifications as max_q_name', 'dataset_qualification.business_qualifications as q_name',
