@@ -1188,7 +1188,7 @@ class FrontstoreController extends Controller
 
 
       if($sRow->approve_status==2 || $sRow->approve_status==6 || $sRow->approve_status==0){
-        if($sRow->pay_with_other_bill_note!=''){
+        if($sRow->pay_with_other_bill_note!='' && $sRow->pay_with_other_bill == 1){
           $other_bill1 = DB::table('db_orders')->select('id','code_order')->whereIn('approve_status',[1,2,6])->where('code_order',$sRow->pay_with_other_bill_note)->update([
             'approve_status' => 1,
             'approve_one_more' => 1,
@@ -2686,7 +2686,7 @@ class FrontstoreController extends Controller
                 db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.approve_status not in (5,6) AND db_orders.check_press_save=2
+                WHERE db_orders.approve_status not in (5,6,0) AND db_orders.check_press_save=2
                 $action_user_011
                 $startDate1
                 $endDate1
