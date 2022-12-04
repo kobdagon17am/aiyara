@@ -20,23 +20,46 @@ use App\Http\Controllers\Frontend\Fc\RunPvController;
 class RunErrorController extends Controller
 {
   public static function index(){
-    $data = DB::table('db_salepage_setting')
+    // $data = DB::table('db_salepage_setting')
+    // ->get();
+    // $i = 0;
+    // foreach($data as $value){
+
+    //   $c = DB::table('customers') //อัพ Pv ของตัวเอง
+    //   ->select('user_name')
+    //   ->where('id', '=', $value->customers_id_fk)
+    //   ->first();
+
+    //   $salepage_setting = DB::table('db_salepage_setting')
+    //   ->where('id', $value->id)
+    //   ->update(['customers_username' => $c->user_name]); //ลงข้อมูลบิลชำระเงิน
+    // $i++;
+    // }
+    // dd($i);
+
+    $user = DB::table('customers')
+    ->select('id', 'user_name','upline_id','introduce_id')
+    ->where('id', '>=',1298067)
+    ->where('id', '<=',1311311)
     ->get();
-    $i = 0;
-    foreach($data as $value){
+    //max1311311
+    $i= 0;
+  foreach($user as $value){
+    $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
 
-      $c = DB::table('customers') //อัพ Pv ของตัวเอง
-      ->select('user_name')
-      ->where('id', '=', $value->customers_id_fk)
-      ->first();
-
-      $salepage_setting = DB::table('db_salepage_setting')
-      ->where('id', $value->id)
-      ->update(['customers_username' => $c->user_name]); //ลงข้อมูลบิลชำระเงิน
-    $i++;
+    if( $data['status'] == 'success'){
+      $i++;
+      $introduce_type = $data['data']->line_type;
+    }else{
+      $introduce_type = '';
     }
-    dd($i);
 
+    $update = DB::table('customers')
+    ->where('id', $value->id)
+    ->update(['introduce_type' =>$introduce_type]);
+  }
+
+  dd('success รวม'.count($user).' Run'.$i);
 
 
 
