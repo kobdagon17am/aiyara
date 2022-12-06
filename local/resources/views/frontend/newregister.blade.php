@@ -130,7 +130,7 @@
 
                      <div class="col-sm-3">
                          <label>@lang('message.ID_card_number') <font class="text-danger">*</font></label>
-                         <input class="form-control" type="text" name="id_card" id="id_card" minlength="13"
+                         <input class="form-control" type="text" name="id_card" id="id_card"
                              value="{{ old('id_card') }}" required="">
                          <span class="error text-danger"></span>
                      </div>
@@ -552,17 +552,21 @@
          var business_location_id = '{{ $data['data']->business_location_id }}';
          if (business_location_id == 1 || business_location_id == '') {
              $('#id_card').attr('maxlength', '13');
+             $('#id_card').attr('minlength', '13');
          } else {
-             $('#id_card').attr('maxlength', '15');
+             $('#id_card').attr('maxlength', '9');
+             $('#id_card').attr('minlength', '9');
          }
 
          $('#business_location').change(function() {
              value = $(this).val();
              if (value != "1") {
-                 $('#id_card').attr('maxlength', '15');
+                 $('#id_card').attr('maxlength', '9');
+                 $('#id_card').attr('minlength', '9');
                  $('#id_card').val("");
              } else {
                  $('#id_card').attr('maxlength', '13');
+                 $('#id_card').attr('minlength', '13');
                  $('#id_card').val("");
              }
          })
