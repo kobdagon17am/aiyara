@@ -77,8 +77,30 @@ class SalepageController extends Controller
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
-      ->orwhere('db_salepage_setting.name_s3', '=', $user_name)
+      // ->orwhere('db_salepage_setting.name_s3', '=', $user_name)
       ->first();
+
+      if(!$data){
+        $data = DB::table('customers')
+        ->select(
+          'db_salepage_setting.*',
+          // 'customers_detail.tel_mobile',
+          'customers.user_name',
+          'customers.first_name',
+          'customers.last_name',
+          'customers.business_name',
+          'customers.profile_img',
+          'customers.email'
+        )
+        ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
+        // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
+        // ->where('customers.user_name', '=', $user_name)
+        // ->orwhere('db_salepage_setting.name_s3', '=', $user_name)
+        ->where('db_salepage_setting.name_s3', '=', $user_name)
+        ->first();
+      }
+
+
     if ($data) {
       $rs = ['stattus' => 'success', 'data' => $data];
       return view('frontend/salepage/cashewy_drink', compact('rs'));
@@ -311,10 +333,22 @@ class SalepageController extends Controller
     $customer_id =  Auth::guard('c_user')->user()->id;
     try {
 
-      $count_data = DB::table('db_salepage_setting')
+      // $count_data = DB::table('db_salepage_setting')
+      //   ->where('customers_id_fk', '=', $customer_id)
+      //   ->orwhere('customers_username', '=', Auth::guard('c_user')->user()->user_name)
+      //   ->count();
+
+      $count_data1 = DB::table('db_salepage_setting')
         ->where('customers_id_fk', '=', $customer_id)
-        ->orwhere('customers_username', '=', Auth::guard('c_user')->user()->user_name)
+        // ->orwhere('customers_username', '=', Auth::guard('c_user')->user()->user_name)
         ->count();
+
+      $count_data2 = DB::table('db_salepage_setting')
+        // ->where('customers_id_fk', '=', $customer_id)
+        ->where('customers_username', '=', Auth::guard('c_user')->user()->user_name)
+        ->count();
+
+        $count_data = $count_data1+$count_data2;
 
       if ($count_data > 0) {
         $update_salepage_setting = DB::table('db_salepage_setting') //update บิล
