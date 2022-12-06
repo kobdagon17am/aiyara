@@ -770,7 +770,17 @@ class Pay_product_receipt_001Controller extends Controller
                             'amt' => DB::raw( ' amt - '.$sRow->amt_get )
                           ));
 
-                          $lastID = DB::table('db_stocks')->latest()->first();
+                          // $lastID = DB::table('db_stocks')->latest()->first();
+                          $lastID = DB::table('db_stocks')
+                          ->select('id')
+                          ->where('branch_id_fk', $sRow->branch_id_fk)
+                          ->where('product_id_fk', $sRow->product_id_fk)
+                          ->where('lot_number', $sRow->lot_number)
+                          ->where('lot_expired_date', $sRow->lot_expired_date)
+                          ->where('warehouse_id_fk', $sRow->warehouse_id_fk)
+                          ->where('zone_id_fk', $sRow->zone_id_fk)
+                          ->where('shelf_id_fk', $sRow->shelf_id_fk)
+                          ->where('shelf_floor', $sRow->shelf_floor)->first();
                           $lastID = $lastID->id;
 
                       }

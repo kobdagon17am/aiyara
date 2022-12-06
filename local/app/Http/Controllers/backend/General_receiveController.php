@@ -335,7 +335,18 @@ class General_receiveController extends Controller
                         'amt' => $value[0]->amt + request('amt'),
                       ));
 
-                    $lastID = DB::table('db_stocks')->latest()->first();
+                    // $lastID = DB::table('db_stocks')->latest()->first();
+                    $lastID = DB::table('db_stocks')
+                    ->select('id')
+                    ->where('business_location_id_fk', request('business_location_id_fk'))
+                    ->where('branch_id_fk', request('branch_id_fk'))
+                    ->where('product_id_fk', request('product_id_fk'))
+                    ->where('lot_number', request('lot_number'))
+                    ->where('lot_expired_date', request('lot_expired_date'))
+                    ->where('warehouse_id_fk', request('warehouse_id_fk'))
+                    ->where('zone_id_fk', request('zone_id_fk'))
+                    ->where('shelf_id_fk', request('shelf_id_fk'))
+                    ->where('shelf_floor', request('shelf_floor'))->first();
                     $lastID = $lastID->id;
                 }
 
