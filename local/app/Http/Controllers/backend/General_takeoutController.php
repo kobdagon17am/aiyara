@@ -84,7 +84,7 @@ class General_takeoutController extends Controller
         // }
 
 
-      // dd($Products);
+      // dd($Products); Check_stock
 
       $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
         return $query->where('id', auth()->user()->business_location_id_fk);
@@ -96,7 +96,7 @@ class General_takeoutController extends Controller
       $Warehouse = \App\Models\Backend\Warehouse::get();
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
-      $Check_stock = \App\Models\Backend\Check_stock::get();
+      $Check_stock = \App\Models\Backend\Check_stock::where('amt','>',0)->get();
 
       return View('backend.general_takeout.form')->with(
         array(

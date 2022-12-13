@@ -1354,6 +1354,7 @@ class AjaxController extends Controller
             ->join('warehouse', 'warehouse.id', '=', 'db_stocks.warehouse_id_fk')
             ->where('db_stocks.product_id_fk',$request->product_id_fk)
             ->whereIn('db_stocks.warehouse_id_fk',$warehouse)
+            ->where('db_stocks.amt','>',0)
             ->get();
           }else{
           // วุฒิแก้
@@ -1365,6 +1366,7 @@ class AjaxController extends Controller
             ->where('db_stocks.business_location_id_fk',@\Auth::user()->business_location_id_fk)
             ->where('db_stocks.branch_id_fk',@\Auth::user()->branch_id_fk)
             ->whereIn('db_stocks.warehouse_id_fk',$warehouse)
+            ->where('db_stocks.amt','>',0)
             ->get();
         }
 
