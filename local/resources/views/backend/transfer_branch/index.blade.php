@@ -1088,7 +1088,8 @@
                                     ],
                                     rowCallback: function(nRow, aData, dataIndex) {
 
-                                        if (aData['approve_status'] != 0) {
+                                        // if (aData['approve_status'] != 0) {
+                                            if (aData['approve_status'] == 1 || aData['approve_status'] == 2) {
 
                                             $('td:last-child', nRow).html('' +
                                                 '<a href="{{ route('backend.transfer_branch.index') }}/' + aData[

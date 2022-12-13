@@ -206,7 +206,7 @@ class Transfer_branchController extends Controller
         if($can_data){
           // dd($can_data);
         // ยกเลิกรายการ
-        if($can_data->sub_approve_status==1 && $can_data->cut_off==1){
+        if($can_data->sub_approve_status==1 && $can_data->cut_off==1 || $can_data->cut_off==1 && $can_data->sub_approve_status==3){
           if($can_data->tr_status_to<=2){
               $item_log = DB::table('db_transfer_branch_details')->select('stocks_id_fk','product_id_fk','amt')->where('transfer_branch_code_id',$can_data->id)->get();
               foreach($item_log as $item){
@@ -263,56 +263,40 @@ class Transfer_branchController extends Controller
 
     public function update(Request $request, $id)
     {
-      // dd($request->all());
-
       $data_code = DB::table('db_transfer_branch_code')->where('id',$id)->first();
-
       if(!empty($request->approve_transfer_branch_code)){
-
+        // dd('3');
             return $this->form($id);
-
       }else
-      // if(!empty($request->approve_status_cutstock) && $request->approve_status==1){
         if(!empty($request->approve_status_cutstock) && $request->sub_approve_status==1 &&  $data_code->cut_off==0){
-        // dd('ok2');
+          // dd('1');
         $rsBranch_details = DB::select("
            select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
         $arr1 = [];
         foreach ($rsBranch_details as $key => $value) {
           array_push($arr1, $value->stocks_id_fk);
         }
-
         $arr1 = implode(",", $arr1);
-
         $rsStock = DB::select(" select * from  db_stocks  where id in (".$arr1.")  ");
               // dd($rsStock);
         foreach ($rsStock as $key => $value) {
             DB::update(" UPDATE db_transfer_branch_details SET stock_amt_before_up =".$value->amt." , stock_date_before_up = '".$value->date_in_stock."'  where transfer_branch_code_id = ".$request->id." and stocks_id_fk = ".$value->id."  ");
         }
-
          $rsBranch_details = DB::select("
            select * from db_transfer_branch_details where transfer_branch_code_id = ".$request->id." ");
          foreach ($rsBranch_details as $key => $value) {
               DB::update(" UPDATE db_stocks SET amt = (amt - ".$value->amt.") where id =".$value->stocks_id_fk."  ");
          }
-
-
          DB::select(" UPDATE `db_transfer_branch_code` SET `tr_status_from`='2' WHERE (`id`='".$rsBranch_details[0]->transfer_branch_code_id."') ");
-
-
       }else{
-        // dd('ok3');
+        // dd('2');
         return $this->form($id);
-
       }
-
-
-
     }
 
    public function form($id=NULL)
     {
-
+      // approve_status
       $id=request('id');
       // dd($id);
       \DB::beginTransaction();

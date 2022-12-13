@@ -335,8 +335,14 @@ class Transfer_branch_codeController extends Controller
           ".$w05."
           ".$w06."
           ".$w07."
-          ORDER BY approve_status ASC, tr_number DESC;
+          ORDER BY CASE
+          WHEN approve_status = 0 THEN 0
+          WHEN approve_status = 1 THEN 1
+          WHEN approve_status = 3 THEN 1
+          WHEN approve_status = 2 THEN 4
+          ELSE 99 END ASC,id DESC
           ");
+          // ORDER BY approve_status ASC, tr_number DESC;
 
       $sQuery = \DataTables::of($sTable);
        return $sQuery
