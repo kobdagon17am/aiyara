@@ -701,9 +701,9 @@ function qrcode(id,type='') {
                         data: 'action'
                     },
                 ],
-                order: [
-                    [1, 'DESC']
-                ]
+                // order: [
+                //     [1, 'DESC']
+                // ]
             });
 
             $('#search-form').on('click', function(e) {
@@ -769,7 +769,7 @@ function qrcode(id,type='') {
 
           ],
           order: [
-              [0, 'DESC']
+              [1, 'DESC']
           ]
       });
 
