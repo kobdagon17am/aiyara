@@ -1155,6 +1155,9 @@ class FrontstoreController extends Controller
   //  dd($request->all());
     // dd($request->transfer_money_datetime." : AAAA");
     // db_delivery
+    if($request->pay_type_id_fk==''||$request->pay_type_id_fk==null){
+      return redirect()->back()->with('error','กรุณาเลือกวิธีการชำระเงินก่อน');
+    }
 
     if (isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip == '1') {
     if(isset($request->note_bill_id)){
