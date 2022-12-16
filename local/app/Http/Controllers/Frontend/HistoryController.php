@@ -211,13 +211,17 @@ class HistoryController extends Controller
 
 
         $orders = DB::table('db_orders')
-            ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class',
+            ->select('db_orders.tracking_no','db_orders.sum_price','db_orders.shipping_price','db_orders.distribution_channel_id_fk',
+            'db_orders.purchase_type_id_fk', 'db_orders.pv_total', 'db_orders.created_at', 'db_orders.delivery_location_frontend','db_orders.order_status_id_fk',
+            'db_orders.branch_id_fk' , 'db_orders.code_order', 'db_orders.cancel_expiry_date','db_orders.pay_type_id_fk','db_orders.id',
+            'db_orders.pv_banlance','db_orders.active_mt_date','db_orders.active_tv_date',
+            'dataset_order_status.detail', 'dataset_order_status.css_class',
                 'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon',
                 'dataset_pay_type.detail as pay_type_name')
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
-            ->whereNotIn('db_orders.id',$not_show_arr)
+            //->whereNotIn('db_orders.id',$not_show_arr)
             ->where('db_orders.order_channel', '!=','VIP')
             ->where('dataset_order_status.lang_id', '=', $business_location_id)
             ->where('dataset_orders_type.lang_id', '=', $business_location_id)
@@ -226,8 +230,8 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) >= '{$request->s_date}' and date(db_orders.created_at) <= '{$request->e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
-            ->whereRaw("(db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.customers_sent_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.member_id_aicash = ".Auth::guard('c_user')->user()->id." )");
-
+            ->whereRaw("(db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.customers_sent_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.member_id_aicash = ".Auth::guard('c_user')->user()->id." )")
+            ->orderby('db_orders.created_at', 'DESC');
             // ->whereRaw(("(db_orders.order_status_id_fk != 8 and )")
             // ->groupBy('db_orders.code_order')
             // ->orderby('db_orders.updated_at', 'DESC')
@@ -245,7 +249,7 @@ class HistoryController extends Controller
             })
             ->addColumn('price', function ($row) {
                 if ($row->type == 5) {
-                    return number_format($row->price_remove_gv, 2);
+                    return number_format($row->total_price - $row->gift_voucher_price, 2);
                 } elseif ($row->type == 6) {
                     return number_format($row->sum_price, 2);
                 } elseif ($row->type == 7) {
