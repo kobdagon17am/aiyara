@@ -70,18 +70,18 @@ class Promotions_imagesController extends Controller
             }
 
             if(!empty(request('image_default'))){
-              
+
               if(request('image_default')==1){
-                DB::update(" 
+                DB::update("
                     UPDATE promotions_images SET image_default = 0  where promotion_id_fk=".request('promotion_id_fk')." ;
                 ");
               }
 
               $sRow->image_default    = request('image_default');
-              
+
             }
 
-                    
+
           $sRow->promotion_id_fk = request('promotion_id_fk');
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
@@ -100,6 +100,7 @@ class Promotions_imagesController extends Controller
 
     public function destroy($id)
     {
+      // dd('lk');
       $sRow = \App\Models\Backend\Promotions_images::find($id);
       @UNLINK(@$sRow->img_url.@$sRow->promotion_img);
       if( $sRow ){
@@ -109,6 +110,7 @@ class Promotions_imagesController extends Controller
     }
 
     public function Datatable(){
+
       $sTable = \App\Models\Backend\Promotions_images::search()->orderBy('image_default', 'desc');
       $sQuery = \DataTables::of($sTable);
       return $sQuery

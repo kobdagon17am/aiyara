@@ -632,7 +632,7 @@
                     rowCallback: function(nRow, aData, dataIndex){
                       $('td:last-child', nRow).html(''
                         + '<a href="{{ route('backend.promotions_images.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary"><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                         + '<a href="javascript: void(0);" data-url="{{ route('backend.promotions_images.index') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="promotions_images" data-file="'+aData['img_path']+'" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
+                         + '<a href="javascript: void(0);" data-url="{{ url('backend/promotions_images/destroy') }}/'+aData['id']+'" data-id="'+aData['id']+'" data-table="promotions_images" data-file="'+aData['img_path']+'" class="btn btn-sm btn-danger remove_01 "><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                     //   + '<button class="btn btn-sm btn-danger" onclick="go_to_rem('+aData['id']+')"><i class="bx bx-trash font-size-16 align-middle"></i></button>'
 
                       ).addClass('input');
@@ -694,7 +694,7 @@
             var id = $(this).data('id');
             var table = $(this).data('table');
             var file = $(this).data('file');
-
+            var url = $(this).data('url');
             // alert(id+" : "+table+" : "+file);
             // return false;
 
@@ -704,9 +704,9 @@
 
             $.ajax({
 
-               type:'POST',
-               url: " {{ url('backend/ajaxDelFunction') }} ",
-               data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
+               type:'GET',
+               url: url,
+              //  data:{ _token: '{{csrf_token()}}',id:id,table:table,file:file },
                 success:function(data){
                      console.log(data);
                      location.reload();

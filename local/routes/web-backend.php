@@ -143,6 +143,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::resource('promotions_images', 'Promotions_imagesController');
     Route::post('promotions_images/datatable', 'Promotions_imagesController@Datatable')->name('promotions_images.datatable');
     Route::get('promotions_images/create/{id}', 'Promotions_imagesController@create');
+    Route::get('promotions_images/destroy/{id}', 'Promotions_imagesController@destroy');
 
 
     Route::resource('faq_topic', 'Faq_topicController');
