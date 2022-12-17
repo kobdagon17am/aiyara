@@ -174,8 +174,8 @@ set_time_limit(9999999);
 
     $arr_orders_id = $arr_order_id;
 
-
-
+// test
+// $arr_orders_id = ['23153','23156','23152'];
 for ($z=0; $z < count($arr_orders_id) ; $z++) {
     // code...
 
@@ -184,8 +184,8 @@ $id = @$arr_orders_id[$z];
 // $n = 22;
 // $limit = 10;
 
-$n = 20;
-$limit = 8;
+$n = 19;
+$limit = 7;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
 
