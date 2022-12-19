@@ -837,8 +837,6 @@ class Pick_warehouseController extends Controller
       ->make(true);
     }
 
-
-
   public function warehouse_qr_0001(Request $reg){
 
       // $sTable = DB::select(" SELECT * FROM `db_pick_pack_packing` WHERE packing_code_id_fk =".$reg->id." GROUP BY packing_code  ");

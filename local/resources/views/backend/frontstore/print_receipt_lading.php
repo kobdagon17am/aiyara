@@ -184,7 +184,7 @@ $id = @$arr_orders_id[$z];
 // $n = 22;
 // $limit = 10;
 
-$n = 19;
+$n = 22;
 $limit = 7;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
