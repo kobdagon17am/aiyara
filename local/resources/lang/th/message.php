@@ -99,6 +99,11 @@ return [
     'status_delivery' => 'สถานะสินค้าจัดส่ง',
     'pay_requisition_001_remain' => 'จ่ายสินค้าใบเบิกค้างจ่าย',
     'pay_requisition_001_report' => 'รายงานการจัดส่งสินค้า',
+// wut add
+    'error_edit' => 'แก้ไขข้อมูลที่ขัดข้อง',
+    'error_edit_1' => 'เปลี่ยนแปลงรหัส',
+    'error_edit_2' => 'ปรับประเทศ',
+    'error_edit_3' => 'ยกเลิกรหัส',
 ],
 
 // /backend/index
@@ -561,6 +566,8 @@ return [
 'p_contact us topic' => 'หัวข้อ',
 'p_contact us detail' => 'รายละเอียด',
 'p_contact quest' => 'สอบถาม',
+
+
 
 ];
 

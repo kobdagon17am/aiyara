@@ -97,6 +97,11 @@ return [
     'status_delivery' => 'Delevery Status',
     'pay_requisition_001_remain' => 'Pay by Bill of landing remain',
     'pay_requisition_001_report' => 'Delivery report',
+    // wut add
+    'error_edit' => 'แก้ไขข้อมูลที่ขัดข้อง',
+    'error_edit_1' => 'เปลี่ยนแปลงรหัส',
+    'error_edit_2' => 'ปรับประเทศ',
+    'error_edit_3' => 'ยกเลิกรหัส',
     ],
 
 // /backend/index

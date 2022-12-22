@@ -99,6 +99,11 @@ return [
     'status_delivery' => 'ស្ថានភាពផលិតផលដឹកជញ្ជួន',
     'pay_requisition_001_remain' => 'ចាយផលិតផលបែបបទជំពាក់',
     'pay_requisition_001_report' => 'របាយការណ៍ដាក់ផ្ងើផលិតផល',
+    // wut add
+    'error_edit' => 'แก้ไขข้อมูลที่ขัดข้อง',
+    'error_edit_1' => 'เปลี่ยนแปลงรหัส',
+    'error_edit_2' => 'ปรับประเทศ',
+    'error_edit_3' => 'ยกเลิกรหัส',
 ],
 
 

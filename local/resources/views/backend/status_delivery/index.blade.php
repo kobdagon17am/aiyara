@@ -1,4 +1,4 @@
-@extends('backend.layouts.master')
+  @extends('backend.layouts.master')
 
 @section('title')
     Aiyara Planet
@@ -540,12 +540,12 @@
                 "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                 processing: true,
                 serverSide: true,
-                scroller: true,
-                scrollCollapse: true,
-                scrollX: true,
+                scroller: false,
+                scrollCollapse: false,
+                scrollX: false,
                 ordering: false,
-                scrollY: '' + ($(window).height() - 370) + 'px',
-                iDisplayLength: 25,
+                // scrollY: '' + ($(window).height() - 370) + 'px',
+                iDisplayLength: 1000,
                 // stateSave: true, // ไม่ได้ ถ้าเปิดใช้งาน จะทำให้ ค้างรายการที่เคยเลือกก่อนหน้านี้ไว้ตลอด
                 ajax: {
                     url: "{{ url('backend/status_delivery/datatable') }}",
@@ -724,12 +724,12 @@
                         "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
                         processing: true,
                         serverSide: true,
-                        scroller: true,
+                        scroller: false,
                         scrollCollapse: true,
                         scrollX: true,
                         ordering: false,
-                        scrollY: '' + ($(window).height() - 370) + 'px',
-                        iDisplayLength: 10,
+                        // scrollY: '' + ($(window).height() - 370) + 'px',
+                        iDisplayLength: 1000,
                         destroy: true,
                         ajax: {
                             url: "{{ url('backend/status_delivery/datatable') }}",

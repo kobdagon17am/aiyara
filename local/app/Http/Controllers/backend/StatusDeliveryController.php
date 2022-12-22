@@ -290,8 +290,6 @@ class StatusDeliveryController extends Controller
         $p = '<label style="color:green;">ส่งออกสินค้า</label>';
        }
 
-
-
        if($row->status_tracking==1 || $row->status_tracking==2 || $row->status_tracking==3){
         $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
         if(@$DP){
@@ -347,7 +345,7 @@ class StatusDeliveryController extends Controller
       //   // dd($row->db_delivery_id);
       //   dd($row);
       //         }
-      if($row->status_tracking==3){
+      if($row->status_tracking==3 || $row->status_tracking==2){
         $pcode = DB::table('db_pick_pack_packing')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
               // if($row->packing_code=='P100008'){
               //     dd($pcode);
