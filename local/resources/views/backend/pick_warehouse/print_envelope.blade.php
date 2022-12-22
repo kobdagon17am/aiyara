@@ -30,12 +30,15 @@
     body {
         font-family: "THSarabunNew";
         font-size: 17px;
+
     }
 
     @page {
         size: A6;
         size: landscape;
         padding: 2px;
+        /* margin: 0px; */
+        /* margin-top: 10px; */
     }
 
     @media print {
@@ -43,20 +46,22 @@
         html,
         body {
             width: 500mm;
-            /*height: 297mm;*/
+            /* height: 297mm; */
         }
     }
 </style>
 
 {{-- <b>ผู้ส่ง..</b><br> --}}
 <?php
-echo 'บริษัท ไอยรา แพลนเน็ต จำกัด (สำนักงานใหญ่)<br>';
-echo 'ที่อยู่ เลขที่ 2102/1 อาคารไอยเรศวร ซอยลาดพร้าว 84 ถนนลาดพร้าว แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพมหานคร';
-echo ' 10310 <br>';
+// echo 'ผู้ส่ง บริษัท ไอยรา แพลนเน็ต จำกัด<br>';
+// echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2102/1 อาคารไอยเรศวร ซอยลาดพร้าว 84 ถนนลาดพร้าว <br>';
+// echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพฯ 10310 <br>';
+// // echo ' 10310 <br>';
+// echo ' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; โทร. 02-0263555 กด 1';
 ?>
-<br>
+<br><br>
 
-<b>กรุณาส่ง..</b><br>
+<b style="font-size: 22px;">ผู้รับ</b><br>
 
 
 <?php
@@ -83,11 +88,12 @@ $value = DB::select(
 // $addr .= $value[0]->amphures?", อ.".$value[0]->amphures:'';
 // $addr .= $value[0]->province?", จ.".$value[0]->province:'';
 
+echo'<label style="font-size: 20px;">';
 if (!empty($value[0]->recipient_name)) {
     echo 'คุณ ' . @$value[0]->recipient_name . '<br>';
     echo 'ที่อยู่ ' . @$value[0]->address . ' ';
-    echo @$value[0]->postcode . '<br>';
-    echo @$value[0]->mobile ? ' Tel.' . @$value[0]->mobile : '' . '<br>';
+    echo ''.@$value[0]->postcode . '<br>';
+    echo ''.@$value[0]->mobile ? ' โทร.' . @$value[0]->mobile : '' . '<br>';
     // echo '<br>';
     // echo '<br>';
     // echo 'Tracking No. : ' . @$value[0]->consignment_no;
@@ -95,5 +101,7 @@ if (!empty($value[0]->recipient_name)) {
     // }else{
     //     $addr = "-ไม่พบข้อมูลที่อยู่-";
 }
+
+echo '</label>';
 
 ?>

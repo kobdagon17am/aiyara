@@ -832,12 +832,12 @@
                     {
                         data: 'customer_name',
                         title: '<center>{{ __('message.info_member') }} </center>',
-                        className: 'text-left w300 '
+                        className: 'text-left  w200'
                     },
                     {
                         data: 'filetype',
                         title: '<center> {{ __('message.file_type') }} </center>',
-                        className: 'text-left'
+                        className: 'text-left w200'
                     },
                     {
                         data: 'regis_status',
@@ -1171,12 +1171,12 @@
                             {
                                 data: 'customer_name',
                                 title: '<center>{{ __('message.info_member') }} </center>',
-                                className: 'text-left w300 '
+                                className: 'text-left  w200'
                             },
                             {
                                 data: 'filetype',
                                 title: '<center> {{ __('message.file_type') }} </center>',
-                                className: 'text-left'
+                                className: 'text-left w200'
                             },
                             {
                                 data: 'regis_status',

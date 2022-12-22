@@ -62,7 +62,6 @@ body {
 }
 
 .NameAndAddress b {
-    /*color: #222222;*/
     margin-right: 5px;
     border-radius: 15px;
 }
@@ -152,7 +151,7 @@ tr.border_bottom td {
     float: left;
     width: 50%;
     font-size: 12px !important;
-    color: grey;
+    /* color: grey; */
 }
 
 .column-2-1 {
@@ -232,7 +231,8 @@ set_time_limit(9999999);
                 <br>
                 <?php
               if($report_type == 'day'){
-                echo "วันที่ ".date('d/m/Y', strtotime($startDate2))." ถึง ".date('Y/m/d', strtotime($endDate2));
+                // echo "ประจำวันที่ ".date('d/m/Y', strtotime($startDate2))." ถึง ".date('Y/m/d', strtotime($endDate2));
+                echo "ประจำวันที่ ".date('d/m/Y', strtotime($startDate2));
               }else{
                 echo "ประจำเดือน ".date('m/Y', strtotime($startDate2));
               }
@@ -246,42 +246,73 @@ set_time_limit(9999999);
 
 
 <div class="NameAndAddress">
-
-    <div style="border-radius: 5px; padding: 3px;">
-        <table style="border-collapse: collapse;vertical-align: top;">
+    <div style="bo  rder-radius: 5px; padding: 3px;">
+        <table style="border-collapse: collapse;">
             <thead>
-                <tr style="background-color: #e6e6e6;">
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                <!-- <tr style="background-color: #e6e6e6;"> -->
+                <tr>
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
                         วันเดือนปี
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
                         เลขที่เอกสาร
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
                         ชื่อ-นามสกุล
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
                         มูลค่าสินค้า
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
+                    ค่าขนส่ง
+                    </td>
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
+                    ค่าธรรมเนียม
+                    </td>
+
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
+                    รวม
+                    </td>
+
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
                         ภาษีมูลค่าเพิ่ม
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        รวม
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
+                        รวมทั้งหมด
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
+                    คูปองส่วนลด
+                    </td>
+
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
                         เงินสด
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" colspan="2">
                         เงินโอน
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
                         เครดิต
                     </td>
-                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
-                        Ai-Cash
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
+                    Promtpay
                     </td>
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;" rowspan="2">
+                    Truemoney
+                    </td>
+                    <!-- <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                        Ai-Cash
+                    </td> -->
                 </tr>
+
+                <tr style="">
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                ออมทรัพย์
+                    </td>
+                    <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;">
+                    กระแสรายวัน
+                    </td>
+            </tr>
             </thead>
             <tbody>
                 <?php
@@ -357,6 +388,7 @@ set_time_limit(9999999);
                         db_orders.sum_price,
                         db_orders.true_money_price,
                         db_orders.prompt_pay_price,
+                        db_orders.account_bank_name_customer,
 
                         customers.first_name as action_first_name,
                         customers.last_name as action_last_name,
@@ -443,6 +475,7 @@ set_time_limit(9999999);
                         db_orders.sum_price,
                         db_orders.true_money_price,
                         db_orders.prompt_pay_price,
+                        db_orders.account_bank_name_customer,
 
                         customers.first_name as action_first_name,
                         customers.last_name as action_last_name,
@@ -516,7 +549,21 @@ set_time_limit(9999999);
               $sum_price_total = 0;
               $cash_pay_total = 0;
               $cash_transfer_price_total = 0;
+              $cash_transfer_price_1_total = 0;
+              $cash_transfer_price_2_total = 0;
               $cash_sum_credit_price_total = 0;
+
+              $shipping_price_new_total = 0;
+              $fee_amt_new_total = 0;
+              $sum_new_total = 0;
+              $tax_new_total = 0;
+              $all_sum_new_total = 0;
+              $gift_voucher_price_new_total = 0;
+              $transfer_price_1_new_total = 0;
+              $transfer_price_2_new_total = 0;
+              $prompt_pay_price_new_total = 0;
+              $true_money_price_new_total = 0;
+
               $aicash_price_total = 0;
               $fee_amt_total = 0;
               $shipping_total = 0;
@@ -524,24 +571,41 @@ set_time_limit(9999999);
               $true_money_price_total = 0;
               $prompt_pay_price_total = 0;
 
-
               $shipping_vat_total = 0;
               $fee_vat_total = 0;
+              $transfer_price_1_total = 0;
+              $transfer_price_2_total = 0;
 
               $arr_date = [];
 
               $total_date_product_value = 0;
               $total_date_tax = 0;
               $total_date_sum_price = 0;
+
+              $total_date_shipping_price = 0;
+
               $total_date_cash_pay = 0;
               $total_date_transfer_price = 0;
               $total_date_sum_credit_price = 0;
               $total_date_aicash_price = 0;
+              $total_date_fee_amt = 0;
+              $total_date_sum_all = 0;
+              $total_date_transfer_price_1 = 0;
+              $total_date_transfer_price_2 = 0;
+
+              $total_date_gift_voucher_price = 0;
+
+              $total_date_prompt_pay_price = 0;
+              $total_date_true_money_price = 0;
 
               $arr_data = [];
               $arr_data2 = [];
 
+                // account_bank_name_customer ดูจากตรงนี้
+                $bank_books = DB::table('dataset_account_bank')->select('id','type_book')->get();
+
             foreach($sTable as $key => $order){
+
               if($order->action_user_name == ''){
                 $order->action_user_name = 'V3';
               }
@@ -583,12 +647,15 @@ set_time_limit(9999999);
 
               if($order->shipping_price>0){
                 $shipping_vat =  $order->shipping_price * (7.00 / (100+ 7.00) );
+                $shipping_vat = round( $shipping_vat ,2 );
                 $order->shipping_price = $order->shipping_price - $shipping_vat;
                 $order->tax = $order->tax + $shipping_vat;
+
               }
 
               if($order->fee_amt>0){
                 $fee_vat =  $order->fee_amt * (7.00 / (100+ 7.00) );
+                $fee_vat = round( $fee_vat ,2 );
                 $order->fee_amt = $order->fee_amt - $fee_vat;
                 $order->tax = $order->tax + $fee_vat;
               }
@@ -596,16 +663,19 @@ set_time_limit(9999999);
               // วุฒิปรับ tax คำนวณใหม่
               if($order->sum_price>0){
                 $order->tax = $order->sum_price * (7.00 / (100+ 7.00) );
+                $order->tax = round( $order->tax ,2 );
                 $order->product_value = $order->sum_price - $order->tax;
               } //
 
               $gift_voucher_price_total += $order->gift_voucher_price;
               $product_value_total += $order->product_value;
-              $tax_total += $order->tax;
+              // $tax_total += $order->tax;
+              $tax_total +=($order->tax+$shipping_vat+$fee_vat);
+
               $sum_price_total += $order->sum_price;
 
               $cash_pay_total += $order->cash_pay;
-              $cash_transfer_price_total += $order->transfer_price;
+
               $cash_sum_credit_price_total += $order->sum_credit_price;
               $aicash_price_total += $order->aicash_price;
               $shipping_total += $order->shipping_price;
@@ -616,6 +686,38 @@ set_time_limit(9999999);
 
               $shipping_vat_total += $shipping_vat;
               $fee_vat_total += $fee_vat;
+
+              $transfer_price_1 = 0;
+              $transfer_price_2 = 0;
+
+              if($order->transfer_price>0){
+                foreach($bank_books as $b){
+                  if($order->account_bank_name_customer==$b->id){
+                      if($b->type_book==1){
+                        $transfer_price_1_total += $order->transfer_price;
+                        $transfer_price_1 = $order->transfer_price;
+                      }
+                      if($b->type_book==2){
+                        $transfer_price_2_total += $order->transfer_price;
+                        $transfer_price_2 = $order->transfer_price;
+                      }
+                  }
+                }
+              }
+
+              $shipping_price_new_total += $order->shipping_price;
+              $fee_amt_new_total += $order->fee_amt;
+              $sum_new_total += ($order->fee_amt+$order->shipping_price+$order->product_value);
+              $tax_new_total += ($order->tax+$shipping_vat+$fee_vat);
+              $all_sum_new_total += ($order->fee_amt+$order->shipping_price+$order->product_value)+($order->tax+$shipping_vat+$fee_vat);
+              $gift_voucher_price_new_total += $order->gift_voucher_price;
+              $transfer_price_1_new_total += $transfer_price_1;
+              $transfer_price_2_new_total += $transfer_price_2;
+              $prompt_pay_price_new_total += $order->prompt_pay_price;
+              $true_money_price_new_total += $order->true_money_price;
+
+              $cash_transfer_price_1_total += $transfer_price_1;
+              $cash_transfer_price_2_total += $transfer_price_2;
 
               // if($report_type == 'day'){
                 $created_at = date('d/m/Y', strtotime($order->created_at));
@@ -632,6 +734,9 @@ set_time_limit(9999999);
 
               // if($report_type == 'day'){
                 $cus_name = $order->action_first_name.' '.$order->action_last_name;
+
+                $cus_name = str_replace("(ยกเลิก)"," ",$cus_name);
+
               // }else{
               //   $cus_name = '-';
               // }
@@ -639,16 +744,30 @@ set_time_limit(9999999);
               if(!isset($arr_date[$created_at])){
                 if(count($arr_date)==0){
                   $total_date_product_value += $order->product_value;
-                  $total_date_tax += $order->tax;
+                  $total_date_tax += $order->tax+($shipping_vat+$fee_vat);
                   $total_date_sum_price += $order->sum_price;
+                  $total_date_shipping_price += $order->shipping_price;
+                  $total_date_fee_amt += $order->fee_amt;
+
+                  $total_date_sum_all += ($order->fee_amt+$order->shipping_price+$order->product_value);
+
                   $total_date_cash_pay += $order->cash_pay;
                   $total_date_transfer_price += $order->transfer_price;
+
+                  $total_date_transfer_price_1 += $transfer_price_1;
+                  $total_date_transfer_price_2 += $transfer_price_2;
+
+                  $total_date_gift_voucher_price += $order->gift_voucher_price;
+
+                  $total_date_prompt_pay_price += $order->prompt_pay_price;
+                  $total_date_true_money_price += $order->true_money_price;
+
                   $total_date_sum_credit_price += $order->sum_credit_price;
                   $total_date_aicash_price += $order->aicash_price;
                   $arr_data[$code_order] = $code_order;
                 }
               }
-
+              // <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
               if(count($arr_date) > 0){
                 if(!isset($arr_date[$created_at])){
                   $p.= '
@@ -657,39 +776,68 @@ set_time_limit(9999999);
                   <td style="text-align: left;"></td>
                   <td style="text-align: right;"></td>
                   <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_product_value,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_shipping_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_fee_amt,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_all,2,".",",").'</td>
                   <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_tax,2,".",",").'</td>
-                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_all+$total_date_tax,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_gift_voucher_price,2,".",",").'</td>
                   <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_cash_pay,2,".",",").'</td>
-                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price_1,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price_2,2,".",",").'</td>
                   <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_credit_price,2,".",",").'</td>
-                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_prompt_pay_price,2,".",",").'</td>
+                  <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_true_money_price,2,".",",").'</td>
+
               </tr>
                   ';
                 }
               }
-
+              // <td style="text-align: right;">'.number_format($order->aicash_price,2,".",",").'</td>
               $p.= '
               <tr>
               <td style="text-align: center;">'.$created_at.'</td>
               <td style="text-align: left;">'.$code_order.'</td>
               <td style="text-align: left;">'.$cus_name.'</td>
               <td style="text-align: right;">'.number_format($order->product_value,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->tax,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->sum_price,2,".",",").'</td>
+              <td style="text-align: right;">'.number_format($order->shipping_price,2,".",",").'</td>
+              <td style="text-align: right;">'.number_format($order->fee_amt,2,".",",").'</td>
+              <td style="text-align: right;">'.number_format(($order->fee_amt+$order->shipping_price+$order->product_value),2,".",",").'</td>
+              <td style="text-align: right;">'.number_format(($order->tax+$shipping_vat+$fee_vat),2,".",",").'</td>
+              <td style="text-align: right;">'.number_format(($order->fee_amt+$order->shipping_price+$order->product_value)+($order->tax+$shipping_vat+$fee_vat),2,".",",").'</td>
+              <td style="text-align: right;">'.number_format($order->gift_voucher_price,2,".",",").'</td>
               <td style="text-align: right;">'.number_format($order->cash_pay,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->transfer_price,2,".",",").'</td>
+              <td style="text-align: right;">'.number_format($transfer_price_1,2,".",",").'</td>
+              <td style="text-align: right;">'.number_format($transfer_price_2,2,".",",").'</td>
               <td style="text-align: right;">'.number_format($order->sum_credit_price,2,".",",").'</td>
-              <td style="text-align: right;">'.number_format($order->aicash_price,2,".",",").'</td>
+              <td style="text-align: right;">'.number_format($order->prompt_pay_price,2,".",",").'</td>
+              <td style="text-align: right;">'.number_format($order->true_money_price,2,".",",").'</td>
+
           </tr>
               ';
 
               if(count($sTable)==$key+1){
 
                 $total_date_product_value += $order->product_value;
-                $total_date_tax += $order->tax;
+                $total_date_tax += $order->tax+($shipping_vat+$fee_vat);
+
                 $total_date_sum_price += $order->sum_price;
+                $total_date_shipping_price += $order->shipping_price;
+                $total_date_fee_amt += $order->fee_amt;
+
+                $total_date_sum_all += ($order->fee_amt+$order->shipping_price+$order->product_value);
+
                 $total_date_cash_pay += $order->cash_pay;
                 $total_date_transfer_price += $order->transfer_price;
+
+                $total_date_transfer_price_1 += $transfer_price_1;
+                $total_date_transfer_price_2 += $transfer_price_2;
+
+                $total_date_prompt_pay_price += $order->prompt_pay_price;
+                $total_date_true_money_price += $order->true_money_price;
+
+                $total_date_gift_voucher_price += $order->gift_voucher_price;
+
                 $total_date_sum_credit_price += $order->sum_credit_price;
                 $total_date_aicash_price += $order->aicash_price;
                 $arr_data[$code_order] = $code_order;
@@ -700,14 +848,22 @@ set_time_limit(9999999);
                 <td style="text-align: left;"></td>
                 <td style="text-align: right;"></td>
                 <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_product_value,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_shipping_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_fee_amt,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_all,2,".",",").'</td>
                 <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_tax,2,".",",").'</td>
-                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_all+$total_date_tax,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_gift_voucher_price,2,".",",").'</td>
                 <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_cash_pay,2,".",",").'</td>
-                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price_1,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_transfer_price_2,2,".",",").'</td>
                 <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_sum_credit_price,2,".",",").'</td>
-                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_prompt_pay_price,2,".",",").'</td>
+                <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_true_money_price,2,".",",").'</td>
+
             </tr>
                 ';
+                // <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
                 // dd($arr_data);
               }
 
@@ -717,25 +873,59 @@ set_time_limit(9999999);
                   $total_date_product_value = 0;
                   $total_date_tax = 0;
                   $total_date_sum_price = 0;
+                  $total_date_shipping_price = 0;
+                  $total_date_fee_amt = 0;
+                  $total_date_sum_all = 0;
                   $total_date_cash_pay = 0;
                   $total_date_transfer_price = 0;
+                  $total_date_transfer_price_1 = 0;
+                  $total_date_transfer_price_2 = 0;
+                  $total_date_prompt_pay_price = 0;
+                  $total_date_true_money_price = 0;
+                  $total_date_gift_voucher_price = 0;
+
                   $total_date_sum_credit_price = 0;
                   $total_date_aicash_price = 0;
-
                   $total_date_product_value += $order->product_value;
-                  $total_date_tax += $order->tax;
+                  $total_date_tax += $order->tax+($shipping_vat+$fee_vat);
                   $total_date_sum_price += $order->sum_price;
+                  $total_date_shipping_price += $order->shipping_price;
+                  $total_date_fee_amt += $order->fee_amt;
+                  $total_date_sum_all += ($order->fee_amt+$order->product_value+$order->shipping_price);
+
+
                   $total_date_cash_pay += $order->cash_pay;
                   $total_date_transfer_price += $order->transfer_price;
+
+                  $total_date_transfer_price_1 += $transfer_price_1;
+                  $total_date_transfer_price_2 += $transfer_price_2;
+
+                  $total_date_prompt_pay_price += $order->prompt_pay_price;
+                  $total_date_true_money_price += $order->true_money_price;
+                  $total_date_gift_voucher_price += $order->gift_voucher_price;
+
                   $total_date_sum_credit_price += $order->sum_credit_price;
                   $total_date_aicash_price += $order->aicash_price;
                 }
               }else{
                 $total_date_product_value += $order->product_value;
-                $total_date_tax += $order->tax;
+                $total_date_tax += $order->tax+($shipping_vat+$fee_vat);
                 $total_date_sum_price += $order->sum_price;
+                $total_date_shipping_price += $order->shipping_price;
+                $total_date_fee_amt += $order->fee_amt;
+                $total_date_sum_all += ($order->fee_amt+$order->product_value+$order->shipping_price);
+
                 $total_date_cash_pay += $order->cash_pay;
                 $total_date_transfer_price += $order->transfer_price;
+
+                $total_date_transfer_price_1 += $transfer_price_1;
+                $total_date_transfer_price_2 += $transfer_price_2;
+
+                $total_date_prompt_pay_price += $order->prompt_pay_price;
+                $total_date_true_money_price += $order->true_money_price;
+
+                $total_date_gift_voucher_price += $order->gift_voucher_price;
+
                 $total_date_sum_credit_price += $order->sum_credit_price;
                 $total_date_aicash_price += $order->aicash_price;
 
@@ -753,18 +943,35 @@ set_time_limit(9999999);
                     <td style="text-align: left;"></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
                         <?php echo number_format($product_value_total,2,".",","); ?></td>
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($shipping_price_new_total,2,".",","); ?></td>
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($fee_amt_new_total,2,".",","); ?></td>
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($sum_new_total,2,".",","); ?></td>
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($tax_new_total,2,".",","); ?></td>
+
                     <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($tax_total,2,".",","); ?></td>
-                    <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($sum_price_total,2,".",","); ?></td>
+                        <?php echo number_format($all_sum_new_total,2,".",","); ?></td>
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($gift_voucher_price_new_total,2,".",","); ?></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
                         <?php echo number_format($cash_pay_total,2,".",","); ?></td>
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($transfer_price_1_new_total,2,".",","); ?></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($cash_transfer_price_total,2,".",","); ?></td>
+                        <?php echo number_format($transfer_price_2_new_total,2,".",","); ?></td>
                     <td style="text-align: right; border-bottom: 3px double #000;">
                         <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?></td>
-                    <td style="text-align: right; border-bottom: 3px double #000;">
-                        <?php echo number_format($aicash_price_total,2,".",","); ?></td>
+
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($prompt_pay_price_new_total,2,".",","); ?></td>
+                        <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php echo number_format($true_money_price_new_total,2,".",","); ?></td>
+
+                    <!-- <td style="text-align: right; border-bottom: 3px double #000;">
+                        <?php //echo number_format($aicash_price_total,2,".",","); ?></td> -->
 
                 </tr>
 
@@ -794,63 +1001,64 @@ set_time_limit(9999999);
                 </td> -->
         </tr>
 
+
         <tr>
-            <td style="border-left: 1px solid #ccc;"> เงินสด &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_pay_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> คูปอง &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> มูลค่าสินค้า &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($product_value_total,2,".",","); ?> &nbsp;</td>
         </tr>
+        <tr>
+            <td style="border-left: 1px solid #ccc;"> เงินสด &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($cash_pay_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> ค่าจัดส่ง &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($shipping_total,2,".",","); ?> &nbsp;</td>
+        </tr>
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> เงินโอน &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_total,2,".",","); ?>&nbsp;
-            </td>
+            <td style="border-left: 1px solid #ccc;"> เงินโอน &nbsp; ออมทรัพย์</td>
+            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_1_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> ค่าธรรมเนียม&nbsp;</td>
             <td style="text-align: right;"><?php echo number_format($fee_amt_total,2,".",","); ?> &nbsp;</td>
         </tr>
+
+        <tr>
+            <td style="border-left: 1px solid #ccc;">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; กระแสรายวัน</td>
+            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_2_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> รวมมูลค่าก่อนภาษีมูลค่าเพิ่ม&nbsp;</td>
+            <td style="text-align: right;"><?php echo number_format(($product_value_total+$shipping_total+$fee_amt_total),2,".",","); ?> &nbsp;</td>
+        </tr>
+
         <tr>
             <td style="border-left: 1px solid #ccc;"> เครดิต &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?> &nbsp;
-            </td>
-            <td style="border-left: 1px solid #ccc;"> ค่าจัดส่ง&nbsp;</td>
-            <td style="text-align: right;"><?php echo number_format($shipping_total,2,".",","); ?> &nbsp;</td>
-        </tr>
-        <tr>
-            <td style="border-left: 1px solid #ccc;"> Ai-Cash &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($aicash_price_total,2,".",","); ?> &nbsp;
-            </td>
-
+            <td style="text-align: right;"> <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
-            <td style="text-align: right;"><?php echo number_format($tax_total,2,".",","); ?> &nbsp;</td>
-        </tr>
-
-        <tr>
-            <td style="border-left: 1px solid #ccc;"> TrueMoney &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($true_money_price_total,2,".",","); ?> &nbsp;
-            </td>
-
-            <td style="border-left: 1px solid #ccc;"> คูปองส่วนลด &nbsp;</td>
-            <td style="text-align: right;"><?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($tax_total,2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
             <td style="border-left: 1px solid #ccc;"> PromptPay &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;
-            </td>
+            <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> คูปองส่วนลด &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
+        </tr>
 
-            <td style="border-left: 1px solid #ccc;">  &nbsp;</td>
-            <td style="text-align: right;"> &nbsp;</td>
+        <tr>
+            <td style="border-left: 1px solid #ccc;"> TrueMoney &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($true_money_price_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> รวมมูลค่าสินค้าและภาษีมูลค่าเพิ่ม &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format(($product_value_total+$shipping_total+$fee_amt_total+$tax_total),2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
             <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระทั้งสิ้น</u></b> </td>
             <td style="text-align: right;"><u style="text-align: right;">
-                    <?php echo number_format($cash_pay_total+$cash_transfer_price_total+$cash_sum_credit_price_total+$aicash_price_total +$true_money_price_total +$prompt_pay_price_total,2,".",","); ?></u>
+                    <?php echo number_format($gift_voucher_price_total+$cash_pay_total+$cash_transfer_price_1_total+$cash_transfer_price_2_total+$cash_sum_credit_price_total+$true_money_price_total +$prompt_pay_price_total,2,".",","); ?></u>
                 &nbsp;</td>
 
-                <td style="border-left: 1px solid #ccc;"> <b><u>รวมยอดชำระ</u></b> </td>
+                <td style="border-left: 1px solid #ccc;"> <b><u>รวมมูลค่าทั้งสิ้น</u></b> </td>
             <td style="text-align: right;"><u style="text-align: right;">
-                    <?php echo number_format(($sum_price_total+$shipping_total+$fee_amt_total+$shipping_vat_total+$fee_vat_total)-$gift_voucher_price_total,2,".",","); ?></u>
+                    <?php echo number_format(($product_value_total+$shipping_total+$fee_amt_total+$tax_total)-$gift_voucher_price_total,2,".",","); ?></u>
                 &nbsp;</td>
 
         </tr>
