@@ -380,15 +380,19 @@ class Pick_packController extends Controller
             $d = DB::select(" select * from db_delivery WHERE packing_code=".$row->packing_code." ");
             // return "P1".sprintf("%05d",@$row->packing_code);
                 $array1 = array();
-                $rs = DB::table('db_delivery')->where('packing_code',@$row->packing_code)->get();
+                $rs = DB::table('db_delivery')->select('db_delivery.receipt','db_orders.shipping_special')->join('db_orders','db_orders.id','db_delivery.orders_id_fk')->where('db_delivery.packing_code',@$row->packing_code)->get();
+                $shipping_special = "";
                 foreach ($rs as $key => $value) {
                     if(!empty(@$value->receipt)){
+                      if(@$value->shipping_special==1){
+                        $shipping_special = "<label style='color:red;'>(ส่งแบบพิเศษ)</label><br>";
+                      }
                         array_push($array1, @$value->receipt);
                     }
                 }
                 $arr = implode('<br>', $array1);
 
-                return "<b>(".@$row->packing_code_desc.")</b><br>".$arr;
+                return $shipping_special."<b>(".@$row->packing_code_desc.")</b><br>".$arr;
 
         }else{
           // return "<span class='order_list' data-id=".@$row->receipt." style='cursor:pointer;color:blue;'> ".@$row->receipt." </span> ";

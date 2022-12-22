@@ -171,7 +171,7 @@ class StatusDeliveryController extends Controller
      })
      ->addColumn('receipt', function($row) {
        if($row->id!==""){
-           $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+           $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
            $array = array();
            if(@$DP){
              foreach ($DP as $key => $value) {
@@ -192,9 +192,9 @@ class StatusDeliveryController extends Controller
          $array = array();
          if(@$DP){
            foreach ($DP as $key => $value) {
-             $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+             $rs = DB::table('db_delivery')->select('customer_id')->where('id',$value->delivery_id_fk)->get();
              if(!empty(@$rs[0]->customer_id)){
-               $Customer = DB::select(" select * from customers where id=".@$rs[0]->customer_id." ");
+               $Customer = DB::select(" select prefix_name,first_name,last_name from customers where id=".@$rs[0]->customer_id." ");
                array_push($array, $Customer[0]->prefix_name.$Customer[0]->first_name." ".$Customer[0]->last_name);
              }
            }
@@ -216,7 +216,7 @@ class StatusDeliveryController extends Controller
              $array = array();
              if(@$DP){
                foreach ($DP as $key => $value) {
-                 $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+                 $rs = DB::table('db_delivery')->select('receipt')->where('id',$value->delivery_id_fk)->get();
                  array_push($array, "'".@$rs[0]->receipt."'");
                }
                $arr = implode(',', $array);
@@ -346,12 +346,12 @@ class StatusDeliveryController extends Controller
       //   dd($row);
       //         }
       if($row->status_tracking==3 || $row->status_tracking==2){
-        $pcode = DB::table('db_pick_pack_packing')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
+        $pcode = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
               // if($row->packing_code=='P100008'){
               //     dd($pcode);
               // }
           if($pcode){
-            $data = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
+            $data = DB::table('db_consignments')->select('con_arr')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
           //   if($row->packing_code=='P100008'){
           //     dd($pcode->packing_code_id_fk);
           // }
@@ -373,10 +373,10 @@ class StatusDeliveryController extends Controller
    ->addColumn('tranfer_status', function($row) {
     $p = "";
     if($row->status_tracking==3){
-      $pcode = DB::table('db_pick_pack_packing')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
+      $pcode = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
 
         if($pcode){
-          $data = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
+          $data = DB::table('db_consignments')->select('tracking_status','tracking_remark')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
 
           foreach($data as $d){
             // $arr = explode(',',$d->con_arr);
