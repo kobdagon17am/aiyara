@@ -530,7 +530,7 @@ class Po_approveController extends Controller
             left join `branchs` on `branchs`.`id` = `db_orders`.`branch_id_fk`
             left join `dataset_approve_status` on `dataset_approve_status`.`id` = `db_orders`.`approve_status`
             where
-            pay_type_id_fk in (1,8,10,11,12) and
+            pay_type_id_fk in (1,8,10,11,12,20) and
             `dataset_order_status`.`lang_id` = 1 and
             (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
             `db_orders`.`id` != 0
@@ -543,7 +543,7 @@ class Po_approveController extends Controller
             $transfer_bill_approvedate
             $customer_id
             or
-            pay_type_id_fk in (1,8,10,11,12) and
+            pay_type_id_fk in (1,8,10,11,12,20) and
             `dataset_order_status`.`lang_id` = 1 and
             (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
             `db_orders`.`id` != 0

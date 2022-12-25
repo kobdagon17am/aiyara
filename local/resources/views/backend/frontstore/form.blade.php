@@ -3597,9 +3597,15 @@
             $(document).on('click', '.btn-plus-product-pro, .btn-minus-product-pro', function(e) {
                 e.preventDefault();
                 var v = $(e.target).closest('.input-group').find('input.quantity').val();
+                v = parseInt(v);
+                // alert('v ' + v);
                 var limited_amt_person = $(this).attr('limited_amt_person');
+                limited_amt_person = parseInt(limited_amt_person);
+                // alert('limited_amt_person ' + limited_amt_person);
+
                 if (limited_amt_person > 0) {
                     if (v >= limited_amt_person) {
+                      // alert(v +' >= '+ limited_amt_person);
                         alert("Promotion นี้ กำหนดจำนวนจำกัดต่อคน ไว้เท่ากับ " + limited_amt_person);
                         $(e.target).closest('.input-group').find('input.quantity').val(limited_amt_person);
                     }
@@ -4751,7 +4757,7 @@
                                     '   <button class="btn btn-outline-secondary  " disabled style="background-color:#d9d9d9 !important;" > ' +
                                     '     <i class="fa fa-minus"></i> ' +
                                     '   </button>' +
-                                    '   <input class=" quantity xxx " min="0"  type="number" readonly placeholder="-" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ ' +
+                                    '   <input class=" quantity xxx " min="0"  type="number" readonly placeholder="-" data-toggle="tooltip" title="สาเหตุที่ซื้อไม่ได้ เพราะ' +
                                     aData['cuase_cannot_buy'] +
                                     ' " style="cursor:pointer;background-color:#d9d9d9 !important;" >' +
                                     '   <div class="input-group-append"> ' +

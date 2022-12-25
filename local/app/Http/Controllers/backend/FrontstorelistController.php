@@ -1322,7 +1322,9 @@ class FrontstorelistController extends Controller
                    }
                    $im = implode(',',$arr);
               }
-              return $im;
+              // dd($im);
+              // return $im;
+              return 0;
           }else{
             return 0;
           }

@@ -3833,7 +3833,7 @@ class FrontstoreController extends Controller
     $sTable = DB::select("
                 SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
                 db_orders.true_money_price,db_orders.prompt_pay_price, db_orders.user_name, db_orders.name_customer, db_orders.name_customer_business,
-                db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,
+                db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,db_orders.customers_sent_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
                 status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
                 db_orders.shipping_free,db_orders.transfer_bill_note
@@ -3871,6 +3871,14 @@ class FrontstoreController extends Controller
             return "[" . @$Customer[0]->user_name . '] <br>' . @$Customer[0]->prefix_name . @$Customer[0]->first_name . " " . @$Customer[0]->last_name;
           }
         }else{
+          if($row->customers_sent_id_fk!='' && $row->customers_sent_id_fk!=null ){
+            if ($row->customers_id_fk) {
+              $Customer = DB::select(" select user_name, prefix_name, first_name, last_name from customers where id=" . $row->customers_id_fk . " ");
+              return "[" . @$Customer[0]->user_name . '] <br>' . @$Customer[0]->prefix_name . @$Customer[0]->first_name . " " . @$Customer[0]->last_name;
+            }else{
+              return "[" . $row->user_name . '] <br>' . $row->name_customer;
+            }
+          }
           return "[" . $row->user_name . '] <br>' . $row->name_customer;
         }
 
