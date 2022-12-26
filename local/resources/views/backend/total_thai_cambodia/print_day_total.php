@@ -735,6 +735,7 @@ set_time_limit(9999999);
               // if($report_type == 'day'){
                 $cus_name = $order->action_first_name.' '.$order->action_last_name;
 
+                $cus_name = str_replace('(ยกเลิกสมัครซ้ำ)','',$cus_name);
                 $cus_name = str_replace("(ยกเลิก)"," ",$cus_name);
 
               // }else{

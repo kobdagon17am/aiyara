@@ -2187,31 +2187,68 @@ ORDER BY db_pick_pack_packing.id
 
               // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
               if(!empty($d0)){
-                $d3_arr = [];
-                $data_d3 = DB::select("SELECT set_addr_send_this,orders_id_fk,id FROM `db_delivery` WHERE receipt in ($arr2);");
-                foreach($data_d3 as $data){
-                  if($data->set_addr_send_this==0){
-                    // dd($data->orders_id_fk);
-                    $order_this = DB::table('db_orders')->where('id',$data->orders_id_fk)->first();
-                    if($order_this){
-                      $order_send = DB::table('db_orders')->where('code_order','like','%'.$order_this->bill_transfer_other.'%')->first();
-                      if($order_send){
-                          // $d3_arr[$data->id] = $order_send->code_order;
-                          $d_send = DB::table('db_delivery')->where('orders_id_fk',$order_send->id)->first();
-                          if($d_send){
-                            DB::table('db_delivery')->where('id',$data->id)->update([
-                              'recipient_name' => $d_send->recipient_name,
-                              'addr_send' => $d_send->addr_send,
-                              'postcode' => $d_send->postcode,
-                              'mobile' => $d_send->mobile,
-                              'tel_home' => $d_send->tel_home,
-                            ]);
-                          }
 
-                      }
-                    }
+                foreach($d0 as $d0_data){
+                  $pack_check = DB::table('db_delivery_packing')
+                  ->select('packing_code')
+                  ->where('delivery_id_fk', $d0_data->id)
+                  ->first();
+              if ($pack_check) {
+                  $pack_check_arr = DB::table('db_delivery_packing')
+                      ->select('delivery_id_fk')
+                      ->where('packing_code', $pack_check->packing_code)
+                      ->pluck('delivery_id_fk')
+                      ->toArray();
+                  if (count($pack_check_arr) > 0) {
+
+                    $delivery_data = DB::table('db_delivery')
+                    ->select('set_addr_send_this', 'recipient_name', 'addr_send', 'postcode', 'mobile', 'tel_home', 'status_pack', 'receipt', 'id as delivery_id_fk', 'orders_id_fk')
+                    ->whereIn('id', $pack_check_arr)
+                    ->where('set_addr_send_this', 1)
+                    ->first();
+
+                    // dd($d0_data->id);
+
+                    DB::table('db_delivery')->where('id',$d0_data->id)->update([
+                      'recipient_name' => $delivery_data->recipient_name,
+                      'addr_send' => $delivery_data->addr_send,
+                      'postcode' => $delivery_data->postcode,
+                      'mobile' => $delivery_data->mobile,
+                      'tel_home' => $delivery_data->tel_home,
+                    ]);
+
+
                   }
+              }
                 }
+
+                // $d3_arr = [];
+                // $data_d3 = DB::select("SELECT set_addr_send_this,orders_id_fk,id FROM `db_delivery` WHERE receipt in ($arr2);");
+                // foreach($data_d3 as $data){
+                //   if($data->set_addr_send_this==0){
+                //     // dd($data->orders_id_fk);
+                //     $order_this = DB::table('db_orders')->where('id',$data->orders_id_fk)->first();
+                //     if($order_this){
+                //       $order_send = DB::table('db_orders')->where('code_order','like','%'.$order_this->bill_transfer_other.'%')->first();
+                //       if($order_send){
+                //           // $d3_arr[$data->id] = $order_send->code_order;
+                //           $d_send = DB::table('db_delivery')->where('orders_id_fk',$order_send->id)->first();
+                //           if($d_send){
+                //             DB::table('db_delivery')->where('id',$data->id)->update([
+                //               'recipient_name' => $d_send->recipient_name,
+                //               'addr_send' => $d_send->addr_send,
+                //               'postcode' => $d_send->postcode,
+                //               'mobile' => $d_send->mobile,
+                //               'tel_home' => $d_send->tel_home,
+                //             ]);
+                //           }
+
+                //       }
+                //     }
+                //   }
+                // }
+
+
               }
 
               // $d3 = DB::select("SELECT * FROM `db_delivery` WHERE receipt in ($arr2) and set_addr_send_this=0 ;");

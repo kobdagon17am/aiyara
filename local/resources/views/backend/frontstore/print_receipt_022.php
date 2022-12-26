@@ -524,7 +524,12 @@ if(!empty($db_orders[0]->action_user)){
         @$cus[0]->prefix_name = '';
        }
        $cus_user_name = @$cus[0]->user_name;
+
+
        $cus_name = @$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name;
+
+       $cus_name = str_replace('(ยกเลิกสมัครซ้ำ)','',$cus_name);
+       $cus_name = str_replace("(ยกเลิก)"," ",$cus_name);
 
        $cus_tax = @$cus[0]->id_card!=""?': '.@$cus[0]->id_card:': เลขผู้เสียภาษี (ไม่ได้ระบุไว้)';
 

@@ -614,7 +614,7 @@ class FrontstoreController extends Controller
 
     $User_branch_id = \Auth::user()->branch_id_fk;
     // $sBranchs = DB::select(" select * from branchs where province_id_fk <> 0  ");
-    $sBranchs = DB::select(" select * from branchs where business_location_id_fk = ".$sBranchs[0]->business_location_id_fk."  ");
+    $sBranchs = DB::select(" select * from branchs where business_location_id_fk = ".$sBranchs[0]->business_location_id_fk." and status = 1 ");
     // dd($sBranchs);
 
     $ThisCustomer = DB::select(" select user_name from customers where id=" . $sRow->customers_id_fk . " ");
