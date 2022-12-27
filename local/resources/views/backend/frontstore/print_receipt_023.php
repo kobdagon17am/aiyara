@@ -134,6 +134,7 @@ $id = @$arr_orders_id[$z];
 
 $n = 22;
 $limit = 10;
+$num_run = 1;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
 
@@ -1411,7 +1412,9 @@ for ($j=0; $j < $amt_page ; $j++) {
                 <td style="width:2.6%;text-align: left;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php //echo @$DB[0]->a ; echo substr(trim(@$DB[0]->b),1,1); ?>
-                <?php if(substr(trim(@$DB[0]->b),1,1)=='n'){ $runno = $runno - 1 ; }else{ if(@$DB[0]->b!='') echo $runno; } ?>
+                <?php if(substr(trim(@$DB[0]->b),1,1)=='n'){ $runno = $runno - 1 ; }else{ if(@$DB[0]->b!='') echo $num_run;
+                //  runno
+                } ?>
                 </td>
 
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
@@ -1461,7 +1464,7 @@ for ($j=0; $j < $amt_page ; $j++) {
                 </td>
 
           </tr>
- <?php $runno++; }  ?>
+ <?php $runno++; $num_run++;}  ?>
 
 
     </table>

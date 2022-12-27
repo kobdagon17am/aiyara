@@ -530,7 +530,7 @@ class Check_stockController extends Controller
                     $warehouse = DB::select(" select * from warehouse where id=".($v->warehouse_id_fk?$v->warehouse_id_fk:0)." ");
                     $zone = DB::select(" select * from zone where id=".($v->zone_id_fk?$v->zone_id_fk:0)." ");
                     $shelf = DB::select(" select * from shelf where id=".($v->shelf_id_fk?$v->shelf_id_fk:0)." ");
-                    $t = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v->shelf_floor;
+                    $t = '('.$v->id.') '.@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$v->shelf_floor;
 
                array_push($f,$t);
             }
@@ -557,7 +557,7 @@ class Check_stockController extends Controller
           GROUP BY branch_id_fk,product_id_fk,lot_number,lot_expired_date,warehouse_id_fk,zone_id_fk,shelf_id_fk,shelf_floor ORDER BY lot_number ");
             $f = [] ;
             foreach ($d as $key => $v) {
-               array_push($f,'<a class="btn btn-outline-success waves-effect waves-light" href="backend/stock_card_01?stock_id='.$v->id.'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a>');
+               array_push($f,'<a class="btn btn-outline-success waves-effect waves-light" href="backend/stock_card_01?stock_id='.$v->id.'" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD '.'('.$v->id.') '.' </a>');
             }
             $f = implode('<br><br>',$f);
 

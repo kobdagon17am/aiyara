@@ -106,6 +106,8 @@ $n = 22;
 $limit = 10;
 // $limit = 10;
 
+$num_run = 1;
+
 $sRow = \App\Models\Backend\Frontstore::find($id);
 if(@$sRow->business_location_id_fk == 1){
   $curr = 'บาท';
@@ -934,15 +936,15 @@ if(!empty($db_orders[0]->action_user)){
             WHERE db_orders.id=".$id."
 
         ");
-/*
-5   เงินสด
-6   เงินสด + Ai-Cash
-7   เครดิต + เงินสด
-8   เครดิต + เงินโอน
-9   เครดิต + Ai-Cash
-10  เงินโอน + เงินสด
-11  เงินโอน + Ai-Cash
-*/
+            /*
+            5   เงินสด
+            6   เงินสด + Ai-Cash
+            7   เครดิต + เงินสด
+            8   เครดิต + เงินโอน
+            9   เครดิต + Ai-Cash
+            10  เงินโอน + เงินสด
+            11  เงินโอน + Ai-Cash
+            */
 
 
     if(@$pay_type[0]->pay_type_id_fk==10){ // 10  เงินโอน + เงินสด
@@ -1352,7 +1354,10 @@ for ($j=0; $j < $amt_page ; $j++) {
                 <td style="width:2.6%;text-align: left;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php //echo @$DB[0]->a ; echo substr(trim(@$DB[0]->b),1,1); ?>
-                <?php if(substr(trim(@$DB[0]->b),1,1)=='n'){ $runno = $runno - 1 ; }else{ if(@$DB[0]->b!='') echo $runno; } ?>
+                <?php if(substr(trim(@$DB[0]->b),1,1)=='n'){ $runno = $runno - 1 ; }else{ if(@$DB[0]->b!='') echo $num_run;
+                //  $runno
+                } ?>
+                <?php  ?>
                 </td>
 
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
@@ -1413,7 +1418,9 @@ for ($j=0; $j < $amt_page ; $j++) {
                 </td>
 
           </tr>
- <?php $runno++; }  ?>
+ <?php $runno++;
+$num_run++;
+}  ?>
 
   <!-- วุฒิเพิ่ม ค่าธรรมเนียมและค่าจัดส่ง -->
   <?php

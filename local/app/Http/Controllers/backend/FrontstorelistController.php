@@ -74,27 +74,29 @@ class FrontstorelistController extends Controller
                     $pv = @$Promotions_cost[0]->pv  ;
                   }
 
+                  $promotion_data = DB::table('promotions')->select('id')->where('id',@$request->promotion_id_fk_pro[$i])->first();
+                  if($promotion_data){
+                    $sRow = new \App\Models\Backend\Frontstorelist;
+                    $sRow->frontstore_id_fk    = @$request->frontstore_id ;
 
-                $sRow = new \App\Models\Backend\Frontstorelist;
-                $sRow->frontstore_id_fk    = @$request->frontstore_id ;
+                    $sRow->customers_id_fk  = (@request('customers_id_fk'))?@request('customers_id_fk'): 0 ;
+                    $sRow->action_user = (@request('action_user'))?@request('action_user'): 0 ;
+                    $sRow->code_order  = (@request('code_order'))?@request('code_order'): 0 ;
 
-                $sRow->customers_id_fk  = (@request('customers_id_fk'))?@request('customers_id_fk'): 0 ;
-                $sRow->action_user = (@request('action_user'))?@request('action_user'): 0 ;
-                $sRow->code_order  = (@request('code_order'))?@request('code_order'): 0 ;
+                    $sRow->amt    =  @$request->quantity[$i];
+                    $sRow->add_from    = '2';
+                    $sRow->promotion_id_fk    = @$request->promotion_id_fk_pro[$i];
 
-                $sRow->amt    =  @$request->quantity[$i];
-                $sRow->add_from    = '2';
-                $sRow->promotion_id_fk    = @$request->promotion_id_fk_pro[$i];
+                    $sRow->selling_price    = @$Promotions_cost[0]->member_price;
+                    $sRow->pv    = $pv ;
+                    $sRow->total_pv    =  $pv * @$request->quantity[$i];
+                    $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity[$i];
+                    $sRow->type_product    =  'promotion' ;
 
-                $sRow->selling_price    = @$Promotions_cost[0]->member_price;
-                $sRow->pv    = $pv ;
-                $sRow->total_pv    =  $pv * @$request->quantity[$i];
-                $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity[$i];
-                $sRow->type_product    =  'promotion' ;
-
-                $sRow->action_date    =  date('Y-m-d H:i:s');
-                $sRow->created_at = date('Y-m-d H:i:s');
-                $sRow->save();
+                    $sRow->action_date    =  date('Y-m-d H:i:s');
+                    $sRow->created_at = date('Y-m-d H:i:s');
+                    $sRow->save();
+                  }
 
               }
 
