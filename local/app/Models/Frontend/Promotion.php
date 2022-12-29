@@ -10,10 +10,9 @@ class Promotion extends Model
 {
 	public static function all_available_purchase($promotion_id){
 
-
     $all_available_purchase = DB::table('db_order_products_list')
     ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
-    ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    // ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
     ->where('db_order_products_list.promotion_id_fk', '=', $promotion_id)
     ->where('type_product', '=','promotion')
     ->first();
