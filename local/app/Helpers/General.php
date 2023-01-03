@@ -1783,6 +1783,9 @@ class General {
 		 // วุฒิเพิ่มมา เอาไว้ตรวจว่าสินค้าไหนจ่ายแล้วของบิลไหน
 		 $db_pay_requisition_002_datas = DB::table('db_pay_requisition_002')
 		 ->where('pick_pack_requisition_code_id_fk',$pick_pack_requisition_code_id_fk)->get();
+
+    DB::table('db_pay_requisition_002_item')->where('pick_pack_requisition_code_id_fk',$pick_pack_requisition_code_id_fk)->delete();
+
 		 foreach($db_pay_requisition_002_datas as $data_002){
 					   $product_amt_get = $data_002->amt_get;
 					   $db_pick_pack_packing_code_data = DB::table('db_pick_pack_packing_code')->select('id','orders_id_fk')->where('id',$pick_pack_requisition_code_id_fk)->first();
@@ -1868,8 +1871,6 @@ class General {
                  }
 
                }
-
-
 
 								 DB::table('db_pay_requisition_002_item')->insert([
 								   'requisition_002_id' => $data_002->id,

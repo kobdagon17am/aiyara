@@ -8272,4 +8272,20 @@ LEFT JOIN db_pay_product_receipt_001 on db_pay_product_receipt_001.orders_id_fk=
         }
     }
 
+    public function ajaxSelectWh(Request $request)
+    {
+      if($request->ajax()){
+
+        $warehouse = DB::table('warehouse')->where('w_code','WH02')->pluck('id')->toArray();
+        $db_stocks = DB::table('db_stocks')->where('branch_id_fk',Auth::user()->branch_id_fk)
+        ->where('product_id_fk',$request->product_id_fk)
+        ->where('lot_expired_date','>=',date('Y-m-d'))
+        ->whereIn('warehouse_id_fk',$warehouse)
+        ->where('amt','>',0)
+        ->get();
+
+        return response()->json(['data'=>$db_stocks,]);
+       }
+  }
+
 }

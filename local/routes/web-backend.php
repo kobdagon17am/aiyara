@@ -460,6 +460,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('pick_warehouse_del_packing/{p_id}', 'Pick_warehouseController@pick_warehouse_del_packing');
 
     Route::get('delete_test', 'Pick_warehouseController@delete_test');
+    Route::get('pick_warehouse/{id}/edit_product', 'Pick_warehouseController@edit_product');
+    Route::post('pick_warehouse_edit_product_store', 'Pick_warehouseController@pick_warehouse_edit_product_store');
 
 
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
@@ -631,6 +633,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('pick_warehouse/print_requisition_detail/{id}/{packing_code_id}', 'AjaxController@createPDFRequisitionDetail');
     Route::get('pick_warehouse/print_requisition_detail_real/{packing_code_id}', 'AjaxController@createPDFRequisitionDetailReal');
     Route::get('pick_warehouse/print_requisition_detail_real_remain/{packing_code_id}', 'AjaxController@createPDFRequisitionDetailRealRemain');
+
+    Route::post('ajaxSelectWh', 'AjaxController@ajaxSelectWh');
 
 
     Route::resource('product_in_cause', 'Product_in_causeController');

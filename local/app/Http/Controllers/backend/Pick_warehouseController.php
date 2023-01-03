@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use DB;
 use File;
 use PDF;
+use Auth;
+
 
 class Pick_warehouseController extends Controller
 {
@@ -165,6 +167,87 @@ class Pick_warehouseController extends Controller
         array(
            // 'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
            'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,'sRow'=> $sRow,
+        ) );
+    }
+
+    public function edit_product($id)
+    {
+      $r = DB::select("SELECT * FROM db_pay_requisition_001 where id in($id) ");
+      if(@$r[0]->status_sent==6){
+        return redirect()->to(url("backend/pick_warehouse/".$id."/cancel"));
+      }
+      // $sRow = \App\Models\Backend\Pick_packPackingCode::find($r[0]->pick_pack_requisition_code_id_fk);
+      $sRow = \App\Models\Backend\Pick_packPackingCode::find($id);
+//   SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$r[0]->pick_pack_requisition_code_id_fk."
+        $addr_sent =  DB::select("
+
+            SELECT customer_id,from_table FROM `customers_addr_sent` WHERE packing_code=".$id."
+        ");
+
+        if($addr_sent){
+            $customer_id = @$addr_sent[0]->customer_id?@$addr_sent[0]->customer_id:0;
+            $from_table = @$addr_sent[0]->from_table;
+            $addr =  DB::select("
+                SELECT * FROM $from_table WHERE customer_id=$customer_id
+            ");
+        }else{
+          $customer_id = 0;
+          @$addr = [0];
+        }
+
+      if(sizeof(@$addr)>0){
+
+        @$address = "";
+        @$address .= "". @$addr[0]->prefix_name.@$addr[0]->first_name." ".@$addr[0]->last_name;
+        @$address .= "". @$addr[0]->house_no. " ". @$addr[0]->house_name. " ";
+        @$address .= " ต. ". @$addr[0]->tamname;
+        @$address .= " อ. ". @$addr[0]->ampname;
+        @$address .= " จ. ". @$addr[0]->provname;
+        @$address .= " รหัส ปณ. ". @$addr[0]->zipcode ;
+
+      }else{
+        @$address = '-ไม่พบข้อมูล-';
+      }
+
+        $sUser =  DB::select("
+            SELECT
+            db_pay_requisition_001.id,
+            db_pay_requisition_001.business_location_id_fk,
+            db_pay_requisition_001.branch_id_fk,
+            db_pay_requisition_001.pick_pack_requisition_code_id_fk,
+            (select name from ck_users_admin where id=db_pay_requisition_001.action_user)  AS user_action,
+            db_pay_requisition_001.action_date,
+            (select name from ck_users_admin where id=db_pay_requisition_001.pay_user)  AS pay_user,
+            db_pay_requisition_001.pay_date,
+            db_pay_requisition_001.status_sent,
+            db_pay_requisition_001.customer_id_fk,
+            db_pay_requisition_001.address_send AS user_address,
+            db_pay_requisition_001.address_send_type,
+            customers.user_name AS user_code,
+            CONCAT(customers.prefix_name,customers.first_name,' ',customers.last_name) AS user_name,
+            dataset_pay_product_status.txt_desc as bill_status
+            FROM
+            db_pay_requisition_001
+            Left Join customers ON $customer_id = customers.id
+            Left Join dataset_pay_product_status ON db_pay_requisition_001.status_sent = dataset_pay_product_status.id
+            where db_pay_requisition_001.id in ($id)
+        ");
+
+        $Products = DB::select("
+        SELECT products.id as product_id,
+        products.product_code,
+        (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+        FROM
+        products_details
+        Left Join products ON products_details.product_id_fk = products.id
+        WHERE lang_id=1 AND status = 1
+        order by products.product_code
+      ");
+
+      return View('backend.pick_warehouse.form_edit_product')->with(
+        array(
+           // 'pick_pack_requisition_code_id_fk'=>$r[0]->pick_pack_requisition_code_id_fk,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,
+           'pick_pack_requisition_code_id_fk'=>$id,'sUser'=>$sUser,'user_address'=>@$address,'id'=>$id,'sRow'=> $sRow, 'Products' => $Products,
         ) );
     }
 
@@ -2882,6 +2965,120 @@ ORDER BY db_pick_pack_packing.id
    }
 
     return true;
+
+  }
+
+  function pick_warehouse_edit_product_store(Request $r){
+    // dd($r->all());
+    \DB::beginTransaction();
+    try {
+    foreach($r->product_id_fk as $key => $product_id_fk){
+      if($product_id_fk!=null && $product_id_fk!=''){
+          $db_stocks = DB::table('db_stocks')->where('id',$r->wh[$key])->first();
+          if($db_stocks){
+              if($db_stocks->amt > $r->amt_need[$key]){
+                 $db_pay_requisition_002_old = DB::table('db_pay_requisition_002')->where('pick_pack_requisition_code_id_fk',$r->pick_pack_packing_code_id)->orderBy('id','Desc')->first();
+                  if($db_pay_requisition_002_old){
+
+                    $products = DB::table('products')->select('id','product_code')->where('id',$product_id_fk)->first();
+                    if($products){
+                      $products_details = DB::table('products_details')->select('product_name')
+                      ->where('product_id_fk',$products->id)->where('lang_id',1)->first();
+
+                      $r_id = DB::table('db_pay_requisition_002')->insertGetId([
+                        'time_pay' => $db_pay_requisition_002_old->time_pay,
+                        'business_location_id_fk' => $db_pay_requisition_002_old->business_location_id_fk,
+                        'branch_id_fk' => $db_pay_requisition_002_old->branch_id_fk,
+                        'pick_pack_requisition_code_id_fk' => $db_pay_requisition_002_old->pick_pack_requisition_code_id_fk,
+                        'customers_id_fk' => $db_pay_requisition_002_old->customers_id_fk,
+                        'product_id_fk' => $product_id_fk,
+                        'product_name' => $products->product_code.' : '.$products_details->product_name,
+                        'amt_need' => $r->amt_need[$key],
+                        'amt_get' => $r->amt_need[$key],
+                        'amt_lot' => $db_stocks->amt,
+                        'amt_remain' => 0,
+                        'product_unit_id_fk' => 4,
+                        'product_unit' => 'ชิ้น',
+                        'lot_number' => $db_stocks->lot_number,
+                        'lot_expired_date' => $db_stocks->lot_expired_date,
+                        'warehouse_id_fk' => $db_stocks->warehouse_id_fk,
+                        'zone_id_fk' => $db_stocks->zone_id_fk,
+                        'shelf_id_fk' => $db_stocks->shelf_id_fk,
+                        'shelf_floor' => $db_stocks->shelf_floor,
+                        'status_cancel'=>0,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                       ]);
+
+                       $db_pick_pack_packing = DB::table('db_pick_pack_packing')
+                       ->select('packing_code','created_at')
+                       ->where('packing_code_id_fk',$db_pay_requisition_002_old->pick_pack_requisition_code_id_fk)
+                       ->first();
+
+                       DB::table('db_pay_requisition_002_pay_history')->insert([
+                        'time_pay' => $db_pay_requisition_002_old->time_pay,
+                        'pick_pack_requisition_code_id_fk' => $db_pay_requisition_002_old->pick_pack_requisition_code_id_fk,
+                        'pick_pack_packing_code_id_fk' => $db_pay_requisition_002_old->pick_pack_requisition_code_id_fk,
+                        'product_id_fk' => $product_id_fk,
+                        'pay_date' => date('Y-m-d H:i:s'),
+                        'pay_user' =>  Auth::user()->id,
+                        'amt_need' => $r->amt_need[$key],
+                        'amt_get' => $r->amt_need[$key],
+                        'amt_remain' => 0,
+                        'status' => 3,
+                       ]);
+
+                       DB::table('db_stock_movement')->insert([
+                        'stock_type_id_fk' =>  1,
+                        'stock_id_fk' => $db_stocks->id,
+                        'ref_table' => 'db_pay_requisition_002',
+                        'ref_table_id' => $r_id,
+                        'ref_doc' => $db_pick_pack_packing->packing_code,
+                        'doc_no' => $db_pick_pack_packing->packing_code,
+                        'doc_date' => $db_pick_pack_packing->created_at,
+                        'business_location_id_fk' => $db_pay_requisition_002_old->business_location_id_fk,
+                        'branch_id_fk' => $db_pay_requisition_002_old->branch_id_fk,
+                        'product_id_fk' => $product_id_fk,
+                        'lot_number' => $db_stocks->lot_number,
+                        'lot_expired_date' => $db_stocks->lot_expired_date,
+                        'amt' => $r->amt_need[$key],
+                        'in_out' => 2,
+                        'product_unit_id_fk' => 4,
+                        'warehouse_id_fk' => $db_stocks->warehouse_id_fk,
+                        'zone_id_fk' => $db_stocks->zone_id_fk,
+                        'shelf_id_fk' => $db_stocks->shelf_id_fk,
+                        'shelf_floor' => $db_stocks->shelf_floor,
+                        'status' => 1,
+                        'note' => 'จ่ายสินค้าตามใบเบิก',
+                        'action_user' => Auth::user()->id,
+                        'action_date' => date('Y-m-d H:i:s'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                       ]);
+
+                       DB::table('db_stocks')->where('id',$r->wh[$key])->update([
+                        'amt' => $db_stocks->amt-$r->amt_need[$key],
+                       ]);
+
+                       \App\Helpers\General::create_pay_requisition_002_item($db_pay_requisition_002_old->pick_pack_requisition_code_id_fk);
+
+                    }
+                  }
+
+              }
+          }
+      }
+    }
+
+    \DB::commit();
+
+    return redirect()->to('backend/pay_requisition_001')->with('success','ทำรายการสำเร็จ');
+
+  } catch (\Exception $e) {
+    echo $e->getMessage();
+    \DB::rollback();
+  }
+
 
   }
 
