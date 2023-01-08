@@ -82,7 +82,7 @@ class KsherController extends Controller
           $resule = ['status' => 'success', 'url' => $gateway_pay_array['data']['pay_content']];
             return $resule;
         } else {
-          $resule = ['status' => 'fail', 'url' => $gateway_pay_array['data']];
+          $resule = ['status' => 'fail', 'url' =>  route('payment/fail')];
           return $resule;
         }
 
