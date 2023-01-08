@@ -138,18 +138,18 @@
                                             <div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
 
                                                 <div class="form-radio">
-                                                    <div class="radio radio-inline">
+                                                    {{-- <div class="radio radio-inline">
                                                         <label>
                                                             <input type="radio" id="bank" onchange="open_input(1)"
-                                                                name="pay_type" value="1" checked="checked">
+                                                                name="pay_type" value="1" disabled>
                                                             <i class="helper"></i><b>โอนชำระ</b>
                                                         </label>
-                                                    </div>
+                                                    </div> --}}
 
                                                     <div class="radio radio-inline">
                                                         <label>
                                                             <input type="radio" id="mobile_banking" onchange="open_input(4)"
-                                                                name="pay_type" value="">
+                                                                name="pay_type" value="" checked="checked">
                                                             <i class="helper"></i><b>Mobile Banking</b>
                                                         </label>
                                                     </div>
@@ -162,19 +162,19 @@
                                                         </label>
                                                     </div> --}}
 
-                                                    <div class="radio radio-inline">
+                                                    {{-- <div class="radio radio-inline">
                                                         <label>
                                                             <input type="radio" onchange="open_input(3)" id="ai_cash"
-                                                                name="pay_type" value="3">
+                                                                name="pay_type" value="3" disabled>
                                                             <i class="helper"></i><b>Ai-Cash</b>
                                                         </label>
-                                                    </div>
+                                                    </div> --}}
 
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="row" id="cart_payment_tranfer">
+                                        <div class="row" id="cart_payment_tranfer"  style="display: none">
 
                                             <div class="row col-md-12 col-lg-12">
                                                 <div class="col-md-6 col-lg-6">
@@ -236,7 +236,7 @@
 
                                         </div>
 
-                                        <div class="row" id="cart_payment_mobile_banking" style="display: none">
+                                        <div class="row" id="cart_payment_mobile_banking">
                                             <div class="row col-md-12 col-lg-12">
                                               @if(Auth::guard('c_user')->user()->business_location_id != 3)
                                                 <div class="col-md-6 col-lg-6">
