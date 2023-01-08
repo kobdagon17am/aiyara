@@ -2974,12 +2974,15 @@ ORDER BY db_pick_pack_packing.id
     try {
     foreach($r->product_id_fk as $key => $product_id_fk){
       if($product_id_fk!=null && $product_id_fk!=''){
+        // dd($product_id_fk);
           $db_stocks = DB::table('db_stocks')->where('id',$r->wh[$key])->first();
+          // dd($db_stocks);
           if($db_stocks){
-              if($db_stocks->amt > $r->amt_need[$key]){
+              if($db_stocks->amt >= $r->amt_need[$key]){
                  $db_pay_requisition_002_old = DB::table('db_pay_requisition_002')->where('pick_pack_requisition_code_id_fk',$r->pick_pack_packing_code_id)->orderBy('id','Desc')->first();
+                //  dd($db_pay_requisition_002_old);
                   if($db_pay_requisition_002_old){
-
+// dd($db_pay_requisition_002_old);
                     $products = DB::table('products')->select('id','product_code')->where('id',$product_id_fk)->first();
                     if($products){
                       $products_details = DB::table('products_details')->select('product_name')
