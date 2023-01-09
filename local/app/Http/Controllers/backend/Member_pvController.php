@@ -110,6 +110,7 @@ class Member_pvController extends Controller
 
    public function update(Request $request, $customer_id)
     {
+      // dd($request->all());
       $detail = DB::table('customers_detail')->select('id')->where('customer_id',$customer_id)->first();
       if(!$detail){
         DB::table('customers_detail')->insert([
@@ -130,6 +131,7 @@ class Member_pvController extends Controller
         $this->updateAddresSendInformation($request, $customer_id);
         return back()->with(['alert' =>['status'=>'success', 'msg'=>'บันทึกข้อมูลที่อยู่จัดส่งสำเร็จ']]);
       } elseif($request->type == 'bank') {
+        // dd('l');
         $this->updateBankInformation($request, $customer_id);
         return back()->with(['alert' =>['status'=>'success', 'msg'=>'บันทึกข้อมูลธนาคารสำเร็จ']]);
       }else{
@@ -321,11 +323,13 @@ class Member_pvController extends Controller
         $w04 = "0" ;
         $Operator04 = "!=";
       }
+      // 1282213 =
+      // dd($w01);
 
 
       $sTable = \App\Models\Backend\Customers::where('id','!=',0)
       ->where('customers.id',$Operator01,$w01)
-      ->where('customers.business_name',$Operator02,trim($w02))
+      // ->where('customers.business_name',$Operator02,trim($w02))
       ->where('customers.introduce_id',$Operator03,$w03)
       ->where('customers.upline_id',$Operator04,$w04)
       ;
