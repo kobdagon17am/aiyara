@@ -522,6 +522,8 @@ class CartPaymentController extends Controller
                         ->update(['pay_type_id_fk' => '12', 'transfer_price' => $total_price]);
                 }
                 DB::commit();
+                Cart::session($order_data->purchase_type_id_fk)->clear();
+
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
                 return redirect('cart_payment_transfer/' . $request->code_order)->withError($resule['message']);
@@ -552,9 +554,10 @@ class CartPaymentController extends Controller
                         ->where('id', $order_data->id)
                         ->update(['pay_type_id_fk' => '17']);
                 }
-
+                Cart::session($order_data->purchase_type_id_fk)->clear();
                 return redirect($data['url']);
             } else {
+
                 return redirect('product-history')->withError('Payment Fail');
             }
 
@@ -578,6 +581,7 @@ class CartPaymentController extends Controller
                         ->where('id', $order_data->id)
                         ->update(['pay_type_id_fk' => '18','approve_status'=>1]);
                 }
+                Cart::session($order_data->purchase_type_id_fk)->clear();
                 return redirect($data['url']);
             } else {
                 return redirect('product-history')->withError('Payment Fail');
@@ -613,6 +617,7 @@ class CartPaymentController extends Controller
                         ->where('id', $order_data->id)
                         ->update(['pay_type_id_fk' => '2','fee'=>$check_cradit['dataset_fee_id_fk'],'charger_type'=>'1','credit_price'=>$credit_price ,'sum_credit_price'=> $total_price,'fee_amt'=>$fee_rate,'approve_status'=>1]);
                 }
+                Cart::session($order_data->purchase_type_id_fk)->clear();
                 return redirect($data['url']);
             } else {
                 return redirect('product-history')->withError('Payment Fail');
@@ -631,6 +636,7 @@ class CartPaymentController extends Controller
                         ->update(['pay_type_id_fk' => '14', 'aicash_price' => $total_price,'member_id_aicash'=>$customer_id]);
                 }
                 DB::commit();
+                Cart::session($order_data->purchase_type_id_fk)->clear();
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
                 return redirect('cart_payment_transfer/' . $request->code_order)->withError($resule['message']);
@@ -648,6 +654,7 @@ class CartPaymentController extends Controller
                         ->update(['pay_type_id_fk' => '4']);
                 }
                 DB::commit();
+                Cart::session($order_data->purchase_type_id_fk)->clear();
                 return redirect('product-history')->withSuccess($resule['message']);
             } elseif ($resule['status'] == 'fail') {
                 return redirect('cart_payment_transfer/' . $request->code_order)->withError($resule['message']);

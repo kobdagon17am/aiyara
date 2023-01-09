@@ -60,6 +60,7 @@ class Product extends Model
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
+     
 
         // $ev_objective = DB::table('categories')
         //       ->where('lang_id', '=', 1)
@@ -118,6 +119,7 @@ class Product extends Model
           $business_location_id = 1;
       }
 
+    
         $promotions = DB::table('promotions')
             ->select('promotions.*', 'promotions_images.img_url', 'promotions_images.promotion_img', 'promotions_cost.selling_price', 'promotions_cost.pv')
             ->leftjoin('promotions_images', 'promotions_images.promotion_id_fk', '=', 'promotions.id')
@@ -135,6 +137,7 @@ class Product extends Model
 
             ->orderby('id', 'DESC')
             ->get();
+           
 
 
 
@@ -159,6 +162,7 @@ class Product extends Model
                 $check_all_available_purchase = Promotion::all_available_purchase($value->id);
                 $count_per_promotion = Promotion::count_per_promotion($value->id,$customer_id);
                 $count_per_promotion_day = Promotion::count_per_promotion_day($value->id,$customer_id);
+              
 
                 //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
                 if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase'] and $value->all_available_purchase != "" and $value->all_available_purchase != 0) {
@@ -217,7 +221,7 @@ class Product extends Model
                     } else {
                         $resule = ['status' => 'success', 'message' => 'สามารถซื้อได้'];
 
-                        $html .= ProductList::product_list_html($value->id, $type, $value->img_url, $value->promotion_img, $value->name_thai, $value->detail_thai, $icon = '', $value->selling_price, $value->pv, $category_id);
+                        $html .= ProductList::product_list_html($value->id, $type, $value->img_url, $value->promotion_img, $value->name_thai, $value->detail_thai, $icon = '', $value->selling_price, $value->pv, 8);
                     }
 
                 } elseif ($value->limited_amt_type == 2) {
@@ -231,6 +235,7 @@ class Product extends Model
                     }
 
                 } else {
+                    
                     $resule = ['status' => 'success', 'message' => 'สามารถซื้อได้'];
 
                     $html .= ProductList::product_list_html($value->id, $type, $value->img_url, $value->promotion_img, $value->name_thai, $value->detail_thai, $icon = '', $value->selling_price, $value->pv, 8);
@@ -240,6 +245,7 @@ class Product extends Model
 
 
             $data = ['html' => $html, 'rs' => $resule];
+            
             return $data;
         }
     }

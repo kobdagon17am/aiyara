@@ -79,7 +79,7 @@ class PaymentAddProduct extends Model
                 }
 
                 $insert_db_products_list->save();
-                Cart::session($type)->remove($value['id']);
+                //Cart::session($type)->remove($value['id']);
 
             }
 
