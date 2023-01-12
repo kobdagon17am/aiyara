@@ -467,6 +467,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // @@@@@@@@@@@@@@@@@@@ จ่ายสินค้าตามใบเสร็จ @@@@@@@@@@@@@@@@@@@
     // หน้าแรก
     Route::resource('pay_product_receipt_001', 'Pay_product_receipt_001Controller');
+    Route::get('pay_product_receipt_001_clear/{id}', 'Pay_product_receipt_001Controller@pay_product_receipt_001_clear');
     Route::post('pay_product_receipt_tb1/datatable', 'Pay_product_receipt_001Controller@Datatable001')->name('pay_product_receipt_tb1.datatable');
     Route::post('pay_product_receipt_tb1/wait_orders', 'Pay_product_receipt_001Controller@wait_orders')->name('pay_product_receipt_tb1.wait_orders');
 
