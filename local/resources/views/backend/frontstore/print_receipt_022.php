@@ -210,6 +210,7 @@ $pv_total = @$sRow->pv_total?@$sRow->pv_total:0;
 // dd($total_price[0]->total);
 // วุฒิแก้เอาราคาสินค้าจริงๆ
 $total_price = $sRow->product_value;
+// dd($sRow->product_value);
 
 // $total_price = str_replace(',','',number_format(@$total_price[0]->total,2));
 $total_price = str_replace(',','',number_format($total_price,2));
@@ -232,6 +233,8 @@ if(!empty($gift_voucher)){
       $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
       $sRow->tax = round( $sRow->tax ,2 );
       $sRow->product_value = $sRow->sum_price - $sRow->tax;
+      // เพิ่มมา
+      $total_price = $sRow->product_value;
     } //
     $shipping_vat = 0;
     if($shipping_price>0){
@@ -262,6 +265,8 @@ if(!empty($gift_voucher)){
       $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
       $sRow->tax = round( $sRow->tax ,2 );
       $sRow->product_value = $sRow->sum_price - $sRow->tax;
+       // เพิ่มมา
+       $total_price = $sRow->product_value;
     } //
     $shipping_vat = 0;
     if($shipping_price>0){
@@ -1259,6 +1264,7 @@ else if(@$pay_type[0]->pay_type_id_fk==19){ // 19  Gift Voucher + เงิน�
 
 
         if($amt_page==1){
+          // dd($total_price);
           // รวมเงิน
             DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+18) ; ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
