@@ -2220,7 +2220,13 @@ foreach($temp_ppr_0021_data as $tmp){
       ->make(true);
     }
 
-
+    public function pay_product_receipt_001_clear($id){
+        $db_pay_product_receipt_001 = DB::table('db_pay_product_receipt_001')->select('id','orders_id_fk','invoice_code')->where('id',$id)->where('status_sent',1)->first();
+        if($db_pay_product_receipt_001){
+          DB::table('db_pay_product_receipt_001')->where('orders_id_fk',$db_pay_product_receipt_001->orders_id_fk)->where('invoice_code',$db_pay_product_receipt_001->invoice_code)->where('status_sent',1)->delete();
+        }
+        return redirect()->back()->with(['alert' => \App\Models\Alert::Msg('success')]);
+    }
 
 
 }
