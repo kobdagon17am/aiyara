@@ -20,12 +20,12 @@
         </ul>
         <form action="{{ route('edit_password_submit') }}" id="edit_password_submit" method="post" accept-charset="utf-8">
           @csrf
-          <div class="input-group input-group-primary">
+          {{-- <div class="input-group input-group-primary">
             <span class="input-group-addon">
              <i class="fa fa-lock"></i>
            </span>
            <input type="password" name="old_password" id="old_password" class="form-control" style="font-size: 18px;color: #000;font-weight: bold;" placeholder="Old Password" required="">
-         </div>
+         </div> --}}
 
          <div class="input-group input-group-primary">
           <span class="input-group-addon">
@@ -67,19 +67,11 @@
   @section('js')
   <script type="text/javascript">
     function change_password(){
-      var old_password = $('#old_password').val();
+      // var old_password = $('#old_password').val();
       var edit_password = $('#edit_password').val();
       var confirm_edit_password = $('#confirm_edit_password').val();
 
-      if(old_password == ''){
-        Swal.fire({
-          icon: 'error',
-          title: 'Old password is null',
-
-        })
-
-
-      }else if(edit_password == ''){
+     if(edit_password == ''){
        Swal.fire({
         icon: 'error',
         title: 'Change password is null',
