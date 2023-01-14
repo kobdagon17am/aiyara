@@ -46,9 +46,9 @@
       <hr>
       <div class="row">
         <div class="col-md-12 text-center">
-          @if($canAccess)
+          {{-- @if($canAccess) --}}
           <button type="button" onclick="change_password()" class="btn btn-primary"> Change Password </button>
-          @endif
+          {{-- @endif --}}
 
         </div>
       </div>
@@ -86,10 +86,10 @@
       })
 
      }else{
-      if(edit_password.length < 6 || edit_password.length > 20){
+      if(edit_password.length < 4 || edit_password.length > 20){
         Swal.fire({
           icon: 'error',
-          title: 'Your password must be between 6 and 20 characte',
+          title: 'Your password must be between 4 and 20 characte',
 
         })
       }else if(edit_password != confirm_edit_password) {
