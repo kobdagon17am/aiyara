@@ -304,10 +304,11 @@
 									<li>
 										<a href="{{route('docs')}}"><i class="fa fa-file-text text-success"></i>  @lang('message.registration_documents') </a>
 									</li>
-                  @if($canAccess)
+
 									<li>
 										<a href="{{route('chage_password')}}"><i class="fa fa-key text-success"></i> @lang('message.edit_passlogin') </a>
 									</li>
+                  @if($canAccess)
                   <li>
 										<a href="{{route('chage_password_aicash')}}"><i class="fa fa-key text-success"></i> @lang('message.edit_pass_aicash') </a>
 									</li>
