@@ -547,6 +547,13 @@
 
                     console.log(aData['status']);
 
+                    var a_id = "{{@\Auth::user()->id}}";
+                    var btn_error_add = "";
+                    if(a_id==29 || a_id== 111){
+                      btn_error_add =  '<a href="{{ url('backend/pick_warehouse') }}/' + aData['id'] +
+                            '/edit_product" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="left" title="แก้ไขรายการสินค้าไม่ครบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ';
+                    }
+
                     if (aData['status'] == 1) {
 
                         $('td:last-child', nRow).html(''
@@ -590,8 +597,7 @@
 
                             //  วุฒฺเพิ่มมาแก้สินค้าหายไม่ครบ
                             +
-                            '<a href="{{ url('backend/pick_warehouse') }}/' + aData['id'] +
-                            '/edit_product" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="left" title="แก้ไขรายการสินค้าไม่ครบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                            btn_error_add
                             // -----
 
                             +
@@ -622,10 +628,9 @@
                             '<a href="{{ url('backend/pick_warehouse') }}/' + aData['id'] +
                             '/qr" class="btn btn-sm btn-info" data-toggle="tooltip" data-toggle="tooltip" data-placement="left" title="Scan QR-Code / จัดส่ง" >จัดส่ง</a> '
 
-                            //  วุฒฺเพิ่มมาแก้สินค้าหายไม่ครบ
-                            +
-                            '<a href="{{ url('backend/pick_warehouse') }}/' + aData['id'] +
-                            '/edit_product" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="left" title="แก้ไขรายการสินค้าไม่ครบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
+                                //  วุฒฺเพิ่มมาแก้สินค้าหายไม่ครบ
+                                +
+                            btn_error_add
                             // -----
 
 
