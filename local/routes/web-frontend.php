@@ -172,7 +172,7 @@ Route::get('export_pdf_history/{code_order?}','Frontend\HistoryController@export
 Route::get('modal_qr_recive_product','Frontend\HistoryController@modal_qr_recive_product')->name('modal_qr_recive_product');
 Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
 
-Route::get('datable/history','Frontend\HistoryController@datatable')->name('datable/history');
+Route::post('datable/history','Frontend\HistoryController@datatable')->name('datable/history');
 Route::get('get_detail_order_aicash','Frontend\HistoryController@get_detail_order_aicash')->name('get_detail_order_aicash');
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
 Route::post('re_new_payment','Frontend\HistoryController@re_new_payment')->name('re_new_payment');
