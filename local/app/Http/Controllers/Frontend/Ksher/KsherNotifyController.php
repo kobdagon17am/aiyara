@@ -218,7 +218,7 @@ class KsherNotifyController extends Controller
       Log::info($dataUpdate->merge($payInfo));
 
       $order = DB::table('db_orders')
-        ->where('code_order', $getKsherData->mch_order_no)
+        ->where('id', $getKsherData->mch_order_no)
         ->update($dataUpdate->merge($payInfo)->toArray());
       Log::info('Order Update Status ' . $order);
     }

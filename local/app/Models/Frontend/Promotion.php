@@ -12,7 +12,8 @@ class Promotion extends Model
 
     $all_available_purchase = DB::table('db_order_products_list')
     ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
-    // ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    ->where('db_orders.order_status_id_fk', '!=', 8)
     ->where('db_order_products_list.promotion_id_fk', '=', $promotion_id)
     ->where('type_product', '=','promotion')
     ->first();
@@ -28,6 +29,7 @@ class Promotion extends Model
     ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
     ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
     ->where('db_order_products_list.type_product', '=','promotion')
+    ->where('db_orders.order_status_id_fk', '!=', 8)
     ->where('db_order_products_list.promotion_id_fk', '=', $promotion_id)
     ->where('db_orders.customers_id_fk', '=',$customer_id)
     ->first();
@@ -44,6 +46,7 @@ class Promotion extends Model
     ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
     ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
     ->where('db_order_products_list.type_product', '=','promotion')
+    ->where('db_orders.order_status_id_fk', '!=', 8)
     ->where('db_order_products_list.promotion_id_fk', '=', $promotion_id)
     ->where('db_orders.customers_id_fk', '=',$customer_id)
     ->wheredate('db_order_products_list.created_at', '=',$date_now)
