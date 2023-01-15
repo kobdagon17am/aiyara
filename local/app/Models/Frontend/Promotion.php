@@ -34,8 +34,6 @@ class Promotion extends Model
     ->where('db_orders.customers_id_fk', '=',$customer_id)
     ->first();
 
-
-
 		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion->amt_all];
 		return $resule;
 	}

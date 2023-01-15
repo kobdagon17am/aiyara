@@ -1713,6 +1713,7 @@ $temp_ppr_0021_data = DB::table($temp_ppr_002)->get();
 // dd($temp_ppr_0021_data);
 // }
 // dd($temp_ppr_0021_data);
+// dd($temp_ppr_0021_data);
 foreach($temp_ppr_0021_data as $tmp){
   $p_unit = 'ชิ้น';
   $p_code = '0000:';
