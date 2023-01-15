@@ -537,11 +537,11 @@ class CartPaymentController extends Controller
             $request['pay_type'] = 15;
 
             $gateway_pay_data = array(
-                'mch_order_no' => $order_data->code_order,
+                'mch_order_no' => $order_data->id,
                 "total_fee" => $total_price,
                 "fee_type" => $fee_type,
                 "channel_list" => 'promptpay',
-                'mch_code' => $order_data->code_order,
+                'mch_code' => $order_data->id,
                 'product_name' => $order_data->type,
             );
 
@@ -565,11 +565,11 @@ class CartPaymentController extends Controller
             $request['pay_type'] = 16;
 
             $gateway_pay_data = array(
-                'mch_order_no' => $order_data->code_order,
+                'mch_order_no' => $order_data->id,
                 "total_fee" => $total_price,
                 "fee_type" => $fee_type,
                 "channel_list" => 'truemoney',
-                'mch_code' => $order_data->code_order,
+                'mch_code' => $order_data->id,
                 'product_name' => $order_data->type,
             );
 
@@ -601,11 +601,11 @@ class CartPaymentController extends Controller
 
           $request['pay_type'] = 2;
             $gateway_pay_data = array(
-                'mch_order_no' => $order_data->code_order,
+                'mch_order_no' => $order_data->id,
                 "total_fee" => $total_price,
                 "fee_type" => $fee_type,
                 "channel_list" => 'ktbcard',
-                'mch_code' => $order_data->code_order,
+                'mch_code' => $order_data->id,
                 'product_name' => $order_data->type,
             );
 

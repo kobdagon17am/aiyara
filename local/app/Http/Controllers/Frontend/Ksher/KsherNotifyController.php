@@ -111,7 +111,7 @@ class KsherNotifyController extends Controller
 
     if ($type_code == 'W') {
       $getOrderData = DB::table('db_add_ai_cash')
-        ->where('code_order', Arr::get($response, 'data.mch_order_no'))
+        ->where('id', Arr::get($response, 'data.mch_order_no'))
         ->first();
 
       if ($getOrderData->total_amt == $getKsherData->total_price) { //ยอดเงินเท่ากันให้อัพเดททันที
@@ -140,7 +140,7 @@ class KsherNotifyController extends Controller
       Log::info('Order Update Status ' . $order);
     } else {
       $getOrderData = DB::table('db_orders')
-        ->where('code_order', Arr::get($response, 'data.mch_order_no'))
+        ->where('id', Arr::get($response, 'data.mch_order_no'))
         ->first();
 
         if ($getKsherData->channel == 'ktbcard') {
