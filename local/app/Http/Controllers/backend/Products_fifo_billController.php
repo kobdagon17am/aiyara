@@ -1189,7 +1189,7 @@ foreach($temp_ppr_0021_data as $tmp){
 
         DB::select(" DROP TABLE IF EXISTS $temp_ppr_001; ");
         DB::select(" CREATE TABLE $temp_ppr_001 LIKE db_orders ");
-        DB::select(" INSERT $temp_ppr_001 SELECT * FROM db_orders WHERE code_order='$invoice_code' ");
+        DB::select(" INSERT $temp_ppr_001 SELECT * FROM db_orders WHERE code_order='$invoice_code' AND invoice_code!=''");
         // $test =   DB::select(" SELECT * FROM db_orders WHERE code_order='$invoice_code' ");
         // return $test;
 
