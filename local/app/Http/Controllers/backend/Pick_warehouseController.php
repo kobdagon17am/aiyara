@@ -3066,6 +3066,93 @@ ORDER BY db_pick_pack_packing.id
                        \App\Helpers\General::create_pay_requisition_002_item($db_pay_requisition_002_old->pick_pack_requisition_code_id_fk);
 
                     }
+                  }else{
+                    // ถ้าไม่เคยมีสินค้าเลย
+                    $products = DB::table('products')->select('id','product_code')->where('id',$product_id_fk)->first();
+                    if($products){
+                      $products_details = DB::table('products_details')->select('product_name')
+                      ->where('product_id_fk',$products->id)->where('lang_id',1)->first();
+
+                      $r_id = DB::table('db_pay_requisition_002')->insertGetId([
+                        'time_pay' => 1,
+                        'business_location_id_fk' => 1,
+                        'branch_id_fk' => 6,
+                        'pick_pack_requisition_code_id_fk' => $r->pick_pack_packing_code_id,
+                        'customers_id_fk' => 0,
+                        'product_id_fk' => $product_id_fk,
+                        'product_name' => $products->product_code.' : '.$products_details->product_name,
+                        'amt_need' => $r->amt_need[$key],
+                        'amt_get' => $r->amt_need[$key],
+                        'amt_lot' => $db_stocks->amt,
+                        'amt_remain' => 0,
+                        'product_unit_id_fk' => 4,
+                        'product_unit' => 'ชิ้น',
+                        'lot_number' => $db_stocks->lot_number,
+                        'lot_expired_date' => $db_stocks->lot_expired_date,
+                        'warehouse_id_fk' => $db_stocks->warehouse_id_fk,
+                        'zone_id_fk' => $db_stocks->zone_id_fk,
+                        'shelf_id_fk' => $db_stocks->shelf_id_fk,
+                        'shelf_floor' => $db_stocks->shelf_floor,
+                        'status_cancel'=>0,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                       ]);
+
+                       $db_pick_pack_packing = DB::table('db_pick_pack_packing')
+                       ->select('packing_code','created_at')
+                       ->where('packing_code_id_fk',$r->pick_pack_packing_code_id)
+                       ->first();
+
+                       DB::table('db_pay_requisition_002_pay_history')->insert([
+                        'time_pay' => 1,
+                        'pick_pack_requisition_code_id_fk' => $r->pick_pack_packing_code_id,
+                        'pick_pack_packing_code_id_fk' => $r->pick_pack_packing_code_id,
+                        'product_id_fk' => $product_id_fk,
+                        'pay_date' => date('Y-m-d H:i:s'),
+                        'pay_user' =>  Auth::user()->id,
+                        'amt_need' => $r->amt_need[$key],
+                        'amt_get' => $r->amt_need[$key],
+                        'amt_remain' => 0,
+                        'status' => 3,
+                       ]);
+
+                       DB::table('db_stock_movement')->insert([
+                        'stock_type_id_fk' =>  1,
+                        'stock_id_fk' => $db_stocks->id,
+                        'ref_table' => 'db_pay_requisition_002',
+                        'ref_table_id' => $r_id,
+                        'ref_doc' => $db_pick_pack_packing->packing_code,
+                        'doc_no' => $db_pick_pack_packing->packing_code,
+                        'doc_date' => $db_pick_pack_packing->created_at,
+                        'business_location_id_fk' => 1,
+                        'branch_id_fk' => 6,
+                        'product_id_fk' => $product_id_fk,
+                        'lot_number' => $db_stocks->lot_number,
+                        'lot_expired_date' => $db_stocks->lot_expired_date,
+                        'amt' => $r->amt_need[$key],
+                        'in_out' => 2,
+                        'product_unit_id_fk' => 4,
+                        'warehouse_id_fk' => $db_stocks->warehouse_id_fk,
+                        'zone_id_fk' => $db_stocks->zone_id_fk,
+                        'shelf_id_fk' => $db_stocks->shelf_id_fk,
+                        'shelf_floor' => $db_stocks->shelf_floor,
+                        'status' => 1,
+                        'note' => 'จ่ายสินค้าตามใบเบิก',
+                        'action_user' => Auth::user()->id,
+                        'action_date' => date('Y-m-d H:i:s'),
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                       ]);
+
+                       DB::table('db_stocks')->where('id',$r->wh[$key])->update([
+                        'amt' => $db_stocks->amt-$r->amt_need[$key],
+                       ]);
+
+                       \App\Helpers\General::create_pay_requisition_002_item($r->pick_pack_packing_code_id);
+
+                    }
+
+
                   }
 
               }
