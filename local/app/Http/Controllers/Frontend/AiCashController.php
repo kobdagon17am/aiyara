@@ -241,7 +241,7 @@ class AiCashController extends Controller
       ->addColumn('code_order', function ($row) {
         if ($row->order_id_fk) {
 
-          return '<label class="label label-inverse-info-border" ><a href="' . route('cart-payment-history', ['code_order' => $row->order_code]) . '">' . $row->order_code . '</a></label>';
+          return '<label class="label label-inverse-info-border" ><a href="' . route('cart-payment-history', ['code_order' => $row->id]) . '">' . $row->order_code . '</a></label>';
         } else {
           return '<label class="label label-inverse-info-border" onclick="view_aicash(' . $row->add_ai_cash_id_fk . ')"><a href="#!">' . $row->order_code . '</a></label>';
         }
