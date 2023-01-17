@@ -107,6 +107,7 @@
     <div class="row">
         <div class="col-md-12">
             รายการ QR CODE  <a href="javascript:;"  class="qr_scan_delete_all" oid="{{@$oid}}" pid="{{@$pid}}" style="color:red;"> <u> Remove All </u> </a>
+          @if(@\Auth::user()->id==29 || @\Auth::user()->id==1 || @\Auth::user()->id==111)
             <br><br>
             <form method="POST" action="{{ url('backend/qr_show_import') }}" enctype="multipart/form-data">
               @csrf
@@ -117,6 +118,7 @@
             <input type="hidden" name="p_list" value="{{@$p_list}}">
             <br><button onclick="return confirm('ยืนยันการทำรายการ?')" type="submit" class="btn btn-sm btn-primary">Import</button>
             </form>
+            @endif
             {{-- สินค้า {{$product->product_code}} : {{$product->product_name}} --}}
             <br><br>
             @foreach($qrs as $qr)
