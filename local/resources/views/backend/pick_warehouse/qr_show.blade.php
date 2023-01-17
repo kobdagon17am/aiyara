@@ -61,13 +61,13 @@
     color: black ;
     background-color: #cfc ;
     z-index: 9999 ;
-  } 
+  }
 
 
 .divTable{
     display: table;
     width: 100%;
-    
+
   }
   .divTableRow {
     display: table-row;
@@ -80,7 +80,7 @@
     border: 1px solid white;
     display: table-cell;
     padding: 3px 6px;
-    word-break: break-all; 
+    word-break: break-all;
   }
   .divTableHeading {
     background-color: #EEE;
@@ -107,22 +107,32 @@
     <div class="row">
         <div class="col-md-12">
             รายการ QR CODE  <a href="javascript:;"  class="qr_scan_delete_all" oid="{{@$oid}}" pid="{{@$pid}}" style="color:red;"> <u> Remove All </u> </a>
+            <br><br>
+            <form method="POST" action="{{ url('backend/qr_show_import') }}" enctype="multipart/form-data">
+              @csrf
+            <label>Import Excel</label>
+            <input type="file" required name="excel_data">
+            <input type="hidden" name="oid" value="{{@$oid}}">
+            <input type="hidden" name="pid" value="{{@$pid}}">
+            <input type="hidden" name="p_list" value="{{@$p_list}}">
+            <br><button onclick="return confirm('ยืนยันการทำรายการ?')" type="submit" class="btn btn-sm btn-primary">Import</button>
+            </form>
             {{-- สินค้า {{$product->product_code}} : {{$product->product_name}} --}}
             <br><br>
             @foreach($qrs as $qr)
-            {{$qr->item_id}} : 
+            {{$qr->item_id}} :
             <input type="text" class="in-tx qr_scan " packing_list="{{$qr->packing_list}}" data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" placeholder="scan qr" value="{{$qr->qr_code}}">
             &nbsp;       &nbsp;       &nbsp;
             <input type="text" class="qr_scan_remark " packing_list="{{$qr->packing_list}}" data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" placeholder="หมายเหตุ" value="{{$qr->remark}}">
-           
+
            <a href="javascript:;" class="qr_scan_delete " packing_list="{{$qr->packing_list}}" data-item_id="{{$qr->item_id}}" invoice_code="{{$qr->invoice_code}}" data-packing_code="{{$qr->packing_code}}" data-product_id_fk="{{$qr->product_id_fk}}" style="color:red;"> <u>Remove</u> </a>
             <br><br>
-            @endforeach 
+            @endforeach
             <div class="myloading"></div>
         </div>
     </div>
 </div>
-     
+
 @endsection
 @section('script')
 <link type="text/css" href="//gyrocode.github.io/jquery-datatables-checkboxes/1.2.12/css/dataTables.checkboxes.css" rel="stylesheet" />
@@ -151,7 +161,7 @@
                 invoice_code:invoice_code,
                 qr_code:v,packing_code:packing_code,
                 packing_list:packing_list,
-                product_id_fk:product_id_fk 
+                product_id_fk:product_id_fk
                 },
                     success:function(data){
                         // console.log(data);

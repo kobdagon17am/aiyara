@@ -1089,7 +1089,12 @@ class Pick_warehouse_fifoController extends Controller
 
                 // วุฒิเพิ่มมาดักยาวเกิน
                 // $invoice_code = implode(",",$arr_inv);
-                $invoice_code = '<a href="javascript:;">';
+                $data_alert = "";
+                foreach($arr_inv as $index =>$ai){
+                  $data_alert.=$ai.",";
+                }
+
+                $invoice_code = '<a href="javascript:;" class="alert_data" data_alert="'.$data_alert.'">';
                 foreach($arr_inv as $index =>$ai){
                   $invoice_code .= $ai;
                   if($index+1 != count($arr_inv)){
@@ -1102,7 +1107,10 @@ class Pick_warehouse_fifoController extends Controller
                     break;
                   }
                 }
+
                 $invoice_code .= '</a>';
+
+
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
                $amt_pay_this = $value->amt;

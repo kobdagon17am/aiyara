@@ -89,7 +89,7 @@ class DeliveryPackingCodeController extends Controller
         // order by db_delivery_packing_code.updated_at desc
        $sTable = DB::select("
 
-          SELECT db_delivery_packing_code.*,db_orders.action_user as action_user_data,db_delivery.updated_at as d_updated_at,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by , MAX(db_orders.shipping_special) AS 'shipping_special' from db_delivery_packing_code
+          SELECT db_delivery_packing_code.*,db_orders.action_user as action_user_data,db_delivery.status_to_wh_date,db_delivery.updated_at as d_updated_at,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by , MAX(db_orders.shipping_special) AS 'shipping_special' from db_delivery_packing_code
           LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
           LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
           LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
@@ -235,11 +235,20 @@ class DeliveryPackingCodeController extends Controller
           }else{
             $user_name = '';
           }
-          $p = '
-          <b class="" style="color:green;">ยืนยันแล้ว</b>
-          <br> โดย : '.$user_name.'
-          <br> '.$row->d_updated_at.'
-          ';
+          if($row->status_to_wh_date==""){
+            $p = '
+            <b class="" style="color:green;">ยืนยันแล้ว</b>
+            <br> โดย : '.$user_name.'
+            <br> '.$row->d_updated_at.'
+            ';
+          }else{
+            $p = '
+            <b class="" style="color:green;">ยืนยันแล้ว</b>
+            <br> โดย : '.$user_name.'
+            <br> '.$row->status_to_wh_date.'
+            ';
+          }
+
         }else{
           $p = '
           <a onclick="return confirm(\'ยืนยันการทำรายการ\')" href="'.url('backend/delivery_approve_to_wh/'.$row->db_delivery_id).'" class="btn btn-sm btn-success">ยืนยัน</a>

@@ -873,6 +873,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('pick_warehouse/{id}/cancel', 'Pick_warehouseController@cancel');
 
     Route::get('qr_show/{oid}/{pid}/{proid}/{p_list}', 'Pick_warehouseController@qr_show');
+    Route::post('qr_show_import', 'Pick_warehouseController@qr_show_import');
 
 
     Route::resource('supplier', 'SupplierController');
