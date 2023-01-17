@@ -30,11 +30,12 @@ class RunNumberPayment extends Model
 
     $code_order =  IdGenerator::generate([
         'table' => 'db_orders',
-        'field' => 'code_order',
+        'field' => 'code_order', 
         'length' => 13,
         'prefix' => 'O'.$business_location_id_fk.''.$date_order,
         'reset_on_prefix_change' => true
     ]);
+    // $code_order = $code_order.''.date('s');
 
       return  $code_order;
 

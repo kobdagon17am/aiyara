@@ -245,7 +245,7 @@
 
 									<li>
                     @if($noti_value->type == 'system' )
-                    <a href="{{ route('cart-payment-history',['code_order'=>$noti_value->order_code]) }}">
+                    <a href="{{ route('cart-payment-history',['code_order'=>$noti_value->id]) }}">
                     <div class="media">
 											<img class="d-flex align-self-center img-radius" src="{{asset('local/public/images/admin_aiyara.png')}}" alt="Generic placeholder image">
 											<div class="media-body">

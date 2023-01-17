@@ -331,7 +331,7 @@ class HistoryController extends Controller
                else {
                   $action = '';
               }
-              return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> ' . $action;
+              return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->id]) . '" ><i class="fa fa-search"></i></a> ' . $action;
 
               }else{
 
@@ -352,7 +352,7 @@ class HistoryController extends Controller
                 }
 
 
-                return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->code_order]) . '" ><i class="fa fa-search"></i></a> '.$action;
+                return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->id]) . '" ><i class="fa fa-search"></i></a> '.$action;
 
               }
 
@@ -519,7 +519,7 @@ class HistoryController extends Controller
 
             ->where('dataset_order_status.lang_id', '=', $business_location_id)
             ->where('dataset_orders_type.lang_id', '=', $business_location_id)
-            ->where('db_orders.code_order', '=', $code_order)
+            ->where('db_orders.id', '=', $code_order)
             ->first();
 
             $branch = DB::table('branchs')
