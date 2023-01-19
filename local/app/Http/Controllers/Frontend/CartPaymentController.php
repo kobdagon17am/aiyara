@@ -538,6 +538,7 @@ class CartPaymentController extends Controller
 
             $gateway_pay_data = array(
                 'mch_order_no' => $order_data->id,
+                'attach' => $order_data->code_order,
                 "total_fee" => $total_price,
                 "fee_type" => $fee_type,
                 "channel_list" => 'promptpay',
@@ -566,6 +567,7 @@ class CartPaymentController extends Controller
 
             $gateway_pay_data = array(
                 'mch_order_no' => $order_data->id,
+                'attach' => $order_data->code_order,
                 "total_fee" => $total_price,
                 "fee_type" => $fee_type,
                 "channel_list" => 'truemoney',
@@ -602,6 +604,7 @@ class CartPaymentController extends Controller
           $request['pay_type'] = 2;
             $gateway_pay_data = array(
                 'mch_order_no' => $order_data->id,
+                'attach' => $order_data->code_order,
                 "total_fee" => $total_price,
                 "fee_type" => $fee_type,
                 "channel_list" => 'ktbcard',

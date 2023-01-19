@@ -70,7 +70,7 @@ class KsherController extends Controller
           'mch_notify_url' => route('ksher_notify'),
             //  'shop_name' => 'AIYARA PLANET บริษัท ไอยรา แพลนเน็ต',
             //  'device' => 'PC',
-            //'attach' =>'หมายเหตุหรือคถอธิบาย',
+            'attach' =>$data['attach'],
             'color' => '#18c160',
             'logo' => asset('frontend/assets/images/logo.png'),
         );
