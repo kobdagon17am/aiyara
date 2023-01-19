@@ -941,6 +941,7 @@ class DeliveryController extends Controller
       DB::table('db_delivery')->where('id',$id)->update([
         'status_to_wh' => 1,
         'status_to_wh_by' => @\Auth::user()->id,
+        'status_to_wh_date' => date('Y-m-d H:i:s'),
       ]);
       return redirect()->back();
     }

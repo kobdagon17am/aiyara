@@ -140,12 +140,9 @@ class Member_regisController extends Controller
 
               $sRow = \App\Models\Backend\Member_regis::find(request('id'));
 
-              // dd($sRow);
-
               if($sRow->regis_doc_status == 1 && date('Y-m-d') > $sRow->approve_date){
                 return redirect()->back()->with(['alert'=>\App\Models\Alert::Msg('error','เอกสารอนุมัติเกินจำนวนวัน ไม่สามารถแก้ไขได้')]);
               }
-
               $sRow->regis_doc_status    = request('regis_status');
               $sRow->approver    = \Auth::user()->id;
               $sRow->approve_date    = date("Y-m-d");
@@ -153,11 +150,11 @@ class Member_regisController extends Controller
               $sRow->item_checked    = 1 ;
               $sRow->save();
 
-// customers
-//   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-//   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-//   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
-//   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+              // customers
+              //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+              //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+              //   `regis_doc3_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าตรงถือบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
+              //   `regis_doc4_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายหน้าบัญชีธนาคาร 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
 
               $Customers = \App\Models\Backend\Customers::find($sRow->customer_id);
               // วุฒิเพิ่มมาเช็คว่าหากเอกสาร อนุมัติครบ 4 แล้วห้ามแก้ไข

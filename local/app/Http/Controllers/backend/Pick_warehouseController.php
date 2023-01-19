@@ -8,7 +8,7 @@ use DB;
 use File;
 use PDF;
 use Auth;
-
+use Session;
 
 class Pick_warehouseController extends Controller
 {
@@ -2846,6 +2846,7 @@ ORDER BY db_pick_pack_packing.id
     }
 
     function qr_show($oid,$pid,$proid,$p_list){
+      // dd($proid);
         $qrs = DB::table('db_pick_warehouse_qrcode')
         // ->where('invoice_code',$oid)
         // ->where('product_id_fk',$proid)
@@ -2861,8 +2862,108 @@ ORDER BY db_pick_pack_packing.id
         'qrs' => $qrs,
         'oid' => $oid,
         'pid' => $pid,
+        'p_list' => $p_list,
       ]);
     }
+
+    public function qr_show_import(Request $request){
+      // dd($request->all());
+    if ($request->file('excel_data')){
+      $file = $request->file('excel_data');
+      // File Details
+      $filename = $file->getClientOriginalName();
+      $extension = $file->getClientOriginalExtension();
+      $tempPath = $file->getRealPath();
+      $fileSize = $file->getSize();
+      $mimeType = $file->getMimeType();
+      // Valid File Extensions
+      $valid_extension = array("xlsx");
+      // 2MB in Bytes
+      // $maxFileSize = 2097152;
+      // 5MB in Bytes
+      $maxFileSize = 5242880;
+      // Check file extension
+      if(in_array(strtolower($extension),$valid_extension)){
+        // Check file size
+        if($fileSize <= $maxFileSize){
+          // File upload location
+          $location = 'uploads_excel_wh/';
+
+          $destinationPath = public_path($location);
+          $file->move($destinationPath, $filename);
+
+          $filepath = public_path("uploads_excel_wh/".$filename);
+
+          $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+          $spreadsheet = $reader->load($filepath);
+
+          $worksheet = $spreadsheet->getActiveSheet();
+          $highestRow = $worksheet->getHighestRow(); // total number of rows
+          $highestColumn = $worksheet->getHighestColumn(); // total number of columns
+          $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+          $lines = $highestRow - 1;
+          if ($lines <= 0) {
+                   // Exit ('There is no data in the Excel table');
+              Session::flash('message','There is no data in the Excel table');
+
+          }else{
+              // dd($highestRow);
+              $i = 0;
+              $item_id = 0;
+
+              $qr_old = DB::table('db_pick_warehouse_qrcode')
+              ->select('item_id')
+              ->where('packing_code',$request->pid)
+              ->where('packing_list',$request->p_list)
+              ->orderBy('item_id','desc')
+              ->first();
+              if($qr_old){
+                $item_id = $qr_old->item_id;
+              }
+
+              $arr_con = [];
+
+              for ($row = 1; $row <= $highestRow; ++$row) {
+                   $qr_code = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                   $remark = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+                    // Skip first row (Remove below comment if you want to skip the first row)
+                   if($i == 0){
+                      $i++;
+                      $item_id++;
+                      continue;
+                   }
+                   if($qr_code!=''){
+                    DB::table('db_pick_warehouse_qrcode')->insert([
+                      'item_id'=>$item_id,
+                      'invoice_code'=>$request->oid,
+                      'packing_code'=>$request->pid,
+                      'packing_list'=>$request->p_list,
+                      'product_id_fk'=>0,
+                      'qr_code'=>$qr_code,
+                      'remark' => $remark,
+                      'created_at' => date('Y-m-d H:i:s'),
+                      'updated_at' => date('Y-m-d H:i:s'),
+                     ]);
+                     $item_id++;
+                   }
+                   $i++;
+
+              }
+              Session::flash('message','Import Successful.');
+          }
+        }else{
+          Session::flash('message','File too large. File must be less than 5MB.');
+        }
+      }else{
+         Session::flash('message','Invalid File Extension.');
+      }
+
+    }
+    return redirect()->back();
+
+  }
+
     // db_pick_pack_packing_code
     function pick_warehouse_save_new_bill(Request $r){
 

@@ -453,6 +453,12 @@
 
         $(document).ready(function() {
 
+          $(document).on('click', '.alert_data', function(event) {
+              var data = $(this).attr('data_alert');
+              alert(data);
+              console.log(data);
+            });
+
             $(document).on('click', '.print02', function(event) {
 
                 event.preventDefault();

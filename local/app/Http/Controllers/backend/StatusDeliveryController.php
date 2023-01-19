@@ -125,7 +125,7 @@ class StatusDeliveryController extends Controller
        // order by db_delivery_packing_code.updated_at desc
       //  dd($receipt);
       $sTable = DB::select("
-         SELECT db_delivery_packing_code.*,db_delivery_packing.packing_code,db_orders.action_user as action_user_data,db_delivery.updated_at as d_updated_at,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_orders.id as db_orders_id,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by,db_delivery.status_tracking , MAX(db_orders.shipping_special) AS 'shipping_special' from db_delivery_packing_code
+         SELECT db_delivery_packing_code.*,db_delivery_packing.packing_code,db_orders.action_user as action_user_data,db_delivery.status_to_wh_date,db_delivery.updated_at as d_updated_at,db_orders.distribution_channel_id_fk, db_orders.shipping_special,db_orders.id as db_orders_id,db_delivery.id as db_delivery_id,db_delivery.status_to_wh,db_delivery.status_to_wh_by,db_delivery.status_tracking , MAX(db_orders.shipping_special) AS 'shipping_special' from db_delivery_packing_code
          LEFT JOIN db_delivery_packing on db_delivery_packing.packing_code_id_fk=db_delivery_packing_code.id
          LEFT JOIN db_delivery on db_delivery.id=db_delivery_packing.delivery_id_fk
          LEFT JOIN db_orders on db_orders.id=db_delivery.orders_id_fk
@@ -139,6 +139,7 @@ class StatusDeliveryController extends Controller
        ");
       //  WHERE db_delivery.status_pick_pack<>1 AND db_delivery.status_delivery<>1
 
+      // packing_code
      $sQuery = \DataTables::of($sTable);
      return $sQuery
      ->addColumn('status_pick_pack', function($row) {
@@ -150,6 +151,8 @@ class StatusDeliveryController extends Controller
                $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
                return $rs[0]->status_pick_pack;
              }
+           }else{
+            return $row->id;
            }
      })
      ->addColumn('action_user_data', function($row) {
@@ -167,7 +170,13 @@ class StatusDeliveryController extends Controller
     })
      ->addColumn('packing_code_desc', function($row) {
        $DP = DB::table('db_delivery_packing')->select('packing_code')->where('packing_code_id_fk',$row->id)->first();
-       return $DP->packing_code;
+       if($DP){
+        return $DP->packing_code;
+       }
+       else{
+        return '-';
+       }
+
      })
      ->addColumn('receipt', function($row) {
        if($row->id!==""){
@@ -223,34 +232,40 @@ class StatusDeliveryController extends Controller
              }
            }
 
-           $addr = DB::select(" SELECT
-                 db_delivery.set_addr_send_this,
-                 db_delivery.recipient_name,
-                 db_delivery.addr_send,
-                 db_delivery.postcode,
-                 db_delivery.mobile,
-                 db_delivery.total_price,
-                 db_delivery_packing_code.id AS db_delivery_packing_code_id,
-                 db_delivery.receipt
-                 FROM
-                 db_delivery_packing_code
-                 Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
-                 Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
-                 WHERE
-                 db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr)  ");
-                //  AND set_addr_send_this=1
-           if($addr){
-             if($row->status_to_wh==0){
-               return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>";
-             }else{
-               return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>";
-               // ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
-             }
+           if(count($array)>0){
+            $addr = DB::select(" SELECT
+            db_delivery.set_addr_send_this,
+            db_delivery.recipient_name,
+            db_delivery.addr_send,
+            db_delivery.postcode,
+            db_delivery.mobile,
+            db_delivery.total_price,
+            db_delivery_packing_code.id AS db_delivery_packing_code_id,
+            db_delivery.receipt
+            FROM
+            db_delivery_packing_code
+            Inner Join db_delivery_packing ON db_delivery_packing.packing_code_id_fk = db_delivery_packing_code.id
+            Inner Join db_delivery ON db_delivery_packing.delivery_id_fk = db_delivery.id
+            WHERE
+            db_delivery_packing_code.id = ".$row->id." and db_delivery.receipt in ($arr)  ");
+           //  AND set_addr_send_this=1
+      if($addr){
+        if($row->status_to_wh==0){
+          return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>";
+        }else{
+          return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile."<br>";
+          // ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
+        }
 
 
+      }else{
+        return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
+      }
            }else{
-             return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";
+            return '-';
            }
+
+
 
      })
      ->escapeColumns('addr_to_send')
@@ -263,11 +278,22 @@ class StatusDeliveryController extends Controller
          }else{
            $user_name = '';
          }
-         $p = '
-         <b class="" style="color:green;">ยืนยันแล้ว</b>
-         <br> โดย : '.$user_name.'
-         <br> '.$row->d_updated_at.'
-         ';
+
+         if($row->status_to_wh_date==''){
+          $p = '
+          <b class="" style="color:green;">ยืนยันแล้ว</b>
+          <br> โดย : '.$user_name.'
+          <br> '.$row->d_updated_at.'
+          ';
+         }else{
+          $p = '
+          <b class="" style="color:green;">ยืนยันแล้ว</b>
+          <br> โดย : '.$user_name.'
+          <br> '.$row->status_to_wh_date.'
+          ';
+         }
+
+
        }else{
       //    $p = '
       //    <a onclick="return confirm(\'ยืนยันการทำรายการ\')" href="'.url('backend/delivery_approve_to_wh/'.$row->db_delivery_id).'" class="btn btn-sm btn-success">ยืนยัน</a>
