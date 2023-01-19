@@ -323,8 +323,16 @@ class Member_pvController extends Controller
         $w04 = "0" ;
         $Operator04 = "!=";
       }
+
+      if($req->id_card!=''){
+        $w05 = $req->id_card;
+        $Operator05 = "=";
+      }else{
+        $w05 = "0" ;
+        $Operator05 = "!=";
+      }
       // 1282213 =
-      // dd($w01);
+      // dd($req->all());
 
 
       $sTable = \App\Models\Backend\Customers::where('id','!=',0)
@@ -332,6 +340,7 @@ class Member_pvController extends Controller
       // ->where('customers.business_name',$Operator02,trim($w02))
       ->where('customers.introduce_id',$Operator03,$w03)
       ->where('customers.upline_id',$Operator04,$w04)
+      ->where('customers.id_card',$Operator05,$w05)
       ;
 
       $sQuery = \DataTables::of($sTable);

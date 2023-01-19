@@ -167,6 +167,20 @@
                   </div>
                 </div>
 
+                <div class="col-md-6 " >
+                  <div class="form-group row">
+                    <label for="introduce_id" class="col-md-3 col-form-label"> ID Card : </label>
+                    <div class="col-md-9">
+                       <input id="id_card" name="id_card" class="form-control" value="">
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-md-6 " >
+
+                </div>
+
                 <div class="col-md-6 " style="" >
                   <div class="form-group row">
                     <label for="" class="col-md-3 col-form-label">  </label>
@@ -414,10 +428,11 @@ $(function() {
                   var customer_id = $('#customer_id').val();
                   var business_name = $('#business_name').val();
                   var introduce_id = $('#introduce_id').val();
+                  var id_card = $('#id_card').val();
 
-                  console.log(customer_id);
-                  console.log(business_name);
-                  console.log(introduce_id);
+                  // console.log(customer_id);
+                  // console.log(business_name);
+                  // console.log(introduce_id);
 
                     // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
                             var oTable;
@@ -437,6 +452,7 @@ $(function() {
                                                 customer_id:customer_id,
                                                 business_name:business_name,
                                                 introduce_id:introduce_id,
+                                                id_card:id_card,
                                               },
                                             method: 'POST',
                                           },

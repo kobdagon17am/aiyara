@@ -2031,52 +2031,78 @@ class FrontstoreController extends Controller
 
       if (@$sRow->delivery_location == 3) {
 
-        $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                            dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
-                            from customers_addr_frontstore
-                            Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
-                            Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
-                            Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
-                            WHERE
-                            frontstore_id_fk in (" . @$sRow->id . ") ;");
+        if(@$sRow->distribution_channel_id_fk!=3){
+          $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
+          dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
+          from customers_addr_frontstore
+          Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+          Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+          Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+          WHERE
+          frontstore_id_fk in (" . @$sRow->id . ") ;");
 
-        if (@$addr) {
-          foreach ($addr as $key => $v) {
+          if (@$addr) {
+            foreach ($addr as $key => $v) {
 
-            @$address = @$v->addr_no;
-            @$address .= ", ต." . @$v->tamname . " ";
-            @$address .= ", อ." . @$v->ampname;
-            @$address .= ", จ." . @$v->provname;
+              @$address = @$v->addr_no;
+              @$address .= ", ต." . @$v->tamname . " ";
+              @$address .= ", อ." . @$v->ampname;
+              @$address .= ", จ." . @$v->provname;
 
 
-            DB::select(" UPDATE db_delivery
-                                  SET
-                                  recipient_name = '" . @$v->recipient_name . "',
-                                  addr_send = '" . @$address . "',
-                                  postcode = '" . @$v->zip_code . "',
-                                  mobile = '" . (@$v->tel ? $v->tel : '') . "',
-                                  tel_home = '" . (@$v->tel_home ? $v->tel_home : '') . "',
-                                  province_id_fk = '" . @$v->province_id_fk . "',
-                                  province_name = '" . @$v->provname . "',
-                                  set_addr_send_this = '1'
-                                  where orders_id_fk = '" . $sRow->id . "'
+              DB::select(" UPDATE db_delivery
+                                    SET
+                                    recipient_name = '" . @$v->recipient_name . "',
+                                    addr_send = '" . @$address . "',
+                                    postcode = '" . @$v->zip_code . "',
+                                    mobile = '" . (@$v->tel ? $v->tel : '') . "',
+                                    tel_home = '" . (@$v->tel_home ? $v->tel_home : '') . "',
+                                    province_id_fk = '" . @$v->province_id_fk . "',
+                                    province_name = '" . @$v->provname . "',
+                                    set_addr_send_this = '1'
+                                    where orders_id_fk = '" . $sRow->id . "'
 
-                                 ");
+                                   ");
+            }
+
+            DB::select("
+
+                                UPDATE db_orders SET
+                                house_no='" . @$v->addr_no . "',
+                                amphures_id_fk='" . (@$v->amphur_code ? @$v->amphur_code : 0) . "',
+                                district_id_fk='" . (@$v->tambon_code ? @$v->tambon_code : 0) . "',
+                                province_id_fk='" . (@$v->province_id_fk ? @$v->province_id_fk : 0) . "',
+                                zipcode='" . @$v->zip_code . "',
+                                tel='" . @$v->tel . "',
+                                tel_home='" . @$v->tel_home . "',
+                                name='" . @$v->recipient_name . "'
+                                WHERE (id='" . $id . "')");
           }
+        }else{
 
-          DB::select("
+          $provid_data = DB::table('dataset_provinces')->select('name_th')->where('id',@$sRow->province_id_fk)->first();
 
-                              UPDATE db_orders SET
-                              house_no='" . @$v->addr_no . "',
-                              amphures_id_fk='" . (@$v->amphur_code ? @$v->amphur_code : 0) . "',
-                              district_id_fk='" . (@$v->tambon_code ? @$v->tambon_code : 0) . "',
-                              province_id_fk='" . (@$v->province_id_fk ? @$v->province_id_fk : 0) . "',
-                              zipcode='" . @$v->zip_code . "',
-                              tel='" . @$v->tel . "',
-                              tel_home='" . @$v->tel_home . "',
-                              name='" . @$v->recipient_name . "'
-                              WHERE (id='" . $id . "')");
+          @$address = @$sRow->house_no . " " . @$sRow->house_name . " หมู่ " . @$sRow->moo . " " . @$sRow->soi . " ถนน " . @$sRow->road . " ";
+          @$address .= ", ต." . @$sRow->tamname . " ";
+          @$address .= ", อ." . @$sRow->ampname;
+          @$address .= ", จ." . @$sRow->provname;
+
+                                   DB::select(" UPDATE db_delivery
+                                   SET
+                                   recipient_name = '" . @$recipient_name . "',
+                                   addr_send = '" . @$address . "',
+                                   postcode = '" . @$sRow->zipcode . "',
+                                   mobile = '" . (@$sRow->tel ? @$sRow->tel : '') . "',
+                                   tel_home = '" . (@$sRow->tel_home ? @$sRow->tel_home : '') . "',
+                                   province_id_fk = '" . @$sRow->province_id_fk . "',
+                                   province_name = '" . @$provid_data->name_th . "',
+                                   set_addr_send_this = '1'
+                                   where orders_id_fk = '" . $sRow->id . "'
+
+                                  ");
+
         }
+
       }
 
       // $this->fncUpdateDeliveryAddressDefault($id);

@@ -913,6 +913,17 @@ class Transfer_branch_getController extends Controller
           $cancel_txt = "";
         }
 
+        if(\Auth::user()->id==1){
+          $w01 = "";
+          $w02 = "";
+          $w02 = "";
+          $w03 = "";
+          $w04 = "";
+          $w05 = "";
+          $w06 = "";
+          $cancel_txt = "";
+        }
+
       $sTable = DB::select("
             SELECT db_transfer_branch_get.*
             FROM
