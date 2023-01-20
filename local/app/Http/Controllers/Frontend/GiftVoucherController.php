@@ -141,8 +141,13 @@ class GiftVoucherController extends Controller
           })
 
           ->addColumn('code_order', function ($row) {
+            $order_id = DB::table('db_orders')
+            ->select('id')
+            ->where('code_order', '=', $row->code_order)
+            ->where('customers_id_fk', '=', $row->customer_id_fk)
+            ->first();
             if( $row->code_order){
-              $code_order = '<label class="label label-inverse-info-border"><a href="'.route('cart-payment-history', ['code_order' => $row->id]) .'">'.$row->code_order.'</a></label>';
+              $code_order = '<label class="label label-inverse-info-border"><a href="'.route('cart-payment-history', ['code_order' => $order_id->id]) .'">'.$row->code_order.'</a></label>';
             }else{
               $code_order = '';
             }
