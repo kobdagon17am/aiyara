@@ -221,12 +221,30 @@ DB::select("
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
 
+// $shipping = DB::select("
+//     SELECT
+//     db_orders.delivery_location,
+//     db_orders.sentto_branch_id,
+//     dataset_delivery_location.txt_desc,
+//     db_orders.shipping_price,
+//     branchs.b_name
+//     FROM
+//     db_orders
+//     Left Join dataset_delivery_location ON db_orders.delivery_location = dataset_delivery_location.id
+//     Left Join branchs ON db_orders.sentto_branch_id = branchs.id
+//     WHERE
+//     db_orders.id = '$id'
+//  ");
 $shipping = DB::select("
     SELECT
     db_orders.delivery_location,
     db_orders.sentto_branch_id,
     dataset_delivery_location.txt_desc,
     db_orders.shipping_price,
+    db_orders.bill_transfer_other,
+    db_orders.fee_amt,
+    db_orders.shipping_free,
+    db_orders.sum_credit_price,
     branchs.b_name
     FROM
     db_orders
@@ -235,6 +253,8 @@ $shipping = DB::select("
     WHERE
     db_orders.id = '$id'
  ");
+$bill_transfer_other = "";
+$bill_transfer_other = $shipping[0]->bill_transfer_other;
 
 $shipping_desc = @$shipping[0]->shipping_price?@$shipping[0]->shipping_price:0;
 
@@ -252,10 +272,12 @@ if(@$shipping[0]->delivery_location==4){
 
 $pv_total = @$sRow->pv_total?@$sRow->pv_total:0;
 
-$total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
 // echo @$total_price[0]->total;
 
-$total_price = str_replace(',','',number_format(@$total_price[0]->total,2));
+// $total_price = str_replace(',','',number_format(@$total_price[0]->total,2));
+$total_price = $sRow->product_value;
+$total_price = str_replace(',','',number_format($total_price,2));
 
 // ถ้าซื้อ ประเภทการซื้อ เป็น Gift Voucher => total_price ต้องลบออกจากราคาซื้อ
 // ถ้า gift_voucher_price > ราคาซื้อ ให้ สรุป total = 0
@@ -263,20 +285,103 @@ $gift_voucher = DB::select(" SELECT gift_voucher_price FROM db_orders where id=$
 if(!empty($gift_voucher)){
     if($gift_voucher[0]->gift_voucher_price > $total_price){
 
-          $total_price = 0 ;
-          $vat = 0 ;
+          // $total_price = 0 ;
+          // $vat = 0 ;
+
+            // วุฒิปรับ tax คำนวณใหม่
+            if($sRow->sum_price>0){
+              $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
+              $sRow->tax = round( $sRow->tax ,2 );
+              $sRow->product_value = $sRow->sum_price - $sRow->tax;
+              // เพิ่มมา
+              $total_price = $sRow->product_value;
+            } //
+            $shipping_vat = 0;
+            if($shipping_price>0){
+              $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
+              $shipping_vat = round( $shipping_vat ,2 );
+              $shipping_price = $shipping_price - $shipping_vat;
+              $sRow->tax = $sRow->tax + $shipping_vat;
+              // $shipping[0]->shipping_price = $shipping_price;
+            }
+            $fee_vat = 0;
+            if($sRow->fee_amt>0){
+              $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
+              $fee_vat = round( $fee_vat ,2 );
+              $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
+              $sRow->tax = $sRow->tax + $fee_vat;
+            }else{
+              $sRow->fee_amt = 0;
+            }
+
+                  $vat = $sRow->tax;
 
     }else{
 
-          $total_price = str_replace(',','',$total_price) - str_replace(',','',$gift_voucher[0]->gift_voucher_price) ;
-          // $vat = intval($total_price) - (intval($total_price)/1.07) ;
-           $vat = $sRow->tax;
+          // $total_price = str_replace(',','',$total_price) - str_replace(',','',$gift_voucher[0]->gift_voucher_price) ;
+          // // $vat = intval($total_price) - (intval($total_price)/1.07) ;
+          //  $vat = $sRow->tax;
+
+                  // วุฒิปรับ tax คำนวณใหม่
+     if($sRow->sum_price>0){
+      $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
+      $sRow->tax = round( $sRow->tax ,2 );
+      $sRow->product_value = $sRow->sum_price - $sRow->tax;
+      // เพิ่มมา
+      $total_price = $sRow->product_value;
+    } //
+    $shipping_vat = 0;
+    if($shipping_price>0){
+      $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
+      $shipping_vat = round( $shipping_vat ,2 );
+      $shipping_price = $shipping_price - $shipping_vat;
+      $sRow->tax = $sRow->tax + $shipping_vat;
+      // $shipping[0]->shipping_price = $shipping_price;
+    }
+    $fee_vat = 0;
+    if($sRow->fee_amt>0){
+      $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
+      $fee_vat = round( $fee_vat ,2 );
+      $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
+      $sRow->tax = $sRow->tax + $fee_vat;
+    }else{
+      $sRow->fee_amt = 0;
+    }
+
+          $vat = $sRow->tax;
     }
 
 
 }else{
 
-     $vat = $sRow->tax;
+    //  $vat = $sRow->tax;
+      // วุฒิปรับ tax คำนวณใหม่
+      if($sRow->sum_price>0){
+        $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
+        $sRow->tax = round( $sRow->tax ,2 );
+        $sRow->product_value = $sRow->sum_price - $sRow->tax;
+         // เพิ่มมา
+         $total_price = $sRow->product_value;
+      } //
+      $shipping_vat = 0;
+      if($shipping_price>0){
+        $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
+        $shipping_vat = round( $shipping_vat ,2 );
+        $shipping_price = $shipping_price - $shipping_vat;
+        $sRow->tax = $sRow->tax + $shipping_vat;
+        // $shipping[0]->shipping_price = $shipping_price;
+      }
+      $fee_vat = 0;
+      if($sRow->fee_amt>0){
+        $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
+        $fee_vat = round( $fee_vat ,2 );
+        $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
+        $sRow->tax = $sRow->tax + $fee_vat;
+      }else{
+        $sRow->fee_amt = 0;
+      }
+
+      $vat = $sRow->tax;
 
 }
 
@@ -1213,13 +1318,13 @@ $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->true_money
 
           // รวมเงิน
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price)-@$vat,2)."' WHERE id = (($n*$i)+18) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+18) ; ");
 
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format($total_price+@$shipping_price,2)."' WHERE id = (($n*$i)+20) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+$shipping_price+$vat+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+20) ; ");
 
           DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
         }elseif($amt_page>1 && ($i+1)!=$amt_page){
@@ -1229,13 +1334,13 @@ $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->true_money
 
             // รวมเงิน
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price)-@$vat,2)."' WHERE id = (($n*$i)+18) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+18) ; ");
 
           //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
 
            // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format($total_price+@$shipping_price,2)."' WHERE id = (($n*$i)+20) ; ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+$shipping_price+$vat+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+20) ; ");
 
             // หนเา
             DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");

@@ -221,8 +221,36 @@ $gift_voucher = DB::select(" SELECT gift_voucher_price FROM db_orders where id=$
 if(!empty($gift_voucher)){
     if($gift_voucher[0]->gift_voucher_price > $total_price){
 
-          $total_price = 0 ;
-          $vat = 0 ;
+          // $total_price = 0 ;
+          // $vat = 0 ;
+
+          // วุฒิปรับ tax คำนวณใหม่
+          if($sRow->sum_price>0){
+            $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
+            $sRow->tax = round( $sRow->tax ,2 );
+            $sRow->product_value = $sRow->sum_price - $sRow->tax;
+            // เพิ่มมา
+            $total_price = $sRow->product_value;
+          } //
+          $shipping_vat = 0;
+          if($shipping_price>0){
+            $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
+            $shipping_vat = round( $shipping_vat ,2 );
+            $shipping_price = $shipping_price - $shipping_vat;
+            $sRow->tax = $sRow->tax + $shipping_vat;
+            // $shipping[0]->shipping_price = $shipping_price;
+          }
+          $fee_vat = 0;
+          if($sRow->fee_amt>0){
+            $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
+            $fee_vat = round( $fee_vat ,2 );
+            $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
+            $sRow->tax = $sRow->tax + $fee_vat;
+          }else{
+            $sRow->fee_amt = 0;
+          }
+
+                $vat = $sRow->tax;
 
     }else{
 
@@ -1268,6 +1296,7 @@ else if(@$pay_type[0]->pay_type_id_fk==19){ // 19  Gift Voucher + เงิน�
           // รวมเงิน
             DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+18) ; ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
+            // dd($total_price.' + '.$shipping_price.' + '.$vat.' + '.$sRow->fee_amt);
             DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+$shipping_price+$vat+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+20) ; ");
 
           DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");

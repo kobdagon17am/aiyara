@@ -899,7 +899,6 @@ class DeliveryController extends Controller
       })
       ->addColumn('total_price_not_gv', function($row) {
         $total = 0;
-
         // $total = $row->total_price - $row->gift_voucher_price;
         $total = $row->total_price;
         // if($row->charger_type==1){
