@@ -2081,11 +2081,13 @@ class FrontstoreController extends Controller
         }else{
 
           $provid_data = DB::table('dataset_provinces')->select('name_th')->where('id',@$sRow->province_id_fk)->first();
+          $district_data = DB::table('dataset_districts')->select('name_th')->where('id',@$sRow->district_id_fk)->first();
+          $amphures_data = DB::table('dataset_amphures')->select('name_th')->where('id',@$sRow->amphures_id_fk)->first();
 
           @$address = @$sRow->house_no . " " . @$sRow->house_name . " หมู่ " . @$sRow->moo . " " . @$sRow->soi . " ถนน " . @$sRow->road . " ";
-          @$address .= ", ต." . @$sRow->tamname . " ";
-          @$address .= ", อ." . @$sRow->ampname;
-          @$address .= ", จ." . @$sRow->provname;
+          @$address .= ", ต." . @$district_data->name_th . " ";
+          @$address .= ", อ." . @$amphures_data->name_th;
+          @$address .= ", จ." . @$provid_data->name_th;
 
                                    DB::select(" UPDATE db_delivery
                                    SET
