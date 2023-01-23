@@ -105,7 +105,7 @@ class KsherNotifyController extends Controller
       $pay_type_id_fk = 2;
       $payInfo = [
         'pay_type_id_fk' =>  $pay_type_id_fk,
-        'credit_price' => $this->formatPrice($getKsherData->total_fee),
+        'sum_credit_price' => $this->formatPrice($getKsherData->total_fee),
       ];
     }
 
@@ -180,6 +180,21 @@ class KsherNotifyController extends Controller
 
         if ($getOrderData->purchase_type_id_fk == '5') {
           $pay_type_id_fk = 17;
+
+          if ($getOrderData->prompt_pay_price  == $getKsherData->total_price) { //ยอดเงินเท่ากันให้อัพเดททันที
+            $dataUpdate = collect([
+              'order_status_id_fk' => 5,
+            ]);
+
+            if ($getOrderData->order_status_id_fk == 1 || $getOrderData->order_status_id_fk == 3) {
+              $resulePv = PvPayment::PvPayment_type_confirme($getOrderData->id, $getOrderData->customers_id_fk, '2', 'customer');
+            }
+          } else {
+            $dataUpdate = collect([
+              'order_status_id_fk' => 2,
+            ]);
+          }
+
         } else {
           $pay_type_id_fk = 15;
         }
@@ -193,6 +208,20 @@ class KsherNotifyController extends Controller
       if ($getKsherData->channel == 'truemoney') {
         if ($getOrderData->purchase_type_id_fk == '5') {
           $pay_type_id_fk = 18;
+
+          if ($getOrderData->true_money_price  == $getKsherData->total_price) { //ยอดเงินเท่ากันให้อัพเดททันที
+            $dataUpdate = collect([
+              'order_status_id_fk' => 5,
+            ]);
+
+            if ($getOrderData->order_status_id_fk == 1 || $getOrderData->order_status_id_fk == 3) {
+              $resulePv = PvPayment::PvPayment_type_confirme($getOrderData->id, $getOrderData->customers_id_fk, '2', 'customer');
+            }
+          } else {
+            $dataUpdate = collect([
+              'order_status_id_fk' => 2,
+            ]);
+          }
         } else {
           $pay_type_id_fk = 16;
         }
@@ -204,7 +233,22 @@ class KsherNotifyController extends Controller
 
       if ($getKsherData->channel == 'ktbcard') {
         if ($getOrderData->purchase_type_id_fk == '5') {
-          $pay_type_id_fk = 9;
+          $pay_type_id_fk = 13;
+
+          if ($getOrderData->sum_credit_price  == $getKsherData->total_price) { //ยอดเงินเท่ากันให้อัพเดททันที
+            $dataUpdate = collect([
+              'order_status_id_fk' => 5,
+            ]);
+
+            if ($getOrderData->order_status_id_fk == 1 || $getOrderData->order_status_id_fk == 3) {
+              $resulePv = PvPayment::PvPayment_type_confirme($getOrderData->id, $getOrderData->customers_id_fk, '2', 'customer');
+            }
+          } else {
+            $dataUpdate = collect([
+              'order_status_id_fk' => 2,
+            ]);
+          }
+
         } else {
           $pay_type_id_fk = 2;
         }
