@@ -1177,6 +1177,11 @@ $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->true_money
 }elseif(@$pay_type[0]->pay_type_id_fk==20){
   $pay_type = 'PromptPay'.': '.number_format((@$pay_type[0]->prompt_pay_price),2).' + เงินโอน: '.number_format((@$pay_type[0]->transfer_price),2);
 }
+elseif(@$pay_type[0]->pay_type_id_fk==17){
+  $pay_type = 'Gift Voucher'.': '.number_format((@$pay_type[0]->gift_voucher_price),2).' + PromptPay: '.number_format((@$pay_type[0]->prompt_pay_price),2);
+}elseif(@$pay_type[0]->pay_type_id_fk==18){
+  $pay_type = 'Gift Voucher'.': '.number_format((@$pay_type[0]->gift_voucher_price),2).' + TrueMoney: '.number_format((@$pay_type[0]->true_money_price),2);
+}
 
 
 
