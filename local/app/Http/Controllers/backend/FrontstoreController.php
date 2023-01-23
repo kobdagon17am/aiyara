@@ -2091,7 +2091,7 @@ class FrontstoreController extends Controller
 
                                    DB::select(" UPDATE db_delivery
                                    SET
-                                   recipient_name = '" . @$recipient_name . "',
+                                   recipient_name = '" . @$sRow->name . "',
                                    addr_send = '" . @$address . "',
                                    postcode = '" . @$sRow->zipcode . "',
                                    mobile = '" . (@$sRow->tel ? @$sRow->tel : '') . "',
