@@ -28,8 +28,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-
-
+      // \App\Models\Frontend\RunNumberPayment::run_number_order(1,'');
+      // dd('ddd');
 
       // $Check = \App\Models\Frontend\Product::product_list_select_promotion_all(4,'A147427');
       // dd($Check);

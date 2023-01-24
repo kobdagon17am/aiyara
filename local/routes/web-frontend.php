@@ -316,6 +316,7 @@ Route::get('salepage/warring', function() {
   return view('frontend.salepage.warring');
 })->name('salepage/warring');
 
+Route::get('check_id_card', 'Frontend\RegisterController@check_id_card')->name('check_id_card');
 Route::get('ksher', 'Frontend\Ksher\KsherController@index')->name('ksher');
 Route::post('gateway_ksher', 'Frontend\Ksher\KsherController@gateway_ksher')->name('gateway_ksher');
 Route::post('ksher_notify', 'Frontend\Ksher\KsherNotifyController@ksher_notify')->name('ksher_notify');

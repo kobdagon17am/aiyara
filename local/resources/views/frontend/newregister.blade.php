@@ -572,22 +572,44 @@
          })
 
          $(document).ready(function() {
-             $('#id_card').on('keyup', function() {
+             $('#id_card').on('change', function() {
                  nation_id = $('#business_location').val();
-
                  if (nation_id == 1) {
                      if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
                          id = $(this).val().replace(/-/g, "");
                          var result = Script_checkID(id);
+                         id_card = $('#id_card').val();
                          if (result === false) {
-                             id_card = $('#id_card').val();
-                             $('span.error').removeClass('text-success').text('เลขบัตร ' + id_card + ' ไม่ถูกต้อง');
+
+                             $('span.error').removeClass('text-success').text('เลขบัตร ' + id_card +
+                                 ' ไม่ถูกต้อง');
                              $('#id_card').val('');
                          } else {
-                             $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
-                         }
+
+
+                             $.ajax({
+                                     url: '{{ route('check_id_card') }}',
+                                     type: 'GET',
+                                     data: {
+                                      id_card: id_card
+                                     },
+                                 })
+                                 .done(function(data) {
+                                     if (data['status'] == 'success') {
+                                         $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
+                                     } else {
+                                      $('span.error').removeClass('text-success').text('มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
+                                      $('#id_card').val('');
+                                         Swal.fire({
+                                             icon: 'error',
+                                             title: 'เลขบัตรประชาชนซ้ำ',
+                                         })
+                                     }
+                                  })
+                                }
                      } else {
-                         $('span.error').removeClass('true').text('');
+                         $('span.error').removeClass('text-success').text('เลขบัตรไม่ครบ 13 หลัก');
+                         $('#id_card').val('');
 
                      }
 

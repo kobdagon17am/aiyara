@@ -171,5 +171,23 @@ class RegisterController extends Controller
 
   }
 
+  public static function check_id_card(Request $rs){
+    if($rs->id_card){
+      $resule = DB::table('customers')
+      ->select('id')
+      ->where('id_card','=',$rs->id_card)
+      ->first();
+      if($resule){
+        $rs = ['status'=>'fail'];
+      }else{
+        $rs = ['status'=>'success'];
+      }
+
+    }else{
+      $rs = ['status'=>'fail'];
+    }
+		return $rs;
+	}
+
 
 }

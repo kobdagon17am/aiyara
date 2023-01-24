@@ -18,27 +18,25 @@ class RunNumberPayment extends Model
   //O = Oder
   //R = Payment
   //E = Course/Event
- //\App\Models\Frontend\RunNumberPayment::run_number_order($business_location_id_fk, $date_order);
+  //\App\Models\Frontend\RunNumberPayment::run_number_order(1,'');
   public static function run_number_order($business_location_id_fk, $date_order = "")
   {
-
-    if ($date_order != '') {
-      $date_order = date('ymd', strtotime($date_order)) ;
-    }else{
-      $date_order = date('ymd');
-    }
-
+    $date_order = date('ymd');
     $code_order =  IdGenerator::generate([
-        'table' => 'db_orders',
-        'field' => 'code_order', 
-        'length' => 13,
-        'prefix' => 'O'.$business_location_id_fk.''.$date_order,
-        'reset_on_prefix_change' => true
+      'table' => 'db_code_order',
+      'field' => 'code_order',
+      'length' => 13,
+      'prefix' => 'O' . $business_location_id_fk . '' . $date_order,
+      'reset_on_prefix_change' => true
     ]);
-    // $code_order = $code_order.''.date('s');
 
+    $rs_code_order = DB::table('db_code_order')
+      ->Insert(['code_order' => $code_order]);
+    if ($rs_code_order == true) {
       return  $code_order;
-
+    } else {
+      \App\Models\Frontend\RunNumberPayment::run_number_order($business_location_id_fk, '');
+    }
   }
 
 
@@ -46,35 +44,47 @@ class RunNumberPayment extends Model
   public static function run_number_aicash($business_location_id_fk)
   {
 
-      $date_order = date('ymd');
-      $code_order =  IdGenerator::generate([
-          'table' => 'db_add_ai_cash',
-          'field' => 'code_order',
-          'length' => 13,
-          'prefix' => 'W'.$business_location_id_fk.''.$date_order,
-          'reset_on_prefix_change' => true
-      ]);
+    $date_order = date('ymd');
+    $code_order =  IdGenerator::generate([
+      'table' => 'db_code_order',
+      'field' => 'code_order',
+      'length' => 13,
+      'prefix' => 'W' . $business_location_id_fk . '' . $date_order,
+      'reset_on_prefix_change' => true
+    ]);
 
-    return  $code_order;
+    $rs_code_order = DB::table('db_code_order')
+      ->Insert(['code_order' => $code_order]);
+    if ($rs_code_order == true) {
+      return  $code_order;
+    } else {
+      \App\Models\Frontend\RunNumberPayment::run_number_aicash($business_location_id_fk);
+    }
   }
 
 
 
   public static function run_number_aistockis()
   {
-      $date_order = date('ymd');
-      $code_order =  IdGenerator::generate([
-          'table' => 'ai_stockist',
-          'field' => 'transection_code',
-          'length' => 13,
-          'prefix' => 'T'.$date_order,
-          'reset_on_prefix_change' => true
-      ]);
-    return  $code_order;
+    $date_order = date('ymd');
+    $code_order =  IdGenerator::generate([
+      'table' => 'db_code_order',
+      'field' => 'code_order',
+      'length' => 13,
+      'prefix' => 'T' . $date_order,
+      'reset_on_prefix_change' => true
+    ]);
+    $rs_code_order = DB::table('db_code_order')
+      ->Insert(['code_order' => $code_order]);
+    if ($rs_code_order == true) {
+      return  $code_order;
+    } else {
+      \App\Models\Frontend\RunNumberPayment::run_number_aistockis();
+    }
   }
 
 
-  public static function run_payment_code($business_location_id,$type_order)
+  public static function run_payment_code($business_location_id, $type_order)
   {
     //R = Payment
     //E = Course/Event
@@ -82,28 +92,39 @@ class RunNumberPayment extends Model
     if ($type_order == 'product') {
 
       $code_order =  IdGenerator::generate([
-        'table' => 'db_orders',
-        'field' => 'invoice_code_id_fk',
+        'table' => 'db_code_order',
+        'field' => 'code_order',
         'length' => 13,
-        'prefix' => 'R'.$business_location_id.''.$date_order,
+        'prefix' => 'R' . $business_location_id . '' . $date_order,
         'reset_on_prefix_change' => true
-    ]);
+      ]);
+
+      $rs_code_order = DB::table('db_code_order')
+        ->Insert(['code_order' => $code_order]);
+      if ($rs_code_order == true) {
+        return  $code_order;
+      } else {
+        \App\Models\Frontend\RunNumberPayment::run_payment_code($business_location_id, $type_order);
+      }
     } elseif ($type_order == 'course_event') {
       $code_order =  IdGenerator::generate([
-        'table' => 'db_orders',
-        'field' => 'invoice_code_id_fk',
+        'table' => 'db_code_order',
+        'field' => 'code_order',
         'length' => 13,
-        'prefix' => 'E'.$business_location_id.''.$date_order,
+        'prefix' => 'E' . $business_location_id . '' . $date_order,
         'reset_on_prefix_change' => true
-    ]);
+      ]);
+
+      $rs_code_order = DB::table('db_code_order')
+        ->Insert(['code_order' => $code_order]);
+      if ($rs_code_order == true) {
+        return  $code_order;
+      } else {
+        \App\Models\Frontend\RunNumberPayment::run_payment_code($business_location_id, $type_order);
+      }
     } else {
       $resule = ['status' => 'fail', 'message' => 'Is not product/course_event'];
       return  $resule;
     }
-
-    $resule = ['status' => 'success', 'message' => 'success', 'code_order' => $code_order];
-    return  $resule;
   }
-
-
 }
