@@ -847,6 +847,7 @@ class PagesController extends Controller{
                         }else{
                           $arr_con[@$recipient_code] = @$consignment_no.',';
                         }
+                        // dd($arr_con[@$recipient_code]);
 
                           DB::table('db_consignments')
                           ->where('recipient_code', @$recipient_code)
@@ -874,6 +875,8 @@ class PagesController extends Controller{
                         ->where('recipient_code', @$recipient_code)
                         ->where('pick_pack_requisition_code_id_fk', @$request->id)
                         ->first();
+
+                        dd($recipient_code);
 
                           $insertData = array(
                             "consignment_no"=>@$consignment_no,

@@ -99,7 +99,7 @@ class Po_approveController extends Controller
         // }
 
         $sum_price = $sRow->transfer_price;
-        $p_bill = "บิล : ".$sRow->code_order.'<br> ยอดชำระ : <label style="color:red;">'.$sRow->transfer_price.' </label><br>';
+        $p_bill = "บิล : ".$sRow->code_order.' <br> ยอดชำระ : <label style="color:red;">'.$sRow->transfer_price.' </label><br>';
 
              // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
              $other_bill = DB::table('db_orders')
@@ -111,7 +111,7 @@ class Po_approveController extends Controller
 
              foreach($other_bill as $ot){
                 $sum_price += $ot->transfer_price;
-                $p_bill .= "บิล : ".$ot->code_order.'<br> ยอดชำระ : <label style="color:red;"> '.$ot->transfer_price.' </label><br>';
+                $p_bill .= "บิล : ".$ot->code_order.' <br> ยอดชำระ : <label style="color:red;"> '.$ot->transfer_price.' </label><br>';
              }
 
              $other_bill_ai = DB::table('db_add_ai_cash')
@@ -520,7 +520,7 @@ class Po_approveController extends Controller
 
 // qry อันที่สองที่มา UNION ALL เอาไว้แสดงผลรวม
 
-       $sTable =     DB::select("
+       $sTable =  DB::select("
             select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
             `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
             `dataset_pay_type`.`detail` as `pay_type_name`,'' as sum_approval_amount_transfer,1 as remark, `branchs`.`b_name`

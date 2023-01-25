@@ -94,19 +94,10 @@ class FrontstoreController extends Controller
         Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
         Session::put('can_approve', $can_approve);
 
-
-    // dump($request->all());
-    // dd(\Auth::user()->position_level);
-    // dd(\Auth::user()->branch_id_fk);
     $branch_id_fk = \Auth::user()->branch_id_fk;
     $user_login_id = \Auth::user()->id;
     $sUser = DB::select(" select * from ck_users_admin ");
-    // $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (1,2) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
-    // $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (3) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
     $sApproveStatus = DB::select(" select * from dataset_approve_status where status=1 and id not in (3) "); // 1,2 เหมือนว่าไม่ได้ใช้แล้ว
-
-    // $resule = CancelOrderController::cancel_order('1618', @\Auth::user()->id,1,'admin');//goftest
-    // dd($resule);
 
     $sPermission = \Auth::user()->permission;
     if ($sPermission == 1) {
@@ -114,34 +105,6 @@ class FrontstoreController extends Controller
     } else {
       $w1 = " AND action_user = $user_login_id ";
     }
-
-
-    $sDBFrontstoreApproveStatus = DB::select("
-
-              SELECT db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,pay_type_id_fk,action_user
-              FROM db_orders
-              Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-              WHERE db_orders.branch_id_fk=$branch_id_fk
-              $w1
-
-              UNION
-
-              SELECT
-              db_add_ai_cash.id,
-              db_add_ai_cash.created_at as d2,
-              0 as purchase_type_id_fk,
-              'เติม Ai-Cash' AS type,
-              db_add_ai_cash.customer_id_fk as c2,
-              db_add_ai_cash.aicash_amt,
-              db_add_ai_cash.id as inv_no,approve_status
-              ,'',
-              db_add_ai_cash.updated_at as ud2,
-              'ai_cash' as pay_type,3 as pay_type_id_fk,action_user
-              FROM db_add_ai_cash
-              WHERE db_add_ai_cash.approve_status<>4
-              $w1
-
-           ");
 
     // รออนุมัติ
     $approve_status_1 = 0;
@@ -175,96 +138,7 @@ class FrontstoreController extends Controller
     $sum_price_total = 0;
     $pv_total = 0;
 
-
-    foreach ($sDBFrontstoreApproveStatus as $key => $value) {
-
-      if ($value->approve_status == 1) {
-        $approve_status_1 += 1;
-        $sum_price_1 += $value->sum_price;
-        $pv_1 += @$value->pv;
-      }
-
-
-      if ($value->approve_status == 5) {
-        $approve_status_5 += 1;
-        $sum_price_5 += $value->sum_price;
-        $pv_5 += @$value->pv;
-      }
-
-      if ($value->approve_status == 9) {
-        $approve_status_9 += 1;
-        $sum_price_9 += $value->sum_price;
-        $pv_9 += @$value->pv;
-      }
-
-      if ($value->approve_status != 1 && $value->approve_status != 5 && $value->approve_status != 9) {
-        $approve_status_88 += 1;
-        $sum_price_88 += @$value->sum_price;
-        $pv_88 += @$value->pv;
-      }
-
-      $approve_status_total += 1;
-      $sum_price_total += @$value->sum_price;
-      $pv_total += @$value->pv;
-    }
-
-
-    $sDBFrontstoreSumCostActionUser = DB::select("
-                SELECT
-                db_orders.action_user,
-                ck_users_admin.`name` as action_user_name,
-                db_orders.pay_type_id_fk,
-                dataset_pay_type.detail AS pay_type,
-                date(db_orders.action_date) AS action_date,
-                sum(db_orders.cash_pay) as cash_pay,
-                sum(db_orders.credit_price) as credit_price,
-                sum(db_orders.transfer_price) as transfer_price,
-                sum(db_orders.aicash_price) as aicash_price,
-                sum(db_orders.shipping_price) as shipping_price,
-                sum(db_orders.fee_amt) as fee_amt,
-                sum(db_orders.total_price) as total_price
-                FROM
-                db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.pay_type_id_fk<>0 $w1
-                GROUP BY action_user
-        ");
-
-    // dd($sDBFrontstoreSumCostActionUser);
-
-    $sDBFrontstoreUserAddAiCash = DB::select("
-              SELECT
-              db_add_ai_cash.action_user,ck_users_admin.`name`,
-              sum(db_add_ai_cash.aicash_amt) as sum,
-              count(*) as cnt,
-              db_add_ai_cash.created_at
-              FROM
-              db_add_ai_cash
-              Left Join ck_users_admin ON db_add_ai_cash.action_user = ck_users_admin.id
-              WHERE approve_status<>4
-              GROUP BY action_user
-
-        ");
-
-
     $sPurchase_type = DB::select(" select * from dataset_orders_type where status=1 and lang_id=1 order by id limit 5");
-
-
-    $sDBSentMoneyDaily = DB::select("
-              SELECT
-              db_sent_money_daily.*,
-              ck_users_admin.`name` as sender
-              FROM
-              db_sent_money_daily
-              Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
-              WHERE date(db_sent_money_daily.updated_at)=CURDATE()
-              order by db_sent_money_daily.time_sent
-        ");
-
-
-    // $r_invoice_code = DB::select(" SELECT code_order FROM db_orders where code_order <>'' ");
-    // dd($r_invoice_code);
 
       $sBusiness_location = \App\Models\Backend\Business_location::get();
 
@@ -274,7 +148,6 @@ class FrontstoreController extends Controller
         'sUser' => $sUser,
         'sApproveStatus' => $sApproveStatus,
         'sPurchase_type' => $sPurchase_type,
-        'sDBFrontstoreApproveStatus' => $sDBFrontstoreApproveStatus,
 
         'approve_status_2' => ($approve_status_2),
         'sum_price_2' => $sum_price_2,
@@ -299,12 +172,6 @@ class FrontstoreController extends Controller
         'approve_status_total' => ($approve_status_total),
         'sum_price_total' => $sum_price_total,
         'pv_total' => $pv_total,
-
-        'sDBFrontstoreSumCostActionUser' => $sDBFrontstoreSumCostActionUser,
-        'sDBFrontstoreUserAddAiCash' => $sDBFrontstoreUserAddAiCash,
-
-        'sDBSentMoneyDaily' => $sDBSentMoneyDaily,
-        // 'r_invoice_code' => $r_invoice_code,
 
       )
     );
