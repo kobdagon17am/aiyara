@@ -3799,7 +3799,7 @@ class FrontstoreController extends Controller
       })
       ->addColumn('purchase_type', function ($row) {
         if (@$row->purchase_type_id_fk > 0) {
-          @$purchase_type = DB::select(" select * from dataset_orders_type where id=" . @$row->purchase_type_id_fk . " ");
+          @$purchase_type = DB::select(" select detail from dataset_orders_type where id=" . @$row->purchase_type_id_fk . " ");
           return @$purchase_type[0]->detail;
         }
       })

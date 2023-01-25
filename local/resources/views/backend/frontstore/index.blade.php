@@ -263,15 +263,15 @@
 
                             <div class="divTableRow">
                                 <!--
-                              <div class="divTH">
-                            <label for="" >เลขที่ใบสั่งซื้อ : </label>
-                          </div>
-                          <div class="divTableCell" style="width: 15%">
-                            <input class="form-control"  />
-                          </div>
-                          <div class="divTableCell">
-                            <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-                          </div> -->
+                                                  <div class="divTH">
+                                                <label for="" >เลขที่ใบสั่งซื้อ : </label>
+                                              </div>
+                                              <div class="divTableCell" style="width: 15%">
+                                                <input class="form-control"  />
+                                              </div>
+                                              <div class="divTableCell">
+                                                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                                              </div> -->
 
                                 <div class="divTH">
                                     <label for="">{{ __('message.creator') }} : </label>
@@ -345,11 +345,11 @@
                                 </div>
                                 <div class="divTableCell" style="width: 15%">
                                     <!--  	   <select name="" class="form-control select2-templating "  >
-                              <option value="">Select</option>
-                                  <option value="0"> - </option>
-                                  <option value="1"> In Process </option>
-                                  <option value="1"> Success </option>
-                            </select> -->
+                                                  <option value="">Select</option>
+                                                      <option value="0"> - </option>
+                                                      <option value="1"> In Process </option>
+                                                      <option value="1"> Success </option>
+                                                </select> -->
                                 </div>
                                 <div class="divTableCell">
                                     <!-- <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button> -->
@@ -378,16 +378,16 @@
                         </div>
                     </div>
                     <!--       </div>
-                </div>
-              </div>
-            </div>
+                                    </div>
+                                  </div>
+                                </div>
 
 
 
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body"> -->
+                                <div class="row">
+                                  <div class="col-12">
+                                    <div class="card">
+                                      <div class="card-body"> -->
                     <hr>
                     <div class="divTable">
                         <div class="divTableBody">
@@ -530,9 +530,9 @@
             });
         });
 
-        $(document).ready(function(){
-          // $('.order_id_select2').select2();
-          $(".order_id_select2").select2({
+        $(document).ready(function() {
+            // $('.order_id_select2').select2();
+            $(".order_id_select2").select2({
                 minimumInputLength: 3,
                 allowClear: true,
                 placeholder: 'Select',
@@ -573,7 +573,7 @@
                 scrollCollapse: true,
                 scrollX: true,
                 paging: true,
-                iDisplayLength: 2000,
+                iDisplayLength: 25,
                 ordering: false,
                 scrollY: '' + ($(window).height() - 370) + 'px',
                 ajax: {
@@ -584,11 +584,17 @@
                     method: 'POST'
                 },
 
-                dom: 'Bfrtip',
+                // dom: 'Bfrtip',
+                dom: 'lBfrtip',
+                lengthMenu: [
+                    [25, 100, -1],
+                    [25, 100, 'All'],
+                ],
                 buttons: [
                     // 'copy', 'csv', 'excel', 'pdf', 'print'
                     'excel', 'print'
                 ],
+
 
                 columns: [{
                         data: 'id',
@@ -1028,8 +1034,6 @@
                                 });
 
                                 setTimeout(function() {
-                                    // $("#tb_sent_money").load(location.href + " #tb_sent_money");
-                                    // $('#data-table').DataTable().clear().draw();
                                     location.reload();
                                 }, 1000);
                             }
@@ -1081,8 +1085,6 @@
                                 });
 
                                 setTimeout(function() {
-                                    // $("#tb_sent_money").load(location.href + " #tb_sent_money");
-                                    // $('#data-table').DataTable().clear().draw();
                                     location.reload();
                                 }, 1000);
                             }
@@ -1181,9 +1183,9 @@
                             ordering: false,
                             paging: true,
                             searching: false,
-                            bLengthChange: false,
+                            bLengthChange: true,
                             destroy: true,
-                            iDisplayLength: 2000,
+                            iDisplayLength: 25,
                             scrollY: '' + ($(window).height() - 370) + 'px',
                             // iDisplayLength: 35,
                             ajax: {
@@ -1203,7 +1205,11 @@
                                 },
                                 method: 'POST',
                             },
-                            dom: 'Bfrtip',
+                            dom: 'lBfrtip',
+                            lengthMenu: [
+                                [25, 100, -1],
+                                [25, 100, 'All'],
+                            ],
                             buttons: [
                                 // 'copy', 'csv', 'excel', 'pdf', 'print'
                                 'excel', 'print'
@@ -1660,9 +1666,9 @@
                         ordering: false,
                         paging: true,
                         searching: false,
-                        bLengthChange: false,
+                        bLengthChange: true,
                         destroy: true,
-                        iDisplayLength: 2000,
+                        iDisplayLength: 25,
                         scrollY: '' + ($(window).height() - 370) + 'px',
                         // iDisplayLength: 35,
                         ajax: {
@@ -1681,7 +1687,11 @@
                             },
                             method: 'POST',
                         },
-                        dom: 'Bfrtip',
+                        dom: 'lBfrtip',
+                        lengthMenu: [
+                            [25, 100, -1],
+                            [25, 100, 'All'],
+                        ],
                         buttons: [
                             // 'copy', 'csv', 'excel', 'pdf', 'print'
                             'excel', 'print'
