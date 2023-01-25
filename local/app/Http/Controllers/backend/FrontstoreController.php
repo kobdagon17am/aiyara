@@ -2027,11 +2027,55 @@ class FrontstoreController extends Controller
         }
       }
 
-
-
       if (@$sRow->delivery_location == 3) {
 
-        if(@$sRow->distribution_channel_id_fk!=3){
+        if(@$sRow->distribution_channel_id_fk==3){
+        $provid_data = DB::table('dataset_provinces')->select('name_th')->where('id',@$sRow->province_id_fk)->first();
+        $district_data = DB::table('dataset_districts')->select('name_th')->where('id',@$sRow->district_id_fk)->first();
+        $amphures_data = DB::table('dataset_amphures')->select('name_th')->where('id',@$sRow->amphures_id_fk)->first();
+
+        @$address = @$sRow->house_no . " " . @$sRow->house_name . " หมู่ " . @$sRow->moo . " " . @$sRow->soi . " ถนน " . @$sRow->road . " ";
+        @$address .= ", ต." . @$district_data->name_th . " ";
+        @$address .= ", อ." . @$amphures_data->name_th;
+        @$address .= ", จ." . @$provid_data->name_th;
+
+        $moo = " หมู่. " . @$sRow->moo;
+        if(@$sRow->moo == '' || @$sRow->moo == '-'){
+          $moo = '';
+        }
+
+        $soi = " ซอย. " . @$sRow->soi;
+        if(@$sRow->soi == '' || @$sRow->soi == '-'){
+          $soi = '';
+        }
+
+        $road = " ถนน. " . @$sRow->road;
+        if(@$sRow->road == '' || @$sRow->road == '-'){
+          $road = '';
+        }
+
+        $house_name = @$sRow->house_name;
+        if(@$sRow->house_name == '' || @$sRow->house_name == '-'){
+          $house_name = '';
+        }
+
+        DB::table('customers_addr_frontstore')->insert([
+          'frontstore_id_fk' => @$sRow->id,
+          'customer_id' => @$sRow->customers_id_fk,
+          'customers_id_fk' => @$sRow->customers_id_fk,
+          'recipient_name' => @$sRow->name,
+          'addr_no' => @$sRow->house_no . " " . $house_name . $moo . $soi . $road . " ",
+          'province_id_fk' => @$sRow->province_id_fk,
+          'amphur_code' => @$sRow->amphures_id_fk,
+          'tambon_code' => @$sRow->district_id_fk,
+          'zip_code' => @$sRow->zipcode,
+          'tel' => @$sRow->tel,
+          'tel_home' => @$sRow->tel_home,
+          'created_at' => date('Y-m-d H:i:s'),
+          'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        }
+
           $addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
           dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname,dataset_provinces.id as province_id_fk
           from customers_addr_frontstore
@@ -2078,32 +2122,7 @@ class FrontstoreController extends Controller
                                 name='" . @$v->recipient_name . "'
                                 WHERE (id='" . $id . "')");
           }
-        }else{
 
-          $provid_data = DB::table('dataset_provinces')->select('name_th')->where('id',@$sRow->province_id_fk)->first();
-          $district_data = DB::table('dataset_districts')->select('name_th')->where('id',@$sRow->district_id_fk)->first();
-          $amphures_data = DB::table('dataset_amphures')->select('name_th')->where('id',@$sRow->amphures_id_fk)->first();
-
-          @$address = @$sRow->house_no . " " . @$sRow->house_name . " หมู่ " . @$sRow->moo . " " . @$sRow->soi . " ถนน " . @$sRow->road . " ";
-          @$address .= ", ต." . @$district_data->name_th . " ";
-          @$address .= ", อ." . @$amphures_data->name_th;
-          @$address .= ", จ." . @$provid_data->name_th;
-
-                                   DB::select(" UPDATE db_delivery
-                                   SET
-                                   recipient_name = '" . @$sRow->name . "',
-                                   addr_send = '" . @$address . "',
-                                   postcode = '" . @$sRow->zipcode . "',
-                                   mobile = '" . (@$sRow->tel ? @$sRow->tel : '') . "',
-                                   tel_home = '" . (@$sRow->tel_home ? @$sRow->tel_home : '') . "',
-                                   province_id_fk = '" . @$sRow->province_id_fk . "',
-                                   province_name = '" . @$provid_data->name_th . "',
-                                   set_addr_send_this = '1'
-                                   where orders_id_fk = '" . $sRow->id . "'
-
-                                  ");
-
-        }
 
       }
 
