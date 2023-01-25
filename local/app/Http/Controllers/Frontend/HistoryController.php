@@ -222,18 +222,17 @@ class HistoryController extends Controller
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
             //->whereNotIn('db_orders.id',$not_show_arr)
-            ->where('db_orders.order_channel', '!=','VIP')
-            ->where('dataset_order_status.lang_id', '=', $business_location_id)
-            ->where('dataset_orders_type.lang_id', '=', $business_location_id)
             ->whereRaw(("case WHEN '{$request->dt_order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$request->dt_order_type}' END"))
             ->whereRaw(("case WHEN '{$request->dt_pay_type}' = '' THEN 1 else dataset_pay_type.id = '{$request->dt_pay_type}' END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) >= '{$request->s_date}' and date(db_orders.created_at) <= '{$request->e_date}'else 1 END"))
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
-             ->whereRaw("db_orders.customers_id_fk = ".Auth::guard('c_user')->user()->id." OR db_orders.customers_sent_id_fk = ".Auth::guard('c_user')->user()->id)
+            ->where('db_orders.order_channel', '!=','VIP')
+            ->where('dataset_order_status.lang_id', '=', $business_location_id)
+            ->where('dataset_orders_type.lang_id', '=', $business_location_id)
+            ->where("db_orders.customers_id_fk","=",Auth::guard('c_user')->user()->id)
+            //->orwhere("db_orders.customers_sent_id_fk","=",Auth::guard('c_user')->user()->id)
             ->orderby('db_orders.created_at', 'DESC');
-
-
 
         $sQuery = Datatables::of($orders);
         return $sQuery
