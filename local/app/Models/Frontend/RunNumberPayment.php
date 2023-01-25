@@ -90,6 +90,7 @@ class RunNumberPayment extends Model
     //E = Course/Event
     $date_order = date('ymd');
     if ($type_order == 'product') {
+       
 
       $code_order =  IdGenerator::generate([
         'table' => 'db_code_order',
@@ -98,11 +99,14 @@ class RunNumberPayment extends Model
         'prefix' => 'R' . $business_location_id . '' . $date_order,
         'reset_on_prefix_change' => true
       ]);
+      
 
       $rs_code_order = DB::table('db_code_order')
         ->Insert(['code_order' => $code_order]);
+        
       if ($rs_code_order == true) {
-        return  $code_order;
+        $resule = ['status' => 'success', 'message' => 'success', 'code_order' => $code_order];
+        return  $resule;
       } else {
         \App\Models\Frontend\RunNumberPayment::run_payment_code($business_location_id, $type_order);
       }
@@ -116,9 +120,11 @@ class RunNumberPayment extends Model
       ]);
 
       $rs_code_order = DB::table('db_code_order')
-        ->Insert(['code_order' => $code_order]);
+        ->Insert(['code_order' => $code_order]); 
       if ($rs_code_order == true) {
-        return  $code_order;
+       
+        $resule = ['status' => 'success', 'message' => 'success', 'code_order' => $code_order];
+        return  $resule;
       } else {
         \App\Models\Frontend\RunNumberPayment::run_payment_code($business_location_id, $type_order);
       }
