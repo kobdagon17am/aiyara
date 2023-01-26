@@ -18,6 +18,15 @@ class Promotion extends Model
     ->where('type_product', '=','promotion')
     ->first();
 
+    // $all_available_purchase = DB::table('db_order_products_list')
+    // ->select(DB::raw('sum(db_order_products_list.amt) as amt_all'))
+    // ->join('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    // ->where('db_orders.order_status_id_fk', '!=', 8)
+    // ->where('db_order_products_list.promotion_id_fk', '=', $promotion_id)
+    // ->where('type_product', '=','promotion')
+    // ->groupBy('db_order_products_list.promotion_id_fk')
+    // ->first();
+
 		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$all_available_purchase->amt_all];
 		return $resule;
 	}
@@ -34,6 +43,20 @@ class Promotion extends Model
     ->where('db_orders.customers_id_fk', '=',$customer_id)
     ->first();
 
+    // $count_per_promotion = DB::table('db_order_products_list')
+    // ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
+    // ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    // ->where('db_order_products_list.promotion_id_fk', $promotion_id)
+    // ->where('db_orders.customers_id_fk', $customer_id)
+    // ->where('db_order_products_list.type_product', 'promotion')
+    // ->whereIn('db_orders.order_status_id_fk', [1, 2, 3, 4, 5, 6, 7])
+    // ->first();
+
+//     Explanation:
+
+// Remove the "!=" operator in the where clause for order status, and use whereIn() instead to check for multiple order statuses that are not equal to 8.
+// Move the promotion_id_fk and customers_id_fk conditions to the beginning of the where clause for better performance.
+
 		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion->amt_all];
 		return $resule;
 	}
@@ -49,6 +72,22 @@ class Promotion extends Model
     ->where('db_orders.customers_id_fk', '=',$customer_id)
     ->wheredate('db_order_products_list.created_at', '=',$date_now)
     ->first();
+
+    //     $count_per_promotion = DB::table('db_order_products_list')
+    // ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
+    // ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    // ->where('db_order_products_list.promotion_id_fk', $promotion_id)
+    // ->where('db_orders.customers_id_fk', $customer_id)
+    // ->where('db_order_products_list.type_product', 'promotion')
+    // ->whereIn('db_orders.order_status_id_fk', [1, 2, 3, 4, 5, 6, 7])
+    // ->whereDate('db_order_products_list.created_at', $date_now)
+    // ->first();
+
+//     Explanation:
+
+// Remove the "!=" operator in the where clause for order status, and use whereIn() instead to check for multiple order statuses that are not equal to 8.
+// Move the promotion_id_fk and customers_id_fk conditions to the beginning of the where clause for better performance.
+// Change whereDate to wheredate for better performance
 
 
 
