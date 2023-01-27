@@ -3770,6 +3770,7 @@ class FrontstoreController extends Controller
                 ORDER BY id DESC
               ");
 
+
     $sQuery = \DataTables::of($sTable);
 
     return $sQuery
