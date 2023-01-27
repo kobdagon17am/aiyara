@@ -697,20 +697,20 @@
                 searching: true,
                 ajax: {
                     url: "{!! route('datable/history') !!}",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        dt_order_type: $('#dt_order_type').val(),
-                        dt_pay_type: $('#dt_pay_type').val(),
-                        s_date: $('#s_date').val(),
-                        e_date: $('#e_date').val(),
+                    // data: {
+                    //     _token: '{{ csrf_token() }}',
+                    //     dt_order_type: $('#dt_order_type').val(),
+                    //     dt_pay_type: $('#dt_pay_type').val(),
+                    //     s_date: $('#s_date').val(),
+                    //     e_date: $('#e_date').val(),
+                    // },
+                    data: function(d) {
+                        d.dt_order_type = $('#dt_order_type').val();
+                        d.dt_pay_type = $('#dt_pay_type').val();
+                        d.s_date = $('#s_date').val();
+                        d.e_date = $('#e_date').val();
+                        d._token = '{!! csrf_token() !!}';
                     },
-                    // data: function(d) {
-                    //     d.dt_order_type = $('#dt_order_type').val();
-                    //     d.dt_pay_type = $('#dt_pay_type').val();
-                    //     d.s_date = $('#s_date').val();
-                    //     d.e_date = $('#e_date').val();
-                    //     d._token = '{!! csrf_token() !!}';
-                    // }
                     method: 'POST',
                 },
                 // type: "POST",
