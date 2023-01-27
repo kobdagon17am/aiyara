@@ -373,6 +373,22 @@
 
                     </div>
 
+                    <div class="row">
+
+                      <div class="col-md-6 ">
+                          <div class="form-group row">
+                              <label for="" class="col-md-3 col-form-label"> แสดง Lot ยอดเป็น 0 : </label>
+                              <div class="col-md-9">
+                                  <select name="lot_0_show" id="lot_0_show" class="form-control">
+                                      <option value="0">ไม่แสดง</option>
+                                      <option value="1">แสดง</option>
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
+
 
                     <div class="row">
                         <div class="col-md-6 ">
@@ -512,6 +528,7 @@
                 var zone_id_fk = $('#zone_id_fk').val();
                 var shelf_id_fk = $('#shelf_id_fk').val();
                 var shelf_floor = $('#shelf_floor').val();
+                var lot_0_show = $('#lot_0_show').val();
 
                 console.log(business_location_id_fk);
                 console.log(branch_id_fk);
@@ -546,6 +563,7 @@
                                 start_date: start_date,
                                 end_date: end_date,
                                 product: product,
+                                lot_0_show: lot_0_show,
                             },
                             method: 'POST',
                         },

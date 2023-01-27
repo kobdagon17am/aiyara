@@ -324,11 +324,21 @@ class Check_stockController extends Controller
            $w09 = "";
         }
 
+        if(!empty($req->lot_0_show)){
+          if($req->lot_0_show==0){
+            $stock_0 = "AND amt <> 0";
+          }else{
+            $stock_0 = "";
+          }
+
+       }else{
         $stock_0 = "AND amt <> 0";
-        $sPermission = \Auth::user()->permission ;
-        if($sPermission==1){
-          $stock_0 = "";
-        }
+       }
+
+        // $sPermission = \Auth::user()->permission ;
+        // if($sPermission==1){
+        //   $stock_0 = "";
+        // }
 
        $sTable = DB::select("
 
