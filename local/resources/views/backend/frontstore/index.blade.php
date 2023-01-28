@@ -573,7 +573,7 @@
                 scrollCollapse: true,
                 scrollX: true,
                 paging: true,
-                iDisplayLength: 25,
+                iDisplayLength: 1000,
                 ordering: false,
                 scrollY: '' + ($(window).height() - 370) + 'px',
                 ajax: {
@@ -586,10 +586,10 @@
 
                 // dom: 'Bfrtip',
                 dom: 'lBfrtip',
-                lengthMenu: [
-                    [25, 100, -1],
-                    [25, 100, 'All'],
-                ],
+                // lengthMenu: [
+                //     [25, 100, -1],
+                //     [25, 100, 'All'],
+                // ],
                 buttons: [
                     // 'copy', 'csv', 'excel', 'pdf', 'print'
                     'excel', 'print'
@@ -1185,7 +1185,7 @@
                             searching: false,
                             bLengthChange: true,
                             destroy: true,
-                            iDisplayLength: 25,
+                            iDisplayLength: 1000,
                             scrollY: '' + ($(window).height() - 370) + 'px',
                             // iDisplayLength: 35,
                             ajax: {
@@ -1206,10 +1206,10 @@
                                 method: 'POST',
                             },
                             dom: 'lBfrtip',
-                            lengthMenu: [
-                                [25, 100, -1],
-                                [25, 100, 'All'],
-                            ],
+                            // lengthMenu: [
+                            //     [25, 100, -1],
+                            //     [25, 100, 'All'],
+                            // ],
                             buttons: [
                                 // 'copy', 'csv', 'excel', 'pdf', 'print'
                                 'excel', 'print'
@@ -1668,7 +1668,7 @@
                         searching: false,
                         bLengthChange: true,
                         destroy: true,
-                        iDisplayLength: 25,
+                        iDisplayLength: 1000,
                         scrollY: '' + ($(window).height() - 370) + 'px',
                         // iDisplayLength: 35,
                         ajax: {
@@ -1688,10 +1688,10 @@
                             method: 'POST',
                         },
                         dom: 'lBfrtip',
-                        lengthMenu: [
-                            [25, 100, -1],
-                            [25, 100, 'All'],
-                        ],
+                        // lengthMenu: [
+                        //     [25, 100, -1],
+                        //     [25, 100, 'All'],
+                        // ],
                         buttons: [
                             // 'copy', 'csv', 'excel', 'pdf', 'print'
                             'excel', 'print'
