@@ -584,7 +584,7 @@ class Check_stockController extends Controller
         public function DatatableBorrow(Request $req){
 
 
-              $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk);
+              $sTable = \App\Models\Backend\Check_stock::where('branch_id_fk',$req->branch_id_fk)->where('product_id_fk',$req->product_id_fk)->where('amt','!=',0);
 
               $sQuery = \DataTables::of($sTable);
               return $sQuery

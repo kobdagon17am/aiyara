@@ -237,7 +237,9 @@ tr.border_bottom td {
 
          $branchs_from = DB::select("
             SELECT
-            branchs.b_name
+            branchs.b_name,
+            db_transfer_branch_code.note,
+            db_transfer_branch_code.approve_note
             FROM
             db_transfer_branch_code
             Left Join branchs ON db_transfer_branch_code.branch_id_fk = branchs.id
@@ -363,6 +365,10 @@ tr.border_bottom td {
   ?>
 
     </table>
+
+    <label>&nbsp;&nbsp;&nbsp;<?php echo 'หมายเหตุ1 : '.$branchs_from[0]->note; ?></label><br>
+    <label>&nbsp;&nbsp;&nbsp;<?php echo 'หมายเหตุ2 : '.$branchs_from[0]->approve_note; ?></label>
+
   </div>
 
 <br>
