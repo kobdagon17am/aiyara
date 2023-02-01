@@ -28,7 +28,13 @@ class Promotion extends Model
     ->whereIn('db_orders.order_status_id_fk', [1, 2, 3, 4, 5, 6, 7])
     ->first();
 
-		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$all_available_purchase->amt_all];
+    if($all_available_purchase){
+      $amt_all = $all_available_purchase->amt_all;
+    }else{
+      $amt_all = 0;
+    }
+
+		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$amt_all];
 		return $resule;
 	}
 
@@ -53,12 +59,18 @@ class Promotion extends Model
     ->whereIn('db_orders.order_status_id_fk', [1, 2, 3, 4, 5, 6, 7])
     ->first();
 
+    if($count_per_promotion){
+      $amt_all = $count_per_promotion->amt_all;
+    }else{
+      $amt_all = 0;
+    }
+
 //     Explanation:
 
 // Remove the "!=" operator in the where clause for order status, and use whereIn() instead to check for multiple order statuses that are not equal to 8.
 // Move the promotion_id_fk and customers_id_fk conditions to the beginning of the where clause for better performance.
 
-		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion->amt_all];
+		$resule = ['status'=>'success','message'=>'success','count'=>$amt_all];
 		return $resule;
 	}
 
@@ -90,9 +102,15 @@ class Promotion extends Model
 // Move the promotion_id_fk and customers_id_fk conditions to the beginning of the where clause for better performance.
 // Change whereDate to wheredate for better performance
 
+if($count_per_promotion){
+  $amt_all = $count_per_promotion->amt_all;
+}else{
+  $amt_all = 0;
+}
 
 
-		$resule = ['status'=>'success','message'=>'success','count'=>$count_per_promotion->amt_all];
+
+		$resule = ['status'=>'success','message'=>'success','count'=>$amt_all];
 		return $resule;
 	}
 
