@@ -58,7 +58,7 @@ class Promotions_imagesController extends Controller
           if ($request->hasFile('image01')) {
               @UNLINK(@$sRow->img_url.@$sRow->image01);
               $this->validate($request, [
-                'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image01' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2000',
               ]);
               $image = $request->file('image01');
               $name = 'p1'.time() . '.' . $image->getClientOriginalExtension();
@@ -77,7 +77,7 @@ class Promotions_imagesController extends Controller
                 ");
               }
 
-              $sRow->image_default    = request('image_default');
+              $sRow->image_default = request('image_default');
 
             }
 
@@ -94,7 +94,11 @@ class Promotions_imagesController extends Controller
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\Promotions_imagesController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->back()->with(['alert'=> array(
+          'status'=>'error',
+          'msg' =>' <b>Message : </b> '."กรุณาตรวจสอบไฟล์รูปภาพ ขนาดไม่เกิน 2 MB และ jpeg,png,jpg,gif,svg".'<br/>',
+        )]);
+        // return redirect()->back()->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 

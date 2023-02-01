@@ -677,8 +677,8 @@ if(!empty($db_orders[0]->action_user)){
               }else{
                 @$address_in_order[0]->house_no = str_replace("(ตย.)"," ",@$address_in_order[0]->house_no);
 
-              @$cus_address = @$address_in_order[0]->house_no." ". @$address_in_order[0]->house_name." ". @$address_in_order[0]->moo."";
-              @$cus_address .= @$address_in_order[0]->soi." ". @$address_in_order[0]->road;
+              @$cus_address = " บ้านเลขที่ ".@$address_in_order[0]->house_no." หมู่บ้าน ". @$address_in_order[0]->house_name." หมู่ ". @$address_in_order[0]->moo."";
+              @$cus_address .= " ซอย ".@$address_in_order[0]->soi." ถนน ". @$address_in_order[0]->road;
               @$cus_address .= ", ต.". @$address_in_order[0]->tamname. " ";
               @$cus_address .= ", อ.". @$address_in_order[0]->ampname;
               @$cus_address .= ", จ.". @$address_in_order[0]->provname;
@@ -830,7 +830,7 @@ if(!empty($db_orders[0]->action_user)){
                                      ");
 
                               if($addr){
-                                  @$address =  "เลขที่ ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name."";
+                                  @$address =  "บ้านเลขที่ ". @$addr[0]->card_house_no." หมู่บ้าน ". @$addr[0]->card_house_name."";
                                   @$address .=  " หมู่ ". @$addr[0]->card_moo;
                                   @$address .=  " ซอย ". @$addr[0]->card_soi;
                                   @$address .=  " ถนน ". @$addr[0]->card_road;
