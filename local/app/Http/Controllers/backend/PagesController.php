@@ -870,13 +870,20 @@ class PagesController extends Controller{
                             "con_arr"=>$arr_con[@$recipient_code],
                           ]);
 
+                          $delis = DB::table('db_delivery')->select('orders_id_fk')->where('packing_code_desc',@$recipient_code)->get();
+                          foreach($delis as $d){
+                            DB::table('db_orders')->where('id',$d->orders_id_fk)->update([
+                              'tracking_no' => @$consignment_no,
+                            ]);
+                          }
+
                         $con_data =  DB::table('db_consignments')
                         // ->select('pay_requisition_001_id_fk','delivery_id_fk')
                         ->where('recipient_code', @$recipient_code)
                         ->where('pick_pack_requisition_code_id_fk', @$request->id)
                         ->first();
 
-                        dd($recipient_code);
+                        // dd($recipient_code);
 
                           $insertData = array(
                             "consignment_no"=>@$consignment_no,

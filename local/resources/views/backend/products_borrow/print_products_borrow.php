@@ -125,7 +125,7 @@ tr.border_bottom td {
     float: left;
     width: 36%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     font-size: 12px !important;
 }
 .column-2 {
@@ -150,7 +150,7 @@ tr.border_bottom td {
     float: left;
     width: 17%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     text-align: center;
 }
 
@@ -170,7 +170,7 @@ tr.border_bottom td {
   #watermark {
 
        position: fixed;
-      /** 
+      /**
           Set a position in the page for your image
           This should center it vertically
       **/
@@ -188,15 +188,15 @@ tr.border_bottom td {
 
 
 
-    <?php 
+    <?php
 
         $borrow_code = DB::table('db_products_borrow_code')->select('db_products_borrow_code.*','branchs.b_name')
         ->join('branchs','branchs.id','db_products_borrow_code.branch_id_fk')
         ->where('db_products_borrow_code.id',$data[0])->get();
 
-        //  $borrow_code = DB::select(" 
+        //  $borrow_code = DB::select("
         //     SELECT *
-        //     FROM db_products_borrow_code 
+        //     FROM db_products_borrow_code
         //     WHERE
         //     id = ".$data[0]."
         //  ");
@@ -208,7 +208,7 @@ tr.border_bottom td {
           $borrow_cause = '';
         }
 
-         $branchs_from = DB::select(" 
+         $branchs_from = DB::select("
             SELECT
             branchs.b_name
             FROM
@@ -217,7 +217,7 @@ tr.border_bottom td {
             WHERE db_transfer_branch_code.id = ".$data[0]."
          ");
 
-       
+
 ?>
 
     <div class="NameAndAddress" style="" >
@@ -225,25 +225,25 @@ tr.border_bottom td {
         <tr>
            <th style="text-align: left;">
             <img src="<?=public_path('images/logo2.png')?>" >
-          </th> 
+          </th>
 
 
           <th style="text-align: right;">
             <span style="font-size: 24px;font-weight: bold;">[ <?php echo $borrow_code[0]->borrow_number; ?> ]</span><br>
               2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
               แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
-              TEL : +66 (0) 2026 3555 
-              FAX : +66 (0) 2514 3944 
+              TEL : +66 (0) 2026 3555
+              FAX : +66 (0) 2514 3944
               E-MAIL : info@aiyara.co.th
           </th>
         </tr>
-      
+
       </table>
     </div>
 
   <div class="NameAndAddress" style="" >
       <table style="border-collapse: collapse;" >
-        <tr> 
+        <tr>
           <th style="text-align: center;font-size: 30px;">
            <center> ใบเบิก/ยืมสินค้า</center>
           </th>
@@ -287,12 +287,12 @@ tr.border_bottom td {
       </tr>
 
 <!-- รายการสินค้า -->
-<?php 
+<?php
 
 
-     $Dt = DB::select(" 
+     $Dt = DB::select("
         SELECT *
-        FROM db_products_borrow_details 
+        FROM db_products_borrow_details
         WHERE
         products_borrow_code_id = ".$data[0]."
      ");
@@ -304,7 +304,7 @@ tr.border_bottom td {
 
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -321,7 +321,7 @@ tr.border_bottom td {
             // $shelf = DB::select(" select * from shelf where id=".$v->shelf_id_fk." ");
             // $warehouses = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
 
-             $d_lot_expired_date = strtotime($v->lot_expired_date); 
+             $d_lot_expired_date = strtotime($v->lot_expired_date);
             //  $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
             $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date));
 
@@ -351,27 +351,31 @@ tr.border_bottom td {
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$v->amt?>  </td>
           </tr>
 
-    <?php  
+    <?php
 
     $j++;
-  
 
-  } 
+
+  }
 
 
   ?>
 
     </table>
+
+
+    <p> &nbsp;&nbsp;&nbsp; หมายเหตุ1 : <?php echo @$borrow_code[0]->note; ?></p>
+
   </div>
 
 <br>
 </div>
 
-<?php 
+<?php
 
-         $warehouses_code = DB::select(" 
+         $warehouses_code = DB::select("
             SELECT *
-            FROM db_products_borrow_code 
+            FROM db_products_borrow_code
             WHERE
             id = ".$data[0]."
          ");
@@ -390,7 +394,7 @@ tr.border_bottom td {
         }else{
           $approve_date =  '';
         }
-        
+
       ?>
 
       <?php if(@$warehouses_code[0]->approve_status==0){ ?>
@@ -411,7 +415,7 @@ tr.border_bottom td {
 
   <div style="border-radius: 5px; height: 30mm; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
-      
+
       <tr>
 
         <td  style="border-left: 1px solid #ccc;"> ผู้ทำรายการเบิก/ยืม
@@ -439,4 +443,3 @@ tr.border_bottom td {
 </div>
 
 
- 

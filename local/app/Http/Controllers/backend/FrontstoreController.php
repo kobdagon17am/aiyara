@@ -1764,8 +1764,8 @@ class FrontstoreController extends Controller
 
           foreach ($addr as $key => $v) {
 
-            @$address = @$v->card_house_no . " " . @$v->card_house_name . " " . @$v->card_moo . "";
-            @$address .= @$v->card_soi . " " . @$v->card_road;
+            @$address = @$v->card_house_no . " " . @$v->card_house_name . " หมู่." . @$v->card_moo . " ซอย.";
+            @$address .= @$v->card_soi . " ถนน." . @$v->card_road;
             @$address .= ", ต." . @$v->tamname . " ";
             @$address .= ", อ." . @$v->ampname;
             @$address .= ", จ." . @$v->provname;
@@ -1848,7 +1848,7 @@ class FrontstoreController extends Controller
         if (@$addr) {
           foreach ($addr as $key => $v) {
 
-            @$address = @$v->house_no . " " . @$v->house_name . " " . @$v->moo . " " . @$v->soi . " " . @$v->road . " ";
+            @$address = @$v->house_no . " " . @$v->house_name . "หมู่." . @$v->moo . " ซอย." . @$v->soi . " ถนน." . @$v->road . " ";
             @$address .= ", ต." . @$v->tamname . " ";
             @$address .= ", อ." . @$v->ampname;
             @$address .= ", จ." . @$v->provname;

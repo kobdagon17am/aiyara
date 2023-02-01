@@ -237,7 +237,9 @@ tr.border_bottom td {
 
          $branchs_from = DB::select("
             SELECT
-            branchs.b_name
+            branchs.b_name,
+            db_transfer_branch_code.note,
+            db_transfer_branch_code.approve_note
             FROM
             db_transfer_branch_code
             Left Join branchs ON db_transfer_branch_code.branch_id_fk = branchs.id
@@ -256,6 +258,33 @@ tr.border_bottom td {
          ");
 
 ?>
+
+<?php
+                 $tr_number = $tr_number[0]->tr_number?$tr_number[0]->tr_number:0;
+                 $branch_get = DB::select("
+                    SELECT
+                        db_transfer_branch_get.approve_date,
+                        db_transfer_branch_get.note1,
+                        db_transfer_branch_get.note2,
+                        ck_users_admin.`name` as who_get
+                        FROM
+                        db_transfer_branch_get
+                        LEFT Join ck_users_admin ON db_transfer_branch_get.approver = ck_users_admin.id
+                        WHERE
+                        tr_number =  '".$tr_number."'
+                 ");
+
+
+            if(@$branch_get[0]->approve_date!=''){
+              // $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date)+543);
+              $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date));
+            }else{
+              $get_date =  ' * รอฝั่งรับโอน รับสินค้า * ';
+            }
+
+
+            ?>
+
 
 <div class="NameAndAddress" >
   <div style="border-radius: 5px;  border: 1px solid grey;padding:-1px;" >
@@ -363,6 +392,11 @@ tr.border_bottom td {
   ?>
 
     </table>
+
+    <label>&nbsp;&nbsp;&nbsp;<?php echo 'หมายเหตุ1 : '.$branchs_from[0]->note; ?></label><br>
+    <label>&nbsp;&nbsp;&nbsp;<?php echo 'หมายเหตุ2 : '.$branchs_from[0]->approve_note; ?></label><br>
+    <label>&nbsp;&nbsp;&nbsp;<?php echo 'หมายเหตุ3 : '.$branch_get[0]->note2; ?></label>
+
   </div>
 
 <br>
@@ -432,32 +466,6 @@ tr.border_bottom td {
         <br>
         วันที่ <?=@$approve_date?>
         </td>
-
-
-            <?php
-                 $tr_number = $tr_number[0]->tr_number?$tr_number[0]->tr_number:0;
-                 $branch_get = DB::select("
-                    SELECT
-                        db_transfer_branch_get.approve_date,
-                        ck_users_admin.`name` as who_get
-                        FROM
-                        db_transfer_branch_get
-                        LEFT Join ck_users_admin ON db_transfer_branch_get.approver = ck_users_admin.id
-                        WHERE
-                        tr_number =  '".$tr_number."'
-                 ");
-
-
-            if(@$branch_get[0]->approve_date!=''){
-              // $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date)+543);
-              $get_date = strtotime($branch_get[0]->approve_date); $get_date =  " วันที่ ".date("d/m/", $get_date).(date("Y", $get_date));
-            }else{
-              $get_date =  ' * รอฝั่งรับโอน รับสินค้า * ';
-            }
-
-
-            ?>
-
 
         <td style="border-left: 1px solid #ccc;"> ผู้รับ
         <br>

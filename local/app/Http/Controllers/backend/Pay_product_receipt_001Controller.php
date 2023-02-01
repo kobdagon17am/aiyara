@@ -1241,7 +1241,7 @@ class Pay_product_receipt_001Controller extends Controller
 if(count($sTable_re)!=0){
 
             $sTable = DB::select("
-            SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
+            SELECT gift_voucher_price,code_order,db_orders.id,db_orders.name_customer,db_orders.user_name,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
             FROM db_orders
             Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
             WHERE 1
@@ -1266,7 +1266,7 @@ if(count($sTable_re)!=0){
           ");
 }else{
               $sTable = DB::select("
-              SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
+              SELECT gift_voucher_price,code_order,db_orders.id,db_orders.name_customer,db_orders.user_name,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk
               FROM db_orders
               Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
               WHERE 1
@@ -1350,10 +1350,11 @@ if(count($sTable_re)!=0){
     })
     ->escapeColumns('created_at')
 
-    //  ->addColumn('customer', function($row) {
-    //        $rs = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
-    //        return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
-    //  })
+     ->addColumn('customer', function($row) {
+          //  $rs = DB::select(" select * from customers where id=".@$row->customers_id_fk." ");
+          //  return @$rs[0]->user_name." : ".@$rs[0]->prefix_name.@$rs[0]->first_name." ".@$rs[0]->last_name;
+          return '['.$row->user_name.'] '.$row->name_customer;
+     })
 
      ->make(true);
    }
