@@ -28,7 +28,13 @@ class Promotion extends Model
     ->whereIn('db_orders.order_status_id_fk', [1, 2, 3, 4, 5, 6, 7])
     ->first();
 
-		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$all_available_purchase->amt_all];
+    if($all_available_purchase){
+      $amt_all = $all_available_purchase->amt_all;
+    }else{
+      $amt_all = 0;
+    }
+
+		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$amt_all];
 		return $resule;
 	}
 
