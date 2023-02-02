@@ -20,12 +20,12 @@ class Promotions_productsController extends Controller
 
  public function create($id)
     {
-       
+
        $sRowNew = \App\Models\Backend\Promotions::find($id);
        // dd($sRowNew);
        // $sProduct = \App\Models\Backend\Products::get();
        $sProduct = \App\Models\Backend\Products_details::where('lang_id', 1)->get();
-          
+
        $sProductUnit = \App\Models\Backend\Product_unit::where('status', 1)->where('lang_id', 1)->get();
        return View('backend.promotions_products.form')->with(array('sRowNew'=>$sRowNew,'sProduct'=>$sProduct,'sProductUnit'=>$sProductUnit));
 
@@ -78,19 +78,23 @@ class Promotions_productsController extends Controller
           $sRow->product_id_fk    = request('product_id_fk');
           $sRow->product_amt    = request('product_amt');
           $sRow->product_unit    = request('product_unit');
-                    
+
           $sRow->created_at = date('Y-m-d H:i:s');
           $sRow->save();
 
 
           \DB::commit();
 
-          return redirect()->to(url("backend/promotions/".request('promotion_id_fk')."/edit"));
+          // return redirect()->to(url("backend/promotions/".request('promotion_id_fk')."/edit"));
+          return redirect()->back()->with(['alert'=> array(
+            'status'=>'success',
+            'msg' =>' <b>Message : </b> '."บันทึกข้อมูลสำเร็จ".'<br/>',
+          )]);
 
       } catch (\Exception $e) {
         echo $e->getMessage();
         \DB::rollback();
-        return redirect()->action('backend\Promotions_productsController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        return redirect()->back()->with(['alert'=>\App\Models\Alert::e($e)]);
       }
     }
 
@@ -111,7 +115,7 @@ class Promotions_productsController extends Controller
                   // return $row->product_unit_id_fk;
         if(!empty($row->product_id_fk)){
 
-          $Products = DB::select(" 
+          $Products = DB::select("
                 SELECT products.id as product_id,
                   products.product_code,
                   (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name ,
