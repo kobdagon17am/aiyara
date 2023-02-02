@@ -739,24 +739,29 @@ if(!empty($db_orders[0]->action_user)){
      ");
      //
 
-            if(!empty(@$address_in_order[0]->provname)){
+     if(!empty(@$address_in_order[0]->provname)){
 
-              @$address_in_order[0]->house_no = str_replace("(ตย.)"," ",@$address_in_order[0]->house_no);
+      $r = strpos(@$address_in_order[0]->house_no,"ตย");
+        if($r!=''){
+          @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';
+        }else{
+          @$address_in_order[0]->house_no = str_replace("(ตย.)"," ",@$address_in_order[0]->house_no);
 
-              @$cus_address = @$address_in_order[0]->house_no." ". @$address_in_order[0]->house_name." ". @$address_in_order[0]->moo."";
-              @$cus_address .= @$address_in_order[0]->soi." ". @$address_in_order[0]->road;
-              @$cus_address .= ", ต.". @$address_in_order[0]->tamname. " ";
-              @$cus_address .= ", อ.". @$address_in_order[0]->ampname;
-              @$cus_address .= ", จ.". @$address_in_order[0]->provname;
-              @$cus_address .= ", ปณ.". @$address_in_order[0]->zipcode;
-              @$cus_address .= ", โทร.". @$address_in_order[0]->tel;
-              @$cus_address .= ", ". @$address_in_order[0]->tel_home;
+        @$cus_address = " บ้านเลขที่ ".@$address_in_order[0]->house_no." หมู่บ้าน ". @$address_in_order[0]->house_name." หมู่ ". @$address_in_order[0]->moo."";
+        @$cus_address .= " ซอย ".@$address_in_order[0]->soi." ถนน ". @$address_in_order[0]->road;
+        @$cus_address .= ", ต.". @$address_in_order[0]->tamname. " ";
+        @$cus_address .= ", อ.". @$address_in_order[0]->ampname;
+        @$cus_address .= ", จ.". @$address_in_order[0]->provname;
+        @$cus_address .= ", ปณ.". @$address_in_order[0]->zipcode;
+        @$cus_address .= ", โทร.". @$address_in_order[0]->tel;
+        @$cus_address .= ", ". @$address_in_order[0]->tel_home;
 
-              @$cus_address = @$cus_address;
+        @$cus_address = @$cus_address;
 
-           }else{
-              @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';
-           }
+        }
+     }else{
+        @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';
+     }
 
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
