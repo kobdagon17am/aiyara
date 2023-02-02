@@ -344,10 +344,6 @@ class StatusDeliveryController extends Controller
                     }
                   }elseif($row->status_tracking==3){
                     $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->select('sender','sent_date')->where('id',$db_pick_pack_packing->packing_code_id_fk)->first();
-        //                    if($row->packing_code=='P100007'){
-        // // dd($row->db_delivery_id);
-        // dd($db_pick_pack_packing);
-        //       }
                     if($db_pick_pack_packing_code){
                       $sender = DB::table('ck_users_admin')->select('name')->where('id',$db_pick_pack_packing_code->sender)->first();
                       $p .= '<br> โดย : '.@$sender->name;
@@ -366,21 +362,19 @@ class StatusDeliveryController extends Controller
     })
 
     ->addColumn('tracking_no', function($row) {
+
+      if($row->id!==""){
+        $to_arr = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->pluck('delivery_id_fk')->toArray();
+      }else{
+        $to_arr = [0];
+      }
+
       $p = "";
-      // if($row->packing_code=='P100008'){
-      //   // dd($row->db_delivery_id);
-      //   dd($row);
-      //         }
       if($row->status_tracking==3 || $row->status_tracking==2){
-        $pcode = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
-              // if($row->packing_code=='P100008'){
-              //     dd($pcode);
-              // }
+        // $pcode = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->where('delivery_id_fk',$row->db_delivery_id)->orderBy('packing_code_id_fk','desc')->first();
+        $pcode = DB::table('db_pick_pack_packing')->select('packing_code_id_fk')->whereIn('delivery_id_fk',$to_arr)->orderBy('packing_code_id_fk','desc')->first();
           if($pcode){
             $data = DB::table('db_consignments')->select('con_arr')->where('pick_pack_requisition_code_id_fk',$pcode->packing_code_id_fk)->where('recipient_code',$row->packing_code)->get();
-          //   if($row->packing_code=='P100008'){
-          //     dd($pcode->packing_code_id_fk);
-          // }
             foreach($data as $d){
               $arr = explode(',',$d->con_arr);
               foreach($arr as $ar){
@@ -389,10 +383,6 @@ class StatusDeliveryController extends Controller
             }
           }
        }
-
-      //  $DP = DB::table('db_delivery_packing')->select('packing_code')->where('packing_code_id_fk',$row->id)->first();
-      //  return $DP->packing_code;
-
      return $p;
    })
 
