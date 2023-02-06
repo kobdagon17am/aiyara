@@ -2660,9 +2660,16 @@ ORDER BY db_pick_pack_packing.id
       try {
       $db_consignments = DB::table('db_consignments')->where('recipient_code',$p_id)->get();
       foreach($db_consignments as $con){
-        $db_delivery = DB::table('db_delivery')->where('packing_code_desc',$con->recipient_code)->get();
+        $db_delivery_data = DB::table('db_delivery')->select('id')->where('packing_code_desc',$con->recipient_code)->first();
+        if($db_delivery_data){
+          $db_delivery = DB::table('db_delivery')->where('packing_code_desc',$con->recipient_code)->get();
+        }else{
+          $db_delivery = DB::table('db_delivery')->where('receipt',$con->recipient_code)->get();
+        }
+        // dd($db_delivery);
         foreach($db_delivery as $de){
           $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$con->pick_pack_requisition_code_id_fk)->first();
+          // dd($db_pick_pack_packing_code); db_delivery_packing
           DB::table('db_delivery')->where('id',$de->id)->update([
             'status_pick_pack' => 0,
             'status_delivery' => 0,
