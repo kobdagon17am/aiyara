@@ -2603,7 +2603,7 @@ class FrontstoreController extends Controller
                 db_orders
                 Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
                 Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                WHERE db_orders.approve_status not in (5,6,0) AND db_orders.check_press_save=2
+                WHERE db_orders.approve_status not in (5,6,0,1) AND db_orders.check_press_save=2
                 $action_user_011
                 $startDate1
                 $endDate1
@@ -2627,7 +2627,7 @@ class FrontstoreController extends Controller
             <table class="table table-sm m-0">
               <thead>
                 <tr style="background-color: #f2f2f2;"><th colspan="8">
-                  ' . trans('message.all_payment_list') . ' (' . $sD3 . ') (<font color=red>ไม่รวมบิล * รอดำเนินการต่อ และ ไม่รวมบิลที่ ยกเลิก </font>)
+                  ' . trans('message.all_payment_list') . ' (' . $sD3 . ') (<font color=red>ไม่รวมบิล * รอดำเนินการต่อ รออนุมัติ และ ไม่รวมบิลที่ ยกเลิก </font>)
                 </th></tr>
                 <tr>
                   <th width="10%">' . trans('message.seller') . '</th>
@@ -2702,9 +2702,8 @@ class FrontstoreController extends Controller
                 FROM
                 db_orders
                 WHERE 1
-                AND approve_status <> 5
-                AND approve_status <> 6
-                AND approve_status <> 0
+                AND approve_status NOT IN (5,6,0,1)
+
                 $action_user_011
                 $startDate1
                 $endDate1

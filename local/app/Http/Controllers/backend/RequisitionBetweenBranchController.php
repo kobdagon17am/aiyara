@@ -73,7 +73,7 @@ class RequisitionBetweenBranchController extends Controller
 
     public function dtListApprove(Request $request)
     {
-      $approves = RequisitionBetweenBranch::with('requisition_details:requisition_between_branch_id,product_name,amount')->isApprove();
+      $approves = RequisitionBetweenBranch::with('requisition_details:requisition_between_branch_id,product_name,amount')->orderBy('created_at','desc')->isApprove();
 
       return DataTables::of($approves)
         ->editColumn('to_branch_id', function ($approve) {
