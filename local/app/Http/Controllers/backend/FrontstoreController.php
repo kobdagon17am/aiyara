@@ -1907,22 +1907,22 @@ class FrontstoreController extends Controller
         @$address .= ", จ." . @$provid_data->name_th;
 
         $moo = " หมู่. " . @$sRow->moo;
-        if(@$sRow->moo == '' || @$sRow->moo == '-'){
+        if(@$sRow->moo == '' || @$sRow->moo == '-' || @$sRow->moo == '_'){
           $moo = '';
         }
 
         $soi = " ซอย. " . @$sRow->soi;
-        if(@$sRow->soi == '' || @$sRow->soi == '-'){
+        if(@$sRow->soi == '' || @$sRow->soi == '-' || @$sRow->soi == '_'){
           $soi = '';
         }
 
         $road = " ถนน. " . @$sRow->road;
-        if(@$sRow->road == '' || @$sRow->road == '-'){
+        if(@$sRow->road == '' || @$sRow->road == '-' || @$sRow->road == '_'){
           $road = '';
         }
 
         $house_name = @$sRow->house_name;
-        if(@$sRow->house_name == '' || @$sRow->house_name == '-'){
+        if(@$sRow->house_name == '' || @$sRow->house_name == '-' || @$sRow->house_name == '_'){
           $house_name = '';
         }
 

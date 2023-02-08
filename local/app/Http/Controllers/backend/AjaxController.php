@@ -5163,7 +5163,7 @@ class AjaxController extends Controller
 
           // return($wh); db_sent_money_daily status_sent_money
 
-          $r0 = DB::select(" SELECT * FROM `db_orders`
+          $r0 = DB::select(" SELECT created_at,id FROM `db_orders`
             WHERE date(created_at)<=CURDATE()
             $wh
             AND approve_status in (2,4,9)
