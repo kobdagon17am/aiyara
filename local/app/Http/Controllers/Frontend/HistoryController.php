@@ -225,6 +225,7 @@ class HistoryController extends Controller
             //->whereNotIn('db_orders.id',$not_show_arr)
             ->where("db_orders.customers_id_fk","=",Auth::guard('c_user')->user()->id)
             ->where('db_orders.order_channel', '!=','VIP')
+            ->where('db_orders.deleted_at', '=',null)
             ->where('dataset_order_status.lang_id', '=', $business_location_id)
             ->where('dataset_orders_type.lang_id', '=', $business_location_id)
             ->whereRaw(("case WHEN '{$request->dt_order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$request->dt_order_type}' END"))

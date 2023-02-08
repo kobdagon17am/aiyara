@@ -20,6 +20,23 @@ use App\Http\Controllers\Frontend\Fc\RunPvController;
 class RunErrorController extends Controller
 {
   public static function index(){
+    
+    $data = RunErrorController::hidden_order();
+    dd($data);
+
+    // $promotions = DB::table('db_promotion_cus')
+    // ->select('db_promotion_cus.id')
+    // ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
+    //           ->where('db_promotion_code.pro_edate', '<=', '2022-12-30 00:59:59')
+    //            //->where('pro_status', 4)
+    //            ->orderByDesc('pro_status')
+    //           // ->limit(1000)
+    //           ->get(); 
+
+    // dd($promotions);
+
+
+
     // $data = DB::table('db_salepage_setting')
     // ->get();
     // $i = 0;
@@ -37,29 +54,29 @@ class RunErrorController extends Controller
     // }
     // dd($i);
 
-    $user = DB::table('customers')
-    ->select('id', 'user_name','upline_id','introduce_id')
-    ->where('id', '>=',1298067)
-    ->where('id', '<=',1311311)
-    ->get();
-    //max1311311
-    $i= 0;
-  foreach($user as $value){
-    $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
+//     $user = DB::table('customers')
+//     ->select('id', 'user_name','upline_id','introduce_id')
+//     ->where('id', '>=',1298067)
+//     ->where('id', '<=',1311311)
+//     ->get();
+//     //max1311311
+//     $i= 0;
+//   foreach($user as $value){
+//     $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
 
-    if( $data['status'] == 'success'){
-      $i++;
-      $introduce_type = $data['data']->line_type;
-    }else{
-      $introduce_type = '';
-    }
+//     if( $data['status'] == 'success'){
+//       $i++;
+//       $introduce_type = $data['data']->line_type;
+//     }else{
+//       $introduce_type = '';
+//     }
 
-    $update = DB::table('customers')
-    ->where('id', $value->id)
-    ->update(['introduce_type' =>$introduce_type]);
-  }
+//     $update = DB::table('customers')
+//     ->where('id', $value->id)
+//     ->update(['introduce_type' =>$introduce_type]);
+//   }
 
-  dd('success รวม'.count($user).' Run'.$i);
+//   dd('success รวม'.count($user).' Run'.$i);
 
 
 
@@ -82,10 +99,10 @@ class RunErrorController extends Controller
   //  dd($rs);
 
 //   $order_data = DB::table('db_orders')
-//   ->where('code_order', '=', 'O122083101256')
+//   ->where('code_order', '=', 'O123010900062')
 //   ->first();
 
-//   $user = DB::table('customers')
+//   $user = DB::table('customers') 
 //   ->select('id', 'pv_aistockist', 'user_name')
 //   ->where('id', '=',$order_data->customers_id_fk)
 //   ->first();
@@ -93,26 +110,33 @@ class RunErrorController extends Controller
 //   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
 //   dd($rs,$user->user_name);
 
-//O122083101093
+// O122083101093
+
 //  $order_data = DB::table('db_orders')
-//   ->wherein('code_order',
-//   ['O122091003188'])
+//   ->wherein('code_order', 
+//   ['O123012200049']) 
 //   ->where('status_run_pv','=','not_run_pv')
 //   //->where('invoice_code_id_fk','=',null)
-//   ->get();
-// // dd($order_data);
+//   ->get(); 
+// // dd($order_data); 
+//   if(count($order_data)>1){ 
+//     dd('มากกว่า 1');
+
+//   }
+// //  dd($order_data);    
 //   $i=0;
 
 //   foreach($order_data as $value){
 //     $i++;
 //     //$rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'customer');
 //     $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
+   
 
 //     $data[][$i]=$rs;
 //   }
+ 
 
-
-// dd($data);
+// dd($data,'O123012200049');
   }
 
   public static function run_invoice_code(){
@@ -788,6 +812,7 @@ class RunErrorController extends Controller
       return $resule;
     }
 
+ 
 
     public static function PvPayment_type_confirme($order_id, $admin_id, $distribution_channel, $action_type)
     {
@@ -795,6 +820,8 @@ class RunErrorController extends Controller
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
+// dd('ok');
+            // dd($order_data);
 
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
@@ -808,10 +835,20 @@ class RunErrorController extends Controller
             return $resule;
         }
 
-        // if ($order_data->order_status_id_fk == 4 || $order_data->order_status_id_fk == 5 || $order_data->order_status_id_fk == 6 || $order_data->order_status_id_fk == 7) {
-        //     $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
-        //     return $resule;
-        // }
+        if ($order_data->order_status_id_fk == 4 || $order_data->order_status_id_fk == 5 || $order_data->order_status_id_fk == 6 || $order_data->order_status_id_fk == 7) {
+            $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
+            return $resule;
+        }
+
+        if($order_update->approve_status){
+          if($order_update->status_run_pv == 'success'){
+            if($order_update->pay_type_id_fk==1||$order_update->pay_type_id_fk==8||$order_update->pay_type_id_fk==10||$order_update->pay_type_id_fk==11||$order_update->pay_type_id_fk==12){
+              $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
+              return $resule;
+            }
+          }
+
+        }
 
         $pv = $order_data->pv_total;
         if ($order_data->status_payment_sent_other == 1) {
@@ -829,7 +866,6 @@ class RunErrorController extends Controller
         $business_location_id = $order_data->business_location_id_fk;
 
         if (empty($order_id)) {
-
             $resule = ['status' => 'fail', 'message' => 'Data is Null'];
             DB::rollback();
             return $resule;
@@ -850,9 +886,6 @@ class RunErrorController extends Controller
 
                 if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
-
-
-
 
                     $check_aicash = DB::table('customers') //อัพ Pv ของตัวเอง
                         ->select('ai_cash','id','user_name')
@@ -999,7 +1032,7 @@ class RunErrorController extends Controller
                                         'approve_status' => 1,
                                         'approve_date' => date('Y-m-d H:i:s')]);
 
-                                $expiry_date = date("Y-m-d", strtotime("+1 month", strtotime(now())));
+                                $expiry_date = date("Y-m-d", strtotime("+30 day"));
 
                                 $inseart_gift_voucher = DB::table('gift_voucher')->insert([
 
@@ -1416,6 +1449,8 @@ class RunErrorController extends Controller
                         $order_update->status_run_pv = 'success';
 
 
+
+
                 } elseif ($type_id == 5) { // Ai Voucher
 
                   if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
@@ -1624,5 +1659,27 @@ class RunErrorController extends Controller
       }
     }
 
+    public static function hidden_order(){
+       $adate= now(); 
+       $date = date("Y-m-d 00:59:59", strtotime("-1 day",strtotime($adate)));
+         
+        $data = DB::table('db_orders')
+        ->where('db_orders.approve_status', '=',0)
+        ->where('db_orders.order_status_id_fk', '=',1)
+        ->where('db_orders.created_at', '<=', $date)
+        ->where('db_orders.deleted_at', '=',null)
+        ->get();
+        
+        $i = 0;
+        foreach( $data as $value){
+            $i++;
+            $order_update = DB::table('db_orders')
+            ->where('id', $value->id)
+            ->update(['deleted_at' => now()]); //ลงข้อมูลบิลชำระเงิน
+        }
+        dd('success',$i);
+
+
+    }
 
 }

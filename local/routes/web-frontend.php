@@ -61,6 +61,7 @@ Route::get('logout', function () {
 
 
 Route::get('RunError','Frontend\Fc\RunErrorController@index')->name('RunError');
+Route::get('fc/hidden_order','Frontend\Fc\RunErrorController@hidden_order')->name('fc/hidden_order');
 
 
 Route::get('payment_test_type_1','Frontend\CartController@payment_test_type_1')->name('payment_test_type_1');
@@ -320,3 +321,5 @@ Route::get('check_id_card', 'Frontend\RegisterController@check_id_card')->name('
 Route::get('ksher', 'Frontend\Ksher\KsherController@index')->name('ksher');
 Route::post('gateway_ksher', 'Frontend\Ksher\KsherController@gateway_ksher')->name('gateway_ksher');
 Route::post('ksher_notify', 'Frontend\Ksher\KsherNotifyController@ksher_notify')->name('ksher_notify');
+
+Route::get('check_id_card', 'Frontend\RegisterController@check_id_card')->name('check_id_card');
