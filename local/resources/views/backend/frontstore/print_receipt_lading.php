@@ -639,20 +639,20 @@ if(!empty($db_orders[0]->action_user)){
      $tel = '';
 
           //  เปลี่ยนบนหัวบิลของพี่กอล์ฟ
-    // if($db_orders[0]->status_payment_sent_other==1){
-    //   $cus = DB::select("
-    //   SELECT
-    //   customers.user_name,
-    //   customers.prefix_name,
-    //   customers.first_name,
-    //   customers.last_name,
-    //   customers.id_card
-    //   FROM
-    //   db_orders
-    //   Left Join customers ON db_orders.customers_sent_id_fk = customers.id
-    //   where db_orders.id = ".$id."
-    //     ");
-    // }else{
+    if($db_orders[0]->status_payment_sent_other==1){
+      $cus = DB::select("
+      SELECT
+      customers.user_name,
+      customers.prefix_name,
+      customers.first_name,
+      customers.last_name,
+      customers.id_card
+      FROM
+      db_orders
+      Left Join customers ON db_orders.customers_sent_id_fk = customers.id
+      where db_orders.id = ".$id."
+        ");
+    }else{
       $cus = DB::select("
       SELECT
       customers.user_name,
@@ -665,7 +665,12 @@ if(!empty($db_orders[0]->action_user)){
       Left Join customers ON db_orders.customers_id_fk = customers.id
       where db_orders.id = ".$id."
         ");
-    // }
+    }
+
+    $buy_other = "";
+    if($db_orders[0]->status_payment_sent_other==1){
+      $buy_other = "ทำรายการโดย : [".$db_orders[0]->user_name."]";
+    }
 
     //  $cus = DB::select("
     //     SELECT
@@ -713,7 +718,35 @@ if(!empty($db_orders[0]->action_user)){
       //       WHERE db_orders.id=".$id."
       //     ");
 
+         // วุฒิเช็คซื้อให้คนอื่น
+         if($db_orders[0]->status_payment_sent_other==1){
        //  วุฒฺิแก้เอาที่อยู่จริงลูกค้ามาใส่
+       $address_in_order = DB::select("
+       SELECT
+       house_no,
+       house_name,
+       moo,
+       soi,
+       road,
+       amphures_id_fk,
+       dataset_amphures.name_th AS ampname,
+       district_id_fk,
+       dataset_districts.name_th AS tamname,
+       province_id_fk,
+       dataset_provinces.name_th AS provname,
+       zipcode,
+       tel_mobile AS tel,
+       tel_home AS tel_home
+       FROM
+       customers_detail
+       Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+       Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+       Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+       WHERE customers_detail.customer_id=".@$db_orders[0]->customers_sent_id_fk."
+     ");
+     //
+         }else{
+                 //  วุฒฺิแก้เอาที่อยู่จริงลูกค้ามาใส่
        $address_in_order = DB::select("
        SELECT
        house_no,
@@ -738,6 +771,7 @@ if(!empty($db_orders[0]->action_user)){
        WHERE customers_detail.customer_id=".@$db_orders[0]->customers_id_fk."
      ");
      //
+         }
 
      if(!empty(@$address_in_order[0]->provname)){
 
@@ -1008,12 +1042,12 @@ if(!empty($db_orders[0]->action_user)){
 
                       }
 
-  //  $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
-  $address = !empty($address) ? $address . ' ' .$tel : NULL;
+   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
+  // $address = !empty($address) ? $address . ' ' .$tel : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("
-                SELECT db_orders.action_user,branchs.b_code as branch_code,customers.user_name
+                SELECT db_orders.*,branchs.b_code as branch_code,customers.user_name
                 FROM
                 db_orders
                 Left Join branchs ON db_orders.branch_id_fk = branchs.id
@@ -1317,7 +1351,7 @@ elseif(@$pay_type[0]->pay_type_id_fk==17){
 
         DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ] $purchase_type ' WHERE id = (($n*$i)+16) ; ");
 
-        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ] $buy_other ' WHERE id = (($n*$i)+17) ; ");
 
         DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
 
@@ -1412,6 +1446,13 @@ for ($j=0; $j < $amt_page ; $j++) {
                 <br>
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
                 <?php echo @$DB[0]->a ; ?>
+                <?php
+                // dd($db_orders);
+        if(@$db_orders[0]->invoice_code_id_fk){
+          echo '<br>'.@$db_orders[0]->invoice_code_id_fk;
+        }
+
+        ?>
                 <br>
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+5) ; "); ?>
                 <?php echo @$DB[0]->a ; ?>
