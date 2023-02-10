@@ -1083,9 +1083,6 @@ if(!empty($db_orders[0]->action_user)){
 
                         }
 
-
-
-
                         if(@$sRow->delivery_location==3){
 
                                 @$addr = DB::select("select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,

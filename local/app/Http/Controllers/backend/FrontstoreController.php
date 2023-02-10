@@ -1036,11 +1036,14 @@ class FrontstoreController extends Controller
     }
   }
 
-  $check_data = \App\Models\Backend\Frontstore::select('id','code_order')->find($request->frontstore_id);
+  $check_data = \App\Models\Backend\Frontstore::select('id','code_order','business_location_id_fk')->find($request->frontstore_id);
   if($check_data){
     $check = \App\Models\Backend\Frontstore::select('id','code_order')->where('code_order',$check_data->code_order)->where('id','!=',$check_data->id)->get();
     if(count($check )>0){
-        return redirect()->back()->with('error','ไม่สามารถทำรายการได้เนื่องจากเลขบิลซ้ำ!! ..กรุณาเยิกเลิกและออกรายการใหม่');
+      $run_pament_code_new = RunNumberPayment::run_number_order($check_data->business_location_id_fk);
+      $check_data->code_order = $run_pament_code_new;
+      $check_data->save();
+        return redirect()->back()->with('error','ไม่สามารถทำรายการได้เนื่องจากเลขบิลซ้ำ ระบบได้ทำการเปลี่ยนเป็นเลขบิล '.$run_pament_code_new.' กรุณาเลือกชำระเงินและกดบันทึกใหม่อีกครั้ง');
         return false;
     }
   }
