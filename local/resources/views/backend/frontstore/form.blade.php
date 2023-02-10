@@ -6431,6 +6431,8 @@
                                 // ปิดไว้ก่อน แนบสลิป ค่อยเปิด
                                 $('.class_btnSave').prop('disabled', true);
 
+                                $('.CalPrice').val('1').change();
+
                             }
 
                         else

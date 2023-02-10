@@ -104,7 +104,8 @@ class Po_approveController extends Controller
              // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
              $other_bill = DB::table('db_orders')
              ->where('pay_with_other_bill',1)
-             ->where('pay_with_other_bill_note','like','%'.$sRow->code_order.'%')
+            //  ->where('pay_with_other_bill_note','like','%'.$sRow->code_order.'%')
+            ->where('pay_with_other_bill_note','=',$sRow->code_order)
              ->where('approve_status','!=',5)
             //  ->where('approve_status',1)
              ->get();
@@ -254,7 +255,7 @@ class Po_approveController extends Controller
                 }
 
                      // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
-                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','like','%'.$data_id->code_order.'%')
+                $other_bill = DB::table('db_orders')->where('pay_with_other_bill',1)->where('pay_with_other_bill_note','=',$data_id->code_order)
                 // ->where('approve_status',1)
                 ->whereIn('approve_status',[1,2,6,9])
                 ->get();
@@ -462,6 +463,7 @@ class Po_approveController extends Controller
                 $branch_id_fk = "";
             }
             $action_user = "";
+
         }else{
 
             $business_location_id_fk = " and db_orders.business_location_id_fk = ".@\Auth::user()->business_location_id_fk." " ;
@@ -519,7 +521,7 @@ class Po_approveController extends Controller
         // return $transfer_bill_status;
 
 // qry อันที่สองที่มา UNION ALL เอาไว้แสดงผลรวม
-
+// dd($branch_id_fk);
        $sTable =  DB::select("
             select `db_orders`.*, `dataset_approve_status`.`txt_desc`, `dataset_approve_status`.`color`, `db_orders`.`id` as `orders_id`,
             `dataset_order_status`.`detail`, `dataset_order_status`.`css_class`, `dataset_orders_type`.`orders_type` as `type`,
@@ -542,27 +544,26 @@ class Po_approveController extends Controller
             $created_at
             $transfer_bill_approvedate
             $customer_id
-            or
-            pay_type_id_fk in (1,8,10,11,12,20) and
-            `dataset_order_status`.`lang_id` = 1 and
-            (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
-            `db_orders`.`id` != 0
-            $business_location_id_fk
-            $action_user
-            $doc_id
-            $transfer_amount_approver
-            $transfer_bill_status
-            $created_at
-            $transfer_bill_approvedate
-            $customer_id
             ORDER BY CASE
-              WHEN approve_status = 1 THEN 1
-              ELSE 99 END ASC,
-         approve_status,
-         code_order desc
-
+            WHEN approve_status = 1 THEN 1
+            ELSE 99 END ASC,
+            approve_status,
+            code_order desc
                 ");
-                // ORDER BY code_order DESC
+
+                // or
+                // pay_type_id_fk in (1,8,10,11,12,20) and
+                // `dataset_order_status`.`lang_id` = 1 and
+                // (`dataset_orders_type`.`lang_id` = 1 or `dataset_orders_type`.`lang_id` IS NULL) and
+                // `db_orders`.`id` != 0
+                // $business_location_id_fk
+                // $action_user
+                // $doc_id
+                // $transfer_amount_approver
+                // $transfer_bill_status
+                // $created_at
+                // $transfer_bill_approvedate
+                // $customer_id
 
         $sQuery = \DataTables::of($sTable);
         return $sQuery
@@ -659,8 +660,10 @@ class Po_approveController extends Controller
             })
             ->escapeColumns('transfer_bill_status')
             ->addColumn('transfer_bill_date', function ($row) {
-                return DB::table('payment_slip')->where('code_order', '=', $row->code_order)->where('status', 2)->orderby('id', 'desc')->value('transfer_bill_date');
-            })
+                // return DB::table('payment_slip')->where('code_order', '=', $row->code_order)->where('status', 2)->orderby('id', 'desc')->value('transfer_bill_date');
+                $transfer_bill_date = DB::table('payment_slip')->select('transfer_bill_date')->where('code_order', '=', $row->code_order)->where('status', 2)->orderby('id', 'desc')->first();
+                return @$transfer_bill_date->transfer_bill_date;
+              })
 
             ->addColumn('pay_with_other_bill_note', function ($row) {
                 $str = '';
@@ -671,7 +674,8 @@ class Po_approveController extends Controller
                     $other_b = DB::table('db_orders')
                     ->select('db_orders.code_order')
                     ->where('db_orders.approve_status','!=',5)
-                    ->where('db_orders.pay_with_other_bill_note','like','%'.$row->code_order.'%')
+                    // ->where('db_orders.pay_with_other_bill_note','like','%'.$row->code_order.'%')
+                    ->where('db_orders.pay_with_other_bill_note','=',$row->code_order)
                     ->get();
 
                     if(count($other_b)!=0){
@@ -843,7 +847,8 @@ class Po_approveController extends Controller
             // ->where('db_orders.id', $con01, $w01)
             ->where('db_orders.pay_with_other_bill',1)
             ->where('db_orders.approve_status','!=',5)
-            ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
+            // ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
+            ->where('db_orders.pay_with_other_bill_note','=',@$order_id->code_order)
             ->get();
             // ->toSql();
         $sQuery = \DataTables::of($sTable);
@@ -1078,7 +1083,8 @@ class Po_approveController extends Controller
                 ->orWhereNull('dataset_orders_type.lang_id');
             })
             ->where('db_orders.pay_with_other_bill',1)
-            ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
+            // ->where('db_orders.pay_with_other_bill_note','like','%'.@$order_id->code_order.'%')
+            ->where('db_orders.pay_with_other_bill_note','=',@$order_id->code_order)
             ->where('db_orders.approve_status','!=',5)
             ->get();
 
