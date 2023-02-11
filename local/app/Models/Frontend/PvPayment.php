@@ -13,6 +13,8 @@ use App\Models\Frontend\Runpv_AiStockis;
 class PvPayment extends Model
 {
 
+
+
     public static function PvPayment_type_confirme($order_id, $admin_id, $distribution_channel, $action_type)
     {
         DB::BeginTransaction();
