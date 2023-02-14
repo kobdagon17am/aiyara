@@ -60,7 +60,7 @@ class Product extends Model
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
-     
+
 
         // $ev_objective = DB::table('categories')
         //       ->where('lang_id', '=', 1)
@@ -119,7 +119,7 @@ class Product extends Model
           $business_location_id = 1;
       }
 
-    
+
         $promotions = DB::table('promotions')
             ->select('promotions.*', 'promotions_images.img_url', 'promotions_images.promotion_img', 'promotions_cost.selling_price', 'promotions_cost.pv')
             ->leftjoin('promotions_images', 'promotions_images.promotion_id_fk', '=', 'promotions.id')
@@ -134,10 +134,11 @@ class Product extends Model
             ->where('promotions.promotion_coupon_status', '=', 0)
             ->wheredate('promotions.show_startdate', '<=', date('Y-m-d'))
             ->wheredate('promotions.show_enddate', '>=', date('Y-m-d'))
-
             ->orderby('id', 'DESC')
             ->get();
-           
+
+
+
 
 
 
@@ -161,8 +162,9 @@ class Product extends Model
 
                 $check_all_available_purchase = Promotion::all_available_purchase($value->id);
                 $count_per_promotion = Promotion::count_per_promotion($value->id,$customer_id);
+
                 $count_per_promotion_day = Promotion::count_per_promotion_day($value->id,$customer_id);
-              
+
 
                 //1 เช็คก่อนว่าใช้โปรโมชั่นเต็มหรือยัง
                 if ($value->all_available_purchase <= $check_all_available_purchase['all_available_purchase'] and $value->all_available_purchase != "" and $value->all_available_purchase != 0) {
@@ -217,6 +219,8 @@ class Product extends Model
                     //เฉพาะต่อรอบโปรโมชั่น(1),ต่อวันภายในรอบโปรโมชั่น(2),(null)ไม่จำกัด,ไม่จำกัด(3)
                     if ($value->limited_amt_person <= $count_per_promotion['count']) {
 
+
+
                         $resule = ['status' => 'fail', 'message' => 'การซื้อเฉพาะต่อรอบโปรโมชั่นครบ '.$value->limited_amt_person.' ชิ้นแล้ว'];
                     } else {
                         $resule = ['status' => 'success', 'message' => 'สามารถซื้อได้'];
@@ -235,17 +239,18 @@ class Product extends Model
                     }
 
                 } else {
-                    
+
                     $resule = ['status' => 'success', 'message' => 'สามารถซื้อได้'];
 
                     $html .= ProductList::product_list_html($value->id, $type, $value->img_url, $value->promotion_img, $value->name_thai, $value->detail_thai, $icon = '', $value->selling_price, $value->pv, 8);
                 }
 
             }
+            dd($resule);
 
 
             $data = ['html' => $html, 'rs' => $resule];
-            
+
             return $data;
         }
     }
