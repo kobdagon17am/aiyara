@@ -72,18 +72,18 @@ class PaymentSentAddressOrder extends Model
       // dd($rs->all());
       // //gift_voucher_price
 
-      if ($rs->sent_type_to_customer == 'sent_type_other') {
-        $insert_db_orders->status_payment_sent_other = 1;
-        $data_customer = DB::table('customers')
-        ->select('user_name','first_name','last_name','business_name')
-        ->where('id','=',$rs->address_sent_id_fk)
-        ->first();
-      }else{
+      // if ($rs->sent_type_to_customer == 'sent_type_other') {
+      //   $insert_db_orders->status_payment_sent_other = 1;
+      //   $data_customer = DB::table('customers')
+      //   ->select('user_name','first_name','last_name','business_name')
+      //   ->where('id','=',$rs->address_sent_id_fk)
+      //   ->first();
+      // }else{
         $data_customer = DB::table('customers')
         ->select('user_name','first_name','last_name','business_name')
         ->where('id','=',$customer_id)
         ->first();
-      }
+      // }
 
       $insert_db_orders->user_name = $data_customer->user_name;
       $insert_db_orders->name_customer = $data_customer->first_name.' '.$data_customer->last_name;
