@@ -3736,6 +3736,7 @@
             });
 
             $(document).on('click', '.btn-plus', function(e) {
+              // alert('l,');
                 const input = $(e.target).closest('.input-group').find('input');
                 if (input.is('input')) {
                     var d = $(".frmFrontstorelist").serialize();
@@ -3747,12 +3748,15 @@
 
                     var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
 
+                    $('.myloading').show();
+
                     $.ajax({
                         type: 'POST',
                         url: " {{ url('backend/frontstorelist/plus') }} ",
                         data: $(".frmFrontstorelist").serialize() + "&product_id_fk_this=" +
                             product_id_fk_this + "&purchase_type_id_fk=" + purchase_type_id_fk,
                         success: function(response) { // What to do if we succeed
+                          $('.myloading').hide();
                             return false;
                             var oTable;
 

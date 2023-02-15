@@ -311,10 +311,57 @@ class FrontstorelistController extends Controller
     public function plus(Request $request)
     {
       // return($request->all());
-      // return($request->all());
+      // return($request->all()); product_unit_id_fk
       // return(count($request->product_id_fk));
       // return($request->quantity[0]);
       // dd();
+      // dd($request->all());
+
+      // $this->fnManageGiveaway(@$request->frontstore_id);
+      // $sBranchs = DB::select(" select * from branchs where id=" . $request->branch_id_fk . " ");
+      //    for ($i=0; $i < count($request->product_id_fk) ; $i++) {
+      //       // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
+      //       // echo $Check_stock->product_id_fk;
+      //   // dd($text);
+      //   \DB::beginTransaction();
+      //   try {
+      //         $sProducts[] = DB::select("
+      //           SELECT
+      //           products.id,
+      //           (
+      //             SELECT product_unit_id_fk
+      //             FROM
+      //             products_units
+      //             WHERE product_id_fk = products.id LIMIT 1
+      //           ) as product_unit,
+
+      //           products.category_id ,categories.category_name,
+      //           (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
+      //           (
+      //           SELECT concat( products.product_code,' : '  ,
+      //           products_details.product_name)
+      //           FROM
+      //           products_details
+      //           WHERE products_details.lang_id=1 AND products_details.product_id_fk=products.id
+      //           ) as pn,
+      //           products_cost.member_price,
+      //           products_cost.pv
+      //           FROM
+      //           products
+      //           LEFT JOIN categories on products.category_id=categories.id
+      //           LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+      //           WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = ".$sBranchs[0]->business_location_id_fk."
+      //       ");
+
+      //     } catch (\Exception $e) {
+      //       echo $e->getMessage();
+      //       dd($sProducts);
+      //       dd($request->product_id_fk[$i]);
+      //       \DB::rollback();
+      //     }
+
+      //           }
+
 
       if(isset($request->product_plus)){
 
@@ -337,7 +384,7 @@ class FrontstorelistController extends Controller
                   WHERE product_id_fk = products.id LIMIT 1
                 ) as product_unit,
                 products.category_id ,categories.category_name,
-                (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
+                (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1 LIMIT 1) as p_img,
                 (
                 SELECT concat( products.product_code,' : '  ,
                 products_details.product_name)
@@ -353,6 +400,7 @@ class FrontstorelistController extends Controller
                 LEFT JOIN products_cost on products.id = products_cost.product_id_fk
                 WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = ".$sBranchs[0]->business_location_id_fk."
             ");
+
               // echo ($sProducts[0]->product_unit);
 
               // return $sProducts;
