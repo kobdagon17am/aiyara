@@ -110,7 +110,7 @@ class ProductsListController extends Controller
       //   ");
 
       $check = DB::select("
-      SELECT 
+      SELECT
       products.id
       FROM
       products
@@ -119,9 +119,9 @@ class ProductsListController extends Controller
       ");
         $not_in = "";
         foreach($check as $c){
-            $img = DB::table('products_images')->where('product_id_fk',$c->id)->first();    
+            $img = DB::table('products_images')->where('product_id_fk',$c->id)->first();
             if($img){
-              $products_details = DB::table('products_details')->where('product_id_fk',$c->id)->first();    
+              $products_details = DB::table('products_details')->where('product_id_fk',$c->id)->first();
             }else{
               $not_in .= $c->id.',';
             }
@@ -138,7 +138,7 @@ class ProductsListController extends Controller
       SELECT
       products.id,
       products.category_id ,categories.category_name,
-      (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1) as p_img,
+      (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1 LIMIT 1) as p_img,
       (
       SELECT concat( products.product_code,' : '  ,
       products_details.product_name)

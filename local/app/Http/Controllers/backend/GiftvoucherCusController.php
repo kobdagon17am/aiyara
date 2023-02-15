@@ -31,12 +31,12 @@ class GiftvoucherCusController extends Controller
     {
 
       $sRow = \App\Models\Backend\GiftvoucherCode::find($id);
- 
+
       return View('backend.giftvoucher_cus.form')
       ->with(
         array(
            'sRow'=>$sRow,
-        ) );       
+        ) );
     }
 
     public function update(Request $request, $id)
@@ -56,7 +56,7 @@ class GiftvoucherCusController extends Controller
           // dd();
 
           if(isset($request->product_plus)){
-            for ($i=0; $i < count($request->product_id_fk) ; $i++) { 
+            for ($i=0; $i < count($request->product_id_fk) ; $i++) {
                 // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
                 // echo $Check_stock->product_id_fk;
                   $sProducts = DB::select("
@@ -67,9 +67,9 @@ class GiftvoucherCusController extends Controller
                       FROM
                       dataset_product_unit
                       WHERE id = products.id AND lang_id=1 LIMIT 1
-                    ) as product_unit,                
+                    ) as product_unit,
                     products.category_id ,categories.category_name,
-                    (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
+                    (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1 LIMIT 1) as p_img,
                     (
                     SELECT concat( products.product_code,' : '  ,
                     products_details.product_name)
@@ -83,10 +83,10 @@ class GiftvoucherCusController extends Controller
                     products
                     LEFT JOIN categories on products.category_id=categories.id
                     LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1 
+                    WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = 1
                 ");
                   // echo ($sProducts[0]->product_unit);
-               
+
                $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
 
                $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
@@ -107,7 +107,7 @@ class GiftvoucherCusController extends Controller
                               // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
                               'product_unit_id_fk' => @$sProducts[0]->product_unit,
                             ]
-                        ); 
+                        );
 
                   }
 
@@ -132,7 +132,7 @@ class GiftvoucherCusController extends Controller
 
               }
 
-       
+
               }
 
 
@@ -146,7 +146,7 @@ class GiftvoucherCusController extends Controller
           }
 
         }
-        
+
     public function destroy($id)
     {
     }

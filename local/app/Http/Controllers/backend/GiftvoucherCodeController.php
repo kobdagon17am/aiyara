@@ -80,7 +80,7 @@ class GiftvoucherCodeController extends Controller
                       WHERE id = products.id AND lang_id=1 LIMIT 1
                     ) as product_unit,
                     products.category_id ,categories.category_name,
-                    (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
+                    (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1 LIMIT 1) as p_img,
                     (
                     SELECT concat( products.product_code,' : '  ,
                     products_details.product_name)
