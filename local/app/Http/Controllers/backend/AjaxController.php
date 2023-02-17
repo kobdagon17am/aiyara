@@ -313,7 +313,7 @@ class AjaxController extends Controller
         if ($rs->startDate) {
             $date = str_replace('/', '-', $rs->startDate);
             $s_date = date('Y-m-d', strtotime($date));
-               $startDate = " AND DATE(db_orders.created_at) >= '" . $s_date . "' ";
+               $startDate = " AND DATE(db_orders.approve_date) >= '" . $s_date . "' ";
                $startDate2 = $s_date;
         } else {
             $startDate = '';
@@ -323,7 +323,7 @@ class AjaxController extends Controller
         if ($rs->endDate) {
             $date = str_replace('/', '-', $rs->endDate);
             $e_date = date('Y-m-d', strtotime($date));
-             $endDate = " AND DATE(db_orders.created_at) <= '" . $e_date . "' ";
+             $endDate = " AND DATE(db_orders.approve_date) <= '" . $e_date . "' ";
              $endDate2 = $e_date;
         } else {
             $endDate = '';
@@ -364,7 +364,7 @@ class AjaxController extends Controller
     if ($rs->startDate) {
         $date = str_replace('/', '-', $rs->startDate);
         $s_date = date('Y-m-d', strtotime($date));
-           $startDate = " AND DATE(db_orders.created_at) >= '" . $s_date . "' ";
+           $startDate = " AND DATE(db_orders.approve_date) >= '" . $s_date . "' ";
            $startDate2 = $s_date;
     } else {
         $startDate = '';
@@ -373,7 +373,7 @@ class AjaxController extends Controller
     if ($rs->endDate) {
         $date = str_replace('/', '-', $rs->endDate);
         $e_date = date('Y-m-d', strtotime($date));
-         $endDate = " AND DATE(db_orders.created_at) <= '" . $e_date . "' ";
+         $endDate = " AND DATE(db_orders.approve_date) <= '" . $e_date . "' ";
          $endDate2 = $e_date;
     } else {
         $endDate = '';

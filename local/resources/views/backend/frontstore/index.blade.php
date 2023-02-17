@@ -263,15 +263,15 @@
 
                             <div class="divTableRow">
                                 <!--
-                                                  <div class="divTH">
-                                                <label for="" >เลขที่ใบสั่งซื้อ : </label>
-                                              </div>
-                                              <div class="divTableCell" style="width: 15%">
-                                                <input class="form-control"  />
-                                              </div>
-                                              <div class="divTableCell">
-                                                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-                                              </div> -->
+                                                          <div class="divTH">
+                                                        <label for="" >เลขที่ใบสั่งซื้อ : </label>
+                                                      </div>
+                                                      <div class="divTableCell" style="width: 15%">
+                                                        <input class="form-control"  />
+                                                      </div>
+                                                      <div class="divTableCell">
+                                                        <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                                                      </div> -->
 
                                 <div class="divTH">
                                     <label for="">{{ __('message.creator') }} : </label>
@@ -345,11 +345,11 @@
                                 </div>
                                 <div class="divTableCell" style="width: 15%">
                                     <!--  	   <select name="" class="form-control select2-templating "  >
-                                                  <option value="">Select</option>
-                                                      <option value="0"> - </option>
-                                                      <option value="1"> In Process </option>
-                                                      <option value="1"> Success </option>
-                                                </select> -->
+                                                          <option value="">Select</option>
+                                                              <option value="0"> - </option>
+                                                              <option value="1"> In Process </option>
+                                                              <option value="1"> Success </option>
+                                                        </select> -->
                                 </div>
                                 <div class="divTableCell">
                                     <!-- <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button> -->
@@ -378,16 +378,16 @@
                         </div>
                     </div>
                     <!--       </div>
-                                    </div>
-                                  </div>
-                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
 
 
 
-                                <div class="row">
-                                  <div class="col-12">
-                                    <div class="card">
-                                      <div class="card-body"> -->
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div class="card">
+                                              <div class="card-body"> -->
                     <hr>
                     <div class="divTable">
                         <div class="divTableBody">
@@ -690,6 +690,11 @@
                                 '" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">' +
                                 d + '</span></a>';
                         }
+                    },
+                    {
+                        data: 'approve_date',
+                        title: '<center> Approve date </center>',
+                        className: 'text-center'
                     },
                     {
                         data: 'status_sent_money',
@@ -1314,6 +1319,11 @@
                                     }
                                 },
                                 {
+                                    data: 'approve_date',
+                                    title: '<center> Approve date </center>',
+                                    className: 'text-center'
+                                },
+                                {
                                     data: 'status_sent_money',
                                     title: '<center>สถานะ<br>การส่งเงิน</center>',
                                     className: 'text-center w80 ',
@@ -1794,6 +1804,11 @@
                                         '" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">' +
                                         d + '</span></a>';
                                 }
+                            },
+                            {
+                                data: 'approve_date',
+                                title: '<center> Approve date </center>',
+                                className: 'text-center'
                             },
                             {
                                 data: 'status_sent_money',
