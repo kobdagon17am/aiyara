@@ -393,6 +393,211 @@ class HistoryController extends Controller
             ->make(true);
     }
 
+    public function datatable_sent_to(Request $request)
+    {
+
+        $business_location_id = Auth::guard('c_user')->user()->business_location_id;
+        if(empty($business_location_id)){
+          $business_location_id = 1;
+        }
+
+        $not_show = DB::table('db_orders')
+        ->select('id')
+        ->whereRaw('db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk = 8 ')
+        ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
+        ->get();
+
+
+        $not_show_arr = array();
+        foreach($not_show as $value){
+          $not_show_arr[] = $value->id;
+        }
+
+        // dd($request->dt_order_type);
+
+            $orders = DB::table('db_orders')
+            ->select('db_orders.tracking_no','db_orders.note','db_orders.sum_price','db_orders.shipping_price','db_orders.distribution_channel_id_fk',
+            'db_orders.purchase_type_id_fk', 'db_orders.pv_total', 'db_orders.created_at', 'db_orders.delivery_location_frontend','db_orders.order_status_id_fk',
+            'db_orders.branch_id_fk' , 'db_orders.code_order', 'db_orders.cancel_expiry_date','db_orders.pay_type_id_fk','db_orders.id',
+            'db_orders.pv_banlance','db_orders.active_mt_date','db_orders.active_tv_date',
+            'dataset_order_status.detail', 'dataset_order_status.css_class',
+                'dataset_orders_type.orders_type as type', 'dataset_orders_type.icon as type_icon',
+                'dataset_pay_type.detail as pay_type_name')
+            ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
+            ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
+            ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
+            //->whereNotIn('db_orders.id',$not_show_arr)
+            ->where("db_orders.customers_sent_id_fk","=",Auth::guard('c_user')->user()->id)
+            ->where('db_orders.order_channel', '!=','VIP')
+            ->where('db_orders.deleted_at', '=',null)
+            ->where('dataset_order_status.lang_id', '=', $business_location_id)
+            ->where('dataset_orders_type.lang_id', '=', $business_location_id)
+            ->whereRaw(("case WHEN '{$request->dt_order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$request->dt_order_type}' END"))
+            ->whereRaw(("case WHEN '{$request->dt_pay_type}' = '' THEN 1 else dataset_pay_type.id = '{$request->dt_pay_type}' END"))
+            ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
+            ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) >= '{$request->s_date}' and date(db_orders.created_at) <= '{$request->e_date}'else 1 END"))
+            ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
+
+            //->orwhere("db_orders.customers_sent_id_fk","=",Auth::guard('c_user')->user()->id)
+            ->orderby('db_orders.created_at', 'DESC');
+
+        $sQuery = Datatables::of($orders);
+        return $sQuery
+            ->addColumn('tracking', function ($row) {
+                if ($row->tracking_no) {
+                    return $row->tracking_no;
+                } else {
+                    return '';
+                }
+
+            })
+            ->addColumn('price', function ($row) {
+                if ($row->type == 5) {
+                    return number_format($row->total_price - $row->gift_voucher_price, 2);
+                } elseif ($row->type == 6) {
+                    return number_format($row->sum_price, 2);
+                } elseif ($row->type == 7) {
+                    return number_format($row->sum_price, 2);
+                } else {
+                    return number_format($row->sum_price + $row->shipping_price, 2);
+                }
+            })
+
+            ->addColumn('pv_total', function ($row) {
+              if($row->purchase_type_id_fk == 5){
+                return '<b class="text-success"> 0 </b>';
+              }else{
+                return '<b class="text-success">' . number_format($row->pv_total) . '</b>';
+              }
+
+            })
+            ->addColumn('date', function ($row) {
+                return date('Y/m/d H:i:s', strtotime($row->created_at));
+            })
+
+            ->addColumn('status', function ($row) {
+                if ($row->delivery_location_frontend == 'sent_office' and $row->order_status_id_fk == 4) {
+                   $name = HistoryController::get_name_branchs($row->branch_id_fk);
+
+                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode('.$row->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$row->detail.' '.$name->b_name.'</b></button>';
+                } else {
+                  if($row->order_status_id_fk == 1 ){
+                    if($row->note){
+                      return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')" > <b style="color: #000">' . $row->detail . '</b></button>';
+                    }else{
+                      return '<span class="label label-inverse-'.$row->css_class.'" ><b style="color:#000"> '.$row->detail.' <b></span>';
+                      // return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '"> <b style="color: #000">' . $row->detail . '</b></button>';
+                    }
+
+
+                  }else if($row->order_status_id_fk == 3){
+                    return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="modal_logtranfer(' . $row->id . ','.$row->customers_id_fk.')" ><i class="fa fa-search"></i> <b style="color: #000">' . $row->detail . '</b></button>';
+
+                  }else {
+
+                    return '<span class="label label-inverse-'.$row->css_class.'" ><b style="color:#000"> '.$row->detail.' <b></span>';
+                  }
+
+
+                }
+            })
+
+            ->addColumn('action', function ($row) {
+
+              if($row->distribution_channel_id_fk == 3 ){
+                if ($row->order_status_id_fk == 1 || $row->order_status_id_fk == 3) {
+                  // $action = '<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')"><i class="fa fa-upload"></i> Upload </button>
+                  $action = '<a class="btn btn-sm btn-success" href="'.route('cart_payment_transfer',['code_order'=>$row->code_order]).'" ><i class="fa fa-refresh"></i> ชำระเงิน </a>
+
+                  <a class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#delete" onclick="delete_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-trash"></i></a>';
+              } elseif ($row->order_status_id_fk == 2 || $row->order_status_id_fk == 5 || ($row->purchase_type_id_fk == 6 and $row->order_status_id_fk == 7)) {
+
+                  if ($row->cancel_expiry_date == '' || $row->cancel_expiry_date == '00-00-00 00:00:00' || (strtotime('now') > strtotime($row->cancel_expiry_date))) {
+                      $action = '';
+                  } else {
+                      if ($row->pay_type_id_fk == 1 || $row->pay_type_id_fk == 10 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 12) {
+                          $action = '';
+                      } else {
+                          //$action = '<a class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#cancel" onclick="cancel_order(' . $row->id . ',\'' . $row->code_order . '\')" ><i class="fa fa-reply-all"></i> Cancel</a>';
+                          $action = '';
+                      }
+
+                  }
+
+              }elseif($row->order_status_id_fk == 9){
+                $action = '<div class="dropdown-warning btn-sm dropdown open">
+                <button class="btn btn-sm btn-warning dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
+                <div class="dropdown-menu" aria-labelledby="dropdown-5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#promptpay" onclick="re_new_payment_promptpay('.$row->id.',\''.$row->code_order.'\')">PromptPay</a>
+                <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#truemoney" onclick="re_new_payment_truemoney('.$row->id.',\''.$row->code_order.'\')">TrueMoney</a>
+                <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')">Upload File Slip</a>
+                </div>
+            </div>';
+              }
+               else {
+                  $action = '';
+              }
+              return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->id]) . '" ><i class="fa fa-search"></i></a> ' . $action;
+
+              }else{
+
+                if(($row->pay_type_id_fk == 3 || $row->pay_type_id_fk == 6 || $row->pay_type_id_fk == 9 || $row->pay_type_id_fk == 11 || $row->pay_type_id_fk == 14) and $row->order_status_id_fk == 2 and  $row->member_id_aicash == Auth::guard('c_user')->user()->id){
+
+                  $action = '<div class="dropdown-warning btn-sm dropdown open">
+                  <button class="btn btn-warning btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fa fa-refresh"></i></button>
+                  <div class="dropdown-menu" aria-labelledby="dropdown-5" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#confirm_aicash" onclick="confirm_aicash('.$row->id.',\''.$row->code_order.'\')">Confirm</a>
+                  <a class="dropdown-item waves-light waves-effect" data-toggle="modal" data-target="#cancel_aicash_backend" onclick="cancel_aicash_backend(' . $row->id . ',\'' . $row->code_order . '\')">Cancel</a>
+
+                  </div>
+              </div>';
+
+                }else{
+                  $action = '';
+
+                }
+
+
+                return '<a class="btn btn-sm btn-primary" href="' . route('cart-payment-history', ['code_order' => $row->id]) . '" ><i class="fa fa-search"></i></a> '.$action;
+
+              }
+
+            })
+
+            ->addColumn('banlance', function ($row) {
+                if ($row->pv_banlance) {
+                    $banlance = number_format($row->pv_banlance);
+                } else {
+                    $banlance = '';
+                }
+                return '<b class="text-primary">' . $banlance . '</b>';
+            })
+
+            ->addColumn('pay_type_name', function ($row) {
+                return '<b class="text-primary">' . $row->pay_type_name . '</b>';
+            })
+            ->addColumn('date_active', function ($row) {
+                if(!empty($row->active_mt_date)) {
+                  $date_active = date('d/m/Y', strtotime($row->active_mt_date));
+                  return '<span class="label label-inverse-info-border" data-toggle="tooltip" data-placement="right" data-original-title="' . $date_active . '"><b style="color:#000">' . $date_active . '<b></span>';
+                }elseif(!empty($row->active_tv_date)) {
+                    $date_active = date('d/m/Y', strtotime($row->active_tv_date));
+                    return '<span class="label label-inverse-info-border" data-toggle="tooltip" data-placement="right" data-original-title="' . $date_active . '"><b style="color:#000">' . $date_active . '<b></span>';
+                }else{
+                  return '';
+                }
+            })
+
+            ->addColumn('type', function ($row) {
+                return $row->type_icon;
+            })
+
+            ->rawColumns(['pv_total', 'status', 'action', 'banlance', 'pay_type_name', 'type','date_active'])
+
+            ->make(true);
+    }
+
+
     public function upload_slip(Request $request)
     {
 

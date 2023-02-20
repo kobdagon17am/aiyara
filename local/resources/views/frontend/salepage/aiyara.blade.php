@@ -132,7 +132,7 @@
 
         </div>
 
-        <div class="col-lg-12 col-sm-12" style="background-color: #00bc72">
+        {{-- <div class="col-lg-12 col-sm-12" style="background-color: #00bc72">
 
             <div class="thumbnail pt-5 pb-5">
                 <div class="thumb">
@@ -143,7 +143,7 @@
                 </div>
             </div>
 
-        </div>
+        </div> --}}
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
@@ -156,7 +156,7 @@
 
         </div>
 
-        <div class="col-lg-12 col-sm-12" style="background-color: #00bc72">
+        {{-- <div class="col-lg-12 col-sm-12" style="background-color: #00bc72">
 
             <div class="thumbnail pt-5 pb-5">
                 <div class="thumb">
@@ -167,7 +167,7 @@
                 </div>
             </div>
 
-        </div>
+        </div> --}}
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
