@@ -20,9 +20,14 @@ use App\Http\Controllers\Frontend\Fc\RunPvController;
 class RunErrorController extends Controller
 {
   public static function index(){
-    
-    $data = RunErrorController::hidden_order();
-    dd($data);
+
+
+    // foreach(){
+
+    // }
+
+    // $data = RunErrorController::hidden_order();
+    // dd($data);
 
     // $promotions = DB::table('db_promotion_cus')
     // ->select('db_promotion_cus.id')
@@ -31,7 +36,7 @@ class RunErrorController extends Controller
     //            //->where('pro_status', 4)
     //            ->orderByDesc('pro_status')
     //           // ->limit(1000)
-    //           ->get(); 
+    //           ->get();
 
     // dd($promotions);
 
@@ -102,7 +107,7 @@ class RunErrorController extends Controller
 //   ->where('code_order', '=', 'O123010900062')
 //   ->first();
 
-//   $user = DB::table('customers') 
+//   $user = DB::table('customers')
 //   ->select('id', 'pv_aistockist', 'user_name')
 //   ->where('id', '=',$order_data->customers_id_fk)
 //   ->first();
@@ -113,28 +118,28 @@ class RunErrorController extends Controller
 // O122083101093
 
 //  $order_data = DB::table('db_orders')
-//   ->wherein('code_order', 
-//   ['O123012200049']) 
+//   ->wherein('code_order',
+//   ['O123012200049'])
 //   ->where('status_run_pv','=','not_run_pv')
 //   //->where('invoice_code_id_fk','=',null)
-//   ->get(); 
-// // dd($order_data); 
-//   if(count($order_data)>1){ 
+//   ->get();
+// // dd($order_data);
+//   if(count($order_data)>1){
 //     dd('มากกว่า 1');
 
 //   }
-// //  dd($order_data);    
+// //  dd($order_data);
 //   $i=0;
 
 //   foreach($order_data as $value){
 //     $i++;
 //     //$rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'customer');
 //     $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
-   
+
 
 //     $data[][$i]=$rs;
 //   }
- 
+
 
 // dd($data,'O123012200049');
   }
@@ -812,7 +817,7 @@ class RunErrorController extends Controller
       return $resule;
     }
 
- 
+
 
     public static function PvPayment_type_confirme($order_id, $admin_id, $distribution_channel, $action_type)
     {
@@ -1660,16 +1665,16 @@ class RunErrorController extends Controller
     }
 
     public static function hidden_order(){
-       $adate= now(); 
+       $adate= now();
        $date = date("Y-m-d 00:59:59", strtotime("-1 day",strtotime($adate)));
-         
+
         $data = DB::table('db_orders')
         ->where('db_orders.approve_status', '=',0)
         ->where('db_orders.order_status_id_fk', '=',1)
         ->where('db_orders.created_at', '<=', $date)
         ->where('db_orders.deleted_at', '=',null)
         ->get();
-        
+
         $i = 0;
         foreach( $data as $value){
             $i++;

@@ -27,45 +27,36 @@ class FrontstoreController extends Controller
 
   public function upPro(Request $request)
   {
-    // $pro = DB::table('cambodia_provinces')->get();
-    // foreach($pro as $p){
-    //   DB::table('dataset_provinces')->insert([
-    //     'business_location_id' => 3,
-    //     'code' => $p->id,
-    //     'name_th' => $p->name,
-    //     'name_en' => $p->name,
-    //     'ref_id' => $p->id,
-    //     'status' => 1,
-    //   ]);
+
+    $orders = DB::table('db_orders')->select('id','code_order')->where('credit_price','!=',null)->where('sum_credit_price',null)->get();
+    dd($orders);
+
+    // $pro_list = DB::table('db_order_products_list')
+    // ->select(DB::raw('SUM(total_pv) AS total_pv'),'id','frontstore_id_fk')
+    // ->where('distribution_channel_id_fk','!=',3)
+    // // ->where('type_product','product')
+    // ->where('created_at','>','2023-02-01 01:00:39')
+    // ->groupBy('frontstore_id_fk')
+    // ->get();
+
+    // $arr_order = [];
+    // foreach($pro_list as $pro){
+    //   $order = DB::table('db_orders')->select('id','pv_total')->where('id','=',$pro->frontstore_id_fk)->first();
+    //   if($order){
+    //     if($pro->total_pv!=$order->pv_total){
+    //       array_push($arr_order,$order->id);
+    //     }
+    //   }
+
     // }
 
-    // $amp = DB::table('cambodia_districts')->get();
-    // foreach($amp as $a){
-    //   $pro = DB::table('dataset_provinces')->where('ref_id',$a->province_id)->first();
-    //   DB::table('dataset_amphures')->insert([
-    //     'code' => $a->id,
-    //     'name_th' => $a->name,
-    //     'name_en' => $a->name,
-    //     'province_id' => $pro->id,
-    //     'ref_id' => $a->id,
-    //     'status' => 1,
-    //   ]);
-    // }
+    // $orders = DB::table('db_orders')->select('id','pv_total','code_order')
+    // ->whereIn('id',$arr_order)
+    // ->whereIn('approve_status',[2,4,9])
+    // ->where('created_at','>','2023-02-01 01:00:39')
+    // ->where('purchase_type_id_fk','!=',5)->get();
 
-    // $tam = DB::table('cambodia_communes')->get();
-    // foreach($tam as $t){
-    //   $am = DB::table('dataset_amphures')->where('ref_id',$t->amphure_id)->first();
-    //   DB::table('dataset_districts')->insert([
-    //     'id' => '333'.$t->id,
-    //     'name_th' => $t->name,
-    //     'name_en' => $t->name,
-    //     'amphure_id' => $am->id,
-    //     'ref_id' => $t->id,
-    //     'status' => 1,
-    //   ]);
-    // }
-
-    return 'ok';
+    // return 'ok';
 
   }
 
@@ -2430,8 +2421,13 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->startDate)) {
+    if($req->date_type == 'created'){
       $startDate1 = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+      }elseif($req->date_type == 'approved'){
+        $startDate1 = " AND DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
+        $startDate2 = " AND DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
+       }
       $startDate3 = date("d-m-Y", strtotime($req->startDate));
       $sD3 = $startDate3;
     } else {
@@ -2442,8 +2438,13 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->endDate)) {
+    if($req->date_type == 'created'){
       $endDate1 = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
       $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+     }elseif($req->date_type == 'approved'){
+      $endDate1 = " AND DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
+      $endDate2 = " AND DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
+       }
       $endDate3 = date("d-m-Y", strtotime($req->endDate));
       $eD3 = " To " . $endDate3;
     } else {
@@ -2641,6 +2642,7 @@ class FrontstoreController extends Controller
                   <th width="5%" class="text-right">TrueMoney</th>
                   <th width="5%" class="text-right">PromptPay</th>
                   <th width="10%" class="text-right">' . trans('message.total') . '</th>
+                  <th width="5%" class="text-right">(GV)</th>
                   <th width="5%" class="text-right">(' . trans('message.fee') . ')</th>
                   <th width="5%" class="text-right">(' . trans('message.transportor_fee') . ')</th>
                 </tr>
@@ -2663,6 +2665,7 @@ class FrontstoreController extends Controller
                       <td class="text-right"> ' . number_format($r->true_money_price, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->prompt_pay_price, 2) . ' </td>
                       <th class="text-right"> ' . number_format($r->total_price, 2) . ' </th>
+                      <td class="text-right"> ' . number_format($r->gift_voucher_price, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->fee_amt, 2) . ' </td>
                       <td class="text-right"> ' . number_format($r->shipping_price, 2) . ' </td>
                     </tr>';
@@ -2721,19 +2724,106 @@ class FrontstoreController extends Controller
                 $business_location_id_fk
         ");
 
+    // วุฒิเพิ่มมาapprove วันอื่นๆ
+
+    // if (!empty($req->startDate)) {
+    //   $startDate1_other_approve = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
+    //   $startDate2_other_approve = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+    //   $startDate3_other_approve = date("d-m-Y", strtotime($req->startDate));
+    //   $sD3 = $startDate3;
+    // } else {
+    //   $startDate1_other_approve = " AND DATE(db_orders.created_at) >= CURDATE() ";
+    //   $startDate2_other_approve = " AND DATE(db_add_ai_cash.created_at) >= CURDATE() ";
+    //   $startDate3_other_approve = date("d-m-Y");
+    //   $sD3 = date("d-m-Y");
+    // }
+
+    // if (!empty($req->endDate)) {
+    //   $endDate1 = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
+    //   $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+    //   $endDate3 = date("d-m-Y", strtotime($req->endDate));
+    //   $eD3 = " To " . $endDate3;
+    // } else {
+    //   $endDate1 = "";
+    //   $endDate2 = "";
+    //   $endDate3 = date("Y-m-d");
+    //   $eD3 = "";
+    // }
+
+    if (!empty($req->endDate)) {
+      $other_approve = "AND DATE(db_orders.approve_date) > '" . $req->endDate . "' ";
+    }else{
+      $other_approve = "AND DATE(db_orders.approve_date) > '" . date('Y-m-d') . "' ";
+    }
+
+
+
+        $sDBFrontstoreTOTAL_other_approve_date = DB::select("
+        SELECT
+        SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS sum_credit_price,
+        SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
+        SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
+        SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
+        SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
+        SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
+        SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
+        SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
+        SUM(CASE WHEN db_orders.charger_type = 2 THEN 0 ELSE db_orders.fee_amt END) AS fee_amt_charger_in,
+
+        db_orders.code_order,
+
+        SUM(
+        (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
+        (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
+        /*  (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +  */
+        (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
+        (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)   /* + */ +
+        (CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END)   /* + */ +
+        (CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END)   /* + */
+
+        /* (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) */
+        ) as total_price,
+
+        SUM(
+         CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END
+        ) AS shipping_price
+
+        FROM
+        db_orders
+        WHERE 1
+        AND approve_status NOT IN (5,6,0,1)
+
+        $action_user_011
+        $startDate1
+        $endDate1
+        $other_approve
+        $invoice_code
+        $purchase_type_id_fk
+        $customer_username
+        $customer_name
+        $action_user_02
+        $status_sent_money
+        $approve_status
+        $viewcondition_01
+        $business_location_id_fk
+
+");
+
+//
   //  วุฒิเพิ่มมา + $sDBFrontstoreTOTAL[0]->fee_amt วุฒิบวกค่าธรรมเนียม
       $show .= '
                     <tr>
                       <th>Total > </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->cash_pay, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->aicash_price, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->transfer_price, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->sum_credit_price, 2) . ' </th>
-                      <td class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->true_money_price, 2) . ' </td>
-                      <td class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->prompt_pay_price, 2) . ' </td>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->total_price, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->fee_amt, 2) . ' </th>
-                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->shipping_price, 2) . ' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->cash_pay, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->cash_pay, 2).'</span>' .' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->aicash_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->aicash_price, 2).'</span>' .' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->transfer_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->transfer_price, 2).'</span>' .' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->sum_credit_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->sum_credit_price, 2).'</span>' .' </th>
+                      <td class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->true_money_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->true_money_price, 2).'</span>' .' </td>
+                      <td class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->prompt_pay_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->prompt_pay_price, 2).'</span>' .' </td>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->total_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->total_price, 2).'</span>' .' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->gift_voucher_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->gift_voucher_price, 2).'</span>' .' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->fee_amt, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->fee_amt, 2).'</span>' .' </th>
+                      <th class="text-right"> ' . number_format($sDBFrontstoreTOTAL[0]->shipping_price, 2) . '<br><span style="color:red;"> - '.number_format(@$sDBFrontstoreTOTAL_other_approve_date[0]->shipping_price, 2).'</span>' .' </th>
                     </tr>';
     $show .= '
                      </tbody>
@@ -2741,6 +2831,7 @@ class FrontstoreController extends Controller
                  </div>
               <br>
            ';
+
     $show .= '
            <div class="table-responsive">
             <table class="table table-sm m-0">
@@ -3230,10 +3321,14 @@ class FrontstoreController extends Controller
         $action_user_012 = "";
       }
 
-
     if (!empty($req->startDate)) {
+     if($req->date_type == 'created'){
       $startDate1 = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+        }elseif($req->date_type == 'approved'){
+          $startDate1 = " AND DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
+          $startDate2 = " AND DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
+         }
       $startDate3 = date("d-m-Y", strtotime($req->startDate));
       $sD3 = $startDate3;
     } else {
@@ -3244,8 +3339,13 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->endDate)) {
+      if($req->date_type == 'created'){
       $endDate1 = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
       $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+      }elseif($req->date_type == 'approved'){
+        $endDate1 = " AND DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
+        $endDate2 = " AND DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
+      }
       $endDate3 = date("d-m-Y", strtotime($req->endDate));
       $eD3 = " To " . $endDate3;
     } else {
@@ -3625,16 +3725,27 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->startDate)) {
+      if($req->date_type == 'created'){
       $startDate = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+      }elseif($req->date_type == 'approved'){
+        $startDate = " AND DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
+        $startDate2 = " AND DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
+      }
+
     } else {
       $startDate = " AND DATE(db_orders.created_at) >= CURDATE() ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= CURDATE() ";
     }
 
     if (!empty($req->endDate)) {
+      if($req->date_type == 'created'){
       $endDate = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
       $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+       }elseif($req->date_type == 'approved'){
+        $endDate = " AND DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
+        $endDate2 = " AND DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
+      }
     } else {
       $endDate = "";
       $endDate2 = "";
@@ -3747,7 +3858,7 @@ class FrontstoreController extends Controller
     }
 
     $sTable = DB::select("
-                SELECT gift_voucher_price,code_order,db_orders.id,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
+                SELECT gift_voucher_price,code_order,db_orders.id,db_orders.approve_date,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
                 db_orders.true_money_price,db_orders.prompt_pay_price, db_orders.user_name, db_orders.name_customer, db_orders.name_customer_business,
                 db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,db_orders.customers_sent_id_fk,
                 credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
@@ -3806,7 +3917,6 @@ class FrontstoreController extends Controller
           return @$purchase_type[0]->detail;
         }
       })
-
       ->addColumn('status', function ($row) {
         if (@$row->approve_status != "") {
           @$approve_status = DB::select(" select * from `dataset_approve_status` where id=" . @$row->approve_status . " ");
@@ -3887,6 +3997,10 @@ class FrontstoreController extends Controller
 
         if (@$row->prompt_pay_price != 0) {
           $total_price += $row->prompt_pay_price;
+        }
+
+        if (@$row->gift_voucher_price != 0) {
+          $total_price += $row->gift_voucher_price;
         }
 
         if (@$row->pay_type_id_fk != 10) {

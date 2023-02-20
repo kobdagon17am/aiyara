@@ -140,6 +140,19 @@
                             </div>
 
                             <div class="divTableRow">
+                            <div class="divTH">
+                              {{-- <label for="startDate">{{ __('message.create_date') }} : </label> --}}
+
+                          </div>
+                          <div class="divTableCell" style="width: 15%">
+                            <select name="date_type" id="date_type" class="form-control select2-templating ">
+                              <option selected value="created">Date created : </option>
+                              <option value="approved">Date Approved : </option>
+                            </select>
+                          </div>
+                            </div>
+
+                            <div class="divTableRow">
                                 <div class="divTH">
                                     <label for="startDate">{{ __('message.create_date') }} : </label>
                                 </div>
@@ -263,15 +276,15 @@
 
                             <div class="divTableRow">
                                 <!--
-                                                  <div class="divTH">
-                                                <label for="" >เลขที่ใบสั่งซื้อ : </label>
-                                              </div>
-                                              <div class="divTableCell" style="width: 15%">
-                                                <input class="form-control"  />
-                                              </div>
-                                              <div class="divTableCell">
-                                                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-                                              </div> -->
+                                                          <div class="divTH">
+                                                        <label for="" >เลขที่ใบสั่งซื้อ : </label>
+                                                      </div>
+                                                      <div class="divTableCell" style="width: 15%">
+                                                        <input class="form-control"  />
+                                                      </div>
+                                                      <div class="divTableCell">
+                                                        <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                                                      </div> -->
 
                                 <div class="divTH">
                                     <label for="">{{ __('message.creator') }} : </label>
@@ -345,11 +358,11 @@
                                 </div>
                                 <div class="divTableCell" style="width: 15%">
                                     <!--  	   <select name="" class="form-control select2-templating "  >
-                                                  <option value="">Select</option>
-                                                      <option value="0"> - </option>
-                                                      <option value="1"> In Process </option>
-                                                      <option value="1"> Success </option>
-                                                </select> -->
+                                                          <option value="">Select</option>
+                                                              <option value="0"> - </option>
+                                                              <option value="1"> In Process </option>
+                                                              <option value="1"> Success </option>
+                                                        </select> -->
                                 </div>
                                 <div class="divTableCell">
                                     <!-- <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button> -->
@@ -378,16 +391,16 @@
                         </div>
                     </div>
                     <!--       </div>
-                                    </div>
-                                  </div>
-                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
 
 
 
-                                <div class="row">
-                                  <div class="col-12">
-                                    <div class="card">
-                                      <div class="card-body"> -->
+                                        <div class="row">
+                                          <div class="col-12">
+                                            <div class="card">
+                                              <div class="card-body"> -->
                     <hr>
                     <div class="divTable">
                         <div class="divTableBody">
@@ -690,6 +703,11 @@
                                 '" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">' +
                                 d + '</span></a>';
                         }
+                    },
+                    {
+                        data: 'approve_date',
+                        title: '<center> Approve date </center>',
+                        className: 'text-center'
                     },
                     {
                         data: 'status_sent_money',
@@ -1154,7 +1172,7 @@
                 var status_sent_money = $('#status_sent_money').val();
                 var approve_status = $('#approve_status').val();
                 var business_location_id_fk = $('#business_location_id_fk').val();
-
+                var date_type = $('#date_type').val();
                 var viewcondition = $(this).data('id');
                 // // console.log(viewcondition);
 
@@ -1202,6 +1220,7 @@
                                     approve_status: approve_status,
                                     viewcondition: viewcondition,
                                     business_location_id_fk: business_location_id_fk,
+                                    date_type: date_type,
                                 },
                                 method: 'POST',
                             },
@@ -1312,6 +1331,11 @@
                                             '" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">' +
                                             d + '</span></a>';
                                     }
+                                },
+                                {
+                                    data: 'approve_date',
+                                    title: '<center> Approve date </center>',
+                                    className: 'text-center'
                                 },
                                 {
                                     data: 'status_sent_money',
@@ -1552,6 +1576,7 @@
                                 approve_status: approve_status,
                                 viewcondition: viewcondition,
                                 business_location_id_fk: business_location_id_fk,
+                                date_type: date_type,
                             },
                             success: function(data) {
                                 // // // console.log(data);
@@ -1576,6 +1601,7 @@
                                 approve_status: approve_status,
                                 viewcondition: viewcondition,
                                 business_location_id_fk: business_location_id_fk,
+                                date_type: date_type,
                             },
                             success: function(data) {
 
@@ -1644,7 +1670,7 @@
                 var status_sent_money = $('#status_sent_money').val();
                 var approve_status = $('#approve_status').val();
                 var business_location_id_fk = $('#business_location_id_fk').val();
-
+                var date_type = $('#date_type').val();
                 console.log(startDate + " : " + endDate);
                 console.log(purchase_type_id_fk);
                 console.log(customer_username);
@@ -1684,6 +1710,7 @@
                                 action_user: action_user,
                                 status_sent_money: status_sent_money,
                                 approve_status: approve_status,
+                                date_type: date_type,
                             },
                             method: 'POST',
                         },
@@ -1794,6 +1821,11 @@
                                         '" style="cursor: pointer;"><span class=" font-size-14 " style="color:darkred">' +
                                         d + '</span></a>';
                                 }
+                            },
+                            {
+                                data: 'approve_date',
+                                title: '<center> Approve date </center>',
+                                className: 'text-center'
                             },
                             {
                                 data: 'status_sent_money',
@@ -2030,6 +2062,7 @@
                             status_sent_money: status_sent_money,
                             approve_status: approve_status,
                             business_location_id_fk: business_location_id_fk,
+                            date_type: date_type,
                         },
                         success: function(data) {
                             // // // console.log(data);
@@ -2053,6 +2086,7 @@
                             status_sent_money: status_sent_money,
                             approve_status: approve_status,
                             business_location_id_fk: business_location_id_fk,
+                            date_type: date_type,
                         },
                         success: function(data) {
 

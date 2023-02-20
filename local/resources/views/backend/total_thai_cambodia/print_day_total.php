@@ -371,7 +371,7 @@ set_time_limit(9999999);
                         ck_users_admin.`name` as action_user_name,
                         db_orders.pay_type_id_fk,
                         dataset_pay_type.detail AS pay_type,
-                        date(db_orders.created_at) AS created_at,
+                        date(db_orders.approve_date) AS approve_date,
                         db_orders.branch_id_fk,
                         branchs.b_name as branchs_name,
                         dataset_business_location.txt_desc as business_location_name,
@@ -407,7 +407,7 @@ set_time_limit(9999999);
                         $endDate
                         $action_user
                         $business_location_id_fk
-                        ORDER BY created_at ASC
+                        ORDER BY approve_date ASC
                   ");
                       }else{
                         // $sTable =DB::select("
@@ -458,7 +458,7 @@ set_time_limit(9999999);
                         ck_users_admin.`name` as action_user_name,
                         db_orders.pay_type_id_fk,
                         dataset_pay_type.detail AS pay_type,
-                        date(db_orders.created_at) AS created_at,
+                        date(db_orders.approve_date) AS approve_date,
                         db_orders.branch_id_fk,
                         branchs.b_name as branchs_name,
                         dataset_business_location.txt_desc as business_location_name,
@@ -494,7 +494,7 @@ set_time_limit(9999999);
                         $endDate
                         $action_user
                         $business_location_id_fk
-                        ORDER BY created_at ASC
+                        ORDER BY approve_date ASC
                   ");
                       }
 
@@ -504,7 +504,7 @@ set_time_limit(9999999);
                 //       ck_users_admin.`name` as action_user_name,
                 //       db_orders.pay_type_id_fk,
                 //       dataset_pay_type.detail AS pay_type,
-                //       date(db_orders.created_at) AS created_at,
+                //       date(db_orders.approve_date) AS approve_date,
                 //       db_orders.branch_id_fk,
                 //       branchs.b_name as branchs_name,
                 //       dataset_business_location.txt_desc as business_location_name,
@@ -539,7 +539,7 @@ set_time_limit(9999999);
                 //       $endDate
                 //       $action_user
                 //       $business_location_id_fk
-                //       ORDER BY created_at ASC
+                //       ORDER BY approve_date ASC
                 // ");
 
 
@@ -604,7 +604,14 @@ set_time_limit(9999999);
                 // account_bank_name_customer ดูจากตรงนี้
                 $bank_books = DB::table('dataset_account_bank')->select('id','type_book')->get();
 
+                $day_old = '';
+                $day_curr = '';
+
             foreach($sTable as $key => $order){
+              $day_curr = $order->approve_date;
+              if($day_old==''){
+                $day_old = $order->approve_date;
+              }
 
               if($order->action_user_name == ''){
                 $order->action_user_name = 'V3';
@@ -720,7 +727,7 @@ set_time_limit(9999999);
               $cash_transfer_price_2_total += $transfer_price_2;
 
               // if($report_type == 'day'){
-                $created_at = date('d/m/Y', strtotime($order->created_at));
+                $approve_date = date('d/m/Y', strtotime($order->approve_date));
               // }else{
               //   $action_date = date('m/Y', strtotime($order->action_date));
               // }
@@ -742,7 +749,7 @@ set_time_limit(9999999);
               //   $cus_name = '-';
               // }
 
-              if(!isset($arr_date[$created_at])){
+              if(!isset($arr_date[$approve_date])){
                 if(count($arr_date)==0){
                   $total_date_product_value += $order->product_value;
                   $total_date_tax += $order->tax+($shipping_vat+$fee_vat);
@@ -770,7 +777,7 @@ set_time_limit(9999999);
               }
               // <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
               if(count($arr_date) > 0){
-                if(!isset($arr_date[$created_at])){
+                if(!isset($arr_date[$approve_date])){
                   $p.= '
                   <tr>
                   <td style="text-align: center;"></td>
@@ -797,7 +804,7 @@ set_time_limit(9999999);
               // <td style="text-align: right;">'.number_format($order->aicash_price,2,".",",").'</td>
               $p.= '
               <tr>
-              <td style="text-align: center;">'.$created_at.'</td>
+              <td style="text-align: center;">'.$approve_date.'</td>
               <td style="text-align: left;">'.$code_order.'</td>
               <td style="text-align: left;">'.$cus_name.'</td>
               <td style="text-align: right;">'.number_format($order->product_value,2,".",",").'</td>
@@ -818,31 +825,90 @@ set_time_limit(9999999);
               ';
 
               if(count($sTable)==$key+1){
+                  if(count($sTable)==1){
 
-                $total_date_product_value += $order->product_value;
-                $total_date_tax += $order->tax+($shipping_vat+$fee_vat);
+                  $total_date_product_value = $order->product_value;
+                  $total_date_tax = $order->tax+($shipping_vat+$fee_vat);
 
-                $total_date_sum_price += $order->sum_price;
-                $total_date_shipping_price += $order->shipping_price;
-                $total_date_fee_amt += $order->fee_amt;
+                  $total_date_sum_price = $order->sum_price;
+                  $total_date_shipping_price = $order->shipping_price;
+                  $total_date_fee_amt = $order->fee_amt;
 
-                $total_date_sum_all += ($order->fee_amt+$order->shipping_price+$order->product_value);
+                  $total_date_sum_all = ($order->fee_amt+$order->shipping_price+$order->product_value);
 
-                $total_date_cash_pay += $order->cash_pay;
-                $total_date_transfer_price += $order->transfer_price;
+                  $total_date_cash_pay = $order->cash_pay;
+                  $total_date_transfer_price = $order->transfer_price;
 
-                $total_date_transfer_price_1 += $transfer_price_1;
-                $total_date_transfer_price_2 += $transfer_price_2;
+                  $total_date_transfer_price_1 = $transfer_price_1;
+                  $total_date_transfer_price_2 = $transfer_price_2;
 
-                $total_date_prompt_pay_price += $order->prompt_pay_price;
-                $total_date_true_money_price += $order->true_money_price;
+                  $total_date_prompt_pay_price = $order->prompt_pay_price;
+                  $total_date_true_money_price = $order->true_money_price;
 
-                $total_date_gift_voucher_price += $order->gift_voucher_price;
+                  $total_date_gift_voucher_price = $order->gift_voucher_price;
 
-                $total_date_sum_credit_price += $order->sum_credit_price;
-                $total_date_aicash_price += $order->aicash_price;
-                $arr_data[$code_order] = $code_order;
-                // dd($total_date_product_value);
+                  $total_date_sum_credit_price = $order->sum_credit_price;
+                  $total_date_aicash_price = $order->aicash_price;
+                  $arr_data[$code_order] = $code_order;
+
+                }else{
+                    if($day_curr!=$day_old){
+                      // dd($code_order);
+                      $total_date_product_value = $order->product_value;
+                      $total_date_tax = $order->tax+($shipping_vat+$fee_vat);
+
+                      $total_date_sum_price = $order->sum_price;
+                      $total_date_shipping_price = $order->shipping_price;
+                      $total_date_fee_amt = $order->fee_amt;
+
+                      $total_date_sum_all = ($order->fee_amt+$order->shipping_price+$order->product_value);
+
+                      $total_date_cash_pay = $order->cash_pay;
+                      $total_date_transfer_price = $order->transfer_price;
+
+                      $total_date_transfer_price_1 = $transfer_price_1;
+                      $total_date_transfer_price_2 = $transfer_price_2;
+
+                      $total_date_prompt_pay_price = $order->prompt_pay_price;
+                      $total_date_true_money_price = $order->true_money_price;
+
+                      $total_date_gift_voucher_price = $order->gift_voucher_price;
+
+                      $total_date_sum_credit_price = $order->sum_credit_price;
+                      $total_date_aicash_price = $order->aicash_price;
+                      $arr_data[$code_order] = $code_order;
+
+                    }else{
+                      $total_date_product_value += $order->product_value;
+                      $total_date_tax += $order->tax+($shipping_vat+$fee_vat);
+
+                      $total_date_sum_price += $order->sum_price;
+                      $total_date_shipping_price += $order->shipping_price;
+                      $total_date_fee_amt += $order->fee_amt;
+
+                      $total_date_sum_all += ($order->fee_amt+$order->shipping_price+$order->product_value);
+
+                      $total_date_cash_pay += $order->cash_pay;
+                      $total_date_transfer_price += $order->transfer_price;
+
+                      $total_date_transfer_price_1 += $transfer_price_1;
+                      $total_date_transfer_price_2 += $transfer_price_2;
+
+                      $total_date_prompt_pay_price += $order->prompt_pay_price;
+                      $total_date_true_money_price += $order->true_money_price;
+
+                      $total_date_gift_voucher_price += $order->gift_voucher_price;
+
+                      $total_date_sum_credit_price += $order->sum_credit_price;
+                      $total_date_aicash_price += $order->aicash_price;
+                      $arr_data[$code_order] = $code_order;
+
+                    }
+
+                }
+
+                $day_old = $order->approve_date;
+
                 $p.= '
                 <tr>
                 <td style="text-align: center;"></td>
@@ -865,11 +931,12 @@ set_time_limit(9999999);
             </tr>
                 ';
                 // <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
-                // dd($arr_data);
               }
 
-              if(!isset($arr_date[$created_at])){
-                $arr_date[$created_at] = $created_at;
+              $day_old = $order->approve_date;
+
+              if(!isset($arr_date[$approve_date])){
+                $arr_date[$approve_date] = $approve_date;
                 if(count($arr_date)!=0){
                   $total_date_product_value = 0;
                   $total_date_tax = 0;

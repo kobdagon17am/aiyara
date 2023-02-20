@@ -426,8 +426,13 @@
                         className: 'text-left'
                     },
                     {
+                        data: 'approve_date',
+                        title: '<center>วันที่อนุมัติ</center>',
+                        className: 'text-center'
+                    },
+                    {
                         data: 'action_date',
-                        title: '<center>วันที่ทำรายการ</center>',
+                        title: '<center>วันที่ทำสร้าง</center>',
                         className: 'text-center'
                     },
                     {

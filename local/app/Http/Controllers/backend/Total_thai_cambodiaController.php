@@ -126,7 +126,7 @@ class Total_thai_cambodiaController extends Controller
         if ($rs->startDate) {
             $date = str_replace('/', '-', $rs->startDate);
             $s_date = date('Y-m-d', strtotime($date));
-            $startDate = " AND DATE(db_orders.created_at) >= '" . $s_date . "' ";
+            $startDate = " AND DATE(db_orders.approve_date) >= '" . $s_date . "' ";
         } else {
             $startDate = '';
         }
@@ -134,7 +134,7 @@ class Total_thai_cambodiaController extends Controller
         if ($rs->endDate) {
             $date = str_replace('/', '-', $rs->endDate);
             $e_date = date('Y-m-d', strtotime($date));
-            $endDate = " AND DATE(db_orders.created_at) <= '" . $e_date . "' ";
+            $endDate = " AND DATE(db_orders.approve_date) <= '" . $e_date . "' ";
         } else {
             $endDate = '';
         }
@@ -171,6 +171,7 @@ class Total_thai_cambodiaController extends Controller
             ck_users_admin.`last_name` as action_last_name,
             db_orders.pay_type_id_fk,
             dataset_pay_type.detail AS pay_type,
+            date(db_orders.approve_date) AS approve_date,
             date(db_orders.created_at) AS created_at,
             db_orders.branch_id_fk,
             branchs.b_name as branchs_name,
@@ -202,7 +203,7 @@ class Total_thai_cambodiaController extends Controller
             $endDate
             $action_user
             $business_location_id_fk
-            ORDER BY created_at ASC
+            ORDER BY approve_date ASC
         ");
         }else{
             $sTable =DB::select("
@@ -213,6 +214,7 @@ class Total_thai_cambodiaController extends Controller
             ck_users_admin.`last_name` as action_last_name,
             db_orders.pay_type_id_fk,
             dataset_pay_type.detail AS pay_type,
+            date_format(db_orders.approve_date, '%M') AS approve_date,
             date_format(db_orders.created_at, '%M') AS created_at,
             db_orders.branch_id_fk,
             branchs.b_name as branchs_name,
@@ -246,8 +248,8 @@ class Total_thai_cambodiaController extends Controller
             $endDate
             $action_user
             $business_location_id_fk
-            GROUP BY action_user , date_format(db_orders.created_at, '%M')
-            ORDER BY created_at ASC
+            GROUP BY action_user , date_format(db_orders.approve_date, '%M')
+            ORDER BY approve_date ASC
         ");
         }
 
@@ -262,13 +264,24 @@ class Total_thai_cambodiaController extends Controller
         ->addColumn('action_date', function ($row) use($report_type) {
 
             if($report_type == 'day'){
-                $created_at = date('d/m/Y', strtotime($row->created_at));
+                $approve_date = date('d/m/Y', strtotime($row->created_at));
               }else{
-                $created_at = date('m/Y', strtotime($row->created_at));
+                $approve_date = date('m/Y', strtotime($row->created_at));
               }
 
-            return $created_at;
+            return $approve_date;
         })
+
+        ->addColumn('approve_date', function ($row) use($report_type) {
+
+          if($report_type == 'day'){
+              $approve_date = date('d/m/Y', strtotime($row->approve_date));
+            }else{
+              $approve_date = date('m/Y', strtotime($row->approve_date));
+            }
+
+          return $approve_date;
+      })
 
         ->addColumn('invoice' , function ($row) use($startDate, $endDate,  $action_user,$business_location_id_fk,$report_type) {
 
