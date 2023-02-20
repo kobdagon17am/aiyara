@@ -28,32 +28,35 @@ class FrontstoreController extends Controller
   public function upPro(Request $request)
   {
 
-    $pro_list = DB::table('db_order_products_list')
-    ->select(DB::raw('SUM(total_pv) AS total_pv'),'id','frontstore_id_fk')
-    ->where('distribution_channel_id_fk','!=',3)
-    // ->where('type_product','product')
-    ->where('created_at','>','2023-02-01 01:00:39')
-    ->groupBy('frontstore_id_fk')
-    ->get();
+    $orders = DB::table('db_orders')->select('id','code_order')->where('credit_price','!=',null)->where('sum_credit_price',null)->get();
+    dd($orders);
 
-    $arr_order = [];
-    foreach($pro_list as $pro){
-      $order = DB::table('db_orders')->select('id','pv_total')->where('id','=',$pro->frontstore_id_fk)->first();
-      if($order){
-        if($pro->total_pv!=$order->pv_total){
-          array_push($arr_order,$order->id);
-        }
-      }
+    // $pro_list = DB::table('db_order_products_list')
+    // ->select(DB::raw('SUM(total_pv) AS total_pv'),'id','frontstore_id_fk')
+    // ->where('distribution_channel_id_fk','!=',3)
+    // // ->where('type_product','product')
+    // ->where('created_at','>','2023-02-01 01:00:39')
+    // ->groupBy('frontstore_id_fk')
+    // ->get();
 
-    }
+    // $arr_order = [];
+    // foreach($pro_list as $pro){
+    //   $order = DB::table('db_orders')->select('id','pv_total')->where('id','=',$pro->frontstore_id_fk)->first();
+    //   if($order){
+    //     if($pro->total_pv!=$order->pv_total){
+    //       array_push($arr_order,$order->id);
+    //     }
+    //   }
 
-    $orders = DB::table('db_orders')->select('id','pv_total','code_order')
-    ->whereIn('id',$arr_order)
-    ->whereIn('approve_status',[2,4,9])
-    ->where('created_at','>','2023-02-01 01:00:39')
-    ->where('purchase_type_id_fk','!=',5)->get();
+    // }
 
-    return 'ok';
+    // $orders = DB::table('db_orders')->select('id','pv_total','code_order')
+    // ->whereIn('id',$arr_order)
+    // ->whereIn('approve_status',[2,4,9])
+    // ->where('created_at','>','2023-02-01 01:00:39')
+    // ->where('purchase_type_id_fk','!=',5)->get();
+
+    // return 'ok';
 
   }
 
@@ -2418,8 +2421,13 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->startDate)) {
+    if($req->date_type == 'created'){
       $startDate1 = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+      }elseif($req->date_type == 'approved'){
+        $startDate1 = " AND DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
+        $startDate2 = " AND DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
+       }
       $startDate3 = date("d-m-Y", strtotime($req->startDate));
       $sD3 = $startDate3;
     } else {
@@ -2430,8 +2438,13 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->endDate)) {
+    if($req->date_type == 'created'){
       $endDate1 = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
       $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+     }elseif($req->date_type == 'approved'){
+      $endDate1 = " AND DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
+      $endDate2 = " AND DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
+       }
       $endDate3 = date("d-m-Y", strtotime($req->endDate));
       $eD3 = " To " . $endDate3;
     } else {
@@ -3308,10 +3321,14 @@ class FrontstoreController extends Controller
         $action_user_012 = "";
       }
 
-
     if (!empty($req->startDate)) {
+     if($req->date_type == 'created'){
       $startDate1 = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+        }elseif($req->date_type == 'approved'){
+          $startDate1 = " AND DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
+          $startDate2 = " AND DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
+         }
       $startDate3 = date("d-m-Y", strtotime($req->startDate));
       $sD3 = $startDate3;
     } else {
@@ -3322,8 +3339,13 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->endDate)) {
+      if($req->date_type == 'created'){
       $endDate1 = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
       $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+      }elseif($req->date_type == 'approved'){
+        $endDate1 = " AND DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
+        $endDate2 = " AND DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
+      }
       $endDate3 = date("d-m-Y", strtotime($req->endDate));
       $eD3 = " To " . $endDate3;
     } else {
@@ -3703,16 +3725,27 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->startDate)) {
+      if($req->date_type == 'created'){
       $startDate = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+      }elseif($req->date_type == 'approved'){
+        $startDate = " AND DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
+        $startDate2 = " AND DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
+      }
+
     } else {
       $startDate = " AND DATE(db_orders.created_at) >= CURDATE() ";
       $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= CURDATE() ";
     }
 
     if (!empty($req->endDate)) {
+      if($req->date_type == 'created'){
       $endDate = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
       $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+       }elseif($req->date_type == 'approved'){
+        $endDate = " AND DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
+        $endDate2 = " AND DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
+      }
     } else {
       $endDate = "";
       $endDate2 = "";

@@ -140,6 +140,19 @@
                             </div>
 
                             <div class="divTableRow">
+                            <div class="divTH">
+                              {{-- <label for="startDate">{{ __('message.create_date') }} : </label> --}}
+
+                          </div>
+                          <div class="divTableCell" style="width: 15%">
+                            <select name="date_type" id="date_type" class="form-control select2-templating ">
+                              <option selected value="created">Date created : </option>
+                              <option value="approved">Date Approved : </option>
+                            </select>
+                          </div>
+                            </div>
+
+                            <div class="divTableRow">
                                 <div class="divTH">
                                     <label for="startDate">{{ __('message.create_date') }} : </label>
                                 </div>
@@ -1159,7 +1172,7 @@
                 var status_sent_money = $('#status_sent_money').val();
                 var approve_status = $('#approve_status').val();
                 var business_location_id_fk = $('#business_location_id_fk').val();
-
+                var date_type = $('#date_type').val();
                 var viewcondition = $(this).data('id');
                 // // console.log(viewcondition);
 
@@ -1207,6 +1220,7 @@
                                     approve_status: approve_status,
                                     viewcondition: viewcondition,
                                     business_location_id_fk: business_location_id_fk,
+                                    date_type: date_type,
                                 },
                                 method: 'POST',
                             },
@@ -1562,6 +1576,7 @@
                                 approve_status: approve_status,
                                 viewcondition: viewcondition,
                                 business_location_id_fk: business_location_id_fk,
+                                date_type: date_type,
                             },
                             success: function(data) {
                                 // // // console.log(data);
@@ -1586,6 +1601,7 @@
                                 approve_status: approve_status,
                                 viewcondition: viewcondition,
                                 business_location_id_fk: business_location_id_fk,
+                                date_type: date_type,
                             },
                             success: function(data) {
 
@@ -1654,7 +1670,7 @@
                 var status_sent_money = $('#status_sent_money').val();
                 var approve_status = $('#approve_status').val();
                 var business_location_id_fk = $('#business_location_id_fk').val();
-
+                var date_type = $('#date_type').val();
                 console.log(startDate + " : " + endDate);
                 console.log(purchase_type_id_fk);
                 console.log(customer_username);
@@ -1694,6 +1710,7 @@
                                 action_user: action_user,
                                 status_sent_money: status_sent_money,
                                 approve_status: approve_status,
+                                date_type: date_type,
                             },
                             method: 'POST',
                         },
@@ -2045,6 +2062,7 @@
                             status_sent_money: status_sent_money,
                             approve_status: approve_status,
                             business_location_id_fk: business_location_id_fk,
+                            date_type: date_type,
                         },
                         success: function(data) {
                             // // // console.log(data);
@@ -2068,6 +2086,7 @@
                             status_sent_money: status_sent_money,
                             approve_status: approve_status,
                             business_location_id_fk: business_location_id_fk,
+                            date_type: date_type,
                         },
                         success: function(data) {
 
