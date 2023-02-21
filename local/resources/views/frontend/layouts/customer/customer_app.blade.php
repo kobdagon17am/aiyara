@@ -413,8 +413,23 @@
             </a>
           </li>
 
-      <li class="{{ (request()->is('taxdata')) ? 'active' : '' }}">
+      {{-- <li class="{{ (request()->is('taxdata')) ? 'active' : '' }}">
             <a href="{{route('taxdata')}}">
+              <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
+              <span class="pcoded-mtext"> @lang('message.withholdingtax')</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li> --}}
+
+          <li class="{{ (request()->is('taxdata')) ? 'active' : '' }}">
+            <?php
+            $id = Auth::guard('c_user')->user()->user_name;
+            $intoken = date("ymd").''.$id.''.date("H");
+            $token = hash('SHA512', $intoken);
+            $url = 'https://aismart.aiyara.co.th/download_50twi/?id='.$id.'&token='.$token;
+
+            ?>
+            <a href="{{$url}}" target="_blank">
               <span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
               <span class="pcoded-mtext"> @lang('message.withholdingtax')</span>
               <span class="pcoded-mcaret"></span>

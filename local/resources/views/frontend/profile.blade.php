@@ -207,7 +207,9 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                   Ai-Stockist : {{ $data->aistockist_status ? 'เป็น' : 'ไม่เป็น' }}<br>
                   @lang('message.position') : {{ $data->q_name }}<br>
-                  @lang('message.package') : {{ $data->dt_package }}
+                  @lang('message.package') : {{ $data->dt_package }}<br>
+                  วันที่สมัคร : {{ date('d/m/Y',strtotime($data->created_at)) }}<br>
+
                 </div>
             </div>
             <!-- <p class="text-muted">PV {{number_format($data->pv)}} | {{$data->q_name}} </p>

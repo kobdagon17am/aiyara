@@ -174,6 +174,9 @@ Route::get('modal_qr_recive_product','Frontend\HistoryController@modal_qr_recive
 Route::post('dt_history','Frontend\HistoryController@dt_history')->name('dt_history');
 
 Route::post('datable/history','Frontend\HistoryController@datatable')->name('datable/history');
+Route::post('datable/history_sent_to','Frontend\HistoryController@datatable_sent_to')->name('datable/history_sent_to');
+
+
 Route::get('get_detail_order_aicash','Frontend\HistoryController@get_detail_order_aicash')->name('get_detail_order_aicash');
 Route::post('upload_slip','Frontend\HistoryController@upload_slip')->name('upload_slip');
 Route::post('re_new_payment','Frontend\HistoryController@re_new_payment')->name('re_new_payment');

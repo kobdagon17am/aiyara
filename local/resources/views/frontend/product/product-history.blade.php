@@ -56,6 +56,7 @@
                 </div>
                 <div class="card-block">
                     <div class="table-responsive ">
+                      <h4> รายการสั่งซื้อ </h4>
                         <table id="multi-colum-dt" class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr>
@@ -84,6 +85,38 @@
                         <code>{{ trans('message.p_history if 30') }}</code>
                     </div>
                 </div>
+
+                <div class="card-block">
+                  <h4> รายการสมาชิกอื่นสั่งซื้อให้ </h4>
+                  <div class="table-responsive ">
+                      <table id="history_sent_to" class="table table-striped table-bordered nowrap">
+                          <thead>
+                              <tr>
+                                  <th>{{ trans('message.p_history order date') }}</th>
+                                  <th>{{ trans('message.p_history po number') }}</th>
+                                  <th>TRACKING</th>
+                                  <th>{{ trans('message.p_history amount') }}</th>
+                                  <th>PV</th>
+                                  {{-- <th>คงเหลือ</th> --}}
+                                  <th>Active</th>
+                                  <th>Type</th>
+                                  <th>{{ trans('message.p_history paid') }}</th>
+                                  <th>{{ trans('message.p_history status') }}</th>
+                                  <th>#</th>
+                              </tr>
+                          </thead>
+                      </table>
+                  </div>
+
+                  <div class="row">
+                      @foreach ($data['orders_type'] as $value)
+                          <code style="color: #000">{!! $value->icon !!} {{ $value->orders_type }} </code>
+                      @endforeach
+                  </div>
+                  <div class="row">
+                      <code>{{ trans('message.p_history if 30') }}</code>
+                  </div>
+              </div>
 
                 <div id="modal_qr_recive"></div>
 
@@ -761,6 +794,81 @@
 
         });
     </script>
+
+<script type="text/javascript">
+  $(function() {
+      var oTable = $('#history_sent_to').DataTable({
+          processing: true,
+          serverSide: true,
+          searching: true,
+          ajax: {
+              url: "{!! route('datable/history_sent_to') !!}",
+              // data: {
+              //     _token: '{{ csrf_token() }}',
+              //     dt_order_type: $('#dt_order_type').val(),
+              //     dt_pay_type: $('#dt_pay_type').val(),
+              //     s_date: $('#s_date').val(),
+              //     e_date: $('#e_date').val(),
+              // },
+              data: function(d) {
+                  d.dt_order_type = $('#dt_order_type').val();
+                  d.dt_pay_type = $('#dt_pay_type').val();
+                  d.s_date = $('#s_date').val();
+                  d.e_date = $('#e_date').val();
+                  d._token = '{!! csrf_token() !!}';
+              },
+              method: 'POST',
+          },
+          // type: "POST",
+          columns: [{
+                  data: 'date'
+              },
+              {
+                  data: 'code_order'
+              },
+              {
+                  data: 'tracking'
+              },
+              {
+                  data: 'price'
+              },
+              {
+                  data: 'pv_total'
+              },
+              // {
+              //     data: 'banlance'
+              // },
+              {
+                  data: 'date_active'
+              },
+              {
+                  data: 'type',
+                  className: 'text-center'
+              },
+              {
+                  data: 'pay_type_name'
+              },
+              {
+                  data: 'status'
+              },
+              {
+                  data: 'action'
+              },
+          ],
+          // order: [
+          //     [1, 'DESC']
+          // ]
+      });
+
+      $('#search-form').on('click', function(e) {
+          oTable.draw();
+          e.preventDefault();
+      });
+
+  });
+</script>
+
+
 
     <script type="text/javascript">
         $(function() {
