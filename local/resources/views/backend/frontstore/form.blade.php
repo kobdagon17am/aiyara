@@ -3748,7 +3748,7 @@
 
                     var branch_id_fk = "{{ @$sRow->branch_id_fk }}";
 
-                    $('.myloading').show();
+                    // $('.myloading').show();
 
                     $.ajax({
                         type: 'POST',

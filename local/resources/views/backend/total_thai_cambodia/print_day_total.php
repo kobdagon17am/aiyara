@@ -1071,51 +1071,51 @@ set_time_limit(9999999);
 
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> คูปอง &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
+        <td style="border-left: 1px solid #ccc;"> เงินสด &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($cash_pay_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> มูลค่าสินค้า &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($product_value_total,2,".",","); ?> &nbsp;</td>
         </tr>
         <tr>
-            <td style="border-left: 1px solid #ccc;"> เงินสด &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_pay_total,2,".",","); ?> &nbsp;</td>
+        <td style="border-left: 1px solid #ccc;"> เงินโอน &nbsp; ออมทรัพย์</td>
+            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_1_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> ค่าจัดส่ง &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($shipping_total,2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> เงินโอน &nbsp; ออมทรัพย์</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_1_total,2,".",","); ?> &nbsp;</td>
+        <td style="border-left: 1px solid #ccc;">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; กระแสรายวัน</td>
+            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_2_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> ค่าธรรมเนียม&nbsp;</td>
             <td style="text-align: right;"><?php echo number_format($fee_amt_total,2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
-            <td style="border-left: 1px solid #ccc;">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; กระแสรายวัน</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_transfer_price_2_total,2,".",","); ?> &nbsp;</td>
+        <td style="border-left: 1px solid #ccc;"> เครดิต &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> รวมมูลค่าก่อนภาษีมูลค่าเพิ่ม&nbsp;</td>
             <td style="text-align: right;"><?php echo number_format(($product_value_total+$shipping_total+$fee_amt_total),2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> เครดิต &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?> &nbsp;</td>
+        <td style="border-left: 1px solid #ccc;"> PromptPay &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($tax_total,2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> PromptPay &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;</td>
-            <td style="border-left: 1px solid #ccc;"> คูปองส่วนลด &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
+        <td style="border-left: 1px solid #ccc;"> TrueMoney &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($true_money_price_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> <b>รวมมูลค่าสินค้าและภาษีมูลค่าเพิ่ม</b> &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format(($product_value_total+$shipping_total+$fee_amt_total+$tax_total),2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>
-            <td style="border-left: 1px solid #ccc;"> TrueMoney &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($true_money_price_total,2,".",","); ?> &nbsp;</td>
-            <td style="border-left: 1px solid #ccc;"> รวมมูลค่าสินค้าและภาษีมูลค่าเพิ่ม &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format(($product_value_total+$shipping_total+$fee_amt_total+$tax_total),2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> คูปองส่วนลด &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
+            <td style="border-left: 1px solid #ccc;"> คูปอง &nbsp;</td>
+            <td style="text-align: right;"> <?php echo number_format($gift_voucher_price_total,2,".",","); ?> &nbsp;</td>
         </tr>
 
         <tr>

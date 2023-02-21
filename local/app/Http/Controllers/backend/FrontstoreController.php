@@ -28,35 +28,37 @@ class FrontstoreController extends Controller
   public function upPro(Request $request)
   {
 
-    $orders = DB::table('db_orders')->select('id','code_order')->where('credit_price','!=',null)->where('sum_credit_price',null)->get();
-    dd($orders);
+    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',15)->where('prompt_pay_price',null)->get();
+    foreach($orders as $order){
+      DB::table('db_orders')->select('id')->where('id',$order->id)->update([
+        'prompt_pay_price' => $order->total_price,
+      ]);
+    }
+    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',15)->where('prompt_pay_price',null)->get();
+    // dd($orders);
 
-    // $pro_list = DB::table('db_order_products_list')
-    // ->select(DB::raw('SUM(total_pv) AS total_pv'),'id','frontstore_id_fk')
-    // ->where('distribution_channel_id_fk','!=',3)
-    // // ->where('type_product','product')
-    // ->where('created_at','>','2023-02-01 01:00:39')
-    // ->groupBy('frontstore_id_fk')
-    // ->get();
+    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',16)->where('true_money_price',null)->get();
+    foreach($orders as $order){
+      DB::table('db_orders')->select('id')->where('id',$order->id)->update([
+        'true_money_price' => $order->total_price,
+      ]);
+    }
+    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',16)->where('true_money_price',null)->get();
+    // dd($orders);
 
-    // $arr_order = [];
-    // foreach($pro_list as $pro){
-    //   $order = DB::table('db_orders')->select('id','pv_total')->where('id','=',$pro->frontstore_id_fk)->first();
-    //   if($order){
-    //     if($pro->total_pv!=$order->pv_total){
-    //       array_push($arr_order,$order->id);
-    //     }
-    //   }
+    // $orders = DB::table('db_orders')->select('id','total_price')
+    // ->where('pay_type_id_fk',null)
+    // ->where('total_price','>',0)
+    // ->whereIn('approve_status',[2,4,9])->get();
 
+    // foreach($orders as $order){
+    //   DB::table('db_orders')->select('id')->where('id',$order->id)->update([
+    //     'prompt_pay_price' => $order->total_price,
+    //     'pay_type_id_fk' => 15,
+    //   ]);
     // }
 
-    // $orders = DB::table('db_orders')->select('id','pv_total','code_order')
-    // ->whereIn('id',$arr_order)
-    // ->whereIn('approve_status',[2,4,9])
-    // ->where('created_at','>','2023-02-01 01:00:39')
-    // ->where('purchase_type_id_fk','!=',5)->get();
-
-    // return 'ok';
+    // dd($orders);
 
   }
 
