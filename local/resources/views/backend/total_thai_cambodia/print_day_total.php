@@ -316,53 +316,6 @@ set_time_limit(9999999);
             </thead>
             <tbody>
                 <?php
-
-                      // $sTable =DB::select("
-                      //       SELECT
-                      //       db_orders.action_user,
-                      //       ck_users_admin.`name` as action_user_name,
-                      //       db_orders.pay_type_id_fk,
-                      //       dataset_pay_type.detail AS pay_type,
-                      //       date(db_orders.action_date) AS action_date,
-                      //       db_orders.branch_id_fk,
-                      //       branchs.b_name as branchs_name,
-                      //       dataset_business_location.txt_desc as business_location_name,
-
-                      //       SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS credit_price,
-                      //       SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
-                      //       SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
-                      //       SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
-                      //       SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
-                      //       SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-
-                      //       SUM(
-                      //       (CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) +
-                      //       (CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) +
-                      //       -- (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) +
-                      //       (CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) +
-                      //       (CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END)
-                      //       -- (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END)
-                      //       ) as total_price,
-
-                      //       SUM(
-                      //       CASE WHEN db_orders.shipping_free = 1 THEN 0 ELSE db_orders.shipping_price END
-                      //       ) AS shipping_price
-
-                      //       FROM
-                      //       db_orders
-                      //       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                      //       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                      //       Left Join branchs ON branchs.id = db_orders.branch_id_fk
-                      //       Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-                      //       WHERE db_orders.approve_status not in (5) AND db_orders.check_press_save=2
-                      //       $startDate
-                      //       $endDate
-                      //       $action_user
-                      //       $business_location_id_fk
-                      //       GROUP BY action_user
-                      //       ORDER BY action_date ASC
-                      // ");
-
                       // แบบไม่ sum
                       if($report_type == 'day'){
                         $sTable =DB::select("
@@ -373,6 +326,7 @@ set_time_limit(9999999);
                         dataset_pay_type.detail AS pay_type,
                         date(db_orders.approve_date) AS approve_date,
                         db_orders.branch_id_fk,
+                        db_orders.customers_sent_id_fk,
                         branchs.b_name as branchs_name,
                         dataset_business_location.txt_desc as business_location_name,
 
@@ -410,54 +364,14 @@ set_time_limit(9999999);
                         ORDER BY approve_date ASC
                   ");
                       }else{
-                        // $sTable =DB::select("
-                        // SELECT
-                        // db_orders.action_user,
-                        // ck_users_admin.`name` as action_user_name,
-                        // ck_users_admin.`first_name` as action_first_name,
-                        // ck_users_admin.`last_name` as action_last_name,
-                        // db_orders.pay_type_id_fk,
-                        // dataset_pay_type.detail AS pay_type,
-                        // date_format(db_orders.action_date, '%M') AS action_date,
-                        // db_orders.branch_id_fk,
-                        // branchs.b_name as branchs_name,
-                        // dataset_business_location.txt_desc as business_location_name,
 
-                        // SUM(CASE WHEN db_orders.sum_credit_price is null THEN 0 ELSE db_orders.sum_credit_price END) AS sum_credit_price,
-                        // SUM(CASE WHEN db_orders.transfer_price is null THEN 0 ELSE db_orders.transfer_price END) AS transfer_price,
-                        // SUM(CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) AS fee_amt,
-                        // SUM(CASE WHEN db_orders.aicash_price is null THEN 0 ELSE db_orders.aicash_price END) AS aicash_price,
-                        // SUM(CASE WHEN db_orders.cash_pay is null THEN 0 ELSE db_orders.cash_pay END) AS cash_pay,
-                        // SUM(CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) AS gift_voucher_price,
-                        // SUM(CASE WHEN db_orders.shipping_price is null THEN 0 ELSE db_orders.shipping_price END) AS shipping_price,
-                        // SUM(CASE WHEN db_orders.product_value is null THEN 0 ELSE db_orders.product_value END) AS product_value,
-                        // SUM(CASE WHEN db_orders.tax is null THEN 0 ELSE db_orders.tax END) AS tax,
-                        // SUM(CASE WHEN db_orders.sum_price is null THEN 0 ELSE db_orders.sum_price END) AS sum_price,
-
-                        // SUM(CASE WHEN db_orders.true_money_price is null THEN 0 ELSE db_orders.true_money_price END) AS true_money_price,
-                        // SUM(CASE WHEN db_orders.prompt_pay_price is null THEN 0 ELSE db_orders.prompt_pay_price END) AS prompt_pay_price,
-
-                        // db_orders.code_order
-
-                        // FROM
-                        // db_orders
-                        // Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                        // Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                        // Left Join branchs ON branchs.id = db_orders.branch_id_fk
-                        // Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-                        // WHERE db_orders.approve_status not in (0,5,1,6,3)
-                        // $startDate
-                        // $endDate
-                        // $action_user
-                        // $business_location_id_fk
-                        // GROUP BY action_user , date_format(db_orders.action_date, '%M')
-                        // ORDER BY action_date ASC
                         $sTable =DB::select("
                         SELECT
                         db_orders.action_user,
                         ck_users_admin.`name` as action_user_name,
                         db_orders.pay_type_id_fk,
                         dataset_pay_type.detail AS pay_type,
+                        db_orders.customers_sent_id_fk,
                         date(db_orders.approve_date) AS approve_date,
                         db_orders.branch_id_fk,
                         branchs.b_name as branchs_name,
@@ -497,51 +411,6 @@ set_time_limit(9999999);
                         ORDER BY approve_date ASC
                   ");
                       }
-
-                //       dd("
-                //       SELECT
-                //       db_orders.action_user,
-                //       ck_users_admin.`name` as action_user_name,
-                //       db_orders.pay_type_id_fk,
-                //       dataset_pay_type.detail AS pay_type,
-                //       date(db_orders.approve_date) AS approve_date,
-                //       db_orders.branch_id_fk,
-                //       branchs.b_name as branchs_name,
-                //       dataset_business_location.txt_desc as business_location_name,
-
-                //       db_orders.sum_credit_price,
-                //       db_orders.transfer_price,
-                //       db_orders.fee_amt,
-                //       db_orders.aicash_price,
-                //       db_orders.cash_pay,
-                //       db_orders.gift_voucher_price,
-                //       db_orders.shipping_price,
-                //       db_orders.product_value,
-                //       db_orders.tax,
-                //       db_orders.sum_price,
-                //       db_orders.true_money_price,
-                //       db_orders.prompt_pay_price,
-
-                //       customers.first_name as action_first_name,
-                //       customers.last_name as action_last_name,
-
-                //       db_orders.code_order
-
-                //       FROM
-                //       db_orders
-                //       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                //       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                //       Left Join branchs ON branchs.id = db_orders.branch_id_fk
-                //       Left Join dataset_business_location ON dataset_business_location.id = db_orders.business_location_id_fk
-                //       Left Join customers ON customers.id = db_orders.customers_id_fk
-                //       WHERE db_orders.approve_status not in (0,5,1,6,3)
-                //       $startDate
-                //       $endDate
-                //       $action_user
-                //       $business_location_id_fk
-                //       ORDER BY approve_date ASC
-                // ");
-
 
               $p = "";
               $product_value_total = 0;
@@ -741,6 +610,14 @@ set_time_limit(9999999);
 
               // if($report_type == 'day'){
                 $cus_name = $order->action_first_name.' '.$order->action_last_name;
+                if($order->customers_sent_id_fk!='' && $order->customers_sent_id_fk!=null && $order->customers_sent_id_fk!=0){
+                  $cus_detail = DB::table('customers')
+                  ->select('first_name as action_first_name','customers.last_name as action_last_name')
+                  ->where('id',$order->customers_sent_id_fk)->first();
+                  if($cus_detail){
+                    $cus_name = $cus_detail->action_first_name.' '.$cus_detail->action_last_name;
+                  }
+                }
 
                 $cus_name = str_replace('(ยกเลิกสมัครซ้ำ)','',$cus_name);
                 $cus_name = str_replace("(ยกเลิก)"," ",$cus_name);

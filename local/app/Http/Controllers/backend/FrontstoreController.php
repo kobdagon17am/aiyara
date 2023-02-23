@@ -27,38 +27,47 @@ class FrontstoreController extends Controller
 
   public function upPro(Request $request)
   {
+    // เปลี่ยนบิลเป็นจัดส่ง
+    // $order = DB::table('db_orders')->select('id')->where('code_order','O123022100091')->first();
+    // $this->fncUpdateDeliveryAddress($order->id);
+    // $this->fncUpdateDeliveryAddressDefault($order->id);
+    //
 
-    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',15)->where('prompt_pay_price',null)->get();
-    foreach($orders as $order){
-      DB::table('db_orders')->select('id')->where('id',$order->id)->update([
-        'prompt_pay_price' => $order->total_price,
-      ]);
-    }
-    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',15)->where('prompt_pay_price',null)->get();
-    // dd($orders);
+    // ไม่สำคัญ
+    $send_money = DB::table('db_sent_money_daily')->select('orders_ids')->where('id',1189)->first();
+    $arr_orid = explode(',',$send_money->orders_ids);
 
-    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',16)->where('true_money_price',null)->get();
-    foreach($orders as $order){
-      DB::table('db_orders')->select('id')->where('id',$order->id)->update([
-        'true_money_price' => $order->total_price,
-      ]);
-    }
-    $orders = DB::table('db_orders')->select('id','total_price')->where('pay_type_id_fk',16)->where('true_money_price',null)->get();
-    // dd($orders);
 
-    // $orders = DB::table('db_orders')->select('id','total_price')
-    // ->where('pay_type_id_fk',null)
-    // ->where('total_price','>',0)
-    // ->whereIn('approve_status',[2,4,9])->get();
+//     $sDBFrontstoreSumCostActionUser = DB::select("
+//     SELECT
+//     db_orders.action_user,
+//     db_orders.pay_type_id_fk,
+//     date(db_orders.created_at) AS action_date,
+//     sum(db_orders.cash_pay) as cash_pay,
+//     sum(db_orders.credit_price) as credit_price,
+//     sum(db_orders.transfer_price) as transfer_price,
+//     sum(db_orders.aicash_price) as aicash_price,
+//     sum(db_orders.shipping_price) as shipping_price,
+//     sum(db_orders.fee_amt) as fee_amt,
+//     sum(db_orders.sum_credit_price) as sum_credit_price,
+//     sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
+//     FROM
+//     db_orders
+//     WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($send_money->orders_ids)
+//     GROUP BY action_user
+// ");
 
-    // foreach($orders as $order){
-    //   DB::table('db_orders')->select('id')->where('id',$order->id)->update([
-    //     'prompt_pay_price' => $order->total_price,
-    //     'pay_type_id_fk' => 15,
-    //   ]);
-    // }
+    $order = DB::table('db_orders')->select('id','code_order')
+    ->where('action_user',20)
+    ->where('created_at','>=','2023-02-20 01:00:00')
+    ->where('created_at','<=','2023-02-20 23:00:00')
+    ->where('pay_type_id_fk',0)
+    // ->whereNotIn('id',$arr_orid)
+    ->whereIn('id',$arr_orid)
+    ->get();
+    // ->sum('transfer_price');
 
-    // dd($orders);
+    dd($order);
 
   }
 
@@ -474,7 +483,7 @@ class FrontstoreController extends Controller
 
     $User_branch_id = \Auth::user()->branch_id_fk;
     // $sBranchs = DB::select(" select * from branchs where province_id_fk <> 0  ");
-    $sBranchs = DB::select(" select * from branchs where business_location_id_fk = ".$sBranchs[0]->business_location_id_fk." and status = 1 ");
+    $sBranchs = DB::select(" select * from branchs where business_location_id_fk = ".$sBranchs[0]->business_location_id_fk." and status = 1 and not_show <> 1");
     // dd($sBranchs);
 
     $ThisCustomer = DB::select(" select user_name from customers where id=" . $sRow->customers_id_fk . " ");
@@ -768,7 +777,7 @@ class FrontstoreController extends Controller
 
     $User_branch_id = \Auth::user()->branch_id_fk;
     // dd($User_branch_id);
-    $sBranchs = DB::select(" select * from branchs where province_id_fk <> 0  ");
+    $sBranchs = DB::select(" select * from branchs where province_id_fk <> 0");
     // dd($sBranchs);
 
     $ThisCustomer = DB::select(" select * from customers where id=" . $sRow->customers_id_fk . " ");
