@@ -41,11 +41,12 @@
                         <select id="report_data" name="report_data" class="form-control select2-templating " required="" >
                             <option value="">-เลือกรายงาน-</option>
                             {{-- <option value="inventory">รายงานสินค้าคงคลัง</option>  --}}
-                            <option value="inventory_in">รายงานรับเข้าสินค้า</option> 
-                            <option value="inventory_out">รายงานจ่ายสินค้า</option> 
-                            <option value="inventory_borrow">รายงานเบิก-ยืม</option> 
-                            <option value="inventory_claim">รายงานส่งสินค้าเคลมโรงงาน</option> 
-                            <option value="inventory_remain">รายงานสินค้าคงเหลือ</option> 
+                            <option value="inventory_in">รายงานรับเข้าสินค้า</option>
+                            <option value="inventory_out">รายงานจ่ายสินค้า</option>
+                            <option value="inventory_borrow">รายงานเบิก-ยืม</option>
+                            <option value="inventory_claim">รายงานส่งสินค้าเคลมโรงงาน</option>
+                            <option value="inventory_remain">รายงานสินค้าคงเหลือ</option>
+                            <option value="sale_report">รายงานการขายสินค้า</option>
                           </select>
                       </div>
                     </div>
@@ -324,17 +325,17 @@
                       <div class="form-group row d-flex ">
                         <label for="ref_code" class="col-md-2 col-form-label">  </label>
                           <div class="col-md-10">
-                     
+
 
                         <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
                           <i class="bx bx-file align-middle "></i> ออกรายงาน
                         </a>
-<!-- 
+<!--
                        <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;" >
                           <i class="bx bx-cog align-middle "></i> Process Stock movement
                         </a>  -->
 
-                
+
                        </div>
                      </div>
                   </div>
@@ -362,7 +363,7 @@
                   var report_data = $('#report_data').val();
                   var startDate_data = $('#startDate_data').val();
                   var endDate_data = $('#endDate_data').val();
-             
+
                   var business_location_id_fk = $('#business_location_id_fk').val();
                   var branch_id_fk = $('#branch_id_fk').val();
                   var start_date = $('#start_date').val();
@@ -384,15 +385,15 @@
                     return false;
                   }
 
-                  if(branch_id_fk==''){
-                    alert('กรุณาเลือกสาขา');
-                    return false;
-                  }
-
+                  // if(branch_id_fk==''){
+                  //   alert('กรุณาเลือกสาขา');
+                  //   return false;
+                  // }
+                  $(".myloading").show();
                   $.ajax({
 
                             type:'POST',
-                            url: " {{ url('backend/report_data/export_excel') }} ", 
+                            url: " {{ url('backend/report_data/export_excel') }} ",
                             data:{ _token: '{{csrf_token()}}',
                             report_data: report_data,
                             startDate_data: startDate_data,
@@ -410,13 +411,14 @@
                              },
                             success:function(data){
                                 setTimeout(function(){
-                                    var url='local/public/excel_files/report_data.xlsx';
-                                    window.open(url, 'Download');  
+                                    var url='local/public/excel_files_new/'+data.path;
+                                    // var url = data.path;
+                                    window.open(url, 'Download');
                                     $(".myloading").hide();
                                 },3000);
 
                             },
-                            error: function(jqXHR, textStatus, errorThrown) { 
+                            error: function(jqXHR, textStatus, errorThrown) {
                                 console.log(JSON.stringify(jqXHR));
                                 console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
                                 $(".myloading").hide();
@@ -434,19 +436,19 @@
         //             $.ajax({
 
         //                    type:'POST',
-        //                    url: " {{ url('backend/excelExportConsignment') }} ", 
+        //                    url: " {{ url('backend/excelExportConsignment') }} ",
         //                    data:{ _token: '{{csrf_token()}}',id:id },
         //                     success:function(data){
-        //                          console.log(data); 
+        //                          console.log(data);
         //                          // location.reload();
         //                          setTimeout(function(){
         //                             var url='local/public/excel_files/consignments.xlsx';
-        //                             window.open(url, 'Download');  
+        //                             window.open(url, 'Download');
         //                             $(".myloading").hide();
         //                         },3000);
 
         //                       },
-        //                     error: function(jqXHR, textStatus, errorThrown) { 
+        //                     error: function(jqXHR, textStatus, errorThrown) {
         //                         console.log(JSON.stringify(jqXHR));
         //                         console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
         //                         $(".myloading").hide();
@@ -674,7 +676,7 @@
        		}
          });
 
-        //  
+        //
 
         $('#startDate_data').datepicker({
             format: 'yyyy-mm-dd',

@@ -38,6 +38,7 @@ class FrontstoreController extends Controller
     //
 
     // สำคัญ
+    // dd('ok');
     $orders = DB::table('db_orders')
     ->select('db_orders.id','db_orders.code_order','db_orders.invoice_code_id_fk','db_orders.approve_date','db_orders.customers_sent_id_fk','customers.user_name','customers.first_name','customers.last_name')
     ->join('customers','customers.id','db_orders.customers_id_fk')
