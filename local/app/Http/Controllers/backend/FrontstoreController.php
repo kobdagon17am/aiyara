@@ -21,53 +21,88 @@ use App\Http\Controllers\Frontend\Fc\GiveawayController;
 use App\Http\Controllers\Frontend\Fc\CancelOrderController;
 use App\Helpers\General;
 use Session;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class FrontstoreController extends Controller
 {
 
   public function upPro(Request $request)
   {
+    // สำคัญ
     // เปลี่ยนบิลเป็นจัดส่ง
     // $order = DB::table('db_orders')->select('id')->where('code_order','O123022100091')->first();
     // $this->fncUpdateDeliveryAddress($order->id);
     // $this->fncUpdateDeliveryAddressDefault($order->id);
     //
 
-    // ไม่สำคัญ
-    $send_money = DB::table('db_sent_money_daily')->select('orders_ids')->where('id',1189)->first();
-    $arr_orid = explode(',',$send_money->orders_ids);
-
-
-//     $sDBFrontstoreSumCostActionUser = DB::select("
-//     SELECT
-//     db_orders.action_user,
-//     db_orders.pay_type_id_fk,
-//     date(db_orders.created_at) AS action_date,
-//     sum(db_orders.cash_pay) as cash_pay,
-//     sum(db_orders.credit_price) as credit_price,
-//     sum(db_orders.transfer_price) as transfer_price,
-//     sum(db_orders.aicash_price) as aicash_price,
-//     sum(db_orders.shipping_price) as shipping_price,
-//     sum(db_orders.fee_amt) as fee_amt,
-//     sum(db_orders.sum_credit_price) as sum_credit_price,
-//     sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
-//     FROM
-//     db_orders
-//     WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($send_money->orders_ids)
-//     GROUP BY action_user
-// ");
-
-    $order = DB::table('db_orders')->select('id','code_order')
-    ->where('action_user',20)
-    ->where('created_at','>=','2023-02-20 01:00:00')
-    ->where('created_at','<=','2023-02-20 23:00:00')
-    ->where('pay_type_id_fk',0)
-    // ->whereNotIn('id',$arr_orid)
-    ->whereIn('id',$arr_orid)
+    // สำคัญ
+    $orders = DB::table('db_orders')
+    ->select('db_orders.id','db_orders.code_order','db_orders.invoice_code_id_fk','db_orders.approve_date','db_orders.customers_sent_id_fk','customers.user_name','customers.first_name','customers.last_name')
+    ->join('customers','customers.id','db_orders.customers_id_fk')
+    ->where('db_orders.approve_date','>=','2023-01-01 01:00:00')
+    ->where('db_orders.approve_date','<=','2023-02-09 16:00:00')
+    ->where('db_orders.delivery_location_frontend','!=','sent_office')
+    ->whereNotIn('db_orders.approve_status',[1,3,5,6])
     ->get();
-    // ->sum('transfer_price');
 
-    dd($order);
+    $spreadsheet = new Spreadsheet();
+    $amt_sheet = 1;
+     $styleArray = array(
+       'font'  => array(
+            'bold'  => true,
+            // 'color' => array('rgb' => '002699'),
+            // 'size'  => 16,
+            'name'  => 'Verdana'
+        ));
+
+        for ($j=0; $j < $amt_sheet ; $j++) {
+          if($j>0){
+            $spreadsheet->createSheet();
+          }
+          $spreadsheet->setActiveSheetIndex($j);
+          $sheet = $spreadsheet->getActiveSheet();
+          $sheet->setTitle("Sheet".($j+1));
+          $sheet->setCellValue('A1', 'ID');
+          $sheet->setCellValue('B1', 'วันที่อนุมัติ');
+          $sheet->setCellValue('C1', 'เลขออเดอร์');
+          $sheet->setCellValue('D1', 'เลขที่ใบเสร็จ');
+          $sheet->setCellValue('E1', 'เจ้าของบิล');
+          $sheet->getStyle('A1:E1')->applyFromArray($styleArray);
+          $k = 2;
+          foreach($orders as $key => $order){
+          $sheet->setCellValue('A'.($key+$k), $order->id);
+          $sheet->setCellValue('B'.($key+$k), $order->approve_date);
+          $sheet->setCellValue('C'.($key+$k), $order->code_order);
+          $sheet->setCellValue('D'.($key+$k), $order->invoice_code_id_fk);
+          if($order->customers_sent_id_fk!='' && $order->customers_sent_id_fk!=null && $order->customers_sent_id_fk!=0){
+            $cus = DB::table('customers')->select('user_name','first_name','last_name')->where('id',$order->customers_sent_id_fk)->first();
+            if($cus){
+              $sheet->setCellValue('E'.($key+$k), $cus->user_name.' : '.$cus->first_name.' '.$cus->last_name);
+            }else{
+              $sheet->setCellValue('E'.($key+$k), $order->user_name.' : '.$order->first_name.' '.$order->last_name);
+            }
+
+          }else{
+            $sheet->setCellValue('E'.($key+$k), $order->user_name.' : '.$order->first_name.' '.$order->last_name);
+          }
+          // $k++;
+        }
+
+        foreach ($sheet->getColumnIterator() as $column) {
+          $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+      }
+
+      $file = 'order_error_'.date('YmdHis').'.xlsx';
+      header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      header('Content-disposition: attachment; filename='.$file);
+      $writer = new Xlsx($spreadsheet);
+      $writer->save(public_path().'/excel_files_new/'.$file);
+      return response()->file(public_path('/excel_files_new/'.$file));
+
+      }
+
 
   }
 

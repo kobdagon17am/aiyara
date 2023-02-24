@@ -410,14 +410,15 @@ class AjaxController extends Controller
       $sheet = $spreadsheet->getActiveSheet();
       $sheet->setTitle("Sheet".($j+1));
 
-      $sTable = DB::select("
+      $sTable =DB::select("
       SELECT
       db_orders.action_user,
       ck_users_admin.`name` as action_user_name,
       db_orders.pay_type_id_fk,
       dataset_pay_type.detail AS pay_type,
-      date(db_orders.created_at) AS created_at,
+      date(db_orders.approve_date) AS approve_date,
       db_orders.branch_id_fk,
+      db_orders.customers_sent_id_fk,
       branchs.b_name as branchs_name,
       dataset_business_location.txt_desc as business_location_name,
       db_orders.sum_credit_price,
@@ -432,6 +433,7 @@ class AjaxController extends Controller
       db_orders.sum_price,
       db_orders.true_money_price,
       db_orders.prompt_pay_price,
+      db_orders.account_bank_name_customer,
       customers.first_name as action_first_name,
       customers.last_name as action_last_name,
       db_orders.code_order
@@ -447,7 +449,7 @@ class AjaxController extends Controller
       $endDate
       $action_user
       $business_location_id_fk
-      ORDER BY created_at ASC
+      ORDER BY approve_date ASC
 ");
 
       $sheet->setCellValue('A1', 'วันเดือนปี');
@@ -557,11 +559,11 @@ class AjaxController extends Controller
           $prompt_pay_price_total += $order->prompt_pay_price;
           $shipping_vat_total += $shipping_vat;
           $fee_vat_total += $fee_vat;
-          $created_at = date('d/m/Y', strtotime($order->created_at));
+          $approve_date = date('d/m/Y', strtotime($order->approve_date));
           $code_order = $order->code_order;
           $cus_name = $order->action_first_name.' '.$order->action_last_name;
 
-          if(!isset($arr_date[$created_at])){
+          if(!isset($arr_date[$approve_date])){
             if(count($arr_date)==0){
               $total_date_product_value += $order->product_value;
               $total_date_tax += $order->tax;
@@ -575,7 +577,7 @@ class AjaxController extends Controller
           }
 
           if(count($arr_date) > 0){
-            if(!isset($arr_date[$created_at])){
+            if(!isset($arr_date[$approve_date])){
               $sheet->setCellValue('A'.($key+$k), '');
               $sheet->setCellValue('B'.($key+$k), '');
               $sheet->setCellValue('C'.($key+$k), '');
@@ -590,7 +592,7 @@ class AjaxController extends Controller
             }
           }
 
-          $sheet->setCellValue('A'.($key+$k), $created_at);
+          $sheet->setCellValue('A'.($key+$k), $approve_date);
           $sheet->setCellValue('B'.($key+$k), $code_order);
           $sheet->setCellValue('C'.($key+$k), $cus_name);
           $sheet->setCellValue('D'.($key+$k), number_format($order->product_value,2,".",","));
@@ -624,8 +626,8 @@ class AjaxController extends Controller
 
           }
 
-          if(!isset($arr_date[$created_at])){
-            $arr_date[$created_at] = $created_at;
+          if(!isset($arr_date[$approve_date])){
+            $arr_date[$approve_date] = $approve_date;
             if(count($arr_date)!=0){
               $total_date_product_value = 0;
               $total_date_tax = 0;

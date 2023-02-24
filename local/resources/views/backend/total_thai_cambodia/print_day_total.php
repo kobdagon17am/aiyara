@@ -361,8 +361,12 @@ set_time_limit(9999999);
                         $endDate
                         $action_user
                         $business_location_id_fk
+
                         ORDER BY approve_date ASC
+
                   ");
+                  // AND db_orders.code_order = 'O123013100212'
+                  // LIMIT 9
                       }else{
 
                         $sTable =DB::select("
@@ -523,7 +527,8 @@ set_time_limit(9999999);
 
               if($order->shipping_price>0){
                 $shipping_vat =  $order->shipping_price * (7.00 / (100+ 7.00) );
-                $shipping_vat = round( $shipping_vat ,2 );
+                // $shipping_vat = round( $shipping_vat ,2 );
+                $shipping_vat = $shipping_vat;
                 $order->shipping_price = $order->shipping_price - $shipping_vat;
                 $order->tax = $order->tax + $shipping_vat;
 
@@ -531,7 +536,8 @@ set_time_limit(9999999);
 
               if($order->fee_amt>0){
                 $fee_vat =  $order->fee_amt * (7.00 / (100+ 7.00) );
-                $fee_vat = round( $fee_vat ,2 );
+                // $fee_vat = round( $fee_vat ,2 );
+                $fee_vat = $fee_vat;
                 $order->fee_amt = $order->fee_amt - $fee_vat;
                 $order->tax = $order->tax + $fee_vat;
               }
@@ -539,7 +545,8 @@ set_time_limit(9999999);
               // วุฒิปรับ tax คำนวณใหม่
               if($order->sum_price>0){
                 $order->tax = $order->sum_price * (7.00 / (100+ 7.00) );
-                $order->tax = round( $order->tax ,2 );
+                // $order->tax = round( $order->tax ,2 );
+                $order->tax = $order->tax;
                 $order->product_value = $order->sum_price - $order->tax;
               } //
 
@@ -951,7 +958,10 @@ set_time_limit(9999999);
         <td style="border-left: 1px solid #ccc;"> เงินสด &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($cash_pay_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> มูลค่าสินค้า &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($product_value_total,2,".",","); ?> &nbsp;</td>
+            <td style="text-align: right;"> <?php
+            echo number_format($product_value_total,2,".",",");
+            // echo $product_value_total;
+            ?> &nbsp;</td>
         </tr>
         <tr>
         <td style="border-left: 1px solid #ccc;"> เงินโอน &nbsp; ออมทรัพย์</td>
@@ -971,14 +981,21 @@ set_time_limit(9999999);
         <td style="border-left: 1px solid #ccc;"> เครดิต &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($cash_sum_credit_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> รวมมูลค่าก่อนภาษีมูลค่าเพิ่ม&nbsp;</td>
-            <td style="text-align: right;"><?php echo number_format(($product_value_total+$shipping_total+$fee_amt_total),2,".",","); ?> &nbsp;</td>
+            <td style="text-align: right;"><?php
+            echo number_format(($product_value_total+$shipping_total+$fee_amt_total),2,".",",");
+            // echo ($product_value_total+$shipping_total+$fee_amt_total);
+            ?> &nbsp;</td>
         </tr>
 
         <tr>
         <td style="border-left: 1px solid #ccc;"> PromptPay &nbsp;</td>
             <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
-            <td style="text-align: right;"> <?php echo number_format($tax_total,2,".",","); ?> &nbsp;</td>
+            <td style="text-align: right;"> <?php
+            // echo number_format($tax_total,2,".",",");
+            // echo round( $tax_total ,2 );
+            echo $tax_total;
+             ?> &nbsp;</td>
         </tr>
 
         <tr>
