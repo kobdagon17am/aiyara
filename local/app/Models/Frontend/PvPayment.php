@@ -203,6 +203,7 @@ class PvPayment extends Model
                     $update_products_lis = DB::table('db_order_products_list')
                         ->where('id', $product_list_value->id)
                         ->update(['approver' => $admin_id,
+                            'customers_id_fk' => $order_data->customers_id_fk,
                             'approve_status' => 1,
                             'approve_date' => date('Y-m-d H:i:s')]);
 
