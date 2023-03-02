@@ -58,8 +58,6 @@ Route::get('logout', function () {
   return redirect('login');
 })->name('logout');
 
-
-
 Route::get('RunError','Frontend\Fc\RunErrorController@index')->name('RunError');
 Route::get('fc/hidden_order','Frontend\Fc\RunErrorController@hidden_order')->name('fc/hidden_order');
 
@@ -326,3 +324,6 @@ Route::post('gateway_ksher', 'Frontend\Ksher\KsherController@gateway_ksher')->na
 Route::post('ksher_notify', 'Frontend\Ksher\KsherNotifyController@ksher_notify')->name('ksher_notify');
 
 Route::get('check_id_card', 'Frontend\RegisterController@check_id_card')->name('check_id_card');
+
+// วุฒิเพิ่มมา
+Route::get('frontend/frontstore/print_receipt_022/{id}/slip/{user_id}', 'backend\PrintController@frontstore_print_receipt_022');

@@ -137,7 +137,8 @@ if(@$sRow->business_location_id_fk == 1){
 // echo $amt_page;
 
 // Product List All
-$TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.\Auth::user()->id;
+$TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.date('YmdHis');
+// $TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.\Auth::user()->id;
 DB::select(" DROP TABLE IF EXISTS $TABLE_tmp ; ");
 DB::select("
     CREATE TEMPORARY TABLE $TABLE_tmp (
@@ -528,8 +529,8 @@ $amt_page = ceil($cnt_all[0]->cnt/$limit);
 // $amt_page = 3;
 // $amt_page = 4;
 
-
-$TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
+$TABLE = 'temp_z01_print_frontstore_print_receipt_02'.date('YmdHis');
+// $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
 DB::select(" DROP TABLE IF EXISTS $TABLE ; ");
 DB::select("
     CREATE TEMPORARY TABLE $TABLE (
@@ -1366,7 +1367,8 @@ elseif(@$pay_type[0]->pay_type_id_fk==17){
 
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
   // echo \Auth::user()->id;
-  $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
+    $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.date('YmdHis');
+  // $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
   // $TABLE = 'temp_z01_print_frontstore_print_receipt_02';
   $count_row = DB::select(" SELECT count(*) as count_row FROM $TABLE  ");
   $count_row = $count_row[0]->count_row ;
