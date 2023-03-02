@@ -26,8 +26,12 @@ class PrintController extends Controller
         if($user_id!=@Auth::guard('c_user')->user()->id){
           return redirect()->to('')->withError('คุณไม่สามารถทำรายการได้');
         }
+        $user_admin_id = @Auth::guard('c_user')->user()->id;
+      }else{
+        $user_admin_id = @Auth::user()->id;
       }
-        $data = [$id];
+
+        $data = [$id,$user_admin_id];
         // width and height $customPaper = The end result was: 10CM X 20CM = array(0,0,567.00,283.80); size 9.5" x 5.5"  24.13 cm x 13.97 cm
         $customPaper = array(0,0,370,565);
         $pdf = PDF::loadView('backend.frontstore.print_receipt_022',compact('data'))->setPaper($customPaper, 'landscape');
