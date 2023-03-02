@@ -250,6 +250,20 @@ class Po_receiveController extends Controller
       return response()->json(\App\Models\Alert::Msg('success'));
     }
 
+    public function destroy_po_supplier_products_receive($id)
+    {
+      // dd($id);
+      $sRow = DB::table('db_po_supplier_products_receive')->select('amt_get','po_supplier_products_id_fk')->where('id',$id)->first();
+      if( $sRow ){
+        $po_supplier_products = DB::table('db_po_supplier_products')->select('product_amt_receive')->where('id',$sRow->po_supplier_products_id_fk)->first();
+        DB::table('db_po_supplier_products')->where('id',$sRow->po_supplier_products_id_fk)->update([
+          'product_amt_receive' => ($po_supplier_products->product_amt_receive-$sRow->amt_get),
+        ]);
+        DB::table('db_po_supplier_products_receive')->select('amt_get','po_supplier_products_id_fk')->where('id',$id)->delete();
+      }
+      return response()->json(\App\Models\Alert::Msg('success'));
+    }
+
     public function Datatable(Request $req){
 
 
