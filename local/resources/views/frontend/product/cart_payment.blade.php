@@ -1192,6 +1192,7 @@
 
               if(type_sent == 'sent_another_bill'){
                 $('#shipping_detail').html('<label class="label label-inverse-warning">จัดส่งพร้อมบิลอื่น</label>');
+                return;
               }
 
              }
@@ -1644,6 +1645,7 @@
         .done(function(data) {
           //  console.log(data['data']);
             if (data['status'] == 'success') {
+
             $("#send_to_name").val(data['data']['name']);
             $("#send_to_tel_mobile").val(data['data']['tel']);
             $("#send_to_tel_home").val(data['data']['tel_home']);

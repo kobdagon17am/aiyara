@@ -237,17 +237,16 @@ class PaymentSentAddressOrder extends Model
         // |2=ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ>customers_detail
         // |3=ที่อยู่กำหนดเอง>customers_addr_frontstore|4=จัดส่งพร้อมบิลอื่น|5=ส่งแบบพิเศษ/พรีเมี่ยม
         $insert_db_orders->delivery_location = 4;
-        $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id, $rs->province, $rs->price, $rs->shipping_premium, $rs->receive);
-        $shipping = $data_shipping['data']->shipping_cost;
+        //$data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id, $rs->province, $rs->price, $rs->shipping_premium, $rs->receive);
+        // $shipping = $data_shipping['data']->shipping_cost;
 
-        if ($data_shipping['data']->shipping_type_id == 1) {
-          $insert_db_orders->shipping_free = 1;
-        }
-
-
-        $insert_db_orders->shipping_price = $shipping;
-        $insert_db_orders->shipping_cost_id_fk = $data_shipping['data']->shipping_type_id;
-        $insert_db_orders->shipping_cost_detail = $data_shipping['data']->shipping_name;
+        // if ($data_shipping['data']->shipping_type_id == 1) {
+        //   $insert_db_orders->shipping_free = 1;
+        // }
+        $insert_db_orders->shipping_free = 1;
+        $insert_db_orders->shipping_price = 0;
+        $insert_db_orders->shipping_cost_id_fk = 1;
+        $insert_db_orders->shipping_cost_detail = 'จัดส่งพร้อมบิลอื่น';
 
         $order_sent_another_bill = DB::table('db_orders')
         ->select('db_orders.*','dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_districts.name_th as district_name')
