@@ -146,11 +146,11 @@ class ReportDataController extends Controller
         }
 
         if($request->report_data=='sale_report'){
-          // $sheet->setCellValue('A'.$head, 'ลำดับ');
-          // $sheet->setCellValue('B'.$head, 'วันที่อนุมัติ');
-          // $sheet->setCellValue('C'.$head, 'รายการ');
-          // $sheet->setCellValue('D'.$head, 'จำนวน');
-          // $sheet->setCellValue('E'.$head, 'ผู้ขาย');
+        //   $sheet->setCellValue('A'.$head, 'ลำดับ');
+        //   $sheet->setCellValue('B'.$head, 'วันที่อนุมัติ');
+        //   $sheet->setCellValue('C'.$head, 'รายการ');
+        //   $sheet->setCellValue('D'.$head, 'จำนวน');
+        //   $sheet->setCellValue('E'.$head, 'ผู้ขาย');
 
           $sheet->setCellValue('A'.$head, 'ลำดับ');
           $sheet->setCellValue('B'.$head, 'รายการ');
