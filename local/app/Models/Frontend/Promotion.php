@@ -42,7 +42,7 @@ class Promotion extends Model
 		$resule = ['status'=>'success','message'=>'success','all_available_purchase'=>$amt_all];
 		return $resule;
 	}
- 
+
 
 	public static function count_per_promotion($promotion_id,$customer_id){//เฉพาะต่อรอบโปรโมชั่น
 
@@ -58,9 +58,9 @@ class Promotion extends Model
 
     $count_per_promotion = DB::table('db_order_products_list')
     ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
-    ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    // ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
     ->where('db_order_products_list.promotion_id_fk', $promotion_id)
-    ->where('db_orders.customers_id_fk', $customer_id)
+    ->where('db_order_products_list.customers_id_fk', $customer_id)
     ->where('db_order_products_list.type_product', 'promotion')
     ->where('db_order_products_list.approve_status', '=','1')
     //->whereIn('db_orders.order_status_id_fk', [1, 2, 3, 4, 5, 6, 7])
@@ -103,9 +103,9 @@ class Promotion extends Model
 
         $count_per_promotion = DB::table('db_order_products_list')
     ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
-    ->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
+    //->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')
     ->where('db_order_products_list.promotion_id_fk', $promotion_id)
-    ->where('db_orders.customers_id_fk', $customer_id)
+    ->where('db_order_products_list.customers_id_fk', $customer_id)
     ->where('db_order_products_list.type_product', 'promotion')
     ->where('db_order_products_list.approve_status', '=','1')
     ->whereDate('db_order_products_list.created_at', $date_now)
