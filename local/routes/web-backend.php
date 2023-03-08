@@ -767,6 +767,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 // Start ใบ PO รับสินค้า
     Route::resource('po_receive', 'Po_receiveController');
+    Route::get('destroy_po_supplier_products_receive/{id}', 'Po_receiveController@destroy_po_supplier_products_receive');
     Route::post('po_receive/datatable', 'Po_receiveController@Datatable')->name('po_receive.datatable');
     Route::post('po_receive_update_note3', 'Po_receiveController@po_receive_update_note3');
 
