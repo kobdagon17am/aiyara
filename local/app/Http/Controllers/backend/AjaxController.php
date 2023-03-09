@@ -6082,7 +6082,7 @@ class AjaxController extends Controller
                 ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 ->orWhere('business_name','LIKE', '%'.$request->term.'%')
-                ->take(500)
+                ->take(50)
                 // ->orderBy('user_name', 'asc')
                 ->orderBy('id', 'asc')
                 ->get();

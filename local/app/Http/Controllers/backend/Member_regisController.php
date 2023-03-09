@@ -141,7 +141,9 @@ class Member_regisController extends Controller
               $sRow = \App\Models\Backend\Member_regis::find(request('id'));
 
               if($sRow->regis_doc_status == 1 && date('Y-m-d') > $sRow->approve_date){
-                return redirect()->back()->with(['alert'=>\App\Models\Alert::Msg('error','เอกสารอนุมัติเกินจำนวนวัน ไม่สามารถแก้ไขได้')]);
+                if(\Auth::user()->id!=1){
+                  return redirect()->back()->with(['alert'=>\App\Models\Alert::Msg('error','เอกสารอนุมัติเกินจำนวนวัน ไม่สามารถแก้ไขได้')]);
+                }
               }
               $sRow->regis_doc_status    = request('regis_status');
               $sRow->approver    = \Auth::user()->id;

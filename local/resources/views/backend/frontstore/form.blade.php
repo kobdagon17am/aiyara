@@ -444,7 +444,7 @@
                                 {{--  --}}
 
                                 <div class="form-group row">
-                                    <label for="customers_id_fk" class="col-md-4 col-form-label"> รหัสลูกค้า : ชื่อลูกค้า
+                                    <label for="customers_id_fk" class="col-md-4 col-form-label"> รหัสลูกค้า :
                                         :
                                         * </label>
                                     <div class="col-md-7">
