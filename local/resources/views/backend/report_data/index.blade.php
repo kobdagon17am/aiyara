@@ -82,7 +82,9 @@
                          <?php $dis01 = !empty(@$sRow->condition_business_location)?'disabled':'' ?>
 
 
-                             <?php if(@\Auth::user()->permission==1){ ?>
+                             <?php
+                              // if(@\Auth::user()->permission==1){
+                              ?>
 
                                       <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
                                            <option value="">-Business Location-</option>
@@ -95,9 +97,11 @@
                                            @endif
                                          </select>
 
-                             <?php }else{ ?>
+                             <?php
+                            //  }else{
+                              ?>
 
-                                      <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " disabled >
+                                      {{-- <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " disabled >
                                        <option value="">-Business Location-</option>
                                        @if(@$sBusiness_location)
                                          @foreach(@$sBusiness_location AS $r)
@@ -112,9 +116,11 @@
                                          @ENDIF
                                          @endforeach
                                        @endif
-                                     </select>
+                                     </select> --}}
 
-                             <?php } ?>
+                             <?php
+                              // }
+                             ?>
 
 
 
@@ -129,12 +135,16 @@
                            <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
                            <div class="col-md-10">
 
-                             <?php if(@\Auth::user()->permission==1){ ?>
+                             <?php
+                              // if(@\Auth::user()->permission==1){
+                                ?>
                                  <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating "  >
                                    <option value="">-เลือก Business Location ก่อน-</option>
                                  </select>
-                             <?php }else{ ?>
-                                 <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " disabled="" >
+                             <?php
+                            // }else{
+                              ?>
+                                 {{-- <select id="branch_id_fk"  name="branch_id_fk" class="form-control select2-templating " disabled="" >
                                     <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
                                     @if(@$sBranchs)
                                        @foreach(@$sBranchs AS $r)
@@ -143,8 +153,10 @@
                                          </option>
                                        @endforeach
                                      @endif
-                                 </select>
-                             <?php } ?>
+                                 </select> --}}
+                             <?php
+                            //  }
+                              ?>
 
                            </div>
                          </div>

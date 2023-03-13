@@ -43,11 +43,11 @@ class ReportDataController extends Controller
       $Warehouse = \App\Models\Backend\Warehouse::get();
       // dd($Warehouse);
       // dd(\Auth::user()->branch_id_fk);
-      if(@\Auth::user()->permission==1){
+      // if(@\Auth::user()->permission==1){
         $Warehouse = \App\Models\Backend\Warehouse::get();
-      }else{
-        $Warehouse = \App\Models\Backend\Warehouse::where('branch_id_fk',\Auth::user()->branch_id_fk)->get();
-      }
+      // }else{
+      //   $Warehouse = \App\Models\Backend\Warehouse::where('branch_id_fk',\Auth::user()->branch_id_fk)->get();
+      // }
 
       $Zone = \App\Models\Backend\Zone::get();
       $Shelf = \App\Models\Backend\Shelf::get();
