@@ -1050,7 +1050,7 @@ if(!empty($db_orders[0]->action_user)){
                                       customers_detail.tel_home,
                                       -- customers_detail.amphures_id_fk,
                                       -- customers_detail.district_id_fk,
-                                      -- customers_detail.road,
+                                      customers_detail.road,
                                       -- customers_detail.province_id_fk,
                                       customers.prefix_name,
                                       customers.first_name,
@@ -1067,7 +1067,8 @@ if(!empty($db_orders[0]->action_user)){
                                       WHERE customers_detail.customer_id =
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
                                 // print_r(@$addr);
-                                @$address =  @$addr[0]->house_no?" เลขที่ ". @$addr[0]->house_no:"". " หมู่บ้าน ". @$addr[0]->house_name;
+                                @$address = @$addr[0]->first_name." ".@$addr[0]->last_name." ";
+                                @$address .= " เลขที่ ". @$addr[0]->house_no. " หมู่บ้าน ". @$addr[0]->house_name. "  ถนน ".@$addr[0]->road;
                                 @$address .= " ต.". @$addr[0]->tamname. " ";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
