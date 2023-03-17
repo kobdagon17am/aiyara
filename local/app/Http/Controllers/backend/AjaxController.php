@@ -5990,18 +5990,27 @@ class AjaxController extends Controller
                 ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'LIKE', "%".$request->term."%")
                 ->take(500)
                 // ->orderBy('user_name', 'asc')
-                ->orderBy('id', 'asc')
+                ->orderBy('id', 'desc')
                 ->get();
               }else{
-                $customers = DB::table('customers')
+                // $customers = DB::table('customers')
+                // ->select('id','user_name','first_name','last_name','business_name')
+                // ->where('user_name','=',$request->term)
+                // ->orderBy('id', 'desc')
+                // ->get();
+
+                // if(count($customers)==0){
+                  $customers = DB::table('customers')
                 ->select('id','user_name','first_name','last_name','business_name')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
                 ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 ->take(500)
                 // ->orderBy('user_name', 'asc')
-                ->orderBy('id', 'asc')
+                ->orderByRaw('LENGTH(user_name)', 'asc')
                 ->get();
+                // }
+
               }
 
             }

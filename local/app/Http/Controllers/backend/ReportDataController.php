@@ -668,14 +668,14 @@ class ReportDataController extends Controller
             }
             elseif($pro->type_product=='giveaway'){
 
-              $arr_giveaway[$pro->giveaway_id_fk] = [
-                'product_name' => $pro->product_name,
-              ];
-              if(isset($arr_giveaway_amt[$pro->giveaway_id_fk])){
-                $arr_giveaway_amt[$pro->giveaway_id_fk] = $arr_giveaway_amt[$pro->giveaway_id_fk]+$pro->amt;
-              }else{
-                $arr_giveaway_amt[$pro->giveaway_id_fk] = $pro->amt;
-              }
+              // $arr_giveaway[$pro->giveaway_id_fk] = [
+              //   'product_name' => $pro->product_name,
+              // ];
+              // if(isset($arr_giveaway_amt[$pro->giveaway_id_fk])){
+              //   $arr_giveaway_amt[$pro->giveaway_id_fk] = $arr_giveaway_amt[$pro->giveaway_id_fk]+$pro->amt;
+              // }else{
+              //   $arr_giveaway_amt[$pro->giveaway_id_fk] = $pro->amt;
+              // }
 
             }
           }
@@ -707,13 +707,13 @@ class ReportDataController extends Controller
             $row_num++;
           }
 
-          foreach($arr_giveaway as $key => $arr_pro){
-            $sheet->setCellValue('A'.($td_data+$row_num+$ac_key), '');
-            $sheet->setCellValue('B'.($td_data+$row_num+$ac_key), $arr_pro['product_name']);
-            $sheet->setCellValue('C'.($td_data+$row_num+$ac_key), $arr_giveaway_amt[$key]);
-            $sheet->setCellValue('D'.($td_data+$row_num+$ac_key), $ac_name);
-            $row_num++;
-          }
+          // foreach($arr_giveaway as $key => $arr_pro){
+          //   $sheet->setCellValue('A'.($td_data+$row_num+$ac_key), '');
+          //   $sheet->setCellValue('B'.($td_data+$row_num+$ac_key), $arr_pro['product_name']);
+          //   $sheet->setCellValue('C'.($td_data+$row_num+$ac_key), $arr_giveaway_amt[$key]);
+          //   $sheet->setCellValue('D'.($td_data+$row_num+$ac_key), $ac_name);
+          //   $row_num++;
+          // }
 
         }
       }

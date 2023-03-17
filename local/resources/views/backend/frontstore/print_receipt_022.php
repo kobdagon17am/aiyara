@@ -932,7 +932,8 @@ if(!empty($db_orders[0]->action_user)){
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
 
                                 // print_r(@$addr);
-                                @$address =  @$addr[0]->house_no?" เลขที่ ". @$addr[0]->house_no:"". " หมู่บ้าน ". @$addr[0]->house_name;
+                                @$address = @$addr[0]->first_name." ".@$addr[0]->last_name." ";
+                                @$address .= @$addr[0]->house_no?" เลขที่ ". @$addr[0]->house_no:"". " หมู่บ้าน ". @$addr[0]->house_name;
                                 @$address .= " ต.". @$addr[0]->tamname. " ";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
