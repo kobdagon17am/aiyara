@@ -598,6 +598,7 @@ class ReportDataController extends Controller
         // ->where('db_orders.approve_date','<=',$request->endDate_data)
         ->where('business_location','=',$request->business_location_id_fk)
         ->get();
+        // dd($promotion_data);
         $promotion_data_arr = [];
         foreach($promotion_data as $pro_data){
           $promotion_data_arr[$pro_data->id] = [
@@ -607,6 +608,7 @@ class ReportDataController extends Controller
           ];
         }
         $row_num = 0;
+        // dd($action_user);
         foreach($action_user as $ac_key => $ac){
           $orders = DB::table('db_orders')
           ->select('id')
@@ -622,7 +624,7 @@ class ReportDataController extends Controller
           ->pluck('id');
 
           $pro_list = DB::table('db_order_products_list')
-          ->select('type_product','promotion_id_fk','giveaway_id_fk','promotion_code','amt','product_name','product_id_fk','frontstore_id_fk')
+          ->select('type_product','promotion_id_fk','giveaway_id_fk','promotion_code','amt','product_name','product_id_fk','frontstore_id_fk','id')
           ->whereIn('frontstore_id_fk',$orders)
           ->get();
 
@@ -652,9 +654,11 @@ class ReportDataController extends Controller
               }
 
             }elseif($pro->type_product=='promotion'){
-
+              // if($pro->id==52812){
+              //   dd($pro_data->id);
+              // }
               $arr_promotion[$pro->promotion_id_fk] = [
-                'product_name' => $promotion_data_arr[$pro_data->id]['pcode'].' : '.$promotion_data_arr[$pro_data->id]['name_thai'],
+                'product_name' => $promotion_data_arr[$pro->promotion_id_fk]['pcode'].' : '.$promotion_data_arr[$pro->promotion_id_fk]['name_thai'],
               ];
               if(isset($arr_promotion_amt[$pro->promotion_id_fk])){
                 $arr_promotion_amt[$pro->promotion_id_fk] = $arr_promotion_amt[$pro->promotion_id_fk]+$pro->amt;
@@ -678,6 +682,8 @@ class ReportDataController extends Controller
               // }
 
             }
+
+
           }
 
           if($ac->action_user!=0){
