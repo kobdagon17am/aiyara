@@ -325,8 +325,8 @@ class Member_pvController extends Controller
       }
 
       if($req->id_card!=''){
-        $w05 = $req->id_card;
-        $Operator05 = "=";
+        $w05 = '%' .$req->id_card;
+        $Operator05 = "like";
       }else{
         $w05 = "0" ;
         $Operator05 = "!=";
