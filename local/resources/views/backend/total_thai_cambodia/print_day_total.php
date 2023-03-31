@@ -686,6 +686,7 @@ set_time_limit(9999999);
                 }
               }
               // <td style="text-align: right;">'.number_format($order->aicash_price,2,".",",").'</td>
+              // <td style="text-align: right;">'.number_format(($order->tax+$shipping_vat+$fee_vat),2,".",",").'</td>
               $p.= '
               <tr>
               <td style="text-align: center;">'.$approve_date.'</td>

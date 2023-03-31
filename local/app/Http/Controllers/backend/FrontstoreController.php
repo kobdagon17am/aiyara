@@ -3851,7 +3851,6 @@ class FrontstoreController extends Controller
       $invoice_code = "";
     }
 
-
     if (!empty($req->action_user)) {
       $action_user_02 = " AND db_orders.action_user = '" . $req->action_user . "' ";
       $action_user_022 = " AND db_add_ai_cash.action_user = '" . $req->action_user . "' ";

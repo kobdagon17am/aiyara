@@ -298,7 +298,8 @@ $(function() {
           // console.log(aData['tr_status_code']);
 
               var sPermission = "<?=\Auth::user()->permission?>";
-              var sU = sessionStorage.getItem("sU");
+              // var sU = sessionStorage.getItem("sU");
+              var sU = "{{ Session::get('sU') }}";
               if(sPermission==1){
                 sU = 1;
               }
@@ -405,7 +406,8 @@ $(function() {
                                         console.log(aData['tr_status_code']);
 
                                             var sPermission = "<?=\Auth::user()->permission?>";
-                                            var sU = sessionStorage.getItem("sU");
+                                            // var sU = sessionStorage.getItem("sU");
+                                            var sU = "{{ Session::get('sU') }}";
                                             if(sPermission==1){
                                               sU = 1;
                                             }
