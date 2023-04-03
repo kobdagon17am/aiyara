@@ -6093,8 +6093,10 @@ class AjaxController extends Controller
                 // ->orWhere('business_name','LIKE', '%'.$request->term.'%')
                 ->take(50)
                 // ->orderBy('user_name', 'asc')
-                ->orderBy('id', 'asc')
+                ->orderByRaw('LENGTH(user_name)', 'asc')
+                // ->orderBy('id', 'asc')
                 ->get();
+ 
             }
             $json_result = [];
             foreach($customers as $k => $v){
