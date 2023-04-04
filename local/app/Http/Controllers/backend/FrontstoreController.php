@@ -1067,7 +1067,7 @@ class FrontstoreController extends Controller
     if (isset($request->pay_type_transfer_slip) && $request->pay_type_transfer_slip == '1') {
     if(isset($request->note_bill_id)){
       foreach($request->note_bill_id as $key_data => $n_data){
-        DB::table('payment_slip')->where('id',$n_data)->update([
+        DB::table('payment_slip')->select('id')->where('id',$n_data)->update([
           'note' => $request->note_bill[$key_data],
         ]);
       }
@@ -1137,6 +1137,7 @@ class FrontstoreController extends Controller
       }
 
       $update_orders = DB::table('db_orders')
+      ->select('id')
         ->where('id', $request->frontstore_id)
         ->update([
           'delivery_location_frontend' => $delivery_location_frontend,
@@ -1315,7 +1316,7 @@ class FrontstoreController extends Controller
             foreach($ot_bill as $ot){
               $number_bill_curr++;
             }
-            DB::table('db_orders')->where('code_order',$sRow->pay_with_other_bill_note)->update([
+            DB::table('db_orders')->select('id')->where('code_order',$sRow->pay_with_other_bill_note)->update([
               'number_bill_curr' => $number_bill_curr,
             ]);
         }
