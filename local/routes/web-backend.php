@@ -290,6 +290,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('ajaxGetOrder', 'AjaxController@ajaxGetOrder');
     Route::post('ajaxGetCustomer', 'AjaxController@ajaxGetCustomer');
+    Route::post('ajaxGetCustomer_name', 'AjaxController@ajaxGetCustomer_name');
     Route::post('ajaxGetCustomerDelivery', 'AjaxController@ajaxGetCustomerDelivery');
     Route::post('ajaxGetCustomerCode', 'AjaxController@ajaxGetCustomerCode');
 
