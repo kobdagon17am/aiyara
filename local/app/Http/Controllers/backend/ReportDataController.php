@@ -78,10 +78,14 @@ class ReportDataController extends Controller
 			 $styleArray = array(
 			   'font'  => array(
 			        'bold'  => true,
-			        'color' => array('rgb' => '002699'),
+			        'color' => array('rgb' => '00000'),
 			        'size'  => 10,
 			        'name'  => 'Verdana'
          ),
+        //  'fill' => array(
+        //   'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+        //   'startColor' => array('argb' => 'D9D9D9')
+        //  ),
          'alignment' => [
           'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
           'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -102,7 +106,7 @@ class ReportDataController extends Controller
         $head = 2;
         $date = 1;
         $td_data = 3;
-        $sheet->mergeCells("A".$date.":B".$date);
+        // $sheet->mergeCells("A".$date.":E".$date);
         $sheet->setCellValue('A'.$date, 'วันที่ '.$request->startDate_data.' ถึง '.$request->endDate_data);
 
         if($request->report_data=='inventory_in'){
@@ -146,18 +150,18 @@ class ReportDataController extends Controller
           $sheet->setCellValue('D'.$head, 'ยอดคงเหลือ');
         }
 
-        if($request->report_data=='sale_report'){
-        //   $sheet->setCellValue('A'.$head, 'ลำดับ');
-        //   $sheet->setCellValue('B'.$head, 'วันที่อนุมัติ');
-        //   $sheet->setCellValue('C'.$head, 'รายการ');
-        //   $sheet->setCellValue('D'.$head, 'จำนวน');
-        //   $sheet->setCellValue('E'.$head, 'ผู้ขาย');
+        // if($request->report_data=='sale_report'){
+        // //   $sheet->setCellValue('A'.$head, 'ลำดับ');
+        // //   $sheet->setCellValue('B'.$head, 'วันที่อนุมัติ');
+        // //   $sheet->setCellValue('C'.$head, 'รายการ');
+        // //   $sheet->setCellValue('D'.$head, 'จำนวน');
+        // //   $sheet->setCellValue('E'.$head, 'ผู้ขาย');
 
-          $sheet->setCellValue('A'.$head, 'ลำดับ');
-          $sheet->setCellValue('B'.$head, 'รายการ');
-          $sheet->setCellValue('C'.$head, 'จำนวน');
-          $sheet->setCellValue('D'.$head, 'ผู้ขาย');
-        }
+        //   $sheet->setCellValue('A'.$head, 'ลำดับ');
+        //   $sheet->setCellValue('B'.$head, 'รายการ');
+        //   $sheet->setCellValue('C'.$head, 'จำนวน');
+        //   $sheet->setCellValue('D'.$head, 'ผู้ขาย');
+        // }
 
 				// $sheet->setCellValue('A1', 'รหัสสินค้า');
 				// $sheet->setCellValue('B1', 'ชื่อสินค้า');
@@ -608,7 +612,10 @@ class ReportDataController extends Controller
           ];
         }
         $row_num = 0;
-        // dd($action_user);
+        $arr_product_total = [];
+        $arr_product_amt_total = [];
+        $arr_promotion_total = [];
+        $arr_promotion_amt_total = [];
         foreach($action_user as $ac_key => $ac){
           $orders = DB::table('db_orders')
           ->select('id')
@@ -653,10 +660,20 @@ class ReportDataController extends Controller
                 $arr_product_amt[$pro->product_id_fk] = $pro->amt;
               }
 
+              $arr_product_total[$pro->product_id_fk] = [
+                'product_name' => $pro->product_name,
+              ];
+              if(isset($arr_product_amt_total[$pro->product_id_fk])){
+                $arr_product_amt_total[$pro->product_id_fk] = $arr_product_amt_total[$pro->product_id_fk]+$pro->amt;
+              }else{
+                $arr_product_amt_total[$pro->product_id_fk] = $pro->amt;
+              }
+
             }elseif($pro->type_product=='promotion'){
               // if($pro->id==52812){
               //   dd($pro_data->id);
               // }
+
               $arr_promotion[$pro->promotion_id_fk] = [
                 'product_name' => $promotion_data_arr[$pro->promotion_id_fk]['pcode'].' : '.$promotion_data_arr[$pro->promotion_id_fk]['name_thai'],
               ];
@@ -664,6 +681,15 @@ class ReportDataController extends Controller
                 $arr_promotion_amt[$pro->promotion_id_fk] = $arr_promotion_amt[$pro->promotion_id_fk]+$pro->amt;
               }else{
                 $arr_promotion_amt[$pro->promotion_id_fk] = $pro->amt;
+              }
+
+              $arr_promotion_total[$pro->promotion_id_fk] = [
+                'product_name' => $promotion_data_arr[$pro->promotion_id_fk]['pcode'].' : '.$promotion_data_arr[$pro->promotion_id_fk]['name_thai'],
+              ];
+              if(isset($arr_promotion_amt_total[$pro->promotion_id_fk])){
+                $arr_promotion_amt_total[$pro->promotion_id_fk] = $arr_promotion_amt_total[$pro->promotion_id_fk]+$pro->amt;
+              }else{
+                $arr_promotion_amt_total[$pro->promotion_id_fk] = $pro->amt;
               }
 
             }
@@ -697,8 +723,67 @@ class ReportDataController extends Controller
             $ac_name = 'V3';
           }
 
+          $styleArray1 = array(
+            'font'  => array(
+                 'bold'  => true,
+                 'color' => array('rgb' => '00000'),
+                 'size'  => 10,
+                 'name'  => 'Verdana'
+            ),
+            // 'fill' => array(
+            //  'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+            //  'startColor' => array('argb' => 'F2F2F2')
+            // ),
+            'alignment' => [
+             'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+         ],
+           );
+
+           $styleArray2 = array(
+            'font'  => array(
+                 'bold'  => true,
+                 'color' => array('rgb' => '00000'),
+                 'size'  => 10,
+                 'name'  => 'Verdana'
+            ),
+            'fill' => array(
+             'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+             'startColor' => array('argb' => 'F2F2F2')
+            ),
+            'alignment' => [
+             'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+         ],
+           );
+
+        $sheet->getStyle('A1:F1')->applyFromArray($styleArray);
+        $sheet->getStyle('A2:F2')->applyFromArray($styleArray2);
+        $sheet->getStyle('A3:A1000')->applyFromArray([
+          'alignment' => [
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+        ],
+        ]);
+
+          $branch_data = DB::table('branchs')->select('b_name')->where('id',$request->branch_id_fk)->first();
+          $sheet->mergeCells("A1:F1");
+          $sheet->setCellValue('A1', 'ศูนย์ธุรกิจ '.@$branch_data->b_name.' รายงานยอดขายสินค้ารายวัน ประจำวันที่ '.date('d/m/Y', strtotime($request->startDate_data)).' ถึง '.date('d/m/Y', strtotime($request->endDate_data)));
+          // Head
+          $sheet->setCellValue('A'.$head, 'ลำดับ');
+          $sheet->setCellValue('B'.$head, 'รายการ');
+          $sheet->setCellValue('C'.$head, 'จำนวน');
+          $sheet->setCellValue('D'.$head, 'ผู้ขาย');
+          // $sheet->setCellValue('A'.$head, 'รหัสสินค้า');
+          // $sheet->setCellValue('B'.$head, 'รายงานขาย');
+          // $sheet->setCellValue('C'.$head, 'จำนวน (ชิ้น)');
+          // $sheet->setCellValue('D'.$head, 'ผู้ขาย');
+
+          $row_num--;
+          // ($td_data+$row_num+$ac_key).' / '.$td_data.' + '.$row_num.' + '.$ac_key);
+          // ($td_data+$row_num+$ac_key)-2);
           foreach($arr_product as $key => $arr_pro){
-            $sheet->setCellValue('A'.($td_data+$row_num+$ac_key), '');
+            $sheet->setCellValue('A'.($td_data+$row_num+$ac_key), ($td_data+$row_num+$ac_key)-2);
             $sheet->setCellValue('B'.($td_data+$row_num+$ac_key), $arr_pro['product_name']);
             $sheet->setCellValue('C'.($td_data+$row_num+$ac_key), $arr_product_amt[$key]);
             $sheet->setCellValue('D'.($td_data+$row_num+$ac_key), $ac_name);
@@ -706,7 +791,7 @@ class ReportDataController extends Controller
           }
 
           foreach($arr_promotion as $key => $arr_pro){
-            $sheet->setCellValue('A'.($td_data+$row_num+$ac_key), '');
+            $sheet->setCellValue('A'.($td_data+$row_num+$ac_key), ($td_data+$row_num+$ac_key)-2);
             $sheet->setCellValue('B'.($td_data+$row_num+$ac_key), $arr_pro['product_name']);
             $sheet->setCellValue('C'.($td_data+$row_num+$ac_key), $arr_promotion_amt[$key]);
             $sheet->setCellValue('D'.($td_data+$row_num+$ac_key), $ac_name);
@@ -722,6 +807,70 @@ class ReportDataController extends Controller
           // }
 
         }
+        // สรุปต่ออีก 1 รายการสินค้าทั้งหมด
+
+        $ac_key_total = count($action_user);
+        $sheet->getStyle('A'.($td_data+$row_num+$ac_key_total-1).':F'.($td_data+$row_num+$ac_key_total-1))->applyFromArray($styleArray2);
+        $sheet->setCellValue('A'.($td_data+$row_num+$ac_key_total-1), 'ลำดับ');
+        $sheet->setCellValue('B'.($td_data+$row_num+$ac_key_total-1), 'สรุปรายการสินค้าที่ขายทั้งหมด');
+        $sheet->setCellValue('C'.($td_data+$row_num+$ac_key_total-1), 'จำนวน');
+        $sheet->setCellValue('D'.($td_data+$row_num+$ac_key_total-1), '');
+
+        $row_num_total = 1;
+
+        // ($td_data+$row_num+$ac_key_total).' / '.$td_data.' + '.$row_num.' + '.$ac_key_total);
+        foreach($arr_product_total as $key => $arr_pro){
+          $sheet->setCellValue('A'.($td_data+$row_num+$ac_key_total), $row_num_total);
+          $sheet->setCellValue('B'.($td_data+$row_num+$ac_key_total), $arr_pro['product_name']);
+          $sheet->setCellValue('C'.($td_data+$row_num+$ac_key_total), $arr_product_amt_total[$key]);
+          $sheet->setCellValue('D'.($td_data+$row_num+$ac_key_total), '');
+          $row_num++;
+          $row_num_total++;
+        }
+
+        $sheet->getStyle('A'.($td_data+$row_num+$ac_key_total).':F'.($td_data+$row_num+$ac_key_total))->applyFromArray($styleArray2);
+        $sheet->setCellValue('A'.($td_data+$row_num+$ac_key_total), 'ลำดับ');
+        $sheet->setCellValue('B'.($td_data+$row_num+$ac_key_total), 'สรุปรายการโปรโมชั่นที่ขายทั้งหมด');
+        $sheet->setCellValue('C'.($td_data+$row_num+$ac_key_total), 'จำนวน');
+        $sheet->setCellValue('D'.($td_data+$row_num+$ac_key_total), '');
+
+        $row_num_total2 = 1;
+        // $arr_promotion_id = [];
+        foreach($arr_promotion_total as $key => $arr_pro){
+          // $arr_promotion_id = array_push($a,$key);
+          $sheet->setCellValue('A'.($td_data+$row_num+$ac_key_total+1), $row_num_total2);
+          $sheet->setCellValue('B'.($td_data+$row_num+$ac_key_total+1), $arr_pro['product_name']);
+          $sheet->setCellValue('C'.($td_data+$row_num+$ac_key_total+1), $arr_promotion_amt_total[$key]);
+          $sheet->setCellValue('D'.($td_data+$row_num+$ac_key_total+1), '');
+
+          // เด่วทำต่อ
+          // $p_products = DB::table('promotions_products')->select('product_amt','product_id_fk','promotion_id_fk')->where('promotion_id_fk',$key)->get();
+
+          // foreach($p_products as $p_p){
+          //   $p_p_data = DB::table('products')->select('product_code')->where('id',$p_p->product_id_fk)->first();
+          //   if($p_p_data){
+          //     $p_p_detail = DB::table('products')->select('product_code')->where('id',$p_p->product_id_fk)->first();
+          //   }
+
+          // }
+
+          // $arr_product_total[$pro->product_id_fk] = [
+          //   'product_name' => $pro->product_name,
+          // ];
+          // if(isset($arr_product_amt_total[$pro->product_id_fk])){
+          //   $arr_product_amt_total[$pro->product_id_fk] = $arr_product_amt_total[$pro->product_id_fk]+$pro->amt;
+          // }else{
+          //   $arr_product_amt_total[$pro->product_id_fk] = $pro->amt;
+          // }
+
+
+          $row_num++;
+          $row_num_total2++;
+        }
+
+
+
+
       }
 
 			}
