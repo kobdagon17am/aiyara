@@ -994,9 +994,9 @@ set_time_limit(9999999);
             <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
             <td style="text-align: right;"> <?php
-            // echo number_format($tax_total,2,".",",");
+            echo number_format($tax_total,2,".",",");
             // echo round( $tax_total ,2 );
-            echo $tax_total;
+            // echo $tax_total;
              ?> &nbsp;</td>
         </tr>
 
