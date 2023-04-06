@@ -628,6 +628,7 @@ set_time_limit(9999999);
 
                 $cus_name = str_replace('(ยกเลิกสมัครซ้ำ)','',$cus_name);
                 $cus_name = str_replace("(ยกเลิก)"," ",$cus_name);
+                $cus_name = str_replace("-ลาออก-"," ",$cus_name);
 
               // }else{
               //   $cus_name = '-';
