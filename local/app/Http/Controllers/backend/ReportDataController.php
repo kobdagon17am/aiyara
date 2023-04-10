@@ -592,6 +592,7 @@ class ReportDataController extends Controller
         ->where('db_orders.approve_date','>=',$request->startDate_data)
         ->where('db_orders.approve_date','<=',$request->endDate_data)
         ->where('business_location_id_fk','=',$request->business_location_id_fk)
+        ->where('branch_id_fk', "=", $request->branch_id_fk)
         ->whereNotIn('db_orders.approve_status',[1,3,5,6])
         ->groupBy('action_user')
         ->get();
@@ -624,6 +625,7 @@ class ReportDataController extends Controller
           ->where('db_orders.approve_date','>=',$request->startDate_data)
           ->where('db_orders.approve_date','<=',$request->endDate_data)
           ->where('business_location_id_fk','=',$request->business_location_id_fk)
+          ->where('branch_id_fk', "=", $request->branch_id_fk)
           // ->where('db_orders.delivery_location_frontend','!=','sent_office')
           ->whereNotIn('db_orders.approve_status',[1,3,5,6])
           ->where('action_user','=',$ac->action_user)
