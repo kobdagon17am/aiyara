@@ -5984,34 +5984,84 @@ class AjaxController extends Controller
               if(strpos($request->term, ' ')){
                 $customers = DB::table('customers')
                 ->select('id','user_name','first_name','last_name','business_name')
-                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                // ->Where('first_name','LIKE', '%'.$request->term.'%')
-                // ->Where('last_name','LIKE', '%'.$request->term.'%')
-                ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'LIKE', "%".$request->term."%")
+                // ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'LIKE', "%".$request->term."%")
+
+                ->where('user_name',$request->term)
+
                 ->take(500)
-                // ->orderBy('user_name', 'asc')
                 ->orderBy('id', 'desc')
                 ->get();
               }else{
-                // $customers = DB::table('customers')
-                // ->select('id','user_name','first_name','last_name','business_name')
-                // ->where('user_name','=',$request->term)
-                // ->orderBy('id', 'desc')
-                // ->get();
-
-                // if(count($customers)==0){
                   $customers = DB::table('customers')
                 ->select('id','user_name','first_name','last_name','business_name')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+
+                ->where('user_name',$request->term)
+
+                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 ->take(500)
-                // ->orderBy('user_name', 'asc')
                 ->orderByRaw('LENGTH(user_name)', 'asc')
                 ->get();
-                // }
 
               }
+
+            }
+
+            $json_result = [];
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->user_name.':'.$v->first_name.' '.$v->last_name,
+                ];
+            }
+            return json_encode($json_result);
+
+           }
+    }
+
+    public function ajaxGetCustomer_name(Request $request)
+    {
+        if($request->ajax()){
+
+            // สำหรับกรณี Autocomplete
+            // $query = \App\Models\Backend\Customers::where('user_name','LIKE',"%$request->txt%")
+            // ->orWhere('first_name','LIKE',"%$request->txt%")
+            // ->orWhere('last_name','LIKE',"%$request->txt%")
+            // ->take(15)->get();
+            // $response = array();
+            // foreach ($query as $key => $value) {
+            //     $response[] = array("value"=>$value->user_name.':'.$value->first_name.' '.$value->last_name,"id"=>$value->id);
+            // }
+            // return json_encode($response);
+
+            if(empty($request->term)){
+                $customers = DB::table('customers')->take(15)->get();
+            }else{
+              // if(strpos($request->term, ' ')){
+                $customers = DB::table('customers')
+                ->select('id','user_name','first_name','last_name','business_name')
+                ->Where(DB::raw("concat(first_name, ' ', last_name)"), 'LIKE', "%".$request->term."%")
+
+                // ->where('user_name',$request->term)
+
+                ->take(500)
+                ->orderBy('id', 'desc')
+                ->get();
+              // }else{
+              //     $customers = DB::table('customers')
+              //   ->select('id','user_name','first_name','last_name','business_name')
+
+              //   // ->where('user_name',$request->term)
+
+              //   // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+              //   // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+              //   // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+              //   ->take(500)
+              //   ->orderByRaw('LENGTH(user_name)', 'asc')
+              //   ->get();
+
+              // }
 
             }
 
@@ -6087,14 +6137,20 @@ class AjaxController extends Controller
                 $customers = DB::table('customers')
                 ->select('id','user_name','first_name','last_name','business_name')
                 // ->whereNotNull('regis_date_doc')
-                ->where('user_name', 'LIKE', '%'.$request->term.'%')
+
+                ->where('user_name',$request->term)
+                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+
+
                 // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 // ->orWhere('business_name','LIKE', '%'.$request->term.'%')
                 ->take(50)
                 // ->orderBy('user_name', 'asc')
-                ->orderBy('id', 'asc')
+                ->orderByRaw('LENGTH(user_name)', 'asc')
+                // ->orderBy('id', 'asc')
                 ->get();
+
             }
             $json_result = [];
             foreach($customers as $k => $v){

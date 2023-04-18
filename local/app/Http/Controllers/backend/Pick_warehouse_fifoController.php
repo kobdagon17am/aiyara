@@ -8,6 +8,7 @@ use DB;
 use File;
 use Session;
 use App\Http\Controllers\backend\AjaxController;
+use Auth;
 
 class Pick_warehouse_fifoController extends Controller
 {
@@ -1139,15 +1140,19 @@ class Pick_warehouse_fifoController extends Controller
 
                    }
 
-// dd($zone_str2);
+// dd(Auth::user());
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                 // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
-                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND zone_id_fk in (".$zone_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+
+                if(Auth::user()->branch_id_fk == 6){
+                    // ให้ฝ่ายคลังดึงชั้น 1 เท่านั้น
+                    $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND shelf_floor = 1 AND warehouse_id_fk in (".$w_str2.") AND zone_id_fk in (".$zone_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+                  }else{
+                  $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND warehouse_id_fk in (".$w_str2.") AND zone_id_fk in (".$zone_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+                }
+
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
-
-
-
                 // วุฒิเพิ่มมา
                 // dd($invoice_code);
                 // if($db_pick_pack_packing_code_data){
@@ -1198,7 +1203,14 @@ class Pick_warehouse_fifoController extends Controller
                     }
 
                     // wut อันนี้แก้ จ่ายผิดคลัง
-                    $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
+                    if(Auth::user()->branch_id_fk == 6){
+                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND shelf_floor = 1 AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
+                    }else{
+                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
+                   }
+
+
+
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                           DB::select(" DROP TABLE IF EXISTS temp_001; ");
@@ -1362,7 +1374,12 @@ class Pick_warehouse_fifoController extends Controller
 
 
                      // wut อันนี้แก้ จ่ายผิดคลัง
-                     $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
+                     if(Auth::user()->branch_id_fk == 6){
+                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND shelf_floor = 1 AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
+                    }else{
+                      $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." AND warehouse_id_fk in (".$w_str.") AND zone_id_fk in (".$zone_str2.") ORDER BY lot_expired_date ASC  ");
+                    }
+
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
 
                      $i = 1;
@@ -2058,7 +2075,13 @@ class Pick_warehouse_fifoController extends Controller
             }
             // time_pay
                 // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
-                $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+                if(Auth::user()->branch_id_fk == 6){
+                  $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND shelf_floor = 1 AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+                }else{
+                  $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk."  ");
+              }
+
+
                 $amt_floor = $temp_db_stocks_01[0]->amt_floor;
 
                 // Case 1 > มีสินค้าพอ (รวมจากทุกชั้น) และ ในคลังมีมากกว่า ที่ต้องการซื้อ
@@ -2216,7 +2239,14 @@ class Pick_warehouse_fifoController extends Controller
 
                      // Case 2.1 > ไล่หาแต่ละชั้น ตาม FIFO ชั้นที่จะหมดอายุก่อน เอาออกมาก่อน
                     //  $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC  ");
+
+                    if(Auth::user()->branch_id_fk == 6){
+                      // ให้ฝ่ายคลังดึงชั้น 1 เท่านั้น
+                      $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk."  AND shelf_floor = 1 AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
+
+                    }else{
                     $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt>0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND  warehouse_id_fk in (".$w_str2.") AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
+                  }
 
                      $i = 1;
                      foreach ($temp_db_stocks_02 as $v_02) {
@@ -2432,7 +2462,12 @@ class Pick_warehouse_fifoController extends Controller
                       @$_SESSION['check_product_instock'] = 0;
 
                       // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
-                      $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt=0 AND branch_id_fk=".\Auth::user()->branch_id_fk."  AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
+                      if(Auth::user()->branch_id_fk == 6){
+                        $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt=0 AND branch_id_fk=".\Auth::user()->branch_id_fk." AND shelf_floor = 1 AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
+                      }else{
+                        $temp_db_stocks_02 = DB::select(" SELECT * from db_stocks WHERE amt=0 AND branch_id_fk=".\Auth::user()->branch_id_fk."  AND product_id_fk=".$value->product_id_fk." ORDER BY lot_expired_date ASC ");
+                     }
+
 
 
                    // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น

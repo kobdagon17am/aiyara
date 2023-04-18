@@ -628,6 +628,7 @@ set_time_limit(9999999);
 
                 $cus_name = str_replace('(ยกเลิกสมัครซ้ำ)','',$cus_name);
                 $cus_name = str_replace("(ยกเลิก)"," ",$cus_name);
+                $cus_name = str_replace("-ลาออก-"," ",$cus_name);
 
               // }else{
               //   $cus_name = '-';
@@ -686,6 +687,7 @@ set_time_limit(9999999);
                 }
               }
               // <td style="text-align: right;">'.number_format($order->aicash_price,2,".",",").'</td>
+              // <td style="text-align: right;">'.number_format(($order->tax+$shipping_vat+$fee_vat),2,".",",").'</td>
               $p.= '
               <tr>
               <td style="text-align: center;">'.$approve_date.'</td>
@@ -992,9 +994,9 @@ set_time_limit(9999999);
             <td style="text-align: right;"> <?php echo number_format($prompt_pay_price_total,2,".",","); ?> &nbsp;</td>
             <td style="border-left: 1px solid #ccc;"> VAT 7% &nbsp;</td>
             <td style="text-align: right;"> <?php
-            // echo number_format($tax_total,2,".",",");
+            echo number_format($tax_total,2,".",",");
             // echo round( $tax_total ,2 );
-            echo $tax_total;
+            // echo $tax_total;
              ?> &nbsp;</td>
         </tr>
 

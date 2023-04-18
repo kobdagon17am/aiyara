@@ -120,6 +120,18 @@
 
     <div class="myBorder">
 
+      <div class="row" >
+        <div class="col-md-6 " >
+          <div class="form-group row">
+            <label for="customer_id_username" class="col-md-3 col-form-label"> รหัสสมาชิก : </label>
+            <div class="col-md-9">
+               <select id="customer_id_username" name="customer_id_username" class="form-control" ></select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
               <div class="row" >
                 <div class="col-md-6 " >
                   <div class="form-group row">
@@ -426,6 +438,7 @@ $(function() {
                   $(".myloading").show();
 
                   var customer_id = $('#customer_id').val();
+                  var customer_id_username = $('#customer_id_username').val();
                   var business_name = $('#business_name').val();
                   var introduce_id = $('#introduce_id').val();
                   var id_card = $('#id_card').val();
@@ -453,6 +466,7 @@ $(function() {
                                                 business_name:business_name,
                                                 introduce_id:introduce_id,
                                                 id_card:id_card,
+                                                customer_id_username:customer_id_username,
                                               },
                                             method: 'POST',
                                           },
@@ -739,7 +753,7 @@ $(function() {
           allowClear: true,
           placeholder: '-Select-',
           ajax: {
-          url: " {{ url('backend/ajaxGetCustomer') }} ",
+          url: " {{ url('backend/ajaxGetCustomer_name') }} ",
           type  : 'POST',
           dataType : 'json',
           delay  : 250,
@@ -759,6 +773,37 @@ $(function() {
         });
 
    });
+</script>
+
+<script type="text/javascript">
+
+  $(document).ready(function(){
+
+     $("#customer_id_username").select2({
+         minimumInputLength: 3,
+         allowClear: true,
+         placeholder: '-Select-',
+         ajax: {
+         url: " {{ url('backend/ajaxGetCustomer') }} ",
+         type  : 'POST',
+         dataType : 'json',
+         delay  : 250,
+         cache: false,
+         data: function (params) {
+          return {
+           term: params.term  || '',   // search term
+           page: params.page  || 1
+          };
+         },
+         processResults: function (data, params) {
+          return {
+           results: data
+          };
+         }
+        }
+       });
+
+  });
 </script>
 
 <script type="text/javascript">

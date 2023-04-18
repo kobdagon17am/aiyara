@@ -229,7 +229,7 @@ if(!empty($gift_voucher)){
           // วุฒิปรับ tax คำนวณใหม่
           if($sRow->sum_price>0){
             $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
-            $sRow->tax = round( $sRow->tax ,2 );
+            // $sRow->tax = round( $sRow->tax ,2 );
             $sRow->product_value = $sRow->sum_price - $sRow->tax;
             // เพิ่มมา
             $total_price = $sRow->product_value;
@@ -237,7 +237,7 @@ if(!empty($gift_voucher)){
           $shipping_vat = 0;
           if($shipping_price>0){
             $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
-            $shipping_vat = round( $shipping_vat ,2 );
+            // $shipping_vat = round( $shipping_vat ,2 );
             $shipping_price = $shipping_price - $shipping_vat;
             $sRow->tax = $sRow->tax + $shipping_vat;
             // $shipping[0]->shipping_price = $shipping_price;
@@ -245,7 +245,7 @@ if(!empty($gift_voucher)){
           $fee_vat = 0;
           if($sRow->fee_amt>0){
             $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
-            $fee_vat = round( $fee_vat ,2 );
+            // $fee_vat = round( $fee_vat ,2 );
             $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
             $sRow->tax = $sRow->tax + $fee_vat;
           }else{
@@ -261,7 +261,7 @@ if(!empty($gift_voucher)){
                // วุฒิปรับ tax คำนวณใหม่
      if($sRow->sum_price>0){
       $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
-      $sRow->tax = round( $sRow->tax ,2 );
+      // $sRow->tax = round( $sRow->tax ,2 );
       $sRow->product_value = $sRow->sum_price - $sRow->tax;
       // เพิ่มมา
       $total_price = $sRow->product_value;
@@ -269,7 +269,7 @@ if(!empty($gift_voucher)){
     $shipping_vat = 0;
     if($shipping_price>0){
       $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
-      $shipping_vat = round( $shipping_vat ,2 );
+      // $shipping_vat = round( $shipping_vat ,2 );
       $shipping_price = $shipping_price - $shipping_vat;
       $sRow->tax = $sRow->tax + $shipping_vat;
       // $shipping[0]->shipping_price = $shipping_price;
@@ -277,7 +277,7 @@ if(!empty($gift_voucher)){
     $fee_vat = 0;
     if($sRow->fee_amt>0){
       $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
-      $fee_vat = round( $fee_vat ,2 );
+      // $fee_vat = round( $fee_vat ,2 );
       $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
       $sRow->tax = $sRow->tax + $fee_vat;
     }else{
@@ -293,7 +293,7 @@ if(!empty($gift_voucher)){
      // วุฒิปรับ tax คำนวณใหม่
      if($sRow->sum_price>0){
       $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
-      $sRow->tax = round( $sRow->tax ,2 );
+      // $sRow->tax = round( $sRow->tax ,2 );
       $sRow->product_value = $sRow->sum_price - $sRow->tax;
        // เพิ่มมา
        $total_price = $sRow->product_value;
@@ -301,7 +301,7 @@ if(!empty($gift_voucher)){
     $shipping_vat = 0;
     if($shipping_price>0){
       $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
-      $shipping_vat = round( $shipping_vat ,2 );
+      // $shipping_vat = round( $shipping_vat ,2 );
       $shipping_price = $shipping_price - $shipping_vat;
       $sRow->tax = $sRow->tax + $shipping_vat;
       // $shipping[0]->shipping_price = $shipping_price;
@@ -309,7 +309,7 @@ if(!empty($gift_voucher)){
     $fee_vat = 0;
     if($sRow->fee_amt>0){
       $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
-      $fee_vat = round( $fee_vat ,2 );
+      // $fee_vat = round( $fee_vat ,2 );
       $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
       $sRow->tax = $sRow->tax + $fee_vat;
     }else{

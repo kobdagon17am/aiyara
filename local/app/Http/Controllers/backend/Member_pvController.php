@@ -296,9 +296,20 @@ class Member_pvController extends Controller
         $w01 = $req->customer_id;
         $Operator01 = "=";
       }else{
-        $w01 = 0 ;
-        $Operator01 = "!=";
+
+        if(!empty($req->customer_id_username)){
+          $w01 = $req->customer_id_username;
+          $Operator01 = "=";
+        }else{
+          $w01 = 0 ;
+          $Operator01 = "!=";
+        }
+
+
       }
+
+
+
 
       if(!empty($req->business_name)){
         $w02 = $req->business_name;
