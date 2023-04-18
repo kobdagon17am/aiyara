@@ -193,6 +193,7 @@ class Register extends Model
 
           $data_customer = [
              'business_location_id'=>$business_location,
+             'country'=>$req->country,
              'user_name'=>$username,
              'password'=>$pass_db,
              'prefix_name'=>$prefix_name,

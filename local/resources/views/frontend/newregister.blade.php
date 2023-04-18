@@ -72,7 +72,7 @@
                      </div>
                      <div class="col-sm-3">
                          <label><b> Business Location </b></label>
-                         <select name="business_location" id="business_location" class="form-control">
+                         <select name="business_location" class="form-control" >
                              @foreach ($data['business_location'] as $business_location_value)
                                  <option value="{{ $business_location_value->id }}"
                                      @if ($business_location_value->id == $data['data']->business_location_id) selected="" @endif>
@@ -129,6 +129,29 @@
                      </div>
 
                      <div class="col-sm-3">
+                      <label>@lang('message.country') <font class="text-danger">*</font></label>
+                      <select class="js-example-basic-single col-sm-12" name="country"  id="business_location"  required="">
+                          @foreach ($data['country'] as $c_value)
+                          <option value="{{ $c_value->txt_desc }}"
+                            @if ($c_value->id == $data['data']->business_location_id) selected="" @endif>
+                            {{ $c_value->txt_desc }}</option>
+                          @endforeach
+                      </select>
+                  </div>
+
+                     <div class="col-sm-3">
+                      <label>@lang('message.Nationality') <font class="text-danger">*</font></label>
+                      <select class="js-example-basic-single col-sm-12" name="nation_id" required="">
+                          <option value="">Select</option>
+                          @foreach ($data['nation'] as $country_value)
+                              <option value="{{ $country_value->nation_id }}"
+                                  @if ($country_value->nation_id == $data['data']->nation_id || $country_value->nation_id == old('nation_id')) selected="" @endif>
+                                  {{ $country_value->nation_name_en }}</option>
+                          @endforeach
+                      </select>
+                  </div>
+
+                     <div class="col-sm-3">
                          <label>@lang('message.ID_card_number') <font class="text-danger">*</font></label>
                          <input class="form-control" type="text" name="id_card" id="id_card"
                              value="{{ old('id_card') }}" required="">
@@ -137,17 +160,7 @@
 
 
 
-                     <div class="col-sm-3">
-                         <label>@lang('message.Nationality') <font class="text-danger">*</font></label>
-                         <select class="js-example-basic-single col-sm-12" name="nation_id" required="">
-                             <option value="">Select</option>
-                             @foreach ($data['country'] as $country_value)
-                                 <option value="{{ $country_value->nation_id }}"
-                                     @if ($country_value->nation_id == $data['data']->nation_id || $country_value->nation_id == old('nation_id')) selected="" @endif>
-                                     {{ $country_value->nation_name_en }}</option>
-                             @endforeach
-                         </select>
-                     </div>
+
                  </div>
 
                  <div class="form-group row">
@@ -554,20 +567,22 @@
              $('#id_card').attr('maxlength', '13');
              $('#id_card').attr('minlength', '13');
          } else {
-             $('#id_card').attr('maxlength', '9');
-             $('#id_card').attr('minlength', '9');
+             $('#id_card').attr('maxlength', '8');
+             $('#id_card').attr('minlength', '8');
          }
 
          $('#business_location').change(function() {
              value = $(this).val();
              if (value != "1") {
-                 $('#id_card').attr('maxlength', '9');
-                 $('#id_card').attr('minlength', '9');
+                 $('#id_card').attr('maxlength', '8');
+                 $('#id_card').attr('minlength', '8');
                  $('#id_card').val("");
+                 $('span.error').text('');
              } else {
                  $('#id_card').attr('maxlength', '13');
                  $('#id_card').attr('minlength', '13');
                  $('#id_card').val("");
+                 $('span.error').text('');
              }
          })
 

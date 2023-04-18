@@ -29,24 +29,37 @@ class RegisterController extends Controller
        $resule = DB::table('customers')
        ->select('*')
        ->where('user_name','=',$user_name)
-       ->limit(1)
        ->first();
 
        $provinces = DB::table('dataset_provinces')
        ->select('*')
        ->get();
 
-       $country = DB::table('db_country')
+       $nation_id = DB::table('db_country')
        ->select('*')
        ->get();
 
+       if($resule->business_location_id == '1' || $resule->business_location_id == null ){
+        $business_location_id = 1;
+       }else{
+        $business_location_id = 3;
+
+       }
        $business_location = DB::table('dataset_business_location')
        ->select('*')
+       ->where('id','=',$business_location_id )
        ->where('lang_id','=',1)
        ->where('status','=',1)
        ->get();
 
-       $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country];
+
+
+       $country = DB::table('dataset_business_location')
+       ->select('*')
+       ->where('lang_id','=',1)
+       ->get();
+
+       $data = ['data'=>$resule,'line_type_back'=>$line_type,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation'=>$nation_id];
 
        return view('frontend/newregister',compact('data'));
 
