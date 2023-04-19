@@ -85,7 +85,7 @@
 
                                     <div class="card">
                                         <div class="card-header">
-                                            <h4>กรอกข้อมูลลงทะเบียนสมาชิกใหม่</h4>
+                                          <h4>@lang('message.register')</h4>
                                         </div>
 
                                         <div class="card-block ">
@@ -96,7 +96,7 @@
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
-                                                        <label><b>รหัสผู้แนะนำ</b></label>
+                                                      <label><b> @lang('message.under') </b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
                                                             style="font-size: 15px;padding: 9px 9px;">
                                                             <font style="color: #000;">
@@ -109,7 +109,7 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label><b>สายงาน</b></label>
+                                                      <label><b>@lang('message.line_type')</b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
                                                             style="font-size: 15px;padding: 9px 9px;">
                                                             <font style="color: #000;">{{ $data['line_type_back'] }}
@@ -139,7 +139,7 @@
                                                     </div> --}}
                                                     <div class="col-sm-3">
                                                         <label><b> Business Location </b></label>
-                                                        <select name="business_location" id="business_location" class="form-control">
+                                                        <select name="business_location"  class="form-control">
                                                             @foreach ($data['business_location'] as $business_location_value)
                                                                 <option value="{{ $business_location_value->id }}"
                                                                     @if ($business_location_value->id == $data['data']->business_location_id) selected="" @endif>
@@ -187,28 +187,31 @@
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-2">
-                                                        <label>สถานะภาพ</label>
+                                                      <label>@lang('message.marital_status')</label>
                                                         <select class="form-control" name="family_status">
-                                                            <option value="1">โสด</option>
-                                                            <option value="2">สมรส</option>
-                                                            <option value="3">หย่าร้าง</option>
+                                                          <option value="1">@lang('message.Single')</option>
+                                                          <option value="2">@lang('message.Married')</option>
+                                                          <option value="3">@lang('message.Divorced')</option>
                                                         </select>
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>วัน/เดือน/ปีเกิด</label>
+                                                      <label>@lang('message.date_of_birth')</label>
                                                         <input class="form-control" type="date" name="birth_day"
                                                             value="{{ old('birth_day') }}">
                                                     </div>
 
-                                                    <div class="col-sm-3">
-                                                        <label>เลขที่บัตรประชาชน <font class="text-danger">*</font>
-                                                            </label>
-                                                        <input class="form-control" id="id_card" type="text" name="id_card"
-                                                            value="{{ old('id_card') }}"   required="">
-                                                            <span class="error text-danger"></span>
-                                                    </div>
 
+                                                    <div class="col-sm-3">
+                                                      <label>@lang('message.country') <font class="text-danger">*</font></label>
+                                                      <select class="js-example-basic-single col-sm-12" name="country"  id="business_location"  required="">
+                                                          @foreach ($data['country'] as $c_value)
+                                                          <option value="{{ $c_value->txt_desc }}"
+                                                            @if ($c_value->id == $data['data']->business_location_id) selected="" @endif>
+                                                            {{ $c_value->txt_desc }}</option>
+                                                          @endforeach
+                                                      </select>
+                                                  </div>
 
 
                                                     <div class="col-sm-3">
@@ -216,7 +219,7 @@
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="nation_id" required="">
                                                             <option value="">Select</option>
-                                                            @foreach ($data['country'] as $country_value)
+                                                            @foreach ($data['nation_id'] as $country_value)
                                                                 <option value="{{ $country_value->nation_id }}"
                                                                     @if ($country_value->nation_id == $data['data']->nation_id || $country_value->nation_id == old('nation_id')) selected="" @endif>
                                                                     {{ $country_value->nation_name_en }}</option>
@@ -224,6 +227,15 @@
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-sm-3">
+                                                  <label>เลขที่บัตรประชาชน <font class="text-danger">*</font>
+                                                      </label>
+                                                  <input class="form-control" id="id_card" type="text" name="id_card"
+                                                      value="{{ old('id_card') }}"   required="">
+                                                      <span class="error text-danger"></span>
+                                              </div>
+
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
