@@ -996,10 +996,31 @@ if(!empty($db_orders[0]->action_user)){
 
                         }
 
+                        if(@$sRow->delivery_location==4){
+
+                          $delivery_data = DB::table('db_delivery')->where('orders_id_fk',$id)->first();
+                          if($delivery_data){
+                            $db_delivery_packing_data = DB::table('db_delivery_packing')->where('delivery_id_fk',$delivery_data->id)->first();
+                            if($db_delivery_packing_data){
+                              $db_delivery_packing_other = DB::table('db_delivery_packing')->where('packing_code',$db_delivery_packing_data->packing_code)->get();
+                              if(count($db_delivery_packing_other)==1){
+                                @$address = @$delivery_data->recipient_name;
+                                @$address .= " ". @$delivery_data->addr_send;
+                                @$address .= " ". @$delivery_data->postcode;
+                                @$address .= " Tel". @$delivery_data->mobile.' '. @$delivery_data->tel_home;
+                              }
+                            }
+                          }else{
+                            @$address = "";
+                          }
+
+                        }
+
                       }
 
 
-   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address  . ' ' . $tel : NULL;
+  //  $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address  . ' ' . $tel : NULL;
+  $address = !empty($address) ? ' '. $address  . ' ' . $tel : NULL;
   //  $address = preg_replace('/[^\_\- ]/i', '', $address);
   // $address = preg_replace('/[^A-Za-z0-9ก-ฮ.:, " " \-]/', '', $address);
 
