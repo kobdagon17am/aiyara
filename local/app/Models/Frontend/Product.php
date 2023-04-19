@@ -246,7 +246,7 @@ class Product extends Model
                 }
 
             }
-            dd($resule);
+            // dd($resule);
 
 
             $data = ['html' => $html, 'rs' => $resule];
