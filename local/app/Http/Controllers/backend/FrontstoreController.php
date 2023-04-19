@@ -3748,16 +3748,16 @@ class FrontstoreController extends Controller
     $user_login_id = \Auth::user()->id;
     $sPermission = \Auth::user()->permission;
     if (\Auth::user()->position_level == '3' || \Auth::user()->position_level == '4') {
-      $action_user_011 = " AND db_orders.branch_id_fk = '" . (\Auth::user()->branch_id_fk) . "' ";
+      $action_user_011 = " db_orders.branch_id_fk = '" . (\Auth::user()->branch_id_fk) . "' ";
     } else {
-      $action_user_011 = " AND action_user = $user_login_id ";
+      $action_user_011 = " action_user = $user_login_id ";
     }
 
     if ($sPermission == 1) {
       $action_user_01 = "";
       $action_user_011 = "";
     } else {
-      $action_user_01 = " AND action_user = $user_login_id ";
+      $action_user_01 = " action_user = $user_login_id ";
     }
 
     $role_check = DB::table('role_group')->select('acc_status')->where('id',\Auth::user()->role_group_id_fk)->first();
@@ -3774,25 +3774,25 @@ class FrontstoreController extends Controller
 
     if (!empty($req->startDate)) {
       if($req->date_type == 'created'){
-      $startDate = " AND DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
-      $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
+      $startDate = " DATE(db_orders.created_at) >= '" . $req->startDate . "' ";
+      $startDate2 = " DATE(db_add_ai_cash.created_at) >= '" . $req->startDate . "' ";
       }elseif($req->date_type == 'approved'){
-        $startDate = " AND DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
-        $startDate2 = " AND DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
+        $startDate = " DATE(db_orders.approve_date) >= '" . $req->startDate . "' ";
+        $startDate2 = " DATE(db_add_ai_cash.approve_date) >= '" . $req->startDate . "' ";
       }
 
     } else {
-      $startDate = " AND DATE(db_orders.created_at) >= CURDATE() ";
-      $startDate2 = " AND DATE(db_add_ai_cash.created_at) >= CURDATE() ";
+      $startDate = " DATE(db_orders.created_at) >= CURDATE() ";
+      $startDate2 = " DATE(db_add_ai_cash.created_at) >= CURDATE() ";
     }
 
     if (!empty($req->endDate)) {
       if($req->date_type == 'created'){
-      $endDate = " AND DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
-      $endDate2 = " AND DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
+      $endDate = " DATE(db_orders.created_at) <= '" . $req->endDate . "' ";
+      $endDate2 = " DATE(db_add_ai_cash.created_at) <= '" . $req->endDate . "' ";
        }elseif($req->date_type == 'approved'){
-        $endDate = " AND DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
-        $endDate2 = " AND DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
+        $endDate = " DATE(db_orders.approve_date) <= '" . $req->endDate . "' ";
+        $endDate2 = " DATE(db_add_ai_cash.approve_date) <= '" . $req->endDate . "' ";
       }
     } else {
       $endDate = "";
@@ -3800,17 +3800,17 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->business_location_id_fk)) {
-      $business_location_id_fk = " AND db_orders.business_location_id_fk = " . $req->business_location_id_fk . " ";
+      $business_location_id_fk = " db_orders.business_location_id_fk = " . $req->business_location_id_fk . " ";
     }else{
-      $business_location_id_fk = " AND db_orders.business_location_id_fk = '" . (\Auth::user()->business_location_id_fk) . "' ";
+      $business_location_id_fk = " db_orders.business_location_id_fk = '" . (\Auth::user()->business_location_id_fk) . "' ";
     }
 
     if (!empty($req->purchase_type_id_fk)) {
-      $purchase_type_id_fk = " AND db_orders.purchase_type_id_fk = '" . $req->purchase_type_id_fk . "' ";
+      $purchase_type_id_fk = " db_orders.purchase_type_id_fk = '" . $req->purchase_type_id_fk . "' ";
       if ($req->purchase_type_id_fk == 4) {
         $purchase_type_id_fk_02 = "";
       } else {
-        $purchase_type_id_fk_02 = " AND db_add_ai_cash.id=0 ";
+        $purchase_type_id_fk_02 = " db_add_ai_cash.id=0 ";
       }
     } else {
       $purchase_type_id_fk = "";
@@ -3818,16 +3818,16 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->customer_username)) {
-      $customer_username = " AND db_orders.customers_id_fk = '" . $req->customer_username . "' ";
-      $customer_username_02 = " AND db_add_ai_cash.customer_id_fk = '" . $req->customer_username . "' ";
+      $customer_username = " db_orders.customers_id_fk = '" . $req->customer_username . "' ";
+      $customer_username_02 = " db_add_ai_cash.customer_id_fk = '" . $req->customer_username . "' ";
     } else {
       $customer_username = "";
       $customer_username_02 = "";
     }
 
     if (!empty($req->customer_name)) {
-      $customer_name = " AND db_orders.customers_id_fk = '" . $req->customer_name . "' ";
-      $customer_name_02 = " AND db_add_ai_cash.customer_id_fk = '" . $req->customer_name . "' ";
+      $customer_name = " db_orders.customers_id_fk = '" . $req->customer_name . "' ";
+      $customer_name_02 = " db_add_ai_cash.customer_id_fk = '" . $req->customer_name . "' ";
     } else {
       $customer_name = "";
       $customer_name_02 = "";
@@ -3843,7 +3843,7 @@ class FrontstoreController extends Controller
               $or_str.= "'".$or."'".',';
             }
           }
-          $invoice_code = " AND code_order IN (".$or_str.") ";
+          $invoice_code = " code_order IN (".$or_str.") ";
         // wut เพิ่ม
         $action_user_01 = "";
         $action_user_011 = "";
@@ -3853,8 +3853,8 @@ class FrontstoreController extends Controller
     }
 
     if (!empty($req->action_user)) {
-      $action_user_02 = " AND db_orders.action_user = '" . $req->action_user . "' ";
-      $action_user_022 = " AND db_add_ai_cash.action_user = '" . $req->action_user . "' ";
+      $action_user_02 = " db_orders.action_user = '" . $req->action_user . "' ";
+      $action_user_022 = " db_add_ai_cash.action_user = '" . $req->action_user . "' ";
     } else {
       $action_user_02 = "";
       $action_user_022 = "";
@@ -3862,8 +3862,8 @@ class FrontstoreController extends Controller
 
 
     if (isset($req->status_sent_money)) {
-      $status_sent_money = " AND db_orders.status_sent_money = " . $req->status_sent_money . " ";
-      $status_sent_money_02 = " AND db_add_ai_cash.status_sent_money = " . $req->status_sent_money . " ";
+      $status_sent_money = " db_orders.status_sent_money = " . $req->status_sent_money . " ";
+      $status_sent_money_02 = " db_add_ai_cash.status_sent_money = " . $req->status_sent_money . " ";
     } else {
       $status_sent_money = "";
       $status_sent_money_02 = "";
@@ -3871,7 +3871,7 @@ class FrontstoreController extends Controller
 
     if (isset($req->approve_status)) {
       if ($req->approve_status == 7) {
-        $approve_status = " AND db_orders.approve_status = 0 ";
+        $approve_status = " db_orders.approve_status = 0 ";
         if (!empty($req->startDate)) {
         } else {
           $startDate = '';
@@ -3880,9 +3880,9 @@ class FrontstoreController extends Controller
           $endDate2 = '';
         }
       } else {
-        $approve_status = " AND db_orders.approve_status = " . $req->approve_status . " ";
+        $approve_status = " db_orders.approve_status = " . $req->approve_status . " ";
       }
-      $approve_status_02 = " AND db_add_ai_cash.approve_status = " . $req->approve_status . " ";
+      $approve_status_02 = " db_add_ai_cash.approve_status = " . $req->approve_status . " ";
     } else {
       $approve_status = "";
       $approve_status_02 = "";
@@ -3890,10 +3890,10 @@ class FrontstoreController extends Controller
 
     if (isset($req->viewcondition)) {
       if (isset($req->viewcondition) && $req->viewcondition == "ViewBuyNormal") {
-        $viewcondition_01 = ' and db_orders.purchase_type_id_fk not in (4,5) ';
-        $viewcondition_02 = ' and db_add_ai_cash.id=0 ';
+        $viewcondition_01 = ' db_orders.purchase_type_id_fk not in (4,5) ';
+        $viewcondition_02 = ' db_add_ai_cash.id=0 ';
       } else if (isset($req->viewcondition) && $req->viewcondition == "ViewBuyVoucher") {
-        $viewcondition_01 = ' and db_orders.purchase_type_id_fk in (4,5) ';
+        $viewcondition_01 = ' db_orders.purchase_type_id_fk in (4,5) ';
         $viewcondition_02 = '';
       } else {
         $viewcondition_01 = '';
@@ -3904,32 +3904,77 @@ class FrontstoreController extends Controller
       $viewcondition_02 = '';
     }
 
-    $sTable = DB::select("
-                SELECT gift_voucher_price,code_order,db_orders.id,db_orders.approve_date,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
-                db_orders.true_money_price,db_orders.prompt_pay_price, db_orders.user_name, db_orders.name_customer, db_orders.name_customer_business,
-                db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,db_orders.customers_sent_id_fk,
-                credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
-                status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
-                db_orders.shipping_free,db_orders.transfer_bill_note
-                FROM db_orders
-                Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                WHERE 1
+    // $sTable = DB::select("
+    //             SELECT gift_voucher_price,code_order,db_orders.id,db_orders.approve_date,action_date,purchase_type_id_fk,0 as type,customers_id_fk,sum_price,invoice_code,approve_status,shipping_price,
+    //             db_orders.true_money_price,db_orders.prompt_pay_price, db_orders.user_name, db_orders.name_customer, db_orders.name_customer_business,
+    //             db_orders.updated_at,dataset_pay_type.detail as pay_type,cash_price,db_orders.business_location_id_fk,db_orders.customers_sent_id_fk,
+    //             credit_price,fee_amt,transfer_price,aicash_price,total_price,db_orders.created_at,
+    //             status_sent_money,cash_pay,action_user,db_orders.pay_type_id_fk,sum_credit_price,db_orders.charger_type,db_orders.pay_with_other_bill,db_orders.pay_with_other_bill_note,
+    //             db_orders.shipping_free,db_orders.transfer_bill_note
+    //             FROM db_orders
+    //             Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+    //             WHERE 1
 
-                $action_user_011
-                $startDate
-                $endDate
-                $purchase_type_id_fk
-                $customer_username
-                $customer_name
-                $invoice_code
-                $status_sent_money
-                $approve_status
-                $viewcondition_01
-                $action_user_02
-                $business_location_id_fk
-                ORDER BY id DESC
-              ");
+    //             $action_user_011
+    //             $startDate
+    //             $endDate
+    //             $purchase_type_id_fk
+    //             $customer_username
+    //             $customer_name
+    //             $invoice_code
+    //             $status_sent_money
+    //             $approve_status
+    //             $viewcondition_01
+    //             $action_user_02
+    //             $business_location_id_fk
+    //             ORDER BY id DESC
+    //           ");
 
+
+    $sTable = DB::table('db_orders')
+    ->leftJoin('dataset_pay_type', 'db_orders.pay_type_id_fk', '=', 'dataset_pay_type.id')
+    ->select('gift_voucher_price', 'code_order', 'db_orders.id', 'db_orders.approve_date', 'action_date', 'purchase_type_id_fk', DB::raw('0 as type'), 'customers_id_fk', 'sum_price', 'invoice_code', 'approve_status', 'shipping_price', 'db_orders.true_money_price', 'db_orders.prompt_pay_price', 'db_orders.user_name', 'db_orders.name_customer', 'db_orders.name_customer_business', 'db_orders.updated_at', 'dataset_pay_type.detail as pay_type', 'cash_price', 'db_orders.business_location_id_fk', 'db_orders.customers_sent_id_fk', 'credit_price', 'fee_amt', 'transfer_price', 'aicash_price', 'total_price', 'db_orders.created_at', 'status_sent_money', 'cash_pay', 'action_user', 'db_orders.pay_type_id_fk', 'sum_credit_price', 'db_orders.charger_type', 'db_orders.pay_with_other_bill', 'db_orders.pay_with_other_bill_note', 'db_orders.shipping_free', 'db_orders.transfer_bill_note')
+    ->when($action_user_011, function ($query) use ($action_user_011) {
+        return $query->whereRaw($action_user_011);
+    })
+    ->when($startDate, function ($query) use ($startDate) {
+        return $query->whereRaw($startDate);
+    })
+    ->when($endDate, function ($query) use ($endDate) {
+        return $query->whereRaw($endDate);
+    })
+    ->when($purchase_type_id_fk, function ($query) use ($purchase_type_id_fk) {
+        return $query->whereRaw($purchase_type_id_fk);
+    })
+    ->when($customer_username, function ($query) use ($customer_username) {
+        return $query->whereRaw($customer_username);
+    })
+    ->when($customer_name, function ($query) use ($customer_name) {
+        return $query->whereRaw(function ($q) use ($customer_name) {
+            $q->whereRaw('name_customer', 'like', '%' . $customer_name . '%')
+                ->orWhere('name_customer_business', 'like', '%' . $customer_name . '%');
+        });
+    })
+    ->when($invoice_code, function ($query) use ($invoice_code) {
+        return $query->whereRaw($invoice_code);
+    })
+    ->when($status_sent_money, function ($query) use ($status_sent_money) {
+        return $query->whereRaw($status_sent_money);
+    })
+    ->when($approve_status, function ($query) use ($approve_status) {
+        return $query->whereRaw($approve_status);
+    })
+    ->when($viewcondition_01, function ($query) use ($viewcondition_01) {
+        return $query->whereRaw($viewcondition_01);
+    })
+    ->when($action_user_02, function ($query) use ($action_user_02) {
+        return $query->whereRaw($action_user_02);
+    })
+
+    ->when($business_location_id_fk, function ($query) use ($business_location_id_fk) {
+      return $query->whereRaw($business_location_id_fk);
+  })
+  ->orderBy('id','desc');
 
     $sQuery = \DataTables::of($sTable);
 

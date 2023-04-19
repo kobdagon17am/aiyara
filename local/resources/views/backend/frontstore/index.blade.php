@@ -586,7 +586,7 @@
                 scrollCollapse: true,
                 scrollX: true,
                 paging: true,
-                iDisplayLength: 1000,
+                iDisplayLength: 40,
                 ordering: false,
                 scrollY: '' + ($(window).height() - 370) + 'px',
                 ajax: {
@@ -1203,7 +1203,7 @@
                             searching: false,
                             bLengthChange: true,
                             destroy: true,
-                            iDisplayLength: 1000,
+                            iDisplayLength: 40,
                             scrollY: '' + ($(window).height() - 370) + 'px',
                             // iDisplayLength: 35,
                             ajax: {
@@ -1694,7 +1694,7 @@
                         searching: false,
                         bLengthChange: true,
                         destroy: true,
-                        iDisplayLength: 1000,
+                        iDisplayLength: 40,
                         scrollY: '' + ($(window).height() - 370) + 'px',
                         // iDisplayLength: 35,
                         ajax: {

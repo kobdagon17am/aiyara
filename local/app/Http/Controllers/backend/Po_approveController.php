@@ -551,7 +551,8 @@ class Po_approveController extends Controller
     })
     ->when($customer_id, function($query, $customer_id) {
         return $query->whereRaw($customer_id);
-    });
+    })
+    ->orderByRaw("CASE WHEN approve_status = 1 THEN 1 ELSE 99 END ASC, approve_status, code_order DESC");
 
     // or
     // pay_type_id_fk in (1,8,10,11,12,20) and
