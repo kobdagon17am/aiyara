@@ -3823,12 +3823,12 @@ class AjaxController extends Controller
 
     public function ajaxCheckAddAiCashStatus(Request $request)
     {
-        if($request->ajax()){
-            //  $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE bill_status=1 ");
-            //  `approve_status` int(11) DEFAULT '0' COMMENT 'ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id',
-            $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE approve_status=3 ");
-            return count($rs);
-        }
+        // if($request->ajax()){
+        //     //  $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE bill_status=1 ");
+        //     //  `approve_status` int(11) DEFAULT '0' COMMENT 'ล้อตาม db_orders>approve_status : 1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย > Ref>dataset_approve_status>id',
+        //     $rs = DB::select(" SELECT * FROM db_add_ai_cash WHERE approve_status=3 ");
+        //     return count($rs);
+        // }
     }
 
 
@@ -6323,9 +6323,10 @@ class AjaxController extends Controller
                 $customers = DB::table('customers')->take(15)->get();
             }else{
                 $customers = DB::table('customers')
+                ->select('id','user_name','first_name','last_name','business_name')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
-                ->orWhere('first_name','LIKE', '%'.$request->term.'%')
-                ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 ->take(15)
                 ->orderBy('user_name', 'asc')
                 ->get();
@@ -6353,6 +6354,7 @@ class AjaxController extends Controller
                 $customers = DB::table('customers')->take(15)->get();
             }else{
                 $customers = DB::table('customers')
+                ->select('id','user_name','first_name','last_name','business_name')
                 ->where('user_name', 'LIKE', '%'.$request->term.'%')
                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
               //  ->orWhere('last_name','LIKE', '%'.$request->term.'%')
@@ -6382,9 +6384,10 @@ class AjaxController extends Controller
             }else{
                 $customers = DB::table('customers')
                 // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                ->select('id','user_name','first_name','last_name','business_name')
                 ->where('first_name','LIKE', '%'.$request->term.'%')
                 // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
-                ->take(1000)
+                ->take(500)
                 ->orderBy('first_name', 'asc')
                 ->orderBy('last_name', 'asc')
                 ->get();

@@ -365,8 +365,8 @@ set_time_limit(9999999);
                         ORDER BY approve_date ASC
 
                   ");
-                  // AND db_orders.code_order = 'O123013100212'
-                  // LIMIT 9
+                  //  AND db_orders.code_order = 'O123030200329'
+                  // LIMIT 116
                       }else{
 
                         $sTable =DB::select("
