@@ -1360,24 +1360,26 @@ class FrontstorelistController extends Controller
            $d1 = \App\Models\Backend\Frontstore::where('id',$row->frontstore_id_fk)->get();
            $d2 = \App\Models\Backend\Customers::where('id',$d1[0]->customers_id_fk)->get();
 
-           $Check = \App\Models\Frontend\Product::product_list_select_promotion_all($row->id,$d1[0]->purchase_type_id_fk,$d2[0]->user_name);
+           $Check = \App\Models\Frontend\Product::product_list_select_promotion_all_backend($row->id,$d1[0]->purchase_type_id_fk,$d2[0]->user_name);
            if($Check){
               $arr = [];
               for ($i=0; $i < count(@$Check) ; $i++) {
                    $c = array_column($Check,$i);
                    foreach ($c as $key => $value) {
-                    if($value['status'] == "fail"){
+                    if($value['status'] == "fail"){ 
                        array_push($arr,$value['message']);
                     }
                    }
-                   $im = implode(',',$arr);
+                   $im = implode(',',$arr); 
               }
               // dd($im);
-              // return $im;
-              return 0;
+              return $im;
+              //return 0;
           }else{
             return 0;
           }
+
+          // return 0;
 
       })
       ->escapeColumns('cuase_cannot_buy')
