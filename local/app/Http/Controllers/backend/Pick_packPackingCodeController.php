@@ -181,7 +181,7 @@ class Pick_packPackingCodeController extends Controller
         if(!empty($req->startDate) && !empty($req->endDate)){
            $w04 = " and date(created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
         }else{
-           $w04 = "";
+           $w04 = "and date(created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
         }
 
         if(!empty($req->startPayDate) && !empty($req->endPayDate)){

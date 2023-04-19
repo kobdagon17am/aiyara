@@ -894,9 +894,9 @@ class Transfer_branch_getController extends Controller
         if(!empty($req->startDate) && !empty($req->endDate)){
            $w05 = " and date(db_transfer_branch_get.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
         }else{
-           $w05 = "";
+           $w05 = "and date(db_transfer_branch_get.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
         }
-
+// dd($w05);
         if(!empty($req->action_user)){
            $w06 = " AND db_transfer_branch_get.action_user = ".$req->action_user." " ;
         }else{
