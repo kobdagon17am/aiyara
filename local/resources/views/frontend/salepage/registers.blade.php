@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Register AIYARA</title>
 
@@ -10,7 +11,7 @@
     <meta name="keywords" content="Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
     <meta name="author" content="codedthemes" /> --}}
     <!-- Favicon icon -->
-    <link rel="icon" href="{{asset('frontend/assets/icon/logo_icon.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('frontend/assets/icon/logo_icon.png') }}" type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
     <!-- Required Fremwork -->
@@ -36,20 +37,19 @@
     <link rel="stylesheet" type="text/css"
         href="{{ asset('frontend/bower_components/multiselect/css/multi-select.css') }}">
 
-        <style>
-          .icons-alert:before {
-              top: 11px;
-          }
+    <style>
+        .icons-alert:before {
+            top: 11px;
+        }
 
-          .pcoded-main-container {
+        .pcoded-main-container {
             margin-top: 0px !important;
-          }
+        }
 
-          .pcoded .pcoded-header[header-theme="theme5"] {
-             background: linear-gradient(to right, #18c160, #18c160);
-            }
-
-      </style>
+        .pcoded .pcoded-header[header-theme="theme5"] {
+            background: linear-gradient(to right, #18c160, #18c160);
+        }
+    </style>
 
 </head>
 <!-- Menu horizontal icon fixed -->
@@ -85,18 +85,19 @@
 
                                     <div class="card">
                                         <div class="card-header">
-                                          <h4>@lang('message.register')</h4>
+                                            <h4>@lang('message.register')</h4>
                                         </div>
 
                                         <div class="card-block ">
 
                                             <form action="{{ route('register_member_salepage') }}"
-                                                id="register_member_salepage" method="POST" enctype="multipart/form-data">
+                                                id="register_member_salepage" method="POST"
+                                                enctype="multipart/form-data">
                                                 @csrf
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
-                                                      <label><b> @lang('message.under') </b></label>
+                                                        <label><b> @lang('message.under') </b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
                                                             style="font-size: 15px;padding: 9px 9px;">
                                                             <font style="color: #000;">
@@ -109,7 +110,7 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                      <label><b>@lang('message.line_type')</b></label>
+                                                        <label><b>@lang('message.line_type')</b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
                                                             style="font-size: 15px;padding: 9px 9px;">
                                                             <font style="color: #000;">{{ $data['line_type_back'] }}
@@ -139,7 +140,7 @@
                                                     </div> --}}
                                                     <div class="col-sm-3">
                                                         <label><b> Business Location </b></label>
-                                                        <select name="business_location"  class="form-control">
+                                                        <select name="business_location" class="form-control">
                                                             @foreach ($data['business_location'] as $business_location_value)
                                                                 <option value="{{ $business_location_value->id }}"
                                                                     @if ($business_location_value->id == $data['data']->business_location_id) selected="" @endif>
@@ -151,34 +152,37 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="col-sm-2">
-                                                      <label> @lang('message.name_prefix')  </label>
-                                                      <select class="form-control" name="name_prefix">
-                                                          <option value="@lang('message.mr')">@lang('message.mr')</option>
-                                                          <option value="@lang('message.mrs')">@lang('message.mrs')</option>
-                                                          <option value="@lang('message.ms')">@lang('message.ms')</option>
-                                                      </select>
+                                                        <label> @lang('message.name_prefix') </label>
+                                                        <select class="form-control" name="name_prefix">
+                                                            <option value="@lang('message.mr')">@lang('message.mr')</option>
+                                                            <option value="@lang('message.mrs')">@lang('message.mrs')</option>
+                                                            <option value="@lang('message.ms')">@lang('message.ms')</option>
+                                                        </select>
 
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.name_first') <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="@lang('message.name_first')"
-                                                            name="name_first" value="{{ old('name_first') }}"
-                                                            required="">
+                                                        <label>@lang('message.name_first') <font class="text-danger">*</font>
+                                                        </label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="@lang('message.name_first')" name="name_first"
+                                                            value="{{ old('name_first') }}" required="">
 
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.name_last') <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="@lang('message.name_last')"
-                                                            name="name_last" value="{{ old('name_last') }}"
-                                                            required="">
+                                                        <label>@lang('message.name_last') <font class="text-danger">*</font>
+                                                        </label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="@lang('message.name_last')" name="name_last"
+                                                            value="{{ old('name_last') }}" required="">
                                                     </div>
 
 
                                                     <div class="col-sm-4">
-                                                        <label>@lang('message.name_business') <font class="text-danger">@lang('message.name_business_a')</font>
-                                                            </label>
+                                                        <label>@lang('message.name_business') <font class="text-danger">
+                                                                @lang('message.name_business_a')</font>
+                                                        </label>
                                                         <input type="text" class="form-control"
                                                             placeholder="@lang('message.name_business')" name="name_business"
                                                             value="{{ old('name_business') }}" required="">
@@ -187,31 +191,33 @@
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-2">
-                                                      <label>@lang('message.marital_status')</label>
+                                                        <label>@lang('message.marital_status')</label>
                                                         <select class="form-control" name="family_status">
-                                                          <option value="1">@lang('message.Single')</option>
-                                                          <option value="2">@lang('message.Married')</option>
-                                                          <option value="3">@lang('message.Divorced')</option>
+                                                            <option value="1">@lang('message.Single')</option>
+                                                            <option value="2">@lang('message.Married')</option>
+                                                            <option value="3">@lang('message.Divorced')</option>
                                                         </select>
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                      <label>@lang('message.date_of_birth')</label>
+                                                        <label>@lang('message.date_of_birth')</label>
                                                         <input class="form-control" type="date" name="birth_day"
                                                             value="{{ old('birth_day') }}">
                                                     </div>
 
 
                                                     <div class="col-sm-3">
-                                                      <label>@lang('message.country') <font class="text-danger">*</font></label>
-                                                      <select class="js-example-basic-single col-sm-12" name="country"  id="business_location"  required="">
-                                                          @foreach ($data['country'] as $c_value)
-                                                          <option value="{{ $c_value->txt_desc }}"
-                                                            @if ($c_value->id == $data['data']->business_location_id) selected="" @endif>
-                                                            {{ $c_value->txt_desc }}</option>
-                                                          @endforeach
-                                                      </select>
-                                                  </div>
+                                                        <label>@lang('message.country') <font class="text-danger">*</font>
+                                                        </label>
+                                                        <select class="js-example-basic-single col-sm-12"
+                                                            name="country" id="business_location" required="">
+                                                            @foreach ($data['country'] as $c_value)
+                                                                <option value="{{ $c_value->txt_desc }}"
+                                                                    @if ($c_value->id == $data['data']->business_location_id) selected="" @endif>
+                                                                    {{ $c_value->txt_desc }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
 
 
                                                     <div class="col-sm-3">
@@ -229,36 +235,42 @@
                                                 </div>
 
                                                 <div class="col-sm-3">
-                                                  <label>เลขที่บัตรประชาชน <font class="text-danger">*</font>
-                                                      </label>
-                                                  <input class="form-control" id="id_card" type="text" name="id_card"
-                                                      value="{{ old('id_card') }}"   required="">
-                                                      <span class="error text-danger"></span>
-                                              </div>
+                                                    <label>เลขที่บัตรประชาชน <font class="text-danger">*</font>
+                                                    </label>
+                                                    <input class="form-control" id="id_card" type="text"
+                                                        name="id_card" value="{{ old('id_card') }}" required="">
+                                                    <span class="error text-danger"></span>
+                                                </div>
 
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
                                                         <label>โทรศัพท์มือถือ <b class="text-danger">*</b></label>
-                                                        <input type="text" class="form-control  us_telephone" autocomplete="off"
-                                                        data-mask="999-999-9999" placeholder="โทรศัพท์มือถือ" name="tel_mobile"
-                                                            value="{{ old('tel_mobile') }}"  required="">
+                                                        <input type="text" class="form-control  us_telephone"
+                                                            autocomplete="off" data-mask="999-999-9999"
+                                                            placeholder="โทรศัพท์มือถือ" name="tel_mobile"
+                                                            value="{{ old('tel_mobile') }}" required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
                                                         <label>โทรศัพท์บ้าน</label>
-                                                        <input type="text" class="form-control  us_telephone" autocomplete="off" data-mask="999-999-9999"
-                                                            placeholder="โทรศัพท์บ้าน" name="tel_home" value="{{ old('tel_home') }}">
+                                                        <input type="text" class="form-control  us_telephone"
+                                                            autocomplete="off" data-mask="999-999-9999"
+                                                            placeholder="โทรศัพท์บ้าน" name="tel_home"
+                                                            value="{{ old('tel_home') }}">
                                                     </div>
 
                                                     <div class="col-sm-3">
                                                         <label>Email </label>
-                                                        <input type="email" class="form-control" placeholder="Email@email.com" name="email" value="{{ old('email') }}" >
+                                                        <input type="email" class="form-control"
+                                                            placeholder="Email@email.com" name="email"
+                                                            value="{{ old('email') }}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
-                                                        <h3 class="sub-title m-t-0" style="color: #000;font-size: 16px">
+                                                        <h3 class="sub-title m-t-0"
+                                                            style="color: #000;font-size: 16px">
                                                             ที่อยู่ตามบัตรประชาชน</h3>
                                                     </div>
                                                 </div>
@@ -274,7 +286,7 @@
 
                                                     <div class="col-sm-3">
                                                         <label>หมู่บ้าน/อาคาร <font class="text-danger">*</font>
-                                                            </label>
+                                                        </label>
                                                         <input type="text" class="form-control"
                                                             placeholder="หมู่บ้าน/อาคาร" id="card_house_name"
                                                             name="card_house_name"
@@ -283,15 +295,15 @@
 
                                                     <div class="col-sm-3">
                                                         <label>หมู่ที่ <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="หมู่ที่"
-                                                            id="card_moo" name="card_moo"
+                                                        <input type="text" class="form-control"
+                                                            placeholder="หมู่ที่" id="card_moo" name="card_moo"
                                                             value="{{ old('card_moo') }}" required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
                                                         <label>ตรอก/ซอย <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="ตรอก/ซอย"
-                                                            id="card_soi" name="card_soi"
+                                                        <input type="text" class="form-control"
+                                                            placeholder="ตรอก/ซอย" id="card_soi" name="card_soi"
                                                             value="{{ old('card_soi') }}" required="">
                                                     </div>
 
@@ -356,7 +368,8 @@
                                                 <div class="col-sm-12 col-xl-6 m-b-30">
                                                     <div class="checkbox-fade fade-in-primary">
                                                         <label>
-                                                            <input type="checkbox" id="copy_card_address" name="copy_card_address">
+                                                            <input type="checkbox" id="copy_card_address"
+                                                                name="copy_card_address">
                                                             <span class="cr">
                                                                 <i
                                                                     class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -376,7 +389,7 @@
 
                                                     <div class="col-sm-3">
                                                         <label>หมู่บ้าน/อาคาร <font class="text-danger">*</font>
-                                                            </label>
+                                                        </label>
                                                         <input type="text" class="form-control"
                                                             placeholder="หมู่บ้าน/อาคาร" id="house_name"
                                                             name="house_name" value="{{ old('house_name') }}"
@@ -385,9 +398,9 @@
 
                                                     <div class="col-sm-3">
                                                         <label>หมู่ที่ <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="หมู่ที่"
-                                                            id="moo" name="moo" value="{{ old('moo') }}"
-                                                            required="">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="หมู่ที่" id="moo" name="moo"
+                                                            value="{{ old('moo') }}" required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
@@ -400,16 +413,16 @@
                                                     <div class="col-sm-3">
                                                         <label>ถนน <font class="text-danger">*</font></label>
                                                         <input type="text" class="form-control" placeholder="ถนน"
-                                                            id="road" name="road" value="{{ old('road') }}"
-                                                            required="">
+                                                            id="road" name="road"
+                                                            value="{{ old('road') }}" required="">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
                                                         <label>จังหวัด <font class="text-danger">*</font></label>
-                                                        <select class="js-example-basic-single col-sm-12" id="province"
-                                                            name="province" required="">
+                                                        <select class="js-example-basic-single col-sm-12"
+                                                            id="province" name="province" required="">
                                                             <option value="">Select</option>
                                                             @foreach ($data['provinces'] as $value_provinces)
                                                                 <option value="{{ $value_provinces->id }}">
@@ -466,32 +479,55 @@
                                                         <label>เลขที่บัญชี</label>
                                                         <input type="text" class="form-control"
                                                             placeholder="เลขที่บัญชี" name="bank_no"
-                                                            value="{{ old('bank_no') }}" >
+                                                            value="{{ old('bank_no') }}">
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                      <label>@lang('message.bank')</label>
-                                                      <select class="form-control" id="bank_name_th" name="bank_name">
-                                                          <option value=""> Select </option>
-                                                          <option value="ธนาคารกรุงเทพ" @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif> ธนาคารกรุงเทพ </option>
-                                                          <option value="ธนาคารกสิกรไทย" @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif> ธนาคารกสิกรไทย </option>
-                                                          <option value="ธนาคารกรุงไทย" @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif> ธนาคารกรุงไทย </option>
-                                                          <option value="ธนาคารไทยพาณิชย์" @if ('ธนาคารไทยพาณิชย์' == old('bank_name')) selected="" @endif> ธนาคารไทยพาณิชย์ </option>
-                                                          <option value="ธนาคารกรุงศรีอยุธยา" @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif> ธนาคารกรุงศรีอยุธยา </option>
-                                                          <option value="ธนาคารทหารไทยธนชาต" @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif> ธนาคารทหารไทยธนชาต </option>
-                                                          <option value="ธนาคารออมสิน" @if ('ธนาคารออมสิน' == old('bank_name')) selected="" @endif> ธนาคารออมสิน </option>
-                                                          <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส." @if ('ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส.' == old('bank_name')) selected="" @endif>
-                                                              ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส. </option>
-                                                          <option value="ธนาคารยูโอบี" @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif> ธนาคารยูโอบี </option>
-                                                      </select>
+                                                        <label>@lang('message.bank')</label>
+                                                        <select class="form-control" id="bank_name_th"
+                                                            name="bank_name">
+                                                            <option value=""> Select </option>
+                                                            <option value="ธนาคารกรุงเทพ"
+                                                                @if ('ธนาคารกรุงเทพ' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารกรุงเทพ </option>
+                                                            <option value="ธนาคารกสิกรไทย"
+                                                                @if ('ธนาคารกสิกรไทย' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารกสิกรไทย </option>
+                                                            <option value="ธนาคารกรุงไทย"
+                                                                @if ('ธนาคารกรุงไทย' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารกรุงไทย </option>
+                                                            <option value="ธนาคารไทยพาณิชย์"
+                                                                @if ('ธนาคารไทยพาณิชย์' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารไทยพาณิชย์ </option>
+                                                            <option value="ธนาคารกรุงศรีอยุธยา"
+                                                                @if ('ธนาคารกรุงศรีอยุธยา' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารกรุงศรีอยุธยา </option>
+                                                            <option value="ธนาคารทหารไทยธนชาต"
+                                                                @if ('ธนาคารทหารไทยธนชาต' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารทหารไทยธนชาต </option>
+                                                            <option value="ธนาคารออมสิน"
+                                                                @if ('ธนาคารออมสิน' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารออมสิน </option>
+                                                            <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส."
+                                                                @if ('ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส.' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร ธ.ก.ส. </option>
+                                                            <option value="ธนาคารยูโอบี"
+                                                                @if ('ธนาคารยูโอบี' == old('bank_name')) selected="" @endif>
+                                                                ธนาคารยูโอบี </option>
+                                                        </select>
 
-                                                      <select class="form-control" id="bank_name_cam" name="bank_name">
-                                                        <option value=""> Select </option>
-                                                        <option value="ABA Bank" @if ('ABA Bank' == old('bank_name')) selected="" @endif> ABA Bank </option>
-                                                        <option value="Acleda Bank" @if ('Acleda Bank' == old('bank_name')) selected="" @endif> Acleda Bank </option>
-                                                    </select>
+                                                        <select class="form-control" id="bank_name_cam"
+                                                            name="bank_name">
+                                                            <option value=""> Select </option>
+                                                            <option value="ABA Bank"
+                                                                @if ('ABA Bank' == old('bank_name')) selected="" @endif>
+                                                                ABA Bank </option>
+                                                            <option value="Acleda Bank"
+                                                                @if ('Acleda Bank' == old('bank_name')) selected="" @endif>
+                                                                Acleda Bank </option>
+                                                        </select>
 
-                                                  </div>
+                                                    </div>
 
 
 
@@ -516,7 +552,8 @@
                                                         <div class="form-check form-check-inline">
                                                             <label class="form-check-label">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="bank_type" id="gender-2" value="กระแสรายวัน">
+                                                                    name="bank_type" id="gender-2"
+                                                                    value="กระแสรายวัน">
                                                                 กระแสรายวัน
                                                             </label>
                                                         </div>
@@ -551,96 +588,98 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>เลขที่บัตรประชาชน  </label>
-                                                        <input type="text" class="form-control"  minlength="8" maxlength="14"  name="benefit_id"
+                                                        <label>เลขที่บัตรประชาชน </label>
+                                                        <input type="text" class="form-control" minlength="8"
+                                                            maxlength="14" name="benefit_id"
                                                             value="{{ old('benefit_id') }}">
                                                     </div>
 
                                                     <div class="col-sm-3">
 
 
-                                                </div>
-
-                                                <div class="form-group col-md-12 row">
-                                                    <div class="col-sm-12">
-                                                        <h5 class="sub-title" style="color: #000;font-size: 16px">
-                                                            เอกสารสำหรับการสมัคร</h5>
                                                     </div>
 
-
-                                                    <div class="col-sm-6">
-
-                                                        <div class="m-t-2 col-sm-12 text-center">
-                                                            <img src="{{ asset('frontend/assets/images/piccardwatremark_.png') }}"
-                                                                id="preview_1" class="img-fluid"
-                                                                style="height: 180px">
+                                                    <div class="form-group col-md-12 row">
+                                                        <div class="col-sm-12">
+                                                            <h5 class="sub-title" style="color: #000;font-size: 16px">
+                                                                เอกสารสำหรับการสมัคร</h5>
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-12">
-                                                                <label>ภาพถ่ายบัตรประชาชน <b
-                                                                        class="text-danger">*</b></label>
-                                                                <input type="file" id="file_1" name="file_1"
-                                                                    class="form-control" required>
+
+
+                                                        <div class="col-sm-6">
+
+                                                            <div class="m-t-2 col-sm-12 text-center">
+                                                                <img src="{{ asset('frontend/assets/images/piccardwatremark_.png') }}"
+                                                                    id="preview_1" class="img-fluid"
+                                                                    style="height: 180px">
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-12">
+                                                                    <label>ภาพถ่ายบัตรประชาชน <b
+                                                                            class="text-danger">*</b></label>
+                                                                    <input type="file" id="file_1"
+                                                                        name="file_1" class="form-control" required>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="m-t-2 col-sm-12 text-center">
+                                                                <img src="{{ asset('frontend/assets/images/หน้าตรง.jpg') }}"
+                                                                    id="preview_2" style="height: 180px"
+                                                                    class="img-fluid">
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-12">
+                                                                    <label>ภายถ่ายหน้าตรง <b
+                                                                            class="text-danger">*</b></label>
+                                                                    <input type="file" id="file_2"
+                                                                        name="file_2" class="form-control" required>
+                                                                </div>
+
                                                             </div>
                                                         </div>
 
-                                                        <div class="m-t-2 col-sm-12 text-center">
-                                                            <img src="{{ asset('frontend/assets/images/หน้าตรง.jpg') }}"
-                                                                id="preview_2" style="height: 180px"
-                                                                class="img-fluid">
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-12">
-                                                                <label>ภายถ่ายหน้าตรง <b
-                                                                        class="text-danger">*</b></label>
-                                                                <input type="file" id="file_2" name="file_2"
-                                                                    class="form-control" required>
+                                                        <div class="col-sm-6">
+
+                                                            <div class="m-t-2 col-sm-12 text-center">
+                                                                <img src="{{ asset('frontend/assets/images/user_card_new.jpg') }}"
+                                                                    id="preview_3" style="height: 180px"
+                                                                    class="img-fluid">
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-12">
+                                                                    <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน <b
+                                                                            class="text-danger">*</b></label>
+                                                                    <input type="file" id="file_3"
+                                                                        name="file_3" class="form-control" required>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="m-t-2 col-sm-12 text-center">
+                                                                <img src="{{ asset('frontend/assets/images/BookBank-7.png') }}"
+                                                                    id="preview_4" style="height: 180px"
+                                                                    class="img-fluid">
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-12">
+                                                                    <label>ภาพถ่ายหน้าบัญชีธนาคาร</label>
+                                                                    <input type="file" id="file_4"
+                                                                        name="file_4" class="form-control">
+                                                                </div>
+
                                                             </div>
 
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-sm-6">
-
-                                                        <div class="m-t-2 col-sm-12 text-center">
-                                                            <img src="{{ asset('frontend/assets/images/user_card_new.jpg') }}"
-                                                                id="preview_3" style="height: 180px"
-                                                                class="img-fluid">
-                                                        </div>
-                                                        <div class="form-group row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group row text-center">
+                                                            <label class="col-sm-2"></label>
                                                             <div class="col-sm-12">
-                                                                <label>ภาพถ่ายหน้าตรงถือบัตรประชาชน <b
-                                                                        class="text-danger">*</b></label>
-                                                                <input type="file" id="file_3" name="file_3"
-                                                                    class="form-control" required>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary m-b-0">@lang('message.register_submit')</button>
                                                             </div>
                                                         </div>
-
-                                                        <div class="m-t-2 col-sm-12 text-center">
-                                                            <img src="{{ asset('frontend/assets/images/BookBank-7.png') }}"
-                                                                id="preview_4" style="height: 180px"
-                                                                class="img-fluid">
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-12">
-                                                                <label>ภาพถ่ายหน้าบัญชีธนาคาร</label>
-                                                                <input type="file" id="file_4" name="file_4"
-                                                                    class="form-control">
-                                                            </div>
-
-                                                        </div>
-
                                                     </div>
-                                                </div>
-
-                                                <div class="col-md-12">
-                                                  <div class="form-group row text-center">
-                                                      <label class="col-sm-2"></label>
-                                                      <div class="col-sm-12">
-                                                          <button type="submit" class="btn btn-primary m-b-0">@lang('message.register_submit')</button>
-                                                      </div>
-                                                  </div>
-                                              </div>
 
 
                                             </form>
@@ -688,8 +727,7 @@
 
     <script src="{{ asset('frontend/bower_components/select2/js/select2.full.min.js') }}"></script>
     <!-- Multiselect js -->
-    <script src="{{ asset('frontend/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js') }}">
-    </script>
+    <script src="{{ asset('frontend/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js') }}"></script>
     <script src="{{ asset('frontend/bower_components/multiselect/js/jquery.multi-select.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/jquery.quicksearch.js') }}"></script>
     <!-- Custom js -->
@@ -697,110 +735,136 @@
 
 
     <!-- Masking js -->
-    <script src="{{asset('frontend/assets/pages/form-masking/inputmask.js')}}"></script>
-    <script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
-    <script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
-    <script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
+    <script src="{{ asset('frontend/assets/pages/form-masking/inputmask.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/form-masking/jquery.inputmask.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/form-masking/autoNumeric.js') }}"></script>
+    <script src="{{ asset('frontend/assets/pages/form-masking/form-mask.js') }}"></script>
 
 
 
     <script type="text/javascript">
+        var business_location_id = '{{ $data['data']->business_location_id }}';
 
-var business_location_id = '{{ $data['data']->business_location_id }}';
+        if (business_location_id == 1 || business_location_id == '') {
+            $('#id_card').attr('maxlength', '13');
+            $('#id_card').attr('minlength', '13');
+        } else if (business_location_id == 2) {
+            $('#id_card').attr('maxlength', '8');
+            $('#id_card').attr('minlength', '8');
+        } else {
+            $('#id_card').attr('maxlength', '9');
+            $('#id_card').attr('minlength', '9');
+        }
 
-         if (business_location_id == 1 || business_location_id == '') {
-             $('#id_card').attr('maxlength', '13');
-             $('#id_card').attr('minlength', '13');
-         } elseif(business_location_id == 2) {
-             $('#id_card').attr('maxlength', '8');
-             $('#id_card').attr('minlength', '8');
-         }else{
-             $('#id_card').attr('maxlength', '9');
-             $('#id_card').attr('minlength', '9');
-         }
+        $('#business_location').change(function() {
+            value = $(this).val();
 
-         $('#business_location').change(function() {
-             value = $(this).val();
-
-             if (value == 1 || value == '') {
-              $('#id_card').attr('maxlength', '13');
-                 $('#id_card').attr('minlength', '13');
-                 $('#id_card').val("");
-                 $('span.error').text('');
-         } elseif(value == 2) {
-          $('#id_card').attr('maxlength', '8');
-                 $('#id_card').attr('minlength', '8');
-                 $('#id_card').val("");
-                 $('span.error').text('');
-         }else{
-          $('#id_card').attr('maxlength', '9');
-                 $('#id_card').attr('minlength', '9');
-                 $('#id_card').val("");
-                 $('span.error').text('');
-         }
-
-
-         $(document).ready(function() {
-             $('#id_card').on('change', function() {
-                 nation_id = $('#business_location').val();
-                 if (nation_id == 1) {
-                     if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
-                         id = $(this).val().replace(/-/g, "");
-                         var result = Script_checkID(id);
-                         id_card = $('#id_card').val();
-                         if (result === false) {
-
-                             $('span.error').removeClass('text-success').text('เลขบัตร ' + id_card +
-                                 ' ไม่ถูกต้อง');
-                             $('#id_card').val('');
-                         } else {
+            if (value == 'THAI' || value == '') {
+                $('#id_card').attr('maxlength', '13');
+                $('#id_card').attr('minlength', '13');
+                $('#id_card').val("");
+                $('span.error').text('');
+            } else if (value == 'LAOS') {
+                $('#id_card').attr('maxlength', '8');
+                $('#id_card').attr('minlength', '8');
+                $('#id_card').val("");
+                $('span.error').text('');
+            } else {
+                $('#id_card').attr('maxlength', '9');
+                $('#id_card').attr('minlength', '9');
+                $('#id_card').val("");
+                $('span.error').text('');
+            }
 
 
-                             $.ajax({
-                                     url: '{{ route('check_id_card') }}',
-                                     type: 'GET',
-                                     data: {
-                                      id_card: id_card
-                                     },
-                                 })
-                                 .done(function(data) {
-                                     if (data['status'] == 'success') {
-                                         $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
-                                     } else {
-                                      $('span.error').removeClass('text-success').text('มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
-                                      $('#id_card').val('');
+        })
+
+
+        $(document).ready(function() {
+            $('#id_card').on('change', function() {
+                nation_id = $('#business_location').val();
+                if (nation_id == 'THAI') {
+                    if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
+                        id = $(this).val().replace(/-/g, "");
+                        var result = Script_checkID(id);
+                        id_card = $('#id_card').val();
+                        if (result === false) {
+
+                            $('span.error').removeClass('text-success').text('เลขบัตร ' + id_card +
+                                ' ไม่ถูกต้อง');
+                            $('#id_card').val('');
+                        } else {
+
+
+                            $.ajax({
+                                    url: '{{ route('check_id_card') }}',
+                                    type: 'GET',
+                                    data: {
+                                        id_card: id_card
+                                    },
+                                })
+                                .done(function(data) {
+                                    if (data['status'] == 'success') {
+                                        $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
+                                    } else {
+                                        $('span.error').removeClass('text-success').text(
+                                            'มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
+                                        $('#id_card').val('');
                                         //  Swal.fire({
                                         //      icon: 'error',
                                         //      title: 'เลขบัตรประชาชนซ้ำ',
                                         //  })
-                                     }
-                                  })
-                                }
-                     } else {
-                         $('span.error').removeClass('text-success').text('เลขบัตรไม่ครบ 13 หลัก');
-                         $('#id_card').val('');
+                                    }
+                                })
+                        }
+                    } else {
+                        $('span.error').removeClass('text-success').text('เลขบัตรไม่ครบ 13 หลัก');
+                        $('#id_card').val('');
 
-                     }
+                    }
 
-                 }
+                } else {
+                    $.ajax({
+                            url: '{{ route('check_id_card') }}',
+                            type: 'GET',
+                            data: {
+                                id_card: id_card
+                            },
+                        })
+                        .done(function(data) {
+                            if (data['status'] == 'success') {
+                                $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
+                            } else {
+                                $('span.error').removeClass('text-success').text(
+                                    'มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
+                                $('#id_card').val('');
+                                //  Swal.fire({
+                                //      icon: 'error',
+                                //      title: 'เลขบัตรประชาชนซ้ำ',
+                                //  })
+                            }
+                        })
 
-             })
-         });
 
-         function Script_checkID(id) {
-             if (!IsNumeric(id)) return false;
-             if (id.substring(0, 1) == 0) return false;
-             if (id.length != 13) return false;
-             for (i = 0, sum = 0; i < 12; i++)
-                 sum += parseFloat(id.charAt(i)) * (13 - i);
-             if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
-             return true;
-         }
+                }
 
-         function IsNumeric(input) {
-             var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
-             return (RE.test(input));
-         }
+            })
+        });
+
+        function Script_checkID(id) {
+            if (!IsNumeric(id)) return false;
+            if (id.substring(0, 1) == 0) return false;
+            if (id.length != 13) return false;
+            for (i = 0, sum = 0; i < 12; i++)
+                sum += parseFloat(id.charAt(i)) * (13 - i);
+            if ((11 - sum % 11) % 10 != parseFloat(id.charAt(12))) return false;
+            return true;
+        }
+
+        function IsNumeric(input) {
+            var RE = /^-?(0|INF|(0[1-7][0-7]*)|(0x[0-9a-fA-F]+)|((0|[1-9][0-9]*|(?=[\.,]))([\.,][0-9]+)?([eE]-?\d+)?))$/;
+            return (RE.test(input));
+        }
 
 
 

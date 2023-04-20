@@ -563,10 +563,12 @@
 
      <script type="text/javascript">
          var business_location_id = '{{ $data['data']->business_location_id }}';
+
+         console.log(business_location_id);
          if (business_location_id == 1 || business_location_id == '') {
              $('#id_card').attr('maxlength', '13');
              $('#id_card').attr('minlength', '13');
-         } elseif(business_location_id == 2) {
+         }else if(business_location_id == 2) {
              $('#id_card').attr('maxlength', '8');
              $('#id_card').attr('minlength', '8');
          }else{
@@ -577,12 +579,12 @@
          $('#business_location').change(function() {
              value = $(this).val();
 
-             if (value == 1 || value == '') {
+             if (value == 'THAI' || value == '') {
               $('#id_card').attr('maxlength', '13');
                  $('#id_card').attr('minlength', '13');
                  $('#id_card').val("");
                  $('span.error').text('');
-         } elseif(value == 2) {
+         }else if(value == 'LAOS') {
           $('#id_card').attr('maxlength', '8');
                  $('#id_card').attr('minlength', '8');
                  $('#id_card').val("");
@@ -600,7 +602,8 @@
          $(document).ready(function() {
              $('#id_card').on('change', function() {
                  nation_id = $('#business_location').val();
-                 if (nation_id == 1) {
+
+                 if (nation_id == 'THAI') {
                      if ($.trim($(this).val()) != '' && $(this).val().length == 13) {
                          id = $(this).val().replace(/-/g, "");
                          var result = Script_checkID(id);
@@ -638,6 +641,28 @@
                          $('#id_card').val('');
 
                      }
+
+                 }else{
+                             $.ajax({
+                                     url: '{{ route('check_id_card') }}',
+                                     type: 'GET',
+                                     data: {
+                                      id_card: id_card
+                                     },
+                                 })
+                                 .done(function(data) {
+                                     if (data['status'] == 'success') {
+                                         $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
+                                     } else {
+                                      $('span.error').removeClass('text-success').text('มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
+                                      $('#id_card').val('');
+                                         Swal.fire({
+                                             icon: 'error',
+                                             title: 'เลขบัตรประชาชนซ้ำ',
+                                         })
+                                     }
+                                  })
+
 
                  }
 
