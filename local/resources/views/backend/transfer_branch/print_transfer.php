@@ -212,8 +212,8 @@ tr.border_bottom td {
           </th>
           <th style="text-align: right;">
             <span style="font-size: 24px;font-weight: bold;">[ <?php echo $tr_number[0]->tr_number; ?> ]</span><br>
-              2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
-              แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
+              94 ซอยนาคนิวาส 6 ถนนนาคนิวาส <br>
+              แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร 10230 ประเทศไทย <br>
               TEL : +66 (0) 2026 3555
               FAX : +66 (0) 2514 3944
               E-MAIL : info@aiyara.co.th

@@ -172,7 +172,7 @@ tr.border_bottom td {
 .divTable{
     display: table;
     width: 100%;
-    
+
   }
   .divTableRow {
     display: table-row;
@@ -185,7 +185,7 @@ tr.border_bottom td {
     border: 1px solid white;
     display: table-cell;
     padding: 3px 6px;
-    word-break: break-all; 
+    word-break: break-all;
   }
   .divTableHeading {
     background-color: #EEE;
@@ -215,8 +215,8 @@ tr.border_bottom td {
             <img src="<?=public_path('images/logo2.png')?>" >
           </th>
           <th style="text-align: right;">
-2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
-แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
+94 ซอยนาคนิวาส 6 ถนนนาคนิวาส <br>
+แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร 10230 ประเทศไทย <br>
 TEL : +66 (0) 2026 3555
 FAX : +66 (0) 2514 3944
 E-MAIL : info@aiyara.co.th
@@ -236,13 +236,13 @@ E-MAIL : info@aiyara.co.th
       </table>
     </div>
 
-    <?php 
+    <?php
         $packing = DB::select(" SELECT * FROM db_pick_pack_packing WHERE delivery_id_fk=".$data[0]." and packing_code_id_fk=".$data[1]."  GROUP BY packing_code ");
 
         $recipient_name = '';
 
         // foreach ($p1 as $key => $value) {
-            
+
             $delivery = DB::select(" SELECT
               db_delivery.set_addr_send_this,
               db_delivery.recipient_name,
@@ -255,7 +255,7 @@ E-MAIL : info@aiyara.co.th
               db_delivery.id as delivery_id_fk
               FROM
               db_delivery
-              WHERE 
+              WHERE
               db_delivery.id = ".@$data[0]." AND set_addr_send_this=1 ");
 
               $recipient_name = @$delivery[0]->recipient_name?@$delivery[0]->recipient_name:'';
@@ -272,7 +272,7 @@ E-MAIL : info@aiyara.co.th
                     array_push( $arr1 ,$v->receipt);
                   }
                   $receipt = implode(', ',$arr1);
-          
+
             }else{
                   $receipt = @$delivery[0]->receipt;
             }
@@ -307,14 +307,14 @@ E-MAIL : info@aiyara.co.th
         <td colspan="2" style="width:30%;vertical-align: top;font-weight: bold" >
           ที่อยู่  : {{@$addr_send}}
        </td>
-  
+
       </tr>
 
       <tr>
         <td colspan="2" style="width:30%;vertical-align: top;font-weight: bold" >
           เลขที่ใบเสร็จ  : {{@$receipt}}
        </td>
-  
+
       </tr>
 
       <tr>
@@ -323,12 +323,11 @@ E-MAIL : info@aiyara.co.th
          <br>
          <br>
        </td>
-  
+
       </tr>
 
 
     </table>
   </div>
-  
 
-  
+

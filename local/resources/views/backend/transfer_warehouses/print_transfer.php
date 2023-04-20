@@ -125,7 +125,7 @@ tr.border_bottom td {
     float: left;
     width: 36%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     font-size: 12px !important;
 }
 .column-2 {
@@ -150,7 +150,7 @@ tr.border_bottom td {
     float: left;
     width: 17%;
     padding: 10px;
-    height: 50px; 
+    height: 50px;
     text-align: center;
 }
 
@@ -170,7 +170,7 @@ tr.border_bottom td {
   #watermark {
 
        position: fixed;
-      /** 
+      /**
           Set a position in the page for your image
           This should center it vertically
       **/
@@ -188,9 +188,9 @@ tr.border_bottom td {
 
 
 
-    <?php 
+    <?php
 
-    $tr_number = DB::select(" 
+    $tr_number = DB::select("
             SELECT
             db_transfer_warehouses_code.tr_number
             FROM
@@ -208,25 +208,25 @@ tr.border_bottom td {
         <tr>
            <th style="text-align: left;">
             <img src="<?=public_path('images/logo2.png')?>" >
-          </th> 
+          </th>
 
 
           <th style="text-align: right;">
             <span style="font-size: 24px;font-weight: bold;">[ <?php echo $tr_number[0]->tr_number; ?> ]</span><br>
-              2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
-              แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
-              TEL : +66 (0) 2026 3555 
-              FAX : +66 (0) 2514 3944 
+              94 ซอยนาคนิวาส 6 ถนนนาคนิวาส <br>
+              แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร 10230 ประเทศไทย <br>
+              TEL : +66 (0) 2026 3555
+              FAX : +66 (0) 2514 3944
               E-MAIL : info@aiyara.co.th
           </th>
         </tr>
-      
+
       </table>
     </div>
 
   <div class="NameAndAddress" style="" >
       <table style="border-collapse: collapse;" >
-        <tr> 
+        <tr>
           <th style="text-align: center;font-size: 30px;">
            <center> ใบโอนสินค้าภายในสาขา </center>
           </th>
@@ -251,12 +251,12 @@ tr.border_bottom td {
       </tr>
 
 <!-- รายการสินค้า -->
-<?php 
+<?php
 
 
-     $Dt = DB::select(" 
+     $Dt = DB::select("
         SELECT *
-        FROM db_transfer_warehouses_details 
+        FROM db_transfer_warehouses_details
         WHERE
         transfer_warehouses_code_id = ".$data[0]." AND remark=2
      ");
@@ -268,7 +268,7 @@ tr.border_bottom td {
 
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -285,7 +285,7 @@ tr.border_bottom td {
             $shelf = DB::select(" select * from shelf where id=".$v->shelf_id_fk." ");
             $warehouses = @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.$v->shelf_floor;
 
-             $d_lot_expired_date = strtotime($v->lot_expired_date); 
+             $d_lot_expired_date = strtotime($v->lot_expired_date);
             //  $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date)+543);
             $lot_expired_date = date("d/m/", $d_lot_expired_date).(date("Y", $d_lot_expired_date));
 
@@ -316,12 +316,12 @@ tr.border_bottom td {
             <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"> <?=$warehouses?>  </td>
           </tr>
 
-    <?php  
+    <?php
 
     $j++;
-  
 
-  } 
+
+  }
 
 
   ?>
@@ -332,11 +332,11 @@ tr.border_bottom td {
 <br>
 </div>
 
-<?php 
+<?php
 
-         $warehouses_code = DB::select(" 
+         $warehouses_code = DB::select("
             SELECT *
-            FROM db_transfer_warehouses_code 
+            FROM db_transfer_warehouses_code
             WHERE
             id = ".$data[0]."
          ");
@@ -355,7 +355,7 @@ tr.border_bottom td {
         }else{
           $approve_date =  '';
         }
-        
+
       ?>
 
       <?php if(@$warehouses_code[0]->approve_status==0){ ?>
@@ -376,7 +376,7 @@ tr.border_bottom td {
 
   <div style="border-radius: 5px; border: 1px solid grey;padding:-1px;" >
     <table style="border-collapse: collapse;vertical-align: top;text-align: center;" >
-      
+
       <tr>
 
         <td  style="border-left: 1px solid #ccc;"> ผู้ทำรายการโอน
@@ -404,4 +404,3 @@ tr.border_bottom td {
 </div>
 
 
- 
