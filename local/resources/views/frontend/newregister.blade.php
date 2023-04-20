@@ -566,24 +566,35 @@
          if (business_location_id == 1 || business_location_id == '') {
              $('#id_card').attr('maxlength', '13');
              $('#id_card').attr('minlength', '13');
-         } else {
+         } elseif(business_location_id == 2) {
              $('#id_card').attr('maxlength', '8');
              $('#id_card').attr('minlength', '8');
+         }else{
+             $('#id_card').attr('maxlength', '9');
+             $('#id_card').attr('minlength', '9');
          }
 
          $('#business_location').change(function() {
              value = $(this).val();
-             if (value != "1") {
-                 $('#id_card').attr('maxlength', '8');
-                 $('#id_card').attr('minlength', '8');
-                 $('#id_card').val("");
-                 $('span.error').text('');
-             } else {
-                 $('#id_card').attr('maxlength', '13');
+
+             if (value == 1 || value == '') {
+              $('#id_card').attr('maxlength', '13');
                  $('#id_card').attr('minlength', '13');
                  $('#id_card').val("");
                  $('span.error').text('');
-             }
+         } elseif(value == 2) {
+          $('#id_card').attr('maxlength', '8');
+                 $('#id_card').attr('minlength', '8');
+                 $('#id_card').val("");
+                 $('span.error').text('');
+         }else{
+          $('#id_card').attr('maxlength', '9');
+                 $('#id_card').attr('minlength', '9');
+                 $('#id_card').val("");
+                 $('span.error').text('');
+         }
+
+
          })
 
          $(document).ready(function() {
