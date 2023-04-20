@@ -205,8 +205,8 @@ tr.border_bottom td {
             </th>
             <th style="text-align: right;">
                 <br>
-                2102/1 อาคารไอยเรศวร ซ.ลาดพร้าว 84 ถ.ลาดพร้าว <br>
-                แขวงวังทองหลาง เขตวังทองหลาง กรุงเทพ 10310 ประเทศไทย <br>
+                94 ซอยนาคนิวาส 6 ถนนนาคนิวาส <br>
+                แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพมหานคร 10230 ประเทศไทย <br>
                 TEL : +66 (0) 2026 3555
                 FAX : +66 (0) 2514 3944
                 E-MAIL : info@aiyara.co.th
@@ -222,13 +222,13 @@ tr.border_bottom td {
             <th style="font-size: 18px;">
                 รายงานค่าคอมมิชชั่น
                 <br>
-                <?php 
+                <?php
               if($report_type == 'day'){
                 echo "วันที่ ".date('d/m/Y', strtotime($startDate2))." ถึง ".date('Y/m/d', strtotime($endDate2));
               }else{
                 echo "ประจำเดือน ".date('m/Y', strtotime($startDate2));
               }
-              
+
               ?>
                 <br>
             </th>
@@ -271,7 +271,7 @@ tr.border_bottom td {
             </thead>
             <tbody>
                 <?php
-                
+
               $p = "";
               $bonus_total_sum = 0;
               $tax_sum = 0;
@@ -296,7 +296,7 @@ tr.border_bottom td {
                               </tr>
                                   ';
                 }
-     
+
 
               echo $p;
               ?>
@@ -322,7 +322,7 @@ tr.border_bottom td {
 
         </table>
     </div>
-    <?php 
+    <?php
     if(count($sTable)>=8){
       echo '<div class="page-break"></div>';
     }
