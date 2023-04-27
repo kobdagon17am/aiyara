@@ -49,11 +49,13 @@ getProvinces();
 function getProvinces() {
     // const businessLocation = $(this).val(); 
     const businessLocation = $('#business_location').val();
-
-    if (businessLocation == 3) {
+    // alert(businessLocation);
+    if (businessLocation == 'CAMBODIA') {
+        var location = 3;
         $('#bank_name_th').hide();
         $('#bank_name_cam').show();
     } else {
+        var location = 1;
         $('#bank_name_cam').hide();
         $('#bank_name_th').show();
     }
@@ -63,7 +65,7 @@ function getProvinces() {
         method: 'POST',
         data: {
             _token: token,
-            business_location: businessLocation,
+            business_location: location,
             query: 'provinces',
         },
         success: function(response) {
@@ -201,7 +203,7 @@ function checkIdIsMatch() {
         const attr = $(el).attr('id')
         if (typeof attr !== 'undefined') {
             if (!card_ids.hasOwnProperty(attr) && !ids.hasOwnProperty(attr)) {
-                console.error('#' + attr + ' not match.');
+                // console.error('#' + attr + ' not match.');
             }
         }
     })

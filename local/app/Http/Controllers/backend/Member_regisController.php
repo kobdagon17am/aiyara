@@ -456,7 +456,8 @@ class Member_regisController extends Controller
           }
 
           $sTable = DB::select("
-          SELECT * FROM `register_files`
+          SELECT register_files.*,customers.user_name,customers.prefix_name,customers.first_name,customers.last_name FROM `register_files`
+          LEFT JOIN customers ON register_files.customer_id = customers.id
           where 1
                   ".$w01."
                   ".$w02."
@@ -468,12 +469,9 @@ class Member_regisController extends Controller
                   ".$all."
                   $not_in
                   ".$get_all_date."
-         GROUP BY customer_id
-         ORDER BY CASE
-         WHEN regis_doc_status = 0 THEN 1
-         ELSE 99 END ASC,
-         regis_doc_status,
-         id desc
+
+         GROUP BY register_files.customer_id
+         ORDER BY customers.regis_doc_date_update desc
            ");
          }
 
@@ -482,13 +480,8 @@ class Member_regisController extends Controller
       ->addIndexColumn()
        ->addColumn('customer_name', function($row) {
         if(@$row->customer_id!=''){
-          $Customer = DB::select(" select
-          user_name,
-          prefix_name,
-          first_name,
-          last_name from customers where id=".@$row->customer_id." ");
 
-          return @$Customer[0]->user_name." : ".@$Customer[0]->prefix_name.@$Customer[0]->first_name." ".@$Customer[0]->last_name;
+          return @$row->user_name." : ".@$row->prefix_name.@$row->first_name." ".@$row->last_name;
         }else{
           return '';
         }
