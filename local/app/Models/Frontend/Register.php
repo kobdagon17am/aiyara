@@ -193,6 +193,7 @@ class Register extends Model
 
           $data_customer = [
              'business_location_id'=>$business_location,
+             'regis_doc_date_update' => now(),
              'country'=>$req->country,
              'user_name'=>$username,
              'password'=>$pass_db,
@@ -294,6 +295,7 @@ class Register extends Model
                  ->insert(['customer_id'=>$id,'type'=>'3','url'=>$url,'file'=>$f_name,'regis_doc_status'=>'0','business_location_id_fk'=>$business_location]);
 
              }
+
          }
 
          $file_4 = $req->file_4;
