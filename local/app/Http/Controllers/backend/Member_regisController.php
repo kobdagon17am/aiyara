@@ -211,7 +211,7 @@ class Member_regisController extends Controller
 
     public function Datatable(Request $req){
 
-
+      // regis_doc3_status
         if(!empty($req->business_location_id_fk)){
            $w01 = " AND register_files.business_location_id_fk=".$req->business_location_id_fk ;
            $business_location_id_fk = $req->business_location_id_fk;

@@ -1114,6 +1114,7 @@ class Pick_warehouse_fifoController extends Controller
 
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
+              //  dd( $temp_db_stocks );
                $amt_pay_this = $value->amt;
 
 
@@ -1139,13 +1140,14 @@ class Pick_warehouse_fifoController extends Controller
                      }
 
                    }
-
+                  //  * ไม่มีสินค้าในคลัง
 // dd(Auth::user());
                 // จำนวนที่จะ Hint ให้ไปหยิบจากแต่ละชั้นมา ตามจำนวนที่สั่งซื้อ โดยการเช็คไปทีละชั้น fifo จนกว่าจะพอ
                 // เอาจำนวนที่เบิก เป็นเช็ค กับ สต๊อก ว่ามีพอหรือไม่ โดยเอาทุกชั้นที่มีมาคิดรวมกันก่อนว่าพอหรือไม่
                 // $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND product_id_fk=".$value->product_id_fk."  ");
 
                 if(Auth::user()->branch_id_fk == 6){
+
                     // ให้ฝ่ายคลังดึงชั้น 1 เท่านั้น
                     $temp_db_stocks_01 = DB::select(" SELECT sum(amt) as amt,count(*) as amt_floor from $temp_db_stocks WHERE amt>0 AND shelf_floor = 1 AND warehouse_id_fk in (".$w_str2.") AND zone_id_fk in (".$zone_str2.") AND product_id_fk=".$value->product_id_fk."  ");
                   }else{

@@ -11,6 +11,8 @@
 
 @section('content')
 
+    <div class="myloading"></div>
+
     <!-- start page title -->
     <div class="row">
         <div class="col-12">
@@ -192,34 +194,38 @@
                                 <?php
                                 //  dd($sRow->approve_status);
                                 ?>
-                                @if (@$sRow->approve_status == 1 ||
-                                    @$sRow->approve_status == 2 ||
-                                    @$sRow->approve_status == 0 ||
-                                    @$sRow->approve_status == 6)
+                                @if (
+                                    @$sRow->approve_status == 1 ||
+                                        @$sRow->approve_status == 2 ||
+                                        @$sRow->approve_status == 0 ||
+                                        @$sRow->approve_status == 6)
                                     <div class="div_confirm_transfer_slip">
                                         <button type="button" class="btn btn-primary waves-effect waves-light"
                                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
 
-                                            <?php
-                                            $db_delivery = \DB::table('db_delivery')->select('packing_code')->where('orders_id_fk',@$sRow->id)->first();
-                                            $status_d = 0;
-                                            if($db_delivery){
-                                              if($db_delivery->packing_code!=0){
+                                        <?php
+                                        $db_delivery = \DB::table('db_delivery')
+                                            ->select('packing_code')
+                                            ->where('orders_id_fk', @$sRow->id)
+                                            ->first();
+                                        $status_d = 0;
+                                        if ($db_delivery) {
+                                            if ($db_delivery->packing_code != 0) {
                                                 $status_d = 1;
-                                              }
                                             }
-                                            ?>
+                                        }
+                                        ?>
 
-                                @if(@$sRow->approve_status==1 )
-                                @if (@$sRow->transfer_bill_status != 2)
-                                          @if($status_d==0)
-                                        <button type="button"
-                                            class="btn btn-danger waves-effect waves-light btnNotAprrove"
-                                            data-toggle="modal" data-target="#cancel"
-                                            order_id="{{ @$sRow->id }}">ไม่อนุมัติ</button>
-                                          @endif
-                                          @endif
-                                          @endif
+                                        @if (@$sRow->approve_status == 1)
+                                            @if (@$sRow->transfer_bill_status != 2)
+                                                @if ($status_d == 0)
+                                                    <button type="button"
+                                                        class="btn btn-danger waves-effect waves-light btnNotAprrove"
+                                                        data-toggle="modal" data-target="#cancel"
+                                                        order_id="{{ @$sRow->id }}">ไม่อนุมัติ</button>
+                                                @endif
+                                            @endif
+                                        @endif
                                         {{-- <button type="button" class="btn btn-success btn-sm waves-effect font-size-16"
                             data-toggle="modal" data-target="#cancel">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> อัพโหลดสลิปใหม่
@@ -244,7 +250,8 @@
                     </div> --}}
                                 @endif
 
-                                <form action="{{ route('backend.po_approve.update', @$sRow->id) }}" method="POST"
+                                <form id="approve_other_form"
+                                    action="{{ route('backend.po_approve.update', @$sRow->id) }}" method="POST"
                                     enctype="multipart/form-data" autocomplete="off" id="form_approve_con">
                                     <input name="_method" type="hidden" value="PUT">
                                     <input name="id" value="{{ $sRow->id }}" type="hidden">
@@ -468,15 +475,17 @@
 
                                                 </div>
 
+                                                <input type="hidden" name="approved" value="approved">
+
 
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">Close</button>
                                                     <button type="submit" name="approved" style="display: none;"
                                                         value='approved'
-                                                        class="btn btn-primary btn_approve_con_real">อนุมัติ</button>
+                                                        class="btn btn-primary btn_approve_con_real">อนุมัติ1</button>
                                                     <button type="button" name="approved" value='approved'
-                                                        class="btn btn-primary btn_approve_con">อนุมัติ</button>
+                                                        class="btn btn-primary btn_approve_con">อนุมัติ2</button>
                                                 </div>
 
 
@@ -583,6 +592,7 @@
     <!-- Lightbox init js -->
     <script src="{{ URL::asset('backend/js/pages/lightbox.init.js') }}"></script>
     <script src="{{ asset('asset/lity/lity.min.js') }}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready(function() {
@@ -932,10 +942,21 @@
             // minDate: 0,
         });
 
-
-
+        var time_approve = 1;
 
         $(document).on('click', '.btn_approve_con', function() {
+            // $('.myloading').show();
+
+            Swal.fire({
+                title: 'รอสักครู่...' + ' ' + time_approve + '/' + '10',
+                html: 'ระบบกำลังทำรายการกรุณาอย่าปิดหน้านี้จนกว่าระบบจะทำรายการเสร็จ...',
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            })
+
             var approval_amount_transfer = $('#approval_amount_transfer').val();
             var total_price_sum = $('#total_price_sum').val();
             total_price_sum = total_price_sum.replace(",", "");
@@ -945,9 +966,137 @@
             approval_amount_transfer = parseFloat(approval_amount_transfer);
             total_price_sum = parseFloat(total_price_sum);
             if (approval_amount_transfer == total_price_sum) {
-                $('.btn_approve_con_real').trigger('click');
+                // $('.btn_approve_con_real').trigger('click');
+
+                var bill_other1 = '';
+                var bill_other2 = '';
+                var bill_other3 = '';
+                var bill_other4 = '';
+                var bill_other5 = '';
+                var bill_other6 = '';
+                var bill_other7 = '';
+                var bill_other8 = '';
+                var bill_other9 = '';
+                var bill_other10 = '';
+
+                var n = 0;
+                $('.order_id_approve').each(function() {
+                    if (n <= 20) {
+                        bill_other1 += $(this).val() + ',';
+                    }
+                    if (n > 20 && n <= 40) {
+                        bill_other2 += $(this).val() + ',';
+                    }
+                    if (n > 40 && n <= 60) {
+                        bill_other3 += $(this).val() + ',';
+                    }
+                    if (n > 60 && n <= 80) {
+                        bill_other4 += $(this).val() + ',';
+                    }
+                    if (n > 80 && n <= 100) {
+                        bill_other5 += $(this).val() + ',';
+                    }
+                    if (n > 100 && n <= 120) {
+                        bill_other5 += $(this).val() + ',';
+                    }
+                    if (n > 120 && n <= 140) {
+                        bill_other7 += $(this).val() + ',';
+                    }
+                    if (n > 160 && n <= 180) {
+                        bill_other8 += $(this).val() + ',';
+                    }
+                    if (n > 180 && n <= 200) {
+                        bill_other9 += $(this).val() + ',';
+                    }
+                    if (n > 200) {
+                        bill_other10 += $(this).val() + ',';
+                    }
+                    n++;
+                });
+
+                // console.log('bill_other1' + ' ' + bill_other1);
+                // console.log('bill_other2' + ' ' + bill_other2);
+                // console.log('bill_other3' + ' ' + bill_other3);
+
+                bill_other_time = "";
+                if (time_approve == 1) {
+                    bill_other_time = bill_other1;
+                } else if (time_approve == 2) {
+                    bill_other_time = bill_other2;
+                } else if (time_approve == 3) {
+                    bill_other_time = bill_other3;
+                } else if (time_approve == 4) {
+                    bill_other_time = bill_other4;
+                } else if (time_approve == 5) {
+                    bill_other_time = bill_other5;
+                } else if (time_approve == 6) {
+                    bill_other_time = bill_other6;
+                } else if (time_approve == 7) {
+                    bill_other_time = bill_other7;
+                } else if (time_approve == 8) {
+                    bill_other_time = bill_other8;
+                } else if (time_approve == 9) {
+                    bill_other_time = bill_other9;
+                } else if (time_approve == 10) {
+                    bill_other_time = bill_other10;
+                }
+
+
+                var form = $('#approve_other_form');
+                var actionUrl = form.attr('action');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    }
+                });
+                $.ajax({
+                    // url: actionUrl,
+                    url: '{{ url('backend/po_approve_update_other/') }}',
+                    type: "POST",
+                    // data: {
+                    //     "_token": "{{ csrf_token() }}",
+                    // },
+                    data: form.serialize() + "&order_id_approve_list=" + bill_other_time,
+                    success: function(response) {
+                        // $('#successMsg').show();
+                        console.log(response);
+                        // alert(response.message);
+                        if (response.status == 1) {
+                            time_approve++;
+                            if (bill_other_time != '') {
+                                window.setTimeout(function() {
+                                    console.log('success :' + ' ' + bill_other_time);
+                                    $('.btn_approve_con').trigger('click');
+                                }, 5000);
+                            } else {
+                                console.log('error :' + ' ' + bill_other_time);
+                                // $('.myloading').hide();
+                                Swal.fire({
+                                    title: '10 /10 สำเร็จ',
+                                    'icon': 'success',
+                                    html: 'ระบบกำลังทำรายการกรุณาอย่าปิดหน้านี้จนกว่าระบบจะทำรายการเสร็จ...',
+                                    didOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
+                                })
+                                window.setTimeout(function() {
+                                    location.reload();
+                                }, 4000);
+
+                            }
+                        }
+                    },
+                    error: function(response) {
+                        $('.myloading').hide();
+                        alert(response.responseJSON);
+                    },
+                });
+
             } else {
-                alert('กรุณาระบุยอดเงินให้ตรงกัน '+'('+approval_amount_transfer+'/'+total_price_sum+')');
+                alert('กรุณาระบุยอดเงินให้ตรงกัน ' + '(' + approval_amount_transfer + '/' +
+                    total_price_sum + ')');
             }
 
         });
@@ -990,8 +1139,6 @@
                 reader.readAsDataURL(ele.files[0]);
             }
         }
-
-
 
         $(document).on('click', '.btnDelSlip', function(event) {
             var id = $(this).data('id');

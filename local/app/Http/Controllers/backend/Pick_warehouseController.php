@@ -15,33 +15,35 @@ class Pick_warehouseController extends Controller
 
     public function index(Request $request)
     {
-
-      $Pick_warehouse_fifo_topicked = \App\Models\Backend\Pick_warehouse_fifo_topicked::get();
+// dd('test');
+      // $Pick_warehouse_fifo_topicked = \App\Models\Backend\Pick_warehouse_fifo_topicked::get();
      // dd($Pick_warehouse_fifo_topicked);
-      $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
+      // $Pick_warehouse_fifo = \App\Models\Backend\Pick_warehouse_fifo::search()->orderBy('lot_expired_date', 'desc');
       // dd($Pick_warehouse_fifo);
 
-      $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
-      $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
-      $sBusiness_location = \App\Models\Backend\Business_location::get();
-      $Customer = DB::select(" SELECT
-          db_delivery.customer_id as id,
-          customers.prefix_name,
-          customers.first_name,
-          customers.last_name,
-          customers.user_name
-          FROM
-          db_delivery
-          Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id
-           ");
+      // $sDelivery = \App\Models\Backend\Delivery::where('approver','NULL')->get();
+      // dd('test');
+      // $sPacking = \App\Models\Backend\DeliveryPackingCode::where('status_delivery','<>','2')->get();
+      // $sBusiness_location = \App\Models\Backend\Business_location::get();
+      //
+      // $Customer = DB::select(" SELECT
+      //     db_delivery.customer_id as id,
+      //     customers.prefix_name,
+      //     customers.first_name,
+      //     customers.last_name,
+      //     customers.user_name
+      //     FROM
+      //     db_delivery
+      //     Left Join customers ON db_delivery.customer_id = customers.id GROUP BY db_delivery.customer_id
+      //      ");
 
       return View('backend.pick_warehouse.index')->with(
         array(
-           'sDelivery'=>$sDelivery,
-           'Customer'=>$Customer,
-           'sBusiness_location'=>$sBusiness_location,
-           'sPacking'=>$sPacking,
-           'Pick_warehouse_fifo_topicked'=>$Pick_warehouse_fifo_topicked,
+          //  'sDelivery'=>$sDelivery,
+          //  'Customer'=>$Customer,
+          //  'sBusiness_location'=>$sBusiness_location,
+          //  'sPacking'=>$sPacking,
+          //  'Pick_warehouse_fifo_topicked'=>$Pick_warehouse_fifo_topicked,
         ) );
 
 
