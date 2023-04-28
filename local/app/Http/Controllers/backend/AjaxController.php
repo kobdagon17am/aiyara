@@ -6138,8 +6138,8 @@ class AjaxController extends Controller
                 ->select('id','user_name','first_name','last_name','business_name')
                 // ->whereNotNull('regis_date_doc')
 
-                ->where('user_name',$request->term)
-                // ->where('user_name', 'LIKE', '%'.$request->term.'%')
+                // ->where('user_name',$request->term)
+                ->where('user_name', 'LIKE', '%'.$request->term.'%')
 
 
                 // ->orWhere('first_name','LIKE', '%'.$request->term.'%')

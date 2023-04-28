@@ -272,7 +272,7 @@ class Member_regisController extends Controller
 
       // regis_doc3_status
 
-      $all = "AND regis_doc_status = 0";
+      $all = "AND register_files.regis_doc_status = 0";
       if($w05!=""){
         $all = "";
         $get_all_date = "";
@@ -450,7 +450,7 @@ class Member_regisController extends Controller
             }
           }
           if(count($arr_not)!=0){
-            $not_in = "AND id NOT IN (".implode(",",$arr_not).")";
+            $not_in = "AND register_files.id NOT IN (".implode(",",$arr_not).")";
           }else{
             $not_in = "";
           }
