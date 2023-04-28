@@ -388,29 +388,29 @@ class Po_approveController extends Controller
           }
         }
       } else {
-        return response()->json([
-          'message' => 'Id Emty',
-          'status' => 0,
-      ]);
-        // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
+      //   return response()->json([
+      //     'message' => 'Id Emty',
+      //     'status' => 0,
+      // ]);
+        return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
       }
 
       \DB::commit();
 
-      return response()->json([
-        'message' => 'success',
-        'status' => 1,
-    ]);
-      // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg('success')]);
+    //   return response()->json([
+    //     'message' => 'success',
+    //     'status' => 1,
+    // ]);
+      return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg('success')]);
     } catch (\Exception $e) {
       echo $e->getMessage();
       \DB::rollback();
       // dd($e->getMessage());
-      return response()->json([
-        'message' => $e,
-        'status' => 0,
-    ]);
-      // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::e($e)]);
+    //   return response()->json([
+    //     'message' => $e,
+    //     'status' => 0,
+    // ]);
+      return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::e($e)]);
     }
   }
 
