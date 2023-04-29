@@ -292,6 +292,7 @@ class Member_regisController extends Controller
         ";
       }
 
+      if($w05==''){
       $sTable = DB::select("
         SELECT id,
         type,
@@ -312,6 +313,27 @@ class Member_regisController extends Controller
        GROUP BY customer_id
        ORDER BY id desc
          ");
+        } else{
+
+          $sTable = DB::select("
+          SELECT register_files.*,customers.user_name,customers.prefix_name,customers.first_name,customers.last_name FROM `register_files`
+          LEFT JOIN customers ON register_files.customer_id = customers.id
+          where 1
+                  ".$w01."
+                  ".$w02."
+                  ".$w03."
+                  ".$w04."
+                  ".$w05."
+                  ".$w06."
+                  ".$w07."
+                  ".$all."
+                  ".$get_all_date."
+
+         GROUP BY register_files.customer_id
+         ORDER BY customers.regis_doc_date_update desc
+           ");
+
+         }
 
          if($w05==''){
           $arr_not = [];
