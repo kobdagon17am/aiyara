@@ -102,6 +102,7 @@ class Po_approveController extends Controller
 
     // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
     $other_bill = DB::table('db_orders')
+      ->select('id','code_order','transfer_price','approve_status')
       ->where('pay_with_other_bill', 1)
       //  ->where('pay_with_other_bill_note','like','%'.$sRow->code_order.'%')
       ->where('pay_with_other_bill_note', '=', $sRow->code_order)
@@ -110,11 +111,15 @@ class Po_approveController extends Controller
       ->get();
 
     foreach ($other_bill as $ot) {
+      if($ot->approve_status == 1 || $ot->approve_status == 2 ||$ot->approve_status == 6 ||$ot->approve_status == 9){
+        $input_data ='<input type="hidden" class="order_id_approve" name="order_id_approve[]" value="'.$ot->code_order.'">';
+      }
       $sum_price += $ot->transfer_price;
-      $p_bill .= "บิล : " . $ot->code_order . ' <br> ยอดชำระ : <label style="color:red;"> ' . $ot->transfer_price . ' </label><br>';
+      $p_bill .= "บิล : " . $ot->code_order . ' '.$input_data.'<br> ยอดชำระ : <label style="color:red;"> ' . $ot->transfer_price . ' </label><br>';
     }
 
     $other_bill_ai = DB::table('db_add_ai_cash')
+    ->select('id','code_order','transfer_price','approve_status')
       ->where('pay_with_other_bill_select', 1)
       ->where('pay_with_other_bill_code', $sRow->code_order)
       ->where('approve_status', '!=', 5)
@@ -122,8 +127,11 @@ class Po_approveController extends Controller
       ->get();
 
     foreach ($other_bill_ai as $ot) {
+         if($ot->approve_status == 1 || $ot->approve_status == 2 ||$ot->approve_status == 6 ||$ot->approve_status == 9){
+        $input_data ='<input type="hidden" class="order_id_approve" name="order_id_approve[]" value="'.$ot->code_order.'">';
+      }
       $sum_price += $ot->transfer_price;
-      $p_bill .= "บิล : " . $ot->code_order . '<br> ยอดชำระ : <label style="color:red;"> ' . $ot->transfer_price . ' </label><br>';
+      $p_bill .= "บิล : " . $ot->code_order. ' '.$input_data. ' <br> ยอดชำระ : <label style="color:red;"> ' . $ot->transfer_price . ' </label><br>';
     }
 
 
@@ -380,17 +388,293 @@ class Po_approveController extends Controller
           }
         }
       } else {
+      //   return response()->json([
+      //     'message' => 'Id Emty',
+      //     'status' => 0,
+      // ]);
         return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
       }
 
       \DB::commit();
 
+    //   return response()->json([
+    //     'message' => 'success',
+    //     'status' => 1,
+    // ]);
       return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg('success')]);
     } catch (\Exception $e) {
       echo $e->getMessage();
       \DB::rollback();
       // dd($e->getMessage());
+    //   return response()->json([
+    //     'message' => $e,
+    //     'status' => 0,
+    // ]);
       return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::e($e)]);
+    }
+  }
+
+  public function po_approve_update_other(Request $request)
+  {
+    // dd($id);
+    $id = $request->id;
+    // dd(explode(',',$request->order_id_approve_list));
+    // dd($request->all());
+    \DB::beginTransaction();
+    try {
+
+      // approval_amount_transfer
+      $data_id = DB::table('db_orders')->where('id', $id)->first();
+      // dd($data_id);
+      if ($data_id) {
+        $sRow = \App\Models\Backend\Orders::find($data_id->id);
+        $sRow->approver = \Auth::user()->id;
+        $sRow->updated_at = now();
+        if (@request('approved') != null) {
+          $sRow->status_slip = 'true';
+          $sRow->order_status_id_fk = '5';
+          if ($sRow->approve_status != 9) {
+            $sRow->approve_status  = 2;
+          }
+          $sRow->transfer_bill_status  = 2;
+          if (!empty($request->slip_ids)) {
+            for ($i = 0; $i < count($request->slip_ids); $i++) {
+              DB::table('payment_slip')->where('id', $request->slip_ids[$i])->update([
+                'note' => $request->slip_note[$i],
+                'code_order' => $sRow->code_order,
+                'status' => 2,
+                'transfer_bill_date' => $request->transfer_bill_date[$i],
+              ]);
+            }
+          }
+          // approval_amount_transfer payment_slip transfer_bill_status
+          $sRow->approval_amount_transfer = $request->approval_amount_transfer;
+          $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
+          $sRow->approval_amount_transfer_over_status = $request->approval_amount_transfer_over_status;
+          $sRow->account_bank_name_customer = $request->account_bank;
+          $sRow->transfer_amount_approver = \Auth::user()->id;
+          $sRow->transfer_bill_date  = $request->transfer_bill_date;
+          $sRow->transfer_bill_approvedate = date("Y-m-d H:i:s");
+          DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+        }
+
+        if (@request('no_approved') != null) {
+          $sRow->status_slip = 'false';
+          $sRow->order_status_id_fk = '3';
+          $sRow->approve_status  = 1;
+          // note
+          $sRow->transfer_bill_status = 1;
+          $sRow->status_slip = 'true';
+          $sRow->approval_amount_transfer = 0;
+          $sRow->approval_amount_transfer_over = 0;
+          $sRow->approval_amount_transfer_over_status = 0;
+          $sRow->account_bank_name_customer = 0;
+          $sRow->transfer_amount_approver =  \Auth::user()->id;
+          $sRow->transfer_bill_date  = NULL;
+          $sRow->transfer_bill_approvedate = NULL;
+          $sRow->transfer_bill_note = @request('detail');
+          DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+          $sRow->approve_status = 6;
+          $sRow->status_slip = false;
+
+          if ($sRow->order_channel == 'MEMBER') {
+            $message = [
+              'customers_id_fk' => $sRow->customers_id_fk,
+              'topics_question' => 'เอกสารไม่ผ่านการตรวจสอบ',
+              'details_question' => 'Order:' . $sRow->code_order,
+              'order_code' => $sRow->code_order,
+              'orders_type' => $sRow->purchase_type_id_fk,
+              'type' => 'system',
+              'status' => 0,
+              'see_status' => 0,
+            ];
+
+            DB::table('pm')->insert($message);
+          }
+        }
+
+
+        if (@request('approved') != null) {
+          // dd('lk');
+          if ($sRow->order_channel == 'VIP') {
+            $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($id, \Auth::user()->id, '1', 'admin');
+            if ($data['status'] != 'fail') {
+              $sRow->order_status_id_fk = '5';
+              // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+              // return false;
+            }
+          } else {
+            $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($id, \Auth::user()->id, '1', 'admin');
+
+            if ($data['status'] != 'fail') {
+              $sRow->order_status_id_fk = '5';
+              // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+              // return false;
+            }
+          }
+        }
+
+        $sRow->save();
+
+        if ($sRow->approve_status == 2) {
+          // $this->fncUpdateDeliveryAddress($sRow->id);
+          // $this->fncUpdateDeliveryAddressDefault($sRow->id);
+          \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($sRow->id);
+          \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($sRow->id);
+        }
+
+        // วุฒิเพิ่มวนเช็คว่ามีบิลไหนจ่ายพร้อมบิลนี้ไหม
+        // $other_bill = DB::table('db_orders')->where('pay_with_other_bill', 1)->where('pay_with_other_bill_note', '=', $data_id->code_order)
+        //   // ->where('approve_status',1)
+        //   ->whereIn('approve_status', [1, 2, 6, 9])
+        //   ->get();
+
+        $order_id_approve_list = explode(',',@$request->order_id_approve_list);
+        $order_id_approve_list_arr = [];
+        foreach($order_id_approve_list as $l){
+           if($l!='' || $l!=','){
+             array_push($order_id_approve_list_arr,$l);
+           }
+        }
+
+        $other_bill = DB::table('db_orders')->select('id')->where('pay_with_other_bill', 1)->whereIn('code_order', $order_id_approve_list_arr)
+        // ->where('approve_status',1)
+        ->whereIn('approve_status', [1, 2, 6, 9])
+        ->get();
+
+        foreach ($other_bill as $b) {
+          $sRow2 = \App\Models\Backend\Orders::find($b->id);
+          $sRow2->approver = \Auth::user()->id;
+          $sRow2->updated_at = now();
+          if (@request('approved') != null) {
+            $sRow2->status_slip = 'true';
+            // $sRow2->order_status_id_fk = '5';
+            if ($sRow2->approve_status != 9) {
+              $sRow2->approve_status  = 2;
+            }
+            $sRow2->transfer_bill_status = 2;
+            $sRow2->approval_amount_transfer = 0;
+            $sRow2->approval_amount_transfer_over = 0;
+            $sRow2->approval_amount_transfer_over_status = 0;
+            $sRow2->account_bank_name_customer = $request->account_bank;
+            $sRow2->transfer_amount_approver = \Auth::user()->id;
+            $sRow2->transfer_bill_date  = $request->transfer_bill_date;
+            $sRow2->transfer_bill_approvedate = date("Y-m-d H:i:s");
+            DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+          }
+
+          if (@request('no_approved') != null) {
+            $sRow2->status_slip = 'false';
+            $sRow2->order_status_id_fk = '3';
+            $sRow2->approve_status  = 1;
+            // note
+            $sRow2->transfer_bill_status = 1;
+            $sRow2->status_slip = 'true';
+            $sRow2->approval_amount_transfer = 0;
+            $sRow2->approval_amount_transfer_over = 0;
+            $sRow2->approval_amount_transfer_over_status = 0;
+            $sRow2->account_bank_name_customer = 0;
+            $sRow2->transfer_amount_approver =  \Auth::user()->id;
+            $sRow2->transfer_bill_date  = NULL;
+            $sRow2->transfer_bill_approvedate = NULL;
+            $sRow2->transfer_bill_note = @request('detail');
+            DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
+            $sRow2->approve_status = 6;
+            $sRow2->status_slip = false;
+          }
+
+          if (@request('approved') != null) {
+
+            if ($sRow2->order_channel == 'VIP') {
+              $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme_vip($b->id, \Auth::user()->id, '1', 'admin');
+              if ($data['status'] != 'fail') {
+                $sRow2->order_status_id_fk = '5';
+                // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+                // return false;
+              }
+            } else {
+              $data = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($b->id, \Auth::user()->id, '1', 'admin');
+              if ($data['status'] != 'fail') {
+                $sRow2->order_status_id_fk = '5';
+                // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'เกิดปัญหาไม่สามารถเติม PV ได้']);
+                // return false;
+              }
+            }
+          }
+
+          $sRow2->save();
+          if ($sRow2->approve_status == 2) {
+            // $this->fncUpdateDeliveryAddress($sRow2->id);
+            // $this->fncUpdateDeliveryAddressDefault($sRow2->id);
+            \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($sRow2->id);
+            \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($sRow2->id);
+          }
+        }
+
+        $admin_id = \Auth::user()->id;
+        $ai_cash = DB::table('db_add_ai_cash')->where('pay_with_other_bill_select', 1)->where('pay_with_other_bill_code', $data_id->code_order)->get();
+        foreach ($ai_cash as $ai) {
+
+          if (@request('approved') != null) {
+
+            $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($ai->id, $admin_id, 'admin', $ai->note, $pay_type_id = '1');
+            $sRow = \App\Models\Backend\Add_ai_cash::find($ai->id);
+            $sRow->approve_status = 2;
+            $sRow->order_type_id_fk = 7;
+            $sRow->approver = \Auth::user()->id;
+            $sRow->approve_date = now();
+            $sRow->note = $ai->note;
+
+            if ($sRow->code_order == "") {
+              $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+              DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
+            }
+
+            $sRow->save();
+          }
+
+          if (@request('no_approved') != null) {
+
+            // $add_aicash = \App\Http\Controllers\Frontend\Fc\AicashConfirmeController::aicash_confirme($ai->id, $admin_id, 'admin', $ai->note, $pay_type_id = '1');
+            $sRow = \App\Models\Backend\Add_ai_cash::find($ai->id);
+            $sRow->approve_status = 6;
+            $sRow->order_type_id_fk = 7;
+            $sRow->approver = \Auth::user()->id;
+            $sRow->approve_date = now();
+            $sRow->note = $ai->note;
+
+            if ($sRow->code_order == "") {
+              $code_order = RunNumberPayment::run_number_aicash($sRow->business_location_id_fk);
+              DB::select(" UPDATE db_add_ai_cash SET code_order='$code_order' WHERE (id='" . $ai->id . "') ");
+            }
+
+            $sRow->save();
+          }
+        }
+      } else {
+        return response()->json([
+          'message' => 'Id Emty',
+          'status' => 0,
+      ]);
+        // return redirect()->action('backend\Po_approveController@index')->with(['alert' => 'Id Emty']);
+      }
+
+      \DB::commit();
+
+      return response()->json([
+        'message' => 'success',
+        'status' => 1,
+    ]);
+      // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::Msg('success')]);
+    } catch (\Exception $e) {
+      echo $e->getMessage();
+      \DB::rollback();
+      // dd($e->getMessage());
+      return response()->json([
+        'message' => $e,
+        'status' => 0,
+    ]);
+      // return redirect()->action('backend\Po_approveController@index')->with(['alert' => \App\Models\Alert::e($e)]);
     }
   }
 
