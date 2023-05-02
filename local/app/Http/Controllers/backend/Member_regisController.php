@@ -450,7 +450,7 @@ class Member_regisController extends Controller
             }
           }
           if(count($arr_not)!=0){
-            $not_in = "AND id NOT IN (".implode(",",$arr_not).")";
+            $not_in = "AND register_files.id NOT IN (".implode(",",$arr_not).")";
           }else{
             $not_in = "";
           }
@@ -471,7 +471,7 @@ class Member_regisController extends Controller
                   ".$get_all_date."
 
          GROUP BY register_files.customer_id
-         ORDER BY customers.regis_doc_date_update desc
+         ORDER BY customers.regis_doc_date_update DESC, register_files.id DESC;
            ");
          }
 
