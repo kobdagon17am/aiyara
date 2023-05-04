@@ -299,9 +299,9 @@ class FrontstoreController extends Controller
     if(@$request->customers_id_fk=='' || @$request->customers_id_fk==null){
       @$request->customers_id_fk = @$request->customers_id_fk_name;
     }
-    if(@$request->customers_id_fk=='' || @$request->customers_id_fk==null){
-      return redirect()->back()->with('error','ไม่พบข้อมูลลูกค้า');
-    }
+    // if(@$request->customers_id_fk=='' || @$request->customers_id_fk==null){
+    //   return redirect()->back()->with('error','ไม่พบข้อมูลลูกค้า');
+    // }
 
     $customers = DB::table('customers')->select('user_name','business_location_id')->where('id',@$request->customers_id_fk)->first();
     if($customers){
@@ -4192,7 +4192,7 @@ class FrontstoreController extends Controller
         if($row->pay_with_other_bill == 1){
           $other = "<br><br> ชำระพร้อมบิล ".$row->pay_with_other_bill_note;
         }
-        $p = "<a href='javascript:;' class='order_select' code_id='".@$row->code_order."'><span class='badge badge-pill badge-soft-primary font-size-16'>".@$row->code_order."</span></a>";
+        $p = "<a href='javascript:;' class='order_select' code_id_fk='".@$row->id."' code_id='".@$row->code_order."'><span class='badge badge-pill badge-soft-primary font-size-16'>".@$row->code_order."</span></a>";
         return $p.$other;
       })
 
