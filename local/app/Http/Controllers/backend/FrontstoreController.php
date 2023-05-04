@@ -2325,7 +2325,7 @@ class FrontstoreController extends Controller
       // $sRow->invoice_code    = $invoice_code ;
 
       if(request('customers_id_fk') =='' || request('customers_id_fk')==null){
-        $customers_id_fk = request('customers_id_fk_name');
+        $customers_id_fk = @request('customers_id_fk_name');
       }else{
         $customers_id_fk = request('customers_id_fk');
       }
