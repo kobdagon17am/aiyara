@@ -493,7 +493,7 @@ class Member_regisController extends Controller
                   ".$get_all_date."
 
          GROUP BY register_files.customer_id
-         ORDER BY customers.regis_doc_date_update desc
+         ORDER BY customers.regis_doc_date_update DESC, register_files.id DESC;
            ");
          }
 
