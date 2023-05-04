@@ -6164,7 +6164,6 @@ class AjaxController extends Controller
            }
     }
 
-
     public function ajaxGetCustomerAistockist(Request $request)
     {
         if($request->ajax()){

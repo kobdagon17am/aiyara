@@ -457,7 +457,30 @@
                                                 disabled="">
                                         @else
                                             <select id="customers_id_fk" name="customers_id_fk" class="form-control"
-                                                required>
+                                                >
+                                            </select>
+
+                                            <!-- <input type="text" class="form-control customer " id="customer" name="customer" > -->
+                                            <!-- <input type="hidden" id="customers_id_fk" name="customers_id_fk"  > -->
+                                        @endif
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="customers_id_fk_name" class="col-md-4 col-form-label"> ชื่อ-นามสกุลลูกค้า (กรณีไม่ทราบรหัส) : </label>
+                                    <div class="col-md-7">
+
+
+                                        @if (!empty(@$sRow->customers_id_fk))
+                                            <input type="hidden" name="customers_id_fk_name"
+                                                value="{{ $sRow->customers_id_fk }}">
+                                            <input type="text" class="form-control" value="{{ @$CusName }}"
+                                                disabled="">
+                                        @else
+                                            <select id="customers_id_fk_name" name="customers_id_fk_name"
+                                                class="form-control" >
                                             </select>
 
                                             <!-- <input type="text" class="form-control customer " id="customer" name="customer" > -->
@@ -804,11 +827,11 @@
                                                 </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             @ELSE
                                                 <!--         <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt') }}/{{ @$sRow->id }}" target=_blank style="display: none;" >
-                                                <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
-                                              </a>
-                                              <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{ @$sRow->id }}" target=_blank style="display: none;" >
-                                                <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
-                                              </a> -->
+                                                    <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 1 : A4 ]</span>
+                                                  </a>
+                                                  <a class="btn btn-success btn-aigreen btn-sm mt-1 btnPrint " href="{{ URL::to('backend/frontstore/print_receipt_02') }}/{{ @$sRow->id }}" target=_blank style="display: none;" >
+                                                    <i class="bx bx-printer align-middle mr-1 font-size-18 "></i><span style="font-size: 14px;"> ใบเสร็จ [ 2 ]</span>
+                                                  </a> -->
                                                 <!-- แลก  Ai Voucher -->
                                                 <a class="btn btn-success btn-aigreen btn-sm mt-1 btnAddFromPromotion "
                                                     href="#">
@@ -1123,37 +1146,37 @@
                                                             <?php
                                                             $addr = DB::select(
                                                                 " SELECT
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.customer_id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.card_house_no,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.card_house_name,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.card_moo,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.card_zipcode,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.card_soi,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.amphures_id_fk,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.district_id_fk,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.road,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.province_id_fk,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.created_at,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card.updated_at,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      dataset_provinces.name_th AS provname,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      dataset_amphures.name_th AS ampname,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      dataset_districts.name_th AS tamname,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers.prefix_name,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers.first_name,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers.last_name
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      FROM
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_address_card
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join customers ON customers_address_card.customer_id = customers.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join customers_detail ON customers.id = customers_detail.customer_id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      where customers_address_card.customer_id = " .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.id,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.customer_id,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.card_house_no,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.card_house_name,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.card_moo,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.card_zipcode,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.card_soi,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.amphures_id_fk,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.district_id_fk,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.road,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.province_id_fk,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.created_at,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card.updated_at,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  dataset_provinces.name_th AS provname,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  dataset_amphures.name_th AS ampname,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  dataset_districts.name_th AS tamname,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers.prefix_name,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers.first_name,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers.last_name
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  FROM
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_address_card
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join customers ON customers_address_card.customer_id = customers.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join customers_detail ON customers.id = customers_detail.customer_id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  where customers_address_card.customer_id = " .
                                                                     (@$sRow->customers_id_fk ? @$sRow->customers_id_fk : 0) .
                                                                     "
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
                                                             );
                                                             if (@$addr[0]->provname != '') {
                                                                 @$address = '';
@@ -1191,30 +1214,30 @@
 
                                                             @$addr = DB::select(
                                                                 "SELECT
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.customer_id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.house_no,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.house_name,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.moo,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.zipcode,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.soi,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.amphures_id_fk,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.district_id_fk,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.road,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail.province_id_fk,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers.prefix_name,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers.first_name,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers.last_name,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      dataset_provinces.name_th AS provname,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      dataset_amphures.name_th AS ampname,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      dataset_districts.name_th AS tamname
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      FROM
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      customers_detail
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join customers ON customers_detail.customer_id = customers.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      WHERE customers_detail.customer_id =
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       " .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.customer_id,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.house_no,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.house_name,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.moo,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.zipcode,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.soi,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.amphures_id_fk,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.district_id_fk,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.road,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail.province_id_fk,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers.prefix_name,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers.first_name,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers.last_name,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  dataset_provinces.name_th AS provname,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  dataset_amphures.name_th AS ampname,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  dataset_districts.name_th AS tamname
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  FROM
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  customers_detail
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join customers ON customers_detail.customer_id = customers.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  WHERE customers_detail.customer_id =
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   " .
                                                                     (@$sRow->customers_id_fk ? @$sRow->customers_id_fk : 0) .
                                                                     ' ',
                                                             );
@@ -1254,12 +1277,12 @@
 
                                                             @$addr = DB::select(
                                                                 "select customers_addr_frontstore.* ,dataset_provinces.name_th as provname,
-                                                                                                                                                                                                                                                                                                                                                                                dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
-                                                                                                                                                                                                                                                                                                                                                                                from customers_addr_frontstore
-                                                                                                                                                                                                                                                                                                                                                                                Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
-                                                                                                                                                                                                                                                                                                                                                                                Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
-                                                                                                                                                                                                                                                                                                                                                                                Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
-                                                                                                                                                                                                                                                                                                                                                                                where customers_addr_frontstore.id = " .
+                                                                                                                                                                                                                                                                                                                                                                                                                                            dataset_amphures.name_th as ampname,dataset_districts.name_th as tamname
+                                                                                                                                                                                                                                                                                                                                                                                                                                            from customers_addr_frontstore
+                                                                                                                                                                                                                                                                                                                                                                                                                                            Left Join dataset_provinces ON customers_addr_frontstore.province_id_fk = dataset_provinces.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                            Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                            Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
+                                                                                                                                                                                                                                                                                                                                                                                                                                            where customers_addr_frontstore.id = " .
                                                                     (@$CusAddrFrontstore[0]->id ? $CusAddrFrontstore[0]->id : 0) .
                                                                     ' ',
                                                             );
@@ -1341,18 +1364,18 @@
 
 
                                                 <!--         dataset_orders_type
-                                        1 ทำคุณสมบัติ
-                                        2 รักษาคุณสมบัติรายเดือน
-                                        3 รักษาคุณสมบัติท่องเที่ยว
-                                        4 เติม Ai-Stockist
-                                        5 แลก  Ai Voucher
+                                            1 ทำคุณสมบัติ
+                                            2 รักษาคุณสมบัติรายเดือน
+                                            3 รักษาคุณสมบัติท่องเที่ยว
+                                            4 เติม Ai-Stockist
+                                            5 แลก  Ai Voucher
 
-                                    dataset_pay_type
-                                    1 โอนชำระ
-                                    2 บัตรเครดิต
-                                    3 Ai-Cash
-                                    4  Ai Voucher
-                                    5 เงินสด -->
+                                        dataset_pay_type
+                                        1 โอนชำระ
+                                        2 บัตรเครดิต
+                                        3 Ai-Cash
+                                        4  Ai Voucher
+                                        5 เงินสด -->
 
 
                                                 <div class="row">
@@ -1508,26 +1531,27 @@
                                                                     </div>
                                                                     <div class="divTableCell">
                                                                         <!-- ===================================
-                                1 เงินโอน
-                                8 เครดิต + เงินโอน
-                                10  เงินโอน + เงินสด
-                                11  เงินโอน + Ai-Cash
-                                12  Gift Voucher + เงินโอน
-                                ===================================
-                                3 Ai-Cash
-                                6 เงินสด + Ai-Cash
-                                9 เครดิต + Ai-Cash
-                                =================================== -->
-                                                                        @if (@$sRow->check_press_save == 2 &&
-                                                                            ($sRow->pay_type_id_fk != '' || $sRow->pay_type_id_fk != 0) &&
-                                                                            ($sRow->pay_type_id_fk == 1 ||
-                                                                                $sRow->pay_type_id_fk == 8 ||
-                                                                                $sRow->pay_type_id_fk == 10 ||
-                                                                                $sRow->pay_type_id_fk == 11 ||
-                                                                                $sRow->pay_type_id_fk == 12 ||
-                                                                                $sRow->pay_type_id_fk == 3 ||
-                                                                                $sRow->pay_type_id_fk == 6 ||
-                                                                                $sRow->pay_type_id_fk == 9))
+                                    1 เงินโอน
+                                    8 เครดิต + เงินโอน
+                                    10  เงินโอน + เงินสด
+                                    11  เงินโอน + Ai-Cash
+                                    12  Gift Voucher + เงินโอน
+                                    ===================================
+                                    3 Ai-Cash
+                                    6 เงินสด + Ai-Cash
+                                    9 เครดิต + Ai-Cash
+                                    =================================== -->
+                                                                        @if (
+                                                                            @$sRow->check_press_save == 2 &&
+                                                                                ($sRow->pay_type_id_fk != '' || $sRow->pay_type_id_fk != 0) &&
+                                                                                ($sRow->pay_type_id_fk == 1 ||
+                                                                                    $sRow->pay_type_id_fk == 8 ||
+                                                                                    $sRow->pay_type_id_fk == 10 ||
+                                                                                    $sRow->pay_type_id_fk == 11 ||
+                                                                                    $sRow->pay_type_id_fk == 12 ||
+                                                                                    $sRow->pay_type_id_fk == 3 ||
+                                                                                    $sRow->pay_type_id_fk == 6 ||
+                                                                                    $sRow->pay_type_id_fk == 9))
                                                                             @php
                                                                                 // วุฒิลบ disabled
                                                                                 // $disAfterSave = 'disabled'
@@ -2163,16 +2187,16 @@
                                                             <div class="divTableRow div_account_bank_id "
                                                                 style="<?= @$div_account_bank_id ?>">
                                                                 <!--    <div class="divTableCell" ></div>
-                                                        <div class="divTH">
-                                                          <label for="" class="label_transfer_price" > หมายเหตุ : </label>
-                                                        </div>
-                                                        <div class="divTableCell">
+                                                            <div class="divTH">
+                                                              <label for="" class="label_transfer_price" > หมายเหตุ : </label>
+                                                            </div>
+                                                            <div class="divTableCell">
 
-                                                             <input {{ @$disAfterSave }} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{ @$sRow->note_fullpayonetime }}" >
+                                                                 <input {{ @$disAfterSave }} type="text" class="form-control" id="note_fullpayonetime" name="note_fullpayonetime" placeholder="ยอดชำระเต็มจำนวน กรณีมีหลายยอดในการโอนครั้งเดียว" value="{{ @$sRow->note_fullpayonetime }}" >
 
-                                                        </div>
-                                                         <div class="divTableCell">
-                                                        </div> -->
+                                                            </div>
+                                                             <div class="divTableCell">
+                                                            </div> -->
                                                             </div>
 
 
@@ -2256,9 +2280,9 @@
 
 
                                                                     <!--
-                                                          <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;"  >
-                                                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                                                </button> -->
+                                                              <button type="submit" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;"  >
+                                                                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                                                                    </button> -->
 
                                                                     @if (@$sRow->distribution_channel_id_fk == 3)
                                                                     @else
@@ -2272,8 +2296,10 @@
 
 
 
-                                                                        <input type="hidden" id="pay_type_transfer_slip"
-                                                                            name="pay_type_transfer_slip" value="1">
+                                                                        <input type="hidden"
+                                                                            id="pay_type_transfer_slip"
+                                                                            name="pay_type_transfer_slip"
+                                                                            value="1">
 
                                                                         @if (!empty(@$PaymentSlip))
                                                                             <button type="button"
@@ -2312,9 +2338,9 @@
                                                                         <?php }?>
 
                                                                         <!--    <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSaveTransferType " style="float: right;display: none;"  >
-                                                                <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
-                                                                </button>
-                                  -->
+                                                                    <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
+                                                                    </button>
+                                      -->
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -2537,8 +2563,8 @@
 
                 <!--         <div class="modal-footer">
 
-                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div> -->
+                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div> -->
 
             </div>
         </div>
@@ -2828,7 +2854,7 @@
 
                     <div class="modal-body">
                         <!--
-                                       <iframe id="iframe" src="{{ url('backend/add_ai_cash/1/edit') }}" width=750 height=350 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling="yes"></iframe> -->
+                                           <iframe id="iframe" src="{{ url('backend/add_ai_cash/1/edit') }}" width=750 height=350 marginwidth=0 marginheight=0 hspace=0 vspace=0 frameborder=0 scrolling="yes"></iframe> -->
 
                     </div>
 
@@ -3736,7 +3762,7 @@
             });
 
             $(document).on('click', '.btn-plus', function(e) {
-              // alert('l,');
+                // alert('l,');
                 const input = $(e.target).closest('.input-group').find('input');
                 if (input.is('input')) {
                     var d = $(".frmFrontstorelist").serialize();
@@ -3756,7 +3782,7 @@
                         data: $(".frmFrontstorelist").serialize() + "&product_id_fk_this=" +
                             product_id_fk_this + "&purchase_type_id_fk=" + purchase_type_id_fk,
                         success: function(response) { // What to do if we succeed
-                          $('.myloading').hide();
+                            $('.myloading').hide();
                             return false;
                             var oTable;
 
@@ -7737,15 +7763,15 @@
     </script>
     <!--
 
-                                         $('.in-tx').keypress(function (e) {
-                                             if (e.which === 13) {
-                                                 var index = $('.in-tx').index(this) + 1;
-                                                 // $('.in-tx').eq(index).focus();
-                                                 // $(".btnSave").focus();
-                                                 return false;
-                                             }
-                                         });
-                                 -->
+                                             $('.in-tx').keypress(function (e) {
+                                                 if (e.which === 13) {
+                                                     var index = $('.in-tx').index(this) + 1;
+                                                     // $('.in-tx').eq(index).focus();
+                                                     // $(".btnSave").focus();
+                                                     return false;
+                                                 }
+                                             });
+                                     -->
 
     <script language="JavaScript">
         document.onkeydown = chkEvent
@@ -7841,6 +7867,30 @@
                 placeholder: '-Select-',
                 ajax: {
                     url: " {{ url('backend/ajaxGetCustomerForFrontstore') }} ",
+                    type: 'POST',
+                    dataType: 'json',
+                    delay: 250,
+                    cache: false,
+                    data: function(params) {
+                        return {
+                            term: params.term || '', // search term
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+
+            $("#customers_id_fk_name").select2({
+                minimumInputLength: 3,
+                allowClear: true,
+                placeholder: '-Select-',
+                ajax: {
+                    url: " {{ url('backend/ajaxGetCustomer_name') }} ",
                     type: 'POST',
                     dataType: 'json',
                     delay: 250,
@@ -7956,6 +8006,57 @@
         $(document).ready(function() {
 
             $(document).on('change', '#customers_id_fk', function(event) {
+
+                $('.myloading').show();
+                var customer_id = $(this).val();
+                $.ajax({
+                    type: 'POST',
+                    url: " {{ url('backend/ajaxGetRegis_date_doc') }} ",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        customer_id: customer_id,
+                    },
+                    success: function(data) {
+                        //console.log(data['customer']);
+                        data['customer']['aistockist_status'];
+                        if (data['customer']['aistockist_status'] == 1) {
+                            var aistockist_status = 'เป็น AiStockist';
+                        } else {
+                            var aistockist_status = 'ไม่เป็น AiStockist';
+                        }
+                        $('#view_pv').val(data['customer']['pv']);
+                        $('#view_customer_mt').val(data['customer']['pv_mt']);
+                        $('#view_customer_tv').val(data['customer']['pv_tv']);
+                        $('#view_customer_ai').val(data['customer']['pv_aistockist']);
+                        $('#view_customer_aistockist').val(aistockist_status);
+                        $('#view_customer_q').val(data['customer']['qualification_name']);
+                        $('#view_customer_package').val(data['customer']['dt_package']);
+
+                        var business_location_data = "THAI";
+                        if (data['customer']['business_location_id'] == 3) {
+                            business_location_data = "CAMBODIA";
+                        }
+
+                        $('#business_location_data').val(business_location_data);
+                        $.each(data, function(index, value) {
+
+                            if (value.regis_date_doc == null) {
+                                $(".note_check_regis_doc").show();
+                                $(".btn_btnsave").attr("disabled", true);
+                            } else {
+                                $(".note_check_regis_doc").hide();
+                                $(".btn_btnsave").attr("disabled", false);
+                            }
+
+                            $('.myloading').hide();
+                        });
+                    },
+
+                });
+            });
+
+
+            $(document).on('change', '#customers_id_fk_name', function(event) {
 
                 $('.myloading').show();
                 var customer_id = $(this).val();
