@@ -32,7 +32,7 @@ class Check_stock_accountController extends Controller
        Session::put('can_cancel_bill', $can_cancel_bill);
        Session::put('can_cancel_bill_across_day', $can_cancel_bill_across_day);
        Session::put('can_approve', $can_approve);
-  
+
         $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {
             return $query->where('id', auth()->user()->business_location_id_fk);
         })->get();
@@ -55,7 +55,7 @@ class Check_stock_accountController extends Controller
       // return View('backend.check_stock_account.form');
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
@@ -96,8 +96,8 @@ class Check_stock_accountController extends Controller
 
           $db_stocks =DB::select(" select * from db_stocks where id in($arr_row_id)  ");
           $branchs = DB::select("SELECT * FROM branchs where id=".@$db_stocks[0]->business_location_id_fk."");
-    
-    // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
+
+    // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส
           // $REF_CODE = DB::select(" SELECT REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM DB_STOCKS_ACCOUNT_CODE ORDER BY REF_CODE DESC LIMIT 1 ");
           $REF_CODE = DB::select(" SELECT ref_code,SUBSTR(ref_code ,4) AS REF_NO FROM db_stocks_account_code ORDER BY ref_code  DESC LIMIT 1 ");
           if($REF_CODE){
@@ -113,7 +113,7 @@ class Check_stock_accountController extends Controller
             $stocks_account_code->branch_id_fk = @$branchs[0]->id;
             // $stocks_account_code->ref_code = $ref_code;
             $stocks_account_code->action_user = (\Auth::user()->id);
-                        
+
 
             $stocks_account_code->condition_business_location = $request->condition_business_location;
             $stocks_account_code->condition_branch = $request->condition_branch;
@@ -130,7 +130,7 @@ class Check_stock_accountController extends Controller
 
           }
 
-          
+
           $inv = DB::select(" SELECT run_code,SUBSTR(run_code,-5) AS REF_NO FROM db_stocks_account ORDER BY run_code DESC LIMIT 1 ");
           if($inv){
                 $REF_CODE = 'A'.$branchs[0]->business_location_id_fk.date("ymd");
@@ -144,11 +144,11 @@ class Check_stock_accountController extends Controller
          $i=1;
          foreach ($db_stocks as $key => $value) {
 
-           //  $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i)); 
-          // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
-             $run_code = ''; 
+           //  $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i));
+          // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส
+             $run_code = '';
 
-             DB::select(" INSERT INTO db_stocks_account 
+             DB::select(" INSERT INTO db_stocks_account
               (
                 stocks_account_code_id_fk,
                 run_code,
@@ -165,7 +165,7 @@ class Check_stock_accountController extends Controller
                 shelf_id_fk,
                 shelf_floor
               )
-               values 
+               values
               (
               '$stocks_account_code->id',
               '$run_code',
@@ -181,7 +181,7 @@ class Check_stock_accountController extends Controller
               '$value->zone_id_fk',
               '$value->shelf_id_fk',
               '$value->shelf_floor'
-              ) 
+              )
 
                ");
 
@@ -215,7 +215,7 @@ class Check_stock_accountController extends Controller
 
         $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
@@ -267,15 +267,15 @@ class Check_stock_accountController extends Controller
         $ConditionNo = $sW_No." ".$sZ_No." ".$sS_No." ".$shelf_floor_No." ".$sProductSel." ".$sLot ;
 
         $ConditionNoChoose = "เงื่อนไขที่ไม่ได้ระบุ  ".$ConditionNo;
-        Session::put('session_ConditionNoChoose', $ConditionNoChoose);      
+        Session::put('session_ConditionNoChoose', $ConditionNoChoose);
 
-        // dd($ConditionNoChoose);  
+        // dd($ConditionNoChoose);
 
         if(!empty(@$sStocks_account_code->condition_product)){
 
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -349,7 +349,7 @@ class Check_stock_accountController extends Controller
       // dd($r);
       // dd($rSumAmt[0]->amt);
       // dd($warehouse_qrcode);
-      
+
       return View('backend.pay_product_receipt.scan_qr')->with(
         array(
            'id'=>$id,
@@ -369,7 +369,7 @@ class Check_stock_accountController extends Controller
 
       $Products = DB::select("SELECT products.id as product_id,
       products.product_code,
-      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+      (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
       FROM
       products_details
       Left Join products ON products_details.product_id_fk = products.id
@@ -390,7 +390,7 @@ class Check_stock_accountController extends Controller
           $status_accepted = 'NEW';
       }
 
-      Session::put('session_status_accepted_id', @$sRow->status_accepted);  
+      Session::put('session_status_accepted_id', @$sRow->status_accepted);
 
       if(empty($sRow)){
         return redirect()->to(url("backend/check_stock_account/"));
@@ -423,15 +423,15 @@ class Check_stock_accountController extends Controller
         $ConditionNo = $sW_No." ".$sZ_No." ".$sS_No." ".$shelf_floor_No." ".$sProductSel." ".$sLot ;
 
         $ConditionNoChoose = "เงื่อนไขที่ไม่ได้ระบุ  ".$ConditionNo;
-        Session::put('session_ConditionNoChoose', $ConditionNoChoose);      
+        Session::put('session_ConditionNoChoose', $ConditionNoChoose);
 
-        // dd($ConditionNoChoose);  
+        // dd($ConditionNoChoose);
 
         if(!empty(@$sRow->condition_product)){
 
             $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -507,7 +507,7 @@ class Check_stock_accountController extends Controller
             if($amt!=0){
 
 
-        // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส 
+        // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส
               $REF_CODE = DB::select(" SELECT business_location_id_fk,REF_CODE,SUBSTR(REF_CODE,4) AS REF_NO FROM db_stocks_account_code ORDER BY REF_CODE DESC LIMIT 1 ");
               if($REF_CODE){
                   $ref_code = 'ADJ'.sprintf("%05d",intval(@$REF_CODE[0]->REF_NO)+1);
@@ -537,7 +537,7 @@ class Check_stock_accountController extends Controller
               $i=1;
               foreach ($db_stocks_account as $key => $value) {
 
-                 $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i)); 
+                 $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i));
 
                  DB::select(" UPDATE db_stocks_account SET run_code = '$run_code' where stocks_account_code_id_fk =".$sRow->stocks_account_code_id_fk." AND id=".$value->id." AND (run_code='' or run_code is null) ");
 
@@ -568,6 +568,47 @@ class Check_stock_accountController extends Controller
 
         if(!empty(request('approved'))){
 
+          $Stock = \App\Models\Backend\Check_stock::where('id',$request->stock_id)->get();
+
+            // // รายการก่อน start_date เพื่อหายอดยกมา
+            // $Stock_movement_in = \App\Models\Backend\Stock_movement::
+            // where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
+            // ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
+            // ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
+            // ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
+            // ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
+            // ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
+            // ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
+            // ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
+            // ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
+            // ->where('in_out','1')
+            // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
+            // ->selectRaw('sum(amt) as sum')
+            // ->get();
+
+            // // ยอดรับเข้า
+            // $amt_balance_in = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
+
+            // $Stock_movement_out = \App\Models\Backend\Stock_movement::
+            // where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
+            // ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
+            // ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
+            // ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
+            // ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
+            // ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
+            // ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
+            // ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
+            // ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
+            // ->where('in_out','2')
+            // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
+            // ->selectRaw('sum(amt) as sum')
+            // ->get();
+
+            // // ยอดเบิกออก
+            // $amt_balance_out = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
+
+            // $amt_balance_stock = $amt_balance_in - $amt_balance_out ;
+
           $sRow = \App\Models\Backend\Stocks_account_code::find(request('id'));
           DB::select(' UPDATE db_stocks_account SET status_accepted='.request('approve_status').',action_date=CURDATE(),approver='.request('approver').',approve_date=CURDATE() where stocks_account_code_id_fk='.request('id').' ');
 
@@ -579,11 +620,11 @@ class Check_stock_accountController extends Controller
               // echo $value->amt_diff;
               // echo $value->product_id_fk;
               // echo $value->lot_number;
-            if(request('approve_status')==3){ // อนุมัติ 
+            if(request('approve_status')==3){ // อนุมัติ
                DB::update(' UPDATE db_stocks SET amt = ( amt + ('.$value->amt_diff.') ) where product_id_fk = "'.$value->product_id_fk.'" AND lot_number="'.$value->lot_number.'" ');
              }
 
-          } 
+          }
           // dd();
 
           $sRow->approver    = request('approver');
@@ -591,6 +632,9 @@ class Check_stock_accountController extends Controller
           $sRow->approve_date    = date('Y-m-d');
           $sRow->note    = request('note');
           $sRow->save();
+
+
+
 
           \DB::commit();
 
@@ -617,7 +661,7 @@ class Check_stock_accountController extends Controller
         DB::select(" UPDATE
             db_stocks_account
             Left Join db_stocks_account_code ON db_stocks_account.stocks_account_code_id_fk = db_stocks_account_code.id
-            SET 
+            SET
             db_stocks_account.status_accepted=
             db_stocks_account_code.status_accepted
             WHERE db_stocks_account.stocks_account_code_id_fk=$id ");
@@ -636,14 +680,14 @@ class Check_stock_accountController extends Controller
     public function Datatable(){
 
       $sTable = \App\Models\Backend\Check_stock_account::search()->orderBy('id', 'asc');
-      
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('product_name', function($row) {
-        
+
           $Products = DB::select("SELECT products.id as product_id,
             products.product_code,
-            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name 
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
             FROM
             products_details
             Left Join products ON products_details.product_id_fk = products.id
@@ -658,7 +702,7 @@ class Check_stock_accountController extends Controller
         $zone = DB::select(" select * from zone where id=".$row->zone_id_fk." ");
         $shelf = DB::select(" select * from shelf where id=".$row->shelf_id_fk." ");
         return @$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name;
-      })      
+      })
       ->addColumn('updated_at', function($row) {
         return is_null($row->updated_at) ? '-' : $row->updated_at;
       })

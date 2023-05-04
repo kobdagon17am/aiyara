@@ -941,6 +941,8 @@ class Transfer_branch_getController extends Controller
           $w05 = "";
           $w06 = "";
           $cancel_txt = "";
+        }else{
+          $w05 = "";
         }
 
       $sTable = DB::select("
