@@ -151,9 +151,9 @@
                         @endif
                     </h6>
 
-                    <h6 class="m-b-20 ">เลขใบเสร็จ : @if ($order->order_payment_code)
+                    <h6 class="m-b-20 ">เลขใบเสร็จ : @if ($order->invoice_code)
                             <span class="text-success">
-                                {{ $order->order_payment_code }} </span>
+                                {{ $order->invoice_code }} </span>
                         @endif
                     </h6>
 

@@ -47,10 +47,13 @@ class RegisterController extends Controller
        }
        $business_location = DB::table('dataset_business_location')
        ->select('*')
-       ->where('id','=',$business_location_id )
+
        ->where('lang_id','=',1)
        ->where('status','=',1)
+       ->orderByRaw("FIELD(id, $business_location_id) desc")
        ->get();
+
+
 
 
 
