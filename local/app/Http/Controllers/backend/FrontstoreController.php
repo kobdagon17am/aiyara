@@ -1821,10 +1821,10 @@ class FrontstoreController extends Controller
 
             @$recipient_name = @$v->prefix_name . @$v->first_name . ' ' . @$v->last_name;
 
-            if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
-            } else {
-              @$address = null;
-            }
+            // if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
+            // } else {
+            //   @$address = null;
+            // }
 
             DB::select(" UPDATE db_delivery
                                             SET
@@ -1902,10 +1902,10 @@ class FrontstoreController extends Controller
             @$address .= ", อ." . @$v->ampname;
             @$address .= ", จ." . @$v->provname;
 
-            if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
-            } else {
-              @$address = null;
-            }
+            // if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
+            // } else {
+            //   @$address = null;
+            // }
 
             @$recipient_name = @$v->prefix_name . @$v->first_name . ' ' . @$v->last_name;
 
@@ -2464,7 +2464,7 @@ class FrontstoreController extends Controller
     if ($sPermission == 1) {
       $action_user_011 = "";
       $action_user_012 = "";
-    } else {
+    } else {  
 
       if (\Auth::user()->position_level == '3' || \Auth::user()->position_level == '4') {
         $action_user_011 = "";
