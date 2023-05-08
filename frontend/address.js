@@ -37,7 +37,7 @@ const moo = $('#moo');
 const soi = $('#soi');
 const road = $('#road');
 
-$('select[name="business_location"]').on('change', getProvinces)
+$('#business_location').on('change', getProvinces)
 $(`${card_province}, ${province}`).on('change', getAmphures)
 $(`${card_amphures}, ${amphures}`).on('change', getDistricts)
 $(`${card_district}, ${district}`).on('change', getZipcode)
