@@ -948,7 +948,7 @@
             // $('.myloading').show();
 
             Swal.fire({
-                title: 'รอสักครู่...' + ' ' + time_approve + '/' + '10',
+                title: 'รอสักครู่...' + ' ' + time_approve + '/' + '20',
                 html: 'ระบบกำลังทำรายการกรุณาอย่าปิดหน้านี้จนกว่าระบบจะทำรายการเสร็จ...',
                 didOpen: () => {
                     Swal.showLoading()
@@ -981,36 +981,100 @@
 
                 var n = 0;
                 $('.order_id_approve').each(function() {
-                    if (n <= 20) {
+                    // if (n <= 20) {
+                    //     bill_other1 += $(this).val() + ',';
+                    // }
+                    // if (n > 20 && n <= 40) {
+                    //     bill_other2 += $(this).val() + ',';
+                    // }
+                    // if (n > 40 && n <= 60) {
+                    //     bill_other3 += $(this).val() + ',';
+                    // }
+                    // if (n > 60 && n <= 80) {
+                    //     bill_other4 += $(this).val() + ',';
+                    // }
+                    // if (n > 80 && n <= 100) {
+                    //     bill_other5 += $(this).val() + ',';
+                    // }
+                    // if (n > 100 && n <= 120) {
+                    //     bill_other5 += $(this).val() + ',';
+                    // }
+                    // if (n > 120 && n <= 140) {
+                    //     bill_other7 += $(this).val() + ',';
+                    // }
+                    // if (n > 140 && n <= 160) {
+                    //     bill_other8 += $(this).val() + ',';
+                    // }
+                    // if (n > 160 && n <= 180) {
+                    //     bill_other9 += $(this).val() + ',';
+                    // }
+                    // if (n > 180) {
+                    //     bill_other10 += $(this).val() + ',';
+                    // }
+
+
+                    if (n <= 10) {
                         bill_other1 += $(this).val() + ',';
                     }
-                    if (n > 20 && n <= 40) {
+                    if (n > 10 && n <= 20) {
                         bill_other2 += $(this).val() + ',';
                     }
-                    if (n > 40 && n <= 60) {
+                    if (n > 20 && n <= 30) {
                         bill_other3 += $(this).val() + ',';
                     }
-                    if (n > 60 && n <= 80) {
+                    if (n > 30 && n <= 40) {
                         bill_other4 += $(this).val() + ',';
                     }
-                    if (n > 80 && n <= 100) {
+                    if (n > 40 && n <= 50) {
                         bill_other5 += $(this).val() + ',';
                     }
-                    if (n > 100 && n <= 120) {
+                    if (n > 50 && n <= 60) {
                         bill_other5 += $(this).val() + ',';
                     }
-                    if (n > 120 && n <= 140) {
+                    if (n > 60 && n <= 70) {
                         bill_other7 += $(this).val() + ',';
                     }
-                    if (n > 160 && n <= 180) {
+                    if (n > 70 && n <= 80) {
                         bill_other8 += $(this).val() + ',';
                     }
-                    if (n > 180 && n <= 200) {
+                    if (n > 80 && n <= 90) {
                         bill_other9 += $(this).val() + ',';
                     }
-                    if (n > 200) {
+                    if (n > 90 && n <= 100) {
                         bill_other10 += $(this).val() + ',';
                     }
+
+                    if (n > 100 && n <= 110) {
+                        bill_other11 += $(this).val() + ',';
+                    }
+                    if (n > 110 && n <= 120) {
+                        bill_other12 += $(this).val() + ',';
+                    }
+                    if (n > 120 && n <= 130) {
+                        bill_other13 += $(this).val() + ',';
+                    }
+                    if (n > 130 && n <= 140) {
+                        bill_other14 += $(this).val() + ',';
+                    }
+                    if (n > 140 && n <= 150) {
+                        bill_other15 += $(this).val() + ',';
+                    }
+                    if (n > 150 && n <= 160) {
+                        bill_other16 += $(this).val() + ',';
+                    }
+                    if (n > 160 && n <= 170) {
+                        bill_other17 += $(this).val() + ',';
+                    }
+                    if (n > 170 && n <= 180) {
+                        bill_other18 += $(this).val() + ',';
+                    }
+                    if (n > 180 && n <= 190) {
+                        bill_other19 += $(this).val() + ',';
+                    }
+                    if (n > 190) {
+                        bill_other20 += $(this).val() + ',';
+                    }
+
                     n++;
                 });
 
@@ -1039,6 +1103,37 @@
                     bill_other_time = bill_other9;
                 } else if (time_approve == 10) {
                     bill_other_time = bill_other10;
+                }
+
+                else if (time_approve == 11) {
+                    bill_other_time = bill_other11;
+                }
+                else if (time_approve == 12) {
+                    bill_other_time = bill_other12;
+                }
+                else if (time_approve == 13) {
+                    bill_other_time = bill_other13;
+                }
+                else if (time_approve == 14) {
+                    bill_other_time = bill_other14;
+                }
+                else if (time_approve == 15) {
+                    bill_other_time = bill_other15;
+                }
+                else if (time_approve == 16) {
+                    bill_other_time = bill_other16;
+                }
+                else if (time_approve == 17) {
+                    bill_other_time = bill_other17;
+                }
+                else if (time_approve == 18) {
+                    bill_other_time = bill_other18;
+                }
+                else if (time_approve == 19) {
+                    bill_other_time = bill_other19;
+                }
+                else if (time_approve == 20) {
+                    bill_other_time = bill_other20;
                 }
 
 
@@ -1072,7 +1167,7 @@
                                 console.log('error :' + ' ' + bill_other_time);
                                 // $('.myloading').hide();
                                 Swal.fire({
-                                    title: '10 /10 สำเร็จ',
+                                    title: '20 /20 สำเร็จ',
                                     'icon': 'success',
                                     html: 'ระบบกำลังทำรายการกรุณาอย่าปิดหน้านี้จนกว่าระบบจะทำรายการเสร็จ...',
                                     didOpen: () => {
@@ -1083,7 +1178,7 @@
                                 })
                                 window.setTimeout(function() {
                                     location.reload();
-                                }, 3000);
+                                }, 2000);
 
                             }
                         }

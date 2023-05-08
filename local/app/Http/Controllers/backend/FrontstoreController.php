@@ -295,6 +295,14 @@ class FrontstoreController extends Controller
   public function store(Request $request)
   {
 // dd('ok');
+// dd($request->all()); user_name
+    if(@$request->customers_id_fk=='' || @$request->customers_id_fk==null){
+      @$request->customers_id_fk = @$request->customers_id_fk_name;
+    }
+    // if(@$request->customers_id_fk=='' || @$request->customers_id_fk==null){
+    //   return redirect()->back()->with('error','ไม่พบข้อมูลลูกค้า');
+    // }
+
     $customers = DB::table('customers')->select('user_name','business_location_id')->where('id',@$request->customers_id_fk)->first();
     if($customers){
 
@@ -316,7 +324,6 @@ class FrontstoreController extends Controller
   }
 
     $sRow = \App\Models\Backend\Frontstore::find($request->id);
-
     if (!empty($request->upload_file)) {
 
       $sRow = \App\Models\Backend\Frontstore::find($request->id);
@@ -1814,10 +1821,10 @@ class FrontstoreController extends Controller
 
             @$recipient_name = @$v->prefix_name . @$v->first_name . ' ' . @$v->last_name;
 
-            if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
-            } else {
-              @$address = null;
-            }
+            // if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
+            // } else {
+            //   @$address = null;
+            // }
 
             DB::select(" UPDATE db_delivery
                                             SET
@@ -1895,10 +1902,10 @@ class FrontstoreController extends Controller
             @$address .= ", อ." . @$v->ampname;
             @$address .= ", จ." . @$v->provname;
 
-            if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
-            } else {
-              @$address = null;
-            }
+            // if (!empty(@$v->tamname) && !empty(@$v->ampname) && !empty(@$v->provname)) {
+            // } else {
+            //   @$address = null;
+            // }
 
             @$recipient_name = @$v->prefix_name . @$v->first_name . ' ' . @$v->last_name;
 
@@ -2317,10 +2324,17 @@ class FrontstoreController extends Controller
       // clear ออกก่อน แล้วค่อยคำนวณใหม่
       // $sRow->invoice_code    = $invoice_code ;
 
+      if(request('customers_id_fk') =='' || request('customers_id_fk')==null){
+        $customers_id_fk = @request('customers_id_fk_name');
+      }else{
+        $customers_id_fk = request('customers_id_fk');
+      }
+
+
       $sRow->branch_id_fk    = request('branch_id_fk');
       $Branchs = \App\Models\Backend\Branchs::find($sRow->branch_id_fk);
       $sRow->business_location_id_fk    = $Branchs->business_location_id_fk;
-      $sRow->customers_id_fk    = request('customers_id_fk');
+      $sRow->customers_id_fk    = $customers_id_fk;
       $sRow->distribution_channel_id_fk    = request('distribution_channel_id_fk');
       $sRow->purchase_type_id_fk    = request('purchase_type_id_fk');
       $sRow->fee    = $fee;
@@ -2331,7 +2345,7 @@ class FrontstoreController extends Controller
 
       $data_customer = DB::table('customers')
       ->select('user_name','first_name','last_name','business_name')
-      ->where('id','=',request('customers_id_fk'))
+      ->where('id','=',$customers_id_fk)
       ->first();
       $sRow->user_name = $data_customer->user_name;
       $sRow->name_customer = $data_customer->first_name.' '.$data_customer->last_name;
@@ -2450,7 +2464,7 @@ class FrontstoreController extends Controller
     if ($sPermission == 1) {
       $action_user_011 = "";
       $action_user_012 = "";
-    } else {
+    } else {  
 
       if (\Auth::user()->position_level == '3' || \Auth::user()->position_level == '4') {
         $action_user_011 = "";
@@ -4178,7 +4192,7 @@ class FrontstoreController extends Controller
         if($row->pay_with_other_bill == 1){
           $other = "<br><br> ชำระพร้อมบิล ".$row->pay_with_other_bill_note;
         }
-        $p = "<a href='javascript:;' class='order_select' code_id='".@$row->code_order."'><span class='badge badge-pill badge-soft-primary font-size-16'>".@$row->code_order."</span></a>";
+        $p = "<a href='javascript:;' class='order_select' code_id_fk='".@$row->id."' code_id='".@$row->code_order."'><span class='badge badge-pill badge-soft-primary font-size-16'>".@$row->code_order."</span></a>";
         return $p.$other;
       })
 

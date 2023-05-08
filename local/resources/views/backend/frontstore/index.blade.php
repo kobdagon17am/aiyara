@@ -140,16 +140,16 @@
                             </div>
 
                             <div class="divTableRow">
-                            <div class="divTH">
-                              {{-- <label for="startDate">{{ __('message.create_date') }} : </label> --}}
+                                <div class="divTH">
+                                    {{-- <label for="startDate">{{ __('message.create_date') }} : </label> --}}
 
-                          </div>
-                          <div class="divTableCell" style="width: 15%">
-                            <select name="date_type" id="date_type" class="form-control select2-templating ">
-                              <option selected value="created">Date created : </option>
-                              <option value="approved">Date Approved : </option>
-                            </select>
-                          </div>
+                                </div>
+                                <div class="divTableCell" style="width: 15%">
+                                    <select name="date_type" id="date_type" class="form-control select2-templating ">
+                                        <option selected value="created">Date created : </option>
+                                        <option value="approved">Date Approved : </option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="divTableRow">
@@ -233,8 +233,8 @@
                                     <select id="customer_name" name="customer_name" class="form-control"></select>
                                 </div>
                                 <div class="divTableCell">
-                                    <button type="button" class="btn btn-primary btnSearchSub " data-attr="customer_name"
-                                        style="padding: 6%;"><i
+                                    <button type="button" class="btn btn-primary btnSearchSub "
+                                        data-attr="customer_name" style="padding: 6%;"><i
                                             class="bx bx-search font-size-18 align-middle "></i></button>
                                 </div>
                                 <div class="divTH">
@@ -276,15 +276,15 @@
 
                             <div class="divTableRow">
                                 <!--
-                                                          <div class="divTH">
-                                                        <label for="" >เลขที่ใบสั่งซื้อ : </label>
-                                                      </div>
-                                                      <div class="divTableCell" style="width: 15%">
-                                                        <input class="form-control"  />
-                                                      </div>
-                                                      <div class="divTableCell">
-                                                        <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-                                                      </div> -->
+                                                                  <div class="divTH">
+                                                                <label for="" >เลขที่ใบสั่งซื้อ : </label>
+                                                              </div>
+                                                              <div class="divTableCell" style="width: 15%">
+                                                                <input class="form-control"  />
+                                                              </div>
+                                                              <div class="divTableCell">
+                                                                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                                                              </div> -->
 
                                 <div class="divTH">
                                     <label for="">{{ __('message.creator') }} : </label>
@@ -358,11 +358,11 @@
                                 </div>
                                 <div class="divTableCell" style="width: 15%">
                                     <!--  	   <select name="" class="form-control select2-templating "  >
-                                                          <option value="">Select</option>
-                                                              <option value="0"> - </option>
-                                                              <option value="1"> In Process </option>
-                                                              <option value="1"> Success </option>
-                                                        </select> -->
+                                                                  <option value="">Select</option>
+                                                                      <option value="0"> - </option>
+                                                                      <option value="1"> In Process </option>
+                                                                      <option value="1"> Success </option>
+                                                                </select> -->
                                 </div>
                                 <div class="divTableCell">
                                     <!-- <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button> -->
@@ -391,16 +391,16 @@
                         </div>
                     </div>
                     <!--       </div>
-                                            </div>
-                                          </div>
-                                        </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
 
 
 
-                                        <div class="row">
-                                          <div class="col-12">
-                                            <div class="card">
-                                              <div class="card-body"> -->
+                                                <div class="row">
+                                                  <div class="col-12">
+                                                    <div class="card">
+                                                      <div class="card-body"> -->
                     <hr>
                     <div class="divTable">
                         <div class="divTableBody">
@@ -1630,11 +1630,13 @@
 
 
             $(document).on('click', '.order_select', function(event) {
+                // var code_id_fk = $(this).attr('code_id_fk');
                 var code = $(this).attr('code_id');
-                var select = $('#invoice_code').val();
-                select.push(code);
-                $('#invoice_code').val(select);
-                $('#invoice_code').trigger('change');
+                // console.log(code);
+                // console.log($('#invoice_code').val());
+                var newOption = new Option(code, code, true, true);
+                $('#invoice_code').append(newOption).trigger('change');
+
             });
 
 

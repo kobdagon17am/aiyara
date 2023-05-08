@@ -391,7 +391,7 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
-
+// dd($request->all());
         if(isset($request->update_delivery_custom)){
 
             $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)." ");
@@ -564,8 +564,6 @@ class DeliveryController extends Controller
         // if(count($request->row_id)>1){
           $arr = implode(',', $request->row_id);
 
-          DB::update(" UPDATE db_delivery SET status_pack='1',updated_at=now() WHERE id in ($arr)  ");
-
           $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
 
           $rsDeliveryAddr = DB::select("
@@ -585,12 +583,14 @@ class DeliveryController extends Controller
             }
 
            foreach ($rsDelivery as $key => $value) {
-               $DeliveryPacking = new \App\Models\Backend\DeliveryPacking;
-               $DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode->id;
+            if($value->status_pack!=1){
+              $DeliveryPacking = new \App\Models\Backend\DeliveryPacking;
+              $DeliveryPacking->packing_code_id_fk = $DeliveryPackingCode->id;
               $DeliveryPacking->packing_code = "P1".sprintf("%05d",$DeliveryPackingCode->id) ;
-               $DeliveryPacking->delivery_id_fk = @$value->id;
-               $DeliveryPacking->created_at = date('Y-m-d H:i:s');
+              $DeliveryPacking->delivery_id_fk = @$value->id;
+              $DeliveryPacking->created_at = date('Y-m-d H:i:s');
               $DeliveryPacking->save();
+            }
 
            }
 
@@ -604,11 +604,13 @@ class DeliveryController extends Controller
            // รหัสนี้สร้างใหม่เพื่อเอาไว้อ้างอิงให้มันชัดเจนยิ่งขึ้น
            $rsDelivery = DB::select(" SELECT * FROM db_delivery WHERE id in ($arr)  ");
            foreach ($rsDelivery as $key => $value) {
-
+            if($value->status_pack!=1){
                 $pc = "P1".sprintf("%05d",$value->packing_code) ;
                 DB::select(" UPDATE db_delivery SET packing_code_desc='$pc' , status_to_wh=0 WHERE id=$value->id  ");
-
+            }
            }
+
+           DB::update(" UPDATE db_delivery SET status_pack='1',updated_at=now() WHERE id in ($arr)  ");
 
         // }else{
         //   $arr = implode(',', $request->row_id);
