@@ -2464,7 +2464,7 @@ class FrontstoreController extends Controller
     if ($sPermission == 1) {
       $action_user_011 = "";
       $action_user_012 = "";
-    } else {  
+    } else {
 
       if (\Auth::user()->position_level == '3' || \Auth::user()->position_level == '4') {
         $action_user_011 = "";
