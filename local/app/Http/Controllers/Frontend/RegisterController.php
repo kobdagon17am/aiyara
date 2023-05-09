@@ -39,7 +39,7 @@ class RegisterController extends Controller
        ->select('*')
        ->get();
 
-       if($resule->business_location_id == '1' || $resule->business_location_id == null ){
+       if(Auth::guard('c_user')->user()->business_location_id  == '1' || Auth::guard('c_user')->user()->business_location_id  == null ){
         $business_location_id = 1;
        }else{
         $business_location_id = 3;
@@ -47,9 +47,10 @@ class RegisterController extends Controller
        }
        $business_location = DB::table('dataset_business_location')
        ->select('*')
-       ->where('id','=',$business_location_id )
+
        ->where('lang_id','=',1)
        ->where('status','=',1)
+       ->orderByRaw("FIELD(id, $business_location_id) desc")
        ->get();
 
 
