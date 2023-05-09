@@ -310,7 +310,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success" id="print_submit">Print PDF</button>
+                        <button type="submit" class="btn btn-success" name="btn_type" value="display" id="print_submit">แสดงในจอ</button>
+                        {{-- <button type="submit" class="btn btn-success" name="btn_type" value="pdf" id="print_submit">Print PDF</button> --}}
                         <button type="button" class="btn btn-success btnExportElsx" id="print_submit">Print Excel</button>
                     </div>
                 </div>
