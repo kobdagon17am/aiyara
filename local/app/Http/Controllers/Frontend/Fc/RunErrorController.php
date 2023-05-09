@@ -21,25 +21,27 @@ class RunErrorController extends Controller
 {
   public static function index(){
 
-
-    // foreach(){
-
-    // }
-
-    // $data = RunErrorController::hidden_order();
+    // $data = \App\Models\Frontend\Promotion::all_available_purchase_2(350);
     // dd($data);
 
-    // $promotions = DB::table('db_promotion_cus')
-    // ->select('db_promotion_cus.id')
-    // ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
-    //           ->where('db_promotion_code.pro_edate', '<=', '2022-12-30 00:59:59')
-    //            //->where('pro_status', 4)
-    //            ->orderByDesc('pro_status')
-    //           // ->limit(1000)
-    //           ->get();
 
-    // dd($promotions);
+    // $run_pament_code = RunNumberPayment::run_number_order(1);
 
+    // dd($run_pament_code);
+    // $data = RunErrorController::hidden_order();
+    // dd($data);
+//dd('1');
+//   $promotions = DB::table('db_promotion_cus')
+//   ->select('db_promotion_cus.id')
+//   ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
+//            ->where('db_promotion_code.pro_edate', '<=', '2023-04-31 00:59:59')
+//            //  ->where('pro_status', 3)
+//            ->orderByDesc('pro_status')
+//            ->limit(50000)
+//           ->get();
+
+//    dd($promotions);
+// 	dd('ok');
 
 
     // $data = DB::table('db_salepage_setting')
@@ -59,29 +61,35 @@ class RunErrorController extends Controller
     // }
     // dd($i);
 
-//     $user = DB::table('customers')
-//     ->select('id', 'user_name','upline_id','introduce_id')
-//     ->where('id', '>=',1298067)
-//     ->where('id', '<=',1311311)
-//     ->get();
-//     //max1311311
-//     $i= 0;
-//   foreach($user as $value){
-//     $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
+    $user = DB::table('customers')
+    ->select('id', 'user_name','upline_id','introduce_id')
+    // ->where('id', '>=',1298067)
+    // ->where('id', '<=',1311311)
+    ->where('user_name','A1307989')
+    ->get();
+    // dd($user);
+    //max1311311
+    $i= 0;
+  foreach($user as $value){
+    // $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
+    $data= RunErrorController::check_type_introduce($value->introduce_id,$value->upline_id,'A1307989');
+    // dd($data);
 
-//     if( $data['status'] == 'success'){
-//       $i++;
-//       $introduce_type = $data['data']->line_type;
-//     }else{
-//       $introduce_type = '';
-//     }
+    if( $data['status'] == 'success'){
+      $i++;
+      $introduce_type = $data['data']->line_type;
+    }else{
+      $introduce_type = '';
+    }
 
-//     $update = DB::table('customers')
-//     ->where('id', $value->id)
-//     ->update(['introduce_type' =>$introduce_type]);
-//   }
 
-//   dd('success รวม'.count($user).' Run'.$i);
+
+    $update = DB::table('customers')
+    ->where('id', $value->id)
+    ->update(['introduce_type' =>$introduce_type]);
+  }
+
+  dd('success รวม'.count($user).' Run'.$i);
 
 
 
@@ -104,8 +112,9 @@ class RunErrorController extends Controller
   //  dd($rs);
 
 //   $order_data = DB::table('db_orders')
-//   ->where('code_order', '=', 'O123010900062')
+//   ->where('code_order', '=', 'O123043000039')
 //   ->first();
+// //   dd($order_data);
 
 //   $user = DB::table('customers')
 //   ->select('id', 'pv_aistockist', 'user_name')
@@ -115,15 +124,15 @@ class RunErrorController extends Controller
 //   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
 //   dd($rs,$user->user_name);
 
-// O122083101093
+
 
 //  $order_data = DB::table('db_orders')
 //   ->wherein('code_order',
-//   ['O123012200049'])
+//   ['O123032400394'])
 //   ->where('status_run_pv','=','not_run_pv')
 //   //->where('invoice_code_id_fk','=',null)
 //   ->get();
-// // dd($order_data);
+// dd($order_data);
 //   if(count($order_data)>1){
 //     dd('มากกว่า 1');
 
@@ -141,7 +150,7 @@ class RunErrorController extends Controller
 //   }
 
 
-// dd($data,'O123012200049');
+// dd($data,'O123032400394');
   }
 
   public static function run_invoice_code(){
@@ -1548,13 +1557,23 @@ class RunErrorController extends Controller
     }
 
 
-    public static function check_type_introduce($introduce_id,$under_line_id){//คนแนะนำ//สร้างภายใต้ id
+    public static function check_type_introduce($introduce_id,$under_line_id,$user_name){//คนแนะนำ//สร้างภายใต้ id
 
 
+        if($introduce_id == $under_line_id){
+            $data = DB::table('customers')
+            ->select('user_name','upline_id','line_type')
+            ->where('user_name','=',$user_name)
+          //->where('upline_id','=',$use_id)
+            ->first();
+            $resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data];
+            return $resule;
+        }
       $data_user = DB::table('customers')
       ->select('upline_id','user_name','upline_id','line_type')
       ->where('user_name','=',$under_line_id)
       ->first();
+    //   dd($data_user);
 
       if(!empty($data_user)){
         $upline_id = $data_user->upline_id;
@@ -1570,7 +1589,7 @@ class RunErrorController extends Controller
         for ($i=1; $i <= $j ; $i++){
           if($i == 1){
             $data = DB::table('customers')
-            ->select('upline_id','user_name','upline_id','line_type')
+            ->select('user_name','upline_id','line_type')
             ->where('user_name','=',$username)
           //->where('upline_id','=',$use_id)
             ->first();
@@ -1591,7 +1610,7 @@ class RunErrorController extends Controller
             }else{
 
               $data = DB::table('customers')
-              ->select('upline_id','user_name','upline_id','line_type')
+              ->select('user_name','upline_id','line_type')
               ->where('id','=',$data->upline_id)
               ->first();
 
@@ -1613,7 +1632,7 @@ class RunErrorController extends Controller
         if($resule['status'] == 'fail'){
 
           $data_account = DB::table('customers')
-          ->select('upline_id','user_name','upline_id','line_type')
+          ->select('user_name','upline_id','line_type')
           ->where('user_name','=',$introduce_id)
           ->first();
 
@@ -1631,7 +1650,7 @@ class RunErrorController extends Controller
               $j =0;
             }else{
               $data_account = DB::table('customers')
-              ->select('upline_id','user_name','upline_id','line_type')
+              ->select('user_name','upline_id','line_type')
               ->where('user_name','=',$username)
               ->first();
 
@@ -1649,6 +1668,7 @@ class RunErrorController extends Controller
 
           //return $resule;
         }
+
         if (in_array($introduce_id, $upline_id_arr)) {
           $resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
         }else{
