@@ -339,6 +339,9 @@ return [
 'trimMax' => 'TrimMax',
 'setting' => 'Settings',
 'vipreport' => 'VIP Report',
+'60' => 'Direct introduction information in the first 60 days (Team Maker), child level',
+'60+' => 'person + grandchild',
+'person'=>'person',
 
 //frontend
 //profile page
@@ -381,6 +384,13 @@ return [
 'expirydate' => 'Expiry Date',
 'all' => 'All',
 'coupondetail' => "*You can send pro to the other per 1 time / you can't use this pro or another pro and add Ai-Stockist",
+'line_information' => 'Line Information',
+'under_the_line' => 'Under the line',
+'introduce'=>'Introduce',
+'to' => 'to',
+'current' => 'current',
+'max' => 'max',
+'Personal recommendation points for this month' => 'Personal recommendation points for this month',
 
 // frontend/newregister
 'register' => 'Register',

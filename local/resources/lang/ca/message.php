@@ -284,6 +284,10 @@ return [
   'close' => 'បិទ',
 ],
 'answer' => 'សំណួរ',
+'60' => 'ទិន្នន័យណែនាំផ្ទាល់នៅក្នុងអំឡុង 60 ថ្ងៃដំបូង (Team Maker) ជំនាន់កូន ',
+'60+' => 'នាក់ + ជំនាន់',
+'person'=>'នាក់',
+
 //frontend
 //NavMenu
 'profile_picture' =>'អាប់ឡោតរូបប្រូហ្វាយ',
@@ -293,7 +297,8 @@ return [
 
 'myprofile' => 'ទិន្នន័យផ្ទាល់ខ្លួន',
 'jobstructure' => 'គ្រោងសាងក្រុមការងារ',
-'directsponsor' => 'អ្នកគំទ្រ',
+'directsponsor' => 'ការណែនាំផ្ទាល់',
+'to' => 'ដល់',
 'commission' => 'ថ្លៃ ខមមិសិន',
 'order' => 'បញ្ជាទិញផលិតផល',
 'Ai-Cash' => 'Ai-Cash',
@@ -305,6 +310,8 @@ return [
 'salepage' => 'ផេគទិញលក់',
 'newsactivity' => 'ព័ត៌មានរួម/កម្មវិធី',
 'contactus' => 'ទំនាក់ទំនង/សាកសួរ',
+'current' => 'បច្ចុប្បន្ន',
+'max' => 'ខ្ពស់បំផុត',
 
 // commissionmenu
 'commission_bonus' => 'របាយការណ៍ចាយបូណាត់',
@@ -362,12 +369,12 @@ return [
 'address' => 'អាសយដ្ឋានសម្រាប់ការផ្ដល់ឯកសារ',
 
 'no' => 'ផ្ទះលេខទី',
-'building' => 'ឈ្មោះ ភូមិ/អាគារ',
+'building' => 'បុរី/អគារ',
 'villageno' => 'ភូមិ',
-'lane' => 'ផ្លូវដើរ',
+'lane' => 'ផ្លូវលំ',
 'road' => 'ផ្លូវ',
-'sub-district/sub-area' => 'ស្រុក',
-'district/area' => 'ស្រុក',
+'sub-district/sub-area' => 'ឃុំ/សង្កាត់',
+'district/area' => 'ស្រុក/ខណ្ឌ',
 'province' => 'ខេត្ត',
 'zipcode' => 'លេខកូដតំបន់',
 'benefitinheritance' => 'ការស្នងអត្ថប្រយោជន៍',
@@ -379,8 +386,9 @@ return [
 'expirydate' => 'ផុតកំណត់',
 'all' => 'ទាំងអស់',
 'coupondetail' => '*រហាត់ប្រូម៉ូសិន ម្នាក់ 1 ឈុត អាចឲ្យទៅសមាជិកផ្សេងទៀតបាន/ មិនអាចប្រើសិទ្ធិជាមួយការគាំទ្រការបញ្ជាទិញផ្សេងៗ រួមជាមួយការបន្ថែម Ai-stockist',
-
-
+'line_information' => 'ព័ត៌មានបន្ទាត់',
+'under_the_line' => 'នៅក្រោមបន្ទាត់',
+'introduce'=>'ណែនាំ',
 // frontend/newregister
 'register' => 'បំពេញព័ត៌មានចុះឈ្មោះសមាជិកថ្មី',
 'name_first' => 'ឈ្មោះ',
@@ -455,12 +463,13 @@ return [
 'Highest_Qualifications'=> 'តំណែងខ្ពស់បំផុត',
 'Reward_Bonus'=> 'សិទ្ធិក្នុងការ Reward Bonus',
 'Count_qualifications'=> 'រាប់តំណែងពី',
-'Middle'=> 'ក្រុមកណ្ដាលគឺក្រុម',
-'Remaining'=> 'ពិន្ទុដែលនៅសល់',
-'Today_score'=> 'ពិន្ទុថ្ងៃទី',
+'Middle'=> 'ពិន្ទុក្រុមកណ្ដាលខែនេះ',
+'Remaining'=> 'ពិន្ទុនៅសល់លើកមក',
+'Today_score'=> 'ពិន្ទុថ្ងៃនេះ',
 'date_information'=> 'ព័ត៌មានថ្ងៃទី',
 'view_line'=> 'ត្រួតពិនិត្យមើលខ្សែការងារ',
 'close'=> 'បិទ',
+'Personal recommendation points for this month' => 'ពិន្ទុណែនាំត្រង់ផ្ទាល់ខ្លួនខែនេះ',
 
 // frontend new
 'p_tab green order'=> 'របាយការណ៍បញ្ជាទិញដើម្បីធ្វើគុណសម្បត្តិ',

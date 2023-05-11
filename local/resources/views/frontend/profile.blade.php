@@ -249,7 +249,8 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
 
               <hr>
-              <p class="f-w-600 mb-2"> ข้อมูลสายงาน </p>
+              <p class="f-w-600 mb-2">  @lang('message.line_information') </p>
+
               <div class="row f-14">
 
                   <?php
@@ -258,7 +259,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                     @if($customer_upline)
                     <div class="col-md-12">
-                  <span>ภายใต้สายงาน : @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
+                  <span>@lang('message.under_the_line') : @if ($customer_upline->business_name and $customer_upline->business_name  != '-')
                     {{ $customer_upline->business_name }} ({{$customer_upline->user_name}})
                     @else
                     {{$customer_upline->prefix_name.' '.$customer_upline->first_name.' '.$customer_upline->last_name }} ({{$customer_upline->user_name}})
@@ -270,7 +271,8 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                     </div> --}}
                   @else
                   <div class="col-md-12">
-                  <span>ภายใต้สายงาน : - </span>
+
+                  <span>@lang('message.under_the_line') : - </span>
                   </div>
 
                   {{-- <div class="col-md-6">
@@ -285,7 +287,8 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
 
                   @if($customer_introduce)
                   <div class="col-md-12">
-                <span>ผู้แนะนำ : @if ($customer_introduce->business_name and $customer_introduce->business_name  != '-')
+
+                <span>@lang('message.introduce') : @if ($customer_introduce->business_name and $customer_introduce->business_name  != '-')
                   {{ $customer_introduce->business_name }} ({{$customer_introduce->user_name}})
                   @else
                   {{$customer_introduce->prefix_name.' '.$customer_introduce->first_name.' '.$customer_introduce->last_name }} ({{$customer_introduce->user_name}})
@@ -297,7 +300,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                   </div> --}}
                 @else
                 <div class="col-md-12">
-                <span>ผู้แนะนำ : - </span>
+                <span>@lang('message.introduce') : - </span>
                 </div>
 
                 {{-- <div class="col-md-6">
