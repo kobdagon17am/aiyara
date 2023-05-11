@@ -8,6 +8,13 @@
           @csrf
           @method('PATCH')
           <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="first_name">คำนำหน้าชื่อ</label>
+                <input type="text" class="form-control" name="prefix_name" id="prefix_name" placeholder="คำนำหน้าชื่อ"
+                  value="{{ $customer->prefix_name }}">
+              </div>
+            </div>
 
             <div class="col-md-3">
               <div class="form-group">
