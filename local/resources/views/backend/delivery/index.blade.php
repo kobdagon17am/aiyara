@@ -247,11 +247,11 @@
                             <div class="col-md-6 ">
                                 <div class="form-group row">
                                     <!--  <label for="" class="col-md-3 col-form-label"> รหัส Packing :  </label>
-                            <div class="col-md-9">
-                              <select id="" name="" class="form-control select2-templating " >
-                                <option value="">-Select-</option>
-                              </select>
-                            </div> -->
+                                <div class="col-md-9">
+                                  <select id="" name="" class="form-control select2-templating " >
+                                    <option value="">-Select-</option>
+                                  </select>
+                                </div> -->
 
                                     <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส-ชื่อลูกค้า : </label>
                                     <div class="col-md-9">
@@ -267,31 +267,31 @@
 
 
                         <!--  <div class="row" >
-                        <div class="col-md-6 " >
-                          <div class="form-group row">
-                            <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส:ชื่อลูกค้า : </label>
-                            <div class="col-md-9">
-                               <select id="transfer_amount_approver" name="transfer_amount_approver" class="form-control select2-templating " >
-                                <option value="">-Select-</option>
-                              </select>
+                            <div class="col-md-6 " >
+                              <div class="form-group row">
+                                <label for="customer_id_fk" class="col-md-3 col-form-label"> รหัส:ชื่อลูกค้า : </label>
+                                <div class="col-md-9">
+                                   <select id="transfer_amount_approver" name="transfer_amount_approver" class="form-control select2-templating " >
+                                    <option value="">-Select-</option>
+                                  </select>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
 
-                        <div class="col-md-6 " >
-                          <div class="form-group row">
-                            <label for="delivery_status" class="col-md-3 col-form-label"> สถานะ :  </label>
-                            <div class="col-md-9">
-                              <select id="delivery_status" name="delivery_status" class="form-control select2-templating " >
-                                <option value="">-Status-</option>
-                                <option value="1" > รอเบิกสินค้าจากคลัง </option>
-                                <option value="2" > จัดส่งแล้ว </option>
-                                <option value="3" > อยู่ระหว่างการจัดเบิก </option>
-                              </select>
+                            <div class="col-md-6 " >
+                              <div class="form-group row">
+                                <label for="delivery_status" class="col-md-3 col-form-label"> สถานะ :  </label>
+                                <div class="col-md-9">
+                                  <select id="delivery_status" name="delivery_status" class="form-control select2-templating " >
+                                    <option value="">-Status-</option>
+                                    <option value="1" > รอเบิกสินค้าจากคลัง </option>
+                                    <option value="2" > จัดส่งแล้ว </option>
+                                    <option value="3" > อยู่ระหว่างการจัดเบิก </option>
+                                  </select>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      </div>  -->
+                          </div>  -->
 
 
                         <div class="row">
@@ -332,7 +332,8 @@
 
                             <div class=" divBtnSave " style="display: none;">
                                 <center>
-                                    <button type="submit" onclick="return confirm('ยืนยันการทำรายการ?')" class="btn btn-primary btn-sm waves-effect font-size-18  " >
+                                    <button type="submit" onclick="return confirm('ยืนยันการทำรายการ?')"
+                                        class="btn btn-primary btn-sm waves-effect font-size-18  ">
                                         <i class="bx bx-save font-size-18 align-middle mr-1"></i> สร้าง Packing List
                                     </button>
                                 </center>
@@ -350,7 +351,8 @@
                         <div style="">
                             <div class="form-group row">
                                 <div class="col-md-12">
-                                    <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ Packing List </span>
+                                    <span style="font-weight: bold;padding-right: 10px;"><i class="bx bx-play"></i> รายการ
+                                        Packing List </span>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -435,7 +437,8 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="" class="col-md-4 col-form-label"> ที่อยู่ <br> <span style="color:red;">กรุณาลบอักษรย่อ จ. ต. อ. ออกจากช่องที่อยู่  :</span> </label>
+                                <label for="" class="col-md-4 col-form-label"> ที่อยู่ <br> <span
+                                        style="color:red;">กรุณาลบอักษรย่อ จ. ต. อ. ออกจากช่องที่อยู่ :</span> </label>
                                 <div class="col-md-7">
                                     <textarea id="delivery_addr" name="delivery_addr" class="form-control" rows="3" required></textarea>
                                 </div>
@@ -665,6 +668,11 @@
                         className: 'text-center'
                     },
                     {
+                        data: 'bill_transfer_other',
+                        title: '<center>จัดส่งพร้อมบิลอื่น</center>',
+                        className: 'text-center ',
+                    },
+                    {
                         data: 'shipping_price',
                         title: '<center>ค่าขนส่ง</center>',
                         className: 'text-center ',
@@ -844,7 +852,7 @@
                                 // var shipping_cost = "{{ @$shipping_cost }}";
                                 // console.log('xxx : ' + total_price);
                                 // if (total_price >= shipping_cost) {
-                                    $('.divBtnSave').show();
+                                $('.divBtnSave').show();
                                 // } else {
                                 //     $('.divBtnSave').hide();
                                 // }
@@ -1470,6 +1478,11 @@
                                 className: 'text-center'
                             },
                             {
+                                data: 'bill_transfer_other',
+                                title: '<center>จัดส่งพร้อมบิลอื่น</center>',
+                                className: 'text-center ',
+                            },
+                            {
                                 data: 'shipping_price',
                                 title: '<center>ค่าขนส่ง</center>',
                                 className: 'text-center ',
@@ -1509,7 +1522,7 @@
 
                             if (aData['shipping_price'] >
                                 0
-                                ) { // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
+                            ) { // 1=orders จาก frontend,2=db_orders จากการขายหลังบ้าน
                                 $('td:eq(2)', nRow).html(
                                     '<span class=" badge badge-info font-size-14" data-toggle="tooltip" data-placement="right" title="Shipping"  >S</span>'
                                 );
@@ -1740,13 +1753,14 @@
                             $('#delivery_cusname').val(value.recipient_name);
                             $('#delivery_addr').val(value.addr_no);
                             if (value.amphur_code != '' && typeof value.amphur_code !==
-                                "undefined" && value.tambon_code != '' && typeof value.tambon_code !==
+                                "undefined" && value.tambon_code != '' && typeof value
+                                .tambon_code !==
                                 "undefined") {
-                              console.log(value);
+                                console.log(value);
                                 $('#delivery_province').val(value.province_id_fk).select2();
                                 // $('#delivery_amphur').val(value.amphur_code).select2();
                                 // $('#delivery_tambon').val(value.tambon_code).select2();
-                            }else{
+                            } else {
                                 $('#delivery_province').val('').select2();
                                 $('#delivery_amphur').val('').select2();
                                 $('#delivery_tambon').val('').select2();

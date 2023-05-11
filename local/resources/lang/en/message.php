@@ -17,6 +17,7 @@ return [
     'add_ai_cash' => 'Top Up Ai-Cash',
     'member_pv' => 'Member Service System',
     'member_regis' => 'Documentary Check',
+    'member_regis_list' => 'Documentary List',
     'faq' => 'FAQ',
     'crm' => 'CRM',
     'pm' => 'PM',

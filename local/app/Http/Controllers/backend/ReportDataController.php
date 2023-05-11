@@ -587,15 +587,28 @@ class ReportDataController extends Controller
 
       if($request->report_data=='sale_report'){
 
-        $action_user = DB::table('db_orders')
-        ->select('action_user')
-        ->where('db_orders.approve_date','>=',$request->startDate_data)
-        ->where('db_orders.approve_date','<=',$request->endDate_data)
-        ->where('business_location_id_fk','=',$request->business_location_id_fk)
-        ->where('branch_id_fk', "=", $request->branch_id_fk)
-        ->whereNotIn('db_orders.approve_status',[1,3,5,6])
-        ->groupBy('action_user')
-        ->get();
+        if($request->branch_id_fk == '' || $request->branch_id_fk == null){
+          $action_user = DB::table('db_orders')
+          ->select('action_user')
+          ->where('db_orders.approve_date','>=',$request->startDate_data)
+          ->where('db_orders.approve_date','<=',$request->endDate_data)
+          ->where('business_location_id_fk','=',$request->business_location_id_fk)
+          // ->where('branch_id_fk', "=", $request->branch_id_fk)
+          ->whereNotIn('db_orders.approve_status',[1,3,5,6])
+          ->groupBy('action_user')
+          ->get();
+        }else{
+          $action_user = DB::table('db_orders')
+          ->select('action_user')
+          ->where('db_orders.approve_date','>=',$request->startDate_data)
+          ->where('db_orders.approve_date','<=',$request->endDate_data)
+          ->where('business_location_id_fk','=',$request->business_location_id_fk)
+          ->where('branch_id_fk', "=", $request->branch_id_fk)
+          ->whereNotIn('db_orders.approve_status',[1,3,5,6])
+          ->groupBy('action_user')
+          ->get();
+        }
+
 
         $promotion_data = DB::table('promotions')
         ->select('id','name_thai','pcode')
@@ -618,6 +631,7 @@ class ReportDataController extends Controller
         $arr_promotion_total = [];
         $arr_promotion_amt_total = [];
         foreach($action_user as $ac_key => $ac){
+          if($request->branch_id_fk == '' || $request->branch_id_fk == null){
           $orders = DB::table('db_orders')
           ->select('id')
           // ->select('db_orders.id','db_orders.code_order','db_orders.invoice_code_id_fk','db_orders.approve_date','db_orders.customers_sent_id_fk','customers.user_name','customers.first_name','customers.last_name')
@@ -625,12 +639,27 @@ class ReportDataController extends Controller
           ->where('db_orders.approve_date','>=',$request->startDate_data)
           ->where('db_orders.approve_date','<=',$request->endDate_data)
           ->where('business_location_id_fk','=',$request->business_location_id_fk)
-          ->where('branch_id_fk', "=", $request->branch_id_fk)
+          // ->where('branch_id_fk', "=", $request->branch_id_fk)
           // ->where('db_orders.delivery_location_frontend','!=','sent_office')
           ->whereNotIn('db_orders.approve_status',[1,3,5,6])
           ->where('action_user','=',$ac->action_user)
           // ->get();
           ->pluck('id');
+          }else{
+            $orders = DB::table('db_orders')
+            ->select('id')
+            // ->select('db_orders.id','db_orders.code_order','db_orders.invoice_code_id_fk','db_orders.approve_date','db_orders.customers_sent_id_fk','customers.user_name','customers.first_name','customers.last_name')
+            // ->join('customers','customers.id','db_orders.customers_id_fk')
+            ->where('db_orders.approve_date','>=',$request->startDate_data)
+            ->where('db_orders.approve_date','<=',$request->endDate_data)
+            ->where('business_location_id_fk','=',$request->business_location_id_fk)
+            ->where('branch_id_fk', "=", $request->branch_id_fk)
+            // ->where('db_orders.delivery_location_frontend','!=','sent_office')
+            ->whereNotIn('db_orders.approve_status',[1,3,5,6])
+            ->where('action_user','=',$ac->action_user)
+            // ->get();
+            ->pluck('id');
+          }
 
           $pro_list = DB::table('db_order_products_list')
           ->select('type_product','promotion_id_fk','giveaway_id_fk','promotion_code','amt','product_name','product_id_fk','frontstore_id_fk','id')
@@ -769,8 +798,13 @@ class ReportDataController extends Controller
         ]);
 
           $branch_data = DB::table('branchs')->select('b_name')->where('id',$request->branch_id_fk)->first();
+          if($branch_data){
+              $b_name = $branch_data->b_name;
+          }else{
+            $b_name = 'ทั้งหมด';
+          }
           $sheet->mergeCells("A1:F1");
-          $sheet->setCellValue('A1', 'ศูนย์ธุรกิจ '.@$branch_data->b_name.' รายงานยอดขายสินค้ารายวัน ประจำวันที่ '.date('d/m/Y', strtotime($request->startDate_data)).' ถึง '.date('d/m/Y', strtotime($request->endDate_data)));
+          $sheet->setCellValue('A1', 'ศูนย์ธุรกิจ '.@$b_name.' รายงานยอดขายสินค้ารายวัน ประจำวันที่ '.date('d/m/Y', strtotime($request->startDate_data)).' ถึง '.date('d/m/Y', strtotime($request->endDate_data)));
           // Head
           $sheet->setCellValue('A'.$head, 'ลำดับ');
           $sheet->setCellValue('B'.$head, 'รายการ');
@@ -810,6 +844,23 @@ class ReportDataController extends Controller
 
         }
         // สรุปต่ออีก 1 รายการสินค้าทั้งหมด
+
+        $styleArray2 = array(
+          'font'  => array(
+               'bold'  => true,
+               'color' => array('rgb' => '00000'),
+               'size'  => 10,
+               'name'  => 'Verdana'
+          ),
+          'fill' => array(
+           'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+           'startColor' => array('argb' => 'F2F2F2')
+          ),
+          'alignment' => [
+           'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+           'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+       ],
+         );
 
         $ac_key_total = count($action_user);
         $sheet->getStyle('A'.($td_data+$row_num+$ac_key_total-1).':F'.($td_data+$row_num+$ac_key_total-1))->applyFromArray($styleArray2);

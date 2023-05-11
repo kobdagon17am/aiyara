@@ -793,7 +793,7 @@
                 // order: [[1, 'desc']],
                 iDisplayLength: 100,
                 ajax: {
-                    url: '{{ route('backend.member_regis.datatable_list') }}',
+                    url: '{{ route('backend.member_regis.datatable') }}',
                     data: function(d) {
                         d.Where = {};
                         $('.myWhere').each(function() {
@@ -1145,7 +1145,7 @@
                         iDisplayLength: 100,
 
                         ajax: {
-                            url: '{{ route('backend.member_regis.datatable_list') }}',
+                            url: '{{ route('backend.member_regis.datatable') }}',
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 business_location_id_fk: business_location_id_fk,

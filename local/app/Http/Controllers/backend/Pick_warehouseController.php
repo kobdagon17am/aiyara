@@ -2208,7 +2208,7 @@ ORDER BY db_pick_pack_packing.id
 
 
   public function warehouse_address_sent(Request $reg){
-    // return $reg->id;
+    // return $reg->id; recipient_name
     if(!empty($reg->packing_id)){
 
       // วุฒิเพิ่มมา
@@ -2294,13 +2294,17 @@ ORDER BY db_pick_pack_packing.id
 
                     // dd($d0_data->id);
 
-                    DB::table('db_delivery')->where('id',$d0_data->id)->update([
-                      'recipient_name' => $delivery_data->recipient_name,
-                      'addr_send' => $delivery_data->addr_send,
-                      'postcode' => $delivery_data->postcode,
-                      'mobile' => $delivery_data->mobile,
-                      'tel_home' => $delivery_data->tel_home,
-                    ]);
+                    if($delivery_data){
+                      DB::table('db_delivery')->where('id',$d0_data->id)->update([
+                        'recipient_name' => $delivery_data->recipient_name,
+                        'addr_send' => $delivery_data->addr_send,
+                        'postcode' => $delivery_data->postcode,
+                        'mobile' => $delivery_data->mobile,
+                        'tel_home' => $delivery_data->tel_home,
+                      ]);
+                    }
+
+
 
 
                   }

@@ -287,7 +287,8 @@ class Transfer_branch_codeController extends Controller
           }else{
              //  $w02 = "AND (db_transfer_branch_code.branch_id_fk = ".\Auth::user()->branch_id_fk.")" ;
              $userBranch = \Auth::user()->branch_id_fk;
-             $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch OR db_transfer_branch_code.to_branch_id_fk = $userBranch AND db_transfer_branch_code.approve_status = 1)";
+            //  $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch OR db_transfer_branch_code.to_branch_id_fk = $userBranch AND db_transfer_branch_code.approve_status = 1)";
+            $w02 = "AND (db_transfer_branch_code.branch_id_fk = $userBranch AND db_transfer_branch_code.approve_status = 1)";
           }
         }
 

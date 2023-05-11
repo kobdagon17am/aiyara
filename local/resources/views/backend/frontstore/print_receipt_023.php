@@ -1138,6 +1138,9 @@ if(!empty($db_orders[0]->action_user)){
 
                       }
   //  $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
+//   if($id == '55448'){
+// dd($address);
+//   }
   $address = !empty($address) ? ' '. $address . ' ' . $tel : NULL;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 

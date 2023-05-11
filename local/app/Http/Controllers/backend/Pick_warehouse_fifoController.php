@@ -896,7 +896,7 @@ class Pick_warehouse_fifoController extends Controller
 
 // /backend/pay_product_receipt
 // http://localhost/aiyara/backend/pick_warehouse
-// %%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%%%%%%%%%%%%%%%%%%% ไม่มีสินค้าในคลัง
    public function Datatable0002FIFO(Request $request){
     // return $request->picking_id;
       $temp_ppp_001 = "temp_ppp_001".\Auth::user()->id; // ดึงข้อมูลมาจาก db_orders
@@ -1057,10 +1057,25 @@ class Pick_warehouse_fifoController extends Controller
             // dd($Products);
 
           $z = 1;
+          // เช็คหาสินค้าค่าขนส่ง
+          $shipping = DB::table('products')->select('id')->where('shipping_status',1)->pluck('id')->toArray();
           foreach ($Products as $key => $value) {
 
+
+            $ship = 0;
+            foreach($shipping as $sh){
+              if($sh==$value->product_id_fk){
+                $ship++;
+              }
+            }
+            if($ship>0){
+              $amt_pay_this = 0;
+            }else{
+              $amt_pay_this = $value->amt;
+            }
+
             // if($value->product_id_fk == 18){
-            //   dd($temp_db_stocks_01[0]->amt);
+            //   dd($temp_db_stocks_01[0]->amt); ไม่มีสินค้าในคลัง
             // }
 
             // dd($value);
@@ -1115,8 +1130,6 @@ class Pick_warehouse_fifoController extends Controller
 
                $temp_db_stocks = "temp_db_stocks".\Auth::user()->id;
               //  dd( $temp_db_stocks );
-               $amt_pay_this = $value->amt;
-
 
                    // วุฒิเพิ่มมาเช็คคลัง ว่าอย่าเอาคลังเก็บมา
                    $w_arr2 = DB::table('warehouse')->select('id')->where('w_code','WH02')->pluck('id')->toArray();
@@ -1576,103 +1589,105 @@ class Pick_warehouse_fifoController extends Controller
 
 
                 }else{ // กรณีไม่มีสินค้าในคลังเลย
+                    if($amt_pay_this > 0){
+                      $amt_pay_remain = $value->amt ;
+                      $pay_this = 0 ;
+                      $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
 
-                     $amt_pay_remain = $value->amt ;
-                     $pay_this = 0 ;
-                     $css_red = $amt_pay_remain>0?'color:red;font-weight:bold;':'';
-
-                    $pn .=
-                    '<div class="divTableRow">
-                     <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
-                    '.@$value->product_name.'</b><br>
-                        ('.@$invoice_code.')
-                    </div>
-                    <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
-                    <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
-                    <div class="divTableCell" style="width:400px;text-align:center;"> ';
+                     $pn .=
+                     '<div class="divTableRow">
+                      <div class="divTableCell" style="padding-bottom:15px;width:250px;"><b>
+                     '.@$value->product_name.'</b><br>
+                         ('.@$invoice_code.')
+                     </div>
+                     <div class="divTableCell" style="text-align:center;font-weight:bold;">'. $pay_this .'</div>
+                     <div class="divTableCell" style="text-align:center;'.$css_red.'">'. $amt_pay_remain .'</div>
+                     <div class="divTableCell" style="width:400px;text-align:center;"> ';
 
 
-                      $pn .=
-                            '<div class="divTableRow" style="text-align:center;">
-                            <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง </div>
-                            </div>
-                            ';
+                       $pn .=
+                             '<div class="divTableRow" style="text-align:center;">
+                             <div class="divTableCell" style="width:200px;text-align:center;color:red;"><center>* ไม่มีสินค้าในคลัง </div>
+                             </div>
+                             ';
 
-                            @$_SESSION['check_product_instock'] = 0;
+                             @$_SESSION['check_product_instock'] = 0;
 
-                              // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
-                              $temp_db_stocks_02 = DB::select(" SELECT * from $temp_ppp_002 WHERE  product_id_fk=".$value->product_id_fk." ");
+                               // $temp_db_stocks_02 = DB::select(" SELECT * from $temp_db_stocks WHERE amt=0 and product_id_fk=".$value->product_id_fk." ");
+                               $temp_db_stocks_02 = DB::select(" SELECT * from $temp_ppp_002 WHERE  product_id_fk=".$value->product_id_fk." ");
 
-                              // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
-                              if(count($temp_db_stocks_02)==0){
-                                $temp_db_stocks_02 = DB::table($temp_ppp_002)
-                                ->select(
-                                  $temp_ppp_002.'.created_at',
-                                  'promotions_products.product_unit as product_unit_id_fk',
-                                  'promotions_products.product_id_fk as product_id_fk',
-                                  DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
-                                  'promotions_products.product_amt as amt',
-                                )
-                                ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
-                                ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
-                                ->join('products','products.id','promotions_products.product_id_fk')
-                                ->where($temp_ppp_002.'.type_product','promotion')
-                                ->where('promotions_products.product_id_fk',$value->product_id_fk)
-                                ->groupBy('promotions_products.product_id_fk')
-                                ->get();
-                              }
+                               // วุฒิเพิ่มมาสำหรับตรวจโปรโมชั่น
+                               if(count($temp_db_stocks_02)==0){
+                                 $temp_db_stocks_02 = DB::table($temp_ppp_002)
+                                 ->select(
+                                   $temp_ppp_002.'.created_at',
+                                   'promotions_products.product_unit as product_unit_id_fk',
+                                   'promotions_products.product_id_fk as product_id_fk',
+                                   DB::raw('CONCAT(products.product_code," : ", products_details.product_name) AS product_name'),
+                                   'promotions_products.product_amt as amt',
+                                 )
+                                 ->join('promotions_products','promotions_products.promotion_id_fk',$temp_ppp_002.'.promotion_id_fk')
+                                 ->join('products_details','products_details.product_id_fk','promotions_products.product_id_fk')
+                                 ->join('products','products.id','promotions_products.product_id_fk')
+                                 ->where($temp_ppp_002.'.type_product','promotion')
+                                 ->where('promotions_products.product_id_fk',$value->product_id_fk)
+                                 ->groupBy('promotions_products.product_id_fk')
+                                 ->get();
+                               }
 
-                     $i = 1;
-                     foreach ($temp_db_stocks_02 as $v_02) {
+                      $i = 1;
+                      foreach ($temp_db_stocks_02 as $v_02) {
 
-                             // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
-                                     $p_unit  = DB::select("  SELECT product_unit
-                                      FROM
-                                      dataset_product_unit
-                                      WHERE id = ".$v_02->product_unit_id_fk." AND  lang_id=1  ");
-                                     $p_unit_name = @$p_unit[0]->product_unit;
+                              // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
+                                      $p_unit  = DB::select("  SELECT product_unit
+                                       FROM
+                                       dataset_product_unit
+                                       WHERE id = ".$v_02->product_unit_id_fk." AND  lang_id=1  ");
+                                      $p_unit_name = @$p_unit[0]->product_unit;
 
-                                     $_choose=DB::table("$temp_ppp_004")
-                                      ->where('pick_pack_requisition_code_id_fk', $row->pick_pack_requisition_code_id_fk)
-                                      ->where('product_id_fk', $v_02->product_id_fk)
-                                      ->where('branch_id_fk', @\Auth::user()->branch_id_fk )
-                                      ->get();
-                                        if($_choose->count() == 0){
-                                              DB::select(" INSERT IGNORE INTO $temp_ppp_004 (
-                                              business_location_id_fk,
-                                              branch_id_fk,
-                                              pick_pack_requisition_code_id_fk,
-                                              product_id_fk,
-                                              product_name,
-                                              amt_need,
-                                              amt_get,
-                                              amt_lot,
-                                              amt_remain,
-                                              product_unit_id_fk,
-                                              product_unit,
-                                              created_at
-                                              )
-                                              VALUES (
-                                                '".@\Auth::user()->business_location_id_fk."',
-                                                '".@\Auth::user()->branch_id_fk."',
-                                                '".$row->pick_pack_requisition_code_id_fk."',
-                                                '".$v_02->product_id_fk."',
-                                                '".$v_02->product_name."',
-                                                '".$v_02->amt."',
-                                                '0',
-                                                '0',
-                                                '".$amt_pay_remain."',
-                                                '".$v_02->product_unit_id_fk."',
-                                                '".$p_unit_name."',
-                                                '".$v_02->created_at."'
-                                              )
-                                            ");
-                                        }
-                                // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
+                                      $_choose=DB::table("$temp_ppp_004")
+                                       ->where('pick_pack_requisition_code_id_fk', $row->pick_pack_requisition_code_id_fk)
+                                       ->where('product_id_fk', $v_02->product_id_fk)
+                                       ->where('branch_id_fk', @\Auth::user()->branch_id_fk )
+                                       ->get();
+                                         if($_choose->count() == 0){
+                                               DB::select(" INSERT IGNORE INTO $temp_ppp_004 (
+                                               business_location_id_fk,
+                                               branch_id_fk,
+                                               pick_pack_requisition_code_id_fk,
+                                               product_id_fk,
+                                               product_name,
+                                               amt_need,
+                                               amt_get,
+                                               amt_lot,
+                                               amt_remain,
+                                               product_unit_id_fk,
+                                               product_unit,
+                                               created_at
+                                               )
+                                               VALUES (
+                                                 '".@\Auth::user()->business_location_id_fk."',
+                                                 '".@\Auth::user()->branch_id_fk."',
+                                                 '".$row->pick_pack_requisition_code_id_fk."',
+                                                 '".$v_02->product_id_fk."',
+                                                 '".$v_02->product_name."',
+                                                 '".$v_02->amt."',
+                                                 '0',
+                                                 '0',
+                                                 '".$amt_pay_remain."',
+                                                 '".$v_02->product_unit_id_fk."',
+                                                 '".$p_unit_name."',
+                                                 '".$v_02->created_at."'
+                                               )
+                                             ");
+                                         }
+                                 // ๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒๒
 
-                              $i++;
+                               $i++;
 
-                        }
+                         }
+                    }
+
 
                 }
 
