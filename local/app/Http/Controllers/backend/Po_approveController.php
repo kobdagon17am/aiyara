@@ -950,7 +950,7 @@ class Po_approveController extends Controller
 
       ->addColumn('pay_with_other_bill_note', function ($row) {
         $str = '';
-        if ($row->pay_with_other_bill_note != '') {
+        if ($row->pay_with_other_bill_note != '' && $row->pay_with_other_bill_note != 0) {
           $str .= "<label>" . $row->pay_with_other_bill_note . "</label>";
         } else {
 
