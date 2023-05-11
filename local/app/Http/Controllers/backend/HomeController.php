@@ -13,9 +13,11 @@ class HomeController extends Controller
 
   public function test_sql(Request $request)
   {
-     $db_delivery_packing = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code','P101787')->pluck('delivery_id_fk')->toArray();
-     $db_delivery = DB::table('db_delivery')->whereIn('id',$db_delivery_packing)->get();
-     dd( $db_delivery);
+    //  $db_delivery_packing = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code','P101787')->pluck('delivery_id_fk')->toArray();
+    //  $db_delivery = DB::table('db_delivery')->whereIn('id',$db_delivery_packing)->get();
+    //  dd( $db_delivery);
+    // $sRow = \App\Models\Backend\Member_regis::find(request('id'));
+
   }
 
     public function index(Request $request)

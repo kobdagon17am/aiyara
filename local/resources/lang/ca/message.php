@@ -18,6 +18,7 @@ return [
     'add_ai_cash' => 'បន្ថែម Ai-Cash',
     'member_pv' => 'ប្រព័ន្ធសេវាកម្មសមាជិក',
     'member_regis' => 'ត្រូតពិនិត្យឯកសារ',
+    'member_regis_list' => 'បញ្ជីឯកសារ',
     'faq' => 'FAQ',
     'crm' => 'CRM',
     'pm' => 'PM',

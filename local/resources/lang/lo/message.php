@@ -12,5 +12,6 @@ return [
 'error_edit_1' => 'เปลี่ยนแปลงรหัส',
 'error_edit_2' => 'ปรับประเทศ',
 'error_edit_3' => 'ยกเลิกรหัส',
+'member_regis_list' => 'รายการเอกสาร',
 
 ];
