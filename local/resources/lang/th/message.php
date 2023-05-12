@@ -137,6 +137,7 @@ return [
 'person'=>'คน',
 'Personal recommendation points for this month' => 'คะแนนแนะนำตรงส่วนตัวเดือนนี้',
 
+
 // backend/course_event
 'course_event_header' => 'COURSE / EVENT',
 'activities_name' => 'ชื่อกิจกรรม',
