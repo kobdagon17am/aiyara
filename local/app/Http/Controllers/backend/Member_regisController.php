@@ -205,7 +205,10 @@ class Member_regisController extends Controller
               $sRow->save();
 
               if($sRow->regis_doc_status == 1){
-                $files_same = \App\Models\Backend\Member_regis::where('customer_id',$sRow->customer_id)->where('type',$sRow->type)->where('regis_doc_status',0)->update([
+                // $files_same = \App\Models\Backend\Member_regis::where('customer_id',$sRow->customer_id)->where('type',$sRow->type)->where('regis_doc_status',0)->update([
+                //   'regis_doc_status' => 9
+                // ]);
+                $files_same = DB::table('register_files')->where('customer_id',$sRow->customer_id)->where('type',$sRow->type)->where('regis_doc_status',0)->update([
                   'regis_doc_status' => 9
                 ]);
             }
@@ -302,7 +305,8 @@ class Member_regisController extends Controller
         if(!empty($req->startDate) && !empty($req->endDate)){
            $w05 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
         }else{
-          $w05 = "and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
+          // $w05 = "and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
+          $w05 = "";
         }
 
         if(!empty($req->approver)){
@@ -605,7 +609,7 @@ class Member_regisController extends Controller
         $r2 = '' ;
         $r3 = '' ;
         $r4 = '' ;
-        // if($Customers){
+        if($Customers){
           foreach ($d as $key => $value) {
             $filetype = DB::select(" select id from dataset_regis_filetype where id=".$value->type." order by id  ");
 
@@ -667,7 +671,7 @@ class Member_regisController extends Controller
             // array_push($f,$filetype[0]->id.' : '.$r1.$r2.$r3.$r4);
             array_push($f,$r1.$r2.$r3.$r4);
         }
-        // }
+        }
 
 
         $f = implode('<br>',$f);
@@ -901,6 +905,7 @@ class Member_regisController extends Controller
            $w07 = "";
         }
 
+
           $sTable = DB::select("
           SELECT register_files.*,customers.user_name,customers.prefix_name,customers.first_name,customers.last_name FROM `register_files`
           LEFT JOIN customers ON register_files.customer_id = customers.id
@@ -916,6 +921,8 @@ class Member_regisController extends Controller
          GROUP BY register_files.customer_id
          ORDER BY customers.regis_doc_date_update desc
            ");
+
+          // dd($sTable);
 
       $sQuery = \DataTables::of($sTable);
       return $sQuery

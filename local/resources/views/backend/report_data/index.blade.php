@@ -33,18 +33,20 @@
                     </div>
             </div> --}}
 
+            <form action="{{ url('backend/report_data/export_pdf') }}" target="_blank" method="POST" enctype="multipart/form-data" autocomplete="off">
+              {{ csrf_field() }}
+
             <div class="row" >
                 <div class="col-md-6 " >
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label">รายงาน : </label>
                       <div class="col-md-9">
-                        <select id="report_data" name="report_data" class="form-control select2-templating " required="" >
+                        <select id="report_data" name="report_data" class="form-control select2-templating " required>
                             <option value="">-เลือกรายงาน-</option>
-                            {{-- <option value="inventory">รายงานสินค้าคงคลัง</option>  --}}
-                            <option value="inventory_in">รายงานรับเข้าสินค้า</option>
+                            {{-- <option value="inventory_in">รายงานรับเข้าสินค้า</option>
                             <option value="inventory_out">รายงานจ่ายสินค้า</option>
                             <option value="inventory_borrow">รายงานเบิก-ยืม</option>
-                            <option value="inventory_claim">รายงานส่งสินค้าเคลมโรงงาน</option>
+                            <option value="inventory_claim">รายงานส่งสินค้าเคลมโรงงาน</option> --}}
                             <option value="inventory_remain">รายงานสินค้าคงเหลือ</option>
                             <option value="sale_report">รายงานการขายสินค้า</option>
                           </select>
@@ -58,7 +60,7 @@
                     <div class="form-group row">
                       <label for="" class="col-md-3 col-form-label">วันที่เริ่ม : </label>
                       <div class="col-md-9">
-                        <input id="startDate_data" class="form-control" value="{{date('Y-m-d')}}" autocomplete="off" value="{{ @$sd }}" />
+                        <input id="startDate_data" class="form-control" name="startDate_data" value="{{date('Y-m-d')}}" autocomplete="off" value="{{ @$sd }}" required />
                       </div>
                     </div>
                   </div>
@@ -67,7 +69,7 @@
                     <div class="form-group row">
                         <label for="zone_id_fk" class="col-md-2 col-form-label"> วันที่สิ้นสุด : </label>
                         <div class="col-md-10">
-                            <input id="endDate_data" class="form-control" value="{{date('Y-m-d')}}" autocomplete="off" value="{{ @$ed }}" />
+                            <input id="endDate_data" class="form-control" name="endDate_data" value="{{date('Y-m-d')}}" autocomplete="off" value="{{ @$ed }}" required />
                         </div>
                       </div>
                 </div>
@@ -86,7 +88,7 @@
                               // if(@\Auth::user()->permission==1){
                               ?>
 
-                                      <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required="" >
+                                      <select id="business_location_id_fk" name="business_location_id_fk" class="form-control select2-templating " required>
                                            <option value="">-Business Location-</option>
                                            @if(@$sBusiness_location)
                                              @foreach(@$sBusiness_location AS $r)
@@ -174,13 +176,13 @@
 
                             <?php if(@\Auth::user()->permission==1){ ?>
 
-                               <select id="warehouse_id_fk"  name="warehouse_id_fk" class="form-control select2-templating " required >
+                               <select id="warehouse_id_fk"  name="warehouse_id_fk" class="form-control select2-templating "  >
                                    <option disabled selected>กรุณาเลือกสาขาก่อน</option>
                                 </select>
 
                             <?php }else{ ?>
 
-                                <select id="warehouse_id_fk"  name="warehouse_id_fk" class="form-control select2-templating " required >
+                                <select id="warehouse_id_fk"  name="warehouse_id_fk" class="form-control select2-templating "  >
                                     <option value="" >-select-</option>
                                     @if(@$Warehouse)
                                       @foreach(@$Warehouse AS $r)
@@ -340,8 +342,12 @@
 
 
                         <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
-                          <i class="bx bx-file align-middle "></i> ออกรายงาน
+                          <i class="bx bx-file align-middle "></i> ออกรายงาน Excel
                         </a>
+
+                        <button class="btn btn-success btn-sm " type="submit" style="font-size: 14px !important;" >
+                          <i class="bx bx-file align-middle "></i> ออกรายงาน PDF
+                        </button>
 <!--
                        <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;" >
                           <i class="bx bx-cog align-middle "></i> Process Stock movement
@@ -354,6 +360,8 @@
 
 
               </div>
+
+            </form>
 
         </div>
     </div>

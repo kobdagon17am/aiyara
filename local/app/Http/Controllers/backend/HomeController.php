@@ -16,7 +16,38 @@ class HomeController extends Controller
     //  $db_delivery_packing = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code','P101787')->pluck('delivery_id_fk')->toArray();
     //  $db_delivery = DB::table('db_delivery')->whereIn('id',$db_delivery_packing)->get();
     //  dd( $db_delivery);
-    // $sRow = \App\Models\Backend\Member_regis::find(request('id'));
+
+    $sTable = DB::select("
+    SELECT register_files.customer_id,register_files.type,register_files.regis_doc_status
+    FROM `register_files`
+    WHERE register_files.regis_doc_status = 0
+    GROUP BY register_files.type, register_files.customer_id;
+     ");
+
+    foreach($sTable as $td){
+      $files_same = DB::table('register_files')->select('id')->where('customer_id',$td->customer_id)->where('type',$td->type)->where('regis_doc_status',1)->first();
+      if($files_same){
+        $files_same = DB::table('register_files')->where('customer_id',$td->customer_id)->where('type',$td->type)->where('regis_doc_status',0)->update([
+          'regis_doc_status' => 9
+        ]);
+      }
+      $files_same = DB::table('register_files')->select('id')->where('customer_id',$td->customer_id)->where('type',$td->type)->where('regis_doc_status',2)->first();
+      if($files_same){
+        $files_same = DB::table('register_files')->where('customer_id',$td->customer_id)->where('type',$td->type)->where('regis_doc_status',0)->update([
+          'regis_doc_status' => 9
+        ]);
+      }
+     }
+
+     $sTable = DB::select("
+     SELECT register_files.customer_id,register_files.type,register_files.regis_doc_status
+     FROM `register_files`
+     WHERE register_files.regis_doc_status = 0
+     GROUP BY register_files.type, register_files.customer_id;
+      ");
+
+      dd($sTable);
+
 
   }
 

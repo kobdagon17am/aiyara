@@ -1052,6 +1052,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('report_data', 'ReportDataController@index')->name('report_data.index');
     // Route::get('report_data/inventory', 'ReportDataController@inventory');
     Route::post('report_data/export_excel', 'ReportDataController@export_excel');
+    Route::post('report_data/export_pdf', 'ReportDataController@export_pdf');
 
 	#===========================================================================================
 

@@ -69,6 +69,16 @@ class ReportDataController extends Controller
     //     return view('backend.report_data.inventory');
     // }
 
+    public function export_pdf(Request $request)
+		{
+      // dd($request->all());
+        if($request->report_data=='inventory_remain'){
+          return view('backend.report_data.inventory_remain',[
+            'r' => $request,
+          ]);
+        }
+    }
+
     public function export_excel(Request $request)
 		{
       // dd($request->all());
