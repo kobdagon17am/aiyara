@@ -129,6 +129,13 @@ return [
 'complaint_date' => 'วันที่รับเรื่อง',
 'customer_topic2' => 'หัวข้อที่ลูกค้าสอบถามเข้ามา',
 'feedback' => 'คำตอบ',
+'to' => 'ถึง',
+'current' => 'ปัจจุบัน',
+'max' => 'สูงสุด',
+'60' => 'ข้อมูลแนะนำตรงในรอบ 60 วันแรก (Team Maker) ชั้นลูก',
+'60+' => 'คน + ชั้นหลาน',
+'person'=>'คน',
+'Personal recommendation points for this month' => 'คะแนนแนะนำตรงส่วนตัวเดือนนี้',
 
 // backend/course_event
 'course_event_header' => 'COURSE / EVENT',
@@ -384,6 +391,11 @@ return [
 'expirydate' => 'หมดอายุ',
 'all' => 'ทั้งหมด',
 'coupondetail' => '*รหัสโปรโมชั่นละ 1 ชุด สามารถส่งต่อให้สมาชิกท่านอื่นๆได้ / ไม่สามารถใช้สิทธิ์กับรายการส่งเสริมการขายอื่นๆ รวมถึงการเติม Ai-Stockist',
+'line_information' => 'ข้อมูลสายงาน',
+'under_the_line' => 'ข้อมูลสายงาน',
+'introduce'=>'ผู้แนะนำ',
+
+
 
 // frontend/newregister
 'register' => 'กรอกข้อมูลลงทะเบียนสมาชิกใหม่',

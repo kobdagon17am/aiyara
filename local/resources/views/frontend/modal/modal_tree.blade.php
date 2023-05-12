@@ -102,7 +102,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
     </tr>
     <tr class="table-success">
       <td><strong>@lang('message.Count_qualifications') </strong></td>
-      <td>{{ date('01/m/Y') }} ถึง {{ date('t/m/Y') }}</td>
+      <td>{{ date('01/m/Y') }} @lang('message.to') {{ date('t/m/Y') }}</td>
       <td></td>
     </tr>
 
@@ -119,7 +119,7 @@ $count_directsponsor = Frontend::check_customer_directsponsor($data->team_active
    </div>
    <div class="col-6">
 
-    <strong>คะแนนแนะนำตรงส่วนตัวเดือนนี้</strong><br>
+    <strong>@lang('message.Personal recommendation points for this month') </strong><br>
       [ A ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_a) }}</font> [ B ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_b) }}</font> [ C ] <font class="font-red">{{ number_format(@$bonus_per_day->month_sppv_c) }}</font>
 
    </div>

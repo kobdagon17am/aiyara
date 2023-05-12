@@ -53,10 +53,11 @@ $count_sponser = 0;
                                     <th class="text-center" style="font-size: 12px;">A</th>
                                     <th class="text-center" style="font-size: 12px;">B</th>
                                     <th class="text-center" style="font-size: 12px;">C</th>
-                                    <th class="text-center" style="font-size: 12px;">ปัจจุบัน</th>
-                                    <th class="text-center" style="font-size: 12px;">สูงสุด</th>
-                                    <th class="text-center" style="font-size: 12px;">ปัจจุบัน</th>
-                                    <th class="text-center" style="font-size: 12px;">สูงสุด</th>
+
+                                    <th class="text-center" style="font-size: 12px;">@lang('message.current')</th>
+                                    <th class="text-center" style="font-size: 12px;">@lang('message.max')</th>
+                                    <th class="text-center" style="font-size: 12px;">@lang('message.current')</th>
+                                    <th class="text-center" style="font-size: 12px;">@lang('message.max')</th>
 
                                 </tr>
                                 <?php
@@ -159,8 +160,8 @@ $count_sponser = 0;
         <div class="card">
 
            <div class="card-header">
-            <h4 class="m-b-10">ข้อมูลแนะนำตรงในรอบ 60 วันแรก (Team Maker)
-                ชั้นลูก <b class="text-primary">{{ count($customers_sponser) }}</b> คน + ชั้นหลาน <b id="count_sponser" class="text-primary"></b> คน</h4>
+            <h4 class="m-b-10">@lang('message.60')
+                 <b class="text-primary">{{ count($customers_sponser) }}</b> @lang('message.60+') <b id="count_sponser" class="text-primary"></b>  @lang('message.person')</h4>
 
             </div>
             <div class="card-block">
