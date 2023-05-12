@@ -306,115 +306,115 @@ set_time_limit(9999999);
                 // })
                 // ->get();
 
-                foreach(){
-                 // doc_date แปลงเป็น updated_at
-                // รายการก่อน start_date เพื่อหายอดยกมา
-                $Stock_movement_in = \App\Models\Backend\Stock_movement::
-                  where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
-                  ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
-                  ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
-                  ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
-                  ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
-                  ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
-                  ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
-                  ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
-                  ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
-                  ->where('in_out','1')
-                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
-                  ->selectRaw('sum(amt) as sum')
-                  ->get();
+                // foreach(){
+                //  // doc_date แปลงเป็น updated_at
+                // // รายการก่อน start_date เพื่อหายอดยกมา
+                // $Stock_movement_in = \App\Models\Backend\Stock_movement::
+                //   where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
+                //   ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
+                //   ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
+                //   ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
+                //   ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
+                //   ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
+                //   ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
+                //   ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
+                //   ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
+                //   ->where('in_out','1')
+                //   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
+                //   ->selectRaw('sum(amt) as sum')
+                //   ->get();
 
-                  // ยอดรับเข้า
-                  $amt_balance_in = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
+                //   // ยอดรับเข้า
+                //   $amt_balance_in = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
 
-                  $Stock_movement_out = \App\Models\Backend\Stock_movement::
-                  where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
-                  ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
-                  ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
-                  ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
-                  ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
-                  ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
-                  ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
-                  ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
-                  ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
-                  ->where('in_out','2')
-                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
-                  ->selectRaw('sum(amt) as sum')
-                  ->get();
+                //   $Stock_movement_out = \App\Models\Backend\Stock_movement::
+                //   where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
+                //   ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
+                //   ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
+                //   ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
+                //   ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
+                //   ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
+                //   ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
+                //   ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
+                //   ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
+                //   ->where('in_out','2')
+                //   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
+                //   ->selectRaw('sum(amt) as sum')
+                //   ->get();
 
-                  // ยอดเบิกออก
-                  $amt_balance_out = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
+                //   // ยอดเบิกออก
+                //   $amt_balance_out = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
 
-                  $amt_balance_stock = $amt_balance_in - $amt_balance_out ;
-                  $txt = "ยอดคงเหลือยกมา";
-                  DB::select(" UPDATE $temp_db_stock_card SET details='$txt',amt_in='$amt_balance_stock' WHERE id=1 ") ;
+                //   $amt_balance_stock = $amt_balance_in - $amt_balance_out ;
+                //   $txt = "ยอดคงเหลือยกมา";
+                //   DB::select(" UPDATE $temp_db_stock_card SET details='$txt',amt_in='$amt_balance_stock' WHERE id=1 ") ;
 
-                  // รายการตามช่วงวันที่ระบุ start_date to end_date
-                  $Stock_movement = \App\Models\Backend\Stock_movement::
-                  where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
-                  ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
-                  ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
-                  ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
-                  ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
-                  ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
-                  ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
-                  ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
-                  ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
-                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->start_date)
-                  ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->end_date)
-                  // วุฒิเพิ่มมาเช็คไม่เอายอด 0
-                  ->where('amt','!=',0)
-                  ->get();
+                //   // รายการตามช่วงวันที่ระบุ start_date to end_date
+                //   $Stock_movement = \App\Models\Backend\Stock_movement::
+                //   where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
+                //   ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
+                //   ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
+                //   ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
+                //   ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
+                //   ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
+                //   ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
+                //   ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
+                //   ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
+                //   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), ">=", $request->start_date)
+                //   ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<=", $request->end_date)
+                //   // วุฒิเพิ่มมาเช็คไม่เอายอด 0
+                //   ->where('amt','!=',0)
+                //   ->get();
 
-                  if($Stock_movement->count() > 0){
-                            // doc_date แปลงเป็น updated_at
-                          foreach ($Stock_movement as $key => $value) {
-                            $full_detail = "";
-                            if($value->stock_type_id_fk==8){
-                              $ref_data = DB::table('db_transfer_branch_code')->select('db_transfer_branch_code.*','branchs.b_name')->where('tr_number',$value->ref_doc)
-                              ->join('branchs','branchs.id','db_transfer_branch_code.to_branch_id_fk')->first();
-                              if($ref_data){
-                                $full_detail = "( ไปยัง ".$ref_data->b_name." )";
-                              }
-                            }
+                //   if($Stock_movement->count() > 0){
+                //             // doc_date แปลงเป็น updated_at
+                //           foreach ($Stock_movement as $key => $value) {
+                //             $full_detail = "";
+                //             if($value->stock_type_id_fk==8){
+                //               $ref_data = DB::table('db_transfer_branch_code')->select('db_transfer_branch_code.*','branchs.b_name')->where('tr_number',$value->ref_doc)
+                //               ->join('branchs','branchs.id','db_transfer_branch_code.to_branch_id_fk')->first();
+                //               if($ref_data){
+                //                 $full_detail = "( ไปยัง ".$ref_data->b_name." )";
+                //               }
+                //             }
 
-                            if($value->stock_type_id_fk==9){
-                              $ref_data = DB::table('db_transfer_branch_code')->select('db_transfer_branch_code.*','branchs.b_name')->where('tr_number',$value->ref_doc)
-                              ->join('branchs','branchs.id','db_transfer_branch_code.branch_id_fk')->first();
-                              if($ref_data){
-                                $full_detail = "( รับจาก ".$ref_data->b_name." )";
-                              }
-                            }
+                //             if($value->stock_type_id_fk==9){
+                //               $ref_data = DB::table('db_transfer_branch_code')->select('db_transfer_branch_code.*','branchs.b_name')->where('tr_number',$value->ref_doc)
+                //               ->join('branchs','branchs.id','db_transfer_branch_code.branch_id_fk')->first();
+                //               if($ref_data){
+                //                 $full_detail = "( รับจาก ".$ref_data->b_name." )";
+                //               }
+                //             }
 
-                               $insertData = array(
-                                  "ref_inv" =>  @$value->ref_doc?$value->ref_doc:NULL,
-                                  "action_date" =>  @$value->updated_at?$value->updated_at:NULL,
-                                  "action_user" =>  @$value->action_user?$value->action_user:NULL,
-                                  "approver" =>  @$value->approver?$value->approver:NULL,
-                                  "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
-                                  "sender" =>  @$value->sender?$value->sender:NULL,
-                                  "sent_date" =>  @$value->sent_date?$value->sent_date:NULL,
-                                  "who_cancel" =>  @$value->who_cancel?$value->who_cancel:NULL,
-                                  "cancel_date" =>  @$value->cancel_date?$value->cancel_date:NULL,
-                                  "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
-                                  "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
-                                  "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
-                                  "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
-                                  "details" =>  (@$value->note?$value->note:NULL).' '.(@$value->note2?$value->note2:NULL).' '.$full_detail,
-                                  "amt_in" =>  @$value->in_out==1?$value->amt:0,
-                                  "amt_out" =>  @$value->in_out==2?$value->amt:0,
-                                  "warehouse_id_fk" =>  @$value->warehouse_id_fk>0?$value->warehouse_id_fk:0,
-                                  "zone_id_fk" =>  @$value->zone_id_fk>0?$value->zone_id_fk:0,
-                                  "shelf_id_fk" =>  @$value->shelf_id_fk>0?$value->shelf_id_fk:0,
-                                  "shelf_floor" =>  @$value->shelf_floor>0?$value->shelf_floor:0,
-                                  "created_at" =>@$value->dd?$value->dd:NULL
-                              );
+                //                $insertData = array(
+                //                   "ref_inv" =>  @$value->ref_doc?$value->ref_doc:NULL,
+                //                   "action_date" =>  @$value->updated_at?$value->updated_at:NULL,
+                //                   "action_user" =>  @$value->action_user?$value->action_user:NULL,
+                //                   "approver" =>  @$value->approver?$value->approver:NULL,
+                //                   "approve_date" =>  @$value->approve_date?$value->approve_date:NULL,
+                //                   "sender" =>  @$value->sender?$value->sender:NULL,
+                //                   "sent_date" =>  @$value->sent_date?$value->sent_date:NULL,
+                //                   "who_cancel" =>  @$value->who_cancel?$value->who_cancel:NULL,
+                //                   "cancel_date" =>  @$value->cancel_date?$value->cancel_date:NULL,
+                //                   "business_location_id_fk" =>  @$value->business_location_id_fk?$value->business_location_id_fk:0,
+                //                   "branch_id_fk" =>  @$value->branch_id_fk?$value->branch_id_fk:0,
+                //                   "product_id_fk" =>  @$value->product_id_fk?$value->product_id_fk:0,
+                //                   "lot_number" =>  @$value->lot_number?$value->lot_number:NULL,
+                //                   "details" =>  (@$value->note?$value->note:NULL).' '.(@$value->note2?$value->note2:NULL).' '.$full_detail,
+                //                   "amt_in" =>  @$value->in_out==1?$value->amt:0,
+                //                   "amt_out" =>  @$value->in_out==2?$value->amt:0,
+                //                   "warehouse_id_fk" =>  @$value->warehouse_id_fk>0?$value->warehouse_id_fk:0,
+                //                   "zone_id_fk" =>  @$value->zone_id_fk>0?$value->zone_id_fk:0,
+                //                   "shelf_id_fk" =>  @$value->shelf_id_fk>0?$value->shelf_id_fk:0,
+                //                   "shelf_floor" =>  @$value->shelf_floor>0?$value->shelf_floor:0,
+                //                   "created_at" =>@$value->dd?$value->dd:NULL
+                //               );
 
-                               DB::table($temp_db_stock_card)->insert($insertData);
-                          }
+                //                DB::table($temp_db_stock_card)->insert($insertData);
+                //           }
 
-                  }
-                }
+                //   }
+                // }
 
             // dd($db_stocks);
 

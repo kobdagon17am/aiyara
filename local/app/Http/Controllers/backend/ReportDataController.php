@@ -77,6 +77,12 @@ class ReportDataController extends Controller
             'r' => $request,
           ]);
         }
+        if($request->report_data=='sale_report'){
+          return view('backend.report_data.sale_report',[
+            'r' => $request,
+          ]);
+        }
+
     }
 
     public function export_excel(Request $request)
