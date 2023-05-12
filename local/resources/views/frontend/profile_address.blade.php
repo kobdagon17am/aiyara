@@ -21,6 +21,11 @@
        <h4 class="sub-title">@lang('message.PERSONALINFORMATION')</h4>
 
        <div class="form-group row">
+        <div class="col-sm-2">
+          <label>@lang('message.name_prefix')</label>
+          <input type="text" name="prefix_name" class="form-control form-control-bold"  value="{{@$customer->prefix_name}}" >
+        </div>
+
         <div class="col-sm-3">
           <label>@lang('message.name_first')</label>
           <input type="text" class="form-control form-control-bold"  value="{{@$customer->first_name}}" disabled>

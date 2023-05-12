@@ -196,6 +196,8 @@ class Register extends Model
   //ฟรีแอคทีม 2 เดือนปฏิทินหลังจากกการสมัคร
           $strtime = strtotime(date('Y-m'));
           $caltime=strtotime("+2 Month",$strtime);
+
+          $regisdoc_expri_date = strtotime("+15 Days",$strtime);
           $two_month = date("Y-m-1", $caltime);
 
           $data_customer = [
@@ -208,6 +210,7 @@ class Register extends Model
              'first_name'=>$first_name,
              'last_name'=>$last_name,
              'business_name'=>$business_name,
+             'regisdoc_expri_date'=> $regisdoc_expri_date,
              'family_status'=>$family_status,
              'id_card'=>$id_card,
              'nation_id'=>$nation_id,

@@ -76,7 +76,7 @@ class ProfileController extends Controller
 
         $customer = DB::table('customers_detail')
             ->select('customers_detail.*','customers.business_location_id', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id',
-            'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name', 'customers.first_name','customers.last_name','customers.business_name')
+            'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name','customers.prefix_name','customers.first_name','customers.last_name','customers.business_name')
             ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
@@ -126,6 +126,10 @@ class ProfileController extends Controller
                 if ($request->has('business_name')) {
                   Customer::find(Auth::guard('c_user')->user()->id)->update(['business_name' => $request->business_name]);
               }
+
+              if ($request->has('prefix_name')) {
+                Customer::find(Auth::guard('c_user')->user()->id)->update(['prefix_name' => $request->prefix_name]);
+            }
 
                 //  $update = DB::table('customers_detail')
                 //  ->where('customer_id','=',Auth::guard('c_user')->user()->id)
