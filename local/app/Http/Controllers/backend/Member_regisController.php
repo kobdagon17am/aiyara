@@ -213,6 +213,15 @@ class Member_regisController extends Controller
                 ]);
             }
 
+            if($sRow->regis_doc_status == 2){
+              // $files_same = \App\Models\Backend\Member_regis::where('customer_id',$sRow->customer_id)->where('type',$sRow->type)->where('regis_doc_status',0)->update([
+              //   'regis_doc_status' => 9
+              // ]);
+              $files_same = DB::table('register_files')->where('customer_id',$sRow->customer_id)->where('type',$sRow->type)->where('regis_doc_status',0)->update([
+                'regis_doc_status' => 9
+              ]);
+          }
+
               // customers
               //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
               //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
@@ -616,9 +625,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==1){
 
                if($Customers->regis_doc1_status=="1"){
-                  $r1 =  'ผ่าน';
+                  $r1 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc1_status=="2"){
-                  $r1 =  'ไม่ผ่าน';
+                  $r1 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                    $r1 =  'รอตรวจสอบ';
                 }
@@ -629,9 +638,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==2){
 
                if($Customers->regis_doc2_status=="1"){
-                  $r2 =  'ผ่าน';
+                  $r2 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc2_status=="2"){
-                  $r2 =  'ไม่ผ่าน';
+                  $r2 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                   $r2 =  'รอตรวจสอบ';
                 }
@@ -643,9 +652,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==3){
 
                if($Customers->regis_doc3_status=="1"){
-                  $r3 =  'ผ่าน';
+                  $r3 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc3_status=="2"){
-                  $r3 =  'ไม่ผ่าน';
+                  $r3 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                   $r3 =  'รอตรวจสอบ';
                 }
@@ -657,9 +666,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==4){
 
                if($Customers->regis_doc4_status=="1"){
-                  $r4 =  'ผ่าน';
+                  $r4 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc4_status=="2"){
-                  $r4 =  'ไม่ผ่าน';
+                  $r4 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                   $r4 =  'รอตรวจสอบ';
                 }
@@ -978,9 +987,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==1){
 
                if($Customers->regis_doc1_status=="1"){
-                  $r1 =  'ผ่าน';
+                  $r1 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc1_status=="2"){
-                  $r1 =  'ไม่ผ่าน';
+                  $r1 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                    $r1 =  'รอตรวจสอบ';
                 }
@@ -991,9 +1000,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==2){
 
                if($Customers->regis_doc2_status=="1"){
-                  $r2 =  'ผ่าน';
+                  $r2 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc2_status=="2"){
-                  $r2 =  'ไม่ผ่าน';
+                  $r2 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                   $r2 =  'รอตรวจสอบ';
                 }
@@ -1005,9 +1014,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==3){
 
                if($Customers->regis_doc3_status=="1"){
-                  $r3 =  'ผ่าน';
+                  $r3 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc3_status=="2"){
-                  $r3 =  'ไม่ผ่าน';
+                  $r3 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                   $r3 =  'รอตรวจสอบ';
                 }
@@ -1019,9 +1028,9 @@ class Member_regisController extends Controller
             if($filetype[0]->id==4){
 
                if($Customers->regis_doc4_status=="1"){
-                  $r4 =  'ผ่าน';
+                  $r4 =  '<span class="badge badge-pill badge-soft-success font-size-13" style="color:darkgreen">ผ่าน</span>';
                 }elseif($Customers->regis_doc4_status=="2"){
-                  $r4 =  'ไม่ผ่าน';
+                  $r4 =  '<span class="badge badge-pill badge-soft-danger font-size-13" style="color:darkred">ไม่ผ่าน</span>';
                 }else{
                   $r4 =  'รอตรวจสอบ';
                 }
