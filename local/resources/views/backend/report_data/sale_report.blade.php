@@ -276,20 +276,20 @@ if ($branch_data) {
                 <tr>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
                         rowspan="2">
-                        ลำดับ
+                        <b>ลำดับ</b>
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
                         rowspan="2">
-                        รายการ
+                        <b>รายการ</b>
                     </td>
 
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
                         rowspan="2">
-                        จำนวน
+                        <b>จำนวน</b>
                     </td>
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
                         rowspan="2">
-                        ผู้ขาย
+                        <b>ผู้ขาย</b>
                     </td>
                 </tr>
 
@@ -496,44 +496,45 @@ if ($branch_data) {
 
                 ?>
             </tbody>
-            <thead>
 
-              <tr>
-                  <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                      rowspan="2">
-                      ลำดับ
-                  </td>
-                  <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                      rowspan="2">
-                      สรุปรายการสินค้าที่ขายทั้งหมด
-                  </td>
+        </table>
 
-                  <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                      rowspan="2">
-                      จำนวน
-                  </td>
-                  <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                      rowspan="2">
+        <br>
+        <table>
+          <thead>
 
-                  </td>
-              </tr>
+            <tr>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
+                    <b>ลำดับ</b>
+                </td>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
+                    <b>สรุปรายการสินค้าที่ขายทั้งหมด</b>
+                </td>
 
-              <tr style="">
-              </tr>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
+                    <b>จำนวน</b>
+                </td>
+                {{-- <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
 
-          </thead>
+                </td> --}}
+            </tr>
 
-          <tbody>
+            <tr style="">
+            </tr>
+
+        </thead>
+
+        <tbody>
             <?php
             $i_new = 1;
             foreach ($arr_product_total as $key => $arr_pro) {
-              $tr = '<tr>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $i_new . '</td>' .
-                 "<td style='text-align: left; border-bottom: 0px solid #000; '>" . $arr_pro['product_name'] .
-                  '</td>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $arr_product_amt_total[$key] .
-                    '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . '' .
-                      '</td>' . '</tr>';
-                    echo $tr;
-                    $i_new++;
+                $tr = '<tr>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $i_new . '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . $arr_pro['product_name'] . '</td>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $arr_product_amt_total[$key] . '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . '' . '</td>' . '</tr>';
+                echo $tr;
+                $i_new++;
                 // $sheet->setCellValue('A' . ($td_data + $row_num + $ac_key_total), $row_num_total);
                 // $sheet->setCellValue('B' . ($td_data + $row_num + $ac_key_total), $arr_pro['product_name']);
                 // $sheet->setCellValue('C' . ($td_data + $row_num + $ac_key_total), $arr_product_amt_total[$key]);
@@ -546,74 +547,130 @@ if ($branch_data) {
 
         <thead>
 
-          <tr>
-              <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                  rowspan="2">
-                  ลำดับ
-              </td>
-              <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                  rowspan="2">
-                  สรุปรายการโปรโมชั่นที่ขายทั้งหมด
-              </td>
+            <tr>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
 
-              <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                  rowspan="2">
-                  จำนวน
-              </td>
-              <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                  rowspan="2">
+                    <b>ลำดับ</b>
+                </td>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
 
-              </td>
-          </tr>
+                    <b>สรุปรายการโปรโมชั่นที่ขายทั้งหมด</b>
+                </td>
 
-          <tr style="">
-          </tr>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
 
-      </thead>
+                    <b>จำนวน</b>
+                </td>
+                {{-- <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
 
-      <tbody>
-        <?php
-          $row_num_total2 = 1;
-          foreach($arr_promotion_total as $key => $arr_pro){
-          // $arr_promotion_id = array_push($a,$key);
-          // $sheet->setCellValue('A'.($td_data+$row_num+$ac_key_total+1), $row_num_total2);
-          // $sheet->setCellValue('B'.($td_data+$row_num+$ac_key_total+1), $arr_pro['product_name']);
-          // $sheet->setCellValue('C'.($td_data+$row_num+$ac_key_total+1), $arr_promotion_amt_total[$key]);
-          // $sheet->setCellValue('D'.($td_data+$row_num+$ac_key_total+1), '');
-          $tr = '<tr>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $row_num_total2 . '</td>' .
-                 "<td style='text-align: left; border-bottom: 0px solid #000; '>" . $arr_pro['product_name'] .
-                  '</td>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $arr_promotion_amt_total[$key] .
-                    '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . '' .
-                      '</td>' . '</tr>';
+                </td> --}}
+            </tr>
+
+            <tr style="">
+            </tr>
+
+        </thead>
+
+        <tbody>
+            <?php
+            $row_num_total2 = 1;
+            foreach ($arr_promotion_total as $key => $arr_pro) {
+                // $arr_promotion_id = array_push($a,$key);
+                // $sheet->setCellValue('A'.($td_data+$row_num+$ac_key_total+1), $row_num_total2);
+                // $sheet->setCellValue('B'.($td_data+$row_num+$ac_key_total+1), $arr_pro['product_name']);
+                // $sheet->setCellValue('C'.($td_data+$row_num+$ac_key_total+1), $arr_promotion_amt_total[$key]);
+                // $sheet->setCellValue('D'.($td_data+$row_num+$ac_key_total+1), '');
+                $tr = '<tr>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $row_num_total2 . '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . $arr_pro['product_name'] . '</td>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $arr_promotion_amt_total[$key] . '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . '' . '</td>' . '</tr>';
+                echo $tr;
+
+                // เด่วทำต่อ
+                $p_products = DB::table('promotions_products')
+                    ->select('product_amt', 'product_id_fk', 'promotion_id_fk','product_amt')
+                    ->where('promotion_id_fk', $key)
+                    ->get();
+
+                foreach ($p_products as $p_p) {
+                    $p_p_data = DB::table('products')
+                        ->select('product_code')
+                        ->where('id', $p_p->product_id_fk)
+                        ->first();
+                    if ($p_p_data) {
+                        $p_p_detail = DB::table('products_details')
+                            ->select('product_name','product_id_fk')
+                            ->where('product_id_fk', $p_p->product_id_fk)
+                            ->where('lang_id',1)
+                            ->first();
+                        if ($p_p_detail) {
+                            $arr_product_total[$p_p->product_id_fk] = [
+                                'product_name' => $p_p_detail->product_name,
+                            ];
+                            if (isset($arr_product_amt_total[$p_p_detail->product_id_fk])) {
+                                $arr_product_amt_total[$p_p_detail->product_id_fk] = $arr_product_amt_total[$p_p_detail->product_id_fk] + ($p_p->product_amt*$arr_promotion_amt_total[$key]);
+                            } else {
+                                $arr_product_amt_total[$p_p_detail->product_id_fk] = ($p_p->product_amt*$arr_promotion_amt_total[$key]);
+                            }
+                        }
+                    }
+                }
+
+                $row_num++;
+                $row_num_total2++;
+            }
+
+            ?>
+        </tbody>
+
+        <thead>
+
+            <tr>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
+                    <b>ลำดับ</b>
+                </td>
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
+                    <b>สรุปรายการสินค้าทั้งหมด และรวมสินค้าในโปรชั่น</b>
+                </td>
+
+                <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
+                    <b>จำนวน</b>
+
+                </td>
+                {{-- <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
+                    rowspan="2">
+
+                </td> --}}
+            </tr>
+
+            <tr style="">
+            </tr>
+
+        </thead>
+
+        <tbody>
+            <?php
+            $i_new = 1;
+            foreach ($arr_product_total as $key => $arr_pro) {
+                if ($arr_pro['product_name'] != '') {
+                    $tr = '<tr>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $i_new . '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . $arr_pro['product_name'] . '</td>' . "<td style='text-align: center; border-bottom: 0px solid #000; '>" . $arr_product_amt_total[$key] . '</td>' . "<td style='text-align: left; border-bottom: 0px solid #000; '>" . '' . '</td>' . '</tr>';
                     echo $tr;
-          // เด่วทำต่อ
-          // $p_products = DB::table('promotions_products')->select('product_amt','product_id_fk','promotion_id_fk')->where('promotion_id_fk',$key)->get();
+                    $i_new++;
+                    // $sheet->setCellValue('A' . ($td_data + $row_num + $ac_key_total), $row_num_total);
+                    // $sheet->setCellValue('B' . ($td_data + $row_num + $ac_key_total), $arr_pro['product_name']);
+                    // $sheet->setCellValue('C' . ($td_data + $row_num + $ac_key_total), $arr_product_amt_total[$key]);
+                    // $sheet->setCellValue('D' . ($td_data + $row_num + $ac_key_total), '');
+                    // $row_num++;
+                    // $row_num_total++;
+                }
+            }
 
-          // foreach($p_products as $p_p){
-          //   $p_p_data = DB::table('products')->select('product_code')->where('id',$p_p->product_id_fk)->first();
-          //   if($p_p_data){
-          //     $p_p_detail = DB::table('products')->select('product_code')->where('id',$p_p->product_id_fk)->first();
-          //   }
-
-          // }
-
-          // $arr_product_total[$pro->product_id_fk] = [
-          //   'product_name' => $pro->product_name,
-          // ];
-          // if(isset($arr_product_amt_total[$pro->product_id_fk])){
-          //   $arr_product_amt_total[$pro->product_id_fk] = $arr_product_amt_total[$pro->product_id_fk]+$pro->amt;
-          // }else{
-          //   $arr_product_amt_total[$pro->product_id_fk] = $pro->amt;
-          // }
-
-
-          $row_num++;
-          $row_num_total2++;
-        }
-
-          ?>
-      </tbody>
-
+            ?>
+        </tbody>
         </table>
 
     </div>

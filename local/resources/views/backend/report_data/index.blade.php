@@ -340,10 +340,10 @@
                         <label for="ref_code" class="col-md-2 col-form-label">  </label>
                           <div class="col-md-10">
 
-
+{{--
                         <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
                           <i class="bx bx-file align-middle "></i> ออกรายงาน Excel
-                        </a>
+                        </a> --}}
 
                         <button class="btn btn-success btn-sm " type="submit" style="font-size: 14px !important;" >
                           <i class="bx bx-file align-middle "></i> ออกรายงาน PDF
