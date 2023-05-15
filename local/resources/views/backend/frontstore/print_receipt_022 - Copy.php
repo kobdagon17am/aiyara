@@ -1,8 +1,43 @@
+
 <style>
 
     @page { margin: 0px; }
+
+    @font-face {
+            font-family: 'Khmer-Regular';
+            font-style: normal;
+            font-weight: normal;
+            /* src: url("{{ public_path('fonts/THSarabunNew.ttf') }}") format('truetype'); */
+            src: url("{{ asset('fonts/Khmer-Regular.ttf') }}") format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Khmer-Regular';
+            font-style: normal;
+            font-weight: bold;
+            /* src: url("{{ public_path('fonts/THSarabunNew Bold.ttf') }}") format('truetype'); */
+            src: url("{{ asset('fonts/Khmer-Regular.ttf') }}") format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Khmer-Regular';
+            font-style: italic;
+            font-weight: normal;
+            /* src: url("{{ public_path('fonts/THSarabunNew Italic.ttf') }}") format('truetype'); */
+            src: url("{{ asset('fonts/Khmer-Regular.ttf') }}") format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Khmer-Regular';
+            font-style: italic;
+            font-weight: bold;
+            /* src: url("{{ public_path('fonts/THSarabunNew BoldItalic.ttf') }}") format('truetype'); */
+            src: url("{{ asset('fonts/Khmer-Regular.ttf') }}") format('truetype');
+        }
+
+
     body{
-      font-family: "THSarabunNew";
+      font-family: "THSarabunNew,Khmer-Regular";
       font-size: 20px;
       font-weight: bold;
       line-height: 14px;
@@ -101,39 +136,45 @@
     require(app_path().'/Models/MyFunction.php');
 
 $id = $data[0];
+$user_admin_id = $data[1];
 $n = 22;
+// $n = 22;
 $limit = 10;
+// $limit = 10;
+
+$num_run = 1;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
-
-$cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
-$cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
-$cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
-
-// promotions_products
-$promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
-$arr_promotion_id_fk = [];
-foreach ($promotion_id_fk as $key => $value) {
-  array_push($arr_promotion_id_fk, $value->promotion_id_fk);
+if(@$sRow->business_location_id_fk == 1){
+  $curr = 'บาท';
+}else{
+  $curr = 'ดอลล่าร์';
 }
 
-$arr_promotion_id = implode(',', $arr_promotion_id_fk);
+// $cnt01 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='product'; ");
+// $cnt02 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $cnt03 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product<>'product' AND type_product<>'promotion'; ");
+// $cnt04 = DB::select(" SELECT count(*) as cnt FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion' AND promotion_code is not NULL; ");
+
+// promotions_products
+// $promotion_id_fk = DB::select(" SELECT promotion_id_fk FROM `db_order_products_list` WHERE frontstore_id_fk=$id AND type_product='promotion'; ");
+// $arr_promotion_id_fk = [];
+// foreach ($promotion_id_fk as $key => $value) {
+//   array_push($arr_promotion_id_fk, $value->promotion_id_fk);
+// }
+
+// $arr_promotion_id = implode(',', $arr_promotion_id_fk);
 // echo $arr_promotion_id;
-$arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
-$cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
-// echo $cnt01[0]->cnt;
-// echo $cnt02[0]->cnt;
-// echo $cnt03[0]->cnt;
-// echo $cnt04[0]->cnt;
-// echo $cnt05[0]->cnt;
+// $arr_promotion_id = !empty($arr_promotion_id) ? $arr_promotion_id : 0;
+// $cnt05 = DB::select(" SELECT count(*) as cnt FROM `promotions_products` WHERE promotion_id_fk in ($arr_promotion_id) ; ");
 
 // $cnt_all = $cnt01[0]->cnt + $cnt02[0]->cnt + $cnt03[0]->cnt + $cnt04[0]->cnt + $cnt05[0]->cnt ;
 // $amt_page = ceil($cnt_all/10);
 // echo $amt_page;
 
 // Product List All
-$TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.\Auth::user()->id;
+// $TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.\Auth::user()->id;
+$TABLE_tmp = 'temp_z01_print_frontstore_print_receipt_02_tmp'.$user_admin_id;
 DB::select(" DROP TABLE IF EXISTS $TABLE_tmp ; ");
 DB::select("
     CREATE TEMPORARY TABLE $TABLE_tmp (
@@ -150,14 +191,14 @@ DB::select("
 ");
 
 
-$sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-$sFrontstoreData = DB::select(" select * from db_order_products_list ");
+// $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $sFrontstorePVtotal = DB::select(" select SUM(total_pv) as pv_total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// $sFrontstoreData = DB::select(" select * from db_order_products_list ");
 
 
 $shipping_price = @$sRow->shipping_price?@$sRow->shipping_price:0;
 
-
+// dd($id);
 
 $shipping = DB::select("
     SELECT
@@ -165,6 +206,10 @@ $shipping = DB::select("
     db_orders.sentto_branch_id,
     dataset_delivery_location.txt_desc,
     db_orders.shipping_price,
+    db_orders.bill_transfer_other,
+    db_orders.fee_amt,
+    db_orders.shipping_free,
+    db_orders.sum_credit_price,
     branchs.b_name
     FROM
     db_orders
@@ -173,6 +218,8 @@ $shipping = DB::select("
     WHERE
     db_orders.id = '$id'
  ");
+$bill_transfer_other = "";
+$bill_transfer_other = $shipping[0]->bill_transfer_other;
 
 $shipping_desc = @$shipping[0]->shipping_price?@$shipping[0]->shipping_price:0;
 // $shipping_desc = $shipping_desc==0 ? '0':@$shipping[0]->txt_desc.'/ ค่าจัดส่ง '.(number_format(@$shipping_price,0));
@@ -182,19 +229,28 @@ if(@$shipping[0]->delivery_location==4){
 }else if(@$shipping[0]->delivery_location==0){
     $shipping_desc = 'รับสินค้าด้วยตัวเอง สาขา: '.@$shipping[0]->b_name;
 }else if(@$shipping[0]->delivery_location==2){
-    $shipping_desc = 'จัดส่ง ปณ./ขนส่ง / '.number_format(@$shipping_price,0);
+    // $shipping_desc = 'จัดส่ง ปณ./ขนส่ง / '.number_format(@$shipping_price,0);
+    $shipping_desc = 'จัดส่ง ปณ./ขนส่ง ';
 }else if(@$shipping[0]->delivery_location==3){
-    $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
+    // $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
+    $shipping_desc = 'ตามที่อยู่ที่ระบุ ';
+}else if(@$shipping[0]->delivery_location==1){
+  // $shipping_desc = 'ตามที่อยู่ที่ระบุ / '.number_format(@$shipping_price,0);
+  $shipping_desc = 'ตามบัตร ปชช ';
 }else{
     $shipping_desc = '0';
 }
 
 $pv_total = @$sRow->pv_total?@$sRow->pv_total:0;
 
-$total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
-// echo @$total_price[0]->total;
+// $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".$id." GROUP BY frontstore_id_fk ");
+// dd($total_price[0]->total);
+// วุฒิแก้เอาราคาสินค้าจริงๆ
+$total_price = $sRow->product_value;
+// dd($sRow->product_value);
 
-$total_price = str_replace(',','',number_format(@$total_price[0]->total,2));
+// $total_price = str_replace(',','',number_format(@$total_price[0]->total,2));
+$total_price = str_replace(',','',number_format($total_price,2));
 
 // ถ้าซื้อ ประเภทการซื้อ เป็น Gift Voucher => total_price ต้องลบออกจากราคาซื้อ
 // ถ้า gift_voucher_price > ราคาซื้อ ให้ สรุป total = 0
@@ -202,36 +258,130 @@ $gift_voucher = DB::select(" SELECT gift_voucher_price FROM db_orders where id=$
 if(!empty($gift_voucher)){
     if($gift_voucher[0]->gift_voucher_price > $total_price){
 
-          $total_price = 0 ;
-          $vat = 0 ;
+          // $total_price = 0 ;
+          // $vat = 0 ;
+
+          // วุฒิปรับ tax คำนวณใหม่
+          if($sRow->sum_price>0){
+            $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
+            // $sRow->tax = round( $sRow->tax ,2 );
+            $sRow->product_value = $sRow->sum_price - $sRow->tax;
+            // เพิ่มมา
+            $total_price = $sRow->product_value;
+          } //
+          $shipping_vat = 0;
+          if($shipping_price>0){
+            $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
+            // $shipping_vat = round( $shipping_vat ,2 );
+            $shipping_price = $shipping_price - $shipping_vat;
+            $sRow->tax = $sRow->tax + $shipping_vat;
+            // $shipping[0]->shipping_price = $shipping_price;
+          }
+          $fee_vat = 0;
+          if($sRow->fee_amt>0){
+            $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
+            // $fee_vat = round( $fee_vat ,2 );
+            $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
+            $sRow->tax = $sRow->tax + $fee_vat;
+          }else{
+            $sRow->fee_amt = 0;
+          }
+
+                $vat = $sRow->tax;
 
     }else{
 
-          $total_price = str_replace(',','',$total_price) - str_replace(',','',$gift_voucher[0]->gift_voucher_price) ;
-          $vat = intval($total_price) - (intval($total_price)/1.07) ;
+          // $total_price = str_replace(',','',$total_price) - str_replace(',','',$gift_voucher[0]->gift_voucher_price) ;
+
+               // วุฒิปรับ tax คำนวณใหม่
+     if($sRow->sum_price>0){
+      $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
+      // $sRow->tax = round( $sRow->tax ,2 );
+      $sRow->product_value = $sRow->sum_price - $sRow->tax;
+      // เพิ่มมา
+      $total_price = $sRow->product_value;
+    } //
+    $shipping_vat = 0;
+    if($shipping_price>0){
+      $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
+      // $shipping_vat = round( $shipping_vat ,2 );
+      $shipping_price = $shipping_price - $shipping_vat;
+      $sRow->tax = $sRow->tax + $shipping_vat;
+      // $shipping[0]->shipping_price = $shipping_price;
+    }
+    $fee_vat = 0;
+    if($sRow->fee_amt>0){
+      $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
+      // $fee_vat = round( $fee_vat ,2 );
+      $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
+      $sRow->tax = $sRow->tax + $fee_vat;
+    }else{
+      $sRow->fee_amt = 0;
+    }
+
+          $vat = $sRow->tax;
     }
 
 
 }else{
+    // $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+     // วุฒิปรับ tax คำนวณใหม่
+     if($sRow->sum_price>0){
+      $sRow->tax = $sRow->sum_price * (7.00 / (100+ 7.00) );
+      // $sRow->tax = round( $sRow->tax ,2 );
+      $sRow->product_value = $sRow->sum_price - $sRow->tax;
+       // เพิ่มมา
+       $total_price = $sRow->product_value;
+    } //
+    $shipping_vat = 0;
+    if($shipping_price>0){
+      $shipping_vat =  $shipping_price * (7.00 / (100+ 7.00) );
+      // $shipping_vat = round( $shipping_vat ,2 );
+      $shipping_price = $shipping_price - $shipping_vat;
+      $sRow->tax = $sRow->tax + $shipping_vat;
+      // $shipping[0]->shipping_price = $shipping_price;
+    }
+    $fee_vat = 0;
+    if($sRow->fee_amt>0){
+      $fee_vat =  $sRow->fee_amt * (7.00 / (100+ 7.00) );
+      // $fee_vat = round( $fee_vat ,2 );
+      $sRow->fee_amt = $sRow->fee_amt - $fee_vat;
+      $sRow->tax = $sRow->tax + $fee_vat;
+    }else{
+      $sRow->fee_amt = 0;
+    }
 
-    $vat = intval(@$sFrontstoreDataTotal[0]->total) - (intval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
-
+    $vat = $sRow->tax;
 }
 
 
- $sTable = DB::select("
-    SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
-    SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
-    ORDER BY add_from,id
+//  $sTable = DB::select("
+//     SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
+//     SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
+//     ORDER BY add_from,id
+// ");
+//
+
+$sTable = DB::select("
+SELECT * from db_order_products_list WHERE frontstore_id_fk = $id and add_from=1 UNION
+SELECT
+id,user_id_fk,frontstore_id_fk,code_order,customers_id_fk,distribution_channel_id_fk,purchase_type_id_fk,pay_type_id_fk,selling_price,
+member_price,product_id_fk,product_name,
+(SUM((CASE WHEN amt is null THEN 1 ELSE amt END))) AS amt,
+product_unit_id_fk,pv,total_pv,total_price,total_member_price,currency,add_from,type_product,promotion_id_fk,promotion_code,giveaway_id_fk,
+course_id_fk,action_date,action_user,approve_status,approver,approve_date,qr_code,created_at,updated_at,deleted_at
+from db_order_products_list WHERE frontstore_id_fk = $id and add_from=2 GROUP BY promotion_id_fk,promotion_code
+ORDER BY add_from,id
 ");
 
-foreach ($sTable as $key => $row) {
 
+foreach ($sTable as $key => $row) {
+  // amt
   $product_name = '';
 
         if($row->type_product=="course"){
                $product_name = $row->product_name;
-               DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".@$row->total_price."'); ");
+               DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."', '".@$row->amt."', '".@$row->total_price."'); ");
         }else{
 
 
@@ -249,7 +399,7 @@ foreach ($sTable as $key => $row) {
                  if(strlen($product_name)>100){
                   $product_name = iconv_substr($product_name,0,100, "UTF-8")."...";
                  }
-                 DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".@$row->total_price."'); ");
+                 DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."', '".@$row->amt."', '".@$row->total_price."'); ");
 
             }else{
 
@@ -275,7 +425,7 @@ foreach ($sTable as $key => $row) {
                      if(strlen($product_name)>100){
                       $product_name = iconv_substr($product_name,0,100, "UTF-8")."...";
                      }
-                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."pv', '".@$row->amt."', '".number_format(@$row->total_price,2)."'); ");
+                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null, '".@$row->selling_price."', '".@$row->total_pv."', '".@$row->amt."', '".number_format(@$row->total_price,2)."'); ");
 
 
 
@@ -343,133 +493,63 @@ if(!empty($gift_voucher)){
     DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '$gift_voucher_price1' ,  '0pv',  1,  '$gift_voucher_price2'); ");
 }
 
+if($sRow->user_name==''||$sRow->user_name==null){
+  $ThisCustomer = DB::select(" select user_name from customers where id=".$sRow->customers_id_fk." ");
+  // ของแถม
+  $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$sRow->pv_total);
+}else{
+  $check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$sRow->user_name,$sRow->pv_total);
+}
 
-$ThisCustomer = DB::select(" select * from customers where id=".$sRow->customers_id_fk." ");
-// ของแถม
-$check_giveaway = \App\Http\Controllers\Frontend\Fc\GiveawayController::check_giveaway($sRow->purchase_type_id_fk,$ThisCustomer[0]->user_name,$sRow->pv_total);
-// dd(@$check_giveaway);
 
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-$giveaway_voucher_price = 0;
-$giveaway_t1 = '';
+          if(@$check_giveaway){
+               // dd($id);
+               $sGiveaway = DB::select(" SELECT * FROM `db_order_products_list_giveaway` where order_id_fk in ($id) AND type_product='giveaway_product' ");
+               // dd($sGiveaway);
 
-                      if(@$check_giveaway){
+                if(@$sGiveaway){
 
-                         for ($i=0; $i < count($check_giveaway) ; $i++) {
+                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, 'สินค้าแถม',  null,  '' ,  '',  '',  ''); ");
 
-                          if(@$check_giveaway[$i]['status']=='success'){
-                              $arr = [];
-                              foreach ($check_giveaway as $key => $v) {
-                                  // print_r($v);
-                                  if($v['status']=='success'){
-                                    // print_r($v['gv_id']);
-                                    array_push($arr,$v['gv_id']);
-                                  }
-                              }
-                              $im = implode(',',$arr);
-                          }
+                      foreach ($sGiveaway as $key => $v) {
 
-                         }
-                         // dd($im);
-                         if(@$im){
-                            $rg = DB::select("select * from db_giveaway where id in ($im); ");
-                          // dd($rg);
+                        $product_name =
+                        ' &nbsp;&nbsp;&nbsp; - '.$v->product_name.' =
+                        '.($v->product_amt*$v->free).'
+                        '.$v->product_unit_name.'
+                        ';
 
+                         DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
 
-                            if(!empty($check_giveaway)){
-                                $rg1 = DB::select("select * from db_giveaway where giveaway_option_id_fk=1 and id in ($im); ");
-                                if(@$rg1){
-                                $product_name = 'ได้รับสินค้าแถม';
-                                DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '' ,  '',  '',  ''); ");
-                                }
-                            }
+                       }
+                }
 
+         }
 
-                          if(@$rg){
+// สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+          if(@$check_giveaway){
+               // dd($id);
+               $sGiveaway = DB::select(" SELECT * FROM `db_order_products_list_giveaway` where order_id_fk in ($id) AND type_product='giveaway_gv' ");
+               // dd($sGiveaway);
 
-                            foreach ($rg as $key => $v) {
-                               // echo $v->giveaway_option_id_fk;
+                if(@$sGiveaway){
 
-                                if($v->giveaway_option_id_fk==1){ // แถมสินค้า
-                                 // $giveaway_t1 .= 'ได้รับสินค้าแถม';
-                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* ได้รับสินค้าแถม </span> ';
+                    DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, 'แถม AiVoucher',  null,  '' ,  '',  '',  ''); ");
 
-                                 $rg_p = DB::select("
+                      foreach ($sGiveaway as $key => $v) {
 
-                                  SELECT db_giveaway_products.*,
-                                  (SELECT product_code FROM products WHERE id=db_giveaway_products.product_id_fk limit 1) as product_code,
-                                  (SELECT product_name FROM products_details WHERE product_id_fk=db_giveaway_products.product_id_fk and lang_id=1 limit 1) as product_name,
-                                  dataset_product_unit.product_unit
-                                  FROM
-                                  db_giveaway_products
-                                  Left Join dataset_product_unit ON db_giveaway_products.product_unit = dataset_product_unit.id
-                                  WHERE giveaway_id_fk in (".$v->id.") ; ");
+                        $product_name =
+                        ' &nbsp;&nbsp;&nbsp; - AiVoucher =
+                        '.($v->gv_free*$v->free).' '.$curr;
 
-                                 ?>
+                         DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
 
-                                  <div class="divTable">
+                       }
+                }
 
-                                 <div class="divTableBody">
-                                  <?php
-
-                                 if(@$rg_p){
-                                  $i = 1;
-                                  foreach ($rg_p as $key => $v2) {
-
-                                    $product_name =
-                                    ' &nbsp;&nbsp;&nbsp; - '.$v2->product_code." : ".$v2->product_name.' =
-                                    '.$v2->product_amt.'
-                                    '.$v2->product_unit.'
-                                    ';
-
-                                     DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  null ,  null,  null,  null ); ");
-
-                                ?>
-
-                         <!--          <div class="divTableRow">
-                                  <div class="divTableCell" style="width: 2%;"><center><?=$i?>)</div>
-                                  <div class="divTableCell" style="width: 25%;text-align: left !important;"><?=$v2->product_code." : ".$v2->product_name?>
-                                  </div>
-                                  <div class="divTableCell" style="width: 5%;"><center><?=$v2->product_amt?></div>
-                                  <div class="divTableCell" style="width: 5%;"><?=$v2->product_unit?></div>
-                                  </div> -->
-
-                                <?php
-                                 $i++;
-
-                                   }
-                                 }
-
-                                 ?>
-                                  </div>
-                                  </div>
-                                  <?php
-
-                               }
-
-
-
-                               if($v->giveaway_option_id_fk==2){ // แถม giveaway_voucher เป็นเงิน
-                                  // แสดงยอดเงิน giveaway_voucher
-                                 // $giveaway_t1 .= '<span style="color:red;font-weight:bold;">* แถม AiVoucher '.$v->giveaway_voucher.' บาท </span>' ;
-
-                               }
-                            }
-                          }
-
-                             if(!empty($check_giveaway)){
-                                    $rg2 = DB::select("select sum(giveaway_voucher) as giveaway_voucher from db_giveaway where giveaway_option_id_fk=2 and id in ($im); ");
-                                    if(@$rg2[0]->giveaway_voucher>0){
-                                       $giveaway_voucher_price = $rg2[0]->giveaway_voucher;
-                                       $product_name = 'แถม AiVoucher '.$rg2[0]->giveaway_voucher .' บาท ';
-                                       DB::select(" INSERT INTO $TABLE_tmp VALUES (null,null, '$product_name',  null,  '' ,  '',  '',  ''); ");
-                                    }
-                                }
-
-                         }
-                      }
-
+         }
 // สินค้าแถม @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
@@ -486,7 +566,8 @@ $amt_page = ceil($cnt_all[0]->cnt/$limit);
 // $amt_page = 4;
 
 
-$TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
+// $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
+$TABLE = 'temp_z01_print_frontstore_print_receipt_02'.$user_admin_id;
 DB::select(" DROP TABLE IF EXISTS $TABLE ; ");
 DB::select("
     CREATE TEMPORARY TABLE $TABLE (
@@ -533,24 +614,182 @@ if(!empty($db_orders[0]->action_user)){
 
 
      $tel = '';
-     $cus = DB::select("
-        SELECT
-        customers.user_name,
-        customers.prefix_name,
-        customers.first_name,
-        customers.last_name
-        FROM
-        db_orders
-        Left Join customers ON db_orders.customers_id_fk = customers.id
-        where db_orders.id = ".$id."
-          ");
+    //  เปลี่ยนบนหัวบิลของพี่กอล์ฟ
+    if($db_orders[0]->status_payment_sent_other==1){
+      $cus = DB::select("
+      SELECT
+      customers.user_name,
+      customers.prefix_name,
+      customers.first_name,
+      customers.last_name,
+      customers.id_card
+      FROM
+      db_orders
+      Left Join customers ON db_orders.customers_sent_id_fk = customers.id
+      where db_orders.id = ".$id."
+        ");
+    }else{
 
+      $cus = DB::select("
+      SELECT
+      customers.user_name,
+      customers.prefix_name,
+      customers.first_name,
+      customers.last_name,
+      customers.id_card
+      FROM
+      db_orders
+      Left Join customers ON db_orders.customers_id_fk = customers.id
+      where db_orders.id = ".$id."
+        ");
+    }
+
+    $buy_other = "";
+    if($db_orders[0]->status_payment_sent_other==1){
+      $buy_other = "ทำรายการโดย : [".$db_orders[0]->user_name."]";
+    }
+
+       if(@$cus[0]->prefix_name == '0'){
+        @$cus[0]->prefix_name = '';
+       }
        $cus_user_name = @$cus[0]->user_name;
+
+
        $cus_name = @$cus[0]->prefix_name.@$cus[0]->first_name.' '.@$cus[0]->last_name;
+
+       $cus_name = str_replace('(ยกเลิกสมัครซ้ำ)','',$cus_name);
+       $cus_name = str_replace("(ยกเลิก)"," ",$cus_name);
+
+       $cus_tax = @$cus[0]->id_card!=""?': '.@$cus[0]->id_card:': เลขผู้เสียภาษี (ไม่ได้ระบุไว้)';
+
+
+      //  $address_in_order = DB::select("
+      //       SELECT
+      //       house_no,
+      //       house_name,
+      //       moo,
+      //       soi,
+      //       road,
+      //       amphures_id_fk,
+      //       dataset_amphures.name_th AS ampname,
+      //       district_id_fk,
+      //       dataset_districts.name_th AS tamname,
+      //       province_id_fk,
+      //       dataset_provinces.name_th AS provname,
+      //       zipcode,
+      //       tel,
+      //       tel_home
+      //       FROM
+      //       db_orders
+      //       Left Join dataset_provinces ON db_orders.province_id_fk = dataset_provinces.id
+      //       Left Join dataset_amphures ON db_orders.amphures_id_fk = dataset_amphures.id
+      //       Left Join dataset_districts ON db_orders.district_id_fk = dataset_districts.id
+      //       WHERE db_orders.id=".$id."
+      //     ");
+
+       // วุฒิเช็คซื้อให้คนอื่น
+       if($db_orders[0]->status_payment_sent_other==1){
+              //  วุฒฺิแก้เอาที่อยู่จริงลูกค้ามาใส่
+              $address_in_order = DB::select("
+              SELECT
+              house_no,
+              house_name,
+              moo,
+              soi,
+              road,
+              amphures_id_fk,
+              dataset_amphures.name_th AS ampname,
+              district_id_fk,
+              dataset_districts.name_th AS tamname,
+              province_id_fk,
+              dataset_provinces.name_th AS provname,
+              zipcode,
+              tel_mobile AS tel,
+              tel_home AS tel_home
+              FROM
+              customers_detail
+              Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+              Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+              Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+              WHERE customers_detail.customer_id=".@$db_orders[0]->customers_sent_id_fk."
+            ");
+            //
+                  }else{
+              //  วุฒฺิแก้เอาที่อยู่จริงลูกค้ามาใส่
+              $address_in_order = DB::select("
+              SELECT
+              house_no,
+              house_name,
+              moo,
+              soi,
+              road,
+              amphures_id_fk,
+              dataset_amphures.name_th AS ampname,
+              district_id_fk,
+              dataset_districts.name_th AS tamname,
+              province_id_fk,
+              dataset_provinces.name_th AS provname,
+              zipcode,
+              tel_mobile AS tel,
+              tel_home AS tel_home
+              FROM
+              customers_detail
+              Left Join dataset_provinces ON customers_detail.province_id_fk = dataset_provinces.id
+              Left Join dataset_amphures ON customers_detail.amphures_id_fk = dataset_amphures.id
+              Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
+              WHERE customers_detail.customer_id=".@$db_orders[0]->customers_id_fk."
+            ");
+            //
+                  }
+
+
+           if(!empty(@$address_in_order[0]->provname)){
+
+            $r = strpos(@$address_in_order[0]->house_no,"ตย");
+              if($r!=''){
+                @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';
+              }else{
+                @$address_in_order[0]->house_no = str_replace("(ตย.)"," ",@$address_in_order[0]->house_no);
+
+              @$cus_address = " บ้านเลขที่ ".@$address_in_order[0]->house_no." หมู่บ้าน ". @$address_in_order[0]->house_name." หมู่ ". @$address_in_order[0]->moo."";
+              @$cus_address .= " ซอย ".@$address_in_order[0]->soi." ถนน ". @$address_in_order[0]->road;
+              @$cus_address .= ", ต.". @$address_in_order[0]->tamname. " ";
+              @$cus_address .= ", อ.". @$address_in_order[0]->ampname;
+              @$cus_address .= ", จ.". @$address_in_order[0]->provname;
+              @$cus_address .= ", ปณ.". @$address_in_order[0]->zipcode;
+              @$cus_address .= ", โทร.". @$address_in_order[0]->tel;
+              @$cus_address .= ", ". @$address_in_order[0]->tel_home;
+
+              @$cus_address = @$cus_address;
+
+              }
+
+
+
+
+           }else{
+              @$cus_address = ': ไม่ได้ลงทะเบียนที่อยู่ไว้';
+           }
+
+
 
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$id)->get();
+                //  where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
+                // วุฒิเพิ่มมาเช็ค
+                $district_id_fk = DB::table('customers_detail')->select('district_id_fk')->where('customer_id',@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)->first();
+                if($district_id_fk){
+                    $dis = DB::table('dataset_districts')->select('id')->where('id',$district_id_fk->district_id_fk)->first();
+                    if(!$dis){
+                      $dis2 = DB::table('dataset_districts')->select('id')->where('name_th',$district_id_fk->district_id_fk)->first();
+                      if($dis2){
+                        DB::table('customers_detail')->where('customer_id',@$sRow->customers_id_fk)->update([
+                          'district_id_fk' => $dis2->id,
+                        ]);
+                      }
+                    }
+                }
 
                  $cus = DB::select("
                     SELECT
@@ -589,12 +828,15 @@ if(!empty($db_orders[0]->action_user)){
                                       dataset_districts.name_th AS tamname,
                                       customers.prefix_name,
                                       customers.first_name,
-                                      customers.last_name
+                                      customers.last_name,
+                                      customers_detail.tel_mobile AS tel_mobile,
+                                      customers_detail.tel_home AS tel_home
                                       FROM
                                       customers_address_card
                                       Left Join dataset_provinces ON customers_address_card.card_province_id_fk = dataset_provinces.id
                                       Left Join dataset_amphures ON customers_address_card.card_amphures_id_fk = dataset_amphures.id
                                       Left Join dataset_districts ON customers_address_card.card_district_id_fk = dataset_districts.id
+                                      Left Join customers_detail ON customers_detail.customer_id = customers_address_card.customer_id
                                       Left Join customers ON customers_address_card.customer_id = customers.id
                                       where customers_address_card.customer_id = ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)."
 
@@ -616,6 +858,16 @@ if(!empty($db_orders[0]->action_user)){
                                  @$address = null;
                               }
 
+                              // if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                              //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                              //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                              //   }
+                              // }else{
+                              //   if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                  $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                              //   }
+                              // }
+
                           }else{
 
                                 $addr = DB::select(" SELECT
@@ -626,6 +878,8 @@ if(!empty($db_orders[0]->action_user)){
                                     customers_address_card.card_moo,
                                     customers_address_card.card_zipcode,
                                     customers_address_card.card_soi,
+                                    customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
                                     -- customers_detail.amphures_id_fk,
                                     -- customers_detail.district_id_fk,
                                     -- customers_detail.road,
@@ -650,7 +904,7 @@ if(!empty($db_orders[0]->action_user)){
                                      ");
 
                               if($addr){
-                                  @$address =  "เลขที่ ". @$addr[0]->card_house_no." ". @$addr[0]->card_house_name."";
+                                  @$address =  "บ้านเลขที่ ". @$addr[0]->card_house_no." หมู่บ้าน ". @$addr[0]->card_house_name."";
                                   @$address .=  " หมู่ ". @$addr[0]->card_moo;
                                   @$address .=  " ซอย ". @$addr[0]->card_soi;
                                   @$address .=  " ถนน ". @$addr[0]->card_road;
@@ -668,6 +922,15 @@ if(!empty($db_orders[0]->action_user)){
                                 @$address = null;
                               }
 
+                              // if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+                              //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                              //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                              //   }
+                              // }else{
+                              //   if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                  $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                              //   }
+                              // }
 
                         }
 
@@ -684,11 +947,13 @@ if(!empty($db_orders[0]->action_user)){
                                       customers_detail.soi,
                                       -- customers_detail.amphures_id_fk,
                                       -- customers_detail.district_id_fk,
-                                      -- customers_detail.road,
+                                      customers_detail.road,
                                       -- customers_detail.province_id_fk,
                                       customers.prefix_name,
                                       customers.first_name,
                                       customers.last_name,
+                                      customers_detail.tel_mobile,
+                                      customers_detail.tel_home,
                                       dataset_provinces.name_th AS provname,
                                       dataset_amphures.name_th AS ampname,
                                       dataset_districts.name_th AS tamname
@@ -700,8 +965,10 @@ if(!empty($db_orders[0]->action_user)){
                                       Left Join dataset_districts ON customers_detail.district_id_fk = dataset_districts.id
                                       WHERE customers_detail.customer_id =
                                        ".(@$sRow->customers_id_fk?@$sRow->customers_id_fk:0)." ");
+
                                 // print_r(@$addr);
-                                @$address =  @$addr[0]->house_no?" เลขที่ ". @$addr[0]->house_no:"". " หมู่บ้าน ". @$addr[0]->house_name;
+                                @$address = @$addr[0]->first_name." ".@$addr[0]->last_name." ";
+                                @$address .= " เลขที่ ". @$addr[0]->house_no. " หมู่บ้าน ". @$addr[0]->house_name. "  ถนน ".@$addr[0]->road;
                                 @$address .= " ต.". @$addr[0]->tamname. " ";
                                 @$address .= " อ.". @$addr[0]->ampname;
                                 @$address .= " จ.". @$addr[0]->provname;
@@ -713,10 +980,19 @@ if(!empty($db_orders[0]->action_user)){
                                     @$address = null;
                                 }
 
+                                // if(@$addr[0]->tel_mobile == '' && @$addr[0]->tel_home == ''){
+
+                                //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                //   }
+
+                                // }else{
+
+                                //   if(!empty(@$addr[0]->tel_mobile) || !empty(@$addr[0]->tel_home)){
+                                    $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
+                                //   }
+                                // }
                         }
-
-
-
 
                         if(@$sRow->delivery_location==3){
 
@@ -727,12 +1003,12 @@ if(!empty($db_orders[0]->action_user)){
                                       Left Join dataset_amphures ON customers_addr_frontstore.amphur_code = dataset_amphures.id
                                       Left Join dataset_districts ON customers_addr_frontstore.tambon_code = dataset_districts.id
                                       where customers_addr_frontstore.id = ".(@$CusAddrFrontstore[0]->id?$CusAddrFrontstore[0]->id:0)." ");
-                                // print_r(@$addr);
+                                // print_r(@$addr[0]->recipient_name);
                                 @$address = @$addr[0]->recipient_name;
                                 @$address .= ' '.@$addr[0]->addr_no;
-                                @$address .= ",". @$addr[0]->tamname. " ";
-                                @$address .= ",". @$addr[0]->ampname;
-                                @$address .= ",". @$addr[0]->provname;
+                                @$address .= ", ต.". @$addr[0]->tamname. " ";
+                                @$address .= ", อ.". @$addr[0]->ampname;
+                                @$address .= ", จ.". @$addr[0]->provname;
                                 @$address .= ",". @$addr[0]->zip_code;
                                 // @$address .= " ". @$addr[0]->tel_mobile ? '<br>Tel. '. @$addr[0]->tel_mobile:'' ;
                                 // @$address .= " ". @$addr[0]->tel_home?', '.@$addr[0]->tel_home:'' ;
@@ -743,14 +1019,46 @@ if(!empty($db_orders[0]->action_user)){
                                 }
 
                                 // echo @$address;
-                                if(!empty(@$addr[0]->tel_mobile)){
-                                     $tel = 'Tel. '. @$addr[0]->tel_mobile . (@$addr[0]->tel_home?', '.@$addr[0]->tel_home:'') ;
-                                }
+                                // if(@$addr[0]->tel == '' && @$addr[0]->tel_home == ''){
+                                //   if(!empty(@$sRow->tel) || !empty(@$sRow->tel_home)){
+                                //     $tel = 'Tel. '. @$sRow->tel . (@$sRow->tel_home?', '.@$sRow->tel_home:'') ;
+                                //   }
+                                // }else{
+                                  // if(!empty(@$addr[0]->tel) || !empty(@$addr[0]->tel_home)){
+                                    $tel = 'Tel. '. @$addr[0]->tel . ' / '.@$addr[0]->tel_home;
+                                  // }
+                                // }
+
+                        }
+
+                        if(@$sRow->delivery_location==4){
+
+                          $delivery_data = DB::table('db_delivery')->where('orders_id_fk',$id)->first();
+                          if($delivery_data){
+                            $db_delivery_packing_data = DB::table('db_delivery_packing')->where('delivery_id_fk',$delivery_data->id)->first();
+                            if($db_delivery_packing_data){
+                              $db_delivery_packing_other = DB::table('db_delivery_packing')->where('packing_code',$db_delivery_packing_data->packing_code)->get();
+                              if(count($db_delivery_packing_other)==1){
+                                @$address = @$delivery_data->recipient_name;
+                                @$address .= " ". @$delivery_data->addr_send;
+                                @$address .= " ". @$delivery_data->postcode;
+                                @$address .= " Tel". @$delivery_data->mobile.' '. @$delivery_data->tel_home;
+                              }
+                            }
+                          }else{
+                            @$address = "";
+                          }
 
                         }
 
                       }
-   $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address : NULL;
+
+
+  //  $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address  . ' ' . $tel : NULL;
+  $address = !empty($address) ? ' '. $address  . ' ' . $tel : NULL;
+  //  $address = preg_replace('/[^\_\- ]/i', '', $address);
+  // $address = preg_replace('/[^A-Za-z0-9ก-ฮ.:, " " \-]/', '', $address);
+
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("
@@ -773,7 +1081,7 @@ if(!empty($db_orders[0]->action_user)){
         $action_user = DB::select(" select * from ck_users_admin where id=".@$db_orders[0]->action_user." ");
         $action_user_name = @$action_user[0]->name;
     }else{
-        $action_user_name = "-";
+        $action_user_name = "V3";
     }
 
     $aistockist = @$db_orders[0]->user_name ? @$db_orders[0]->user_name : '-';
@@ -801,27 +1109,21 @@ if(!empty($db_orders[0]->action_user)){
     $pay_type = DB::select("
 
             select
-            db_orders.pay_type_id_fk,
-            db_orders.credit_price,
-            db_orders.transfer_price,
-            db_orders.fee_amt,
-            db_orders.aicash_price,
-            db_orders.cash_pay,
-            db_orders.gift_voucher_price,
+            db_orders.*,
             dataset_pay_type.detail as pay_type
             from db_orders Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
             WHERE db_orders.id=".$id."
 
         ");
-/*
-5   เงินสด
-6   เงินสด + Ai-Cash
-7   เครดิต + เงินสด
-8   เครดิต + เงินโอน
-9   เครดิต + Ai-Cash
-10  เงินโอน + เงินสด
-11  เงินโอน + Ai-Cash
-*/
+            /*
+            5   เงินสด
+            6   เงินสด + Ai-Cash
+            7   เครดิต + เงินสด
+            8   เครดิต + เงินโอน
+            9   เครดิต + Ai-Cash
+            10  เงินโอน + เงินสด
+            11  เงินโอน + Ai-Cash
+            */
 
 
     if(@$pay_type[0]->pay_type_id_fk==10){ // 10  เงินโอน + เงินสด
@@ -836,7 +1138,17 @@ if(!empty($db_orders[0]->action_user)){
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }
 
-    }else if(@$pay_type[0]->pay_type_id_fk==6){ // 6   เงินสด + Ai-Cash
+    }else
+    if(@$pay_type[0]->pay_type_id_fk==1){ // 1 เงินโอน
+          $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
+  }else
+  if(@$pay_type[0]->pay_type_id_fk==2){ // 2 บัตรเครดิต
+      $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
+}else
+if(@$pay_type[0]->pay_type_id_fk==3){ // 3 Ai-Cash
+    $pay_type = 'Ai-Cash: '.@$pay_type[0]->aicash_price;
+}
+    else if(@$pay_type[0]->pay_type_id_fk==6){ // 6   เงินสด + Ai-Cash
         if(@$pay_type[0]->cash_pay>0 && @$pay_type[0]->aicash_price==0){
             $pay_type = 'เงินสด: '.@$pay_type[0]->transfer_price;
         }elseif(@$pay_type[0]->cash_pay>0 && @$pay_type[0]->aicash_price>0){
@@ -849,35 +1161,45 @@ if(!empty($db_orders[0]->action_user)){
 
     }else if(@$pay_type[0]->pay_type_id_fk==7){ // 7   เครดิต + เงินสด
         if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay==0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
+
         }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->cash_pay>0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->cash_pay>0){
             $pay_type = 'เงินสด: '.@$pay_type[0]->cash_pay;
         }else{
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินสด: '.@$pay_type[0]->cash_pay;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
         }
 
     }else if(@$pay_type[0]->pay_type_id_fk==8){ // 8   เครดิต + เงินโอน
         if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->transfer_price==0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
         }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->transfer_price>0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินโอน: '.@$pay_type[0]->transfer_price;
         }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->transfer_price>0){
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price;
         }else{
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + เงินโอน: '.@$pay_type[0]->transfer_price;
         }
 
     }else if(@$pay_type[0]->pay_type_id_fk==9){ // 9   เครดิต + Ai-Cash
         if(@$pay_type[0]->credit_price>0 && @$pay_type[0]->aicash_price==0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price;
         }elseif(@$pay_type[0]->credit_price>0 && @$pay_type[0]->aicash_price>0){
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
         }elseif(@$pay_type[0]->credit_price==0 && @$pay_type[0]->aicash_price>0){
             $pay_type = 'Ai-Cash: '.@$pay_type[0]->aicash_price;
         }else{
-            $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            // $pay_type = 'เครดิต: '.@$pay_type[0]->credit_price.' ค่าธรรมเนียม: '.@$pay_type[0]->fee_amt.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+            $pay_type = 'เครดิต: '.@$pay_type[0]->sum_credit_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
         }
 
     }else if(@$pay_type[0]->pay_type_id_fk==11){ // 11   เงินโอน + Ai-Cash
@@ -891,10 +1213,40 @@ if(!empty($db_orders[0]->action_user)){
         }else{
             $pay_type = 'เงินโอน: '.@$pay_type[0]->transfer_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
         }
+    }else if(@$pay_type[0]->pay_type_id_fk==4){ // 4  Gift Voucher
+          $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price;
+  }
+
+  else if(@$pay_type[0]->pay_type_id_fk==12){ // 12  Gift Voucher + เงินโอน
+    $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + เงินโอน: '.@$pay_type[0]->transfer_price;
+}
+
+else if(@$pay_type[0]->pay_type_id_fk==13){ // 13  Gift Voucher + บัตรเครดิต
+  $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + เครดิต: '.@$pay_type[0]->sum_credit_price;
+}
+
+else if(@$pay_type[0]->pay_type_id_fk==14){ // 14  Gift Voucher + Ai-Cash
+  $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + Ai-Cash: '.@$pay_type[0]->aicash_price;
+}
+else if(@$pay_type[0]->pay_type_id_fk==19){ // 19  Gift Voucher + เงินสด
+  $pay_type = 'Gift Voucher: '.@$pay_type[0]->gift_voucher_price.' + เงินสด: '.@$pay_type[0]->cash_pay;
+}elseif(@$pay_type[0]->pay_type_id_fk==15){
+  $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->prompt_pay_price,2);
+}elseif(@$pay_type[0]->pay_type_id_fk==16){
+  $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->true_money_price,2);
+}elseif(@$pay_type[0]->pay_type_id_fk==20){
+  $pay_type = 'PromptPay'.': '.number_format((@$pay_type[0]->prompt_pay_price),2).' + เงินโอน: '.number_format((@$pay_type[0]->transfer_price),2);
+}
+elseif(@$pay_type[0]->pay_type_id_fk==17){
+  $pay_type = 'Gift Voucher'.': '.number_format((@$pay_type[0]->gift_voucher_price),2).' + PromptPay: '.number_format((@$pay_type[0]->prompt_pay_price),2);
+}elseif(@$pay_type[0]->pay_type_id_fk==18){
+  $pay_type = 'Gift Voucher'.': '.number_format((@$pay_type[0]->gift_voucher_price),2).' + TrueMoney: '.number_format((@$pay_type[0]->true_money_price),2);
+}
 
 
-    }else{ // 5   เงินสด
-        $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
+  else{ // 5   เงินสด
+        // $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$total_price,2);
+        $pay_type = @$pay_type[0]->pay_type.': '.number_format(@$pay_type[0]->cash_pay,2);
     }
 
 
@@ -906,10 +1258,16 @@ if(!empty($db_orders[0]->action_user)){
         DB::select(" UPDATE $TABLE SET a = '$cus_name' WHERE id = (($n*$i)+3) ; ");
         DB::select(" UPDATE $TABLE SET a = '$sRow->code_order' WHERE id = (($n*$i)+4) ; ");
         if(@$sRow->approve_date!=''){
-DB::select(" UPDATE $TABLE SET a = '".date("d-m-Y",strtotime(@$sRow->approve_date))."' WHERE id = (($n*$i)+5) ; ");
-}else{
-DB::select(" UPDATE $TABLE SET a = 'บิลยังไม่อนุมัติ' WHERE id = (($n*$i)+5) ; ");
-}
+            DB::select(" UPDATE $TABLE SET a = '".date("d-m-Y",strtotime(@$sRow->approve_date))."' WHERE id = (($n*$i)+5) ; ");
+            }else{
+              if(@$sRow->pay_with_other_bill_note!='' && @$sRow->status_run_pv!='success'){
+                $other_bill_data = DB::table('db_orders')->select('approve_date')->where('code_order',@$sRow->pay_with_other_bill_note)->first();
+                DB::select(" UPDATE $TABLE SET a = '".date("d-m-Y",strtotime(@$other_bill_data->approve_date))."' WHERE id = (($n*$i)+5) ; ");
+              }else{
+                DB::select(" UPDATE $TABLE SET a = 'บิลยังไม่อนุมัติ' WHERE id = (($n*$i)+5) ; ");
+              }
+
+            }
 
         // รายการสินค้า
         if($m==1){
@@ -1014,62 +1372,43 @@ DB::select(" UPDATE $TABLE SET a = 'บิลยังไม่อนุมั�
 
         $m++;
 
+        $rPt = DB::select(" SELECT * FROM dataset_orders_type where id=".$sRow->purchase_type_id_fk." ");
+
+        $purchase_type = "ประเภทการซื้อ : ".$rPt[0]->orders_type;
+
+        $score_detail = number_format(@$pv_total,0).' pv';
+        if($sRow->purchase_type_id_fk==5){
+          @$pv_total = 0;
+          $score_detail = '-';
+        }
 
 
-        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".number_format(@$pv_total,0)." pv ]' WHERE id = (($n*$i)+16) ; ");
-        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc ]' WHERE id = (($n*$i)+17) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'REF : [ $id ] AG : [ $agency ] SK : [ $aistockist ] คะแนนครั้งนี้ : [ ".$score_detail." ] $purchase_type ' WHERE id = (($n*$i)+16) ; ");
 
-        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
+        DB::select(" UPDATE $TABLE SET a = 'ชำระ : [ $pay_type ] พนักงาน : [ $action_user_name ] จัดส่ง : [ $shipping_desc $bill_transfer_other ] $buy_other ' WHERE id = (($n*$i)+17) ; ");
 
-        DB::select(" UPDATE $TABLE SET a = '".(@$sRow->note!=''?'* '.@$sRow->note:'&nbsp;')."' WHERE id = (($n*$i)+19) ; ");
+        // DB::select(" UPDATE $TABLE SET a = '".(@$sRow->pay_with_other_bill_note!=''?'หมายเหตุ '.@$sRow->pay_with_other_bill_note:'&nbsp;')."' WHERE id = (($n*$i)+18) ; ");
+
+        // DB::select(" UPDATE $TABLE SET a = '".(@$sRow->note!=''?'* '.@$sRow->note:'&nbsp;')."' WHERE id = (($n*$i)+19) ; ");
 
 
         if($amt_page==1){
-
+          // dd($total_price);
           // รวมเงิน
-          //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price)-@$vat,2)."' WHERE id = (($n*$i)+18) ; ");
-
-          //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+18) ; ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
-
-           // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            // $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
-            // if($giveaway_voucher_price>0){
-            //     if(($total_price+@$shipping_price) > $giveaway_voucher_price){
-            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
-            //     }else{
-            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
-            //     }
-            // }else{
-                DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2)."' WHERE id = (($n*$i)+20) ; ");
-            // }
+            // dd($total_price.' + '.$shipping_price.' + '.$vat.' + '.$sRow->fee_amt);
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+$shipping_price+$vat+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+20) ; ");
 
           DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
         }elseif($amt_page>1 && ($i+1)!=$amt_page){
           DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page ต่อหน้า ".($i+2)." )' WHERE id = (($n*$i)+22) ; ");
         }else{
           if($i+1==$amt_page){
-
             // รวมเงิน
-          //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('18', null, null, null, null, null, null, '".$total_price."'); ");
-            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price)-@$vat,2)."' WHERE id = (($n*$i)+18) ; ");
-
-          //  DB::select(" INSERT IGNORE INTO $TABLE VALUES ('19', null, null, null, null, null, null, '".number_format(@$vat,2)."'); ");
+            DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+18) ; ");
             DB::select(" UPDATE $TABLE SET g = '".number_format(@$vat,2)."' WHERE id = (($n*$i)+19) ; ");
-
-           // DB::select(" INSERT IGNORE INTO $TABLE VALUES ('20', null, null, null, null, null, null, '".number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)."'); ");
-            // $giveaway_voucher_price = $giveaway_voucher_price?$giveaway_voucher_price:0;
-            // if($giveaway_voucher_price>0){
-            //     if(($total_price+@$shipping_price) > $giveaway_voucher_price){
-            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)."' WHERE id = (($n*$i)+20) ; ");
-            //     }else{
-            //         DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2).'-'.$giveaway_voucher_price.' = '.number_format(($total_price+@$shipping_price)-$giveaway_voucher_price,2)." => 0.00' WHERE id = (($n*$i)+20) ; ");
-            //     }
-            // }else{
-                DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+@$shipping_price),2)."' WHERE id = (($n*$i)+20) ; ");
-            // }
-            // หนเา
+                DB::select(" UPDATE $TABLE SET g = '".number_format(($total_price+$shipping_price+$vat+$sRow->fee_amt),2)."' WHERE id = (($n*$i)+20) ; ");
             DB::select(" UPDATE $TABLE SET g = '(หน้า ".($i+1)."/$amt_page)' WHERE id = (($n*$i)+22) ; ");
           }
         }
@@ -1087,41 +1426,70 @@ DB::select(" UPDATE $TABLE SET a = 'บิลยังไม่อนุมั�
 
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
   // echo \Auth::user()->id;
-  $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
+
+  $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.$user_admin_id;
+  // $TABLE = 'temp_z01_print_frontstore_print_receipt_02'.\Auth::user()->id;
   // $TABLE = 'temp_z01_print_frontstore_print_receipt_02';
   $count_row = DB::select(" SELECT count(*) as count_row FROM $TABLE  ");
   $count_row = $count_row[0]->count_row ;
 
 
-
+  $db_orders_Data = DB::select("
+  SELECT db_orders.*,branchs.b_code as branch_code
+  FROM db_orders
+  LEFT Join branchs ON db_orders.branch_id_fk = branchs.id
+  WHERE
+  db_orders.id = '$id'
+");
 
 for ($j=0; $j < $amt_page ; $j++) {
-
-
  ?>
 
 <div class="NameAndAddress " >
     <table >
       <tr>
-        <td style="width: 47% ;margin-left:35px !important;">
-
-          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
+        <td style="width: 60% ;margin-left:100px !important;">
+  <?php
+  $DB = DB::select(" SELECT * FROM $TABLE");
+  // dd($DB);
+  ?>
+          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; ");
+          ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+3) ; "); ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a."</span><br>"; ?>
+
+          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+6) ; "); ?>
+          <?php echo "<span style='font-size:14px;'>".@$cus_address."</span><br>"; ?>
+
+          <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+7) ; "); ?>
+          <?php echo "<span style='font-size:15px;'>".@$cus_tax." </span><br>"; ?>
       </td>
 
 <!-- THELP  -->
       <td style="vertical-align: top; font-size: 24px;font-weight: bold;" >
+      <?php
+      if($sRow->approve_status == 5){
+        echo '<b style="color:red;"><u> BILL CANCEL </u></b>';
+      }
+       ?>
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+1) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
+        <?php echo @$DB[0]->a ;
+        ?>
       </td>
 
       <td style="margin-left:25px !important;margin-top:18px !important;width:30%;vertical-align: top;" >
         <br>
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
+        <?php echo @$DB[0]->a; ?>
+        <?php
+        if(@$db_orders[0]->invoice_code_id_fk){
+          echo '<br>'.@$db_orders[0]->invoice_code_id_fk;
+        }
+
+        ?>
+
         <br>
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+5) ; "); ?>
         <?php echo @$DB[0]->a ; ?>
@@ -1129,8 +1497,10 @@ for ($j=0; $j < $amt_page ; $j++) {
       </tr>
     </table>
 
-    <table style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;" >
+    <table style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 130px !important;" >
 
+
+    <!-- <a href="backend/pick_warehouse_del_packing/P100896" onclick="return confirm('คุณต้องการยกเลิกรายการ P100896 ? (หลังจากนั้นจะไม่สามารถแก้ไขได้อีก)')"><i class="bx bx-trash grow " data-toggle="tooltip" data-placement="left" title="" style="font-size:24px;cursor:pointer;color:red;" data-original-title="ยกเลิกรายการ P100896"></i></a> -->
 
 <!-- รายการสินค้า -->
 
@@ -1141,13 +1511,16 @@ for ($j=0; $j < $amt_page ; $j++) {
                 <td style="width:2.6%;text-align: left;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php //echo @$DB[0]->a ; echo substr(trim(@$DB[0]->b),1,1); ?>
-                <?php if(substr(trim(@$DB[0]->b),1,1)=='n'){ $runno = $runno - 1 ; }else{ if(@$DB[0]->b!='') echo $runno; } ?>
+                <?php if(substr(trim(@$DB[0]->b),1,1)=='n'){ $runno = $runno - 1 ; }else{ if(@$DB[0]->b!='') echo $num_run;
+                //  $runno
+                } ?>
+                <?php  ?>
                 </td>
 
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
                 <?php
                 if(@$DB[0]->c==""){ ?>
-                    <td colspan="2" style="width:28%;text-align: left;">
+                    <td colspan="2" style="width:28%;text-align: left; font-size:18px;">
                     <?php echo @$DB[0]->b ; ?>
                      </td>
                     <?php
@@ -1173,9 +1546,20 @@ for ($j=0; $j < $amt_page ; $j++) {
 
                 <td style="width:5%;text-align: right;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in ($i) ; "); ?>
+
                 <?php
+
                 if(@$DB[0]->c==""){
-                  echo @$DB[0]->e ;
+
+                  if(@$DB[0]->e and @$DB[0]->f and @$DB[0]->e > 0 ){
+                    $pv_per_product = $DB[0]->e / $DB[0]->f ;
+                  echo $pv_per_product.'Pv';
+                  }
+
+                  if(@$DB[0]->f and @$DB[0]->e == 0){
+                    echo '0Pv';
+                  }
+
                 }
                 ?>
                 </td>
@@ -1191,18 +1575,127 @@ for ($j=0; $j < $amt_page ; $j++) {
                 </td>
 
           </tr>
- <?php $runno++; }  ?>
+ <?php $runno++;
+$num_run++;
+}  ?>
 
+  <!-- วุฒิเพิ่ม ค่าธรรมเนียมและค่าจัดส่ง -->
+  <?php
+
+
+      $total_fee_amt = 0;
+      $total_shipping_price = 0;
+      // dd($cnt_all[0]->cnt);
+      // dd($amt_page);
+      $str = "";
+      $n = 22;
+       $limit = 10;
+
+              for($z =0; $z <= $amt_page; $z++){
+                $DB1 = DB::select(" SELECT * FROM $TABLE where id = ($z*$n)+22; ");
+                if(isset($DB1[0])){
+                  $DB2 = DB::select(" SELECT * FROM $TABLE where id = ($z*$n)+22; ");
+                  $str.= $DB2[0]->g;
+                }
+                // else{
+                //   break;
+                // }
+              }
+
+      // dd($DB[0]->g);
+      // dd($DB[0]->g = "(หน้า ".$amt_page.'/'.$amt_page);
+      // $page_cn = $cnt_all[0]->cnt/10;
+      // $page_string = "(หน้า ".$amt_page.'/'.$amt_page;
+      $page_string = "(หน้า ".($j+1)."/".$amt_page;
+
+      // $cnt_all = DB::select(" SELECT count(*) as cnt FROM $TABLE_tmp ");
+      // $amt_page = ceil($cnt_all[0]->cnt/$limit);
+      // dd($page_string);
+  ?>
+  <?php
+  // dd($page_string);
+  //  dd($DB[0]->g);
+    // if ( strstr( $DB[0]->g,  $page_string) ) {
+      if($j+1 == $amt_page){
+
+      if($shipping[0]->fee_amt > 0){
+        if($shipping[0]->fee_amt!=null){
+          $total_fee_amt += $shipping[0]->fee_amt;
+        }
+          $text1 =  '
+          <tr style="vertical-align: top;line-height: 12px !important;">
+          <td style="width:2.6%;text-align: left;">  </td>
+          <td style="width:18%;text-align: left;"> ค่าบริการบัตรเครดิต </td>
+          <td style="width:10%;text-align: left;"> </td>
+          <td style="width:6%;text-align: right;"> </td>
+          <td style="width:5%;text-align: right;"> </td>
+          <td style="width:4%;text-align: right;"> </td>
+          <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
+          </tr> ';
+          echo $text1;
+      }
+      if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
+        $total_shipping_price += $shipping[0]->shipping_price;
+          $text2 =  '
+          <tr style="vertical-align: top;line-height: 12px !important;">
+          <td style="width:2.6%;text-align: left;">  </td>
+          <td style="width:18%;text-align: left;"> ค่าบริการจัดส่งสินค้า </td>
+          <td style="width:10%;text-align: left;"> </td>
+          <td style="width:6%;text-align: right;"> </td>
+          <td style="width:5%;text-align: right;"> </td>
+          <td style="width:4%;text-align: right;"> </td>
+          <td style="width:11%;text-align: right;"> '.number_format($total_shipping_price, 2).' </td>
+          </tr> ';
+          echo $text2;
+    }
+  }
+
+  ?>
+    <?php
+    // if($shipping[0]->fee_amt > 0){
+    //   if($shipping[0]->fee_amt!=null){
+    //     $total_fee_amt += $shipping[0]->fee_amt;
+    //   }
+    //     $text1 =  '
+    //     <tr style="vertical-align: top;line-height: 12px !important;">
+    //     <td style="width:2.6%;text-align: left;">  </td>
+    //     <td style="width:18%;text-align: left;"> ค่าบริการบัตรเครดิต </td>
+    //     <td style="width:10%;text-align: left;"> </td>
+    //     <td style="width:6%;text-align: right;"> </td>
+    //     <td style="width:5%;text-align: right;"> </td>
+    //     <td style="width:4%;text-align: right;"> </td>
+    //     <td style="width:11%;text-align: right;"> '.number_format($total_fee_amt, 2).' </td>
+    //     </tr> ';
+    //     echo $text1;
+    // }
+    ?>
+
+<?php
+// if($shipping[0]->shipping_price > 0 && $shipping[0]->shipping_free != 1){
+//       $total_shipping_price += $shipping[0]->shipping_price;
+//         $text2 =  '
+//         <tr style="vertical-align: top;line-height: 12px !important;">
+//         <td style="width:2.6%;text-align: left;">  </td>
+//         <td style="width:18%;text-align: left;"> ค่าบริการจัดส่งสินค้า </td>
+//         <td style="width:10%;text-align: left;"> </td>
+//         <td style="width:6%;text-align: right;"> </td>
+//         <td style="width:5%;text-align: right;"> </td>
+//         <td style="width:4%;text-align: right;"> </td>
+//         <td style="width:11%;text-align: right;"> '.number_format($total_shipping_price, 2).' </td>
+//         </tr> ';
+//         echo $text2;
+//     }
+    ?>
 
     </table>
 
   <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;" >
     <tr>
-      <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+      <td colspan="2" style="margin-left:33px !important;width:80%;font-size: 14px;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+16) ; "); ?>
         <?php echo @$DB[0]->a ; ?>
       </td>
-      <td style="text-align: right;"></td>
+      <!-- <td style="text-align: right;"></td> -->
       <td style="text-align: right;"></td>
       <td style="text-align: right;"></td>
     </tr>
@@ -1247,22 +1740,36 @@ for ($j=0; $j < $amt_page ; $j++) {
       </td>
       <td colspan="2" style="width:50%;text-align: right;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
-        <?php echo @$DB[0]->g ; ?>
+        <?php
+        // if($total_fee_amt > 0){
+        //   $new_total = str_replace(',', '', @$DB[0]->g);
+
+        //   if($new_total=='' || $new_total==null){
+        //     $new_total = 0;
+        //   }
+        //   $new_total = $new_total+$total_fee_amt;
+        //   echo number_format($new_total, 2);
+        // }else{
+          echo @$DB[0]->g;
+        // }
+         ?>
       </td>
     </tr>
 
 
-    <tr>
+    <!-- <tr>
       <td colspan="3" style="font-size: 14px !important;margin-left: 5% !important;">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+21) ; "); ?>
-        <?php echo @$DB[0]->a ; ?> &nbsp;
+        <php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+21) ; "); ?>
+        <php echo @$DB[0]->a ; ?> &nbsp;
       </td>
       <td style="text-align: right;">
       </td>
-    </tr>
+    </tr> -->
 
   </table>
 </div>
+
+xxxxxx សិរីសោភ័ណ xxxxxxxxxxx
 
  <div style="float:right;font-size: 14px !important;">
   <!-- Page 1 -->
