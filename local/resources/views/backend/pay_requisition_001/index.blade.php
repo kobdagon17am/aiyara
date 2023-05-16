@@ -563,7 +563,7 @@
                             '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                            '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                            '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> '
 
@@ -586,7 +586,7 @@
                             '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                            '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                            '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> '
                             // + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -618,7 +618,7 @@
                             '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                            '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                            '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
                             '<a href="{{ url('backend/pick_warehouse') }}/' + aData['id'] +
@@ -649,7 +649,7 @@
                             '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                            '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                            '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> '
                             // // วุฒิเปลี่ยน
@@ -681,7 +681,7 @@
                             '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                            '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                            '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                             aData['id'] +
                             '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
                             '<a href="{{ url('backend/pick_warehouse') }}/' + aData['id'] +
@@ -1090,7 +1090,7 @@
                                     '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                                    '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                                    '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> '
 
@@ -1114,7 +1114,7 @@
                                     '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                                    '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                                    '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> '
                                     // + '<a href="{{ url('backend/pick_warehouse') }}?id='+aData['id']+'" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="เบิก/แก้ไข/ลบ" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
@@ -1149,7 +1149,7 @@
                                     '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                                    '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                                    '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
                                     '<a href="{{ url('backend/pick_warehouse') }}/' +
@@ -1183,7 +1183,7 @@
                                     '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                                    '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                                    '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> '
                                     // // วุฒิเปลี่ยน
@@ -1218,7 +1218,7 @@
                                     '<a href="{{ url('backend/pick_warehouse/print_requisition_detail_real/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-success"  data-toggle="tooltip" data-placement="left" title="รายละเอียดลูกค้าทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
-                                    '<a href="{{ url('backend/frontstore/print_receipt_lading/') }}/' +
+                                    '<a href="{{ url('backend/frontstore/print_receipt_lading_display/') }}/' +
                                     aData['id'] +
                                     '" target="blank" class="btn btn-sm btn-primary"  data-toggle="tooltip" data-placement="left" title="พิมพ์ใบเสร็จทั้งหมด" ><i class="bx bx-printer grow " style="font-size:14px;cursor:pointer;color:white;margin-top:1px;"></i></a> ' +
                                     '<a href="{{ url('backend/pick_warehouse') }}/' +
