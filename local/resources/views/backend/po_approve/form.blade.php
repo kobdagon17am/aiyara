@@ -979,6 +979,17 @@
                 var bill_other9 = '';
                 var bill_other10 = '';
 
+                var bill_other11 = '';
+                var bill_other12 = '';
+                var bill_other13 = '';
+                var bill_other14 = '';
+                var bill_other15 = '';
+                var bill_other16 = '';
+                var bill_other17 = '';
+                var bill_other18 = '';
+                var bill_other19 = '';
+                var bill_other20 = '';
+
                 var n = 0;
                 $('.order_id_approve').each(function() {
                     // if (n <= 20) {
@@ -1029,7 +1040,7 @@
                         bill_other5 += $(this).val() + ',';
                     }
                     if (n > 50 && n <= 60) {
-                        bill_other5 += $(this).val() + ',';
+                        bill_other6 += $(this).val() + ',';
                     }
                     if (n > 60 && n <= 70) {
                         bill_other7 += $(this).val() + ',';
@@ -1078,9 +1089,29 @@
                     n++;
                 });
 
-                // console.log('bill_other1' + ' ' + bill_other1);
-                // console.log('bill_other2' + ' ' + bill_other2);
-                // console.log('bill_other3' + ' ' + bill_other3);
+                console.log('n' + ' ' + n);
+
+                console.log('bill_other1' + ' ' + bill_other1);
+                console.log('bill_other2' + ' ' + bill_other2);
+                console.log('bill_other3' + ' ' + bill_other3);
+                console.log('bill_other4' + ' ' + bill_other4);
+                console.log('bill_other5' + ' ' + bill_other5);
+                console.log('bill_other6' + ' ' + bill_other6);
+                console.log('bill_other7' + ' ' + bill_other7);
+                console.log('bill_other8' + ' ' + bill_other8);
+                console.log('bill_other9' + ' ' + bill_other9);
+                console.log('bill_other10' + ' ' + bill_other10);
+
+                console.log('bill_other11' + ' ' + bill_other11);
+                console.log('bill_other12' + ' ' + bill_other12);
+                console.log('bill_other13' + ' ' + bill_other13);
+                console.log('bill_other14' + ' ' + bill_other14);
+                console.log('bill_other15' + ' ' + bill_other15);
+                console.log('bill_other16' + ' ' + bill_other16);
+                console.log('bill_other17' + ' ' + bill_other17);
+                console.log('bill_other18' + ' ' + bill_other18);
+                console.log('bill_other19' + ' ' + bill_other19);
+                console.log('bill_other20' + ' ' + bill_other20);
 
                 bill_other_time = "";
                 if (time_approve == 1) {
@@ -1103,36 +1134,25 @@
                     bill_other_time = bill_other9;
                 } else if (time_approve == 10) {
                     bill_other_time = bill_other10;
-                }
-
-                else if (time_approve == 11) {
+                } else if (time_approve == 11) {
                     bill_other_time = bill_other11;
-                }
-                else if (time_approve == 12) {
+                } else if (time_approve == 12) {
                     bill_other_time = bill_other12;
-                }
-                else if (time_approve == 13) {
+                } else if (time_approve == 13) {
                     bill_other_time = bill_other13;
-                }
-                else if (time_approve == 14) {
+                } else if (time_approve == 14) {
                     bill_other_time = bill_other14;
-                }
-                else if (time_approve == 15) {
+                } else if (time_approve == 15) {
                     bill_other_time = bill_other15;
-                }
-                else if (time_approve == 16) {
+                } else if (time_approve == 16) {
                     bill_other_time = bill_other16;
-                }
-                else if (time_approve == 17) {
+                } else if (time_approve == 17) {
                     bill_other_time = bill_other17;
-                }
-                else if (time_approve == 18) {
+                } else if (time_approve == 18) {
                     bill_other_time = bill_other18;
-                }
-                else if (time_approve == 19) {
+                } else if (time_approve == 19) {
                     bill_other_time = bill_other19;
-                }
-                else if (time_approve == 20) {
+                } else if (time_approve == 20) {
                     bill_other_time = bill_other20;
                 }
 
@@ -1165,6 +1185,7 @@
                                 }, 5000);
                             } else {
                                 console.log('error :' + ' ' + bill_other_time);
+                                console.log('time_approve :' + ' ' + time_approve);
                                 // $('.myloading').hide();
                                 Swal.fire({
                                     title: '20 /20 สำเร็จ',
@@ -1176,9 +1197,9 @@
                                     allowOutsideClick: false,
                                     allowEscapeKey: false
                                 })
-                                window.setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
+                                  window.setTimeout(function() {
+                                      location.reload();
+                                  }, 2000);
 
                             }
                         }

@@ -51,6 +51,20 @@ class PrintController extends Controller
        return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
 
    }
+
+      // วุฒิเพิ่มมา
+      public function print_receipt_lading_display($id)
+      {
+         $data = [$id];
+         // width and height $customPaper = The end result was: 10CM X 20CM = array(0,0,567.00,283.80); size 9.5" x 5.5"  24.13 cm x 13.97 cm
+        //  $customPaper = array(0,0,370,565);
+        //  $pdf = PDF::loadView('backend.frontstore.print_receipt_lading',compact('data'))->setPaper($customPaper, 'landscape');
+         // return $pdf->download('cover_sheet.pdf'); // โหลดทันที
+        //  return $pdf->stream('receipt_sheet.pdf'); // เปิดไฟลฺ์
+       return view('backend.frontstore.print_receipt_lading_display',compact('data'));
+
+     }
+
 // medthod
 
 

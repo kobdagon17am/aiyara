@@ -599,6 +599,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('frontstore/print_receipt_022/{id}', 'PrintController@frontstore_print_receipt_022');
     Route::get('frontstore/print_receipt_lading/{id}', 'PrintController@print_receipt_lading');
+    Route::get('frontstore/print_receipt_lading_display/{id}', 'PrintController@print_receipt_lading_display'); //print_receipt_lading_display
     Route::get('frontstore/print_receipt_023/{id}', 'PrintController@frontstore_print_receipt_023');
     Route::get('frontstore/print_receipt_023/{id}/{pick_pack_packing_code_id_fk}', 'PrintController@frontstore_print_receipt_023');
 
