@@ -37,6 +37,23 @@ class RegisterSalepageController extends Controller
        ->where('lang_id','=',1)
        ->get();
 
+       $registers_setting = DB::table('customers')
+       ->select('user_name','registers_setting')
+       ->where('user_name','=',$user_name)
+       ->first();
+
+       if(empty($registers_setting)){
+         $data = ['status' => 'fail', 'message' => 'ไม่มีข้อมูลผู้แนะนำกรุณาติดต่อ AIYARA'];
+         return view('frontend/salepage/fail',compact('data'));
+       }
+
+
+       $user_registers = $registers_setting->user_name;
+       $line_setting = $registers_setting->registers_setting;
+
+       $last_user = LineModel::last_line($user_registers,$line_setting);
+
+
 
 
 
@@ -57,7 +74,8 @@ class RegisterSalepageController extends Controller
        ->orderByRaw("FIELD(id, $business_location_id) desc")
        ->get();
 
-       $data = ['data'=>$customer,'line_type_back'=>$customer->registers_setting,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation_id'=>$nation_id];
+       $data = ['data'=>$customer,'line_type_back'=>$customer->registers_setting,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation_id'=>$nation_id,'last_user'=>$last_user];
+      //  dd($data);
 
        return view('frontend/salepage/registers',compact('data'));
 
