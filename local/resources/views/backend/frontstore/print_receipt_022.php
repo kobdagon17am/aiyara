@@ -102,9 +102,9 @@
 
 $id = $data[0];
 $user_admin_id = $data[1];
-$n = 22;
+$n = 21;
 // $n = 22;
-$limit = 10;
+$limit = 9;
 // $limit = 10;
 
 $num_run = 1;
@@ -1553,8 +1553,8 @@ $num_run++;
       // dd($cnt_all[0]->cnt);
       // dd($amt_page);
       $str = "";
-      $n = 22;
-       $limit = 10;
+      $n = 21;
+       $limit = 9;
 
               for($z =0; $z <= $amt_page; $z++){
                 $DB1 = DB::select(" SELECT * FROM $TABLE where id = ($z*$n)+22; ");

@@ -132,8 +132,8 @@ for ($z=0; $z < count($arr_orders_id) ; $z++) {
 
 $id = @$arr_orders_id[$z];
 
-$n = 22;
-$limit = 10;
+$n = 21;
+$limit = 9;
 $num_run = 1;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
