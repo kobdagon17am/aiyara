@@ -99,7 +99,7 @@ class DeliveryPackingCodeController extends Controller
           group by db_delivery_packing_code.id
           order by db_delivery_packing_code.updated_at desc
         ");
-
+// dd('ll');
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       // แก้ไขที่อยู่
@@ -108,7 +108,7 @@ class DeliveryPackingCodeController extends Controller
          if(@$DP){
               foreach ($DP as $key => $value) {
                 $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-                return $rs[0]->status_pick_pack;
+                return @$rs[0]->status_pick_pack;
               }
             }
       })
