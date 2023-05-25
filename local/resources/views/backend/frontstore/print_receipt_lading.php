@@ -181,11 +181,11 @@ for ($z=0; $z < count($arr_orders_id) ; $z++) {
 
 $id = @$arr_orders_id[$z];
 
-// $n = 22;
-// $limit = 10;
+$n = 22;
+$limit = 10;
 
-$n = 21;
-$limit = 9;
+// $n = 21;
+// $limit = 9;
 
 $num_run = 1;
 
@@ -1065,6 +1065,7 @@ if(!empty($db_orders[0]->action_user)){
 
   //  $address = !empty($address) ? 'ชื่อ-ที่อยู่ผู้รับ: '. $address . ' ' . $tel : NULL;
   $address = !empty($address) ? $address . ' ' .$tel : null;
+  // $address = !empty($address) ? $address . ' ' : null;
   // $address .= ' delivery_location '.$sRow->code_order.' :' .@$sRow->delivery_location;
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
@@ -1416,7 +1417,7 @@ elseif(@$pay_type[0]->pay_type_id_fk==17){
     }
 
        DB::select(" UPDATE $TABLE SET  a = '$address ' WHERE id = (($amt_page*$n)-2) ; ");
-       DB::select(" UPDATE $TABLE SET  a = '$tel ' WHERE id = (($amt_page*$n)-1) ; ");
+      //  DB::select(" UPDATE $TABLE SET  a = '$tel ' WHERE id = (($amt_page*$n)-1) ; ");
 
        // ยอดรวม
        DB::select(" UPDATE $TABLE_tmp SET  g = 0 WHERE g is null; ");
@@ -1442,7 +1443,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 <div class="NameAndAddress ">
     <table>
         <tr>
-            <td style="width: 60% ;margin-left:35px !important;">
+            <td style="width: 60% ;margin-left:100px !important;">
 
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
                 <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
@@ -1556,8 +1557,8 @@ for ($j=0; $j < $amt_page ; $j++) {
     </table>
 
 
-    <!-- <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;"> -->
-    <table style="">
+    <table border="0" style="border-collapse: collapse;vertical-align: top;margin-top:-3px !important;" >
+    <!-- <table style=""> -->
         <tr>
             <td colspan="2" style="margin-left:33px !important;width:80%;font-size: 14px;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+16) ; "); ?>
@@ -1590,12 +1591,12 @@ for ($j=0; $j < $amt_page ; $j++) {
         </tr>
 
         <tr>
-            <td style="margin-left:33px !important;width:80%;font-size: 14px;">
+        <td style="margin-left:33px !important;width:80%;font-size: 14px;" colspan="3">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+19) ; "); ?>
                 <?php echo @$DB[0]->a ; ?>
             </td>
-            <td style="text-align: right;"></td>
-            <td style="text-align: right;"></td>
+            <!-- <td style="text-align: right;"></td> -->
+            <!-- <td style="text-align: right;"></td> -->
             <td style="text-align: right;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+19) ; "); ?>
                 <?php echo @$DB[0]->g ; ?>
@@ -1603,11 +1604,11 @@ for ($j=0; $j < $amt_page ; $j++) {
         </tr>
 
         <tr>
-            <td colspan="2" style="font-size: 14px !important;margin-left: 5% !important;">
+        <td colspan="3" style="margin-left:33px !important;width:80%;font-size: 14px;" >
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
                 <?php echo @$DB[0]->a ; ?>
             </td>
-            <td colspan="2" style="width:50%;text-align: right;">
+            <td style="text-align: right;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
                 <?php echo @$DB[0]->g ; ?>
             </td>

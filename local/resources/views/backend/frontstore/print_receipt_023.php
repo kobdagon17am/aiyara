@@ -132,8 +132,8 @@ for ($z=0; $z < count($arr_orders_id) ; $z++) {
 
 $id = @$arr_orders_id[$z];
 
-$n = 21;
-$limit = 9;
+$n = 22;
+$limit = 10;
 $num_run = 1;
 
 $sRow = \App\Models\Backend\Frontstore::find($id);
@@ -1490,7 +1490,7 @@ DB::select(" UPDATE $TABLE SET a = 'บิลยังไม่อนุมั�
     }
 
        DB::select(" UPDATE $TABLE SET  a = '$address ' WHERE id = (($amt_page*$n)-2) ; ");
-       DB::select(" UPDATE $TABLE SET  a = '$tel ' WHERE id = (($amt_page*$n)-1) ; ");
+      //  DB::select(" UPDATE $TABLE SET  a = '$tel ' WHERE id = (($amt_page*$n)-1) ; ");
 
        // ยอดรวม
        DB::select(" UPDATE $TABLE_tmp SET  g = 0 WHERE g is null; ");
@@ -1516,7 +1516,7 @@ for ($j=0; $j < $amt_page ; $j++) {
 <div class="NameAndAddress " >
     <table >
       <tr>
-        <td style="width: 60% ;margin-left:35px !important;">
+        <td style="width: 60% ;margin-left:100px !important;">
 
           <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+2) ; "); ?>
           <?php echo "<span style='font-size:24px;'>".@$DB[0]->a." <br> "; ?>
@@ -1626,7 +1626,7 @@ for ($j=0; $j < $amt_page ; $j++) {
     </table>
 
 
-  <table style="border-collapse: collapse;vertical-align: top;margin-top:5px !important;" >
+  <table border="0" style="border-collapse: collapse;vertical-align: top;margin-top:-3px !important;" >
     <tr>
       <td colspan="2" style="margin-left:33px !important;width:80%;font-size: 14px;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+16) ; "); ?>
@@ -1672,11 +1672,11 @@ for ($j=0; $j < $amt_page ; $j++) {
     </tr>
 
     <tr>
-      <td colspan="2" style="font-size: 14px !important;margin-left: 5% !important;">
+    <td colspan="3" style="margin-left:33px !important;width:80%;font-size: 14px;" >
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
         <?php echo @$DB[0]->a ; ?>
       </td>
-      <td colspan="2" style="width:50%;text-align: right;">
+      <td style="text-align: right;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
         <?php echo @$DB[0]->g ; ?>
       </td>
