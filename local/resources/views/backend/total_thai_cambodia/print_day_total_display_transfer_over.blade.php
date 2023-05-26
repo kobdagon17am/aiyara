@@ -228,11 +228,7 @@ set_time_limit(9999999);
         <tr>
             <th style="font-size: 18px;">
 
-            @if($select_status == 1)
-            รายงานการขาย
-            @elseif($select_status == 2)
-            รายงานการขาย <span style="color:red;">ที่ยกเลิก</span>
-            @endif
+            รายงานการโอนเงินคืน กรณีเงินเกิน
 
                 <br>
                 <?php
@@ -338,11 +334,8 @@ set_time_limit(9999999);
             <tbody>
                 <?php
 
-                if ($select_status == 1) {
                     $approve_status = 'WHERE db_orders.approve_status not in (0,5,1,6,3)';
-                } elseif($select_status == 2) {
-                    $approve_status = 'WHERE db_orders.approve_status in (5)';
-                }
+                    $over = 'AND db_orders.approval_amount_transfer_over > 0';
 
                 // แบบไม่ sum
                 if ($report_type == 'day') {
@@ -389,6 +382,7 @@ set_time_limit(9999999);
                                         $endDate
                                         $action_user
                                         $business_location_id_fk
+                                        $over
 
                                         ORDER BY approve_date ASC
 
@@ -439,6 +433,7 @@ set_time_limit(9999999);
                                         $endDate
                                         $action_user
                                         $business_location_id_fk
+                                        $over
                                         ORDER BY approve_date ASC
                                   ");
                 }
