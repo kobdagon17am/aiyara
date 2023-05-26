@@ -265,7 +265,7 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                </div>
+
 
                                                 <div class="col-sm-3">
                                                     <label>@lang('message.ID_card_number') <font class="text-danger">*</font>
@@ -274,6 +274,8 @@
                                                         name="id_card" value="{{ old('id_card') }}" required="">
                                                     <span class="error text-danger"></span>
                                                 </div>
+                                                </div>
+
 
 
                                                 <div class="form-group row">
@@ -366,7 +368,7 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>>@lang('message.district/area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.district/area') <font class="text-danger">*</font></label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="card_amphures" id="card_amphures" required="">
                                                             <option value="">Select</option>
@@ -481,7 +483,7 @@
 
 
                                                     <div class="col-sm-3">
-                                                        <label>>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="district" id="district" required="">
                                                             <option value="">Select</option>
