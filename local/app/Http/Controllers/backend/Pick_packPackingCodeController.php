@@ -482,7 +482,7 @@ class Pick_packPackingCodeController extends Controller
 
             $tx = '<center>
 
-              <a href="javascript: void(0);" target=_blank data-id="'.$v->recipient_code.'" class="print02" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
+              <a href="'.url("backend/frontstore/print_receipt_023/".$v->recipient_code."/".$v->pick_pack_requisition_code_id_fk."").'" target=_blank data-id="'.$v->recipient_code.'" class="" data-toggle="tooltip" data-placement="bottom" title="ใบเสร็จ"  > <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#476b6b;"></i></a>
 
                </center>' ;
 

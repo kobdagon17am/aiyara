@@ -352,6 +352,7 @@ class AjaxController extends Controller
             'endDate2' => $endDate2,
             'action_user' => $action_user,
             'business_location_id_fk' => $business_location_id_fk,
+            'select_status' => $rs->select_status,
            ]);
         }else{
           $pdf = PDF::loadView('backend.total_thai_cambodia.print_day_total',[
@@ -362,6 +363,7 @@ class AjaxController extends Controller
             'endDate2' => $endDate2,
             'action_user' => $action_user,
             'business_location_id_fk' => $business_location_id_fk,
+            'select_status' => $rs->select_status,
            ])->setPaper('a4', 'landscape');
 
         //    return $pdf->download('day_total.pdf'); // โหลดทันที
