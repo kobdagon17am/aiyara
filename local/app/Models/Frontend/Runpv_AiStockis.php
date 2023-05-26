@@ -517,6 +517,10 @@ class Runpv_AiStockis extends Model
   {
     try {
       DB::BeginTransaction();
+      if ($pv<= 0 ) {
+        $resule = ['status' => 'fail', 'message' => 'pv = 0'];
+        return $resule;
+      }
 
       $user = DB::table('customers')
         ->select('id', 'pv_aistockist', 'user_name')

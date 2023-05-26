@@ -136,9 +136,7 @@
                                                         <label><b> @lang('message.under') </b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
                                                             style="font-size: 15px;padding: 9px 9px;">
-                                                            <font style="color: #000;">
-                                                                {{ $data['data']->business_name }} (
-                                                                {{ $data['data']->user_name }} ) </font>
+                                                            <font style="color: #000;">{{$data['last_user']}}</font>
                                                         </span>
                                                         {{-- <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
                                                         <input type="hidden" name="upline_id"
@@ -158,22 +156,21 @@
                                                             value="{{ $data['line_type_back'] }}">
 
                                                     </div>
-
-                                                    {{-- <div class="col-sm-3">
-                                                        <label><b>รหัสผู้แนะนำ</b></label>
-
-                                                        <div class="input-group input-group-button">
+                                                    <div class="col-sm-3">
+                                                        <label><b>@lang('message.Referral_UserName')</b></label>
+                                                        <span class=" form-control pcoded-badge label label-success"
+                                                        style="font-size: 15px;padding: 9px 9px;">
+                                                        <font style="color: #000;">
+                                                            {{ $data['data']->business_name }} (
+                                                            {{ $data['data']->user_name }} ) </font>
+                                                    </span>
+                                                        {{-- <div class="input-group input-group-button">
                                                             <input type="text" class="form-control" name="introduce"
                                                                 id="introduce" placeholder="รหัสผู้แนะนำ"
-                                                                value="{{ Auth::guard('c_user')->user()->user_name }}">
-                                                            <span class="input-group-addon btn btn-primary"
-                                                                id="basic-addon10" onclick="check_user()">
-                                                                <span class=""><i
-                                                                        class=" icofont icofont-check-circled"></i>
-                                                                    Check</span>
-                                                            </span>
-                                                        </div>
-                                                    </div> --}}
+                                                                value="{{ $data['data']->user_name }}">
+
+                                                        </div> --}}
+                                                    </div>
                                                     <div class="col-sm-3">
                                                         <label><b> Business Location </b></label>
                                                         <select name="business_location" class="form-control">
@@ -268,7 +265,7 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                </div>
+
 
                                                 <div class="col-sm-3">
                                                     <label>@lang('message.ID_card_number') <font class="text-danger">*</font>
@@ -277,6 +274,8 @@
                                                         name="id_card" value="{{ old('id_card') }}" required="">
                                                     <span class="error text-danger"></span>
                                                 </div>
+                                                </div>
+
 
 
                                                 <div class="form-group row">
@@ -369,7 +368,7 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>>@lang('message.district/area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.district/area') <font class="text-danger">*</font></label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="card_amphures" id="card_amphures" required="">
                                                             <option value="">Select</option>
@@ -386,7 +385,7 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>>@lang('message.zipcode')</label>
+                                                        <label>@lang('message.zipcode')</label>
                                                         <input type="text" class="form-control"
                                                             placeholder="@lang('message.zipcode')" id="card_zipcode"
                                                             name="card_zipcode" value="{{ old('card_zipcode') }}">
@@ -484,7 +483,7 @@
 
 
                                                     <div class="col-sm-3">
-                                                        <label>>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="district" id="district" required="">
                                                             <option value="">Select</option>
