@@ -24,23 +24,27 @@ class FrontstorelistController extends Controller
 
     public function plusPromotion(Request $request)
     {
-      // return($request->all());
-      // dd();
+      // dd($request->all());
       if(isset($request->promotion_id_fk_pro)){
 
         $this->fnManageGiveaway(@$request->frontstore_id);
 
-        for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) {
+        // for ($i=0; $i < count($request->promotion_id_fk_pro) ; $i++) {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
            $sFrontstore = \App\Models\Backend\Frontstore::find(@$request->frontstore_id);
+           $quantity_key = "";
+           foreach($request->promotion_id_fk_pro as $key=> $pro){
+              if($pro == request('promotion_id_fk_this')){
+                $quantity_key = $key;
+              }
+           }
+           $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', request('promotion_id_fk_this'))->get();
 
-           $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->get();
+         if(@$sRow[0]->promotion_id_fk == request('promotion_id_fk_this')){
 
-         if(@$sRow[0]->promotion_id_fk == @$request->promotion_id_fk_pro[$i]){
-
-                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
+                 $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',request('promotion_id_fk_this'))->get();
 
                   if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                     $pv = 0;
@@ -48,13 +52,13 @@ class FrontstorelistController extends Controller
                     $pv = @$Promotions_cost[0]->pv  ;
                   }
 
-                  \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', @$request->promotion_id_fk_pro[$i])->update(
+                  \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('promotion_id_fk', request('promotion_id_fk_this'))->update(
                         [
-                          'amt' => @$request->quantity[$i] ,
+                          'amt' => @$request->quantity[$quantity_key] ,
                           'selling_price' => @$Promotions_cost[0]->member_price ,
                           'pv' => $pv ,
-                          'total_pv' => $pv * @$request->quantity[$i] ,
-                          'total_price' => @$Promotions_cost[0]->member_price * @$request->quantity[$i] ,
+                          'total_pv' => $pv * @$request->quantity[$quantity_key] ,
+                          'total_price' => @$Promotions_cost[0]->member_price * @$request->quantity[$quantity_key] ,
                           'type_product' => 'promotion' ,
                         ]
                     );
@@ -63,9 +67,9 @@ class FrontstorelistController extends Controller
           }else{
 
 
-            if(@$request->promotion_id_fk_pro[$i]!=0 && @$request->quantity[$i]!=0){
+            if(request('promotion_id_fk_this')!=0 && @$request->quantity[$quantity_key]!=0){
 
-                $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',@$request->promotion_id_fk_pro[$i])->get();
+                $Promotions_cost = \App\Models\Backend\Promotions_cost::where('promotion_id_fk',request('promotion_id_fk_this'))->get();
 
 
                   if(request('purchase_type_id_fk')==5){ //  Ai Voucher
@@ -74,7 +78,7 @@ class FrontstorelistController extends Controller
                     $pv = @$Promotions_cost[0]->pv  ;
                   }
 
-                  $promotion_data = DB::table('promotions')->select('id')->where('id',@$request->promotion_id_fk_pro[$i])->first();
+                  $promotion_data = DB::table('promotions')->select('id')->where('id',request('promotion_id_fk_this'))->first();
                   if($promotion_data){
                     $sRow = new \App\Models\Backend\Frontstorelist;
                     $sRow->frontstore_id_fk    = @$request->frontstore_id ;
@@ -83,14 +87,14 @@ class FrontstorelistController extends Controller
                     $sRow->action_user = (@request('action_user'))?@request('action_user'): 0 ;
                     $sRow->code_order  = (@request('code_order'))?@request('code_order'): 0 ;
 
-                    $sRow->amt    =  @$request->quantity[$i];
+                    $sRow->amt    =  @$request->quantity[$quantity_key];
                     $sRow->add_from    = '2';
-                    $sRow->promotion_id_fk    = @$request->promotion_id_fk_pro[$i];
+                    $sRow->promotion_id_fk    = request('promotion_id_fk_this');
 
                     $sRow->selling_price    = @$Promotions_cost[0]->member_price;
                     $sRow->pv    = $pv ;
-                    $sRow->total_pv    =  $pv * @$request->quantity[$i];
-                    $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity[$i];
+                    $sRow->total_pv    =  $pv * @$request->quantity[$quantity_key];
+                    $sRow->total_price    =  @$Promotions_cost[0]->member_price * @$request->quantity[$quantity_key];
                     $sRow->type_product    =  'promotion' ;
 
                     $sRow->action_date    =  date('Y-m-d H:i:s');
@@ -122,7 +126,7 @@ class FrontstorelistController extends Controller
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-        }
+        // }
 
       }
 
@@ -310,70 +314,186 @@ class FrontstorelistController extends Controller
 
     public function plus(Request $request)
     {
-      // return($request->all());
-      // return($request->all()); product_unit_id_fk
-      // return(count($request->product_id_fk));
-      // return($request->quantity[0]);
-      // dd();
       // dd($request->all());
-
-      // $this->fnManageGiveaway(@$request->frontstore_id);
-      // $sBranchs = DB::select(" select * from branchs where id=" . $request->branch_id_fk . " ");
-      //    for ($i=0; $i < count($request->product_id_fk) ; $i++) {
-      //       // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
-      //       // echo $Check_stock->product_id_fk;
-      //   // dd($text);
-      //   \DB::beginTransaction();
-      //   try {
-      //         $sProducts[] = DB::select("
-      //           SELECT
-      //           products.id,
-      //           (
-      //             SELECT product_unit_id_fk
-      //             FROM
-      //             products_units
-      //             WHERE product_id_fk = products.id LIMIT 1
-      //           ) as product_unit,
-
-      //           products.category_id ,categories.category_name,
-      //           (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id) as p_img,
-      //           (
-      //           SELECT concat( products.product_code,' : '  ,
-      //           products_details.product_name)
-      //           FROM
-      //           products_details
-      //           WHERE products_details.lang_id=1 AND products_details.product_id_fk=products.id
-      //           ) as pn,
-      //           products_cost.member_price,
-      //           products_cost.pv
-      //           FROM
-      //           products
-      //           LEFT JOIN categories on products.category_id=categories.id
-      //           LEFT JOIN products_cost on products.id = products_cost.product_id_fk
-      //           WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = ".$sBranchs[0]->business_location_id_fk."
-      //       ");
-
-      //     } catch (\Exception $e) {
-      //       echo $e->getMessage();
-      //       dd($sProducts);
-      //       dd($request->product_id_fk[$i]);
-      //       \DB::rollback();
-      //     }
-
-      //           }
-
-
       if(isset($request->product_plus)){
-
+        // dd($request->product_id_fk);
         $this->fnManageGiveaway(@$request->frontstore_id);
-        $sBranchs = DB::select(" select * from branchs where id=" . $request->branch_id_fk . " ");
-        // if(!isset($sBranchs[0]->business_location_id_fk)){
-        //   $sBranchs[0]->business_location_id_fk =
-        // }
+        $sBranchs = DB::select(" select business_location_id_fk from branchs where id=" . $request->branch_id_fk . " ");
+        // for ($i=0; $i < count($request->product_id_fk) ; $i++) {
+              $sProducts = DB::select("
+                SELECT
+                products.id,
+                (
+                  SELECT product_unit_id_fk
+                  FROM
+                  products_units
+                  WHERE product_id_fk = products.id LIMIT 1
+                ) as product_unit,
+                products.category_id ,categories.category_name,
+                (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1 LIMIT 1) as p_img,
+                (
+                SELECT concat( products.product_code,' : '  ,
+                products_details.product_name)
+                FROM
+                products_details
+                WHERE products_details.lang_id=1 AND products_details.product_id_fk=products.id
+                ) as pn,
+                products_cost.member_price,
+                products_cost.pv
+                FROM
+                products
+                LEFT JOIN categories on products.category_id=categories.id
+                LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                WHERE products.id = ".request('product_id_fk_this')." AND products_cost.business_location_id = ".$sBranchs[0]->business_location_id_fk."
+            ");
+           $sFrontstore = \App\Models\Backend\Frontstore::select('purchase_type_id_fk')->find(request('frontstore_id'));
+           $quantity_key = "";
+             foreach($request->product_id_fk as $key=> $pro){
+                if($pro == request('product_id_fk_this')){
+                  $quantity_key = $key;
+                }
+             }
+           $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @request('product_id_fk_this'))->get();
+          if( count($sRow)>0 ){
+
+              if(@request('product_id_fk_this') == request('product_id_fk_this')){
+                // echo @$request->quantity[$i];
+                if(request('purchase_type_id_fk')==5){ //  Ai Voucher
+                  $pv = 0;
+                }else{
+                  $pv = @$sProducts[0]->pv * @$request->quantity[$quantity_key] ;
+                }
+
+                  \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @request('product_id_fk_this'))->update(
+                        [
+                          // 'frontstore_id_fk' => request('frontstore_id') ,
+                          'amt' => @$request->quantity[$quantity_key] ,
+                          'total_pv' => $pv ,
+                          'total_price' => @$sProducts[0]->member_price * @$request->quantity[$quantity_key] ,
+                          // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk,
+                          'product_unit_id_fk' => @$sProducts[0]->product_unit,
+                          'type_product' => 'product' ,
+                        ]
+                    );
+
+              }
+
+          }else{
+                if(request('purchase_type_id_fk')==5){
+                  $pv = 0;
+                }else{
+                  $pv = @$sProducts[0]->pv ;
+                }
+
+                $sRow = new \App\Models\Backend\Frontstorelist;
+                $sRow->frontstore_id_fk    = request('frontstore_id') ;
+
+                $sRow->frontstore_id_fk  = request('frontstore_id') ;
+                $sRow->customers_id_fk  = (@request('customers_id_fk'))?@request('customers_id_fk'): 0 ;
+                $sRow->action_user = (@request('action_user'))?@request('action_user'): 0 ;
+                $sRow->code_order  = (@request('code_order'))?@request('code_order'): 0 ;
+
+                $sRow->product_id_fk    = @request('product_id_fk_this');
+                $sRow->purchase_type_id_fk    = @$sFrontstore->purchase_type_id_fk;
+                $sRow->selling_price    = @$sProducts[0]->member_price;
+                $sRow->pv    = $pv ;
+                $sRow->amt    =  @$request->quantity[$quantity_key];
+                $sRow->product_unit_id_fk    =  @$sProducts[0]->product_unit ;
+                $sRow->total_pv    =  $pv * @$request->quantity[$quantity_key];
+                $sRow->total_price    =  @$sProducts[0]->member_price * @$request->quantity[$quantity_key];
+                $sRow->type_product    =  'product' ;
+                $sRow->created_at = date('Y-m-d H:i:s');
+                // if(!empty($request->quantity[$quantity_key])){
+                //   if(@request('product_id_fk_this') == request('product_id_fk_this')){
+                      $sRow->save();
+                //   }
+                // }
+
+          }
+
+
+           $ProductsName = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".@request('product_id_fk_this')." AND lang_id=1");
+
+           foreach($ProductsName AS $r){
+              DB::select(" UPDATE db_order_products_list SET product_name='".@$r->product_code." : ".@$r->product_name."' WHERE product_id_fk=".@$r->product_id."  ");
+           }
+
+
+          // }
+
+       $id=   @$request->frontstore_id;
+
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id) GROUP BY frontstore_id_fk ");
+       // dd($sFrontstoreDataTotal);
+       if($sFrontstoreDataTotal){
+              $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+              $vat = $vat > 0  ? $vat : 0 ;
+              $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+              $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
+              $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
+              DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+              DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
+        }else{
+          DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+        }
+
+
+
+          // $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
+          // DB::select(" UPDATE db_orders SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
+
+
+          if(isset($request->product_plus_addlist)){
+              // return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
+             if($request->quantity[0]==0){
+                DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
+             }
+          }
+
+
+                 DB::select(" UPDATE db_orders SET
+
+                  pay_type_id_fk='0',
+
+                  aicash_price='0',
+                  member_id_aicash='0',
+                  transfer_price='0',
+                  credit_price='0',
+
+                  charger_type='0',
+                  fee='0',
+                  fee_amt='0',
+                  sum_credit_price='0',
+                  account_bank_id='0',
+
+                  transfer_money_datetime=NULL ,
+                  file_slip=NULL,
+
+                  total_price='0',
+                  cash_price='0',
+                  cash_pay='0'
+
+                  WHERE id=$request->frontstore_id ");
+
+
+      }
+
+    }
+
+    public function plus_old(Request $request)
+    {
+      // dd($request->all());
+      if(isset($request->product_plus)){
+        // dd($request->product_id_fk);
+        $this->fnManageGiveaway(@$request->frontstore_id);
+        $sBranchs = DB::select(" select business_location_id_fk from branchs where id=" . $request->branch_id_fk . " ");
         for ($i=0; $i < count($request->product_id_fk) ; $i++) {
-            // $Check_stock = \App\Models\Backend\Check_stock::find($request->id[$i]);
-            // echo $Check_stock->product_id_fk;
-        // dd($text);
               $sProducts = DB::select("
                 SELECT
                 products.id,
@@ -400,21 +520,12 @@ class FrontstorelistController extends Controller
                 LEFT JOIN products_cost on products.id = products_cost.product_id_fk
                 WHERE products.id = ".$request->product_id_fk[$i]." AND products_cost.business_location_id = ".$sBranchs[0]->business_location_id_fk."
             ");
-
-              // echo ($sProducts[0]->product_unit);
-
-              // return $sProducts;
-              // dd();
-
-           $sFrontstore = \App\Models\Backend\Frontstore::find(request('frontstore_id'));
+           $sFrontstore = \App\Models\Backend\Frontstore::select('purchase_type_id_fk')->find(request('frontstore_id'));
 
            $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @$request->product_id_fk[$i])->get();
-           // echo count($sRow);
-           // return @$request->frontstore_id;
           if( count($sRow)>0 ){
 
               if(@$request->product_id_fk[$i] == request('product_id_fk_this')){
-
                 // echo @$request->quantity[$i];
                 if(request('purchase_type_id_fk')==5){ //  Ai Voucher
                   $pv = 0;
@@ -905,9 +1016,143 @@ class FrontstorelistController extends Controller
 
     }
 
+    public function minus(Request $request)
+    {
+      // dd($request->all());
+
+      if(isset($request->product_plus)){
+
+        $this->fnManageGiveaway(@$request->frontstore_id);
+
+        // for ($i=0; $i < count($request->product_id_fk) ; $i++) {
+              $sProducts = DB::select("
+                SELECT
+                products.id,
+                (
+                  SELECT product_unit_id_fk
+                  FROM
+                  products_units
+                  WHERE product_id_fk = products.id LIMIT 1
+                ) as product_unit,
+                products.category_id ,categories.category_name,
+                (SELECT concat(img_url,product_img) FROM products_images WHERE products_images.product_id_fk=products.id AND products_images.image_default=1 LIMIT 1) as p_img,
+                (
+                SELECT concat( products.product_code,' : '  ,
+                products_details.product_name)
+                FROM
+                products_details
+                WHERE products_details.lang_id=1 AND products_details.product_id_fk=products.id
+                ) as pn,
+                (
+                SELECT dataset_product_unit.product_unit
+                FROM
+                products_units
+                LEFT JOIN dataset_product_unit on dataset_product_unit.id=products_units.product_unit_id_fk
+                WHERE products_units.product_id_fk=products.id
+                ) as product_unit,
+                products_cost.member_price,
+                products_cost.pv
+                FROM
+                products
+                LEFT JOIN categories on products.category_id=categories.id
+                LEFT JOIN products_cost on products.id = products_cost.product_id_fk
+                WHERE products.id = ".request('product_id_fk_this')." AND products_cost.business_location_id = 1
+            ");
+              // echo ($sProducts[0]->selling_price);
+              // echo request('product_id_fk_this');
+           $sFrontstore = \App\Models\Backend\Frontstore::select('purchase_type_id_fk')->find(request('frontstore_id'));
+           $quantity_key = "";
+           foreach($request->product_id_fk as $key=> $pro){
+              if($pro == request('product_id_fk_this')){
+                $quantity_key = $key;
+              }
+           }
+           $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', request('product_id_fk_this'))->get();
+           // return count($sRow);
+
+            if(request('purchase_type_id_fk')==5){ //  Ai Voucher
+              $pv = 0;
+            }else{
+              $pv = @$sProducts[0]->pv ;
+            }
 
 
-     public function minus(Request $request)
+              if( count($sRow)>0 ){
+
+                    \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', request('product_id_fk_this'))->update(
+                          [
+                            // 'frontstore_id_fk' => request('frontstore_id') ,
+                            'amt' => @$request->quantity[$quantity_key] ,
+                            'total_pv' => $pv * @$request->quantity[$quantity_key] ,
+                            'total_price' => @$sProducts[0]->member_price * @$request->quantity[$quantity_key] ,
+                            // 'purchase_type_id_fk' => @$sFrontstore->purchase_type_id_fk ,
+                            // 'product_unit_id_fk' => @$sProducts[0]->product_unit,
+                          ]
+                      );
+
+
+                     DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
+
+              }
+
+          // }
+
+
+
+       $id=   @$request->frontstore_id;
+
+       $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id) GROUP BY frontstore_id_fk ");
+       // dd($sFrontstoreDataTotal);
+       if($sFrontstoreDataTotal){
+          $vat = floatval(@$sFrontstoreDataTotal[0]->total) - (floatval(@$sFrontstoreDataTotal[0]->total)/1.07) ;
+          $vat = $vat > 0  ? $vat : 0 ;
+          $product_value = str_replace(",","",floatval(@$sFrontstoreDataTotal[0]->total) - $vat) ;
+          $total = @$sFrontstoreDataTotal[0]->total>0?@$sFrontstoreDataTotal[0]->total:0;
+          $total_pv = @$sFrontstoreDataTotal[0]->total_pv>0?@$sFrontstoreDataTotal[0]->total_pv:0;
+          DB::select(" UPDATE db_orders SET product_value=".($product_value).",tax=".($vat).",sum_price=".($total).",pv_total=".($total_pv)." WHERE id=$id ");
+        }else{
+          DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
+        }
+
+
+          // $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
+          // DB::select(" UPDATE db_orders SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
+
+
+
+             DB::select(" UPDATE db_orders SET
+
+              pay_type_id_fk='0',
+
+              aicash_price='0',
+              member_id_aicash='0',
+              transfer_price='0',
+              credit_price='0',
+
+              charger_type='0',
+              fee='0',
+              fee_amt='0',
+              sum_credit_price='0',
+              account_bank_id='0',
+
+              transfer_money_datetime=NULL ,
+              file_slip=NULL,
+
+              total_price='0',
+              cash_price='0',
+              cash_pay='0'
+
+              WHERE id=$request->frontstore_id ");
+
+
+
+      }
+
+    }
+
+
+
+     public function minus_old(Request $request)
         {
           // return($request->all());
           // dd();
@@ -1366,11 +1611,11 @@ class FrontstorelistController extends Controller
               for ($i=0; $i < count(@$Check) ; $i++) {
                    $c = array_column($Check,$i);
                    foreach ($c as $key => $value) {
-                    if($value['status'] == "fail"){ 
+                    if($value['status'] == "fail"){
                        array_push($arr,$value['message']);
                     }
                    }
-                   $im = implode(',',$arr); 
+                   $im = implode(',',$arr);
               }
               // dd($im);
               return $im;
