@@ -120,6 +120,10 @@ class Pick_warehouse_fifoController extends Controller
             array_push($arr_04,$value->promotion_id_fk);
           }
 
+          // if($request->picking_id == 803){
+          //   dd($arr_03);
+          // }
+
           $arr_promotion = array_unique($arr_04);
           $arr_promotion = array_filter($arr_promotion);
           $arr_promotion = implode(",",$arr_promotion);
@@ -359,10 +363,24 @@ class Pick_warehouse_fifoController extends Controller
 
                 // วุฒิเพิ่มมา เบิกจ่ายสินค้าใบเบิกใหม่ 2
                 $DeliveryPackingCode = \App\Models\Backend\Pick_packPackingCode::where('id',$picking)->first();
+
                 if($DeliveryPackingCode->bill_remain_status==1){
                   $arr_item = explode(',',$DeliveryPackingCode->pay_requisition_002_item);
                   $item_pro = DB::table('db_pay_requisition_002_item')->whereIn('id',$arr_item)->pluck('product_id_fk')->toArray();
+                  // if($request->picking_id == 803){
+                  //   $test = DB::table($temp_ppp_0022)->get();
+                  //   dd($test);
+                  // }
                   DB::table($temp_ppp_0022)->whereNotIn('product_id_fk',$item_pro)->delete();
+                  // วุฒิเพิ่มมาใหม่ไว้เช็คเอาตัวเหลือมาบวกกัน
+                  $item_pros = DB::table('db_pay_requisition_002_item')->select('product_id_fk','amt_remain')->whereIn('id',$arr_item)->get();
+                  foreach($item_pros as $i){
+                    $sum_re = DB::table('db_pay_requisition_002_item')->select('amt_remain')->whereIn('id',$arr_item)->where('product_id_fk',$i->product_id_fk)->sum('amt_remain');
+                      DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->update([
+                        'amt' => $sum_re,
+                      ]);
+                  }
+
                 }
 
           // $lastInsertId = DB::getPdo()->lastInsertId();
