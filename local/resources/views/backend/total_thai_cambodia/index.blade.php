@@ -307,12 +307,24 @@
                             <option value="day">รายงานรายวัน</option>
                             <option value="month">รายงานรายเดือน</option>
                         </select>
+                        <br>
+                        สถานะบิล
+                        <select id="select_status" name="select_status"
+                                  class="form-control select2-templating ">
+                                  <option value="1">บิลอนุมัติแล้ว</option>
+                                  <option value="2">
+                                    บิลยกเลิก
+                                  </option>
+                                  <option value="3">
+                                    บิลโอนเงินคืน กรณีเงินเกิน
+                                  </option>
+                              </select>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success" name="btn_type" value="display" id="print_submit">แสดงในจอ</button>
                         {{-- <button type="submit" class="btn btn-success" name="btn_type" value="pdf" id="print_submit">Print PDF</button> --}}
-                        <button type="button" class="btn btn-success btnExportElsx" id="print_submit">Print Excel</button>
+                        {{-- <button type="button" class="btn btn-success btnExportElsx" id="print_submit">Print Excel</button> --}}
                     </div>
                 </div>
 

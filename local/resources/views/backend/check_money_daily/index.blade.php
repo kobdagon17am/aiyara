@@ -100,6 +100,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                  <form action="{{url('backend/check_money_daily_report_pint')}}" target="_blank" method="POST" enctype="multipart/form-data" autocomplete="off">
+                    {{ csrf_field() }}
                     <div class="row">
                         <div class="col-11">
                             <div class="row">
@@ -145,7 +147,7 @@
                                     </div>
 
 
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <div class="form-group row">
                                             <select id="status_search" name="status_search"
                                                 class="form-control select2-templating ">
@@ -157,11 +159,11 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 d-flex  ">
-                                        <input id="startDate" autocomplete="off" placeholder="วันเริ่ม" />
-                                        <input id="endDate" autocomplete="off" placeholder="วันสิ้นสุด" />
+                                    <div class="col-md-3 d-flex  ">
+                                        <input id="startDate" name="startDate" autocomplete="off" placeholder="วันเริ่ม" />
+                                        <input id="endDate" name="endDate" autocomplete="off" placeholder="วันสิ้นสุด" />
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <div class="form-group row"> &nbsp; &nbsp;
                                             <button type="button" class="btn btn-success btn-sm waves-effect btnSearch "
                                                 style="font-size: 14px !important;cursor: pointer;">
@@ -170,12 +172,20 @@
                                             </button>
                                         </div>
                                     </div>
+                                    <div class="col-md-1">
+                                      <button type="submit" class="btn btn-success btn-sm waves-effect  "
+                                      style="font-size: 14px !important;cursor: pointer;">
+                                      <i class="fa fa-print"></i> รับเงินรายวัน
+                                    </button>
+                                  </div>
                                 </div>
                             </div>
 
                         </div>
 
                     </div>
+
+                  </form>
 
                     <div class="myBorder">
                         <span style="font-weight: bold;"> <i class="bx bx-play"></i> รายการส่งเงินรายวัน </span>

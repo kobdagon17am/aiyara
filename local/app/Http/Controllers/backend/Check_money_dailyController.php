@@ -50,6 +50,145 @@ class Check_money_dailyController extends Controller
       ) );
     }
 
+    public function check_money_daily_report_pint(Request $req)
+    {
+          // dd($req->all());
+                    // วุฒิทำค้นหา บิลวันที่ทำรายการก่อน
+                    if(!empty($req->business_location_id_fk)){
+                      $w012 = " AND db_orders.business_location_id_fk=".$req->business_location_id_fk ;
+                  }else{
+                      // $w01 = "";
+                      $w012 = " AND db_orders.business_location_id_fk=".\Auth::user()->business_location_id_fk;
+                  }
+                  if(!empty($req->branch_id_fk)){
+                      $w022 = " AND db_orders.branch_id_fk=".$req->branch_id_fk ;
+                  }else{
+                      $w022 = "";
+                  }
+
+                  if(!empty($req->seller)){
+                      $w032 = " AND db_orders.action_user=".$req->seller ;
+                  }else{
+                      $w032 = "";
+                  }
+
+                  if(!empty($req->status_search)){
+                      $s = $req->status_search==1?"2":"1";
+                      $w042 = " AND db_orders.status_sent_money=".$s."" ;
+                  }else{
+                      $w042 = "";
+                  }
+
+                  if(!empty($req->startDate) && !empty($req->endDate)){
+                      $w052 = " AND date(db_orders.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+                  }else{
+                      $w052 = " AND date(db_orders.created_at)=CURDATE() ";
+                  }
+
+                  // วุฒิแก้ รวมข้อมูล groupby
+                  $sTable2 = DB::select("
+                  SELECT
+                  db_orders.id,
+                  db_orders.sent_money_daily_id_fk
+                  FROM
+                  db_orders
+                  WHERE
+                  db_orders.invoice_code!=''
+                  $w012
+                  $w022
+                  $w032
+                  $w042
+                  $w052
+                  AND sent_money_daily_id_fk != 0
+                  ");
+
+                  $arr_sent = "";
+                  foreach($sTable2 as $key => $s2){
+                      if($s2!=''){
+                        if($key+1 == count($sTable2)){
+                            $arr_sent .= $s2->sent_money_daily_id_fk;
+                        }else{
+                            $arr_sent .= $s2->sent_money_daily_id_fk.',';
+                        }
+                      }
+                  }
+                  if($arr_sent!=""){
+                      $w_arr = "AND db_sent_money_daily.id IN ($arr_sent)";
+                  }else{
+                      $w_arr = "AND db_sent_money_daily.id IN (0)";
+                  }
+
+                  if(!empty($req->business_location_id_fk)){
+                      $w01 = " HAVING business_location=".$req->business_location_id_fk;
+                  }else{
+                      // $w01 = "";
+                      $w01 = " HAVING business_location=".\Auth::user()->business_location_id_fk;
+                  }
+
+                  if(!empty($req->branch_id_fk)){
+                      $w02 = " AND (SELECT branch_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1)=".$req->branch_id_fk ;
+                  }else{
+                      $w02 = "";
+                  }
+
+                  if(!empty($req->seller)){
+                      $w03 = " AND db_sent_money_daily.sender_id=".$req->seller ;
+                  }else{
+                      $w03 = "";
+                  }
+
+                  if(!empty($req->status_search)){
+                      $w04 = " AND db_sent_money_daily.status_approve=".$req->status_search ;
+                  }else{
+                      $w04 = "";
+                  }
+                  $date_check = 0;
+                  if(!empty($req->startDate) && !empty($req->endDate)){
+                      $date_check = 1;
+                      $w05_order = " AND date(db_orders.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+                  }
+                  else{
+                      $w05_order = " AND date(db_orders.created_at)<=CURDATE() ";
+                  }
+                  $w05 = "";
+
+                      $has_id = 0;
+                  if(isset($req->id)){
+
+                    $sTable = DB::select("  SELECT db_sent_money_daily.*,remark as detail,1 as remark,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location FROM db_sent_money_daily WHERE  id=".$req->id." AND db_sent_money_daily.status_cancel=0 ");
+                            $has_id = 1;
+                            $w05 = " ";
+                            $w05_order = " ";
+                            $w052 = " ";
+                            $w_arr= " ";
+                  }else{
+
+                      $sTable = DB::select("
+                      SELECT db_sent_money_daily.*,1 as remark,remark as detail
+                      ,(SELECT business_location_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as business_location
+                      ,(SELECT branch_id_fk FROM db_orders WHERE id in(db_sent_money_daily.orders_ids) limit 1) as branch
+                      FROM db_sent_money_daily WHERE db_sent_money_daily.status_cancel=0
+                      $w02
+                      $w03
+                      $w04
+                      $w05
+                      $w_arr
+                  ");
+                  }
+// dd($sTable);
+       return View('backend.check_money_daily.check_money_daily_report_pint')->with(array(
+        'sTable'=>$sTable,
+        'has_id'=>$has_id,
+        'w05'=>$w05,
+        'w05_order'=>$w05_order,
+         'w052'=>$w052,
+         'w_arr'=>$w_arr,
+         'w02'=>$w02,
+         'w03'=>$w03,
+         'w04'=>$w04,
+      ) );
+    }
+
     public function check_money_daily_report(Request $request)
     {
       //   $sBusiness_location = \App\Models\Backend\Business_location::when(auth()->user()->permission !== 1, function ($query) {

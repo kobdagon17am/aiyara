@@ -343,32 +343,62 @@ class AjaxController extends Controller
         } else {
             $business_location_id_fk = "";
         }
-        if($rs->btn_type=='display'){
-           return view('backend.total_thai_cambodia.print_day_total_display',[
-            'report_type' => $report_type,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'startDate2' => $startDate2,
-            'endDate2' => $endDate2,
-            'action_user' => $action_user,
-            'business_location_id_fk' => $business_location_id_fk,
-           ]);
+
+        if($rs->select_status != 3){
+          if($rs->btn_type=='display'){
+            return view('backend.total_thai_cambodia.print_day_total_display',[
+             'report_type' => $report_type,
+             'startDate' => $startDate,
+             'endDate' => $endDate,
+             'startDate2' => $startDate2,
+             'endDate2' => $endDate2,
+             'action_user' => $action_user,
+             'business_location_id_fk' => $business_location_id_fk,
+             'select_status' => $rs->select_status,
+            ]);
+         }else{
+           $pdf = PDF::loadView('backend.total_thai_cambodia.print_day_total_display',[
+             'report_type' => $report_type,
+             'startDate' => $startDate,
+             'endDate' => $endDate,
+             'startDate2' => $startDate2,
+             'endDate2' => $endDate2,
+             'action_user' => $action_user,
+             'business_location_id_fk' => $business_location_id_fk,
+             'select_status' => $rs->select_status,
+            ])->setPaper('a4', 'landscape');
+
+         //    return $pdf->download('day_total.pdf'); // โหลดทันที
+            return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
+         }
         }else{
-          $pdf = PDF::loadView('backend.total_thai_cambodia.print_day_total',[
-            'report_type' => $report_type,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'startDate2' => $startDate2,
-            'endDate2' => $endDate2,
-            'action_user' => $action_user,
-            'business_location_id_fk' => $business_location_id_fk,
-           ])->setPaper('a4', 'landscape');
+          if($rs->btn_type=='display'){
+            return view('backend.total_thai_cambodia.print_day_total_display_transfer_over',[
+             'report_type' => $report_type,
+             'startDate' => $startDate,
+             'endDate' => $endDate,
+             'startDate2' => $startDate2,
+             'endDate2' => $endDate2,
+             'action_user' => $action_user,
+             'business_location_id_fk' => $business_location_id_fk,
+             'select_status' => $rs->select_status,
+            ]);
+         }else{
+           $pdf = PDF::loadView('backend.total_thai_cambodia.print_day_total_display_transfer_over',[
+             'report_type' => $report_type,
+             'startDate' => $startDate,
+             'endDate' => $endDate,
+             'startDate2' => $startDate2,
+             'endDate2' => $endDate2,
+             'action_user' => $action_user,
+             'business_location_id_fk' => $business_location_id_fk,
+             'select_status' => $rs->select_status,
+            ])->setPaper('a4', 'landscape');
 
-        //    return $pdf->download('day_total.pdf'); // โหลดทันที
-           return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
+         //    return $pdf->download('day_total.pdf'); // โหลดทันที
+            return $pdf->stream('day_total.pdf'); // เปิดไฟลฺ์
+         }
         }
-
-
    }
 
    public function total_thai_cambodia_excel(Request $rs)
