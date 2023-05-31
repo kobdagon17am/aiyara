@@ -19,6 +19,7 @@ class DocsController extends Controller
     ->select('register_files.*')
 		->where('register_files.customer_id','=',Auth::guard('c_user')->user()->id)
     // ->leftjoin('dataset_regis_doc_status', 'dataset_regis_doc_status.id', '=', 'register_files.regis_doc_status')
+    ->where('register_files.regis_doc_status','!=',9)
     ->orderby('register_files.created_at','DESC')
 		->get();
 
