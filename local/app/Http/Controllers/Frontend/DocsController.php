@@ -50,6 +50,13 @@ class DocsController extends Controller
 
 				$f_name = date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_1'.'.'.$file_1->getClientOriginalExtension();
 				if($file_1->move($url,$f_name)){
+
+
+					$update = DB::table('register_files')
+					->where('customer_id', '=', Auth::guard('c_user')->user()->id)
+          ->where('type', '=', 1)
+					->update(['regis_doc_status' => 9]);
+
 					DB::table('register_files')
 					->insert(['user_name'=>Auth::guard('c_user')->user()->user_name,'customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'1','url'=>$url,'file'=>$f_name,'business_location_id_fk'=>$business_location_id]);
           $update_use->regis_doc1_status = 0;
@@ -62,6 +69,12 @@ class DocsController extends Controller
 				$url='local/public/files_register/2/'.date('Ym');
 				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_2'.'.'.$file_2->getClientOriginalExtension();
 				if($file_2->move($url,$f_name)){
+
+          $update = DB::table('register_files')
+					->where('customer_id', '=', Auth::guard('c_user')->user()->id)
+          ->where('type', '=', 2)
+					->update(['regis_doc_status' => 9]);
+
 					DB::table('register_files')
 					->insert(['user_name'=>Auth::guard('c_user')->user()->user_name,'customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'2','url'=>$url,'file'=>$f_name,'business_location_id_fk'=>$business_location_id]);
           $update_use->regis_doc2_status = 0;
@@ -75,6 +88,11 @@ class DocsController extends Controller
 				$url='local/public/files_register/3/'.date('Ym');
 				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_3'.'.'.$file_3->getClientOriginalExtension();
 				if($file_3->move($url,$f_name)){
+          $update = DB::table('register_files')
+					->where('customer_id', '=', Auth::guard('c_user')->user()->id)
+          ->where('type', '=', 3)
+					->update(['regis_doc_status' => 9]);
+
 					DB::table('register_files')
 					->insert(['user_name'=>Auth::guard('c_user')->user()->user_name,'customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'3','url'=>$url,'file'=>$f_name,'business_location_id_fk'=>$business_location_id]);
           $update_use->regis_doc3_status = 0;
@@ -88,6 +106,12 @@ class DocsController extends Controller
 				$url='local/public/files_register/4/'.date('Ym');
 				$f_name =  date('YmdHis').'_'.Auth::guard('c_user')->user()->id.'_4'.'.'.$file_4->getClientOriginalExtension();
 				if($file_4->move($url,$f_name)){
+
+          $update = DB::table('register_files')
+					->where('customer_id', '=', Auth::guard('c_user')->user()->id)
+          ->where('type', '=', 4)
+					->update(['regis_doc_status' => 9]);
+
 					DB::table('register_files')
 					->insert(['user_name'=>Auth::guard('c_user')->user()->user_name,'customer_id'=>Auth::guard('c_user')->user()->id,'type'=>'4','url'=>$url,'file'=>$f_name,'business_location_id_fk'=>$business_location_id]);
           $update_use->regis_doc4_status = 0;
