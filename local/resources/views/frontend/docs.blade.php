@@ -101,8 +101,9 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                         <thead>
                             <tr>
                                 {{-- <th width="100">#</th> --}}
-                                <th>Docs</th>
+
                                 <th width="200">Date</th>
+                                <th>Docs</th>
                                 <th width="200">Status</th>
                                 <th>Detail</th>
                             </tr>
@@ -137,8 +138,9 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
                                 ?>
                                 <tr>
                                     {{-- <th scope="row">{{ $i }}</th> --}}
+
+                                    <td>{{ date('d/m/Y H:i:s', strtotime($value->created_at)) }}</td>
                                     <td>{{ $type }}</td>
-                                    <td>{{ date('d/m/Y', strtotime($value->created_at)) }}</td>
                                     <td>{!! $status !!}</td>
                                     <td>{!! $value->comment !!}</td>
                                 </tr>

@@ -197,17 +197,17 @@ class HistoryController extends Controller
           $business_location_id = 1;
         }
 
-        $not_show = DB::table('db_orders')
-        ->select('id')
-        ->whereRaw('db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk = 8 ')
-        ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
-        ->get();
+        // $not_show = DB::table('db_orders')
+        // ->select('id')
+        // ->whereRaw('db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk = 8 ')
+        // ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
+        // ->get();
 
 
-        $not_show_arr = array();
-        foreach($not_show as $value){
-          $not_show_arr[] = $value->id;
-        }
+        // $not_show_arr = array();
+        // foreach($not_show as $value){
+        //   $not_show_arr[] = $value->id;
+        // }
 
         // dd($request->dt_order_type);
 
@@ -235,6 +235,7 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
 
             //->orwhere("db_orders.customers_sent_id_fk","=",Auth::guard('c_user')->user()->id)
+            ->whereRaw('(db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk != 8 )')
             ->orderby('db_orders.created_at', 'DESC');
 
         $sQuery = Datatables::of($orders);
