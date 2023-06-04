@@ -659,9 +659,9 @@ set_time_limit(9999999);
                     </td>
 
                     <td style="border-left: 1px solid #ccc;border-bottom: 1px solid #ccc;text-align: center;"
-                    rowspan="1" colspan="5">
-                    รวมเงิน
-                </td>
+                        rowspan="1" colspan="5">
+                        รวมเงิน
+                    </td>
                 </tr>
 
                 <tr style="">
@@ -684,6 +684,13 @@ set_time_limit(9999999);
             </thead>
             <tbody>
                 <?php
+
+                $col_5_total = 0;
+                $col_6_total = 0;
+                $col_7_total = 0;
+                $col_8_total = 0;
+                $col_9_total = 0;
+
                 foreach ($sTable as $key => $row) {
                     $col_1 = '';
                     $col_2 = '';
@@ -700,12 +707,6 @@ set_time_limit(9999999);
                     $col_13 = '';
                     $td = '<tr>';
 
-                      $col_5_total = 0;
-                      $col_6_total = 0;
-                      $col_7_total = 0;
-                      $col_8_total = 0;
-                      $col_9_total = 0;
-
                     // ผู้ส่ง
                     if (@$row->sender_id != '' && $row->remark == 1) {
                         $sD = DB::select(' select name from ck_users_admin where id=' . $row->sender_id . ' ');
@@ -721,43 +722,43 @@ set_time_limit(9999999);
                     if ($row->remark == 1) {
                         $sDBSentMoneyDaily = DB::select(
                             "
-                                                          SELECT
-                                                          db_sent_money_daily.*,
-                                                          ck_users_admin.`name` as sender
-                                                          FROM
-                                                          db_sent_money_daily
-                                                          Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
-                                                          WHERE db_sent_money_daily.id=" .
+                                                                          SELECT
+                                                                          db_sent_money_daily.*,
+                                                                          ck_users_admin.`name` as sender
+                                                                          FROM
+                                                                          db_sent_money_daily
+                                                                          Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
+                                                                          WHERE db_sent_money_daily.id=" .
                                 $row->id .
                                 "
-                                                          $w05
-                                                          order by db_sent_money_daily.time_sent
-                                                         ",
+                                                                          $w05
+                                                                          order by db_sent_money_daily.time_sent
+                                                                         ",
                         );
                         $pn = '';
                         foreach (@$sDBSentMoneyDaily as $r) {
                             $sOrders = DB::select(
                                 "
-                                                                          SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name,date(db_orders.created_at) as date_order
-                                                                          FROM
-                                                                          db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
-                                                                          where sent_money_daily_id_fk in (" .
+                                                                                          SELECT db_orders.invoice_code ,customers.prefix_name,customers.first_name,customers.last_name,date(db_orders.created_at) as date_order
+                                                                                          FROM
+                                                                                          db_orders Left Join customers ON db_orders.customers_id_fk = customers.id
+                                                                                          where sent_money_daily_id_fk in (" .
                                     $r->id .
                                     ")
-                                                                          $w052
-                                                                          GROUP BY date(db_orders.created_at);
-                                                                      ",
+                                                                                          $w052
+                                                                                          GROUP BY date(db_orders.created_at);
+                                                                                      ",
                             );
                             $i = 1;
                             foreach ($sOrders as $key => $value) {
                                 $pn .=
                                     '
-                                                                            <div class="divTableRow invoice_code_list ">
-                                                                            <div class="divTableCell" style="text-align:center;">' .
+                                                                                            <div class="divTableRow invoice_code_list ">
+                                                                                            <div class="divTableCell" style="text-align:center;">' .
                                     date('d/m/Y', strtotime($value->date_order)) .
                                     ' </div>
-                                                                            </div>
-                                                                            ';
+                                                                                            </div>
+                                                                                            ';
                                 $i++;
                             }
                         }
@@ -774,18 +775,18 @@ set_time_limit(9999999);
                         if ($row->remark == 1) {
                             $sDBSentMoneyDaily = DB::select(
                                 "
-                                                SELECT
-                                                db_sent_money_daily.*,
-                                                ck_users_admin.`name` as sender
-                                                FROM
-                                                db_sent_money_daily
-                                                Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
-                                                WHERE  db_sent_money_daily.id=" .
+                                                                SELECT
+                                                                db_sent_money_daily.*,
+                                                                ck_users_admin.`name` as sender
+                                                                FROM
+                                                                db_sent_money_daily
+                                                                Left Join ck_users_admin ON db_sent_money_daily.sender_id = ck_users_admin.id
+                                                                WHERE  db_sent_money_daily.id=" .
                                     $row->id .
                                     "
-                                                $w05
-                                                order by db_sent_money_daily.time_sent
-                                                ",
+                                                                $w05
+                                                                order by db_sent_money_daily.time_sent
+                                                                ",
                             );
 
                             $arr = [];
@@ -793,12 +794,12 @@ set_time_limit(9999999);
                             foreach (@$sDBSentMoneyDaily as $r) {
                                 $sOrders = DB::select(
                                     "
-                                                   SELECT *
-                                                   FROM
-                                                   db_orders where sent_money_daily_id_fk in (" .
+                                                                   SELECT *
+                                                                   FROM
+                                                                   db_orders where sent_money_daily_id_fk in (" .
                                         $r->id .
                                         ") $w052;
-                                               ",
+                                                               ",
                                 );
 
                                 foreach ($sOrders as $key => $value) {
@@ -812,31 +813,31 @@ set_time_limit(9999999);
                             if ($id) {
                                 $sDBFrontstoreSumCostActionUser = DB::select(
                                     "
-                                       SELECT
-                                       db_orders.action_user,
-                                       ck_users_admin.`name` as action_user_name,
-                                       db_orders.pay_type_id_fk,
-                                       dataset_pay_type.detail AS pay_type,
-                                       date(db_orders.created_at) AS action_date,
-                                       sum(db_orders.cash_pay) as cash_pay,
-                                       sum(db_orders.credit_price) as credit_price,
-                                       sum(db_orders.transfer_price) as transfer_price,
-                                       sum(db_orders.aicash_price) as aicash_price,
-                                       sum(db_orders.shipping_price) as shipping_price,
-                                       sum(db_orders.fee_amt) as fee_amt,
-                                       sum(db_orders.sum_credit_price) as sum_credit_price,
-                                       sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
-                                       FROM
-                                       db_orders
-                                       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
-                                       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
-                                       WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id)
+                                                       SELECT
+                                                       db_orders.action_user,
+                                                       ck_users_admin.`name` as action_user_name,
+                                                       db_orders.pay_type_id_fk,
+                                                       dataset_pay_type.detail AS pay_type,
+                                                       date(db_orders.created_at) AS action_date,
+                                                       sum(db_orders.cash_pay) as cash_pay,
+                                                       sum(db_orders.credit_price) as credit_price,
+                                                       sum(db_orders.transfer_price) as transfer_price,
+                                                       sum(db_orders.aicash_price) as aicash_price,
+                                                       sum(db_orders.shipping_price) as shipping_price,
+                                                       sum(db_orders.fee_amt) as fee_amt,
+                                                       sum(db_orders.sum_credit_price) as sum_credit_price,
+                                                       sum(db_orders.cash_pay+db_orders.credit_price+db_orders.transfer_price+db_orders.aicash_price) as total_price
+                                                       FROM
+                                                       db_orders
+                                                       Left Join dataset_pay_type ON db_orders.pay_type_id_fk = dataset_pay_type.id
+                                                       Left Join ck_users_admin ON db_orders.action_user = ck_users_admin.id
+                                                       WHERE db_orders.pay_type_id_fk<>0 AND db_orders.id in ($id)
 
-                                       AND db_orders.business_location_id_fk in(" .
+                                                       AND db_orders.business_location_id_fk in(" .
                                         $row->business_location .
                                         ")
-                                       GROUP BY action_user
-                                  ",
+                                                       GROUP BY action_user
+                                                  ",
                                 );
                                 $cash_pay_total = 0;
                                 foreach (@$sDBFrontstoreSumCostActionUser as $r) {
@@ -918,11 +919,11 @@ set_time_limit(9999999);
                 $td = '<tr>';
 
                 $td .= '<td style="border-bottom: 0px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;" colspan="8"></td>';
-                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">'.number_format($col_5_total,2).'</td>';
-                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">'.number_format($col_6_total,2).'</td>';
-                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">'.number_format($col_7_total,2).'</td>';
-                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">'.number_format($col_8_total,2).'</td>';
-                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">'.number_format($col_9_total,2).'</td>';
+                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">' . number_format($col_5_total, 2) . '</td>';
+                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">' . number_format($col_6_total, 2) . '</td>';
+                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">' . number_format($col_7_total, 2) . '</td>';
+                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">' . number_format($col_8_total, 2) . '</td>';
+                $td .= '<td style="border-bottom: 3px double #000;border-left: 0px solid #ccc;text-align: right; font-weight: bold;">' . number_format($col_9_total, 2) . '</td>';
 
                 echo $td . '</tr>';
                 ?>

@@ -145,14 +145,16 @@ class General {
 							->first();
 
               // วุฒิเพิ่มมา && $db_pay_requisition_002_remain_check->amt_remain > 0
-								if($db_pay_requisition_002_item->amt_remain > 0 && $db_pay_requisition_002_remain_check->amt_remain > 0){
-									 $check = $check+1;
-									array_push($arr_re_002_item, $db_pay_requisition_002_item->order_id);
-									array_push($arr_re_002, $db_pay_requisition_002->pick_pack_requisition_code_id_fk);
-								$r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
-								}else{
-								$r_ch_t = '';
-								}
+              if($db_pay_requisition_002_item->amt_get == 0){
+                if($db_pay_requisition_002_item->amt_remain > 0 && $db_pay_requisition_002_remain_check->amt_remain > 0){
+                  $check = $check+1;
+                 array_push($arr_re_002_item, $db_pay_requisition_002_item->order_id);
+                 array_push($arr_re_002, $db_pay_requisition_002->pick_pack_requisition_code_id_fk);
+               $r_ch_t = '&nbsp;<span style="font:15px;color:red;">(รายการนี้ค้างจ่าย จำนวน '.$db_pay_requisition_002_item->amt_remain.' )</span>';
+               }else{
+               $r_ch_t = '';
+               }
+              }
 
 				$amt_get = DB::table('db_pay_requisition_002')
 							->join('db_pay_requisition_002_item','db_pay_requisition_002_item.requisition_002_id','db_pay_requisition_002.id')
