@@ -6088,7 +6088,7 @@ class AjaxController extends Controller
 
                 // ->where('user_name',$request->term)
 
-                ->take(500)
+                ->take(100)
                 ->orderBy('id', 'desc')
                 ->get();
               // }else{
