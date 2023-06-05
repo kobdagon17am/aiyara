@@ -565,7 +565,7 @@
          var business_location_id = '{{ $data['data']->business_location_id }}';
 
          console.log(business_location_id);
-         if (business_location_id == 1 || business_location_id == '') {
+         if (business_location_id == 1 || business_location_id == '' || business_location_id == 5) {
              $('#id_card').attr('maxlength', '13');
              $('#id_card').attr('minlength', '13');
          }else if(business_location_id == 2) {
@@ -579,7 +579,7 @@
          $('#business_location').change(function() {
              value = $(this).val();
 
-             if (value == 'THAI' || value == '') {
+             if (value == 'THAI' || value == ''  || value == 'THAI(พิเศษ)') {
               $('#id_card').attr('maxlength', '13');
                  $('#id_card').attr('minlength', '13');
                  $('#id_card').val("");
@@ -643,7 +643,7 @@
                      }
 
                  }else{
-                             $.ajax({
+                  $.ajax({
                                      url: '{{ route('check_id_card') }}',
                                      type: 'GET',
                                      data: {
@@ -662,7 +662,6 @@
                                          })
                                      }
                                   })
-
 
                  }
 

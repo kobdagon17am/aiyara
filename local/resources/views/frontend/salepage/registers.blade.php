@@ -87,37 +87,54 @@
                                         <div class="card-header">
                                             <h4>@lang('message.register') </h4>
                                             <ul>
-                                              <li class="dropdown">
-                                                <b>@lang('message.menus.language')</b>
-                                                <button  class=" header-item waves-effect" style="line-height:0px;border: 0px;background: border-box;"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    @IF(Session::get('locale')=='th')
-                                                    <img class="" src="{{ asset('backend/images/flags/flag_thai.jpg') }}" alt="Language" height="16">
-                                                    @ELSEIF(Session::get('locale')=='en')
-                                                    <img class="" src="{{ asset('backend/images/flags/us.jpg') }}" alt="Language" height="16">
-                                                    @ELSEIF(Session::get('locale')=='ca')
-                                                    <img class="" src="{{ asset('backend/images/flags/flag_cambodia.jpg') }}" alt="Language" height="16">
-                                                    @ENDIF
-                                                </button>
+                                                <li class="dropdown">
+                                                    <b>@lang('message.menus.language')</b>
+                                                    <button class=" header-item waves-effect"
+                                                        style="line-height:0px;border: 0px;background: border-box;"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        @if (Session::get('locale') == 'th')
+                                                            <img class=""
+                                                                src="{{ asset('backend/images/flags/flag_thai.jpg') }}"
+                                                                alt="Language" height="16">
+                                                        @ELSEIF(Session::get('locale') == 'en')
+                                                            <img class=""
+                                                                src="{{ asset('backend/images/flags/us.jpg') }}"
+                                                                alt="Language" height="16">
+                                                        @ELSEIF(Session::get('locale') == 'ca')
+                                                            <img class=""
+                                                                src="{{ asset('backend/images/flags/flag_cambodia.jpg') }}"
+                                                                alt="Language" height="16">
+                                                        @ENDIF
+                                                    </button>
 
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <!-- item-->
-                                                    <a href="{{ URL('/lang/th') }}" class="dropdown-item notify-item">
-                                                        <img src="{{ asset('backend/images/flags/flag_thai.jpg') }}" alt="user-image" class="mr-1" height="12"> <span style="color: black">Thai</span>
-                                                    </a>
-                                                    <!-- item-->
-                                                    <a href="{{ URL('/lang/en') }}" class="dropdown-item notify-item">
-                                                        <img src="{{ asset('backend/images/flags/us.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">US</span>
-                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <!-- item-->
+                                                        <a href="{{ URL('/lang/th') }}"
+                                                            class="dropdown-item notify-item">
+                                                            <img src="{{ asset('backend/images/flags/flag_thai.jpg') }}"
+                                                                alt="user-image" class="mr-1" height="12"> <span
+                                                                style="color: black">Thai</span>
+                                                        </a>
+                                                        <!-- item-->
+                                                        <a href="{{ URL('/lang/en') }}"
+                                                            class="dropdown-item notify-item">
+                                                            <img src="{{ asset('backend/images/flags/us.jpg') }}"
+                                                                alt="user-image" class="mr-1" height="12"> <span
+                                                                style="color: black">US</span>
+                                                        </a>
 
-                                                    <a href="{{ URL('/lang/ca') }}" class="dropdown-item notify-item">
-                                                      <img src="{{ asset('backend/images/flags/flag_cambodia.jpg') }}" alt="user-image" class="mr-1" height="12"> <span  style="color: black">Cambodia</span>
-                                                  </a>
+                                                        <a href="{{ URL('/lang/ca') }}"
+                                                            class="dropdown-item notify-item">
+                                                            <img src="{{ asset('backend/images/flags/flag_cambodia.jpg') }}"
+                                                                alt="user-image" class="mr-1" height="12"> <span
+                                                                style="color: black">Cambodia</span>
+                                                        </a>
 
 
-                                                </div>
-                                            </li>
-                                                    </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
 
 
                                         </div>
@@ -136,7 +153,7 @@
                                                         <label><b> @lang('message.under') </b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
                                                             style="font-size: 15px;padding: 9px 9px;">
-                                                            <font style="color: #000;">{{$data['last_user']}}</font>
+                                                            <font style="color: #000;">{{ $data['last_user'] }}</font>
                                                         </span>
                                                         {{-- <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
                                                         <input type="hidden" name="upline_id"
@@ -159,11 +176,11 @@
                                                     <div class="col-sm-3">
                                                         <label><b>@lang('message.Referral_UserName')</b></label>
                                                         <span class=" form-control pcoded-badge label label-success"
-                                                        style="font-size: 15px;padding: 9px 9px;">
-                                                        <font style="color: #000;">
-                                                            {{ $data['data']->business_name }} (
-                                                            {{ $data['data']->user_name }} ) </font>
-                                                    </span>
+                                                            style="font-size: 15px;padding: 9px 9px;">
+                                                            <font style="color: #000;">
+                                                                {{ $data['data']->business_name }} (
+                                                                {{ $data['data']->user_name }} ) </font>
+                                                        </span>
                                                         {{-- <div class="input-group input-group-button">
                                                             <input type="text" class="form-control" name="introduce"
                                                                 id="introduce" placeholder="รหัสผู้แนะนำ"
@@ -187,9 +204,12 @@
                                                     <div class="col-sm-2">
                                                         <label> @lang('message.name_prefix') </label>
                                                         <select class="form-control" name="name_prefix">
-                                                            <option value="@lang('message.mr')">@lang('message.mr')</option>
-                                                            <option value="@lang('message.mrs')">@lang('message.mrs')</option>
-                                                            <option value="@lang('message.ms')">@lang('message.ms')</option>
+                                                            <option value="@lang('message.mr')">@lang('message.mr')
+                                                            </option>
+                                                            <option value="@lang('message.mrs')">@lang('message.mrs')
+                                                            </option>
+                                                            <option value="@lang('message.ms')">@lang('message.ms')
+                                                            </option>
                                                         </select>
 
                                                     </div>
@@ -254,7 +274,8 @@
 
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.Nationality')  <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.Nationality') <font class="text-danger">*</font>
+                                                            </label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="nation_id" required="">
                                                             <option value="">Select</option>
@@ -267,13 +288,14 @@
                                                     </div>
 
 
-                                                <div class="col-sm-3">
-                                                    <label>@lang('message.ID_card_number') <font class="text-danger">*</font>
-                                                    </label>
-                                                    <input class="form-control" id="id_card" type="text"
-                                                        name="id_card" value="{{ old('id_card') }}" required="">
-                                                    <span class="error text-danger"></span>
-                                                </div>
+                                                    <div class="col-sm-3">
+                                                        <label>@lang('message.ID_card_number') <font class="text-danger">*</font>
+                                                        </label>
+                                                        <input class="form-control" id="id_card" type="text"
+                                                            name="id_card" value="{{ old('id_card') }}"
+                                                            required="">
+                                                        <span class="error text-danger"></span>
+                                                    </div>
                                                 </div>
 
 
@@ -312,7 +334,8 @@
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.no') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.no') <font class="text-danger">*</font>
+                                                            </label>
                                                         <input type="text" class="form-control"
                                                             placeholder="@lang('message.no')" id="card_house_no"
                                                             name="card_house_no" value="{{ old('card_house_no') }}"
@@ -330,30 +353,37 @@
 
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.villageno')<font class="text-danger">*</font></label>
+                                                        <label>@lang('message.villageno')<font class="text-danger">*</font>
+                                                            </label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="@lang('message.villageno')" id="card_moo" name="card_moo"
-                                                            value="{{ old('card_moo') }}" required="">
+                                                            placeholder="@lang('message.villageno')" id="card_moo"
+                                                            name="card_moo" value="{{ old('card_moo') }}"
+                                                            required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.lane') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.lane') <font class="text-danger">*</font>
+                                                            </label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="@lang('message.lane')" id="card_soi" name="card_soi"
-                                                            value="{{ old('card_soi') }}" required="">
+                                                            placeholder="@lang('message.lane')" id="card_soi"
+                                                            name="card_soi" value="{{ old('card_soi') }}"
+                                                            required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.road')<font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="@lang('message.road')"
-                                                            id="card_road" name="card_road"
-                                                            value="{{ old('card_road') }}" required="">
+                                                        <label>@lang('message.road')<font class="text-danger">*</font>
+                                                            </label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="@lang('message.road')" id="card_road"
+                                                            name="card_road" value="{{ old('card_road') }}"
+                                                            required="">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.province') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.province') <font class="text-danger">*</font>
+                                                            </label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             id="card_province" name="card_province" required="">
                                                             <option value="">Select</option>
@@ -368,7 +398,8 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.district/area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.district/area') <font class="text-danger">*</font>
+                                                            </label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="card_amphures" id="card_amphures" required="">
                                                             <option value="">Select</option>
@@ -376,7 +407,8 @@
                                                         {{-- <input type="text" class="form-control" placeholder="เขต/อำเภอ" id="card_amphures" name="card_amphures" value="{{ old('card_amphures') }}"> --}}
                                                     </div>
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font>
+                                                            </label>
                                                         {{-- <input type="text" class="form-control" placeholder="แขวง/ตำบล" id="card_district" name="card_district" value="{{ old('district') }}"> --}}
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="card_district" id="card_district" required="">
@@ -395,7 +427,7 @@
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
                                                         <h3 class="sub-title" style="color: #000;font-size: 16px">
-                                                          @lang('message.Convenient_address')
+                                                            @lang('message.Convenient_address')
                                                         </h3>
                                                     </div>
                                                 </div>
@@ -416,10 +448,12 @@
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.no') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.no') <font class="text-danger">*</font>
+                                                            </label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="@lang('message.no')" id="house_no" name="house_no"
-                                                            value="{{ old('house_no') }}" required="">
+                                                            placeholder="@lang('message.no')" id="house_no"
+                                                            name="house_no" value="{{ old('house_no') }}"
+                                                            required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
@@ -432,30 +466,37 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.villageno') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.villageno') <font class="text-danger">*</font>
+                                                            </label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="@lang('message.villageno')" id="moo" name="moo"
-                                                            value="{{ old('moo') }}" required="">
+                                                            placeholder="@lang('message.villageno')" id="moo"
+                                                            name="moo" value="{{ old('moo') }}"
+                                                            required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.lane') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.lane') <font class="text-danger">*</font>
+                                                            </label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="@lang('message.lane')" id="soi" name="soi"
-                                                            value="{{ old('soi') }}" required="">
+                                                            placeholder="@lang('message.lane')" id="soi"
+                                                            name="soi" value="{{ old('soi') }}"
+                                                            required="">
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.road') <font class="text-danger">*</font></label>
-                                                        <input type="text" class="form-control" placeholder="@lang('message.road')"
-                                                            id="road" name="road"
-                                                            value="{{ old('road') }}" required="">
+                                                        <label>@lang('message.road') <font class="text-danger">*</font>
+                                                            </label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="@lang('message.road')" id="road"
+                                                            name="road" value="{{ old('road') }}"
+                                                            required="">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.province') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.province') <font class="text-danger">*</font>
+                                                            </label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             id="province" name="province" required="">
                                                             <option value="">Select</option>
@@ -469,7 +510,8 @@
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.district/area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.district/area') <font class="text-danger">*</font>
+                                                            </label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="amphures" id="amphures" required="">
                                                             <option value="">Select</option>
@@ -483,7 +525,8 @@
 
 
                                                     <div class="col-sm-3">
-                                                        <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font></label>
+                                                        <label>@lang('message.sub-district/sub-area') <font class="text-danger">*</font>
+                                                            </label>
                                                         <select class="js-example-basic-single col-sm-12"
                                                             name="district" id="district" required="">
                                                             <option value="">Select</option>
@@ -494,8 +537,8 @@
                                                     <div class="col-sm-3">
                                                         <label>@lang('message.zipcode')</label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="@lang('message.zipcode')" id="zipcode" name="zipcode"
-                                                            value="{{ old('zipcode') }}">
+                                                            placeholder="@lang('message.zipcode')" id="zipcode"
+                                                            name="zipcode" value="{{ old('zipcode') }}">
                                                     </div>
 
                                                 </div>
@@ -504,7 +547,7 @@
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
                                                         <h4 class="sub-title" style="color: #000;font-size: 16px">
-                                                          @lang('message.bankingaccount')</h4>
+                                                            @lang('message.bankingaccount')</h4>
                                                     </div>
                                                 </div>
 
@@ -573,8 +616,9 @@
 
                                                     <div class="col-sm-3">
                                                         <label>@lang('message.branch')</label>
-                                                        <input type="text" class="form-control" placeholder="@lang('message.branch')"
-                                                            name="bank_branch" value="{{ old('bank_branch') }}">
+                                                        <input type="text" class="form-control"
+                                                            placeholder="@lang('message.branch')" name="bank_branch"
+                                                            value="{{ old('bank_branch') }}">
                                                     </div>
                                                 </div>
 
@@ -585,8 +629,9 @@
                                                         <div class="form-check form-check-inline">
                                                             <label class="form-check-label">
                                                                 <input class="form-check-input" type="radio"
-                                                                    name="bank_type" id="gender-1" value="@lang('message.Savings')"
-                                                                    checked="checked"> @lang('message.Savings')
+                                                                    name="bank_type" id="gender-1"
+                                                                    value="@lang('message.Savings')" checked="checked">
+                                                                @lang('message.Savings')
                                                             </label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
@@ -606,7 +651,7 @@
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
                                                         <h5 class="sub-title" style="color: #000;font-size: 16px">
-                                                          @lang('message.successor')</h5>
+                                                            @lang('message.successor')</h5>
                                                     </div>
                                                 </div>
 
@@ -615,8 +660,8 @@
                                                     <div class="col-sm-3">
                                                         <label>@lang('message.Beneficiaries_name-surname')</label>
                                                         <input type="text" class="form-control"
-                                                            placeholder="@lang('message.Beneficiaries_name-surname')"
-                                                            name="benefit_name" value="{{ old('benefit_name') }}">
+                                                            placeholder="@lang('message.Beneficiaries_name-surname')" name="benefit_name"
+                                                            value="{{ old('benefit_name') }}">
                                                     </div>
                                                 </div>
 
@@ -644,7 +689,7 @@
                                                         <div class="col-sm-12">
 
                                                             <h5 class="sub-title" style="color: #000;font-size: 16px">
-                                                              @lang('message.Documents_for_applying') </h5>
+                                                                @lang('message.Documents_for_applying') </h5>
                                                         </div>
 
 
@@ -808,7 +853,7 @@
         $('#business_location').change(function() {
             value = $(this).val();
 
-            if (value == 'THAI' || value == '') {
+            if (value == 'THAI' || value == '' || value == 'THAI(พิเศษ)') {
                 $('#id_card').attr('maxlength', '13');
                 $('#id_card').attr('minlength', '13');
                 $('#id_card').val("");
@@ -859,10 +904,6 @@
                                         $('span.error').removeClass('text-success').text(
                                             'มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
                                         $('#id_card').val('');
-                                        //  Swal.fire({
-                                        //      icon: 'error',
-                                        //      title: 'เลขบัตรประชาชนซ้ำ',
-                                        //  })
                                     }
                                 })
                         }
@@ -873,27 +914,23 @@
                     }
 
                 } else {
-                    $.ajax({
-                            url: '{{ route('check_id_card') }}',
-                            type: 'GET',
-                            data: {
-                                id_card: id_card
-                            },
-                        })
-                        .done(function(data) {
-                            if (data['status'] == 'success') {
-                                $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
-                            } else {
-                                $('span.error').removeClass('text-success').text(
-                                    'มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
-                                $('#id_card').val('');
-                                //  Swal.fire({
-                                //      icon: 'error',
-                                //      title: 'เลขบัตรประชาชนซ้ำ',
-                                //  })
-                            }
-                        })
-
+                  id_card = $('#id_card').val();
+                                $.ajax({
+                                    url: '{{ route('check_id_card') }}',
+                                    type: 'GET',
+                                    data: {
+                                        id_card: id_card
+                                    },
+                                })
+                                .done(function(data) {
+                                    if (data['status'] == 'success') {
+                                        $('span.error').addClass('text-success').text('เลขบัตรถูกต้อง');
+                                    } else {
+                                        $('span.error').removeClass('text-success').text(
+                                            'มีเลขบัตรประชาชนในระบบแล้วไม่สามารถสมัครซ้ำได้');
+                                        $('#id_card').val('');
+                                    }
+                                })
 
                 }
 
