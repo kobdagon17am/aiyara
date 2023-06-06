@@ -35,6 +35,7 @@ class RegisterSalepageController extends Controller
        $country = DB::table('dataset_business_location')
        ->select('*')
        ->where('lang_id','=',1)
+       ->orderby('orderby')
        ->get();
 
        $registers_setting = DB::table('customers')
