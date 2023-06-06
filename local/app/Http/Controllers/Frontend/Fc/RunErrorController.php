@@ -21,6 +21,66 @@ class RunErrorController extends Controller
 {
   public static function index(){
 
+
+
+    ////////////////////////////////
+
+    //     $data = DB::table('customers') //อัพ Pv ของตัวเอง
+    //       ->select('id','user_name')
+    //       ->wherein('user_name',['A253581',
+    //       'A261096',
+    //       'A221367',
+    //       'A226513',
+    //       'A252646',
+    //       'A360053',
+    //       'A184187',
+    //       'A812891',
+    //       'A627397',
+    //       'A374050',
+    //       'A853812',
+    //       'A853948',
+    //       'A842033',
+    //       'A744761',
+    //       'A748112',
+    //       'A743851',
+    //       'A780493',
+    //       'A686074',
+    //       'A521845',
+    //       'A739132',
+    //       'A871413'])
+    //       ->get();
+    //       $arr = array();
+    // $i = 0;
+    // foreach($data as $value){
+
+    //   $gv = \App\Helpers\Frontend::get_gitfvoucher($value->user_name);
+    //   if($gv){
+    //     $gv_value = 0;
+    //   }else{
+    //     $gv_value = $gv;
+    //   }
+      
+    //   if($gv_value>0){
+    //     dd($value->user_name,'fail');
+    //   }else{
+    //      $arr[] = $value->id;
+    //   }
+
+    // $i++;
+
+    // $customers = DB::table('customers')
+    // ->wherein('id',$arr)
+    // ->update(['business_location_id' => 3]); //ลงข้อมูลบิลชำระเงิน
+
+    // $file = DB::table('register_files')
+    // ->wherein('customer_id',$arr)
+    // ->update(['business_location_id_fk' => 3]); //ลงข้อมูลบิลชำระเงิน
+
+    // }
+    // dd($i,'success');
+
+
+    /////////////////////////////////
     // $data = \App\Models\Frontend\Promotion::all_available_purchase_2(350);
     // dd($data);
 

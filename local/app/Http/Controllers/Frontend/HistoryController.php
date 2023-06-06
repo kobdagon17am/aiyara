@@ -235,7 +235,7 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
 
             //->orwhere("db_orders.customers_sent_id_fk","=",Auth::guard('c_user')->user()->id)
-            ->whereRaw('(db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk != 8 )')
+            ->whereRaw('(db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk NOT IN (8) )')
             ->orderby('db_orders.created_at', 'DESC');
 
         $sQuery = Datatables::of($orders);
