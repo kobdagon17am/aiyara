@@ -1446,10 +1446,11 @@ for ($j=0; $j < $amt_page ; $j++) {
         ?>
       </td>
 
-      <td style="margin-left:25px !important;margin-top:18px !important;width:30%;vertical-align: top;" >
-        <br>
+      <td style="margin-left:25px !important;margin-top:0px !important;width:30%;vertical-align: top;" >
+        <!-- <br> -->
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+4) ; "); ?>
         <?php echo @$DB[0]->a; ?>
+
         <?php
         if(@$db_orders[0]->invoice_code_id_fk){
           echo '<br>'.@$db_orders[0]->invoice_code_id_fk;
@@ -1457,9 +1458,21 @@ for ($j=0; $j < $amt_page ; $j++) {
 
         ?>
 
-        <br>
+      <!-- new -->
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+5) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
+        <?php echo '<br>'.@$DB[0]->a ; ?>
+        <!-- / -->
+
+        <?php
+        // if(@$db_orders[0]->invoice_code_id_fk){
+        //   echo '<br>'.@$db_orders[0]->invoice_code_id_fk;
+        // }
+
+        ?>
+
+        <br>
+        <?php //$DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+5) ; "); ?>
+        <?php //echo @$DB[0]->a ; ?>
       </td>
       </tr>
     </table>
@@ -1702,8 +1715,9 @@ $num_run++;
 
     <tr>
     <td style="margin-left:33px !important;width:80%;font-size: 14px;" colspan="3">
-        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
-        <?php echo @$DB[0]->a ; ?>
+    <!-- address -->
+        <?php //$DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
+        <?php //echo @$DB[0]->a ; ?>
       </td>
       <td style="text-align: right;">
         <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
@@ -1736,8 +1750,14 @@ $num_run++;
   </table>
 </div>
 
+<div style="float:left;font-size: 14px !important;">
+<?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+20) ; "); ?>
+        <?php echo @$DB[0]->a ; ?>
+        </div>
+
  <div style="float:right;font-size: 14px !important;">
   <!-- Page 1 -->
+
        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+22) ; "); ?>
        <?php echo @$DB[0]->g ; ?>
  </div>
