@@ -643,6 +643,7 @@
                      }
 
                  }else{
+                  id_card = $('#id_card').val();
                   $.ajax({
                                      url: '{{ route('check_id_card') }}',
                                      type: 'GET',
