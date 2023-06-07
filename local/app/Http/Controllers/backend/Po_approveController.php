@@ -806,7 +806,7 @@ class Po_approveController extends Controller
     ->leftJoin('branchs', 'branchs.id', '=', 'db_orders.branch_id_fk')
     ->leftJoin('dataset_approve_status', 'dataset_approve_status.id', '=', 'db_orders.approve_status')
     ->where([
-        ['pay_type_id_fk', '=', 1],
+        // ['pay_type_id_fk', '=', 1],
         ['dataset_order_status.lang_id', '=', 1],
         ['db_orders.id', '!=', 0]
     ])
