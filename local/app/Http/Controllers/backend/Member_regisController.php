@@ -865,7 +865,7 @@ class Member_regisController extends Controller
     }
 
     public function Datatable_list(Request $req){
-      // regis_doc3_status
+      // regis_date_doc
         if(!empty($req->business_location_id_fk)){
            $w01 = " AND register_files.business_location_id_fk=".$req->business_location_id_fk ;
            $business_location_id_fk = $req->business_location_id_fk;
@@ -897,9 +897,9 @@ class Member_regisController extends Controller
         }
 
         if(!empty($req->startDate) && !empty($req->endDate)){
-           $w05 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+           $w05 = " and date(customers.regis_date_doc) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
         }else{
-           $w05 = "and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
+           $w05 = "and date(customers.regis_date_doc) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
         }
 
         if(!empty($req->approver)){
