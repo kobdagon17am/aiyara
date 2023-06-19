@@ -853,7 +853,7 @@
         $('#business_location').change(function() {
             value = $(this).val();
 
-            if (value == 'THAI' || value == '' || value == 'THAI(พิเศษ)') {
+            if (value == 'THAI' || value == '' || value == 'THAI(ผู้ไม่มีสัญชาติไทย)') {
                 $('#id_card').attr('maxlength', '13');
                 $('#id_card').attr('minlength', '13');
                 $('#id_card').val("");

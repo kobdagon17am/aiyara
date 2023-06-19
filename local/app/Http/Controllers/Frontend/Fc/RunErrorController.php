@@ -27,27 +27,7 @@ class RunErrorController extends Controller
 
     //     $data = DB::table('customers') //อัพ Pv ของตัวเอง
     //       ->select('id','user_name')
-    //       ->wherein('user_name',['A253581',
-    //       'A261096',
-    //       'A221367',
-    //       'A226513',
-    //       'A252646',
-    //       'A360053',
-    //       'A184187',
-    //       'A812891',
-    //       'A627397',
-    //       'A374050',
-    //       'A853812',
-    //       'A853948',
-    //       'A842033',
-    //       'A744761',
-    //       'A748112',
-    //       'A743851',
-    //       'A780493',
-    //       'A686074',
-    //       'A521845',
-    //       'A739132',
-    //       'A871413'])
+    //       ->wherein('user_name',['A623425'])
     //       ->get();
     //       $arr = array();
     // $i = 0;
@@ -121,35 +101,35 @@ class RunErrorController extends Controller
     // }
     // dd($i);
 
-    $user = DB::table('customers')
-    ->select('id', 'user_name','upline_id','introduce_id')
-    // ->where('id', '>=',1298067)
-    // ->where('id', '<=',1311311)
-    ->where('user_name','A1307989')
-    ->get();
-    // dd($user);
-    //max1311311
-    $i= 0;
-  foreach($user as $value){
-    // $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
-    $data= RunErrorController::check_type_introduce($value->introduce_id,$value->upline_id,'A1307989');
-    // dd($data);
+  //   $user = DB::table('customers')
+  //   ->select('id', 'user_name','upline_id','introduce_id')
+  //   // ->where('id', '>=',1298067)
+  //   // ->where('id', '<=',1311311)
+  //   ->where('user_name','A1307989')
+  //   ->get();
+  //   // dd($user);
+  //   //max1311311
+  //   $i= 0;
+  // foreach($user as $value){
+  //   // $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
+  //   $data= RunErrorController::check_type_introduce($value->introduce_id,$value->upline_id,'A1307989');
+  //   // dd($data);
 
-    if( $data['status'] == 'success'){
-      $i++;
-      $introduce_type = $data['data']->line_type;
-    }else{
-      $introduce_type = '';
-    }
+  //   if( $data['status'] == 'success'){
+  //     $i++;
+  //     $introduce_type = $data['data']->line_type;
+  //   }else{
+  //     $introduce_type = '';
+  //   }
 
 
 
-    $update = DB::table('customers')
-    ->where('id', $value->id)
-    ->update(['introduce_type' =>$introduce_type]);
-  }
+  //   $update = DB::table('customers')
+  //   ->where('id', $value->id)
+  //   ->update(['introduce_type' =>$introduce_type]);
+  // }
 
-  dd('success รวม'.count($user).' Run'.$i);
+  // dd('success รวม'.count($user).' Run'.$i);
 
 
 
