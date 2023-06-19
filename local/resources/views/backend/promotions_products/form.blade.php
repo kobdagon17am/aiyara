@@ -74,7 +74,40 @@
                     </select>
                   </div>
                 </div>
-               
+
+                <?php
+                $products=DB::table('promotions_products')
+                ->select('promotions_products.*','products.product_code','products_details.product_name')
+                ->leftjoin('products','products.id','promotions_products.product_id_fk')
+                ->leftjoin('products_details','products_details.product_id_fk','products.id')
+                ->where('promotions_products.promotion_id_fk',@$sRowNew->id)
+                ->where('products_details.lang_id',1)
+                ->get();
+                // dd(@$sRowNew->id);
+                // dd($products);
+                ?>
+                <div class="container">
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          <th colspan="2">รายการสินค้าในโปรโมชั่น</th>
+                        </tr>
+                        <tr>
+                          <th>สินค้า</th>
+                          <th>จำนวน</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                  @foreach($products as $p)
+                    <tr>
+                      <td>{{$p->product_code}} : {{$p->product_name}}</td>
+                      <td>{{$p->product_amt}}</td>
+                    </tr>
+                  @endforeach
+                </tbody>
+                </table>
+                </div>
+
 
                 <div class="form-group mb-0 row">
                     <div class="col-md-6">
@@ -83,7 +116,7 @@
                         </a>
                     </div>
                     <div class="col-md-6 text-right">
-                        
+
                         <button type="submit" class="btn btn-primary btn-sm waves-effect">
                           <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูล
                         </button>

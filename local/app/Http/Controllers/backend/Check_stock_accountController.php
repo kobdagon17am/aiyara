@@ -147,9 +147,9 @@ class Check_stock_accountController extends Controller
            //  $run_code = $REF_CODE.(sprintf("%05d",$REF_NO+$i));
           // ปรับใหม่ ถ้า Status = NEW จะยังไม่สร้างรหัส
              $run_code = '';
-
              DB::select(" INSERT INTO db_stocks_account
               (
+                stock_id,
                 stocks_account_code_id_fk,
                 run_code,
                 business_location_id_fk,
@@ -167,6 +167,7 @@ class Check_stock_accountController extends Controller
               )
                values
               (
+              '$value->id',
               '$stocks_account_code->id',
               '$run_code',
               '$value->business_location_id_fk',
@@ -547,12 +548,10 @@ class Check_stock_accountController extends Controller
 
 
             }
-
             return redirect()->to(url("backend/check_stock_account/adjust/".request('id')."?from_id=".request('from_id')));
 
 
         }else{
-
            return $this->form();
 
         }
@@ -567,48 +566,6 @@ class Check_stock_accountController extends Controller
           // dd(request('id'));
 
         if(!empty(request('approved'))){
-
-          $Stock = \App\Models\Backend\Check_stock::where('id',$request->stock_id)->get();
-
-            // // รายการก่อน start_date เพื่อหายอดยกมา
-            // $Stock_movement_in = \App\Models\Backend\Stock_movement::
-            // where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
-            // ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
-            // ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
-            // ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
-            // ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
-            // ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
-            // ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
-            // ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
-            // ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
-            // ->where('in_out','1')
-            // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
-            // ->selectRaw('sum(amt) as sum')
-            // ->get();
-
-            // // ยอดรับเข้า
-            // $amt_balance_in = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
-
-            // $Stock_movement_out = \App\Models\Backend\Stock_movement::
-            // where('product_id_fk',($Stock[0]->product_id_fk?$Stock[0]->product_id_fk:0))
-            // ->where('lot_number',($Stock[0]->lot_number?$Stock[0]->lot_number:0))
-            // ->where('lot_expired_date',($Stock[0]->lot_expired_date?$Stock[0]->lot_expired_date:0))
-            // ->where('business_location_id_fk',($Stock[0]->business_location_id_fk?$Stock[0]->business_location_id_fk:0))
-            // ->where('branch_id_fk',($Stock[0]->branch_id_fk?$Stock[0]->branch_id_fk:0))
-            // ->where('warehouse_id_fk',($Stock[0]->warehouse_id_fk?$Stock[0]->warehouse_id_fk:0))
-            // ->where('zone_id_fk',($Stock[0]->zone_id_fk?$Stock[0]->zone_id_fk:0))
-            // ->where('shelf_id_fk',($Stock[0]->shelf_id_fk?$Stock[0]->shelf_id_fk:0))
-            // ->where('shelf_floor',($Stock[0]->shelf_floor?$Stock[0]->shelf_floor:0))
-            // ->where('in_out','2')
-            // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
-            // ->selectRaw('sum(amt) as sum')
-            // ->get();
-
-            // // ยอดเบิกออก
-            // $amt_balance_out = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
-
-            // $amt_balance_stock = $amt_balance_in - $amt_balance_out ;
-
           $sRow = \App\Models\Backend\Stocks_account_code::find(request('id'));
           DB::select(' UPDATE db_stocks_account SET status_accepted='.request('approve_status').',action_date=CURDATE(),approver='.request('approver').',approve_date=CURDATE() where stocks_account_code_id_fk='.request('id').' ');
 
@@ -617,24 +574,116 @@ class Check_stock_accountController extends Controller
           // dd($stocks_account);
 
           foreach ($stocks_account as $key => $value) {
-              // echo $value->amt_diff;
-              // echo $value->product_id_fk;
-              // echo $value->lot_number;
-            if(request('approve_status')==3){ // อนุมัติ
-               DB::update(' UPDATE db_stocks SET amt = ( amt + ('.$value->amt_diff.') ) where product_id_fk = "'.$value->product_id_fk.'" AND lot_number="'.$value->lot_number.'" ');
-             }
 
+            if(request('approve_status')==3){ // อนุมัติ
+               DB::update(' UPDATE db_stocks SET amt = ( amt + ('.$value->amt_diff.') ) where id = "'.$value->stock_id.'" AND product_id_fk = "'.$value->product_id_fk.'" AND lot_number="'.$value->lot_number.'" ');
+
+               // wut add
+
+              $stock = \App\Models\Backend\Check_stock::where('id',$value->stock_id)->first();
+              if($stock){
+
+                // รายการก่อน start_date เพื่อหายอดยกมา
+                $Stock_movement_in = \App\Models\Backend\Stock_movement::
+                // where('id',$stock->id)
+                  where('product_id_fk',($stock->product_id_fk?$stock->product_id_fk:0))
+                ->where('lot_number',($stock->lot_number?$stock->lot_number:0))
+                ->where('lot_expired_date',($stock->lot_expired_date?$stock->lot_expired_date:0))
+                ->where('business_location_id_fk',($stock->business_location_id_fk?$stock->business_location_id_fk:0))
+                ->where('branch_id_fk',($stock->branch_id_fk?$stock->branch_id_fk:0))
+                ->where('warehouse_id_fk',($stock->warehouse_id_fk?$stock->warehouse_id_fk:0))
+                ->where('zone_id_fk',($stock->zone_id_fk?$stock->zone_id_fk:0))
+                ->where('shelf_id_fk',($stock->shelf_id_fk?$stock->shelf_id_fk:0))
+                ->where('shelf_floor',($stock->shelf_floor?$stock->shelf_floor:0))
+                ->where('in_out','1')
+                // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
+                ->where('status','1')
+                ->selectRaw('sum(amt) as sum')
+                ->get();
+
+                // ยอดรับเข้า
+                $amt_balance_in = @$Stock_movement_in[0]->sum?$Stock_movement_in[0]->sum:0;
+
+                $Stock_movement_out = \App\Models\Backend\Stock_movement::
+                // where('id',$stock->id)
+                // ->where('product_id_fk',($stock->product_id_fk?$stock->product_id_fk:0))
+                where('product_id_fk',($stock->product_id_fk?$stock->product_id_fk:0))
+                ->where('lot_number',($stock->lot_number?$stock->lot_number:0))
+                ->where('lot_expired_date',($stock->lot_expired_date?$stock->lot_expired_date:0))
+                ->where('business_location_id_fk',($stock->business_location_id_fk?$stock->business_location_id_fk:0))
+                ->where('branch_id_fk',($stock->branch_id_fk?$stock->branch_id_fk:0))
+                ->where('warehouse_id_fk',($stock->warehouse_id_fk?$stock->warehouse_id_fk:0))
+                ->where('zone_id_fk',($stock->zone_id_fk?$stock->zone_id_fk:0))
+                ->where('shelf_id_fk',($stock->shelf_id_fk?$stock->shelf_id_fk:0))
+                ->where('shelf_floor',($stock->shelf_floor?$stock->shelf_floor:0))
+                ->where('in_out','2')
+                ->where('status','1')
+                // ->where(DB::raw("(DATE_FORMAT(updated_at,'%Y-%m-%d'))"), "<", $request->start_date)
+                ->selectRaw('sum(amt) as sum')
+                ->get();
+
+                // ยอดเบิกออก
+                $amt_balance_out = @$Stock_movement_out[0]->sum?$Stock_movement_out[0]->sum:0;
+                $amt_balance_stock = $amt_balance_in - $amt_balance_out;
+
+                $amt_balance_new = 0;
+                if($amt_balance_stock < $value->amt_check){
+                  // dd($amt_balance_stock);
+                  $amt_balance_new = $value->amt_check - $amt_balance_stock;
+                }
+                if($amt_balance_stock > $value->amt_check){
+                  $amt_balance_new = $amt_balance_stock-$value->amt_check;
+                }
+
+
+
+                $Stock_movement_new =  new \App\Models\Backend\Stock_movement();
+                $Stock_movement_new->stock_type_id_fk = 10;
+                $Stock_movement_new->stock_id_fk = $stock->id;
+                $Stock_movement_new->ref_table = 'db_stocks_account';
+                $Stock_movement_new->ref_table_id = $value->id;
+                $Stock_movement_new->ref_doc = $sRow->ref_code;
+                $Stock_movement_new->doc_date = $value->updated_at;
+                $Stock_movement_new->business_location_id_fk = $stock->business_location_id_fk;
+                $Stock_movement_new->branch_id_fk = $stock->branch_id_fk;
+                $Stock_movement_new->product_id_fk = $stock->product_id_fk;
+                $Stock_movement_new->lot_number = $stock->lot_number;
+                $Stock_movement_new->lot_expired_date = $stock->lot_expired_date;
+                $Stock_movement_new->amt = $amt_balance_new;
+
+                // dd($amt_balance_new);
+
+                if($amt_balance_stock < $value->amt_check){
+                  $Stock_movement_new->in_out = 1;
+                }
+                if($amt_balance_stock > $value->amt_check){
+                  $Stock_movement_new->in_out = 2;
+                }
+
+                $Stock_movement_new->product_unit_id_fk = $stock->product_unit_id_fk;
+                $Stock_movement_new->warehouse_id_fk = $stock->warehouse_id_fk;
+                $Stock_movement_new->zone_id_fk = $stock->zone_id_fk;
+                $Stock_movement_new->shelf_id_fk = $stock->shelf_id_fk;
+                $Stock_movement_new->shelf_floor = $stock->shelf_floor;
+                $Stock_movement_new->status = 1;
+                $Stock_movement_new->note = 'บัญชีปรับยอดสต็อกจากการตรวจเช็ค '.$sRow->ref_code;
+                $Stock_movement_new->note2 = ' ';
+                $Stock_movement_new->action_user = \Auth::user()->id;
+                $Stock_movement_new->action_date = date('Y-m-d H:i:s');
+                $Stock_movement_new->approver = \Auth::user()->id;
+                $Stock_movement_new->approve_date = date('Y-m-d H:i:s');
+                $Stock_movement_new->save();
+              }
+
+                //
+              }
           }
-          // dd();
 
           $sRow->approver    = request('approver');
           $sRow->status_accepted    = request('approve_status');
           $sRow->approve_date    = date('Y-m-d');
           $sRow->note    = request('note');
           $sRow->save();
-
-
-
 
           \DB::commit();
 

@@ -54,14 +54,14 @@ class Stocks_account_codeController extends Controller
       //           }else{
       //               $sTable = \App\Models\Backend\Stocks_account_code::where('action_user',\Auth::user()->id)->orderBy('id', 'asc');
       //           }
-                
+
       //         }
       // }
 
       if(\Auth::user()->permission==1){
-            $sTable = \App\Models\Backend\Stocks_account_code::search()->orderBy('id', 'asc');
+            $sTable = \App\Models\Backend\Stocks_account_code::search()->orderBy('id', 'desc');
       }else{
-           $sTable = \App\Models\Backend\Stocks_account_code::where('branch_id_fk',\Auth::user()->branch_id_fk)->search()->orderBy('id', 'asc');
+           $sTable = \App\Models\Backend\Stocks_account_code::where('branch_id_fk',\Auth::user()->branch_id_fk)->search()->orderBy('id', 'desc');
       }
 
       // $sTable = \App\Models\Backend\Stocks_account_code::search()->orderBy('id', 'asc');
@@ -73,7 +73,7 @@ class Stocks_account_codeController extends Controller
         }else{
           return '0';
         }
-      }) 
+      })
       ->addColumn('action_user', function($row) {
         if(@$row->action_user!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->action_user." ");
@@ -81,7 +81,7 @@ class Stocks_account_codeController extends Controller
         }else{
           return '';
         }
-      }) 
+      })
        ->addColumn('approver', function($row) {
         if(@$row->approver!=''){
           $sD = DB::select(" select * from ck_users_admin where id=".$row->approver." ");
@@ -89,7 +89,7 @@ class Stocks_account_codeController extends Controller
         }else{
           return '';
         }
-      }) 
+      })
        ->addColumn('business_location', function($row) {
         if(@$row->business_location_id_fk!=''){
              $P = DB::select(" select * from dataset_business_location where id=".@$row->business_location_id_fk." ");
@@ -97,7 +97,7 @@ class Stocks_account_codeController extends Controller
         }else{
              return '-';
         }
-      }) 
+      })
       ->addColumn('branch', function($row) {
           $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
           return @$sBranchs[0]->b_name;

@@ -276,15 +276,15 @@
 
                             <div class="divTableRow">
                                 <!--
-                                                                  <div class="divTH">
-                                                                <label for="" >เลขที่ใบสั่งซื้อ : </label>
-                                                              </div>
-                                                              <div class="divTableCell" style="width: 15%">
-                                                                <input class="form-control"  />
-                                                              </div>
-                                                              <div class="divTableCell">
-                                                                <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
-                                                              </div> -->
+                                                                      <div class="divTH">
+                                                                    <label for="" >เลขที่ใบสั่งซื้อ : </label>
+                                                                  </div>
+                                                                  <div class="divTableCell" style="width: 15%">
+                                                                    <input class="form-control"  />
+                                                                  </div>
+                                                                  <div class="divTableCell">
+                                                                    <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button>
+                                                                  </div> -->
 
                                 <div class="divTH">
                                     <label for="">{{ __('message.creator') }} : </label>
@@ -358,11 +358,11 @@
                                 </div>
                                 <div class="divTableCell" style="width: 15%">
                                     <!--  	   <select name="" class="form-control select2-templating "  >
-                                                                  <option value="">Select</option>
-                                                                      <option value="0"> - </option>
-                                                                      <option value="1"> In Process </option>
-                                                                      <option value="1"> Success </option>
-                                                                </select> -->
+                                                                      <option value="">Select</option>
+                                                                          <option value="0"> - </option>
+                                                                          <option value="1"> In Process </option>
+                                                                          <option value="1"> Success </option>
+                                                                    </select> -->
                                 </div>
                                 <div class="divTableCell">
                                     <!-- <button type="button" class="btn btn-primary" style="padding: 6%;"><i class="bx bx-search font-size-18 align-middle "></i></button> -->
@@ -391,16 +391,16 @@
                         </div>
                     </div>
                     <!--       </div>
+                                                        </div>
+                                                      </div>
                                                     </div>
-                                                  </div>
-                                                </div>
 
 
 
-                                                <div class="row">
-                                                  <div class="col-12">
-                                                    <div class="card">
-                                                      <div class="card-body"> -->
+                                                    <div class="row">
+                                                      <div class="col-12">
+                                                        <div class="card">
+                                                          <div class="card-body"> -->
                     <hr>
                     <div class="divTable">
                         <div class="divTableBody">
@@ -447,7 +447,9 @@
                         <div class="col-lg-5">
                             <div class="card">
                                 <div class="card-body">
-
+                                    <button class="btn btn-sm btn-primary" id="cal_sum">
+                                        คำนวณข้อมูล ยอดรวม <i class="fa fa-refresh"></i>
+                                    </button>
                                     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
                                     <div class="div_PV_Amount"></div>
                                     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -459,6 +461,9 @@
                         <div class="col-lg-7">
                             <div class="card">
                                 <div class="card-body">
+                                    <button class="btn btn-sm btn-primary" id="cal_list">
+                                        คำนวณข้อมูล ยอดขาย <i class="fa fa-refresh"></i>
+                                    </button>
                                     <div class="div_SumCostActionUser"></div>
 
                                 </div>
@@ -1560,6 +1565,8 @@
 
                         // @@@@@@@@@@@@@@@@@@@@@@@@@@ datatables @@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
+
                         $.ajax({
                             url: " {{ url('backend/getSumCostActionUser') }} ",
                             method: "post",
@@ -2113,21 +2120,24 @@
     <script>
         $(document).ready(function() {
 
-            $.ajax({
-                url: " {{ url('backend/getSumCostActionUser') }} ",
-                method: "post",
-                data: {
-                    "_token": "{{ csrf_token() }}",
+            $('#cal_list').click(function() {
+                $.ajax({
+                    url: " {{ url('backend/getSumCostActionUser') }} ",
+                    method: "post",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
 
-                },
-                success: function(data) {
-                    // // // console.log(data);
-                    $(".div_SumCostActionUser").html(data);
+                    },
+                    success: function(data) {
+                        // // // console.log(data);
+                        $(".div_SumCostActionUser").html(data);
 
-                }
+                    }
+                });
             });
 
 
+            $('#cal_sum').click(function() {
             // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             $.ajax({
                 url: " {{ url('backend/getPV_Amount') }} ",
@@ -2141,7 +2151,7 @@
                 }
             });
             // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+          });
 
 
         });

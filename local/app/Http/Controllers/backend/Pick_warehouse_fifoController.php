@@ -44,7 +44,7 @@ class Pick_warehouse_fifoController extends Controller
       // return($request->all());
       // return $request->picking_id;
       // return "aaa";
-      // dd();
+      // dd(); temp_ppp_0022
 
       // $arr_picking_id = $request->picking_id;
       // $picking = explode(",", $request->picking_id);
@@ -246,6 +246,7 @@ class Pick_warehouse_fifoController extends Controller
               DB::select(" DROP TABLE IF EXISTS $temp_ppp_002; ");
               DB::select(" CREATE TABLE $temp_ppp_002 LIKE db_order_products_list ");
               // กรณี product
+              // dd(DB::table($temp_ppp_001)->get());
               DB::select(" INSERT IGNORE INTO $temp_ppp_002
               SELECT db_order_products_list.* FROM db_order_products_list INNER Join $temp_ppp_001 ON db_order_products_list.frontstore_id_fk = $temp_ppp_001.id ");
 
@@ -257,18 +258,19 @@ class Pick_warehouse_fifoController extends Controller
               ADD COLUMN pick_pack_requisition_code_id_fk  int NULL DEFAULT 0 COMMENT 'Ref>db_pick_pack_requisition_code>id' AFTER id ");
               DB::select(" UPDATE $temp_ppp_002 SET pick_pack_requisition_code_id_fk=$lastInsertId01  ");
 
-
+              // dd(DB::table($temp_ppp_002)->get());
               $temp_ppp_0022 = "temp_ppp_0022".\Auth::user()->id;
               DB::select(" DROP TABLE IF EXISTS $temp_ppp_0022; ");
               DB::select(" CREATE TABLE $temp_ppp_0022 LIKE temp_ppp_002_template ");
               // sleep(3);
+
               DB::select(" INSERT IGNORE INTO $temp_ppp_0022 (pick_pack_requisition_code_id_fk, product_id_fk, product_name, amt, product_unit_id_fk)
               SELECT $lastInsertId01, product_id_fk, product_name, sum(amt), product_unit_id_fk FROM $temp_ppp_002 WHERE product_id_fk in ($arr_product_id_fk) GROUP BY pick_pack_packing_code_id_fk,product_id_fk");
-
+// dd(DB::table($temp_ppp_0022)->get());
               // กรณี promotion
-
+// dd(@$arr_promotion);
               if(@$arr_promotion){
-
+// dd('lk');
                   // $r_promo_product = DB::select(" SELECT product_id_fk,sum(product_amt) as product_amt,product_unit FROM `promotions_products` where promotion_id_fk in ($arr_promotion) GROUP BY product_id_fk  ");
                    // if(@$r_promo_product){
                   //     foreach ($r_promo_product as $key => $v) {
@@ -299,7 +301,7 @@ class Pick_warehouse_fifoController extends Controller
 
                   // วุฒิเพิ่มมานับจำนวนโปร
                   $Pro_amt = DB::table($temp_ppp_002)->select('*',DB::raw('SUM(amt) AS sum_amt'))->whereIn('promotion_id_fk',$new_arr_promotion)->groupBy('promotion_id_fk')->get();
-
+// dd($Pro_amt);
                   foreach($Pro_amt as $pro){
                       $r_pro = DB::table('promotions_products')->where('promotion_id_fk',$pro->promotion_id_fk)->get();
                       foreach($r_pro as $r){
@@ -366,21 +368,31 @@ class Pick_warehouse_fifoController extends Controller
 
                 if($DeliveryPackingCode->bill_remain_status==1){
                   $arr_item = explode(',',$DeliveryPackingCode->pay_requisition_002_item);
+
                   $item_pro = DB::table('db_pay_requisition_002_item')->whereIn('id',$arr_item)->pluck('product_id_fk')->toArray();
                   // if($request->picking_id == 803){
                   //   $test = DB::table($temp_ppp_0022)->get();
                   //   dd($test);
                   // }
+
                   DB::table($temp_ppp_0022)->whereNotIn('product_id_fk',$item_pro)->delete();
                   // วุฒิเพิ่มมาใหม่ไว้เช็คเอาตัวเหลือมาบวกกัน
                   $item_pros = DB::table('db_pay_requisition_002_item')->select('product_id_fk','amt_remain')->whereIn('id',$arr_item)->get();
+                  // dd(DB::table($temp_ppp_0022)->get());
+                  // dd($item_pros);
                   foreach($item_pros as $i){
                     $sum_re = DB::table('db_pay_requisition_002_item')->select('amt_remain')->whereIn('id',$arr_item)->where('product_id_fk',$i->product_id_fk)->sum('amt_remain');
-                      DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->update([
-                        'amt' => $sum_re,
-                      ]);
-                  }
+                      $count = DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->count();
+                      if($count>1){
 
+                      }else{
+                        DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->update([
+                          'amt' => $sum_re,
+                        ]);
+                      }
+
+                  }
+                  // dd(DB::table($temp_ppp_0022)->get());
                 }
 
           // $lastInsertId = DB::getPdo()->lastInsertId();
@@ -1104,7 +1116,15 @@ class Pick_warehouse_fifoController extends Controller
                 WHERE db_orders.id in ($orders_id_fk) AND db_order_products_list.product_id_fk in ($value->product_id_fk)  AND type_product='product' ");
                 if(@$p1){
                   foreach (@$p1 as $inv) {
-                      array_push($arr_inv,@$inv->code_order);
+                    $cal = 0;
+                    foreach($arr_inv as $in){
+                      if($in==$inv->code_order){
+                        $cal++;
+                      }
+                    }
+                      if($cal==0){
+                        array_push($arr_inv,@$inv->code_order);
+                      }
                   }
                 }
 
@@ -1117,7 +1137,16 @@ class Pick_warehouse_fifoController extends Controller
                 WHERE db_orders.id in  ($orders_id_fk) AND promotions_products.product_id_fk in ($value->product_id_fk) AND db_order_products_list.type_product='promotion' ");
                 if(@$p2){
                   foreach (@$p2 as $inv) {
-                      array_push($arr_inv,@$inv->code_order);
+                      // array_push($arr_inv,@$inv->code_order);
+                        $cal = 0;
+                    foreach($arr_inv as $in){
+                      if($in==$inv->code_order){
+                        $cal++;
+                      }
+                    }
+                      if($cal==0){
+                        array_push($arr_inv,@$inv->code_order);
+                      }
                   }
                 }
 

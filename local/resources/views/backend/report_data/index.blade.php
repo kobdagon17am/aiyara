@@ -43,6 +43,7 @@
                       <div class="col-md-9">
                         <select id="report_data" name="report_data" class="form-control select2-templating " required>
                             <option value="">-เลือกรายงาน-</option>
+                            \<option value="inventory_in">รายงานรับเข้าสินค้าทั่วไป</option>
                             {{-- <option value="inventory_in">รายงานรับเข้าสินค้า</option>
                             <option value="inventory_out">รายงานจ่ายสินค้า</option>
                             <option value="inventory_borrow">รายงานเบิก-ยืม</option>
@@ -340,8 +341,8 @@
                         <label for="ref_code" class="col-md-2 col-form-label">  </label>
                           <div class="col-md-10">
 
-{{--
-                        <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
+
+                        {{-- <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;" >
                           <i class="bx bx-file align-middle "></i> ออกรายงาน Excel
                         </a> --}}
 

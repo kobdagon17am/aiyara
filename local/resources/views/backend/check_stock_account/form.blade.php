@@ -8,7 +8,7 @@
 
   .form-group {
      /*margin-bottom: 1rem; */
-     margin-bottom: 0rem  !important; 
+     margin-bottom: 0rem  !important;
   }
 
 </style>
@@ -50,7 +50,7 @@
     </div>
 </div>
 <!-- end page title -->
-  <?php 
+  <?php
       $sPermission = \Auth::user()->permission ;
       $menu_id = Session::get('session_menu_id');
     if($sPermission==1){
@@ -98,7 +98,7 @@
 <div class="row" style="display: none;">
 @else
 <div class="row" style="">
-@ENDIF 
+@ENDIF
     <div class="col-12">
         <div class="card">
             <div class="card-body">
@@ -129,7 +129,7 @@
                       <div class="form-group row">
                             <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
                             <div class="col-md-10">
-                            
+
                               <?php if(!empty(@$sRow->condition_branch)){ ?>
                                   <select class="form-control select2-templating " disabled="" >
                                       @if(@$sBranchs)
@@ -152,7 +152,7 @@
 
                </div>
 
-      
+
                   <div class="row" >
                     <div class="col-md-6 " >
                        <div class="form-group row">
@@ -294,7 +294,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
 
                   </div>
 
@@ -311,7 +311,7 @@
                         </div>
                     </div>
                   </div>
-                  @ENDIF 
+                  @ENDIF
 
               </div>
 
@@ -324,19 +324,19 @@
             <input type="hidden" name="save_to_stock_check" value="1" >
 
  @IF(!empty(@$sRow))
- 
-            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_RefCode')}} </span> 
+
+            <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_RefCode')}} </span>
             @if(@$sRow->status_accepted==0||@$sRow->status_accepted==1||@$sRow->status_accepted==2||@$sRow->status_accepted==5)
-                  <span style="font-size: 14px;font-weight: bold;color:red;"><i class="bx bx-play"></i> {{@Session::get('session_Status_accepted')}}  </span> 
+                  <span style="font-size: 14px;font-weight: bold;color:red;"><i class="bx bx-play"></i> {{@Session::get('session_Status_accepted')}}  </span>
                   <span style="font-size: 14px;font-weight: bold;"> > {{@Session::get('session_Action_user')}} </span>
-            @ELSE 
+            @ELSE
                   <span style="font-size: 14px;font-weight: bold;color:red;"><i class="bx bx-play"></i> {{@Session::get('session_Status_accepted')}} </span>
                   <span style="font-size: 14px;font-weight: bold;"> > {{@Session::get('session_Approver')}} </span>
-            @ENDIF 
+            @ENDIF
             <br>
             <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionChoose')}} </span><br>
             <span style="font-size: 14px;font-weight: bold;"><i class="bx bx-play"></i> {{@Session::get('session_ConditionNoChoose')}} </span>
- @ENDIF 
+ @ENDIF
 
             <input type="hidden" name="condition_business_location" value="{{@$sRow->condition_business_location?@$sRow->condition_business_location:0}}" >
             <input type="hidden" name="condition_branch" value="{{@$sRow->condition_branch?@$sRow->condition_branch:0}}" >
@@ -365,16 +365,16 @@
       </form>
 
           @IF(!empty(@$sRow))
-          
+
                 <table id="data-table-check" class="table table-bordered " style="width: 100%;">
                 </table>
-                       
+
                          <div class="row  " style="" >
                           <div class="col-md-12" >
                              <div class="form-group row">
                               <div class="col-md-12" style="">
                               <center>
-            
+
                        <form id="basic-form" action="" method="post">
                                  <div class="form-group row">
                                   <label for="cuase_desc" class="col-md-3 col-form-label">หมายเหตุ * :</label>
@@ -382,7 +382,7 @@
                                     <textarea class="form-control" rows="3" id="cuase_desc" name="cuase_desc" required  minlength="5" <?=@$dis_btnSave?> >{{@$sRow->cuase_desc}}</textarea>
                                   </div>
                                 </div>
-                        </form>                             
+                        </form>
                                 </center>
                               </div>
                               </div>
@@ -390,7 +390,7 @@
                         </div>
 
                         <br>
-            
+
                 @IF(isset($_REQUEST['Approve']))
                 @ELSE
                         <div class="row  " style="" >
@@ -406,7 +406,7 @@
                                   <a class="btn btn-info btn-sm btnPrint " href="{{ URL::to('backend/check_stock_account/print_receipt') }}/{{@$sRow->id}}" style="font-size: 14px !important;width: 160px;" target="_blank" >
                                     <i class="bx bx-printer align-middle "></i> พิมพ์ใบตรวจนับสินค้า
                                   </a>
-                                 @ENDIF 
+                                 @ENDIF
                                &nbsp;
                                &nbsp;
                                &nbsp;
@@ -414,29 +414,29 @@
                                 <a class="btn btn-primary btn-sm btnOffer " href="{{ URL::to('backend/check_stock_account/') }}/{{@$sRow->id}}" style="font-size: 14px !important;width: 160px;" >
                                   <i class="bx bx-save align-middle "></i> บันทึก > ขออนุมัติ
                                 </a>
-                                @ENDIF 
+                                @ENDIF
 
-                             @ENDIF 
+                             @ENDIF
 
                                 </center>
                               </div>
                               </div>
                           </div>
                         </div>
-                 @ENDIF 
+                 @ENDIF
 
-    @ENDIF 
+    @ENDIF
 
 <?php //echo @Session::get('session_status_accepted_id'); echo @$sRow->status_accepted; ?>
 
 @IF( ( isset($_REQUEST['Approve']) || @$sRow->status_accepted==3 || @$sRow->status_accepted==4 ) && @$sRow->status_accepted!=0 && @$sRow->status_accepted!=1 && @$sRow->status_accepted!=5 )
-          
-         <br> 
+
+         <br>
          <form action="{{ route('backend.check_stock_account.update', @$sRow->id ) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <input name="_method" type="hidden" value="PUT">
                 <input name="approved" type="hidden" value="1">
                 <input name="id" type="hidden" value="{{@$sRow->id}}">
-  
+
                 {{ csrf_field() }}
 
             <!-- 0=NEW,1=PENDDING,2=REQUEST,3=ACCEPTED/APPROVED,4=NO APPROVED,5=CANCELED -->
@@ -518,10 +518,10 @@
                     </div>
                     <div class="col-md-6 text-right">
                     </div>
-                  </div> 
+                  </div>
 
               </form>
-    
+
   @endif
 
             </div>
@@ -553,14 +553,14 @@
                     // }, 0) / rows.count();
                     }, 0) / 1 ;
                 salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display( salaryAvg );
- 
+
                 var ageAvg = rows
                     .data()
                     .pluck(3)
                     .reduce( function (a, b) {
                         return a + b*1;
                     }, 0) / rows.count();
- 
+
                 return $('<tr/ style=" background-color:#f2f2f2 !important;">')
                     .append( '<td colspan="3">Averages for '+group+'</td>' )
                     .append( '<td>'+ageAvg.toFixed(0)+'</td>' )
@@ -654,7 +654,7 @@ $(function() {
                   }
 
            },
-   
+
     });
 
 
@@ -668,7 +668,7 @@ $(function() {
 
 
         $(document).ready(function() {
-          
+
             $(document).on('click', '.btnSearch', function(event) {
                   event.preventDefault();
 
@@ -694,7 +694,7 @@ $(function() {
                   var zone_id_fk = $('#zone_id_fk').val();
                   var shelf_id_fk = $('#shelf_id_fk').val();
                   var shelf_floor = $('#shelf_floor').val();
-                  
+
                   $("input[name=condition_business_location]").val(business_location_id_fk);
                   $("input[name=condition_branch]").val(branch_id_fk);
                   $("input[name=condition_warehouse]").val(warehouse_id_fk);
@@ -703,7 +703,7 @@ $(function() {
                   $("input[name=condition_shelf_floor]").val(shelf_floor);
                   $("input[name=condition_product]").val(product);
                   $("input[name=condition_lot_number]").val(lot_number);
-               
+
                   // console.log(shelf_floor);
                   // console.log(lot_number);
                   // return false;
@@ -745,7 +745,7 @@ $(function() {
                                         {data: 'amt',
                                              defaultContent: "0",   title :'<center>คงคลังล่าสุด</center>', className: 'text-center',render: function(d) {
                                                  return d;
-                                              
+
                                           }},
                                         {data: 'warehouses', title :'<center>คลังสินค้า </center>', className: 'text-left'},
                                         // {data: 'id', title :'Tools', className: 'text-center w80'},
@@ -763,7 +763,7 @@ $(function() {
                                                }, 0);
                                                 sTotal = $.fn.dataTable.render.number(',', '.', 0, ' ').display( sTotal );
                                             // sTotal = 2;
-                             
+
                                             return $('<tr/ style=" background-color:#f2f2f2 !important;">')
                                                 .append( '<td colspan="4" style="text-align:center;">Total for '+group+'</td>' )
                                                 .append( '<td style=" background-color:#f2f2f2 !important;font-weight: bold; "><center>'+(sTotal)+'</td>' )
@@ -771,17 +771,17 @@ $(function() {
                                         },
                                         dataSrc: "product_name"
                                     },
-                               
+
                                       rowCallback: function(nRow, aData, dataIndex){
 
                                         $("td:eq(0)", nRow).html(aData['id']+'<input type="hidden" name="row_id[]" value="'+aData['id']+'">');
 
                                       //         if(sU!=''&&sD!=''){
                                       //             $('td:last-child', nRow).html('-');
-                                      //         }else{ 
+                                      //         }else{
                                       //               $('td:last-child', nRow).html(''
                                       //                 + '<a href="{{ route('backend.check_stock_account.index') }}/'+aData['id']+'/edit" class="btn btn-sm btn-primary" style="'+sU+'" ><i class="bx bx-edit font-size-16 align-middle"></i></a> '
-                                                      
+
                                       //               ).addClass('input');
                                       //         }
 
@@ -791,7 +791,7 @@ $(function() {
                                                   },2000);
 
                                          },
-                                 
+
                                 });
 
                             });
@@ -799,10 +799,10 @@ $(function() {
                       setTimeout(function(){
                         $("#spinner_frame").hide();
                       },1500);
-               
+
             });
 
-        }); 
+        });
     </script>
 
 
@@ -810,34 +810,34 @@ $(function() {
   <script>
 
         $(document).ready(function() {
-          
+
             $(document).on('click', '.btnCreate', function(event) {
                   event.preventDefault();
                   $("#spinner_frame").show();
                   $("#frm-02").submit();
             });
 
-        }); 
+        });
 
 
 
         $(document).ready(function() {
-          
-               
+
+
                $(document).on('click', '.btnAccept', function(event) {
 
                   event.preventDefault();
                   $("#spinner_frame").show();
 
                   $.ajax({
-                    url: " {{ url('backend/ajaxAcceptCheckStock') }} ", 
+                    url: " {{ url('backend/ajaxAcceptCheckStock') }} ",
                     method: "post",
                     data: {
                       // business_location_id_fk:business_location_id_fk,
-                      "_token": "{{ csrf_token() }}", 
+                      "_token": "{{ csrf_token() }}",
                     },
                     success:function(data)
-                    { 
+                    {
                       location.reload();
                     }
                   })
@@ -845,8 +845,8 @@ $(function() {
               });
 
 
-                                                                                                              
-        }); 
+
+        });
 
 
 
@@ -861,14 +861,14 @@ $(function() {
 
            if(business_location_id_fk != ''){
              $.ajax({
-                  url: " {{ url('backend/ajaxGetBranch') }} ", 
+                  url: " {{ url('backend/ajaxGetBranch') }} ",
                   method: "post",
                   data: {
                     business_location_id_fk:business_location_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลสาขา !!.');
                    }else{
@@ -884,7 +884,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -895,14 +895,14 @@ $(function() {
 
            if(branch_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetWarehouse') }} ", 
+                   url: " {{ url('backend/ajaxGetWarehouse') }} ",
                   method: "post",
                   data: {
                     branch_id_fk:branch_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูลคลัง !!.');
                    }else{
@@ -917,7 +917,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -928,14 +928,14 @@ $(function() {
 
            if(warehouse_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetZone') }} ", 
+                   url: " {{ url('backend/ajaxGetZone') }} ",
                   method: "post",
                   data: {
                     warehouse_id_fk:warehouse_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Zone !!.');
                    }else{
@@ -949,7 +949,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -960,14 +960,14 @@ $(function() {
 
            if(zone_id_fk != ''){
              $.ajax({
-                   url: " {{ url('backend/ajaxGetShelf') }} ", 
+                   url: " {{ url('backend/ajaxGetShelf') }} ",
                   method: "post",
                   data: {
                     zone_id_fk:zone_id_fk,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                    if(data == ''){
                        alert('ไม่พบข้อมูล Shelf !!.');
                    }else{
@@ -980,7 +980,7 @@ $(function() {
                   }
                 })
            }
- 
+
       });
 
 
@@ -1001,15 +1001,15 @@ $(function() {
              }
 
              $.ajax({
-                  url: " {{ url('backend/ajaxOfferToApprove') }} ", 
+                  url: " {{ url('backend/ajaxOfferToApprove') }} ",
                   method: "post",
                   data: {
                     id:id,
                     cuase_desc:cuase_desc,
-                    "_token": "{{ csrf_token() }}", 
+                    "_token": "{{ csrf_token() }}",
                   },
                   success:function(data)
-                  { 
+                  {
                     location.reload();
                   }
                 });
@@ -1017,7 +1017,7 @@ $(function() {
           }
 
 
- 
+
       });
 
 

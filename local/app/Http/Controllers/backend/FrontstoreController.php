@@ -4122,63 +4122,63 @@ class FrontstoreController extends Controller
         return @number_format((@$total_price), 2);
       })
 
-      ->addColumn('status_delivery_packing', function ($row) {
-        $r = DB::select(" select receipt FROM db_delivery WHERE receipt = '" . $row->code_order . "' AND status_pack=1 ");
-        if (@$r) {
-          return 1;
-        } else {
-          return 0;
-        }
-      })
-      ->addColumn('status_pay_product_receipt', function ($row) {
-        $r = DB::select(" SELECT id FROM db_pay_product_receipt_001 WHERE invoice_code = '" . $row->code_order . "' AND status_sent<>4 ");
-        if (@$r) {
-          return 1;
-        } else {
-          return 0;
-        }
-      })
-      ->addColumn('status_delivery_02', function ($row) {
-        $ch = 0;
-        $r = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
-        foreach ($r as $key => $value) {
+      // ->addColumn('status_delivery_packing', function ($row) {
+      //   $r = DB::select(" select receipt FROM db_delivery WHERE receipt = '" . $row->code_order . "' AND status_pack=1 ");
+      //   if (@$r) {
+      //     return 1;
+      //   } else {
+      //     return 0;
+      //   }
+      // })
+      // ->addColumn('status_pay_product_receipt', function ($row) {
+      //   $r = DB::select(" SELECT id FROM db_pay_product_receipt_001 WHERE invoice_code = '" . $row->code_order . "' AND status_sent<>4 ");
+      //   if (@$r) {
+      //     return 1;
+      //   } else {
+      //     return 0;
+      //   }
+      // })
+      // ->addColumn('status_delivery_02', function ($row) {
+      //   $ch = 0;
+      //   $r = DB::select(" SELECT orders_id_fk FROM `db_pick_pack_packing_code` where status<>6 and status_picked=1 ; ");
+      //   foreach ($r as $key => $value) {
 
-          $orders_id_fk = explode(',', @$value->orders_id_fk);
-          if (in_array($row->id, @$orders_id_fk)) {
-            $ch = 1;
-          }
-        }
-        return @$ch;
-      })
-      ->addColumn('status_sent_product', function ($row) {
-        if (!empty($row->code_order)) {
-          $r1 = DB::select(" SELECT receipts FROM `db_pick_pack_requisition_code` where status=1 ; ");
-          if (@$r1) {
-            $receipts = explode(',', $r1[0]->receipts);
-            if (in_array($row->code_order, $receipts)) {
-              return $row->code_order;
-            } else {
-              return '';
-            }
-          } else {
-            return '';
-          }
-        }
-      })
-      ->addColumn('status_sent_desc', function ($row) {
-        if (!empty($row->code_order)) {
+      //     $orders_id_fk = explode(',', @$value->orders_id_fk);
+      //     if (in_array($row->id, @$orders_id_fk)) {
+      //       $ch = 1;
+      //     }
+      //   }
+      //   return @$ch;
+      // })
+      // ->addColumn('status_sent_product', function ($row) {
+      //   if (!empty($row->code_order)) {
+      //     $r1 = DB::select(" SELECT receipts FROM `db_pick_pack_requisition_code` where status=1 ; ");
+      //     if (@$r1) {
+      //       $receipts = explode(',', $r1[0]->receipts);
+      //       if (in_array($row->code_order, $receipts)) {
+      //         return $row->code_order;
+      //       } else {
+      //         return '';
+      //       }
+      //     } else {
+      //       return '';
+      //     }
+      //   }
+      // })
+      // ->addColumn('status_sent_desc', function ($row) {
+      //   if (!empty($row->code_order)) {
 
-          $r1 = DB::select(" SELECT pick_pack_packing_code_id_fk,receipts FROM `db_pick_pack_requisition_code` order by pick_pack_packing_code_id_fk desc limit 1 ; ");
-          if (@$r1) {
-            $receipts = explode(',', $r1[0]->receipts);
-            if (in_array($row->code_order, $receipts)) {
-              $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '" . $r1[0]->pick_pack_packing_code_id_fk . "' ");
-              $r3 = \App\Models\Backend\Pay_requisition_status::find($r2[0]->status_sent);
-              return @$r3->txt_desc;
-            }
-          }
-        }
-      })
+      //     $r1 = DB::select(" SELECT pick_pack_packing_code_id_fk,receipts FROM `db_pick_pack_requisition_code` order by pick_pack_packing_code_id_fk desc limit 1 ; ");
+      //     if (@$r1) {
+      //       $receipts = explode(',', $r1[0]->receipts);
+      //       if (in_array($row->code_order, $receipts)) {
+      //         $r2 = DB::select(" SELECT status_sent FROM `db_pay_requisition_001` WHERE pick_pack_requisition_code_id_fk = '" . $r1[0]->pick_pack_packing_code_id_fk . "' ");
+      //         $r3 = \App\Models\Backend\Pay_requisition_status::find($r2[0]->status_sent);
+      //         return @$r3->txt_desc;
+      //       }
+      //     }
+      //   }
+      // })
       ->addColumn('action_user', function ($row) {
         if (@$row->action_user != '') {
           $sD = DB::select(" select name from ck_users_admin where id=" . $row->action_user . " ");
