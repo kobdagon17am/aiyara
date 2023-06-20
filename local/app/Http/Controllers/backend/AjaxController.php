@@ -6207,6 +6207,40 @@ class AjaxController extends Controller
            }
     }
 
+    public function ajaxGetCoupong(Request $request)
+    {
+        if($request->ajax()){
+
+            if(empty($request->term)){
+                $customers = DB::table('db_promotion_cus')->orderBy('id','desc')->take(15)->get();
+            }else{
+                $customers = DB::table('db_promotion_cus')
+                ->select('id','promotion_code_id_fk','promotion_code','user_name')
+                // ->whereNotNull('regis_date_doc')
+                // ->where('user_name',$request->term)
+                ->where('promotion_code', 'LIKE', '%'.$request->term.'%')
+                // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
+                // ->orWhere('business_name','LIKE', '%'.$request->term.'%')
+                ->take(50)
+                // ->orderBy('user_name', 'asc')
+                ->orderByRaw('LENGTH(promotion_code)', 'asc')
+                // ->orderBy('id', 'asc')
+                ->get();
+
+            }
+            $json_result = [];
+            foreach($customers as $k => $v){
+                $json_result[] = [
+                    'id'    => $v->id,
+                    'text'  => $v->promotion_code.' ('.$v->user_name.') ',
+                ];
+            }
+            return json_encode($json_result);
+
+           }
+    }
+
     public function ajaxGetCustomerAistockist(Request $request)
     {
         if($request->ajax()){

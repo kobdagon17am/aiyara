@@ -298,6 +298,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetCustomerNameOnly', 'AjaxController@ajaxGetCustomerNameOnly');
 
     Route::post('ajaxGetCustomerForFrontstore', 'AjaxController@ajaxGetCustomerForFrontstore');
+    Route::post('ajaxGetCoupong', 'AjaxController@ajaxGetCoupong');
     Route::post('ajaxGetCustomerForAicashSelect', 'AjaxController@ajaxGetCustomerForAicashSelect');
     Route::post('ajaxGetCustomerAistockist', 'AjaxController@ajaxGetCustomerAistockist');
     Route::post('ajaxGetCustomerAgency', 'AjaxController@ajaxGetCustomerAgency');

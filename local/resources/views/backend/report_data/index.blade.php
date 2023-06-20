@@ -43,7 +43,8 @@
                       <div class="col-md-9">
                         <select id="report_data" name="report_data" class="form-control select2-templating " required>
                             <option value="">-เลือกรายงาน-</option>
-                            \<option value="inventory_in">รายงานรับเข้าสินค้าทั่วไป</option>
+                            <option value="inventory_in">รายงานรับเข้าสินค้าทั่วไป</option>
+                            <option value="inventory_in_po">รายงานรับเข้าสินค้า PO</option>
                             {{-- <option value="inventory_in">รายงานรับเข้าสินค้า</option>
                             <option value="inventory_out">รายงานจ่ายสินค้า</option>
                             <option value="inventory_borrow">รายงานเบิก-ยืม</option>
