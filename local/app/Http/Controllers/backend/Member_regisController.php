@@ -865,7 +865,7 @@ class Member_regisController extends Controller
     }
 
     public function Datatable_list(Request $req){
-      // regis_date_doc
+      // regis_doc3_status regis_date_doc
         if(!empty($req->business_location_id_fk)){
            $w01 = " AND register_files.business_location_id_fk=".$req->business_location_id_fk ;
            $business_location_id_fk = $req->business_location_id_fk;
@@ -1226,7 +1226,10 @@ class Member_regisController extends Controller
 
     }
 
+
     public function Datatable02(Request $req){
+
+        // dd($req);
         // customers
         //   `regis_doc1_status` int(1) DEFAULT '0' COMMENT 'ภาพถ่ายบัตรประชาชน 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
         //   `regis_doc2_status` int(1) DEFAULT '0' COMMENT 'ภายถ่ายหน้าตรง 0=ยังไม่ส่ง 1=ผ่าน 2=ไม่ผ่าน',
@@ -1385,6 +1388,8 @@ class Member_regisController extends Controller
                 $filetype = DB::select(" select * from dataset_regis_filetype where id=1 ");
                 $icon .= $filetype[0]->icon_nosend;
              }
+
+
 
             $type_2 =   DB::select(" SELECT regis_doc_status FROM `register_files`  where customer_id=".$row->customer_id." AND type=2 group by customer_id,type ");
             if($type_2){

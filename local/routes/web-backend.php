@@ -459,6 +459,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pick_warehouse_scan_save', 'Pick_warehouseController@pick_warehouse_scan_save');
     Route::post('pick_warehouse_save_new_bill', 'Pick_warehouseController@pick_warehouse_save_new_bill');
     Route::get('pick_warehouse_del_packing/{p_id}', 'Pick_warehouseController@pick_warehouse_del_packing');
+    Route::get('pick_warehouse_recall_packing/{p_id}', 'Pick_warehouseController@pick_warehouse_recall_packing');
+    Route::get('pick_warehouse_recall_packing_approve/{p_id}', 'Pick_warehouseController@pick_warehouse_recall_packing_approve');
 
     Route::get('delete_test', 'Pick_warehouseController@delete_test');
     Route::get('pick_warehouse/{id}/edit_product', 'Pick_warehouseController@edit_product');

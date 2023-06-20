@@ -2397,17 +2397,36 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_del', function($row) use($remain_id) {
 
-        $d = DB::select(" SELECT recipient_code FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+        $d = DB::select(" SELECT recipient_code,recall_status FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
         $f = [] ;
         $tx = '';
         foreach ($d as $key => $v) {
-
+          if($remain_id->status==1 || $remain_id->status==2 || $remain_id->status==3 || $remain_id->status==4){
             $tx = '<center>
-
               <a href="backend/pick_warehouse_del_packing/'.$v->recipient_code.'"  onclick="return confirm(\'คุณต้องการยกเลิกรายการ '.$v->recipient_code.' ? (หลังจากนั้นจะไม่สามารถแก้ไขได้อีก)\')" ><i class="bx bx-trash grow " data-toggle="tooltip" data-placement="left" title="ยกเลิกรายการ '.$v->recipient_code.'" style="font-size:24px;cursor:pointer;color:red;"></i></a>
-
                </center>' ;
+          }
+
+          elseif($remain_id->status==5){
+            if($v->recall_status == 0){
+              $tx = '<center>
+              <a href="backend/pick_warehouse_recall_packing/'.$v->recipient_code.'"  onclick="return confirm(\'คุณต้องการเรียกคืนสินค้ารายการ '.$v->recipient_code.' ? (หลังจากนั้นจะไม่สามารถแก้ไขได้อีก)\')" ><i class="fa fa-truck grow " data-toggle="tooltip" data-placement="left" title="เรียกคืนสินค้า '.$v->recipient_code.'" style="font-size:24px;cursor:pointer;color:red;"></i></a>
+               </center>' ;
+            }else{
+              if($v->recall_status == 1){
+                $tx = '<center>
+                <a href="backend/pick_warehouse_recall_packing_approve/'.$v->recipient_code.'"  onclick="return confirm(\'ยืนยันรับสินค้าคืนแล้วรายการ '.$v->recipient_code.' ? \')" ><i class="fa fa-archive" data-toggle="tooltip" data-placement="left" title="ยืนยันรับสินค้าคืน '.$v->recipient_code.'" style="font-size:24px;cursor:pointer;color:green;"></i></a>
+                 </center>' ;
+              }
+              if($v->recall_status == 2){
+                $tx = '<center style="color:green;"><b>ได้รับสินค้าคืนแล้ว</b></center>' ;
+              }
+            }
+
+          }else{
+            $tx = '';
+          }
 
            array_push($f,@$tx);
         }
@@ -2415,7 +2434,7 @@ ORDER BY db_pick_pack_packing.id
         // return $f;
 
         $web_all = "";
-        if($remain_id->status==1 || $remain_id->status==2 || $remain_id->status==3 || $remain_id->status==4){
+        // if($remain_id->status==1 || $remain_id->status==2 || $remain_id->status==3 || $remain_id->status==4){
           foreach($f as $value){
             $web = "<div class='col-md-12'style='height: 70px;'>";
             $web .=$value;
@@ -2423,7 +2442,7 @@ ORDER BY db_pick_pack_packing.id
             $web_all .=$web.'<br>';
           }
 
-        }
+        // }
 
         return $web_all;
 
@@ -2455,11 +2474,18 @@ ORDER BY db_pick_pack_packing.id
 
       ->addColumn('column_002', function($row) {
 
-         $d = DB::select(" SELECT recipient_name,address,postcode,mobile,phone_no FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+         $d = DB::select(" SELECT recipient_name,address,postcode,mobile,phone_no,recall_status,recall_by,recall_date FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
           foreach ($d as $key => $v) {
-             array_push($f,@$v->recipient_name." > ".@$v->address ." ".@$v->postcode.(@$v->mobile?" Tel.".@$v->mobile:"").(@$v->phone_no?", ".@$v->phone_no:"") );
+            $tx = "";
+            if($v->recall_status == 1){
+              $tx = ' <span style="color:red;"><b>(เรียกสินค้าคืน โดย '.@$v->recall_by.' '.@$v->recall_date.')</b></span>' ;
+            }
+            if($v->recall_status == 2){
+              $tx = ' <span style="color:green;"><b>(รับสินค้าคืนแล้ว โดย '.@$v->recall_by.' '.@$v->recall_approve.')</b></span>' ;
+            }
+             array_push($f,@$v->recipient_name." > ".@$v->address ." ".@$v->postcode.(@$v->mobile?" Tel.".@$v->mobile:"").(@$v->phone_no?", ".@$v->phone_no:"").$tx );
           }
 
           $web_all = "";
@@ -2847,6 +2873,396 @@ ORDER BY db_pick_pack_packing.id
         }
 
       return redirect()->back()->with('success','Delete success');
+    }
+
+    function pick_warehouse_recall_packing($p_id){
+      \DB::beginTransaction();
+      try {
+      $db_consignments = DB::table('db_consignments')->where('recipient_code',$p_id)->get();
+      foreach($db_consignments as $con){
+        $db_delivery_data = DB::table('db_delivery')->select('id')->where('packing_code_desc',$con->recipient_code)->first();
+        if($db_delivery_data){
+          $db_delivery = DB::table('db_delivery')->where('packing_code_desc',$con->recipient_code)->get();
+        }else{
+          $db_delivery = DB::table('db_delivery')->where('receipt',$con->recipient_code)->get();
+        }
+
+        DB::table('db_consignments')->where('id',$con->id)->update([
+          'recall_status' => 1,
+          'recall_by' => Auth::user()->name,
+          'recall_date' => date('Y-m-d H:i:s'),
+        ]);
+
+        foreach($db_delivery as $de){
+          $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$con->pick_pack_requisition_code_id_fk)->first();
+
+          DB::table('db_delivery')->where('id',$de->id)->update([
+            'status_pick_pack' => 0,
+            'status_delivery' => 0,
+            'status_tracking' => 0,
+            'status_scan_wh' => 0,
+            'user_scan' => 0,
+            'status_to_wh' => 0,
+          ]);
+      //     if($db_pick_pack_packing_code){
+      //       $or_ids = explode(",", $db_pick_pack_packing_code->orders_id_fk);
+      //       $or_codes = explode(",", $db_pick_pack_packing_code->receipt);
+      //       $or_ids_str = "";
+      //       $or_codes_str = "";
+
+      //       foreach($or_ids as $key => $or_id){
+      //           if($or_id!=$de->orders_id_fk){
+      //             if($key+1==count($or_ids)){
+      //               $or_ids_str .= $or_id;
+      //             }else{
+      //               $or_ids_str .= $or_id.',';
+      //             }
+      //           }
+      //       }
+      //       $or_ids_str2 = explode(",", $or_ids_str);
+      //       $or_ids_str_arr = [];
+      //       foreach($or_ids_str2 as $key => $or_id){
+      //       if($or_id!=''){
+      //         array_push($or_ids_str_arr,$or_id);
+      //       }
+      //     }
+      //     $or_ids_str = '';
+      //     foreach($or_ids_str_arr as $key => $or_id){
+      //         if($key+1==count($or_ids_str_arr)){
+      //           $or_ids_str .= $or_id;
+      //         }else{
+      //           $or_ids_str .= $or_id.',';
+      //         }
+      //   }
+
+      //       foreach($or_codes as $key => $or_code){
+      //         if($or_code!=$de->receipt){
+      //           if($key+1==count($or_codes)){
+      //             $or_codes_str .= $or_code;
+      //           }else{
+      //             $or_codes_str .= $or_code.',';
+      //           }
+      //         }
+      //     }
+      //     $or_codes_str2 = explode(",", $or_codes_str);
+      //     $or_codes_str_arr = [];
+      //     foreach($or_codes_str2 as $key => $or_code){
+      //      if($or_code!=''){
+      //       array_push($or_codes_str_arr,$or_code);
+      //      }
+      //   }
+      //   $or_codes_str = '';
+      //   foreach($or_codes_str_arr as $key => $or_code){
+      //       if($key+1==count($or_codes_str_arr)){
+      //         $or_codes_str .= $or_code;
+      //       }else{
+      //         $or_codes_str .= $or_code.',';
+      //       }
+      // }
+
+      //     // db_pick_pack_packing_code
+      //       DB::table('db_pick_pack_packing_code')->where('id',$db_pick_pack_packing_code->id)->update([
+      //         'orders_id_fk' => $or_ids_str,
+      //         'receipt' => $or_codes_str,
+      //       ]);
+
+      //       $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')->where('order_id',$de->orders_id_fk)->get();
+      //       foreach($db_pay_requisition_002_item as $req_item){
+      //         $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+      //         if($db_pay_requisition_002){
+      //           DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->update([
+      //             'amt_get' => ($db_pay_requisition_002->amt_get - $req_item->amt_get),
+      //             'amt_need' => ($db_pay_requisition_002->amt_need - $req_item->amt_need),
+      //             'amt_remain' => ($db_pay_requisition_002->amt_get - $req_item->amt_get) - ($db_pay_requisition_002->amt_need - $req_item->amt_need),
+      //           ]);
+      //         }
+      //         $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+      //         if($db_pay_requisition_002){
+      //           $db_stocks = DB::table('db_stocks')
+      //           ->where('product_id_fk',$db_pay_requisition_002->product_id_fk)
+      //           ->where('warehouse_id_fk',$db_pay_requisition_002->warehouse_id_fk)
+      //           ->where('business_location_id_fk',$db_pay_requisition_002->business_location_id_fk)
+      //           ->where('branch_id_fk',$db_pay_requisition_002->branch_id_fk)
+      //           ->where('zone_id_fk',$db_pay_requisition_002->zone_id_fk)
+      //           ->where('shelf_id_fk',$db_pay_requisition_002->shelf_id_fk)
+      //           ->where('shelf_floor',$db_pay_requisition_002->shelf_floor)
+      //           ->where('lot_number',$db_pay_requisition_002->lot_number)
+      //           ->first();
+      //           if($db_stocks){
+      //               DB::table('db_stocks')
+      //             ->where('id',$db_stocks->id)
+      //             ->update([
+      //               'amt' => $db_stocks->amt + $req_item->amt_get,
+      //             ]);
+      //             $db_pick_pack_packing = DB::table('db_pick_pack_packing')->select('packing_code','created_at')->where('packing_code_id_fk',$con->pick_pack_requisition_code_id_fk)->first();
+      //             if($db_pick_pack_packing){
+      //               $ref_doc = $db_pick_pack_packing->packing_code;
+      //               $doc_date = $db_pick_pack_packing->created_at;
+      //             }else{
+      //               $ref_doc = "";
+      //               $doc_date = "";
+      //             }
+      //             DB::table('db_stock_movement')->insert([
+      //               'stock_type_id_fk' => 1,
+      //               'stock_id_fk' => $db_stocks->id,
+      //               'ref_table' => 'db_pay_requisition_002',
+      //               'ref_table_id' => $req_item->requisition_002_id,
+      //               'ref_doc' => $ref_doc,
+      //               'doc_date' => $doc_date,
+      //               'business_location_id_fk' => $db_stocks->business_location_id_fk,
+      //               'branch_id_fk' => $db_stocks->branch_id_fk,
+      //               'product_id_fk' => $db_stocks->product_id_fk,
+      //               'lot_number' => $db_stocks->lot_number,
+      //               'lot_expired_date' => $db_stocks->lot_expired_date,
+      //               'amt' => $req_item->amt_get,
+      //               'in_out' => 1,
+      //               'product_unit_id_fk' => $db_stocks->product_unit_id_fk,
+      //               'warehouse_id_fk' => $db_stocks->warehouse_id_fk,
+      //               'zone_id_fk' => $db_stocks->zone_id_fk,
+      //               'shelf_id_fk' => $db_stocks->shelf_id_fk,
+      //               'shelf_floor' => $db_stocks->shelf_floor,
+      //               'status' => 1,
+      //               'note' => 'ยกเลิกจ่ายสินค้าตามใบเบิก',
+      //               'action_user' => \Auth::user()->id,
+      //               'action_date' => date('Y-m-d H:i:s'),
+      //               'approver' => \Auth::user()->id,
+      //               'approve_date' => date('Y-m-d H:i:s'),
+      //               'created_at' => date('Y-m-d H:i:s'),
+      //               'updated_at' => date('Y-m-d H:i:s'),
+      //             ]);
+      //           }
+      //         }
+
+      //         DB::table('db_pick_pack_requisition_code')->where('pick_pack_packing_code_id_fk',$db_pick_pack_packing_code->id)->update([
+      //           'receipts' => $or_codes_str,
+      //         ]);
+
+      //         $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+
+      //         DB::table($db_pick_pack_requisition_code)->where('pick_pack_packing_code_id_fk',$db_pick_pack_packing_code->id)->update([
+      //           'receipts' => $or_codes_str,
+      //         ]);
+
+      //         //  db_pick_pack_requisition_code
+      //         $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+      //         if($db_pay_requisition_002->amt_need<=0){
+      //          DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->delete();
+      //         }
+
+      //         DB::table('db_pay_requisition_002_item')->where('id',$req_item->id)->delete();
+      //         DB::table('db_pick_pack_packing')->where('delivery_id_fk',$de->id)->where('packing_code_id_fk',$con->pick_pack_requisition_code_id_fk)->delete();
+      //       }
+
+      //     }
+
+        }
+      }
+
+      // DB::table('db_consignments')->where('recipient_code',$p_id)->delete();
+
+      \DB::commit();
+    } catch (\Exception $e) {
+          echo $e->getMessage();
+          \DB::rollback();
+          return redirect()->back()->with(['alert'=>\App\Models\Alert::e($e)]);
+        }
+
+      return redirect()->back()->with('success','เรียกรับสินค้าคืน');
+    }
+
+    function pick_warehouse_recall_packing_approve($p_id){
+      \DB::beginTransaction();
+      try {
+      $db_consignments = DB::table('db_consignments')->where('recipient_code',$p_id)->get();
+      foreach($db_consignments as $con){
+        $db_delivery_data = DB::table('db_delivery')->select('id')->where('packing_code_desc',$con->recipient_code)->first();
+        if($db_delivery_data){
+          $db_delivery = DB::table('db_delivery')->where('packing_code_desc',$con->recipient_code)->get();
+        }else{
+          $db_delivery = DB::table('db_delivery')->where('receipt',$con->recipient_code)->get();
+        }
+
+        DB::table('db_consignments')->where('id',$con->id)->update([
+          'recall_status' => 2,
+          'recall_by' => Auth::user()->name,
+          'recall_approve' => date('Y-m-d H:i:s'),
+          'recall_date' => date('Y-m-d H:i:s'),
+        ]);
+
+        foreach($db_delivery as $de){
+          $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')->where('id',$con->pick_pack_requisition_code_id_fk)->first();
+
+          // DB::table('db_delivery')->where('id',$de->id)->update([
+          //   'status_pick_pack' => 0,
+          //   'status_delivery' => 0,
+          //   'status_tracking' => 0,
+          //   'status_scan_wh' => 0,
+          //   'user_scan' => 0,
+          // ]);
+              if($db_pick_pack_packing_code){
+
+          //       $or_ids = explode(",", $db_pick_pack_packing_code->orders_id_fk);
+          //       $or_codes = explode(",", $db_pick_pack_packing_code->receipt);
+          //       $or_ids_str = "";
+          //       $or_codes_str = "";
+
+          //       foreach($or_ids as $key => $or_id){
+          //           if($or_id!=$de->orders_id_fk){
+          //             if($key+1==count($or_ids)){
+          //               $or_ids_str .= $or_id;
+          //             }else{
+          //               $or_ids_str .= $or_id.',';
+          //             }
+          //           }
+          //       }
+          //       $or_ids_str2 = explode(",", $or_ids_str);
+          //       $or_ids_str_arr = [];
+          //       foreach($or_ids_str2 as $key => $or_id){
+          //       if($or_id!=''){
+          //         array_push($or_ids_str_arr,$or_id);
+          //       }
+          //     }
+          //     $or_ids_str = '';
+          //     foreach($or_ids_str_arr as $key => $or_id){
+          //         if($key+1==count($or_ids_str_arr)){
+          //           $or_ids_str .= $or_id;
+          //         }else{
+          //           $or_ids_str .= $or_id.',';
+          //         }
+          //   }
+
+          //       foreach($or_codes as $key => $or_code){
+          //         if($or_code!=$de->receipt){
+          //           if($key+1==count($or_codes)){
+          //             $or_codes_str .= $or_code;
+          //           }else{
+          //             $or_codes_str .= $or_code.',';
+          //           }
+          //         }
+          //     }
+          //     $or_codes_str2 = explode(",", $or_codes_str);
+          //     $or_codes_str_arr = [];
+          //     foreach($or_codes_str2 as $key => $or_code){
+          //      if($or_code!=''){
+          //       array_push($or_codes_str_arr,$or_code);
+          //      }
+          //   }
+          //   $or_codes_str = '';
+          //   foreach($or_codes_str_arr as $key => $or_code){
+          //       if($key+1==count($or_codes_str_arr)){
+          //         $or_codes_str .= $or_code;
+          //       }else{
+          //         $or_codes_str .= $or_code.',';
+          //       }
+          // }
+
+            // DB::table('db_pick_pack_packing_code')->where('id',$db_pick_pack_packing_code->id)->update([
+            //   'orders_id_fk' => $or_ids_str,
+            //   'receipt' => $or_codes_str,
+            // ]);
+
+            $db_pay_requisition_002_item = DB::table('db_pay_requisition_002_item')->where('order_id',$de->orders_id_fk)->get();
+            foreach($db_pay_requisition_002_item as $req_item){
+              $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+              // if($db_pay_requisition_002){
+              //   DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->update([
+              //     'amt_get' => ($db_pay_requisition_002->amt_get - $req_item->amt_get),
+              //     'amt_need' => ($db_pay_requisition_002->amt_need - $req_item->amt_need),
+              //     'amt_remain' => ($db_pay_requisition_002->amt_get - $req_item->amt_get) - ($db_pay_requisition_002->amt_need - $req_item->amt_need),
+              //   ]);
+              // }
+              $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+              if($db_pay_requisition_002){
+                $db_stocks = DB::table('db_stocks')
+                ->where('product_id_fk',$db_pay_requisition_002->product_id_fk)
+                ->where('warehouse_id_fk',$db_pay_requisition_002->warehouse_id_fk)
+                ->where('business_location_id_fk',$db_pay_requisition_002->business_location_id_fk)
+                ->where('branch_id_fk',$db_pay_requisition_002->branch_id_fk)
+                ->where('zone_id_fk',$db_pay_requisition_002->zone_id_fk)
+                ->where('shelf_id_fk',$db_pay_requisition_002->shelf_id_fk)
+                ->where('shelf_floor',$db_pay_requisition_002->shelf_floor)
+                ->where('lot_number',$db_pay_requisition_002->lot_number)
+                ->first();
+                if($db_stocks){
+                    DB::table('db_stocks')
+                  ->where('id',$db_stocks->id)
+                  ->update([
+                    'amt' => $db_stocks->amt + $req_item->amt_get,
+                  ]);
+                  $db_pick_pack_packing = DB::table('db_pick_pack_packing')->select('packing_code','created_at')->where('packing_code_id_fk',$con->pick_pack_requisition_code_id_fk)->first();
+                  if($db_pick_pack_packing){
+                    $ref_doc = $db_pick_pack_packing->packing_code;
+                    $doc_date = $db_pick_pack_packing->created_at;
+                  }else{
+                    $ref_doc = "";
+                    $doc_date = "";
+                  }
+                  DB::table('db_stock_movement')->insert([
+                    'stock_type_id_fk' => 1,
+                    'stock_id_fk' => $db_stocks->id,
+                    'ref_table' => 'db_pay_requisition_002',
+                    'ref_table_id' => $req_item->requisition_002_id,
+                    'ref_doc' => $ref_doc,
+                    'doc_date' => $doc_date,
+                    'business_location_id_fk' => $db_stocks->business_location_id_fk,
+                    'branch_id_fk' => $db_stocks->branch_id_fk,
+                    'product_id_fk' => $db_stocks->product_id_fk,
+                    'lot_number' => $db_stocks->lot_number,
+                    'lot_expired_date' => $db_stocks->lot_expired_date,
+                    'amt' => $req_item->amt_get,
+                    'in_out' => 1,
+                    'product_unit_id_fk' => $db_stocks->product_unit_id_fk,
+                    'warehouse_id_fk' => $db_stocks->warehouse_id_fk,
+                    'zone_id_fk' => $db_stocks->zone_id_fk,
+                    'shelf_id_fk' => $db_stocks->shelf_id_fk,
+                    'shelf_floor' => $db_stocks->shelf_floor,
+                    'status' => 1,
+                    'note' => 'รับสินค้าคืนจากรายการ '.$con->recipient_code.' เรียกรับสินค้าคืน',
+                    'action_user' => \Auth::user()->id,
+                    'action_date' => date('Y-m-d H:i:s'),
+                    'approver' => \Auth::user()->id,
+                    'approve_date' => date('Y-m-d H:i:s'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                  ]);
+                }
+              }
+
+              // DB::table('db_pick_pack_requisition_code')->where('pick_pack_packing_code_id_fk',$db_pick_pack_packing_code->id)->update([
+              //   'receipts' => $or_codes_str,
+              // ]);
+
+              // $db_pick_pack_requisition_code = "db_pick_pack_requisition_code".\Auth::user()->id;
+
+              // DB::table($db_pick_pack_requisition_code)->where('pick_pack_packing_code_id_fk',$db_pick_pack_packing_code->id)->update([
+              //   'receipts' => $or_codes_str,
+              // ]);
+
+              //  db_pick_pack_requisition_code
+              // $db_pay_requisition_002 = DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->first();
+              // if($db_pay_requisition_002->amt_need<=0){
+              //  DB::table('db_pay_requisition_002')->where('id',$req_item->requisition_002_id)->delete();
+              // }
+
+              // DB::table('db_pay_requisition_002_item')->where('id',$req_item->id)->delete();
+              // DB::table('db_pick_pack_packing')->where('delivery_id_fk',$de->id)->where('packing_code_id_fk',$con->pick_pack_requisition_code_id_fk)->delete();
+            }
+
+          }
+
+        }
+      }
+
+      // DB::table('db_consignments')->where('recipient_code',$p_id)->delete();
+
+      \DB::commit();
+    } catch (\Exception $e) {
+          echo $e->getMessage();
+          \DB::rollback();
+          return redirect()->back()->with(['alert'=>\App\Models\Alert::e($e)]);
+        }
+
+      return redirect()->back()->with('success','รับสินค้าคืนแล้ว');
     }
 
 

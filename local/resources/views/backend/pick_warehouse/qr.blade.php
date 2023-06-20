@@ -756,7 +756,7 @@
                     {
                         data: 'column_del',
                         title: '<span style="vertical-align: middle;"><center> ยกเลิกรายการ </span> ',
-                        className: 'text-center w80 ',
+                        className: 'text-center',
                         render: function(d) {
                             return d;
                         }
