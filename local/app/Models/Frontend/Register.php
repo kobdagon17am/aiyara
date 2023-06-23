@@ -198,6 +198,7 @@ class Register extends Model
           $caltime=strtotime("+2 Month",$strtime);
 
           $regisdoc_expri_date = strtotime("+15 Days",$strtime);
+          $regisdoc_expri_date = date("Y-m-d", $regisdoc_expri_date);
           $two_month = date("Y-m-1", $caltime);
 
           $data_customer = [
