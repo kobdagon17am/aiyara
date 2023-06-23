@@ -71,7 +71,6 @@ class ReportDataController extends Controller
 
     public function export_pdf(Request $request)
 		{
-      // dd($request->all());
         if($request->report_data=='inventory_remain'){
           return view('backend.report_data.inventory_remain',[
             'r' => $request,
@@ -84,6 +83,11 @@ class ReportDataController extends Controller
         }
         if($request->report_data=='inventory_in'){
           return view('backend.report_data.inventory_in',[
+            'r' => $request,
+          ]);
+        }
+        if($request->report_data=='inventory_in_po'){
+          return view('backend.report_data.inventory_in_po',[
             'r' => $request,
           ]);
         }

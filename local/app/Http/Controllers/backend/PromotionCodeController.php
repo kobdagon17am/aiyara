@@ -52,8 +52,55 @@ class PromotionCodeController extends Controller
       $startDate = $req->startDate;
       $endDate = $req->endDate;
       $status = $req->pstatus;
+      $customers_id_fk = $req->customers_id_fk;
+      $promotion_code = $req->promotion_code;
 
-      $sTable = \App\Models\Backend\PromotionCode::search()
+      if($customers_id_fk!=''){
+        $customers = DB::table('customers')->select('user_name')->where('id',$customers_id_fk)->first();
+        $promotion_cus_arr = DB::table('db_promotion_cus')->select('promotion_code_id_fk')->where('user_name',$customers->user_name)->pluck('promotion_code_id_fk')->toArray();
+
+        $sTable = \App\Models\Backend\PromotionCode::search()
+        ->select('db_promotion_code.*', 'promotions.name_thai','promotions.pcode')
+        ->leftJoin('promotions', 'promotions.id', 'db_promotion_code.promotion_id_fk')
+        // ->when($coupon_name, function ($query, $coupon_name) {
+        //   return $query->where('promotions.name_thai', 'LIKE', "%{$coupon_name}%");
+        // })
+        // ->when($startDate, function ($query, $startDate) {
+        //   return $query->where('db_promotion_code.pro_sdate', '>=', $startDate);
+        // })
+        // ->when($endDate, function ($query, $endDate) {
+        //   return $query->where('db_promotion_code.pro_edate', '<=', $endDate);
+        // })
+        ->whereIn('db_promotion_code.id',$promotion_cus_arr)
+        ->when($status, function ($query, $status) {
+            if ($status == -1) {
+              return $query->where('db_promotion_code.pro_edate', '<', date('Y-m-d'));
+            } else if ($status == 2) {
+              return $query->where('db_promotion_code.pro_edate', '>', date('Y-m-d'))
+                ->where('db_promotion_code.status', 0);
+            } else {
+              return $query->where('db_promotion_code.status', $status);
+            }
+        })->orderBy('id','desc');
+      }elseif($promotion_code!=''){
+        $promotion_cus_arr = DB::table('db_promotion_cus')->select('promotion_code_id_fk')->where('id',$promotion_code)->pluck('promotion_code_id_fk')->toArray();
+        $sTable = \App\Models\Backend\PromotionCode::search()
+        ->select('db_promotion_code.*', 'promotions.name_thai','promotions.pcode')
+        ->leftJoin('promotions', 'promotions.id', 'db_promotion_code.promotion_id_fk')
+        ->whereIn('db_promotion_code.id',$promotion_cus_arr)
+        ->when($status, function ($query, $status) {
+            if ($status == -1) {
+              return $query->where('db_promotion_code.pro_edate', '<', date('Y-m-d'));
+            } else if ($status == 2) {
+              return $query->where('db_promotion_code.pro_edate', '>', date('Y-m-d'))
+                ->where('db_promotion_code.status', 0);
+            } else {
+              return $query->where('db_promotion_code.status', $status);
+            }
+        })->orderBy('id','desc');
+      }else{
+        // dd('kk222');
+        $sTable = \App\Models\Backend\PromotionCode::search()
         ->select('db_promotion_code.*', 'promotions.name_thai','promotions.pcode')
         ->leftJoin('promotions', 'promotions.id', 'db_promotion_code.promotion_id_fk')
         ->when($coupon_name, function ($query, $coupon_name) {
@@ -75,6 +122,8 @@ class PromotionCodeController extends Controller
               return $query->where('db_promotion_code.status', $status);
             }
         })->orderBy('id','desc');
+      }
+
       $sQuery = \DataTables::of($sTable);
       return $sQuery
       ->addColumn('promotion_name', function($row) {

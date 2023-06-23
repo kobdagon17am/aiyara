@@ -298,6 +298,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('ajaxGetCustomerNameOnly', 'AjaxController@ajaxGetCustomerNameOnly');
 
     Route::post('ajaxGetCustomerForFrontstore', 'AjaxController@ajaxGetCustomerForFrontstore');
+    Route::post('ajaxGetCoupong', 'AjaxController@ajaxGetCoupong');
     Route::post('ajaxGetCustomerForAicashSelect', 'AjaxController@ajaxGetCustomerForAicashSelect');
     Route::post('ajaxGetCustomerAistockist', 'AjaxController@ajaxGetCustomerAistockist');
     Route::post('ajaxGetCustomerAgency', 'AjaxController@ajaxGetCustomerAgency');
@@ -459,6 +460,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('pick_warehouse_scan_save', 'Pick_warehouseController@pick_warehouse_scan_save');
     Route::post('pick_warehouse_save_new_bill', 'Pick_warehouseController@pick_warehouse_save_new_bill');
     Route::get('pick_warehouse_del_packing/{p_id}', 'Pick_warehouseController@pick_warehouse_del_packing');
+    Route::get('pick_warehouse_recall_packing/{p_id}', 'Pick_warehouseController@pick_warehouse_recall_packing');
+    Route::get('pick_warehouse_recall_packing_approve/{p_id}', 'Pick_warehouseController@pick_warehouse_recall_packing_approve');
 
     Route::get('delete_test', 'Pick_warehouseController@delete_test');
     Route::get('pick_warehouse/{id}/edit_product', 'Pick_warehouseController@edit_product');
@@ -826,7 +829,6 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('check_stock_transfer_warehouses/datatable', 'Check_stockController@DatatableTransfer_warehouses')->name('check_stock_transfer_warehouses.datatable');
     Route::post('check_stock_transfer_branch/datatable', 'Check_stockController@DatatableTransfer_branch')->name('check_stock_transfer_branch.datatable');
 
-
     Route::resource('check_stock_check', 'Check_stock_checkController');
     Route::post('check_stock_check/datatable', 'Check_stock_checkController@Datatable')->name('check_stock_check.datatable');
     Route::post('check_stock_check_02/datatable', 'Check_stock_checkController@Datatable02')->name('check_stock_check_02.datatable');
@@ -837,14 +839,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('member_regis/datatable_list', 'Member_regisController@Datatable_list')->name('member_regis.datatable_list');
     Route::post('member_regis02/datatable', 'Member_regisController@Datatable02')->name('member_regis02.datatable');
 
-
     Route::resource('member_pv', 'Member_pvController');
     Route::post('member_pv/datatable', 'Member_pvController@Datatable')->name('member_pv.datatable');
 
-
     Route::resource('stocks_account_code', 'Stocks_account_codeController');
     Route::post('stocks_account_code/datatable', 'Stocks_account_codeController@Datatable')->name('stocks_account_code.datatable');
-
 
     Route::resource('stock_card', 'Stock_cardController');
     Route::post('stock_card/datatable', 'Stock_cardController@Datatable')->name('stock_card.datatable');
@@ -861,10 +860,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}/{shelf_id_fk}/{shelf_floor}/{lot_number}/{lot_expired_date_s}', 'Check_stockController@stock_card');
     Route::get('check_stock/stock_card/{product_id_fk}/{business_location_id_fk}/{branch_id_fk}/{warehouse_id_fk}/{zone_id_fk}/{shelf_id_fk}/{shelf_floor}/{lot_number}/{lot_expired_date_s}/{lot_expired_date_e}', 'Check_stockController@stock_card');
 
-
     Route::resource('stock_card_01', 'Stock_card_01Controller');
     Route::post('stock_card_01/datatable', 'Stock_card_01Controller@Datatable')->name('stock_card_01.datatable');
-
 
     Route::get('check_stock/print/{id}/{lot_number}', 'AjaxController@createPDFStock_card');
     Route::get('pick_warehouse/print/{id}', 'AjaxController@createPDFPick_warehouse');

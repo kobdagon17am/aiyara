@@ -1460,6 +1460,16 @@ for ($j=0; $j < $amt_page ; $j++) {
             </td>
 
             <!-- THELP  -->
+            <td style="vertical-align: top; font-size: 24px;font-weight: bold;" >
+      <?php
+      if($sRow->approve_status == 5){
+        echo '<b style="color:red;"><u> BILL CANCEL </u></b>';
+      }
+       ?>
+        <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+1) ; "); ?>
+        <?php echo @$DB[0]->a ;
+        ?>
+      </td>
             <td style="vertical-align: top; font-size: 24px;font-weight: bold;">
                 <?php $DB = DB::select(" SELECT * FROM $TABLE where id in (($j*$n)+1) ; "); ?>
                 <?php echo @$DB[0]->a ; ?>

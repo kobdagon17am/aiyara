@@ -1831,16 +1831,19 @@ class FrontstoreController extends Controller
                                             recipient_name = '" . @$recipient_name . "',
                                             addr_send = '" . @$address . "',
                                             postcode = '" . @$v->card_zipcode . "',
+                                            mobile = '" . (@$v->tel ? $v->tel : '') . "',
+                                            tel_home = '" . (@$v->tel_home ? $v->tel_home : '') . "',
                                             province_id_fk = '" . @$v->card_province_id_fk . "',
                                             province_name = '" . @$v->province_name . "',
                                             set_addr_send_this = '1'
                                             where orders_id_fk = '" . $sRow->id . "'
 
                                            ");
+
           }
 
 
-          DB::select("
+                            DB::select("
 
                               UPDATE db_orders SET
                               house_no='" . @$v->card_house_no . "',
