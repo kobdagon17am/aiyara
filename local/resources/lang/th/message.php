@@ -456,6 +456,9 @@ return [
 'success_fully'=>'เอกสารผ่านการตรวจสอบเรียบร้อย',
 'Check'=>'ตรวจสอบ',
 
+'Check_expridate'=>'หมดเขตส่งเอกสารวันที่',
+
+
 
 //frontend/tree_view
 'down_a'=> 'ดิ่งขา A',
