@@ -39,7 +39,17 @@
       <div class="card-block">
         <h5 class="text-primary"> {{trans('message.p_benefits travel promotion')}} </h5>
         <hr>
+        <?php
 
+        $user_name = Auth::guard('c_user')->user()->user_name;
+        $token = hash('SHA512', date('ymd').$user_name . date('H') . 'TRAVEL' );
+        $url = 'https://aismart.aiyara.co.th/v3_pro_travel/?id='.$user_name.'&token='.$token;
+        ?>
+
+        <iframe src="{{$url}}"
+        style="display: block;width: 100%;height: 100vh;border: none;"></iframe>
+
+{{--
         @if(count($data) > 0)
         <div class="row">
           <div class="col-lg-12 col-xl-12 ">
@@ -76,7 +86,7 @@
           </button>
           <strong>Data is Null! </strong>: {{trans('message.p_benefits no travel pro')}}
         </div>
-        @endif
+        @endif --}}
 
       </div>
 
