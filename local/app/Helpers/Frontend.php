@@ -114,13 +114,17 @@ class Frontend{
 
       if($customer->regisdoc_expri_date){
 		if($customer->regisdoc_expri_date == '0000-00-00'){
-			$regisdoc_expri_date = now();
+			 
+			$html .='<div class="alert alert-warning icons-alert">
+			<p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y').'</b></code></p>
+		   </div>';
 		}else{
-			$regisdoc_expri_date = $customer->regisdoc_expri_date;
+			$html .='<div class="alert alert-warning icons-alert">
+			<p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y',strtotime($customer->regisdoc_expri_date)).'</b></code></p>
+		   </div>';
+			 
 		}
-        $html .='<div class="alert alert-warning icons-alert">
-        <p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y',strtotime($customer->regisdoc_expri_date)).'</b></code></p>
-       </div>';
+       
       }
 
       if(empty($customer->regisdoc_expri_date) || $customer->regisdoc_expri_date == '0000-00-00'){

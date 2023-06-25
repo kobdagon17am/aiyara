@@ -196,8 +196,8 @@ class Register extends Model
   //ฟรีแอคทีม 2 เดือนปฏิทินหลังจากกการสมัคร
           $strtime = strtotime(date('Y-m'));
           $caltime=strtotime("+2 Month",$strtime);
-
-          $regisdoc_expri_date = strtotime("+15 Days",$strtime);
+          $strtime_expri_date = strtotime(date('Y-m-d'));
+          $regisdoc_expri_date = strtotime("+15 Days",$strtime_expri_date);
           $regisdoc_expri_date = date("Y-m-d", $regisdoc_expri_date);
           $two_month = date("Y-m-1", $caltime);
 
