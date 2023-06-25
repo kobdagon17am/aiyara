@@ -113,13 +113,17 @@ class Frontend{
       ->first();
 
       if($customer->regisdoc_expri_date){
+		if($customer->regisdoc_expri_date == '0000-00-00'){
+			$regisdoc_expri_date = now();
+		}else{
+			$regisdoc_expri_date = $customer->regisdoc_expri_date;
+		}
         $html .='<div class="alert alert-warning icons-alert">
         <p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y',strtotime($customer->regisdoc_expri_date)).'</b></code></p>
        </div>';
       }
 
-
-      if(empty($customer->regisdoc_expri_date)){
+      if(empty($customer->regisdoc_expri_date) || $customer->regisdoc_expri_date == '0000-00-00'){
         $status_file = 'on';
 
       }elseif(strtotime($customer->regisdoc_expri_date) < strtotime(date('Ymd'))){
