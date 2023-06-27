@@ -100,6 +100,12 @@ public static function dt_coupon_code(Request $rs)
        ->leftjoin('promotions', 'promotions.id', '=', 'db_promotion_code.promotion_id_fk')
        ->leftjoin('customers', 'customers.user_name', '=', 'db_promotion_cus.used_user_name')
       //  ->where('db_promotion_code.approve_status','=',1)
+
+      ->wheredate('promotions.show_startdate','<=',date('Y-m-d'))
+      ->wheredate('promotions.show_enddate','>=',date('Y-m-d'))
+      ->wheredate('db_promotion_code.pro_sdate','<=',date('Y-m-d'))
+      ->wheredate('db_promotion_code.pro_edate','>=',date('Y-m-d'))
+
        ->where('db_promotion_cus.user_name','=',Auth::guard('c_user')->user()->user_name)
        ->whereRaw(("case
        WHEN '{$rs->status}' = 1 THEN db_promotion_cus.pro_status = 1 and db_promotion_code.pro_edate >= '{$date}'
