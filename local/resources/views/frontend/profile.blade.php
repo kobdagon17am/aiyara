@@ -394,7 +394,7 @@ $check_kyc = Frontend::check_kyc(Auth::guard('c_user')->user()->user_name);
            <select class="form-control" id="status" >
               <option value="1">@lang('message.notused')</option>
               <option value="2">@lang('message.used')</option>
-              <option value="expiry_date">@lang('message.expirydate')</option>
+              {{-- <option value="expiry_date">@lang('message.expirydate')</option> --}}
               {{-- <option value="">@lang('message.all')</option> --}}
             </select>
           </div>

@@ -37,7 +37,7 @@
 
     <div class="page-header card">
       <div class="card-block">
-        <h5 class="text-primary"> {{trans('message.p_benefits travel promotion')}} </h5>
+        <h4> {{trans('message.p_benefits travel promotion')}} [{{ Auth::guard('c_user')->user()->user_name}}] </h4>
         <hr>
         <?php
 
