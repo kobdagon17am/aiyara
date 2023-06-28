@@ -44,7 +44,7 @@ class Pick_warehouse_fifoController extends Controller
       // return($request->all());
       // return $request->picking_id;
       // return "aaa";
-      // dd(); temp_ppp_0022
+      // dd(); temp_ppp_0022 temp_db_stocks
 
       // $arr_picking_id = $request->picking_id;
       // $picking = explode(",", $request->picking_id);
@@ -197,8 +197,10 @@ class Pick_warehouse_fifoController extends Controller
 
           // return $arr_product_id_fk;
 
+          // DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
+          // WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
           DB::select(" INSERT IGNORE INTO $temp_db_stocks SELECT * FROM db_stocks
-          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.warehouse_id_fk=(SELECT warehouse_id_fk FROM branchs WHERE id=db_stocks.branch_id_fk) AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
+          WHERE db_stocks.business_location_id_fk='$business_location_id_fk' AND db_stocks.branch_id_fk='$branch_id_fk' AND db_stocks.lot_expired_date>=now() AND db_stocks.product_id_fk in ($arr_product_id_fk) ORDER BY db_stocks.lot_number ASC, db_stocks.lot_expired_date ASC ");
 
 
       //    $r_test = DB::select(" SELECT * FROM $temp_db_stocks ");

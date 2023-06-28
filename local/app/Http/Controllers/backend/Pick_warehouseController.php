@@ -2256,8 +2256,7 @@ ORDER BY db_pick_pack_packing.id
             $d2 = DB::select(" SELECT receipts FROM $db_pick_pack_requisition_code WHERE `pick_pack_packing_code_id_fk`=".$d1[0]->pick_pack_requisition_code_id_fk." ");
             }
 
-
-// dd($db_pick_pack_requisition_code);
+// dd($db_pick_pack_requisition_code); db_pick_pack_packing_code
             if($d2){
               foreach ($d2 as $key => $v) {
                  $str = explode(',',$v->receipts);
@@ -2287,7 +2286,7 @@ ORDER BY db_pick_pack_packing.id
                   if (count($pack_check_arr) > 0) {
 
                     $delivery_data = DB::table('db_delivery')
-                    ->select('set_addr_send_this', 'recipient_name', 'addr_send', 'postcode', 'mobile', 'tel_home', 'status_pack', 'receipt', 'id as delivery_id_fk', 'orders_id_fk')
+                    ->select('set_addr_send_this','status_to_wh_by', 'recipient_name', 'addr_send', 'postcode', 'mobile', 'tel_home', 'status_pack', 'receipt', 'id as delivery_id_fk', 'orders_id_fk')
                     ->whereIn('id', $pack_check_arr)
                     ->where('set_addr_send_this', 1)
                     ->first();
@@ -2295,13 +2294,26 @@ ORDER BY db_pick_pack_packing.id
                     // dd($d0_data->id);
 
                     if($delivery_data){
-                      DB::table('db_delivery')->where('id',$d0_data->id)->update([
-                        'recipient_name' => $delivery_data->recipient_name,
-                        'addr_send' => $delivery_data->addr_send,
-                        'postcode' => $delivery_data->postcode,
-                        'mobile' => $delivery_data->mobile,
-                        'tel_home' => $delivery_data->tel_home,
-                      ]);
+                      if($remain_id->ref_bill_id==''){
+                        DB::table('db_delivery')->where('id',$d0_data->id)->update([
+                          'recipient_name' => $delivery_data->recipient_name,
+                          'addr_send' => $delivery_data->addr_send,
+                          'postcode' => $delivery_data->postcode,
+                          'mobile' => $delivery_data->mobile,
+                          'tel_home' => $delivery_data->tel_home,
+                          // 'status_to_wh_by' => $delivery_data->status_to_wh_by,
+                        ]);
+                      }else{
+                        DB::table('db_delivery')->where('id',$d0_data->id)->update([
+                          'recipient_name' => $delivery_data->recipient_name,
+                          'addr_send' => $delivery_data->addr_send,
+                          'postcode' => $delivery_data->postcode,
+                          'mobile' => $delivery_data->mobile,
+                          'tel_home' => $delivery_data->tel_home,
+                          'status_to_wh_by' => $delivery_data->status_to_wh_by,
+                        ]);
+                      }
+
                     }
 
 
@@ -2359,7 +2371,9 @@ ORDER BY db_pick_pack_packing.id
                       //  }
 
                       $check = DB::table('db_consignments')->select('id')->where('recipient_code',$recipient_code)->where('pick_pack_requisition_code_id_fk',$reg->packing_id)->first();
-
+                      // if($v3->orders_id_fk == 64160){
+                      // dd($check);
+                      // }
                         // if($recipient_code=='P100107' && $v3->status_to_wh_by!=0){
                         //   // dd($check);
                         //   dd($v3);
@@ -2443,7 +2457,6 @@ ORDER BY db_pick_pack_packing.id
           }
 
         // }
-
         return $web_all;
 
      })
@@ -2457,7 +2470,7 @@ ORDER BY db_pick_pack_packing.id
           foreach ($d as $key => $v) {
              array_push($f,@$v->recipient_code);
           }
-          // $f = implode('<br><br><br>',$f);
+          // $f = implode('<br><br><br>',$f); รายละเอียดลูกค้า
             $web_all = "";
           foreach($f as $value){
             $web = "<div class='col-md-12' style='height: 70px;'>";
@@ -2664,16 +2677,21 @@ ORDER BY db_pick_pack_packing.id
             ->where('no_product',0)
             ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
             ->get();
+            // dd($p_code->id);
             if(!empty($DP)){
               $pn = '';
               $arr = [];
               foreach ($DP as $key => $value) {
+                // $db_consignments = DB::table('db_consignments')->select('id')->where('pick_pack_requisition_code_id_fk',$row->pick_pack_requisition_code_id_fk)->where('delivery_id_fk',$value->delivery_id_fk)->first();
+                // if($db_consignments){
                   $pn .=
-                    '<div class="col-md-12" style="height: 70px;">
-                    <center>
-                    <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
-                    </center>
-                    </div><br>';
+                  '<div class="col-md-12" style="height: 70px;">
+                  <center>
+                  <a href="backend/pick_warehouse/print_requisition_detail/'.$value->delivery_id_fk.'/'.$p_code->id.'" title="รายละเอียดลูกค้า" target=_blank ><i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#0099cc;"></i></a>
+                  </center>
+                  </div><br>';
+                // }
+
               }
                return $pn;
             }else{

@@ -335,10 +335,10 @@ class Check_stockController extends Controller
         $stock_0 = "AND amt <> 0";
        }
 
-        // $sPermission = \Auth::user()->permission ;
-        // if($sPermission==1){
-        //   $stock_0 = "";
-        // }
+        $sPermission = \Auth::user()->permission ;
+        if($sPermission==1){
+          $stock_0 = "";
+        }
 
        $sTable = DB::select("
 
