@@ -596,16 +596,25 @@
 					</a>
 				</li>
 
-				<li class="{{ (request()->is('travel*')) ? 'active' : '' }}">
+				{{-- <li class="{{ (request()->is('travel*')) ? 'active' : '' }}">
 					<a href="{{route('travel')}}">
 						<span class="pcoded-micon"><i class="ti-angle-right text-success"></i></span>
 						<span class="pcoded-mtext"> @lang('message.travelpromotion')</span>
 						<span class="pcoded-mcaret"></span>
 					</a>
-				</li>
+				</li> --}}
 
 			</ul>
 		</li>
+
+    <li class="{{ (request()->is('travel')) ? 'active' : '' }}">
+			<a href="{{route('travel')}}">
+				<span class="pcoded-micon"><i class="fa fa-plane text-success"></i><b> @lang('message.travelpromotion')</b></span>
+				<span class="pcoded-mtext"> @lang('message.travelpromotion')</span>
+				<span class="pcoded-mcaret"></span>
+			</a>
+		</li>
+
 
     <li class="pcoded-hasmenu {{ (request()->is('salepage/*') || request()->is('cart-payment-history-vip/*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">

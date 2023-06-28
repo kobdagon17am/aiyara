@@ -446,6 +446,7 @@ return [
 'not_verified'=>'You cannot do any transaction. If the identity is not verified',
 'success_fully'=> 'Documents have been verified successfully.',
 'Check'=>'Check.',
+'Check_expridate'=>'Deadline for submitting documents',
 
 //frontend/tree_view
 'down_a'=> 'Down A',

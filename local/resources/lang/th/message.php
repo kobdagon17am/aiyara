@@ -456,6 +456,9 @@ return [
 'success_fully'=>'เอกสารผ่านการตรวจสอบเรียบร้อย',
 'Check'=>'ตรวจสอบ',
 
+'Check_expridate'=>'หมดเขตส่งเอกสารวันที่',
+
+
 
 //frontend/tree_view
 'down_a'=> 'ดิ่งขา A',
@@ -566,8 +569,8 @@ return [
 'p_benefits award detail'=> 'รายละเอียดรางวัลเกียรติยศ',
 'p_benefits retain qual'=> 'รักษาคุณสมบัติ',
 'p_benefits advantage'=> 'สิทธิประโยชน์',
-'p_benefits travel promotion'=> 'โปรโมชั่นท่องเที่ยวท่องเที่ยว',
-'p_benefits no travel pro'=> 'ไม่มีโปรโมชั่นท่องเที่ยวท่องเที่ยวในช่วงนี้',
+'p_benefits travel promotion'=> 'โปรโมชั่นท่องเที่ยว',
+'p_benefits no travel pro'=> 'ไม่มีโปรโมชั่นท่องเที่ยวในช่วงนี้',
 'p_sale page set'=> 'กำหนดสายข้อมูลการลงทะเบียนสมาชิกใหม่ที่มาจากหน้าเว็บ',
 'p_sale page name'=> 'ชื่อ',
 'p_sale page phone number'=> 'เบอร์โทร',

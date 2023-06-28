@@ -6,7 +6,7 @@
 
 <div class="page-header card">
  <div class="card-block">
- <a href="{{ route('travel') }}"><h4 class="text-primary"> โปรโมชั่นท่องเที่ยวท่องเที่ยว</h4> </a>
+ <a href="{{ route('travel') }}"><h4 class="text-primary"> โปรโมชั่นท่องเที่ยว</h4> </a>
     <hr>
   <div class="row mt-2">
     <div class="col-md-3">

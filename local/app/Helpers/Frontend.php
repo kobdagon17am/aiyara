@@ -84,7 +84,7 @@ class Frontend{
     }
 
 		$customer =  DB::table('customers')
-		->select('id')
+		->select('id','regisdoc_expri_date')
 		->where('user_name','=',$user_customer)
     ->where('regis_doc1_status','=','1')
     ->where('regis_doc2_status','=','1')
@@ -99,14 +99,48 @@ class Frontend{
       </button>
       <strong> SUCCESS </strong> <code> '.__('message.success_fully').' </code>
       </div>';
+      $status_file = 'on';
 
-      $rs = ['status'=>'success','message'=>'เอกสารผ่านเเล้ว','html'=>$html];
+      $rs = ['status'=>'success','status_file'=>$status_file,'message'=>'เอกสารผ่านเเล้ว','html'=>$html];
     }else{
       $html = '<div class="alert alert-warning icons-alert">
        <p><strong>Warning!</strong> <code>'.__('message.not_verified').'</code>  <a href="'.route('docs').'" class="pcoded-badge label label-warning ">'.__('message.Check').'</a></p>
       </div>';
 
-    $rs = ['status'=>'fail','message'=>$user_customer.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
+      $customer =  DB::table('customers')
+      ->select('id','regisdoc_expri_date')
+      ->where('user_name','=',$user_customer)
+      ->first();
+
+      if($customer->regisdoc_expri_date){
+		if($customer->regisdoc_expri_date == '0000-00-00'){
+			 
+			$html .='<div class="alert alert-warning icons-alert">
+			<p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y').'</b></code></p>
+		   </div>';
+		}else{
+			$html .='<div class="alert alert-warning icons-alert">
+			<p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y',strtotime($customer->regisdoc_expri_date)).'</b></code></p>
+		   </div>';
+			 
+		}
+       
+      }
+
+      if(empty($customer->regisdoc_expri_date) || $customer->regisdoc_expri_date == '0000-00-00'){
+        $status_file = 'on';
+
+      }elseif(strtotime($customer->regisdoc_expri_date) < strtotime(date('Ymd'))){
+        $status_file = 'of';
+
+      }else{
+        $status_file = 'on';
+
+      }
+
+
+
+    $rs = ['status'=>'fail','status_file'=>$status_file,'message'=>$user_customer.' ไม่สามารถทำรายการใดๆได้ หากยังไม่ผ่านการยืนยันตัวตน',
     'html'=>$html];
     }
     return $rs;
