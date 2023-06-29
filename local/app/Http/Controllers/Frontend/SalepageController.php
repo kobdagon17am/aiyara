@@ -22,16 +22,28 @@ class SalepageController extends Controller
         'customers.last_name',
         'customers.business_name',
         'customers.profile_img',
-        'customers.email'
+        'customers.email',
+        'customers.business_location_id'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
+      $business_location_id = $data->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
 
     if ($data) {
       $rs = ['stattus' => 'success', 'data' => $data];
-      return view('frontend/salepage/aimmura', compact('rs'));
+
+      if( $business_location_id  == 1){
+        return view('frontend/salepage/aimmura', compact('rs'));
+      }else{
+        return view('frontend/salepage/aimmura_ca', compact('rs'));
+      }
+
     } else {
 
       $data = DB::table('customers')
@@ -43,16 +55,28 @@ class SalepageController extends Controller
           'customers.last_name',
           'customers.business_name',
           'customers.profile_img',
-          'customers.email'
+          'customers.email',
+          'customers.business_location_id'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
         // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s2', '=', $user_name)
         ->first();
 
+
+      $business_location_id = $data->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
       if ($data) {
         $rs = ['stattus' => 'success', 'data' => $data];
-        return view('frontend/salepage/aimmura', compact('rs'));
+        if( $business_location_id  == 1){
+          return view('frontend/salepage/aimmura', compact('rs'));
+        }else{
+          return view('frontend/salepage/aimmura_ca', compact('rs'));
+        }
+
       } else {
         return view('errors/404');
       }
@@ -72,7 +96,8 @@ class SalepageController extends Controller
         'customers.last_name',
         'customers.business_name',
         'customers.profile_img',
-        'customers.email'
+        'customers.email',
+        'customers.business_location_id'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
@@ -90,7 +115,8 @@ class SalepageController extends Controller
           'customers.last_name',
           'customers.business_name',
           'customers.profile_img',
-          'customers.email'
+          'customers.email',
+          'customers.business_location_id'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
         // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
@@ -100,10 +126,21 @@ class SalepageController extends Controller
         ->first();
       }
 
+      $business_location_id = $data->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
 
     if ($data) {
       $rs = ['stattus' => 'success', 'data' => $data];
-      return view('frontend/salepage/cashewy_drink', compact('rs'));
+
+      if( $business_location_id  == 1){
+        return view('frontend/salepage/cashewy_drink', compact('rs'));
+      }else{
+        return view('frontend/salepage/cashewy_drink_ca', compact('rs'));
+      }
+
     } else {
       return view('errors/404');
     }
@@ -122,17 +159,28 @@ class SalepageController extends Controller
         'customers.last_name',
         'customers.business_name',
         'customers.profile_img',
-        'customers.email'
+        'customers.email',
+        'customers.business_location_id'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
+      $business_location_id = $data->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
 
 
     if ($data) {
       $rs = ['stattus' => 'success', 'data' => $data];
-      return view('frontend/salepage/aifacad', compact('rs'));
+
+      if( $business_location_id  == 1){
+        return view('frontend/salepage/aifacad', compact('rs'));
+      }else{
+        return view('frontend/salepage/aifacad_ca', compact('rs'));
+      }
+
     } else {
 
       $data = DB::table('customers')
@@ -144,16 +192,27 @@ class SalepageController extends Controller
           'customers.last_name',
           'customers.business_name',
           'customers.profile_img',
-          'customers.email'
+          'customers.email',
+          'customers.business_location_id'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
         // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s4', '=', $user_name)
         ->first();
 
+        $business_location_id = $data->business_location_id;
+        if (empty($business_location_id)) {
+            $business_location_id = 1;
+        }
+
       if ($data) {
         $rs = ['stattus' => 'success', 'data' => $data];
-        return view('frontend/salepage/aifacad', compact('rs'));
+
+        if( $business_location_id  == 1){
+          return view('frontend/salepage/aifacad', compact('rs'));
+        }else{
+          return view('frontend/salepage/aifacad_ca', compact('rs'));
+        }
       } else {
         return view('errors/404');
       }
@@ -175,16 +234,28 @@ class SalepageController extends Controller
         'customers.last_name',
         'customers.business_name',
         'customers.profile_img',
-        'customers.email'
+        'customers.email',
+        'customers.business_location_id'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
+      $business_location_id = $data->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
     if ($data) {
       $rs = ['stattus' => 'success', 'data' => $data];
-      return view('frontend/salepage/ailada', compact('rs'));
+
+
+      if( $business_location_id  == 1){
+        return view('frontend/salepage/ailada', compact('rs'));
+      }else{
+        return view('frontend/salepage/ailada_ca', compact('rs'));
+      }
     } else {
 
       $data = DB::table('customers')
@@ -196,16 +267,25 @@ class SalepageController extends Controller
           'customers.last_name',
           'customers.business_name',
           'customers.profile_img',
-          'customers.email'
+          'customers.email',
+          'customers.business_location_id'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
         // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s5', '=', $user_name)
         ->first();
+        $business_location_id = $data->business_location_id;
+        if (empty($business_location_id)) {
+            $business_location_id = 1;
+        }
 
       if ($data) {
         $rs = ['stattus' => 'success', 'data' => $data];
-        return view('frontend/salepage/ailada', compact('rs'));
+        if( $business_location_id  == 1){
+          return view('frontend/salepage/ailada', compact('rs'));
+        }else{
+          return view('frontend/salepage/ailada_ca', compact('rs'));
+        }
       } else {
         return view('errors/404');
       }
@@ -225,17 +305,29 @@ class SalepageController extends Controller
         'customers.last_name',
         'customers.business_name',
         'customers.profile_img',
-        'customers.email'
+        'customers.email',
+        'customers.business_location_id'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
+      $business_location_id = $data->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
 
     if ($data) {
       $rs = ['stattus' => 'success', 'data' => $data];
-      return view('frontend/salepage/trimmax', compact('rs'));
+
+      if( $business_location_id  == 1){
+        return view('frontend/salepage/trimmax', compact('rs'));
+      }else{
+        return view('frontend/salepage/trimmax_ca', compact('rs'));
+      }
+
     } else {
 
       $data = DB::table('customers')
@@ -247,7 +339,8 @@ class SalepageController extends Controller
           'customers.last_name',
           'customers.business_name',
           'customers.profile_img',
-          'customers.email'
+          'customers.email',
+          'customers.business_location_id'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
         // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
@@ -256,7 +349,11 @@ class SalepageController extends Controller
 
       if ($data) {
         $rs = ['stattus' => 'success', 'data' => $data];
-        return view('frontend/salepage/trimmax', compact('rs'));
+        if( $business_location_id  == 1){
+          return view('frontend/salepage/trimmax', compact('rs'));
+        }else{
+          return view('frontend/salepage/trimmax_ca', compact('rs'));
+        }
       } else {
         return view('errors/404');
       }
@@ -277,7 +374,8 @@ class SalepageController extends Controller
         'customers.last_name',
         'customers.business_name',
         'customers.profile_img',
-        'customers.email'
+        'customers.email',
+        'customers.business_location_id'
       )
       ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
@@ -285,10 +383,21 @@ class SalepageController extends Controller
 
       ->first();
 
+      $business_location_id = $data->business_location_id;
+      if (empty($business_location_id)) {
+          $business_location_id = 1;
+      }
+
 
     if ($data) {
       $rs = ['stattus' => 'success', 'data' => $data];
-      return view('frontend/salepage/aiyara', compact('rs'));
+
+
+      if( $business_location_id  == 1){
+        return view('frontend/salepage/aiyara', compact('rs'));
+      }else{
+        return view('frontend/salepage/aiyara_ca', compact('rs'));
+      }
     } else {
 
       $data = DB::table('customers')
@@ -300,15 +409,26 @@ class SalepageController extends Controller
           'customers.last_name',
           'customers.business_name',
           'customers.profile_img',
-          'customers.email'
+          'customers.email',
+          'customers.business_location_id'
         )
         ->leftjoin('db_salepage_setting', 'customers.user_name', '=', 'db_salepage_setting.customers_username')
         // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s1', '=', $user_name)
         ->first();
+
+        $business_location_id = $data->business_location_id;
+        if (empty($business_location_id)) {
+            $business_location_id = 1;
+        }
       if ($data) {
         $rs = ['stattus' => 'success', 'data' => $data];
-        return view('frontend/salepage/aiyara', compact('rs'));
+
+        if( $business_location_id  == 1){
+          return view('frontend/salepage/aiyara', compact('rs'));
+        }else{
+          return view('frontend/salepage/aiyara_ca', compact('rs'));
+        }
       } else {
         return view('errors/404');
       }
