@@ -27,63 +27,62 @@ Cashewy Drink
 
     <div class="container">
         <div class="row justify-content-center">
-            <img src="{{ asset('frontend/salepage/Cashewy/1.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/01.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/2.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/02.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/3.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/03.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/4.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/04.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/5.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/05.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/6.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/06.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/7.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/07.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/8.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/08.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/9.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/09.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/Cashewy/10.jpg') }}"
+            <img src="{{ asset('frontend/salepage/Cashewy_ca/10.jpg') }}"
                 class="img-fluid" alt="CashewyDrink">
         </div>
         <div class="row justify-content-center mt-2">
-          <img src="{{ asset('frontend/salepage/Cashewy/11.jpg') }}"
+          <img src="{{ asset('frontend/salepage/Cashewy_ca/11.jpg') }}"
               class="img-fluid" alt="CashewyDrink">
       </div>
       <div class="row justify-content-center mt-2">
-        <a href="{{ $url }}/aiyarashop/product-detail/2/10/{{ $rs['data']->user_name }}" target="_blank" >
-          <img src="{{ asset('frontend/salepage/Cashewy/12.jpg') }}"
+
+          <img src="{{ asset('frontend/salepage/Cashewy_ca/12.jpg') }}"
             class="img-fluid" alt="CashewyDrink">
-        </a>
 
 
     </div>

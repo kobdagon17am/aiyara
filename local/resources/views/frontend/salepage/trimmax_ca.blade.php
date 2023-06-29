@@ -29,183 +29,84 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <img src="{{ asset('frontend/salepage/TrimMax/1.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/01.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/2.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/02.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/3.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/03.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/4.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/04.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-          <a href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/TrimMax/5.jpg') }}"
+
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/05.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
-          </a>
+
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/6.jpg') }}"
-                class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
-        </div>
-
-        <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/7.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/06.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/8.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/07.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-          <a href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/TrimMax/9.jpg') }}"
-                class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
-          </a>
-        </div>
-
-        <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/10.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/08.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/11.jpg') }}"
+
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/09.jpg') }}"
+                class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
+
+        </div>
+
+        <div class="row justify-content-center mt-2">
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/10.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/12.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/11.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
         </div>
 
         <div class="row justify-content-center mt-2">
-          <a href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" >
-            <img src="{{ asset('frontend/salepage/TrimMax/13.jpg') }}"
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/12.jpg') }}"
                 class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
-          </a>
         </div>
+
+        <div class="row justify-content-center mt-2">
+
+            <img src="{{ asset('frontend/salepage/TrimMax_ca/13.jpg') }}"
+                class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
+
+        </div>
+
+        <div class="row justify-content-center mt-2">
+
+          <img src="{{ asset('frontend/salepage/TrimMax_ca/14.jpg') }}"
+              class="img-fluid" alt="เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม">
+
+      </div>
 
     </div>
-
-    <div class="container bg_product mt-2">
-        <!-- Three columns of text below the carousel -->
-        <p class="text-center pt-5" style="margin-bottom: -3px;"><span style="color:#28a745;font-size:4rem;font-weight: 600;">รสชาติใหม่</span> <span
-                style="color:#3a3939;font-size:2.5rem;font-weight: 600;"> ที่คุณต้องลิ้มลอง</span>
-
-        </p>
-
-        <div class="row text-center mb-2">
-          <div class="col-6 col-sm-6 col-lg-4">
-            <a href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank" >
-              <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR03.png') }}" class="img-fluid"
-                  alt="Responsive image">
-            </a>
-              <h3 class="mb-0">ราคา 420 บาท</h3>
-              <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
-              <p><a class="btn btn-success"  href="{{ $url }}/aiyarashop/product-detail/2/22/{{ $rs['data']->user_name }}" target="_blank"  style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a></p>
-          </div><!-- /.col-lg-4 -->
-
-            <div class="col-6 col-sm-6 col-lg-4 mt-2">
-              <a href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" >
-                <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR_01.png') }}" class="img-fluid" alt="Responsive image">
-              </a>
-                <h3 class="mb-0">ราคา 450 บาท</h3>
-                <p class="mt-0" style="font-size: 18px">จำนวน 10 ซอง</p>
-
-                <a class="btn btn-success btn-md"  href="{{ $url }}/aiyarashop/product-detail/2/15/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ </a>
-            </div><!-- /.col-lg-4 -->
-            <div class="col-6 col-sm-6 col-lg-4">
-              <a href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" >
-                <img src="{{ asset('frontend/salepage/TrimMax/เครื่องดื่มเพื่อสุขภาพเกรดพรีเมี่ยม_final-CR02.png') }}" class="img-fluid"
-                    alt="Responsive image">
-              </a>
-                <h3 class="mb-0">ราคา 580 บาท</h3>
-                <p class="mt-0" style="font-size: 18px">จำนวน 15 ซอง</p>
-
-                <p>
-                  <a class="btn btn-success"  href="{{ $url }}/aiyarashop/product-detail/2/2/{{ $rs['data']->user_name }}" target="_blank" style="font-size: 23px"><i class="fa fa-shopping-basket"></i> สั่งซื้อ
-                  </a>
-                </p>
-            </div><!-- /.col-lg-4 -->
-
-
-        </div><!-- /.row -->
-
-        <div class="row justify-content-center mt-2">
-            <img src="{{ asset('frontend/salepage/TrimMax/tranfer.png') }}" width="500" class="img-fluid"
-                alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง">
-        </div>
-
-    </div>
-
-
-    {{-- <div class="container marketing" style="margin-top: 10px">
-             <hr class="featurette-divider">
-            <div class="row featurette">
-                <div class="col-md-7">
-                    <h2 class="featurette-heading"> First featurette heading. <span class="text-muted">It’ll blow your
-                            mind.</span></h2>
-                    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis
-                        euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus,
-                        tellus ac cursus commodo.</p>
-                </div>
-                <div class="col-md-5">
-                    <img src="http://website.aiyara.co.th/wp-content/uploads/2020/10/สื่อออนไลน์-โฟมล้างหน้าไอลดา-01-copy.jpg"
-                        alt="ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง" class="img-thumbnail">ปัจจัยสิ่งแวดล้อมและพฤติกรรมเสี่ยง-02.jpg
-                </div>
-            </div>
-
-           <hr class="featurette-divider">
-
-            <div class="row featurette">
-                <div class="col-md-7 order-md-2">
-                    <h2 class="featurette-heading">Oh yeah, it’s that good. <span class="text-muted">See for
-                            yourself.</span></h2>
-                    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis
-                        euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus,
-                        tellus ac cursus commodo.</p>
-                </div>
-                <div class="col-md-5 order-md-1">
-
-                    <img src="http://website.aiyara.co.th/wp-content/uploads/2020/10/06-S__13918235-โชค.jpg" alt="..."
-                        class="img-thumbnail">
-                </div>
-            </div>
-
-            <hr class="featurette-divider p-2">
-
-           <div class="row featurette">
-                <div class="col-md-7">
-                    <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-                    <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis
-                        euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus,
-                        tellus ac cursus commodo.</p>
-                </div>
-                <div class="col-md-5">
-                    <img src="http://website.aiyara.co.th/wp-content/uploads/2020/10/05-S__57335986-ก้อย.jpg" alt="..."
-                        class="img-thumbnail">
-                </div>
-            </div>
-
-         <hr class="featurette-divider">
-
-            <!-- /END THE FEATURETTES -->
-
-        </div><!-- /.container --> --}}
 
 
     <!-- FOOTER -->

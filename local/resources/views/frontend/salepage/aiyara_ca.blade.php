@@ -30,10 +30,10 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center">
-                <img src="{{ asset('frontend/salepage/Aiyara/01.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/01.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/02.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/02.jpg') }}" class="img-fluid" alt="">
             </div>
 
 
@@ -53,27 +53,27 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/04.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/04.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/05.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/05.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/06.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/06.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/07.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/07.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/08.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/08.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/09.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/09.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -92,19 +92,19 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/11.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/11.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/12.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/12.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/13.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/13.jpg') }}" class="img-fluid" alt="">
             </div>
 
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/14.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/14.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
@@ -124,56 +124,15 @@
 
         <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/16.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/17.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/17.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/19.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
 
-        {{-- <div class="col-lg-12 col-sm-12" style="background-color: #00bc72">
 
-            <div class="thumbnail pt-5 pb-5">
-                <div class="thumb">
-                    <div class="embed-responsive embed-responsive-4by3">
-                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/AVbMiA5K-dk"></iframe>
-
-                    </div>
-                </div>
-            </div>
-
-        </div> --}}
-
-        <div class="col-lg-12 col-sm-12">
-            <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/19.jpg') }}" class="img-fluid" alt="">
-            </div>
-
-            <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/20.jpg') }}" class="img-fluid" alt="">
-            </div>
-
-        </div>
-
-        {{-- <div class="col-lg-12 col-sm-12" style="background-color: #00bc72">
-
-            <div class="thumbnail pt-5 pb-5">
-                <div class="thumb">
-                    <div class="embed-responsive embed-responsive-4by3">
-                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/i31zYCoSOV8"></iframe>
-
-                    </div>
-                </div>
-            </div>
-
-        </div> --}}
-
-        <div class="col-lg-12 col-sm-12">
-            <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/22.jpg') }}" class="img-fluid" alt="">
-            </div>
-        </div>
 
 
         <div class="col-lg-12 col-sm-12" style="background-color: #00bc72">
@@ -191,15 +150,15 @@
 
             <div class="col-lg-12 col-sm-12">
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/24.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/24.jpg') }}" class="img-fluid" alt="">
             </div>
             <div class="row justify-content-center mt-2">
               <a href="{{ url('registermember/' .$rs['data']->user_name)}}">
-                <img src="{{ asset('frontend/salepage/Aiyara/25.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/25.jpg') }}" class="img-fluid" alt="">
               </a>
             </div>
             <div class="row justify-content-center mt-2">
-                <img src="{{ asset('frontend/salepage/Aiyara/26.jpg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('frontend/salepage/Aiyara_ca/26.jpg') }}" class="img-fluid" alt="">
             </div>
 
         </div>
