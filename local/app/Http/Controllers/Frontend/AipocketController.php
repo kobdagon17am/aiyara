@@ -503,6 +503,14 @@ class AipocketController extends Controller
       ->first();
 
 
+      $ai_stockist_check = DB::table('ai_stockist')
+      ->where('ai_stockist.transection_code', '=', $rs->cancel_code)
+      ->get();
+
+      if(count($ai_stockist_check)>=2){
+        return redirect('ai-stockist')->withError('มีการทำรายการซ้ำ กรุณาติดต่อเจ้าหน้าที่');
+      }
+
 
     if (empty($ai_stockist)) {
       return redirect('ai-stockist')->withError('ไม่พบข้อมูลเลขบิล กรุณาติดต่อเจ้าหน้าที่');
