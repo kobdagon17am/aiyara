@@ -476,7 +476,7 @@ return [
 'Highest_Qualifications'=> 'คุณวุฒิสูงสุด',
 'Reward_Bonus'=> 'สิทธิ Reward Bonus',
 'Count_qualifications'=> 'นับคุณวุฒิจาก',
-'Middle'=> 'คะแนนทีมกลางเดือนนี้(สำหรับทำคุณวุฒิ)',
+'Middle'=> 'คะแนนทีมเดือนนี้(สำหรับทำคุณวุฒิ)',
 'Remaining'=> 'คะแนนคงเหลือยกมา(สำหรับคำนวณTMB)',
 'Today_score'=> 'คะแนนวันนี้',
 'date_information'=> 'ข้อมูลวันที่',
