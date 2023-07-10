@@ -29,7 +29,7 @@ class SalepageController extends Controller
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
-      $business_location_id = $data->business_location_id;
+      $business_location_id = @$data->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
@@ -64,7 +64,7 @@ class SalepageController extends Controller
         ->first();
 
 
-      $business_location_id = $data->business_location_id;
+      $business_location_id = @$data->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
@@ -126,7 +126,7 @@ class SalepageController extends Controller
         ->first();
       }
 
-      $business_location_id = $data->business_location_id;
+      $business_location_id = @$data->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
@@ -166,7 +166,7 @@ class SalepageController extends Controller
       // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
       ->where('customers.user_name', '=', $user_name)
       ->first();
-      $business_location_id = $data->business_location_id;
+      $business_location_id = @$data->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
@@ -200,7 +200,7 @@ class SalepageController extends Controller
         ->where('db_salepage_setting.name_s4', '=', $user_name)
         ->first();
 
-        $business_location_id = $data->business_location_id;
+        $business_location_id = @$data->business_location_id;
         if (empty($business_location_id)) {
             $business_location_id = 1;
         }
@@ -242,7 +242,7 @@ class SalepageController extends Controller
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
-      $business_location_id = $data->business_location_id;
+      $business_location_id = @$data->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
@@ -274,7 +274,7 @@ class SalepageController extends Controller
         // ->leftjoin('customers_detail', 'customers_detail.user_name', '=', 'customers.user_name')
         ->where('db_salepage_setting.name_s5', '=', $user_name)
         ->first();
-        $business_location_id = $data->business_location_id;
+        $business_location_id = @$data->business_location_id;
         if (empty($business_location_id)) {
             $business_location_id = 1;
         }
@@ -313,7 +313,7 @@ class SalepageController extends Controller
       ->where('customers.user_name', '=', $user_name)
       ->first();
 
-      $business_location_id = $data->business_location_id;
+      $business_location_id = @$data->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
@@ -383,7 +383,7 @@ class SalepageController extends Controller
 
       ->first();
 
-      $business_location_id = $data->business_location_id;
+      $business_location_id = @$data->business_location_id;
       if (empty($business_location_id)) {
           $business_location_id = 1;
       }
@@ -417,7 +417,7 @@ class SalepageController extends Controller
         ->where('db_salepage_setting.name_s1', '=', $user_name)
         ->first();
 
-        $business_location_id = $data->business_location_id;
+        $business_location_id = @$data->business_location_id;
         if (empty($business_location_id)) {
             $business_location_id = 1;
         }
