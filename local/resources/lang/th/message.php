@@ -135,7 +135,7 @@ return [
 '60' => 'ข้อมูลแนะนำตรงในรอบ 60 วันแรก (Team Maker) ชั้นลูก',
 '60+' => 'คน + ชั้นหลาน',
 'person'=>'คน',
-'Personal recommendation points for this month' => 'คะแนนแนะนำตรงส่วนตัวเดือนนี้(สำหรับทำคุณวุฒิ)',
+'Personal recommendation points for this month' => 'คะแนนแนะนำตรงส่วนตัวเดือนนี้',
 
 
 // backend/course_event
@@ -476,7 +476,7 @@ return [
 'Highest_Qualifications'=> 'คุณวุฒิสูงสุด',
 'Reward_Bonus'=> 'สิทธิ Reward Bonus',
 'Count_qualifications'=> 'นับคุณวุฒิจาก',
-'Middle'=> 'คะแนนทีมกลางเดือนนี้',
+'Middle'=> 'คะแนนทีมกลางเดือนนี้(สำหรับทำคุณวุฒิ)',
 'Remaining'=> 'คะแนนคงเหลือยกมา(สำหรับคำนวณTMB)',
 'Today_score'=> 'คะแนนวันนี้',
 'date_information'=> 'ข้อมูลวันที่',
