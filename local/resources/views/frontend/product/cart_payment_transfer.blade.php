@@ -162,13 +162,13 @@
                                                         </label>
                                                     </div> --}}
 
-                                                    {{-- <div class="radio radio-inline">
+                                                    <div class="radio radio-inline">
                                                         <label>
                                                             <input type="radio" onchange="open_input(3)" id="ai_cash"
-                                                                name="pay_type" value="3" disabled>
+                                                                name="pay_type" value="3" >
                                                             <i class="helper"></i><b>Ai-Cash</b>
                                                         </label>
-                                                    </div> --}}
+                                                    </div>
 
                                                 </div>
                                             </div>
