@@ -197,17 +197,17 @@ class HistoryController extends Controller
           $business_location_id = 1;
         }
 
-        // $not_show = DB::table('db_orders')
-        // ->select('id')
-        // ->whereRaw('db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk = 8 ')
-        // ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
-        // ->get();
+        $not_show = DB::table('db_orders')
+        ->select('id')
+        ->whereRaw('db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk = 8 ')
+        ->where('db_orders.customers_id_fk', '=', Auth::guard('c_user')->user()->id)
+        ->get();
 
 
-        // $not_show_arr = array();
-        // foreach($not_show as $value){
-        //   $not_show_arr[] = $value->id;
-        // }
+        $not_show_arr = array();
+        foreach($not_show as $value){
+          $not_show_arr[] = $value->id;
+        }
 
         // dd($request->dt_order_type);
 
@@ -222,12 +222,13 @@ class HistoryController extends Controller
             ->leftjoin('dataset_order_status', 'dataset_order_status.orderstatus_id', '=', 'db_orders.order_status_id_fk')
             ->leftjoin('dataset_orders_type', 'dataset_orders_type.group_id', '=', 'db_orders.purchase_type_id_fk')
             ->leftjoin('dataset_pay_type', 'dataset_pay_type.id', '=', 'db_orders.pay_type_id_fk')
-            //->whereNotIn('db_orders.id',$not_show_arr)
+            ->whereNotIn('db_orders.id',$not_show_arr)
             ->where("db_orders.customers_id_fk","=",Auth::guard('c_user')->user()->id)
             ->where('db_orders.order_channel', '!=','VIP')
             ->where('db_orders.deleted_at', '=',null)
             ->where('dataset_order_status.lang_id', '=', $business_location_id)
             ->where('dataset_orders_type.lang_id', '=', $business_location_id)
+            // ->whereRaw('(db_orders.distribution_channel_id_fk NOT IN (3) and db_orders.order_status_id_fk NOT IN (8) )')
             ->whereRaw(("case WHEN '{$request->dt_order_type}' = '' THEN 1 else dataset_orders_type.group_id = '{$request->dt_order_type}' END"))
             ->whereRaw(("case WHEN '{$request->dt_pay_type}' = '' THEN 1 else dataset_pay_type.id = '{$request->dt_pay_type}' END"))
             ->whereRaw(("case WHEN '{$request->s_date}' != '' and '{$request->e_date}' = ''  THEN  date(db_orders.created_at) = '{$request->s_date}' else 1 END"))
@@ -235,7 +236,7 @@ class HistoryController extends Controller
             ->whereRaw(("case WHEN '{$request->s_date}' = '' and '{$request->e_date}' != ''  THEN  date(db_orders.created_at) = '{$request->e_date}' else 1 END"))
 
             //->orwhere("db_orders.customers_sent_id_fk","=",Auth::guard('c_user')->user()->id)
-            ->whereRaw('(db_orders.distribution_channel_id_fk != 3  and db_orders.order_status_id_fk NOT IN (8) )')
+
             ->orderby('db_orders.created_at', 'DESC');
 
         $sQuery = Datatables::of($orders);
