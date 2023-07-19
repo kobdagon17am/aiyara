@@ -417,7 +417,7 @@
                                                          placeholder="แขวง/ตำบล" value="{{ $address->district_name }}"
                                                          readonly="">
                                                      <input type="hidden" name="district"
-                                                         value="{{ $address->district_id_fk }}">
+                                                         value="{{ @$address->district_id_fk }}">
                                                  </div>
 
                                                  <div class="col-sm-4">
@@ -1136,9 +1136,9 @@
 
 
      <script type="text/javascript">
-         var address_provinces_id = '{{ $address->district_id_fk }}';
+         var address_provinces_id = '{{ @$address->district_id_fk }}';
 
-         check_shipping('{{ $address->district_id_fk }}', '');
+         check_shipping('{{ @$address->district_id_fk }}', '');
          var type = '{{ $bill['type'] }}';
 
          // var premium = document.getElementById('checkbox13').checked;
@@ -1165,7 +1165,7 @@
              //  }
 
              if (sent_address) {
-                 check_shipping('{{ $address->district_id_fk }}', '');
+                 check_shipping('{{ @$address->district_id_fk }}', '');
              }
              if (sent_address_card) {
                  var sent_address = document.getElementById('sent_address_check').checked;
