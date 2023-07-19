@@ -541,7 +541,7 @@ class Add_ai_cashController extends Controller
     $sTable = DB::select("
          SELECT db_add_ai_cash.*
          FROM
-         db_add_ai_cash where 1
+         db_add_ai_cash where type_create = 'admin'
          " . $w01 . "
          " . $w02 . "
          " . $w03 . "
