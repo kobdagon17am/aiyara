@@ -1136,9 +1136,9 @@
 
 
      <script type="text/javascript">
-         var address_provinces_id = '{{ @$province_id_fk }}';
-        
-         check_shipping('{{ @$province_id_fk }}', '');
+         var address_provinces_id = '{{ $address->district_id_fk }}';
+
+         check_shipping('{{ $address->district_id_fk }}', '');
          var type = '{{ $bill['type'] }}';
 
          // var premium = document.getElementById('checkbox13').checked;
@@ -1165,7 +1165,7 @@
              //  }
 
              if (sent_address) {
-                 check_shipping('{{ @$province_id_fk }}', '');
+                 check_shipping('{{ $address->district_id_fk }}', '');
              }
              if (sent_address_card) {
                  var sent_address = document.getElementById('sent_address_check').checked;
@@ -1186,7 +1186,7 @@
              var location_id = '{{ $bill['location_id'] }}';
              var type = '{{ $bill['type'] }}';
              var price = '{{ $bill['price'] }}';
-             
+
              if ( provinces_id == '') {
               var price_total_view = numberWithCommas(price);
               $('.price_total').html(price_total_view);

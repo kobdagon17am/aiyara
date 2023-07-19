@@ -1058,7 +1058,6 @@
         </div>
     </div>
 
-
 @endsection
 @section('js')
   <!-- jquery file upload js -->

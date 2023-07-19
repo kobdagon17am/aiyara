@@ -70,6 +70,8 @@ class CartPaymentController extends Controller
             ->where('customer_id', '=', $customer_id)
             ->first();
 
+
+
         if(@$province_data->province_id_fk){
           $data_shipping = ShippingCosController::fc_check_shipping_cos($business_location_id, $province_data->province_id_fk, $price);
           $shipping = $data_shipping['data']->shipping_cost;
