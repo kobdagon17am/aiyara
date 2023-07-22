@@ -700,7 +700,7 @@ class HistoryController extends Controller
           $business_location_id = 1;
       }
 
-      dd($code_order);
+      // dd($code_order);
 
         $order = DB::table('db_orders')
             ->select('db_orders.*', 'dataset_order_status.detail', 'dataset_order_status.css_class', 'dataset_orders_type.orders_type as type',
@@ -733,7 +733,7 @@ class HistoryController extends Controller
             ->where('db_orders.id', '=', $code_order)
             ->first();
 
-            dd($order);
+            // dd($order);
 
             $branch = DB::table('branchs')
             ->select('b_name')
