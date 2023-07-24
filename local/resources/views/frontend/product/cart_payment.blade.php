@@ -1181,7 +1181,7 @@
          }
 
          function check_shipping(provinces_id = '', type_sent = '') {
-
+           
 
              var location_id = '{{ $bill['location_id'] }}';
              var type = '{{ $bill['type'] }}';
@@ -1201,6 +1201,8 @@
                 return;
               }
 
+             }else{
+                document.getElementById("btn_pay").style.display = 'block';
              }
 
 
