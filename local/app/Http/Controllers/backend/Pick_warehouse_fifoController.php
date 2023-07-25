@@ -385,14 +385,18 @@ class Pick_warehouse_fifoController extends Controller
                   foreach($item_pros as $i){
                     $sum_re = DB::table('db_pay_requisition_002_item')->select('amt_remain')->whereIn('id',$arr_item)->where('product_id_fk',$i->product_id_fk)->sum('amt_remain');
                       $count = DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->count();
+                      // dd($count);
                       if($count>1){
-
+                       DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->update([
+                          'amt' => $sum_re,
+                        ]);
+                        $first = DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->first();
+                        DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->where('id',$first->id)->delete();
                       }else{
                         DB::table($temp_ppp_0022)->where('product_id_fk',$i->product_id_fk)->update([
                           'amt' => $sum_re,
                         ]);
                       }
-
                   }
                   // dd(DB::table($temp_ppp_0022)->get());
                 }
