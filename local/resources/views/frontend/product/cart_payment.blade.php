@@ -417,7 +417,7 @@
                                                          placeholder="แขวง/ตำบล" value="{{ $address->district_name }}"
                                                          readonly="">
                                                      <input type="hidden" name="district"
-                                                         value="{{ $address->district_id_fk }}">
+                                                         value="{{ @$address->district_id_fk }}">
                                                  </div>
 
                                                  <div class="col-sm-4">
@@ -1130,11 +1130,15 @@
     <script src="{{asset('frontend/assets/pages/form-masking/jquery.inputmask.js')}}"></script>
     <script src="{{asset('frontend/assets/pages/form-masking/autoNumeric.js')}}"></script>
     <script src="{{asset('frontend/assets/pages/form-masking/form-mask.js')}}"></script>
+    <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
+    <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
+
 
 
      <script type="text/javascript">
-         var address_provinces_id = '{{ @province_id_fk }}';
-         check_shipping('{{ @province_id_fk }}', '');
+         var address_provinces_id = '{{ @$address->district_id_fk }}';
+
+         check_shipping('{{ @$address->district_id_fk }}', '');
          var type = '{{ $bill['type'] }}';
 
          // var premium = document.getElementById('checkbox13').checked;
@@ -1161,7 +1165,7 @@
              //  }
 
              if (sent_address) {
-                 check_shipping({{ @province_id_fk }}, '');
+                 check_shipping('{{ @$address->district_id_fk }}', '');
              }
              if (sent_address_card) {
                  var sent_address = document.getElementById('sent_address_check').checked;
@@ -1188,6 +1192,8 @@
               $('.price_total').html(price_total_view);
               $('#price_total').val(price);
               document.getElementById('shipping').textContent = 0;
+              document.getElementById('shipping_detail').innerHTML = '';
+            document.getElementById("btn_pay").style.display = 'none';
 
 
               if(type_sent == 'sent_another_bill'){
@@ -1692,8 +1698,6 @@
 
 }
      </script>
-     <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
-     <script src="{{ asset('frontend/custom/cart_payment/sent_type.js') }}"></script>{{-- ส่งให้ตัวเอง หรือส่งให้คนอื่น --}}
 
 
      <script>

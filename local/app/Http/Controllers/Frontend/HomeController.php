@@ -51,7 +51,6 @@ class HomeController extends Controller
     ->first();
 
 
-
     return view('frontend/modal/modal_tree',['data'=>$data]);
   }
 
