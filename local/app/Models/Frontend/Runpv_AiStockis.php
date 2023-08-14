@@ -518,7 +518,8 @@ class Runpv_AiStockis extends Model
     try {
       DB::BeginTransaction();
       if ($pv<= 0 ) {
-        $resule = ['status' => 'fail', 'message' => 'pv = 0'];
+        // $resule = ['status' => 'fail', 'message' => 'pv = 0'];
+        $resule = ['status' => 'success', 'message' => 'pv = 0 ไม่บันทึกข้อมล'];
         return $resule;
       }
 

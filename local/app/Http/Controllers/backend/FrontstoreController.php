@@ -1064,7 +1064,10 @@ class FrontstoreController extends Controller
 
   public function update(Request $request, $id)
   {
-  //  dd($request->all());
+    // if($request->frontstore_id==73438){
+    //   dd($request->all());
+    // }
+  //
     // dd($request->transfer_money_datetime." : AAAA");
     // db_delivery
     if($request->pay_type_id_fk==''||$request->pay_type_id_fk==null){
@@ -1277,6 +1280,10 @@ class FrontstoreController extends Controller
         return redirect()->to(url("backend/frontstore"));
       } else if (isset($request->receipt_save_list)) {
 
+        // if($request->frontstore_id==73438){
+        //   dd('ok');
+        //   dd($request->all());
+        // }
 
         // dd($request->transfer_money_datetime." : BBBB");
 
@@ -1407,10 +1414,6 @@ class FrontstoreController extends Controller
                    ('" . request('customers_id_fk') . "', '', '" . $sRow->code_order . "', '$image_path', '$name', now(), now()) ");
           $lastInsertId_03 = DB::getPdo()->lastInsertId();
         }
-
-
-
-
 
         //id_order,id_admin,1 ติดต่อหน้าร้าน 2 ช่องทางการจำหน่ายอื่นๆ  dataset_distribution_channel>id  ,'customer หรือ admin'
         // dd("1233");
@@ -1655,8 +1658,6 @@ class FrontstoreController extends Controller
         // กลุ่มนี้ต้องรออนุมัติก่อน
         // dd('1274');
 
-
-
         $sRow->check_press_save = 2;
 
         $sRow->save();
@@ -1665,17 +1666,26 @@ class FrontstoreController extends Controller
         DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_02);");
         DB::select(" UPDATE `payment_slip` SET `order_id`=$sRow->id ,`code_order`='$sRow->code_order' WHERE (`id`=$lastInsertId_03);");
 
-
-
         DB::select(" UPDATE db_orders SET pv_total=0 WHERE pv_total is null; ");
 
         if (request('pay_type_id_fk') == 1 || request('pay_type_id_fk') == 8 || request('pay_type_id_fk') == 10 || request('pay_type_id_fk') == 11 || request('pay_type_id_fk') == 12 || request('pay_type_id_fk') == 3 || request('pay_type_id_fk') == 6 || request('pay_type_id_fk') == 9 || request('pay_type_id_fk') == 14) {
 
           DB::select(" UPDATE `db_orders` SET `approve_status`=1,`order_status_id_fk`=2 WHERE (`id`=" . $sRow->id . ") ");
         } else {
+
+
+        // if($request->frontstore_id==73438){
+        //   dd('ok4');
+        //   dd($request->all());
+        // }
           $rs = PvPayment::PvPayment_type_confirme($sRow->id, \Auth::user()->id, '1', 'admin');
           //DB::select(" UPDATE `db_orders` SET `approve_status`=2 WHERE (`id`=".$sRow->id.") ");
         }
+
+        // if($request->frontstore_id==73438){
+        //   dd('ok3');
+        //   dd($request->all());
+        // }
 
         if ($request->shipping_free == 1) {
           DB::select(" UPDATE `db_orders` SET `shipping_price`=0 WHERE (`id`=" . $sRow->id . ") ");
