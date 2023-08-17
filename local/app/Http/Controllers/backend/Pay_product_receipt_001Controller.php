@@ -1223,19 +1223,19 @@ class Pay_product_receipt_001Controller extends Controller
 
   $startDate = "";
   $app_status = "AND db_orders.approve_status = 2";
-  if(isset($req->startDate)){
-    $startDate = " AND DATE(db_orders.approve_date) >= '".$req->startDate."' " ;
-    $app_status = "";
-  }else{
-    $startDate = " AND DATE(db_orders.approve_date) >= '".date('Y-m').'-01'."' " ;
-  }
+  // if(isset($req->startDate)){
+  //   $startDate = " AND DATE(db_orders.approve_date) >= '".$req->startDate."' " ;
+  //   $app_status = "";
+  // }else{
+  //   $startDate = " AND DATE(db_orders.approve_date) >= '".date('Y-m').'-01'."' " ;
+  // }
 
   $endDate = "";
-  if(isset($req->endDate)){
-    $endDate = " AND DATE(db_orders.approve_date) <= '".$req->endDate."' " ;
-  }else{
-    $endDate = " AND DATE(db_orders.approve_date) <= '".date('Y-m').'-31'."' " ;
-  }
+  // if(isset($req->endDate)){
+  //   $endDate = " AND DATE(db_orders.approve_date) <= '".$req->endDate."' " ;
+  // }else{
+  //   $endDate = " AND DATE(db_orders.approve_date) <= '".date('Y-m').'-31'."' " ;
+  // }
   // sentto_branch_id
 
 if(count($sTable_re)!=0){

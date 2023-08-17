@@ -21,8 +21,6 @@ class PvPayment extends Model
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
-// dd('ok');
-            // dd($order_data);
 
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
@@ -177,6 +175,7 @@ class PvPayment extends Model
                     $code_order = $run_pament_code['code_order'];
                 }
 
+
                 $strtotime_date_now_30 = strtotime("+30 minutes");
                 $strtotime_date_now_23 = strtotime(date('Y-m-d 23:00:00'));
 
@@ -211,9 +210,6 @@ class PvPayment extends Model
                         $giveaway = DB::table('db_order_products_list_giveaway')
                             ->where('db_order_products_list_giveaway.product_list_id_fk', '=', $product_list_value->id)
                             ->get();
-
-
-
 
                         foreach ($giveaway as $giveaway_value) {
 
@@ -319,6 +315,7 @@ class PvPayment extends Model
                 $order_update->invoice_code_id_fk = $code_order;
                 $order_update->invoice_code = $order_data->code_order;
                 //check รายการสินค้าแถม
+
 
                 if ($type_id == 1) { //ทำคุณสมบติ
 
@@ -600,7 +597,10 @@ class PvPayment extends Model
                   }
 
                   $resule = Runpv_AiStockis::add_pv_aistockist($type_id, $pv,$customer_update->user_name,$customer_update->user_name,$order_data->code_order,$order_data->id);
-
+                  // if($order_id==73438){
+                  //   // dd($type_id);
+                  //   dd($resule);
+                  //  }
                   if ($resule['status'] == 'fail') {
 
                     $log =  ['customer_user_name' => $customer_update->user_name,
@@ -612,6 +612,9 @@ class PvPayment extends Model
                     ];
                     $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
                   }
+
+
+
 
                     $add_pv_aipocket = $customer_update->pv_aistockist + $pv;
                     $customer_update->pv_aistockist = $add_pv_aipocket;
@@ -703,10 +706,11 @@ class PvPayment extends Model
 
                 } else { //ไม่เข้าเงื่อนไขได้เลย
                     $resule = ['status' => 'fail', 'message' => 'ไม่มีเงื่อนไขที่ตรงตามความต้องการ'];
+
+
                     DB::rollback();
                     return $resule;
                 }
-
 
 
                 if ($resule['status'] == 'success') {

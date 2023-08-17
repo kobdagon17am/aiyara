@@ -44,7 +44,6 @@
 					$sheet->setCellValue('E'.($i+2), $sRow[$i]->remark);
 				}
 
-
 			}
 
 			$file = 'pm_broadcast.xlsx';
