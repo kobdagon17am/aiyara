@@ -301,7 +301,7 @@
                                     <select id="distribution_channel_id_fk"  class="form-control select2-templating " disabled="" >
                                           @if(@$sDistribution_channel3)
                                             @foreach(@$sDistribution_channel3 AS $r)
-                                         
+
                                                     <option value="{{$r->id}}"
                                                       {{ (@$r->id==@$sRow->distribution_channel_id_fk)?'selected':'' }}  >{{$r->txt_desc}}
                                                     </option>
@@ -2165,7 +2165,7 @@
                                                     </center>
                                                     <br>
 
-                                                     
+
 
                                                       <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
                                                         <div class="divTH" >
@@ -2206,7 +2206,7 @@
 
 
 
-                            
+
 <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
 
@@ -3657,7 +3657,7 @@
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-           
+
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);

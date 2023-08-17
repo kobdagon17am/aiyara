@@ -305,7 +305,7 @@ if(@$sRow->check_press_save==2){
                                     <select id="distribution_channel_id_fk"  class="form-control select2-templating " disabled="" >
                                           @if(@$sDistribution_channel3)
                                             @foreach(@$sDistribution_channel3 AS $r)
-                                         
+
                                                     <option value="{{$r->id}}"
                                                       {{ (@$r->id==@$sRow->distribution_channel_id_fk)?'selected':'' }}  >{{$r->txt_desc}}
                                                     </option>
@@ -1450,7 +1450,7 @@ if(@$sRow->check_press_save==2){
                       </div>
                       <div class="divTableCell">
 <!-- CalPriceAicash -->
-      
+
                       <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
 
                       </div>
@@ -1835,7 +1835,7 @@ if(@$sRow->check_press_save==2){
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> 
+        </button>
       </div>
 
       <div class="modal-body">
@@ -2169,7 +2169,7 @@ if(@$sRow->check_press_save==2){
                                                     </center>
                                                     <br>
 
-                                                     
+
 
                                                       <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
                                                         <div class="divTH" >
@@ -2210,7 +2210,7 @@ if(@$sRow->check_press_save==2){
 
 
 
-                            
+
 <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
 
@@ -3668,7 +3668,7 @@ if(@$sRow->check_press_save==2){
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-           
+
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);
@@ -5486,7 +5486,7 @@ $(document).ready(function() {
                        url: " {{ url('backend/ajaxSearchMemberAicash') }} ",
                        data: { _token: '{{csrf_token()}}',username_check:username_check,username_buy:username_buy},
                         success:function(data){
-                               
+
                                console.log(data);
                                // return false;
                                // $.each(data,function(key,value){
@@ -5520,7 +5520,7 @@ $(document).ready(function() {
 
 
 
-                });     
+                });
 
 // ไม่ได้ใช้แล้ว
               $(document).on('change', '#member_id_aicash_select', function(event) {

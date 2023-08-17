@@ -305,7 +305,7 @@ if(@$sRow->check_press_save==2){
                                     <select id="distribution_channel_id_fk"  class="form-control select2-templating " disabled="" >
                                           @if(@$sDistribution_channel3)
                                             @foreach(@$sDistribution_channel3 AS $r)
-                                         
+
                                                     <option value="{{$r->id}}"
                                                       {{ (@$r->id==@$sRow->distribution_channel_id_fk)?'selected':'' }}  >{{$r->txt_desc}}
                                                     </option>
@@ -1450,7 +1450,7 @@ if(@$sRow->check_press_save==2){
                       </div>
                       <div class="divTableCell">
 <!-- CalPriceAicash -->
-      
+
                       <input {{@$disAfterSave}} class="form-control input-airight f-ainumber-18-b input-aireadonly " id="aicash_price" name="aicash_price" value="{{number_format(@$sRow->aicash_price,2)}}" readonly="" >
 
                       </div>
@@ -1613,7 +1613,7 @@ if(@$sRow->check_press_save==2){
                                 // ประเภทโอน
                     if(@$sRow->pay_type_id_fk==1 || @$sRow->pay_type_id_fk==8 || @$sRow->pay_type_id_fk==10 || @$sRow->pay_type_id_fk==11 || @$sRow->pay_type_id_fk==12){
 
-                      // print_r($PaymentSlip); 
+                      // print_r($PaymentSlip);
 
                     ?>
 
@@ -1628,14 +1628,14 @@ if(@$sRow->check_press_save==2){
                            </button>
 
                           @ELSE
-                      
+
                            <button type="button" class="btn btn-primary btn-sm waves-effect font-size-16 class_btnSave " style="float: right;" disabled >
                            <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึกข้อมูลใบเสร็จ
                            </button>
 
                           @ENDIF
 
-                          
+
 
                     <?php }else{ ?>
 
@@ -1854,7 +1854,7 @@ if(@$sRow->check_press_save==2){
         <h5 class="modal-title" id="modalDeliveryTitle"><b><i class="bx bx-play"></i>ที่อยู่การจัดส่ง (กำหนดเอง) </b></h5>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button> 
+        </button>
       </div>
 
       <div class="modal-body">
@@ -2188,7 +2188,7 @@ if(@$sRow->check_press_save==2){
                                                     </center>
                                                     <br>
 
-                                                     
+
 
                                                       <div class="divTableRow div_account_bank_id " style="<?=@$div_account_bank_id?>">
                                                         <div class="divTH" >
@@ -2229,7 +2229,7 @@ if(@$sRow->check_press_save==2){
 
 
 
-                            
+
 <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
 
@@ -3687,7 +3687,7 @@ if(@$sRow->check_press_save==2){
                     ],
                     rowCallback: function(nRow, aData, dataIndex){
 
-           
+
 
                             var cuase_cannot_buy = aData['cuase_cannot_buy'];
                             // console.log(cuase_cannot_buy);
@@ -4357,7 +4357,7 @@ $(document).ready(function() {
                       }else{
                         $('.class_btnSave').prop('disabled',true);
                       }
-                      
+
                       // $('.class_btnSaveTransferType').removeAttr( "disabled" );
                       // $('.class_btnSaveTransferType').show();
 
@@ -5290,7 +5290,7 @@ $(document).ready(function() {
                               }
 
 
-                             
+
 
                                 $('.myloading').hide();
 
@@ -6031,12 +6031,12 @@ $(document).ready(function() {
 
               var cnt_slip =  "{{@$cnt_slip}}";
               // console.log(cnt_slip);
-             // กรณีเงินโอน 
+             // กรณีเงินโอน
               if(pay_type_id_fk==1 || pay_type_id_fk==8 || pay_type_id_fk==10 || pay_type_id_fk==11 || pay_type_id_fk==12){
                 if(cnt_slip>0){
                   $('.class_btnSave').removeAttr( "disabled" );
                 }else{
-                 
+
 
                    if($('#pay_with_other_bill').is(':checked')==true){
                      // alert("test");

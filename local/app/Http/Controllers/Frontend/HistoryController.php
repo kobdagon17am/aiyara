@@ -733,7 +733,7 @@ class HistoryController extends Controller
             ->where('db_orders.id', '=', $code_order)
             ->first();
 
-            // dd($order);
+            //  dd($order);
 
             $branch = DB::table('branchs')
             ->select('b_name')
