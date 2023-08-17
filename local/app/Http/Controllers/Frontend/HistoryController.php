@@ -279,6 +279,12 @@ class HistoryController extends Controller
 
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode('.$row->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$row->detail.' '.$name->b_name.'</b></button>';
                 } else {
+
+                  if($row->order_status_id_fk == 5 and !empty($row->tracking_no)){
+                    return '<span class="label label-inverse-success" ><b style="color:#000"> Success <b></span>';
+                  }
+
+
                   if($row->order_status_id_fk == 1 ){
                     if($row->note){
                       return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" data-toggle="modal" data-target="#large-Modal" onclick="upload_slip('.$row->id.',\''.$row->note.'\')" > <b style="color: #000">' . $row->detail . '</b></button>';
