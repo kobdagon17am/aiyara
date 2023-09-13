@@ -1143,7 +1143,7 @@ class FrontstoreController extends Controller
         DB::table('db_orders')->where('code_order',request('bill_transfer_other'))->update([
           'delivery_location' => 4,
           'delivery_location_frontend' => $delivery_location_frontend,
-          'bill_transfer_other' => request('bill_transfer_other'),
+          'bill_transfer_other' => $sRow->code_order,
           'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
