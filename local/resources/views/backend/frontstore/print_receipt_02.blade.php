@@ -137,8 +137,8 @@ $LIMIT_PAGE = $LIMIT_RANGE * ($amt_page-1) ;
 // Test
 // $amt_page = 1;
 
-// Start for 
-for ($j=1; $j <= $amt_page ; $j++) { 
+// Start for
+for ($j=1; $j <= $amt_page ; $j++) {
 
   if($j==1){
     $LIMIT = " LIMIT 0 ,$LIMIT_RANGE ";
@@ -150,7 +150,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
    // $LIMIT = " LIMIT 3 ";
 
 ?>
- 
+
 <?php
 
 
@@ -204,14 +204,14 @@ for ($j=1; $j <= $amt_page ; $j++) {
                  $Delivery_location = DB::select(" select id,txt_desc from dataset_delivery_location  ");
                  $CusAddrFrontstore = \App\Models\Backend\CusAddrFrontstore::where('frontstore_id_fk',$data[0])->get();
 
-                 $cus = DB::select(" 
+                 $cus = DB::select("
                     SELECT
                     customers.user_name,
                     customers.prefix_name,
                     customers.first_name,
                     customers.last_name
                     FROM
-                    db_orders 
+                    db_orders
                     Left Join customers ON db_orders.customers_id_fk = customers.id
                     where db_orders.id = ".$data[0]."
                       ");
@@ -387,7 +387,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
 
                      ?>
       </td>
-      
+
 
       <td style="vertical-align: top; font-size: 24px;font-weight: bold;" >
         <?php if(@$sRow->delivery_location==0){ ?>
@@ -403,7 +403,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
       </td>
       </tr>
     </table>
-    
+
 
 
     <table style="margin-left:10px !important;margin-top:44px !important;border-collapse: collapse;height: 150px !important;" >
@@ -432,7 +432,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
                     Left Join db_orders ON db_orders.id = db_order_products_list.frontstore_id_fk
                     Left Join customers_detail ON db_orders.customers_id_fk = customers_detail.customer_id
                     Left Join customers ON customers_detail.customer_id = customers.id
-             
+
                     WHERE
                     db_order_products_list.frontstore_id_fk =
                     ".$data[0]."  AND add_from=1
@@ -445,7 +445,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
     }else{
       $i = $LIMIT_PAGE + 1;
     }
-    
+
 
     foreach ($P as $key => $v) {
 
@@ -598,7 +598,7 @@ for ($j=1; $j <= $amt_page ; $j++) {
         <?php } ?>
 
 
-       
+
       </td>
       <td style="text-align: right;"></td>
       <td style="text-align: right;"></td>
@@ -610,11 +610,11 @@ for ($j=1; $j <= $amt_page ; $j++) {
 
 
         <?php if(@$sRow->delivery_location==0){ ?>
-          
+
            ชำระ : [ สด={{number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)}} ] พนักงาน : [ {{@$action_user_name}} ] การจัดส่ง : [ 4/0 ]
 
         <?php }else{ ?>
-           
+
            ชำระ : [ สด={{number_format(@$sFrontstoreDataTotal[0]->total+@$shipping_cost,2)}} ] พนักงาน : [ {{@$action_user_name}} ] การจัดส่ง : [ 4/{{$shipping_cost}} ]
         <?php } ?>
 
@@ -693,6 +693,6 @@ for ($j=1; $j <= $amt_page ; $j++) {
  <div style="float:right;margin-top: 10%;">  Page {{@$j}} </div>
 @ENDIF
 <?php
-// End for 
+// End for
 }
 ?>

@@ -264,13 +264,13 @@
                                   <div class="col-md-7">
 
                               @if($ChangePurchaseType==1)
-                                
+
                                          <!-- Gift Voucher -->
-                                      @if(!empty(@$sRow->purchase_type_id_fk) && @$sRow->purchase_type_id_fk==5)  
+                                      @if(!empty(@$sRow->purchase_type_id_fk) && @$sRow->purchase_type_id_fk==5)
                                            <input type="hidden" id="purchase_type_id_fk" name="purchase_type_id_fk" value="{{@$sRow->purchase_type_id_fk}}"  >
                                            <input type="text" class="form-control" value="{{@$PurchaseName}}"  disabled="" >
                                       @ELSE
-                                     
+
                                          <select id="purchase_type_id_fk" name="purchase_type_id_fk" class="form-control select2-templating "  >
                                           <option value="">Select</option>
                                           @if(@$sPurchase_type)
@@ -309,7 +309,7 @@
                                 @endif
 
                               @endif
-                             
+
 
                                   </div>
                                 </div>
@@ -335,7 +335,7 @@
                                 </select>
 
                         @else
-                             
+
                                   <select id="aistockist" name="aistockist" class="form-control select2-templating " disabled >
                                     <option value="">-</option>
                                     @if(@$aistockist)
@@ -348,7 +348,7 @@
                                   </select>
 
                          @endif
-           
+
 
                                   </div>
                                 </div>
@@ -479,20 +479,20 @@
 
                           </div>
  <div class="text-right">
-<?php 
+<?php
   // echo "วันที่สร้าง : ". $DATE_CREATED ;echo " / "; echo "วันที่เมื่อวานนี้ : ". $DATE_YESTERDAY ;echo " / "; echo "วันนี้ : ".$DATE_TODAY;
  ?>
-     </div>         
-           
+     </div>
+
            @if($ChangePurchaseType==1)
 
-                     @if(@$sRow->purchase_type_id_fk==5)  
+                     @if(@$sRow->purchase_type_id_fk==5)
                      @ELSE
                           <div class="col-md-11 text-right">
                             <br>
                             <button type="button" class="btn btn-primary btn-sm waves-effect font-size-14 btnSaveChangePurchaseType ">
                             <i class="bx bx-save font-size-16 align-middle mr-1"></i> บันทึก > แก้ไขข้อมูล
-                            </button> 
+                            </button>
                           </div>
                      @ENDIF
            @endif
@@ -1116,7 +1116,7 @@
                               $ds_y_03 = $ds_03[0];
                               $ds_03 = $ds_d_03.'/'.$ds_m_03.'/'.$ds_y_03.' '.(date('H:i',strtotime(@$sRow->transfer_money_datetime_03)));
                             }else{$ds_03='';} ?>วัน เวลา ที่โอน
-                              <input class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" /> 
+                              <input class="form-control transfer_money_datetime_03" autocomplete="off" value="{{$ds_03}}" style="width: 45%;margin-left: 5%;font-weight: bold;" placeholder="วัน เวลา ที่โอน" />
                               <input type="hidden" id="transfer_money_datetime_03" name="transfer_money_datetime_03" value="{{@$sRow->transfer_money_datetime_03}}"  />
                           </div>
 
@@ -2273,7 +2273,7 @@
         });
 
 
-// รับสินค้าด้วยตัวเอง 
+// รับสินค้าด้วยตัวเอง
        $(document).on('click', '#addr_00', function(event) {
               var v = $(this).val();
               console.log(v);
@@ -2302,12 +2302,12 @@
               $("#addr_05").prop("disabled", false);
         });
 // จัดส่งพร้อมบิลอื่น
-       $(document).on('click', '#addr_04', function(event) { 
+       $(document).on('click', '#addr_04', function(event) {
               var v = $(this).val();
               console.log(v);
               $("#addr_05").prop("disabled", true);
         });
-// ส่งแบบพิเศษ / Premium       
+// ส่งแบบพิเศษ / Premium
        $(document).on('click', '#addr_05', function(event) {
               var v = $(this).val();
               console.log(v);
@@ -4811,7 +4811,7 @@ $(document).ready(function() {
                                      $.ajax({
                                        type:'POST',
                                        url: " {{ url('backend/ajaxSaveChangePurchaseType') }} ",
-                                       data: { _token: '{{csrf_token()}}', 
+                                       data: { _token: '{{csrf_token()}}',
                                            orders_id_fk:orders_id_fk,
                                            purchase_type_id_fk:purchase_type_id_fk,
                                            aistockist:aistockist,
@@ -4822,7 +4822,7 @@ $(document).ready(function() {
                                                 setTimeout(function(){
                                                     $(".myloading").hide();
                                                     location.reload();
-                                                  }, 3000);  
+                                                  }, 3000);
                                           },
                                     });
                               }else{

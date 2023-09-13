@@ -259,11 +259,8 @@ class Register extends Model
                 'card_road'=>$card_road,
                 'card_zipcode'=>$card_zipcode,
                 'customer_id'=>$id];
+
                 DB::table('customers_address_card')->insert($customer_address_card);
-
-
-
-
                 $customer_code = [
                    'customers_id_fk'=>$id,
                    'c_code'=>$c_code];
