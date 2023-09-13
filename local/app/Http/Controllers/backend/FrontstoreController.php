@@ -1147,6 +1147,12 @@ class FrontstoreController extends Controller
           'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
+        $this_with_order = DB::table('db_orders')->select('id')->where('code_order',request('bill_transfer_other'))->first();
+        if($this_with_order){
+          $this->fncUpdateDeliveryAddress($this_with_order->id);
+          $this->fncUpdateDeliveryAddressDefault($this_with_order->id);
+        }
+
       } elseif ($delivery_location == 5) { //ส่งแบบพิเศษ/พรีเมี่ยม
         $delivery_location_frontend = 'shipping_special';
         $shipping_special = 1;
