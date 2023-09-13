@@ -1069,7 +1069,7 @@ class FrontstoreController extends Controller
     // }
   //
     // dd($request->transfer_money_datetime." : AAAA");
-    // db_delivery
+    // db_delivery delivery_location
     if($request->pay_type_id_fk==''||$request->pay_type_id_fk==null){
       return redirect()->back()->with('error','กรุณาเลือกวิธีการชำระเงินก่อน');
     }
@@ -1138,6 +1138,14 @@ class FrontstoreController extends Controller
         $delivery_location_frontend = 'sent_address_other';
       } elseif ($delivery_location == 4) { //จัดส่งพร้อมบิลอื่น
         $delivery_location_frontend = 'sent_another_bill';
+
+        // เช็คสำหรับโอนเงินค่าจัดส่งทีหลัง bill_transfer_other
+        DB::table('db_orders')->where('code_order',request('bill_transfer_other'))->update([
+          'delivery_location' => 4,
+          'delivery_location_frontend' => $delivery_location_frontend,
+          'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
       } elseif ($delivery_location == 5) { //ส่งแบบพิเศษ/พรีเมี่ยม
         $delivery_location_frontend = 'shipping_special';
         $shipping_special = 1;
