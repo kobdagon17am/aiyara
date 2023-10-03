@@ -736,97 +736,108 @@ $all_order = explode(',', $db_pick_pack_packing_code->receipt);
 
         <br>
         <table style="border-collapse: collapse;">
-            <tr>
-                <th colspan="2" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
-            </tr>
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label
-                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย
-                        ............................</label>
-                </th>
-                <th style="text-align: left;font-size: 18px;">
-                    ถุงใหญ่(ใบ) ...........................
-                    ถุงเล็ก(ใบ) ................................
-                </th>
-            </tr>
+          <tr>
+              <th colspan="2" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
+          </tr>
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย
+                      ............................</label>
+              </th>
+              <th style="text-align: left;font-size: 18px;">
+                  ถุงใหญ่(ใบ) ...........................
+                  ถุงเล็ก(ใบ) ................................
+              </th>
+          </tr>
 
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label
-                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;บันทึกจ่ายระบบโดย
-                        ....................................................</label>
-                </th>
-                <th style="text-align: left;font-size: 18px;">
-                    ขนาดลัง ...........................
-                    จำนวน/ลัง .....................................
-                </th>
-            </tr>
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;บันทึกจ่ายระบบโดย
+                      ....................................................</label>
+              </th>
+              <th style="text-align: left;font-size: 18px;">
+                  ขนาดลัง ...........................
+                  จำนวน/ลัง .....................................
+              </th>
+          </tr>
 
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
-                        &nbsp;รายการสินค้าถูกต้อง</label>
-                </th>
-                <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... ผู้ดำเนินการ
-                    .................................. </th>
-            </tr>
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
+                      &nbsp;รายการสินค้าถูกต้อง</label>
+              </th>
+              <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... เวลา
+                  ............................................. </th>
+          </tr>
 
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label
-                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;จำนวนสินค้าถูกต้อง</label>
-                </th>
-                <th style="text-align: left;font-size: 18px;"> </th>
-            </tr>
+          <tr>
+            <th style="text-align: left;font-size: 18px;">
+                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                    style="transform : scale(1.3);">
+                <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
+                    &nbsp;ชั่งน้ำหนักเรียบร้อย</label>
+            </th>
+            <th style="text-align: left;font-size: 18px;"> ผู้ดำเนินการ .............................................................................. </th>
+        </tr>
 
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label
-                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด</label>
-                </th>
-                <th style="text-align: left;font-size: 18px;"> </th>
-            </tr>
 
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label
-                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย</label>
-                </th>
-                <th style="text-align: left;font-size: 18px;"> </th>
-            </tr>
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label
-                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ผ่าน</label>
-                    &nbsp;&nbsp; <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                        style="transform : scale(1.3);">
-                    <label
-                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ไม่ผ่าน</label>
-                </th>
-                <th style="text-align: left;font-size: 18px;"></th>
-            </tr>
-            <tr>
-                <th style="text-align: left;font-size: 18px;">
-                    &nbsp; &nbsp; &nbsp; ผู้ตรวจสอบ ............................ เวลา ..........................
-                </th>
-                <th style="text-align: left;font-size: 18px;"> </th>
-            </tr>
-        </table>
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;จำนวนสินค้าถูกต้อง</label>
+              </th>
+              <th style="text-align: left;font-size: 18px;"> </th>
+          </tr>
+
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด</label>
+              </th>
+              <th style="text-align: left;font-size: 18px;"> </th>
+          </tr>
+
+          {{-- <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย</label>
+              </th>
+              <th style="text-align: left;font-size: 18px;"> </th>
+          </tr> --}}
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ผ่าน</label>
+                  &nbsp;&nbsp; <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);">
+                  <label
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ไม่ผ่าน</label>
+              </th>
+              <th style="text-align: left;font-size: 18px;"></th>
+          </tr>
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+                  &nbsp; &nbsp; &nbsp; ผู้ตรวจสอบ .................................................................
+              </th>
+              <th style="text-align: left;font-size: 18px;"> </th>
+          </tr>
+      </table>
 
         @if ($index < count($db_pick_pack_packing_data) - 1)
             <div class="page-break"></div>
