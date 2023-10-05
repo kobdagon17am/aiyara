@@ -527,7 +527,7 @@ class CartPaymentController extends Controller
 
                   $update_order = DB::table('db_orders')
                   ->where('id', $order_data->id)
-                  ->update(['pay_type_id_fk' => '12','credit_price'=>null,'aicash_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'true_money_price'=>null,'prompt_pay_price'=>null]);
+                  ->update(['credit_price'=>null,'aicash_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'true_money_price'=>null,'prompt_pay_price'=>null]);
 
                 }
                 DB::commit();
@@ -566,7 +566,7 @@ class CartPaymentController extends Controller
                 }else{
                   $update_order = DB::table('db_orders')
                   ->where('id', $order_data->id)
-                  ->update(['pay_type_id_fk' => '17','credit_price'=>null,'aicash_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'true_money_price'=>null,'transfer_price'=>null]);
+                  ->update(['credit_price'=>null,'aicash_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'true_money_price'=>null,'transfer_price'=>null]);
 
                 }
                 Cart::session($order_data->purchase_type_id_fk)->clear();
@@ -599,7 +599,7 @@ class CartPaymentController extends Controller
                 }else{
                   $update_order = DB::table('db_orders')
                   ->where('id', $order_data->id)
-                  ->update(['pay_type_id_fk' => '18','credit_price'=>null,'aicash_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'prompt_pay_price'=>null,'transfer_price'=>null]);
+                  ->update(['credit_price'=>null,'aicash_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'prompt_pay_price'=>null,'transfer_price'=>null]);
                 }
                 Cart::session($order_data->purchase_type_id_fk)->clear();
                 return redirect($data['url']);
@@ -664,7 +664,7 @@ class CartPaymentController extends Controller
                 }else{
                   $update_order = DB::table('db_orders')
                   ->where('id', $order_data->id)
-                  ->update(['pay_type_id_fk' => '14','credit_price'=>null,'true_money_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'prompt_pay_price'=>null,'transfer_price'=>null]);
+                  ->update(['credit_price'=>null,'true_money_price'=>null,'cash_price'=>null,'gift_voucher_price'=>null,'prompt_pay_price'=>null,'transfer_price'=>null]);
                 }
                 DB::commit();
                 Cart::session($order_data->purchase_type_id_fk)->clear();
@@ -686,7 +686,7 @@ class CartPaymentController extends Controller
                 }else{
                   $update_order = DB::table('db_orders')
                   ->where('id', $order_data->id)
-                  ->update(['pay_type_id_fk' => '4','credit_price'=>null,'true_money_price'=>null,'cash_price'=>null,'prompt_pay_price'=>null,'transfer_price'=>null]);
+                  ->update(['credit_price'=>null,'true_money_price'=>null,'cash_price'=>null,'prompt_pay_price'=>null,'transfer_price'=>null]);
                 }
                 DB::commit();
                 Cart::session($order_data->purchase_type_id_fk)->clear();
