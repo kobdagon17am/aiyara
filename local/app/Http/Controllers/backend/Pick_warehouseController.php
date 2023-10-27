@@ -1328,38 +1328,44 @@ GROUP BY db_order_products_list.product_id_fk
     public function warehouse_qr_0002_pack_scan(Request $reg){
 
       // Scan Qr-code
-  $sTable = DB::select("
+        $sTable = DB::select("
 
-  SELECT
-  db_pick_pack_packing.id,
-  db_pick_pack_packing.p_size,
-  db_pick_pack_packing.p_weight,
-  db_pick_pack_packing.p_amt_box,
-  db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-  db_pick_pack_packing.packing_code as packing_code,
-  db_delivery.user_scan,
-  db_delivery.status_scan_wh,
-  CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
-  CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
-  db_delivery.id as db_delivery_id,
-  db_delivery.packing_code as db_delivery_packing_code
-  FROM `db_pick_pack_packing`
-  LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-  LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
-  WHERE
-  db_pick_pack_packing.delivery_id_fk =".$reg->delivery_id."
-  AND
-  db_pick_pack_packing.packing_code_id_fk =".$reg->id."
+        SELECT
+        db_pick_pack_packing.id,
+        db_pick_pack_packing.p_size,
+        db_pick_pack_packing.p_weight,
+        db_pick_pack_packing.p_amt_box,
+        db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+        db_pick_pack_packing.packing_code as packing_code,
+        db_delivery.user_scan,
+        db_delivery.status_scan_wh,
+        CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
+        CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
+        db_delivery.id as db_delivery_id,
+        db_delivery.packing_code as db_delivery_packing_code
+        FROM `db_pick_pack_packing`
+        LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+        LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+        WHERE
+        db_pick_pack_packing.delivery_id_fk =".$reg->delivery_id."
+        AND
+        db_pick_pack_packing.packing_code_id_fk =".$reg->id."
 
-  AND db_delivery_packing.packing_code is not null
+        AND db_delivery_packing.packing_code is not null
 
-  ORDER BY db_pick_pack_packing.id
+        ORDER BY db_pick_pack_packing.id
 
-  ");
+        ");
 
         $r_delivery_id = $reg->delivery_id;
         // dd($sTable);
         $sQuery = \DataTables::of($sTable);
+
+        // if($reg->id==1267){
+        //   dd($r_delivery_id);
+        // }
+
+
         return $sQuery
         ->addColumn('column_001', function($row) use($r_delivery_id){
 
@@ -1373,10 +1379,9 @@ GROUP BY db_order_products_list.product_id_fk
           }
                            $sum_amt = 0 ;
                            $r_ch_t = '';
-
                           //  วุฒิเพิ่มมา
-                          $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$r_delivery_id."");
-                          $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+                          $d1 = DB::select(" SELECT packing_code from db_delivery WHERE id=".$r_delivery_id."");
+                          $d2 = DB::select(" SELECT receipt from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
                            $receipt = "";
                            foreach ($d2 as $key => $d) {
                             $receipt .= $d->receipt.',';
@@ -1398,12 +1403,11 @@ GROUP BY db_order_products_list.product_id_fk
                             $r_ch_t .= ($key+1).')  '.$value->code_order.'<br>';
                       }}
 
-        if(@$row->lists){
-          return '<b>'.$row->lists.'</b><br><b>ผู้รับ : '.$customer->recipient_name.$user_name .'</b><br><br>'.$r_ch_t;
-        }else{
-          return "-";
-        }
-
+            if(@$row->lists){
+              return '<b>'.$row->lists.'</b><br><b>ผู้รับ : '.$customer->recipient_name.$user_name .'</b><br><br>'.$r_ch_t;
+            }else{
+              return "-";
+            }
         })
         ->escapeColumns('column_001')
         ->addColumn('column_002', function($row)  use($r_delivery_id){
@@ -1424,8 +1428,8 @@ GROUP BY db_order_products_list.product_id_fk
                 $r_ch_t = '';
 
                   //  วุฒิเพิ่มมา
-                  $d1 = DB::select(" SELECT * from db_delivery WHERE id=".$r_delivery_id."");
-                  $d2 = DB::select(" SELECT * from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
+                  $d1 = DB::select(" SELECT packing_code from db_delivery WHERE id=".$r_delivery_id."");
+                  $d2 = DB::select(" SELECT receipt from db_delivery WHERE packing_code=".$d1[0]->packing_code."");
                    $receipt = "";
                    foreach ($d2 as $key => $d) {
                     $receipt .= $d->receipt.',';
@@ -1455,9 +1459,9 @@ GROUP BY db_order_products_list.product_id_fk
                   if($value->product_id_fk!=null){
 
                   // หา max time_pay ก่อน
-                   $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
+                  //  $r_ch01 = DB::select("SELECT time_pay FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." order by time_pay desc limit 1  ");
                 // Check ว่ามี status=2 ? (ค้างจ่าย)
-                   $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
+                  //  $r_ch02 = DB::select("SELECT * FROM `db_pay_requisition_002_pay_history` where product_id_fk in(".$value->product_id_fk.") AND  pick_pack_packing_code_id_fk=".$row->packing_code_id_fk." and time_pay=".$r_ch01[0]->time_pay." and status=2 ");
                   //  if(count($r_ch02)>0){
                   //     $r_ch_t = '(รายการนี้ค้างจ่ายในรอบนี้ สินค้าในคลังมีไม่เพียงพอ)';
                   //  }else{
@@ -1466,6 +1470,7 @@ GROUP BY db_order_products_list.product_id_fk
 
                   //  วุฒิเพิ่มมา
                    $db_pay_requisition_002 = DB::table('db_pay_requisition_002')
+                   ->select('pick_pack_requisition_code_id_fk')
                    ->where('product_id_fk',$value->product_id_fk)
                    ->where('pick_pack_requisition_code_id_fk',$row->packing_code_id_fk)
                    ->orderBy('time_pay', 'desc')
@@ -1492,8 +1497,6 @@ GROUP BY db_order_products_list.product_id_fk
                     }else{
                       $r_ch_t = '';
                     }
-
-
 
                   // $sum_amt += $value->amt_get;
                   $sum_amt += $db_pay_requisition_002_item->amt_get;
@@ -1568,14 +1571,14 @@ GROUP BY db_order_products_list.product_id_fk
         ->escapeColumns('column_002')
         ->addColumn('column_003', function($row) {
 
-          $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
+          $sBox = DB::table('db_pick_pack_boxsize')->select('id')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
             $pn = '<div class="divTable"><div class="divTableBody">';
             $pn .=
             '<div class="divTableRow">
             <div class="divTableCell" style="width:90px;text-align:center;font-weight:bold;"> ข้อมูลอื่นๆ </div>
             </div>
             ';
-            if($sBox->count()==0){
+            if(count($sBox)==0){
                 DB::table('db_pick_pack_boxsize')->insert([
                     'pick_pack_packing_id_fk' => @$row->id,
                     'created_at' => date('Y-m-d H:i:s'),
@@ -1588,7 +1591,7 @@ GROUP BY db_order_products_list.product_id_fk
               $readonly = "";
             }
 
-            $sBox = DB::table('db_pick_pack_boxsize')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
+            $sBox = DB::table('db_pick_pack_boxsize')->select('id','p_size','p_weight')->where('pick_pack_packing_id_fk',@$row->id)->where('deleted_at',null)->get();
             foreach($sBox as $key1 => $box){
               $pn .= '<div class="divTableRow row_0002" data-bill-type="warehouse_qr_0002">
               <div class="divTableCell" style="text-align:left;">
@@ -1621,33 +1624,31 @@ GROUP BY db_order_products_list.product_id_fk
 
   public function warehouse_qr_00022(Request $reg){
 
+        $sTable = DB::select("
 
+        SELECT
+        db_pick_pack_packing.id,
+        db_pick_pack_packing.p_size,
+        db_pick_pack_packing.p_weight,
+        db_pick_pack_packing.p_amt_box,
+        db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+        db_pick_pack_packing.packing_code as packing_code,
+        CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
+        CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
+        db_delivery.id as db_delivery_id,
+        db_delivery.packing_code as db_delivery_packing_code
+        FROM `db_pick_pack_packing`
+        LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+        LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
+        WHERE
 
-$sTable = DB::select("
+        db_pick_pack_packing.packing_code_id_fk =".$reg->id."
 
-SELECT
-db_pick_pack_packing.id,
-db_pick_pack_packing.p_size,
-db_pick_pack_packing.p_weight,
-db_pick_pack_packing.p_amt_box,
-db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-db_pick_pack_packing.packing_code as packing_code,
-CASE WHEN db_delivery_packing.packing_code is not null THEN concat(db_delivery_packing.packing_code,' (packing)') ELSE db_delivery.receipt END as lists ,
-CASE WHEN db_delivery_packing.packing_code is not null THEN 'packing' ELSE 'no_packing' END as remark,
-db_delivery.id as db_delivery_id,
-db_delivery.packing_code as db_delivery_packing_code
-FROM `db_pick_pack_packing`
-LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-LEFT JOIN db_delivery_packing on db_delivery_packing.delivery_id_fk=db_delivery.id
-WHERE
+        AND db_delivery_packing.packing_code is null
 
-db_pick_pack_packing.packing_code_id_fk =".$reg->id."
+        ORDER BY db_pick_pack_packing.id
 
-AND db_delivery_packing.packing_code is null
-
-ORDER BY db_pick_pack_packing.id
-
-");
+        ");
 
 
 

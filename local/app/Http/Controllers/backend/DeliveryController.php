@@ -910,7 +910,8 @@ class DeliveryController extends Controller
         //   $total = $total-$row->fee_amt;
         // }
 
-          return $total;
+          // return $total;
+          return @$row->total_price;
       })
     ->addColumn('receipt_new', function($row) {
       $data = $row->receipt;

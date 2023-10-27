@@ -644,11 +644,11 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
           </tr>
           <tr>
               <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
+                  {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);"> --}}
                   <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย
-                      ............................</label>
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">ตรวจสอบเอกสารใบเสร็จรับเงินโดย
+                      .....................................</label>
               </th>
               <th style="text-align: left;font-size: 18px;">
                   ถุงใหญ่(ใบ) ...........................
@@ -658,10 +658,10 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
           <tr>
               <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
+                  {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                      style="transform : scale(1.3);"> --}}
                   <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;บันทึกจ่ายระบบโดย
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">บันทึกเลข QR Code โดย
                       ....................................................</label>
               </th>
               <th style="text-align: left;font-size: 18px;">
