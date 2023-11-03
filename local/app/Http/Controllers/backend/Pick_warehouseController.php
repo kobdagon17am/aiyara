@@ -929,6 +929,9 @@ class Pick_warehouseController extends Controller
       $sTable = DB::table('db_pick_pack_packing_code')
       // ->join('db_orders','db_pick_pack_packing_code.receipt','=','db_orders.code_order')
       // ->select('db_pick_pack_packing_code.*','db_orders.id as order_id')
+
+      // " syntax to use near ')' at line 1 (SQL:  SELECT receipt FROM `db_delivery` where id in ()  )"
+
       ->where('db_pick_pack_packing_code.id',$reg->id)->get();
 
       $sQuery = \DataTables::of($sTable);

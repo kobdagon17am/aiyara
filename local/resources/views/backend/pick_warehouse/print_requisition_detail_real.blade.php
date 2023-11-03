@@ -290,20 +290,20 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
     $delivery = DB::select(
         " SELECT
-                                                                          db_delivery.set_addr_send_this,
-                                                                          db_delivery.recipient_name,
-                                                                          db_delivery.addr_send,
-                                                                          db_delivery.postcode,
-                                                                          db_delivery.mobile,
-                                                                          db_delivery.tel_home,
-                                                                          db_delivery.status_pack,
-                                                                          db_delivery.receipt,
-                                                                          db_delivery.id as delivery_id_fk,
-                                                                          db_delivery.orders_id_fk
-                                                                          FROM
-                                                                          db_delivery
-                                                                          WHERE
-                                                                          db_delivery.id = " .
+                                                                              db_delivery.set_addr_send_this,
+                                                                              db_delivery.recipient_name,
+                                                                              db_delivery.addr_send,
+                                                                              db_delivery.postcode,
+                                                                              db_delivery.mobile,
+                                                                              db_delivery.tel_home,
+                                                                              db_delivery.status_pack,
+                                                                              db_delivery.receipt,
+                                                                              db_delivery.id as delivery_id_fk,
+                                                                              db_delivery.orders_id_fk
+                                                                              FROM
+                                                                              db_delivery
+                                                                              WHERE
+                                                                              db_delivery.id = " .
             $pick_pack_packing_data->delivery_id_fk .
             ' AND set_addr_send_this=1 ',
     );
@@ -507,34 +507,34 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
                 $sTable = DB::select(
                     "
 
-                                                                                                                                                                                                                                                                                                SELECT
-                                                                                                                                                                                                                                                                                                db_pick_pack_packing.id,
-                                                                                                                                                                                                                                                                                                db_pick_pack_packing.p_size,
-                                                                                                                                                                                                                                                                                                db_pick_pack_packing.p_weight,
-                                                                                                                                                                                                                                                                                                db_pick_pack_packing.p_amt_box,
-                                                                                                                                                                                                                                                                                                db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
-                                                                                                                                                                                                                                                                                                db_pick_pack_packing.packing_code as packing_code,
-                                                                                                                                                                                                                                                                                                db_delivery.id as db_delivery_id,
-                                                                                                                                                                                                                                                                                                db_delivery.packing_code as db_delivery_packing_code
-                                                                                                                                                                                                                                                                                                FROM `db_pick_pack_packing`
-                                                                                                                                                                                                                                                                                                LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
-                                                                                                                                                                                                                                                                                                WHERE
-                                                                                                                                                                                                                                                                                                db_pick_pack_packing.packing_code_id_fk =" .
+                                                                                                                                                                                                                                                                                                                SELECT
+                                                                                                                                                                                                                                                                                                                db_pick_pack_packing.id,
+                                                                                                                                                                                                                                                                                                                db_pick_pack_packing.p_size,
+                                                                                                                                                                                                                                                                                                                db_pick_pack_packing.p_weight,
+                                                                                                                                                                                                                                                                                                                db_pick_pack_packing.p_amt_box,
+                                                                                                                                                                                                                                                                                                                db_pick_pack_packing.packing_code_id_fk as packing_code_id_fk,
+                                                                                                                                                                                                                                                                                                                db_pick_pack_packing.packing_code as packing_code,
+                                                                                                                                                                                                                                                                                                                db_delivery.id as db_delivery_id,
+                                                                                                                                                                                                                                                                                                                db_delivery.packing_code as db_delivery_packing_code
+                                                                                                                                                                                                                                                                                                                FROM `db_pick_pack_packing`
+                                                                                                                                                                                                                                                                                                                LEFT JOIN db_delivery on db_delivery.id=db_pick_pack_packing.delivery_id_fk
+                                                                                                                                                                                                                                                                                                                WHERE
+                                                                                                                                                                                                                                                                                                                db_pick_pack_packing.packing_code_id_fk =" .
                         $data[0] .
                         "
-                                                                                                                                                                                                                                                                                                AND db_pick_pack_packing.delivery_id_fk = " .
+                                                                                                                                                                                                                                                                                                                AND db_pick_pack_packing.delivery_id_fk = " .
                         $pick_pack_packing_data->delivery_id_fk .
                         "
-                                                                                                                                                                                                                                                                                                ORDER BY db_pick_pack_packing.id
-                                                                                                                                                                                                                                                                                                ",
+                                                                                                                                                                                                                                                                                                                ORDER BY db_pick_pack_packing.id
+                                                                                                                                                                                                                                                                                                                ",
                 );
 
                 foreach ($sTable as $key => $row) {
                     $pn = '<tr>
-                                                                                                                                                                                                                                    <td style="width:70%; "><b>รหัส : ชื่อสินค้า</b></td>
-                                                                                                                                                                                                                                    <td style="width:15%; text-align:left;"><b>จำนวน</b></td>
-                                                                                                                                                                                                                                    <td style="width:15%; text-align:left;"><b>หน่วย</b></td>
-                                                                                                                                                                                                                                    </tr>';
+                                                                                                                                                                                                                                                    <td style="width:70%; "><b>รหัส : ชื่อสินค้า</b></td>
+                                                                                                                                                                                                                                                    <td style="width:15%; text-align:left;"><b>จำนวน</b></td>
+                                                                                                                                                                                                                                                    <td style="width:15%; text-align:left;"><b>หน่วย</b></td>
+                                                                                                                                                                                                                                                    </tr>';
 
                     // $pn = '<div class="divTable"><div class="divTableBody">';
                     // $pn .= '<div class="divTableRow">
@@ -566,20 +566,20 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
                             if (!empty($value->product_id_fk)) {
                                 $pn .=
                                     "
-                                                                                                                                                                                                                                                <tr>
-                                                                                                                                                                                                                                                  <td>" .
+                                                                                                                                                                                                                                                                <tr>
+                                                                                                                                                                                                                                                                  <td>" .
                                     @$value->product_code .
                                     ' : ' .
                                     @$value->product_name .
                                     "</td>
-                                                                                                                                                                                                                                                  <td style='text-align:left;'>" .
+                                                                                                                                                                                                                                                                  <td style='text-align:left;'>" .
                                     @$value->amt_sum .
                                     "</td>
-                                                                                                                                                                                                                                                  <td style='text-align:left;'>" .
+                                                                                                                                                                                                                                                                  <td style='text-align:left;'>" .
                                     @$value->product_unit .
                                     "</td>
-                                                                                                                                                                                                                                                  </tr>
-                                                                                                                                                                                                                                              ";
+                                                                                                                                                                                                                                                                  </tr>
+                                                                                                                                                                                                                                                              ";
 
                                 // $pn .=
                                 //     '<div class="divTableRow">
@@ -616,12 +616,12 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
 
                         $pn .=
                             "  <tr>
-                                                                                                                                                                                                                                                  <td style='text-align:right;'><b>รวม</b></td>
-                                                                                                                                                                                                                                                  <td style='text-align:left;'>" .
+                                                                                                                                                                                                                                                                  <td style='text-align:right;'><b>รวม</b></td>
+                                                                                                                                                                                                                                                                  <td style='text-align:left;'>" .
                             @$sum_amt .
                             "</td>
-                                                                                                                                                                                                                                                  <td style='text-align:left;'></td>
-                                                                                                                                                                                                                                                  </tr>";
+                                                                                                                                                                                                                                                                  <td style='text-align:left;'></td>
+                                                                                                                                                                                                                                                                  </tr>";
 
                         echo $pn;
 
@@ -639,80 +639,91 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
         </div>
 
         <table style="border-collapse: collapse;">
-          <tr>
-              <th colspan="2" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
-          </tr>
-          <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+            <tr>
+                <th colspan="2" style="text-align: left;font-size: 18px;"><b><u>ส่วนงานคลัง</u></b></th>
+            </tr>
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+                    {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                       style="transform : scale(1.3);"> --}}
-                  <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">ตรวจสอบเอกสารใบเสร็จรับเงินโดย
-                      .....................................</label>
-              </th>
-              <th style="text-align: left;font-size: 18px;">
-                  ถุงใหญ่(ใบ) ...........................
-                  ถุงเล็ก(ใบ) ................................
-              </th>
-          </tr>
+                    <label
+                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">ตรวจสอบเอกสารใบเสร็จรับเงินโดย
+                        .....................................</label>
+                </th>
+                <th style="text-align: left;font-size: 18px;">
+                    ถุงใหญ่(ใบ) ...........................
+                    ถุงเล็ก(ใบ) ................................
+                </th>
+            </tr>
 
-          <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+                    {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                       style="transform : scale(1.3);"> --}}
-                  <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">บันทึกเลข QR Code โดย
-                      ....................................................</label>
-              </th>
-              <th style="text-align: left;font-size: 18px;">
-                  ขนาดลัง ...........................
-                  จำนวน/ลัง .....................................
-              </th>
-          </tr>
+                    <label
+                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">บันทึกเลข
+                        QR Code โดย
+                        ....................................................</label>
+                </th>
+                <th style="text-align: left;font-size: 18px;">
+                    ขนาดลัง ...........................
+                    จำนวน/ลัง .....................................
+                </th>
+            </tr>
 
-          <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
-                  <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
-                      &nbsp;รายการสินค้าถูกต้อง</label>
-              </th>
-              <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... เวลา
-                  ............................................. </th>
-          </tr>
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                        style="transform : scale(1.3);">
+                    <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
+                        &nbsp;รายการสินค้าถูกต้อง</label>
+                </th>
+                <th style="text-align: left;font-size: 18px;"> น้ำหนัก(Kg.) ...................... เวลา
+                    ............................................. </th>
+            </tr>
 
-          <tr>
-            <th style="text-align: left;font-size: 18px;">
-                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+                    {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                     style="transform : scale(1.3);">
                 <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
-                    &nbsp;ชั่งน้ำหนักเรียบร้อย</label>
-            </th>
-            <th style="text-align: left;font-size: 18px;"> ผู้ดำเนินการ .............................................................................. </th>
-        </tr>
+                    &nbsp;ชั่งน้ำหนักเรียบร้อย</label> --}}
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                        style="transform : scale(1.3);">
+                    <label
+                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;จำนวนสินค้าถูกต้อง</label>
+                </th>
+                <th style="text-align: left;font-size: 18px;"> ผู้จัดสินค้า
+                    ................................................................................. </th>
+            </tr>
 
 
-          <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
-                  <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;จำนวนสินค้าถูกต้อง</label>
-              </th>
-              <th style="text-align: left;font-size: 18px;"> </th>
-          </tr>
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                        style="transform : scale(1.3);">
+                    <label
+                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด</label>
+                </th>
+                <th style="text-align: left;font-size: 18px;"> ผู้ตัดจ่ายสินค้าในระบบ
+                    ............................................................. </th>
+            </tr>
 
-          <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
-                  <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด</label>
-              </th>
-              <th style="text-align: left;font-size: 18px;"> </th>
-          </tr>
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                        style="transform : scale(1.3);">
+                    <label
+                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ผ่าน</label>
+                    &nbsp;&nbsp; <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                        style="transform : scale(1.3);">
+                    <label
+                        style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ไม่ผ่าน</label>
+                </th>
+                <th style="text-align: left;font-size: 18px;"> </th>
+            </tr>
 
-          {{-- <tr>
+            {{-- <tr>
               <th style="text-align: left;font-size: 18px;">
                   <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                       style="transform : scale(1.3);">
@@ -721,26 +732,19 @@ $db_pick_pack_packing_data = DB::table('db_pick_pack_packing')
               </th>
               <th style="text-align: left;font-size: 18px;"> </th>
           </tr> --}}
-          <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
-                  <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ผ่าน</label>
-                  &nbsp;&nbsp; <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
-                  <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ไม่ผ่าน</label>
-              </th>
-              <th style="text-align: left;font-size: 18px;"></th>
-          </tr>
-          <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  &nbsp; &nbsp; &nbsp; ผู้ตรวจสอบ .................................................................
-              </th>
-              <th style="text-align: left;font-size: 18px;"> </th>
-          </tr>
-      </table>
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+
+                </th>
+                <th style="text-align: left;font-size: 18px;"></th>
+            </tr>
+            <tr>
+                <th style="text-align: left;font-size: 18px;">
+                    &nbsp; &nbsp; &nbsp; ผู้ตรวจสอบ .................................................................
+                </th>
+                <th style="text-align: left;font-size: 18px;"> </th>
+            </tr>
+        </table>
 
 
         @if ($index < count($db_pick_pack_packing_data) - 1)

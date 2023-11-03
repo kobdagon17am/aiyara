@@ -718,11 +718,11 @@ if (@$delivery[0]->status_pack == 1) {
       </tr>
       <tr>
           <th style="text-align: left;font-size: 18px;">
-              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                  style="transform : scale(1.3);">
+              {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                style="transform : scale(1.3);"> --}}
               <label
-                  style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย
-                  ............................</label>
+                  style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">ตรวจสอบเอกสารใบเสร็จรับเงินโดย
+                  .....................................</label>
           </th>
           <th style="text-align: left;font-size: 18px;">
               ถุงใหญ่(ใบ) ...........................
@@ -732,10 +732,11 @@ if (@$delivery[0]->status_pack == 1) {
 
       <tr>
           <th style="text-align: left;font-size: 18px;">
-              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                  style="transform : scale(1.3);">
+              {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                style="transform : scale(1.3);"> --}}
               <label
-                  style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;บันทึกจ่ายระบบโดย
+                  style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">บันทึกเลข
+                  QR Code โดย
                   ....................................................</label>
           </th>
           <th style="text-align: left;font-size: 18px;">
@@ -756,25 +757,20 @@ if (@$delivery[0]->status_pack == 1) {
       </tr>
 
       <tr>
-        <th style="text-align: left;font-size: 18px;">
-            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                style="transform : scale(1.3);">
-            <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
-                &nbsp;ชั่งน้ำหนักเรียบร้อย</label>
-        </th>
-        <th style="text-align: left;font-size: 18px;"> ผู้ดำเนินการ .............................................................................. </th>
-    </tr>
-
-
-      <tr>
           <th style="text-align: left;font-size: 18px;">
+              {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+              style="transform : scale(1.3);">
+          <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
+              &nbsp;ชั่งน้ำหนักเรียบร้อย</label> --}}
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                   style="transform : scale(1.3);">
               <label
                   style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;จำนวนสินค้าถูกต้อง</label>
           </th>
-          <th style="text-align: left;font-size: 18px;"> </th>
+          <th style="text-align: left;font-size: 18px;"> ผู้จัดสินค้า
+              ................................................................................. </th>
       </tr>
+
 
       <tr>
           <th style="text-align: left;font-size: 18px;">
@@ -783,18 +779,10 @@ if (@$delivery[0]->status_pack == 1) {
               <label
                   style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด</label>
           </th>
-          <th style="text-align: left;font-size: 18px;"> </th>
+          <th style="text-align: left;font-size: 18px;"> ผู้ตัดจ่ายสินค้าในระบบ
+              ............................................................. </th>
       </tr>
 
-      {{-- <tr>
-          <th style="text-align: left;font-size: 18px;">
-              <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                  style="transform : scale(1.3);">
-              <label
-                  style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย</label>
-          </th>
-          <th style="text-align: left;font-size: 18px;"> </th>
-      </tr> --}}
       <tr>
           <th style="text-align: left;font-size: 18px;">
               <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
@@ -805,6 +793,22 @@ if (@$delivery[0]->status_pack == 1) {
                   style="transform : scale(1.3);">
               <label
                   style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ไม่ผ่าน</label>
+          </th>
+          <th style="text-align: left;font-size: 18px;"> </th>
+      </tr>
+
+      {{-- <tr>
+        <th style="text-align: left;font-size: 18px;">
+            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                style="transform : scale(1.3);">
+            <label
+                style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย</label>
+        </th>
+        <th style="text-align: left;font-size: 18px;"> </th>
+    </tr> --}}
+      <tr>
+          <th style="text-align: left;font-size: 18px;">
+
           </th>
           <th style="text-align: left;font-size: 18px;"></th>
       </tr>

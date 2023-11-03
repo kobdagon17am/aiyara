@@ -741,11 +741,11 @@ $all_order = explode(',', $db_pick_pack_packing_code->receipt);
           </tr>
           <tr>
               <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
+                  {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                    style="transform : scale(1.3);"> --}}
                   <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ตรวจสอบเอกสารใบเสร็จรับเงินโดย
-                      ............................</label>
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">ตรวจสอบเอกสารใบเสร็จรับเงินโดย
+                      .....................................</label>
               </th>
               <th style="text-align: left;font-size: 18px;">
                   ถุงใหญ่(ใบ) ...........................
@@ -755,10 +755,11 @@ $all_order = explode(',', $db_pick_pack_packing_code->receipt);
 
           <tr>
               <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
+                  {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                    style="transform : scale(1.3);"> --}}
                   <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;บันทึกจ่ายระบบโดย
+                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">บันทึกเลข
+                      QR Code โดย
                       ....................................................</label>
               </th>
               <th style="text-align: left;font-size: 18px;">
@@ -779,25 +780,20 @@ $all_order = explode(',', $db_pick_pack_packing_code->receipt);
           </tr>
 
           <tr>
-            <th style="text-align: left;font-size: 18px;">
-                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                    style="transform : scale(1.3);">
-                <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
-                    &nbsp;ชั่งน้ำหนักเรียบร้อย</label>
-            </th>
-            <th style="text-align: left;font-size: 18px;"> ผู้ดำเนินการ .............................................................................. </th>
-        </tr>
-
-
-          <tr>
               <th style="text-align: left;font-size: 18px;">
+                  {{-- <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                  style="transform : scale(1.3);">
+              <label style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">
+                  &nbsp;ชั่งน้ำหนักเรียบร้อย</label> --}}
                   <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
                       style="transform : scale(1.3);">
                   <label
                       style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;จำนวนสินค้าถูกต้อง</label>
               </th>
-              <th style="text-align: left;font-size: 18px;"> </th>
+              <th style="text-align: left;font-size: 18px;"> ผู้จัดสินค้า
+                  ................................................................................. </th>
           </tr>
+
 
           <tr>
               <th style="text-align: left;font-size: 18px;">
@@ -806,18 +802,10 @@ $all_order = explode(',', $db_pick_pack_packing_code->receipt);
                   <label
                       style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;สภาพสินค้าไม่มีรอยบุบหรือฉีกขาด</label>
               </th>
-              <th style="text-align: left;font-size: 18px;"> </th>
+              <th style="text-align: left;font-size: 18px;"> ผู้ตัดจ่ายสินค้าในระบบ
+                  ............................................................. </th>
           </tr>
 
-          {{-- <tr>
-              <th style="text-align: left;font-size: 18px;">
-                  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
-                      style="transform : scale(1.3);">
-                  <label
-                      style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย</label>
-              </th>
-              <th style="text-align: left;font-size: 18px;"> </th>
-          </tr> --}}
           <tr>
               <th style="text-align: left;font-size: 18px;">
                   <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
@@ -829,6 +817,22 @@ $all_order = explode(',', $db_pick_pack_packing_code->receipt);
                   <label
                       style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ไม่ผ่าน</label>
               </th>
+              <th style="text-align: left;font-size: 18px;"> </th>
+          </tr>
+
+          {{-- <tr>
+            <th style="text-align: left;font-size: 18px;">
+                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"
+                    style="transform : scale(1.3);">
+                <label
+                    style="position: relative; left: -20px; display: inline-block; vertical-align: middle;">&nbsp;ชั่งน้ำหนักสินค้าเรียบร้อย</label>
+            </th>
+            <th style="text-align: left;font-size: 18px;"> </th>
+        </tr> --}}
+          <tr>
+              <th style="text-align: left;font-size: 18px;">
+
+              </th>
               <th style="text-align: left;font-size: 18px;"></th>
           </tr>
           <tr>
@@ -838,6 +842,7 @@ $all_order = explode(',', $db_pick_pack_packing_code->receipt);
               <th style="text-align: left;font-size: 18px;"> </th>
           </tr>
       </table>
+
 
         @if ($index < count($db_pick_pack_packing_data) - 1)
             <div class="page-break"></div>
