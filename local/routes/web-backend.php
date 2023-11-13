@@ -449,6 +449,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::post('packing_list/datatable', 'Pick_packPackingCodeController@packing_list')->name('packing_list.datatable');
     Route::post('packing_list_for_fifo/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo')->name('packing_list_for_fifo.datatable');
+    Route::post('pay_requisition_001_datatable_return', 'Pick_packPackingCodeController@pay_requisition_001_datatable_return');
     Route::post('packing_list_for_fifo/datatable_report', 'Pick_packPackingCodeController@packing_list_for_fifo_report')->name('packing_list_for_fifo.datatable_report');
     Route::post('packing_list_for_fifo_02/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo_02')->name('packing_list_for_fifo_02.datatable');
 
@@ -621,6 +622,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('frontstore/get_order_history_status', 'FrontstoreController@getOrderHistoryStatus')->name('frontstore.get_order_history_status');
     Route::resource('frontstore', 'FrontstoreController');
+    Route::post('frontstore_save_delivery_location', 'FrontstoreController@frontstore_save_delivery_location');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
     Route::get('frontstore/viewdata/{id}', 'FrontstoreController@viewdata');
@@ -821,6 +823,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 // End รับสินค้าเข้าจากการโอนระหว่างสาขา
 
     Route::resource('general_receive', 'General_receiveController');
+    Route::get('general_receive_add_more', 'General_receiveController@general_receive_add_more');
+    Route::post('general_receive_store_more', 'General_receiveController@general_receive_store_more');
+
     Route::post('general_receive/datatable', 'General_receiveController@Datatable')->name('general_receive.datatable');
 
     Route::resource('check_stock', 'Check_stockController');

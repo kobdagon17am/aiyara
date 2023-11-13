@@ -27,7 +27,7 @@ class PvPayment extends Model
         $GiftvoucherCus = new GiftvoucherCus;
         $customer_update_ai_cash = Customer::find($order_data->member_id_aicash);
 
-        // dd($movement_ai_cash);
+        // dd($movement_ai_cash); approve_date
 
         if (empty($order_data)) {
             $resule = ['status' => 'fail', 'message' => 'ไม่มีบิลนี้อยู่ในระบบ'];
@@ -191,7 +191,10 @@ class PvPayment extends Model
                 $order_update->order_status_id_fk = $orderstatus_id;
                 $order_update->cancel_expiry_date = $cancel_expiry_date;
                 $order_update->approve_status = 2;
-                $order_update->approve_date = date('Y-m-d H:i:s');
+
+                if($order_update->approve_date=='' || $order_update->approve_date==null){
+                  $order_update->approve_date = date('Y-m-d H:i:s');
+                }
 
                 $product_list = DB::table('db_order_products_list')
                     ->where('frontstore_id_fk', '=', $order_id)
@@ -327,8 +330,10 @@ class PvPayment extends Model
 
                     $order_update->pv_old = $customer_update->pv;
                     $order_update->pv_banlance = $add_pv;
-                    $order_update->approve_date = date('Y-m-d H:i:s');
 
+                if($order_update->approve_date=='' || $order_update->approve_date==null){
+                    $order_update->approve_date = date('Y-m-d H:i:s');
+                }
                     // dd($customer_update->user_name);
                     // dd($pv);
                     if($order_update->status_run_pv == 'not_run_pv' || $order_update->status_run_pv == 'cancel' ){
@@ -364,7 +369,10 @@ class PvPayment extends Model
                     $order_update->pv_mt_old = $customer_update->pv_mt;
                     $order_update->active_mt_old_date = $active_mt_old_date;
                     $order_update->status_pv_mt_old = $status_pv_mt_old;
+
+                if($order_update->approve_date=='' || $order_update->approve_date==null){
                     $order_update->approve_date = date('Y-m-d H:i:s');
+                }
 
                     $strtime_user = strtotime($customer_update->pv_mt_active);
                     $strtime = strtotime(date("Y-m-d"));
@@ -829,7 +837,10 @@ class PvPayment extends Model
             $order_update->approver = $admin_id;
             $order_update->order_status_id_fk = $orderstatus_id;
             $order_update->approve_status = 2;
+
+            if($order_update->approve_date=='' || $order_update->approve_date==null){
             $order_update->approve_date = date('Y-m-d H:i:s');
+            }
             $customer_update->save();
             $order_update->save();
 

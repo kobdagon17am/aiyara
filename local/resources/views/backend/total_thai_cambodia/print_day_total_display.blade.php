@@ -228,11 +228,11 @@ set_time_limit(9999999);
         <tr>
             <th style="font-size: 18px;">
 
-            @if($select_status == 1)
-            รายงานการขาย
-            @elseif($select_status == 2)
-            รายงานการขาย <span style="color:red;">ที่ยกเลิก</span>
-            @endif
+                @if ($select_status == 1)
+                    รายงานการขาย
+                @elseif($select_status == 2)
+                    รายงานการขาย <span style="color:red;">ที่ยกเลิก</span>
+                @endif
 
                 <br>
                 <?php
@@ -371,6 +371,8 @@ set_time_limit(9999999);
                                         db_orders.true_money_price,
                                         db_orders.prompt_pay_price,
                                         db_orders.account_bank_name_customer,
+                                        db_orders.total_price,
+
 
                                         customers.first_name as action_first_name,
                                         customers.last_name as action_last_name,
@@ -510,6 +512,7 @@ set_time_limit(9999999);
                 $day_curr = '';
 
                 foreach ($sTable as $key => $order) {
+
                     $day_curr = $order->approve_date;
                     if ($day_old == '') {
                         $day_old = $order->approve_date;
@@ -688,6 +691,14 @@ set_time_limit(9999999);
                             $arr_data[$code_order] = $code_order;
                         }
                     }
+
+                    // ทดสอบหาผิดพลาด
+                    // $all_price_test = $order->transfer_price+$order->gift_voucher_price+$order->prompt_pay_price+$order->true_money_price+$order->sum_credit_price+$order->aicash_price+$order->cash_pay;
+
+                    // if($order->total_price != $all_price_test){
+                    //   echo '*** '.$order->code_order.' ('.($total_date_sum_all + $total_date_tax).'/'.$all_price_test.')';
+                    // }
+
                     // <td style="text-align: right; border-bottom: 1px solid #000; ">'.number_format($total_date_aicash_price,2,".",",").'</td>
                     if (count($arr_date) > 0) {
                         if (!isset($arr_date[$approve_date])) {

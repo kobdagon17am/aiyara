@@ -28,10 +28,14 @@
                   </div>
 
                   <div class="col-4 text-right class_btn_add " >
-                    <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_receive.create') }}">
-                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>ADD
+                    {{-- <a class="btn btn-info btn-sm mt-1 " href="{{ route('backend.general_receive.create') }}">
+                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>รับสินค้า
+                    </a> --}}
+                    <a class="btn btn-info btn-sm mt-1 " href="{{ url('backend/general_receive_add_more') }}">
+                      <i class="bx bx-plus font-size-20 align-middle mr-1"></i>รับสินค้า
                     </a>
                   </div>
+
 
                 </div>
 
