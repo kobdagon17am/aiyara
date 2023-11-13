@@ -151,7 +151,7 @@ class HistoryController extends Controller
         if ($type == 'refresh_time') {
 
             $type_qr_modal = 'update';
-            $random = Random_code::random_code('8');
+            $random = 'QR'.Random_code::random_code('6');
             $qr = $id . '' . $random;
 
             $endata = date('Y-m-d H:i:s', strtotime("+30 minutes"));
@@ -171,7 +171,7 @@ class HistoryController extends Controller
                 }
             } else {
                 $type_qr_modal = 'update';
-                $random = Random_code::random_code('8');
+                $random = 'QR'.Random_code::random_code('6');
                 $qr = $id . '' . $random;
 
                 $endata = date('Y-m-d H:i:s', strtotime("+30 minutes"));
@@ -191,6 +191,7 @@ class HistoryController extends Controller
 
     public function datatable(Request $request)
     {
+
 
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
@@ -274,7 +275,7 @@ class HistoryController extends Controller
             })
 
             ->addColumn('status', function ($row) {
-                if ($row->delivery_location_frontend == 'sent_office' and $row->order_status_id_fk == 4) {
+                if ($row->delivery_location_frontend == 'sent_office' and ($row->order_status_id_fk == 4 || $row->order_status_id_fk == 5)) {
                    $name = HistoryController::get_name_branchs($row->branch_id_fk);
 
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode('.$row->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$row->detail.' '.$name->b_name.'</b></button>';
@@ -423,7 +424,7 @@ class HistoryController extends Controller
 
         // dd($request->dt_order_type);
 
-            
+
 
             $orders = DB::table('db_orders')
             ->select('db_orders.tracking_no','db_orders.note','db_orders.sum_price','db_orders.shipping_price','db_orders.distribution_channel_id_fk',
@@ -488,7 +489,7 @@ class HistoryController extends Controller
             })
 
             ->addColumn('status', function ($row) {
-                if ($row->delivery_location_frontend == 'sent_office' and $row->order_status_id_fk == 4) {
+                if ($row->delivery_location_frontend == 'sent_office' and ($row->order_status_id_fk == 4 || $row->order_status_id_fk == 5 )) {
                    $name = HistoryController::get_name_branchs($row->branch_id_fk);
 
                     return '<button class="btn btn-sm btn-' . $row->css_class . ' btn-outline-' . $row->css_class . '" onclick="qrcode('.$row->id.')" ><i class="fa fa-qrcode"></i> <b style="color: #000">'.$row->detail.' '.$name->b_name.'</b></button>';

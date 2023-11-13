@@ -11,16 +11,16 @@ class Random_code extends Model
 			$number =8;
 		}
 
-		$alphabet = 'abcdefghjkmnopqrstuvwxyz23456789';
-		$code = array(); 
+		$alphabet = 'ABCDEFGHJKLMNOPQRSTUVWXYZ23456789';
+		$code = array();
 
-		$alphaLength = strlen($alphabet) - 1;  
+		$alphaLength = strlen($alphabet) - 1;
 		for($i = 0; $i < $number; $i++) {
 			$n = rand(0, $alphaLength);
 			$code[] = $alphabet[$n];
 		}
 		$code = implode($code);
-		return $code; 
+		return $code;
 	}
 
 }

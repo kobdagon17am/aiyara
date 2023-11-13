@@ -7,6 +7,7 @@
                    </div>
 
                    <div class="modal-body text-center">
+                       <p>{{$data_order->qr_code}}</p>
                        {{ QrCode::size(300)->generate($data_order->qr_code) }}
                        <p>{{ $data_order->code_order }}</p>
                        <?php
