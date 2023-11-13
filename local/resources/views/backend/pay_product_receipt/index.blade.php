@@ -439,8 +439,6 @@
                           }, 1500);
 
                       }else{
-
-
                         // check ดูก่อนว่า บิลนี้ ถูกเลือกไปแล้ว
                           $.ajax({
                             type:'POST',
@@ -451,6 +449,8 @@
                                   if(data>0){
                                       location.replace('{{ url("backend/pay_product_receipt") }}/'+data+'/edit');
                                   }else{
+                                    $("input[name='txtSearch']").val(data.invoice_code);
+
                                       $(".btnSearch").trigger('click');
 
                                   }

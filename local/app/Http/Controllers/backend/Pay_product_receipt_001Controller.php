@@ -588,11 +588,22 @@ class Pay_product_receipt_001Controller extends Controller
     public function ajaxCHECKPay_product_receipt(Request $request)
     {
       // temp_db_stocks
+      $invoice_code = $request->txtSearch;
+      if(strpos($invoice_code,"QR") !== false){
+        $order_qr = DB::table('db_orders')->select('invoice_code')->where('qr_code',$invoice_code)->where('qr_endate','>',date('Y-m-d'))->first();
+        if($order_qr){
+          $invoice_code = $order_qr->invoice_code;
+          $request->txtSearch = $order_qr->invoice_code;
+        }
+  }
          $r =  DB::select(" select id from db_pay_product_receipt_001 WHERE invoice_code='".$request->txtSearch."' ");
          if($r){
             return  $r[0]->id;
          }else{
-            return 0;
+            // return 0;
+             return response()->json([
+              'invoice_code' =>$invoice_code,
+             ]);
          }
     }
 

@@ -1172,15 +1172,14 @@ foreach($temp_ppr_0021_data as $tmp){
     // คิวรีจาก db_orders ที่ branch_id_fk = sentto_branch_id & delivery_location = 0
     // กรณีที่ เป็น invoice_code (เพราะมี 2 กรณี คือ invoice_code กับ QR_CODE)
     $invoice_code = $request->txtSearch;
-    $qr_is = strpos($invoice_code,"QR");
-    if($qr_is){
+    if(strpos($invoice_code,"QR") !== false){
         $order_qr = DB::table('db_orders')->select('invoice_code')->where('qr_code',$invoice_code)->where('qr_endate','>',date('Y-m-d'))->first();
         if($order_qr){
           $invoice_code = $order_qr->invoice_code;
           $request->txtSearch = $order_qr->invoice_code;
         }
-    }
-    // $order_check = QR111111
+  }
+    // $order_check = QR111111 O123111000002
 
     if(@\Auth::user()->permission==1){
          $r01 = DB::select(" SELECT invoice_code FROM db_orders where invoice_code='$invoice_code' AND branch_id_fk = sentto_branch_id & delivery_location = 0  AND approve_status NOT IN (1,3,5,6) ");
