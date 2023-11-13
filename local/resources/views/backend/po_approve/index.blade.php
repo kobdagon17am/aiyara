@@ -241,9 +241,9 @@
                                     $last_day = date('Y-m-d');
                                     ?>
                                     <!-- <=
-                                                                 $first_day
-                                                                 $last_day
-                                                                 ?> -->
+                                                                         $first_day
+                                                                         $last_day
+                                                                         ?> -->
                                     <input id="bill_sdate" autocomplete="off" placeholder="Begin Date"
                                         style="margin-left: 1.5%;border: 1px solid grey;font-weight: bold;color: black"
                                         value="" />
@@ -283,8 +283,8 @@
 
                                     <!-- บิลเติม Ai-cash -->
                                     <!--     <a class="btn btn-info btn-sm btnSearch02 " href="#" style="font-size: 14px !important;margin-left: 0.8%;" >
-                                                                <i class="bx bx-search align-middle "></i> SEARCH
-                                                              </a> -->
+                                                                        <i class="bx bx-search align-middle "></i> SEARCH
+                                                                      </a> -->
 
 
                                 </div>
@@ -543,7 +543,12 @@
                                     $('td:last-child', nRow).html('' +
                                         '<a href="{{ route('backend.po_approve.index') }}/' + aData['id'] +
                                         '/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ' +
-                                        ''
+                                        '' +
+                                        '<a href="javascript: void(0);" title="ยกเลิกบิลนี้" data-url="{{ route('backend.frontstore.index') }}/' +
+                                        aData['id'] +
+                                        '" class="btn btn-sm btn-danger cCancel ccc " data-id="' +
+                                        aData['id'] +
+                                        '"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                     ).addClass('input');
 
                                 } else {
@@ -772,6 +777,49 @@
                         //     //  $(".myloading").hide();
                         //     location.reload();
                         // }, 135000);
+
+                        $(document).on('click', '.cCancel', function(event) {
+
+                            var id = $(this).data('id');
+                            // alert(id);
+                            // return false;
+
+                            if (!confirm("ยืนยัน ? เพื่อยกเลิกรายการสั่งซื้อที่ระบุ ")) {
+                                return false;
+                            } else {
+                                $.ajax({
+                                    url: " {{ url('backend/ajaxCancelOrderBackend') }} ",
+                                    method: "post",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        id: id,
+                                    },
+                                    success: function(data) {
+                                        if (data['status'] == 'success') {
+                                            Swal.fire({
+                                                type: 'success',
+                                                title: data['ms'],
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            });
+                                            location.reload();
+                                        } else {
+                                            Swal.fire({
+                                                type: 'error',
+                                                title: data['ms'],
+                                                showConfirmButton: false,
+                                                // timer: 2000
+                                            });
+                                        }
+
+                                    }
+                                });
+
+                            }
+
+
+                        });
+
                     });
                 </script>
 
@@ -1029,7 +1077,12 @@
                                                 '<a href="{{ route('backend.po_approve.index') }}/' +
                                                 aData['id'] +
                                                 '/edit" class="btn btn-sm btn-primary" ><i class="bx bx-edit font-size-16 align-middle"></i></a> ' +
-                                                ''
+                                                '' +
+                                                '<a href="javascript: void(0);" title="ยกเลิกบิลนี้" data-url="{{ route('backend.frontstore.index') }}/' +
+                                                aData['id'] +
+                                                '" class="btn btn-sm btn-danger cCancel ccc " data-id="' +
+                                                aData['id'] +
+                                                '"  ><i class="bx bx-trash font-size-16 align-middle"></i></a>'
                                             ).addClass('input');
                                         } else {
                                             console.log("aData['pay_with_other_bill'] == 1");
@@ -1530,9 +1583,9 @@
 
 
                 <!-- <audio autoplay>
-                                          <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
-                                        </audio>
-                                         -->
+                                                  <source src="http://freesound.org/data/previews/263/263133_2064400-lq.mp3">
+                                                </audio>
+                                                 -->
 
                 <script type="text/javascript">
                     $(document).ready(function() {

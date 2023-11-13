@@ -187,10 +187,25 @@ class Po_approveController extends Controller
           $sRow->approval_amount_transfer = $request->approval_amount_transfer;
           $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
           $sRow->approval_amount_transfer_over_status = $request->approval_amount_transfer_over_status;
+
+          if ($request->hasFile('approval_amount_transfer_over_slip')) {
+            @UNLINK(@$sRow->approval_amount_transfer_over_slip);
+            $this->validate($request, [
+              'approval_amount_transfer_over_slip' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+            $image = $request->file('approval_amount_transfer_over_slip');
+            $name = 'S3'.date('YmdHis'). time() . '.' . $image->getClientOriginalExtension();
+            $image_path = 'local/public/files_slip/' . date('Ym');
+            $image->move($image_path, $name);
+            $sRow->approval_amount_transfer_over_slip = $image_path . $name;
+          }
+
           $sRow->account_bank_name_customer = $request->account_bank;
           $sRow->transfer_amount_approver = \Auth::user()->id;
           $sRow->transfer_bill_date  = $request->transfer_bill_date;
           $sRow->transfer_bill_approvedate = date("Y-m-d H:i:s");
+
+
           DB::select(" UPDATE db_orders set approve_status=0 WHERE check_press_save=0; ");
         }
 
@@ -414,6 +429,48 @@ class Po_approveController extends Controller
     }
   }
 
+  public function po_approve_over(Request $request)
+  {
+    \DB::beginTransaction();
+    try {
+
+      $sRow = \App\Models\Backend\Orders::find($request->id);
+
+    $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
+          $sRow->approval_amount_transfer_over_status = $request->approval_amount_transfer_over_status;
+       if ($request->hasFile('approval_amount_transfer_over_slip')) {
+            @UNLINK(@$sRow->approval_amount_transfer_over_slip);
+            $this->validate($request, [
+              'approval_amount_transfer_over_slip' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+            $image = $request->file('approval_amount_transfer_over_slip');
+            $name = 'S3'.date('YmdHis'). time() . '.' . $image->getClientOriginalExtension();
+            $image_path = 'local/public/files_slip/' . date('Ym');
+            $image->move($image_path, $name);
+            $sRow->approval_amount_transfer_over_slip = $image_path .'/'. $name;
+          }
+          $sRow->save();
+
+        \DB::commit();
+
+        //   return response()->json([
+        //     'message' => 'success',
+        //     'status' => 1,
+        // ]);
+          return redirect()->back()->with(['alert' => \App\Models\Alert::Msg('success')]);
+        } catch (\Exception $e) {
+          echo $e->getMessage();
+          \DB::rollback();
+          // dd($e->getMessage());
+        //   return response()->json([
+        //     'message' => $e,
+        //     'status' => 0,
+        // ]);
+          return redirect()->back()->with(['alert' => \App\Models\Alert::e($e)]);
+        }
+  }
+
+
   public function po_approve_update_other(Request $request)
   {
     // dd($id);
@@ -451,6 +508,19 @@ class Po_approveController extends Controller
           $sRow->approval_amount_transfer = $request->approval_amount_transfer;
           $sRow->approval_amount_transfer_over = $request->approval_amount_transfer_over;
           $sRow->approval_amount_transfer_over_status = $request->approval_amount_transfer_over_status;
+          if ($request->hasFile('approval_amount_transfer_over_slip')) {
+            @UNLINK(@$sRow->approval_amount_transfer_over_slip);
+            $this->validate($request, [
+              'approval_amount_transfer_over_slip' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+            $image = $request->file('approval_amount_transfer_over_slip');
+            $name = 'S3'.date('YmdHis'). time() . '.' . $image->getClientOriginalExtension();
+            $image_path = 'local/public/files_slip/' . date('Ym');
+            $image->move($image_path, $name);
+            $sRow->approval_amount_transfer_over_slip = $image_path . $name;
+          }
+
+
           $sRow->account_bank_name_customer = $request->account_bank;
           $sRow->transfer_amount_approver = \Auth::user()->id;
           $sRow->transfer_bill_date  = $request->transfer_bill_date;

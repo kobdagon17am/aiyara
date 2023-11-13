@@ -1065,7 +1065,7 @@ class FrontstoreController extends Controller
 
   public function update(Request $request, $id)
   {
-    // if($request->frontstore_id==73438){
+    // if($request->frontstore_id==73438){ aistockist
     //   dd($request->all());
     // }
   // approve_date
@@ -2320,7 +2320,7 @@ class FrontstoreController extends Controller
     try {
       if ($id) {
         $sRow = \App\Models\Backend\Frontstore::find($id);
-        // $invoice_code = $sRow->invoice_code;
+        // $invoice_code = $sRow->invoice_code; aistockist
 
         // $sRow->cash_price    = str_replace(',','',request('cash_price')) ;
         // $sRow->fee_amt    = str_replace(',','',request('fee_amt')) ;

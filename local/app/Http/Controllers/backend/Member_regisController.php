@@ -897,9 +897,9 @@ class Member_regisController extends Controller
         }
 
         if(!empty($req->startDate) && !empty($req->endDate)){
-           $w05 = " and date(register_files.created_at) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
+           $w05 = " and date(register_files.approve_date) BETWEEN '".$req->startDate."' AND '".$req->endDate."'  " ;
         }else{
-           $w05 = "and date(register_files.created_at) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
+           $w05 = "and date(register_files.approve_date) BETWEEN '".date('Y-m-d')."' AND '".date('Y-m-d')."'";
         }
 
         if(!empty($req->approver)){

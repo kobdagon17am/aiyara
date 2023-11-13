@@ -691,6 +691,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
 // ใบสั่งซื้อรออนุมัติ
     Route::resource('po_approve', 'Po_approveController');
+    Route::post('po_approve_over', 'Po_approveController@po_approve_over');
     Route::any('po_approve_update_other', 'Po_approveController@po_approve_update_other');
     Route::post('po_approve/datatable', 'Po_approveController@Datatable')->name('po_approve.datatable');
     Route::post('po_approve_edit/datatable', 'Po_approveController@DatatableEdit')->name('po_approve_edit.datatable');

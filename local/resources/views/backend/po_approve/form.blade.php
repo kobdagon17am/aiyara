@@ -200,6 +200,10 @@
                                         @$sRow->approve_status == 0 ||
                                         @$sRow->approve_status == 6)
                                     <div class="div_confirm_transfer_slip">
+
+                                        <button type="button" class="btn btn-warning waves-effect waves-light"
+                                            data-toggle="modal" data-target="#confirm_over">จัดการเงินเกิน</button>
+
                                         <button type="button" class="btn btn-primary waves-effect waves-light"
                                             data-toggle="modal" data-target="#confirm">อนุมัติ</button>
 
@@ -371,16 +375,18 @@
                                                                     สถานะโอนคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
                                                                 <select class="form-control"
                                                                     name="approval_amount_transfer_over_status">
-                                                                    <option value="0">ยังไม่โอนยอดคืน</option>
-                                                                    <option value="1">โอนยอดคืนแล้ว</option>
+                                                                    <option <?php if (@$sRow->approval_amount_transfer_over_status == 0) {
+                                                                      echo 'selected';
+                                                                  } ?> value="0">
+                                                                      ยังไม่โอนยอดคืน</option>
+                                                                  <option <?php if (@$sRow->approval_amount_transfer_over_status == 1) {
+                                                                      echo 'selected';
+                                                                  } ?> value="1">
+                                                                      โอนยอดคืนแล้ว</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                     </div>
-
-
-
-
 
                                                     @if (!empty(@$sRow->pay_with_other_bill))
                                                         <div class="col-md-12 mt-2 mb-2 text-left">
@@ -494,6 +500,115 @@
                                     </div><!-- /.modal -->
 
                                 </form>
+
+                                <form action="{{ url('backend/po_approve_over') }}" method="POST"
+                                    enctype="multipart/form-data" autocomplete="off">
+                                    <input name="id" value="{{ $sRow->id }}" type="hidden">
+
+                                    {{ csrf_field() }}
+
+                                    <div class="modal fade" id="confirm_over" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="m  odal-title mt-0" id="confirm_over">
+                                                        จัดการยอดเงินเกิน
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                    <div class="col-md-12 mt-2 mb-2 text-left">
+                                                        <div class="row form-group ">
+                                                            <div class="col-md-6 text-left">
+                                                                <h5 class="font-size-14">เลขที่ใบสั่งซื้อ </h5>
+                                                                <input class="form-control" type="text"
+                                                                    value="{{ @$sRow->code_order }}" readonly="">
+                                                            </div>
+                                                            <div class="col-md-6 text-left">
+                                                                <h5 class="font-size-14">วันที่สั่งซื้อในสลิป</h5>
+                                                                <input class="form-control" type="text"
+                                                                    value="{{ @$sRow->action_date }}" readonly="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12 mt-2 mb-2 text-left">
+                                                        <div class="row form-group ">
+                                                            <div class="col-md-6 text-left">
+                                                                <h5 class="font-size-14 ">
+                                                                    จำนวนยอดที่เกิน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                                <input class="form-control NumberOnly " type="text"
+                                                                    name="approval_amount_transfer_over"
+                                                                    value="{{ @$sRow->approval_amount_transfer_over }}">
+                                                            </div>
+                                                            <div class="col-md-6 text-left">
+                                                                <h5 class="font-size-14 ">
+                                                                    สถานะโอนคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                                <select class="form-control"
+                                                                    name="approval_amount_transfer_over_status">
+                                                                    <option <?php if (@$sRow->approval_amount_transfer_over_status == 0) {
+                                                                        echo 'selected';
+                                                                    } ?> value="0">
+                                                                        ยังไม่โอนยอดคืน</option>
+                                                                    <option <?php if (@$sRow->approval_amount_transfer_over_status == 1) {
+                                                                        echo 'selected';
+                                                                    } ?> value="1">
+                                                                        โอนยอดคืนแล้ว</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12 mt-2 mb-2 text-left">
+                                                        <div class="row form-group ">
+                                                            <div class="col-md-6 text-left">
+                                                                <h5 class="font-size-14 ">
+                                                                    แนบหลักฐานโอนเงินคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                                <input class="form-control" type="file"
+                                                                    name="approval_amount_transfer_over_slip">
+                                                            </div>
+                                                            {{-- <div class="col-md-6 text-left">
+                                                          <h5 class="font-size-14 ">
+                                                              สถานะโอนคืน<br>(หากในสลิปยอดเงินเกินมา)</h5>
+                                                          <select class="form-control"
+                                                              name="approval_amount_transfer_over_status">
+                                                              <option value="0">ยังไม่โอนยอดคืน</option>
+                                                              <option value="1">โอนยอดคืนแล้ว</option>
+                                                          </select>
+                                                      </div> --}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mt-2 mb-2 text-left ">
+                                                      <div class="row form-group ">
+                                                        @if (!empty(@$sRow->approval_amount_transfer_over_slip))
+                                                        <img src="{{asset(@$sRow->approval_amount_transfer_over_slip)}}"
+                                                            class="img-fluid" alt="Responsive image">
+                                                      </div>
+                                                      @endif
+                                                  </div>
+                                                </div>
+
+                                                <input type="hidden" name="approved" value="approved">
+
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">ยืนยัน</button>
+                                                </div>
+
+
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+
+                                </form>
+
 
                                 <form action="{{ route('backend.po_approve.update', @$sRow->id) }}" method="POST"
                                     enctype="multipart/form-data" autocomplete="off">
@@ -1159,6 +1274,8 @@
 
                 var form = $('#approve_other_form');
                 var actionUrl = form.attr('action');
+                var approval_amount_transfer_over_slip = $('#approval_amount_transfer_over_slip').prop('files')[0];
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
@@ -1171,7 +1288,8 @@
                     // data: {
                     //     "_token": "{{ csrf_token() }}",
                     // },
-                    data: form.serialize() + "&order_id_approve_list=" + bill_other_time,
+                    data: form.serialize() + "&order_id_approve_list=" + bill_other_time +
+                        '&approval_amount_transfer_over_slip=' + approval_amount_transfer_over_slip,
                     success: function(response) {
                         // $('#successMsg').show();
                         console.log(response);
@@ -1197,9 +1315,9 @@
                                     allowOutsideClick: false,
                                     allowEscapeKey: false
                                 })
-                                  window.setTimeout(function() {
-                                      location.reload();
-                                  }, 2000);
+                                window.setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
 
                             }
                         }
