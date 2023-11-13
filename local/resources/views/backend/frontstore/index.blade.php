@@ -423,6 +423,12 @@
                                         {{ __('message.only_buy_ai_gift') }} </button>
                                 </div>
                                 <div class="divTableCell" style="text-align: right;">
+                                  <button type="button" class="btn btn-warning btnViewCondition " title="ตรวจหาบิลที่เป็นปัญหาทั้งหมด"
+                                      data-id="ViewFailed"><i class="bx bx-search font-size-18 align-middle"></i>
+                                     ตรวจสอบบิล </button>
+                              </div>
+
+                                <div class="divTableCell" style="text-align: right;">
                                     <a href="{{ route('backend.frontstore.create') }}">
                                         <button type="button" class="btn btn-success btnAdd  "><i
                                                 class="fa fa-plus font-size-18 align-middle "></i>

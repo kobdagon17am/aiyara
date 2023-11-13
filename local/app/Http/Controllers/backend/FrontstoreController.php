@@ -24,6 +24,7 @@ use Session;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Models\Backend\Frontstore;
 
 class FrontstoreController extends Controller
 {
@@ -1067,7 +1068,7 @@ class FrontstoreController extends Controller
     // if($request->frontstore_id==73438){
     //   dd($request->all());
     // }
-  //
+  // approve_date
     // dd($request->transfer_money_datetime." : AAAA");
     // db_delivery delivery_location
     if($request->pay_type_id_fk==''||$request->pay_type_id_fk==null){
@@ -3787,6 +3788,7 @@ class FrontstoreController extends Controller
 
   public function Datatable(Request $req)
   {
+    // viewcondition
     $user_login_id = \Auth::user()->id;
     $sPermission = \Auth::user()->permission;
     if (\Auth::user()->position_level == '3' || \Auth::user()->position_level == '4') {
@@ -3930,6 +3932,7 @@ class FrontstoreController extends Controller
       $approve_status_02 = "";
     }
 
+    $viewcondition_03 = '';
     if (isset($req->viewcondition)) {
       if (isset($req->viewcondition) && $req->viewcondition == "ViewBuyNormal") {
         $viewcondition_01 = ' db_orders.purchase_type_id_fk not in (4,5) ';
@@ -3937,7 +3940,12 @@ class FrontstoreController extends Controller
       } else if (isset($req->viewcondition) && $req->viewcondition == "ViewBuyVoucher") {
         $viewcondition_01 = ' db_orders.purchase_type_id_fk in (4,5) ';
         $viewcondition_02 = '';
-      } else {
+      } else if(isset($req->viewcondition) && $req->viewcondition == "ViewFailed"){
+        $viewcondition_01 = ' db_orders.pay_type_id_fk IS NULL ';
+        $viewcondition_02 = '';
+        $viewcondition_03 = 'db_orders.approve_status in (2,3,4,9)';
+      }
+      else {
         $viewcondition_01 = '';
         $viewcondition_02 = '';
       }
@@ -4009,6 +4017,9 @@ class FrontstoreController extends Controller
     ->when($viewcondition_01, function ($query) use ($viewcondition_01) {
         return $query->whereRaw($viewcondition_01);
     })
+    ->when($viewcondition_03, function ($query) use ($viewcondition_03) {
+      return $query->whereRaw($viewcondition_03);
+  })
     ->when($action_user_02, function ($query) use ($action_user_02) {
         return $query->whereRaw($action_user_02);
     })
@@ -4285,4 +4296,52 @@ class FrontstoreController extends Controller
 
     return $rows;
   }
+
+      public function frontstore_save_delivery_location(Request $r)
+      {
+        \DB::beginTransaction();
+        try {
+
+            $order = Frontstore::where('id',$r->frontstore_id_fk)->first();
+            if($order){
+              $order->bill_transfer_other = $r->bill_transfer_other;
+              $order->delivery_location_frontend = 'sent_another_bill';
+              $order->delivery_location = $r->delivery_location;
+              $order->save();
+            }else{
+              return response()->json([
+                'message' => 'ไม่พบ Order',
+                'status' => 0,
+                'data' => '',
+            ]);
+            }
+
+            \DB::commit();
+
+        // } catch (\Exception $e) {
+        //   echo $e->getMessage();
+        //   \DB::rollback();
+        //   // return redirect()->action('backend\General_receiveController@index')->with(['alert'=>\App\Models\Alert::e($e)]);
+        // }
+      }
+            catch (\Exception $e) {
+                DB::rollback();
+                // return $e->getMessage();
+                return response()->json([
+                    'message' =>  $e->getMessage(),
+                    'status' => 0,
+                    'data' => '',
+                ]);
+            }
+            catch(\FatalThrowableError $e)
+            {
+                DB::rollback();
+                return response()->json([
+                    'message' =>  $e->getMessage(),
+                    'status' => 0,
+                    'data' => '',
+                ]);
+            }
+      }
+
 }
