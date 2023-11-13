@@ -227,7 +227,6 @@ class Check_stockController extends Controller
         return redirect()->to(url("backend/check_stock"));
     }
 
-
     public function Datatable(Request $req){
 
       if(isset($req->Where['business_location_id_fk'])){
@@ -580,6 +579,183 @@ class Check_stockController extends Controller
       ->make(true);
     }
 
+    public function DatatablePrint(Request $req){
+
+      if(isset($req->Where['business_location_id_fk'])){
+        if($req->Where['business_location_id_fk']!=''){
+          $req->business_location_id_fk = $req->Where['business_location_id_fk'];
+        }
+      }
+
+      if(isset($req->Where['branch_id_fk'])){
+        if($req->Where['branch_id_fk']!=''){
+          $req->branch_id_fk = $req->Where['branch_id_fk'];
+        }
+      }
+      if(isset($req->Where['warehouse_id_fk'])){
+        if($req->Where['warehouse_id_fk']!=''){
+          $req->warehouse_id_fk = $req->Where['warehouse_id_fk'];
+        }
+      }
+      if(isset($req->Where['zone_id_fk'])){
+        if($req->Where['zone_id_fk']!=''){
+          $req->zone_id_fk = $req->Where['zone_id_fk'];
+        }
+      }
+      if(isset($req->Where['shelf_id_fk'])){
+        if($req->Where['shelf_id_fk']!=''){
+          $req->shelf_id_fk = $req->Where['shelf_id_fk'];
+        }
+      }
+      if(isset($req->Where['shelf_floor'])){
+        if($req->Where['shelf_floor']!=''){
+          $req->shelf_floor = $req->Where['shelf_floor'];
+        }
+      }
+      if(isset($req->Where['lot_number'])){
+        if($req->Where['lot_number']!=''){
+          $req->lot_number = $req->Where['lot_number'];
+        }
+      }
+      if(isset($req->Where['product'])){
+        if($req->Where['product']!=''){
+          $req->product = $req->Where['product'];
+        }
+      }
+
+        if(!empty($req->business_location_id_fk)){
+           $w01 = "  AND business_location_id_fk=".$req->business_location_id_fk ;
+        }else{
+           $w01 = "";
+        }
+        if(!empty($req->branch_id_fk)){
+           $w02 = " AND branch_id_fk = ".$req->branch_id_fk." " ;
+        }else{
+           $w02 = "" ;
+        }
+        if(!empty($req->warehouse_id_fk)){
+           $w03 = " AND warehouse_id_fk = ".$req->warehouse_id_fk." " ;
+        }else{
+           $w03 = "" ;
+        }
+        if(!empty($req->zone_id_fk)){
+           $w04 = " AND zone_id_fk = ".$req->zone_id_fk." " ;
+        }else{
+           $w04 = "" ;
+        }
+
+        if(!empty($req->shelf_id_fk)){
+           $w05 = " AND shelf_id_fk = ".$req->shelf_id_fk." " ;
+        }else{
+           $w05 = "" ;
+        }
+
+        if(!empty($req->shelf_floor)){
+           $w06 = " AND shelf_floor = ".$req->shelf_floor." " ;
+        }else{
+           $w06 = "" ;
+        }
+
+        if(!empty($req->lot_number)){
+           $w07 = ' AND lot_number = "' .$req->lot_number.'" ' ;
+        }else{
+           $w07 = "" ;
+        }
+
+        if(!empty($req->product)){
+           $w08 = " AND product_id_fk = ".$req->product." " ;
+        }else{
+           $w08 = "" ;
+        }
+
+        if(!empty($req->start_date) && !empty($req->end_date)){
+           $w09 = ' and date(lot_expired_date) BETWEEN "'.$req->start_date.'" AND "'.$req->end_date.'"  ';
+        }else{
+           // $w09 = " and date(lot_expired_date) >= CURDATE() ";
+           $w09 = "";
+        }
+
+        if(!empty($req->lot_0_show)){
+          if($req->lot_0_show==0){
+            $stock_0 = "AND db_stocks.amt <> 0";
+          }else{
+            $stock_0 = "";
+          }
+
+       }else{
+        $stock_0 = "AND db_stocks.amt <> 0";
+       }
+
+        $sPermission = \Auth::user()->permission ;
+        if($sPermission==1){
+          $stock_0 = "";
+        }
+
+       $sTable = DB::select("
+       SELECT db_stocks.*,products.product_code FROM `db_stocks` JOIN products ON db_stocks.product_id_fk=products.id
+       WHERE 1
+       $stock_0
+        $w01
+        $w02
+        $w03
+        $w04
+        $w05
+        $w06
+        $w07
+        $w08
+        $w09
+      ORDER BY products.product_code
+        ");
+        // dd($req);
+      return view('backend.check_stock.print_stock',[
+        'sTable' =>$sTable,
+      ]);
+
+        // WHERE 1
+        // GROUP BY db_stocks.product_id_fk
+      $sQuery = \DataTables::of($sTable);
+      return $sQuery
+      ->addColumn('product_name', function($row) {
+
+          $Products = DB::select("SELECT products.id as product_id,
+            products.product_code,
+            (CASE WHEN products_details.product_name is null THEN '* ไม่ได้กรอกชื่อสินค้า' ELSE products_details.product_name END) as product_name
+            FROM
+            products_details
+            Left Join products ON products_details.product_id_fk = products.id
+            WHERE products.id=".$row->product_id_fk." AND lang_id=1");
+
+           return @$Products[0]->product_code." : ".@$Products[0]->product_name;
+
+      })
+// date(lot_expired_date) >= CURDATE()
+      ->addColumn('lot_number', function($row) {
+        return $row->lot_number;
+      })
+      ->addColumn('lot_expired_date', function($row) {
+        return $row->lot_expired_date;
+      })
+       ->addColumn('amt_desc', function($row){
+        return $row->amt;
+      })
+      ->addColumn('amt', function($row){
+        return $row->amt;
+      })
+      ->addColumn('warehouses', function($row) {
+
+        $sBranchs = DB::select(" select * from branchs where id=".$row->branch_id_fk." ");
+        $warehouse = DB::select(" select * from warehouse where id=".($row->warehouse_id_fk?$row->warehouse_id_fk:0)." ");
+        $zone = DB::select(" select * from zone where id=".($row->zone_id_fk?$row->zone_id_fk:0)." ");
+        $shelf = DB::select(" select * from shelf where id=".($row->shelf_id_fk?$row->shelf_id_fk:0)." ");
+        $t = '('.$row->id.') '.@$sBranchs[0]->b_name.'/'.@$warehouse[0]->w_name.'/'.@$zone[0]->z_name.'/'.@$shelf[0]->s_name.'/ชั้น>'.@$row->shelf_floor;
+        return  $t;
+      })
+      ->addColumn('stock_card', function($row) {
+          return '-';
+      })
+      ->escapeColumns('stock_card')
+      ->make(true);
+    }
 
         public function DatatableBorrow(Request $req){
 

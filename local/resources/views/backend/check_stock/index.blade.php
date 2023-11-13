@@ -17,17 +17,16 @@
         }
 
         /* #data-table-01 tr.odd {
-                                                      background-color: white;
-                                                    }
+                                                                                          background-color: white;
+                                                                                        }
 
-                                                    #data-table-01 tr.even {
-                                                      background-color: #f2f2f2;
-                                                    }
-                                                    */
+                                                                                        #data-table-01 tr.even {
+                                                                                          background-color: #f2f2f2;
+                                                                                        }
+                                                                                        */
         #data-table-01 tr:hover {
             background-color: #f9ffe6;
         }
-
     </style>
 @endsection
 
@@ -36,7 +35,8 @@
 
     <div class="row">
         <div class="col-md-12" style="">
-            <div id="spinner_frame" style="display: none;
+            <div id="spinner_frame"
+                style="display: none;
                                                                 position: fixed;
                                                                 top: 50%;
                                                                 left: 50%;
@@ -70,8 +70,8 @@
                 <h4 class="mb-0 font-size-18">
 
                     <!--           <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;" >
-                                                                                <i class="bx bx-cog align-middle "></i> Process Stock movement
-                                                                              </a> -->
+                                                                                                                    <i class="bx bx-cog align-middle "></i> Process Stock movement
+                                                                                                                  </a> -->
 
                 </h4>
 
@@ -105,340 +105,373 @@
             <div class="card">
                 <div class="card-body">
 
-
-                    <div class="row">
-
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="" class="col-md-3 col-form-label">Business Location : </label>
-                                <div class="col-md-9">
-                                    <?php $dis01 = !empty(@$sRow->condition_business_location) ? 'disabled' : ''; ?>
+                    <form action="{{ route('backend.check_stock.datatable_print') }}" method="POST" target="_blank" enctype="multipart/form-data"
+                        autocomplete="off">
+                        {{ csrf_field() }}
 
 
-                                    <?php if(@\Auth::user()->permission==1){ ?>
-
-                                    <select id="business_location_id_fk" name="business_location_id_fk"
-                                        class="form-control select2-templating " required="">
-                                        <option value="">-Business Location-</option>
-                                        @if (@$sBusiness_location)
-                                            @foreach (@$sBusiness_location as $r)
-                                                <option value="{{ $r->id }}">
-                                                    {{ $r->txt_desc }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-
-                                    <?php }else{ ?>
-
-                                    <select id="business_location_id_fk" name="business_location_id_fk"
-                                        class="form-control select2-templating " disabled>
-                                        {{-- <option value="">-Business Location-</option> --}}
-                                        <?php
-                                        // dd($sBusiness_location);
-                                        ?>
-                                        @if (@$sBusiness_location)
-                                            @foreach (@$sBusiness_location as $r)
-                                                @if (empty(@$sRow->condition_business_location))
-                                                    <option value="{{ $r->id }}"
-                                                        {{ @$r->id == '1' ? 'selected' : '' }}>
-                                                        {{ $r->txt_desc }}
-                                                    </option>
-                                                @ELSE
-                                                    <option value="{{ $r->id }}"
-                                                        {{ @$r->id == @$sRow->condition_business_location ? 'selected' : '' }}>
-                                                        {{ $r->txt_desc }}
-                                                    </option>
-                                                @ENDIF
-                                            @endforeach
-                                        @endif
-                                    </select>
-
-                                    <?php } ?>
-
-
-
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
-                                <div class="col-md-10">
-
-                                    <?php if(@\Auth::user()->permission==1 || (\Auth::user()->position_level !== 5 && \Auth::user()->position_level !== 0)){ ?>
-                                    <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating ">
-                                        <option value="">-เลือก Business Location ก่อน-</option>
-                                        @if (@$sBranchs)
-                                            @foreach (@$sBranchs as $r)
-                                                <option value="{{ $r->id }}"
-                                                    {{ @$r->id == \Auth::user()->branch_id_fk ? 'selected' : '' }}>
-                                                    {{ $r->b_name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    <?php }else{
-                                      ?>
-                                    <select id="branch_id_fk" name="branch_id_fk" class="form-control select2-templating "
-                                        disabled="">
-                                        <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
-                                        @if (@$sBranchs)
-                                            @foreach (@$sBranchs as $r)
-                                                <option value="{{ $r->id }}"
-                                                    {{ @$r->id == \Auth::user()->branch_id_fk ? 'selected' : '' }}>
-                                                    {{ $r->b_name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    <?php } ?>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : </label>
-                                <div class="col-md-9">
-
-                                    <?php if(@\Auth::user()->permission==1){ ?>
-
-                                    <select id="warehouse_id_fk" name="warehouse_id_fk"
-                                        class="form-control select2-templating " required>
-                                        <option disabled selected>กรุณาเลือกสาขาก่อน</option>
-                                    </select>
-
-                                    <?php }else{ ?>
-
-                                    <select id="warehouse_id_fk" name="warehouse_id_fk"
-                                        class="form-control select2-templating " required>
-                                        <option value="">-select-</option>
-                                        @if (@$Warehouse)
-                                            @foreach (@$Warehouse as $r)
-                                                <option value="{{ $r->id }}">
-                                                    {{ $r->w_name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-
-                                    <?php } ?>
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="zone_id_fk" class="col-md-2 col-form-label"> Zone : </label>
-                                <div class="col-md-10">
-
-                                    <?php if(!empty(@$sRow->condition_zone)){ ?>
-                                    <select class="form-control select2-templating " disabled="">
-                                        @if (@$Zone)
-                                            @foreach (@$Zone as $r)
-                                                <option value="{{ $r->id }}"
-                                                    {{ @$r->id == @$sRow->condition_zone ? 'selected' : '' }}>
-                                                    {{ $r->z_name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    <?php }else{ ?>
-                                    <select id="zone_id_fk" name="zone_id_fk" class="form-control select2-templating ">
-                                        <option disabled selected>กรุณาเลือกคลังก่อน</option>
-                                    </select>
-                                    <?php } ?>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="shelf_id_fk" class="col-md-3 col-form-label"> Shelf : </label>
-                                <div class="col-md-9">
-
-                                    <?php if(!empty(@$sRow->condition_shelf)){ ?>
-                                    <select class="form-control select2-templating " disabled="">
-                                        @if (@$Shelf)
-                                            @foreach (@$Shelf as $r)
-                                                <option value="{{ $r->id }}"
-                                                    {{ @$r->id == @$sRow->condition_shelf ? 'selected' : '' }}>
-                                                    {{ $r->s_name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    <?php }else{ ?>
-                                    <select id="shelf_id_fk" name="shelf_id_fk" class="form-control select2-templating ">
-                                        <option disabled selected>กรุณาเลือกโซนก่อน</option>
-                                    </select>
-                                    <?php } ?>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="shelf_floor" class="col-md-2 col-form-label"> ชั้น : </label>
-                                <div class="col-md-10">
-                                    <?php $dis02 = !empty(@$sRow->condition_shelf_floor) ? 'disabled' : ''; ?>
-                                    <select id="shelf_floor" name="shelf_floor" class="form-control select2-templating "
-                                        <?= $dis02 ?>>
-                                        <option value="">-select-</option>
-                                        <option value="1" {{ @$sRow->condition_shelf_floor == 1 ? 'selected' : '' }}>1
-                                        </option>
-                                        <option value="2" {{ @$sRow->condition_shelf_floor == 2 ? 'selected' : '' }}>2
-                                        </option>
-                                        <option value="3" {{ @$sRow->condition_shelf_floor == 3 ? 'selected' : '' }}>3
-                                        </option>
-                                        <option value="4" {{ @$sRow->condition_shelf_floor == 4 ? 'selected' : '' }}>4
-                                        </option>
-                                        <option value="5" {{ @$sRow->condition_shelf_floor == 5 ? 'selected' : '' }}>5
-                                        </option>
-                                        <option value="6" {{ @$sRow->condition_shelf_floor == 6 ? 'selected' : '' }}>6
-                                        </option>
-                                        <option value="7" {{ @$sRow->condition_shelf_floor == 7 ? 'selected' : '' }}>7
-                                        </option>
-                                        <option value="8" {{ @$sRow->condition_shelf_floor == 8 ? 'selected' : '' }}>8
-                                        </option>
-                                        <option value="9" {{ @$sRow->condition_shelf_floor == 9 ? 'selected' : '' }}>9
-                                        </option>
-                                        <option value="10" {{ @$sRow->condition_shelf_floor == 10 ? 'selected' : '' }}>10
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="" class="col-md-3 col-form-label"> สินค้า : </label>
-                                <div class="col-md-9">
-                                    <?php $dis03 = !empty(@$sRow->condition_product) ? 'disabled' : ''; ?>
-                                    <select name="product" id="product" class="form-control select2-templating "
-                                        <?= $dis03 ?>>
-                                        <option value="">-รหัสสินค้า : ชื่อสินค้า-</option>
-                                        @if (@$Products)
-                                            @foreach (@$Products as $r)
-                                                <option value="{{ @$r->product_id }}"
-                                                    {{ @$r->product_id == @$sRow->condition_product ? 'selected' : '' }}>
-                                                    {{ @$r->product_code . ' : ' . @$r->product_name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-6 ">
-                            <div class="form-group row">
-                                <label for="lot_number" class="col-md-2 col-form-label"> Lot-No. : </label>
-                                <div class="col-md-10">
-                                    <?php $dis04 = !empty(@$sRow->condition_lot_number) ? 'disabled' : ''; ?>
-                                    <select name="lot_number" id="lot_number" class="form-control select2-templating "
-                                        <?= $dis04 ?>>
-                                        <option value="">-Lot Number-</option>
-                                        @if (@$lot_number)
-                                            @foreach (@$lot_number as $r)
-                                                <option value="{{ @$r->lot_number }}"
-                                                    {{ @$r->lot_number == @$sRow->condition_lot_number ? 'selected' : '' }}>
-                                                    {{ @$r->lot_number }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-
-                      <div class="col-md-6 ">
-                          <div class="form-group row">
-                              <label for="" class="col-md-3 col-form-label"> แสดง Lot ยอดเป็น 0 : </label>
-                              <div class="col-md-9">
-                                  <select name="lot_0_show" id="lot_0_show" class="form-control">
-                                      <option value="0">ไม่แสดง</option>
-                                      <option value="1">แสดง</option>
-                                  </select>
-                              </div>
-                          </div>
-                      </div>
-
-                  </div>
-
-
-                    <div class="row">
-                        <div class="col-md-6 ">
-                            <div class="form-group row" style="display:none;">
-                                <label for="ref_code" class="col-md-3 col-form-label">Lot expired date : </label>
-                                <div class="col-md-9 d-flex">
-                                    <?php
-                                    //  $first_day_this_month = date('Y-m-01'); // hard-coded '01' for first day
-                                    //   $last_day_this_month  = date('Y-m-t');
-                                    ?>
-                                    <input id="start_date" autocomplete="off" placeholder="Begin"
-                                        style="border: 1px solid grey;" />
-                                    <input id="end_date" autocomplete="off" placeholder="End"
-                                        style="border: 1px solid grey;" />
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 ">
-                            <div class="form-group row d-flex ">
-                                <label for="ref_code" class="col-md-2 col-form-label"> </label>
-                                <div class="col-md-10">
-
-
-                                    <a class="btn btn-info btn-sm btnSearch " href="#" style="font-size: 14px !important;">
-                                        <i class="bx bx-search align-middle "></i> SEARCH
-                                    </a>
-                                    <!--
-                                                                             <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;" >
-                                                                                <i class="bx bx-cog align-middle "></i> Process Stock movement
-                                                                              </a>  -->
-
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                    @if (empty(@$sRow))
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group row">
 
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label">Business Location : </label>
+                                    <div class="col-md-9">
+                                        <?php $dis01 = !empty(@$sRow->condition_business_location) ? 'disabled' : ''; ?>
+
+
+                                        <?php if(@\Auth::user()->permission==1){ ?>
+
+                                        <select id="business_location_id_fk" name="business_location_id_fk"
+                                            class="form-control select2-templating ">
+                                            <option value="">-Business Location-</option>
+                                            @if (@$sBusiness_location)
+                                                @foreach (@$sBusiness_location as $r)
+                                                    <option value="{{ $r->id }}">
+                                                        {{ $r->txt_desc }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+
+                                        <?php }else{ ?>
+
+                                        <select id="business_location_id_fk" name="business_location_id_fk"
+                                            class="form-control select2-templating " readonly>
+                                            {{-- <option value="">-Business Location-</option> --}}
+                                            <?php
+                                            // dd($sBusiness_location);
+                                            ?>
+                                            @if (@$sBusiness_location)
+                                                @foreach (@$sBusiness_location as $r)
+                                                    @if (empty(@$sRow->condition_business_location))
+                                                        <option value="{{ $r->id }}"
+                                                            {{ @$r->id == '1' ? 'selected' : '' }}>
+                                                            {{ $r->txt_desc }}
+                                                        </option>
+                                                    @ELSE
+                                                        <option value="{{ $r->id }}"
+                                                            {{ @$r->id == @$sRow->condition_business_location ? 'selected' : '' }}>
+                                                            {{ $r->txt_desc }}
+                                                        </option>
+                                                    @ENDIF
+                                                @endforeach
+                                            @endif
+                                        </select>
+
+                                        <?php } ?>
+
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="branch_id_fk" class="col-md-2 col-form-label"> สาขา : </label>
+                                    <div class="col-md-10">
+
+                                        <?php if(@\Auth::user()->permission==1 || (\Auth::user()->position_level !== 5 && \Auth::user()->position_level !== 0)){ ?>
+                                        <select id="branch_id_fk" name="branch_id_fk"
+                                            class="form-control select2-templating ">
+                                            <option value="">-เลือก Business Location ก่อน-</option>
+                                            @if (@$sBranchs)
+                                                @foreach (@$sBranchs as $r)
+                                                    <option value="{{ $r->id }}"
+                                                        {{ @$r->id == \Auth::user()->branch_id_fk ? 'selected' : '' }}>
+                                                        {{ $r->b_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <?php }else{
+                                      ?>
+                                        <select id="branch_id_fk" name="branch_id_fk"
+                                            class="form-control select2-templating " readonly>
+                                            <option value="" selected>กรุณาเลือก Business Location ก่อน</option>
+                                            @if (@$sBranchs)
+                                                @foreach (@$sBranchs as $r)
+                                                    <option value="{{ $r->id }}"
+                                                        {{ @$r->id == \Auth::user()->branch_id_fk ? 'selected' : '' }}>
+                                                        {{ $r->b_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <?php } ?>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="warehouse_id_fk" class="col-md-3 col-form-label"> คลัง : </label>
+                                    <div class="col-md-9">
+
+                                        <?php if(@\Auth::user()->permission==1){ ?>
+
+                                        <select id="warehouse_id_fk" name="warehouse_id_fk"
+                                            class="form-control select2-templating " >
+                                            <option disabled selected>กรุณาเลือกสาขาก่อน</option>
+                                        </select>
+
+                                        <?php }else{ ?>
+
+                                        <select id="warehouse_id_fk" name="warehouse_id_fk"
+                                            class="form-control select2-templating " >
+                                            <option value="">-select-</option>
+                                            @if (@$Warehouse)
+                                                @foreach (@$Warehouse as $r)
+                                                    <option value="{{ $r->id }}">
+                                                        {{ $r->w_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+
+                                        <?php } ?>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="zone_id_fk" class="col-md-2 col-form-label"> Zone : </label>
+                                    <div class="col-md-10">
+
+                                        <?php if(!empty(@$sRow->condition_zone)){ ?>
+                                        <select name="zone_id_fk"  class="form-control select2-templating " disabled="">
+                                            @if (@$Zone)
+                                                @foreach (@$Zone as $r)
+                                                    <option value="{{ $r->id }}"
+                                                        {{ @$r->id == @$sRow->condition_zone ? 'selected' : '' }}>
+                                                        {{ $r->z_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <?php }else{ ?>
+                                        <select id="zone_id_fk" name="zone_id_fk" class="form-control select2-templating ">
+                                            <option disabled selected>กรุณาเลือกคลังก่อน</option>
+                                        </select>
+                                        <?php } ?>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    @ENDIF
+
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="shelf_id_fk" class="col-md-3 col-form-label"> Shelf : </label>
+                                    <div class="col-md-9">
+
+                                        <?php if(!empty(@$sRow->condition_shelf)){ ?>
+                                        <select name="shelf_id_fk" class="form-control select2-templating " disabled="">
+                                            @if (@$Shelf)
+                                                @foreach (@$Shelf as $r)
+                                                    <option value="{{ $r->id }}"
+                                                        {{ @$r->id == @$sRow->condition_shelf ? 'selected' : '' }}>
+                                                        {{ $r->s_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <?php }else{ ?>
+                                        <select id="shelf_id_fk" name="shelf_id_fk"
+                                            class="form-control select2-templating ">
+                                            <option disabled selected>กรุณาเลือกโซนก่อน</option>
+                                        </select>
+                                        <?php } ?>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="shelf_floor" class="col-md-2 col-form-label"> ชั้น : </label>
+                                    <div class="col-md-10">
+                                        <?php $dis02 = !empty(@$sRow->condition_shelf_floor) ? 'disabled' : ''; ?>
+                                        <select id="shelf_floor" name="shelf_floor"
+                                            class="form-control select2-templating " <?= $dis02 ?>>
+                                            <option value="">-select-</option>
+                                            <option value="1"
+                                                {{ @$sRow->condition_shelf_floor == 1 ? 'selected' : '' }}>
+                                                1
+                                            </option>
+                                            <option value="2"
+                                                {{ @$sRow->condition_shelf_floor == 2 ? 'selected' : '' }}>
+                                                2
+                                            </option>
+                                            <option value="3"
+                                                {{ @$sRow->condition_shelf_floor == 3 ? 'selected' : '' }}>
+                                                3
+                                            </option>
+                                            <option value="4"
+                                                {{ @$sRow->condition_shelf_floor == 4 ? 'selected' : '' }}>
+                                                4
+                                            </option>
+                                            <option value="5"
+                                                {{ @$sRow->condition_shelf_floor == 5 ? 'selected' : '' }}>
+                                                5
+                                            </option>
+                                            <option value="6"
+                                                {{ @$sRow->condition_shelf_floor == 6 ? 'selected' : '' }}>
+                                                6
+                                            </option>
+                                            <option value="7"
+                                                {{ @$sRow->condition_shelf_floor == 7 ? 'selected' : '' }}>
+                                                7
+                                            </option>
+                                            <option value="8"
+                                                {{ @$sRow->condition_shelf_floor == 8 ? 'selected' : '' }}>
+                                                8
+                                            </option>
+                                            <option value="9"
+                                                {{ @$sRow->condition_shelf_floor == 9 ? 'selected' : '' }}>
+                                                9
+                                            </option>
+                                            <option value="10"
+                                                {{ @$sRow->condition_shelf_floor == 10 ? 'selected' : '' }}>10
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label"> สินค้า : </label>
+                                    <div class="col-md-9">
+                                        <?php $dis03 = !empty(@$sRow->condition_product) ? 'disabled' : ''; ?>
+                                        <select name="product" id="product" class="form-control select2-templating "
+                                            <?= $dis03 ?>>
+                                            <option value="">-รหัสสินค้า : ชื่อสินค้า-</option>
+                                            @if (@$Products)
+                                                @foreach (@$Products as $r)
+                                                    <option value="{{ @$r->product_id }}"
+                                                        {{ @$r->product_id == @$sRow->condition_product ? 'selected' : '' }}>
+                                                        {{ @$r->product_code . ' : ' . @$r->product_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="lot_number" class="col-md-2 col-form-label"> Lot-No. : </label>
+                                    <div class="col-md-10">
+                                        <?php $dis04 = !empty(@$sRow->condition_lot_number) ? 'disabled' : ''; ?>
+                                        <select name="lot_number" id="lot_number"
+                                            class="form-control select2-templating " <?= $dis04 ?>>
+                                            <option value="">-Lot Number-</option>
+                                            @if (@$lot_number)
+                                                @foreach (@$lot_number as $r)
+                                                    <option value="{{ @$r->lot_number }}"
+                                                        {{ @$r->lot_number == @$sRow->condition_lot_number ? 'selected' : '' }}>
+                                                        {{ @$r->lot_number }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 ">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-3 col-form-label"> แสดง Lot ยอดเป็น 0 : </label>
+                                    <div class="col-md-9">
+                                        <select name="lot_0_show" id="lot_0_show" class="form-control">
+                                            <option value="0">ไม่แสดง</option>
+                                            <option value="1">แสดง</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="form-group row" style="display:none;">
+                                    <label for="ref_code" class="col-md-3 col-form-label">Lot expired date : </label>
+                                    <div class="col-md-9 d-flex">
+                                        <?php
+                                        //  $first_day_this_month = date('Y-m-01'); // hard-coded '01' for first day
+                                        //   $last_day_this_month  = date('Y-m-t');
+                                        ?>
+                                        <input id="start_date" name="start_date" autocomplete="off" placeholder="Begin"
+                                            style="border: 1px solid grey;" />
+                                        <input id="end_date" name="end_date" autocomplete="off" placeholder="End"
+                                            style="border: 1px solid grey;" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ">
+                                <div class="form-group row d-flex ">
+                                    <label for="ref_code" class="col-md-2 col-form-label"> </label>
+                                    <div class="col-md-10">
+
+
+                                        <a class="btn btn-info btn-sm btnSearch " href="#"
+                                            style="font-size: 14px !important;">
+                                            <i class="bx bx-search align-middle "></i> SEARCH
+                                        </a>
+                                        <button type="submit" class="btn btn-success btn-sm"
+                                            style="font-size: 14px !important;">
+                                            <i class="bx bx-search align-middle "></i> PRINT
+                                        </button>
+                                        <!--
+                                                                                                                 <a class="btn btn-info btn-sm btnStockMovement " href="#" style="font-size: 14px !important;float: right;" >
+                                                                                                                    <i class="bx bx-cog align-middle "></i> Process Stock movement
+                                                                                                                  </a>  -->
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        @if (empty(@$sRow))
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                    </div>
+                                </div>
+                            </div>
+                        @ENDIF
+
+
+                    </form>
 
                 </div>
 
@@ -541,6 +574,25 @@
                 $(function() {
                     oTable = $('#data-table-01').DataTable({
                         "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                        // dom: 'lBfrtip',
+                        // lengthMenu: [
+                        //     [25, 100, -1],
+                        //     [25, 100, 'All'],
+                        // ],
+                        // buttons: [{
+                        //         extend: 'excel',
+                        //         exportOptions: {
+                        //             columns: [0, 1, 2, 3, 4, 5]
+                        //         }
+                        //     },
+                        //     {
+                        //         extend: 'print',
+                        //         exportOptions: {
+                        //             columns: [0, 1, 2, 3, 4, 5]
+                        //         }
+                        //     },
+                        // ],
+
                         processing: true,
                         serverSide: true,
                         scroller: true,
@@ -552,6 +604,234 @@
                         "searching": false,
                         ajax: {
                             url: '{{ route('backend.check_stock.datatable') }}',
+                            data: {
+                                business_location_id_fk: business_location_id_fk,
+                                branch_id_fk: branch_id_fk,
+                                warehouse_id_fk: warehouse_id_fk,
+                                zone_id_fk: zone_id_fk,
+                                shelf_id_fk: shelf_id_fk,
+                                shelf_floor: shelf_floor,
+                                lot_number: lot_number,
+                                start_date: start_date,
+                                end_date: end_date,
+                                product: product,
+                                lot_0_show: lot_0_show,
+                            },
+                            method: 'POST',
+                        },
+
+                        // dom: 'Bfrtip',
+                        // buttons: [
+                        //     {
+                        //         extend: 'excelHtml5',
+                        //         title: 'CHECK STOCK'
+                        //     },
+
+                        // ],
+                        columns: [{
+                                data: 'id',
+                                title: 'no.',
+                                className: 'text-center w50'
+                            },
+                            {
+                                data: 'product_name',
+                                title: '<center>รหัสสินค้า : ชื่อสินค้า </center>',
+                                className: 'text-left w230 '
+                            },
+                            {
+                                data: 'lot_number',
+                                title: '<center>ล็อตนัมเบอร์ </center>',
+                                className: 'text-left'
+                            },
+                            {
+                                data: 'lot_expired_date',
+                                title: '<center>วันหมดอายุ </center>',
+                                className: 'text-center'
+                            },
+                            {
+                                data: 'amt_desc',
+                                title: '<center>จำนวน </center>',
+                                className: 'text-center'
+                            },
+                            {
+                                data: 'warehouses',
+                                title: '<center>คลังสินค้า </center>',
+                                className: 'text-left'
+                            },
+                            {
+                                data: 'stock_card',
+                                title: 'STOCK CARD',
+                                className: 'text-center w150'
+                            },
+                        ],
+
+                        rowGroup: {
+                            startRender: null,
+                            endRender: function(rows, group) {
+                                var sTotal = rows
+                                    .data()
+                                    .pluck('amt')
+                                    .reduce(function(a, b) {
+                                        return a + b * 1;
+                                        // return a + b;
+                                    }, 0);
+
+                                // console.log(sTotal);
+
+                                sTotal = $.fn.dataTable.render.number(',', '.', 0, '  ')
+                                    .display(sTotal);
+
+                                var product_id_fk = rows.data().pluck('product_id_fk')
+                                    .toArray();
+                                var product_id_fk = product_id_fk[0];
+
+                                var lot_number = rows.data().pluck('lot_number')
+                                    .toArray();
+                                var lot_expired_date = rows.data().pluck(
+                                    'lot_expired_date').toArray();
+                                var lot_number = lot_number[0];
+
+                                var warehouse_id_fk = $('#warehouse_id_fk').val();
+                                var zone_id_fk = $('#zone_id_fk').val();
+                                var shelf_id_fk = $('#shelf_id_fk').val();
+                                var shelf_floor = $('#shelf_floor').val();
+                                var lot_number = $('#lot_number').val();
+
+                                var lot_expired_date_s = $('#start_date').val();
+                                var lot_expired_date_e = $('#end_date').val();
+
+                                return $('<tr>')
+                                    .append(
+                                        '<td colspan="4" style="text-align:right;background-color:#e6e6e6 !important;font-weight: bold;">Total for ' +
+                                        group + '</td>')
+                                    .append(
+                                        '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "><center>' +
+                                        (sTotal) + '</td>')
+                                    .append(
+                                        '<td style=" background-color:#e6e6e6 !important;font-weight: bold; "></td>'
+                                    )
+                                    .append(
+                                        '<td style=" font-weight: bold; "><center><a class="btn btn-outline-warning waves-effect waves-light" href="{{ url('backend/check_stock/stock_card') }}/' +
+                                        product_id_fk + '/' + business_location_id_fk +
+                                        '/' + branch_id_fk + '/' + warehouse_id_fk +
+                                        '/' + zone_id_fk + '/' + shelf_id_fk + '/' +
+                                        shelf_floor + '/' + lot_number + '/' +
+                                        lot_expired_date_s + '/' + lot_expired_date_e +
+                                        '" style="padding: initial;padding-left: 2px;padding-right: 2px;color:black;" target=_blank > STOCK CARD </a></td>'
+                                    );
+
+
+                            },
+                            dataSrc: ["product_name"]
+                        },
+
+                        rowCallback: function(nRow, aData, dataIndex) {
+
+                            var info = $(this).DataTable().page.info();
+                            $("td:eq(0)", nRow).html(info.start + dataIndex + 1);
+
+                        },
+
+
+                    });
+
+
+                });
+
+
+                // setTimeout(function(){
+                //   $("#spinner_frame").hide();
+                // },2000);
+
+            });
+
+            $(document).on('click', '.btnSearchPrint', function(event) {
+                event.preventDefault();
+
+                // $("#spinner_frame").show();
+
+                // return false;
+
+                var business_location_id_fk = $('#business_location_id_fk').val();
+                var branch_id_fk = $('#branch_id_fk').val();
+                var start_date = $('#start_date').val();
+                var end_date = $('#end_date').val();
+
+
+                // if(business_location_id_fk==''){
+                //    $("#business_location_id_fk").select2('open');
+                //    $("#spinner_frame").hide();
+                //     return false;
+                //  }
+                // if(branch_id_fk==''){
+                //    $("#branch_id_fk").select2('open');
+                //    $("#spinner_frame").hide();
+                //     return false;
+                //  }
+
+                // if(start_date==''){
+                //     // $("#start_date").focus();
+                //     $("#spinner_frame").hide();
+                //      return false;
+                //   }
+
+                // if(end_date==''){
+                //   $("#end_date").focus();
+                //   $("#spinner_frame").hide();
+                //    return false;
+                // }
+
+                var product = $('#product').val();
+                var lot_number = $('#lot_number').val();
+                var warehouse_id_fk = $('#warehouse_id_fk').val();
+                var zone_id_fk = $('#zone_id_fk').val();
+                var shelf_id_fk = $('#shelf_id_fk').val();
+                var shelf_floor = $('#shelf_floor').val();
+                var lot_0_show = $('#lot_0_show').val();
+
+                console.log(business_location_id_fk);
+                console.log(branch_id_fk);
+                console.log(start_date);
+                console.log(end_date);
+
+
+                // return false;
+                var oTable;
+                $(function() {
+                    oTable = $('#data-table-01').DataTable({
+                        "sDom": "<'row'<'col-sm-12'tr>><'row'<'col-sm-5'i><'col-sm-7'p>>",
+                        dom: 'Bfrtip',
+                        // lengthMenu: [
+                        //     [25, 100, -1],
+                        //     [25, 100, 'All'],
+                        // ],
+                        buttons: [{
+                                extend: 'excel',
+                                footer: true,
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5]
+                                }
+                            },
+                            {
+                                extend: 'print',
+                                footer: true,
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5]
+                                }
+                            },
+                        ],
+
+                        processing: true,
+                        serverSide: true,
+                        scroller: true,
+                        scrollCollapse: true,
+                        scrollX: true,
+                        ordering: false,
+                        destroy: true,
+                        iDisplayLength: 500,
+                        "searching": false,
+                        ajax: {
+                            url: '{{ route('backend.check_stock.datatable_print') }}',
                             data: {
                                 business_location_id_fk: business_location_id_fk,
                                 branch_id_fk: branch_id_fk,

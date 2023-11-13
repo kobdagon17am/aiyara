@@ -1274,7 +1274,7 @@
 
                 var form = $('#approve_other_form');
                 var actionUrl = form.attr('action');
-                var approval_amount_transfer_over_slip = $('#approval_amount_transfer_over_slip').prop('files')[0];
+                // var approval_amount_transfer_over_slip = $('#approval_amount_transfer_over_slip').prop('files')[0];
 
                 $.ajaxSetup({
                     headers: {
@@ -1288,8 +1288,7 @@
                     // data: {
                     //     "_token": "{{ csrf_token() }}",
                     // },
-                    data: form.serialize() + "&order_id_approve_list=" + bill_other_time +
-                        '&approval_amount_transfer_over_slip=' + approval_amount_transfer_over_slip,
+                    data: form.serialize() + "&order_id_approve_list=" + bill_other_time,
                     success: function(response) {
                         // $('#successMsg').show();
                         console.log(response);

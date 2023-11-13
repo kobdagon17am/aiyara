@@ -831,6 +831,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::resource('check_stock', 'Check_stockController');
     Route::post('check_stock/datatable', 'Check_stockController@Datatable')->name('check_stock.datatable');
+    Route::post('check_stock/datatable_print', 'Check_stockController@DatatablePrint')->name('check_stock.datatable_print');
     Route::post('check_stock_borrow/datatable', 'Check_stockController@DatatableBorrow')->name('check_stock_borrow.datatable');
     Route::post('check_stock_transfer_warehouses/datatable', 'Check_stockController@DatatableTransfer_warehouses')->name('check_stock_transfer_warehouses.datatable');
     Route::post('check_stock_transfer_branch/datatable', 'Check_stockController@DatatableTransfer_branch')->name('check_stock_transfer_branch.datatable');
