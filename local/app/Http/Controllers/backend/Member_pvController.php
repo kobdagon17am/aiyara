@@ -38,6 +38,7 @@ class Member_pvController extends Controller
 
 
 
+
       return View('backend.member_pv.index')->with(
         array(
            'sBusiness_location'=>$sBusiness_location,'sBranchs'=>$sBranchs,'Supplier'=>$Supplier,
@@ -96,8 +97,26 @@ class Member_pvController extends Controller
       $provinces = DB::table('dataset_provinces')->pluck('name_th', 'id');
       $file_img = DB::table('register_files')->where('customer_id',$customer->id)->where('type',4)->first();
 
+      $dataset_business_location = DB::table('dataset_business_location')
+      ->where('status','=',1)
+      ->get();
+
+
+      $dataset_business_name = DB::table('dataset_business_location')
+      ->where('id',$customer->business_location_id)
+      ->first();
+
+      if($dataset_business_name){
+        $b_name = $dataset_business_name->txt_desc;
+      }else{
+        $b_name = 'THAI';
+      }
+
+
       return view('backend.member_pv.edit')->with([
         'customer' => $customer,
+        'dataset_business_location' => $dataset_business_location,
+        'business_location_name' => $b_name,
         'qualifications' => $qualifications,
         'packages' => $packages,
         'addressCard' => $addressCard,
@@ -491,6 +510,52 @@ class Member_pvController extends Controller
       ->make(true);
     }
 
+
+
+    public static function tranfer_file(Request $rs){
+
+
+
+      $data = DB::table('customers') //อัพ Pv ของตัวเอง
+          ->select('id','user_name')
+          ->where('user_name',$rs->user_name)
+          ->first();
+          $arr = array();
+
+    if(empty($data)){
+      //fail
+      return redirect('backend/member_pv/'.$data->id.'/edit')->with(['alert' =>['status'=>'fail', 'msg'=>'ไม่พบรหัส']]);
+
+    }
+
+      $gv = \App\Helpers\Frontend::get_gitfvoucher($data->user_name);
+      if($gv){
+        $gv_value = 0;
+      }else{
+        $gv_value = $gv;
+      }
+
+      if($gv_value>0){
+        //dd($data->user_name,'fail');
+        return redirect('backend/member_pv/'.$data->id.'/edit')->with(['alert' =>['status'=>'fail', 'msg'=>'มียอด Gitfvoucher คงเหลือ ไม่สามารถย้ายได้']]);
+      }
+
+
+    $customers = DB::table('customers')
+    ->where('id',$data->id)
+    ->update(['business_location_id' => $rs->business_location]); //ลงข้อมูลบิลชำระเงิน
+
+    $file = DB::table('register_files')
+    ->where('customer_id',$data->id)
+    ->update(['business_location_id_fk' => $rs->business_location]); //ลงข้อมูลบิลชำระเงิน
+
+    return redirect('backend/member_pv/'.$data->id.'/edit')->with(['alert' =>['status'=>'success', 'msg'=>'ย้ายข้อมูลสำเร็จ']]);
+
+
+
+
+
+}
 
 
 }

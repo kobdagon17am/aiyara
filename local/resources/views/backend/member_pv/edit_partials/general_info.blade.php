@@ -103,3 +103,49 @@
     </div>
   </div>
 </div>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="font-weight-bold">Business Location</h5>
+        <hr class="mt-1 mb-2">
+        <form action="{{ route('backend.member_regis.tranfer_file') }}" method="POST" >
+
+
+          @csrf
+          <input type="hidden" name="user_name" value="{{$customer->user_name}}">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="first_name">Business Location</label>
+                <input type="text" class="form-control" placeholder="Business Location"
+                  value="{{ $business_location_name }}" disabled>
+
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="package_id">ปรับ Business Location</label>
+                <select name="business_location"  class="form-control" required>
+                  <option value="">- เลือก Business Location -</option>
+                  @foreach ($dataset_business_location as $value)
+                    <option value="{{ $value->id }}" @if($value->id == $customer->business_location_id) selected @endif>{{ $value->txt_desc }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="text-right">
+            <button type="submit" name="type" onclick="return confirm('Confirm Business Locatio ?')" class="btn btn-info">แก้ไขข้อมูล</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

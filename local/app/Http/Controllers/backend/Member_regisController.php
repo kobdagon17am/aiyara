@@ -1481,48 +1481,6 @@ class Member_regisController extends Controller
         ->make(true);
       }
 
-      public static function tranfer_file(Request $rs){
 
-
-            $data = DB::table('customers') //อัพ Pv ของตัวเอง
-                ->select('id','user_name')
-                ->where('user_name',$rs->user_name)
-                ->first();
-                $arr = array();
-
-          if(empty($data)){
-            //fail
-            return redirect('backend/member_regis')->with(['alert' =>['status'=>'fail', 'msg'=>'ไม่พบรหัส']]);
-
-          }
-
-            $gv = \App\Helpers\Frontend::get_gitfvoucher($data->user_name);
-            if($gv){
-              $gv_value = 0;
-            }else{
-              $gv_value = $gv;
-            }
-
-            if($gv_value>0){
-              //dd($data->user_name,'fail');
-              return redirect('backend/member_regis')->with(['alert' =>['status'=>'fail', 'msg'=>'มียอด Gitfvoucher คงเหลือ ไม่สามารถย้ายได้']]);
-            }
-
-
-          $customers = DB::table('customers')
-          ->where('id',$data->id)
-          ->update(['business_location_id' => 3]); //ลงข้อมูลบิลชำระเงิน
-
-          $file = DB::table('register_files')
-          ->where('customer_id',$data->id)
-          ->update(['business_location_id_fk' => 3]); //ลงข้อมูลบิลชำระเงิน
-
-          return redirect('backend/member_regis')->with(['alert' =>['status'=>'success', 'msg'=>'ย้ายข้อมูลสำเร็จ']]);
-
-
-
-
-
-      }
 
 }
