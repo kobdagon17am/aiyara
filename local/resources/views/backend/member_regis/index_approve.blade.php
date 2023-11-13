@@ -104,6 +104,7 @@
 @endsection
 
 @section('content')
+
     <div class="myloading"></div>
     <!-- start page title -->
     <div class="row">
@@ -408,8 +409,11 @@
                                     </div>
                                 </div>
 
+                                <div class="table-responsive p-3">
                                 <table id="data-table-02" class="table table-bordered " style="width: 100%;">
                                 </table>
+                                </div>
+
 
                             </div>
 
@@ -770,6 +774,32 @@
         </div>
     </div>
 
+    <div class="modal fade" id="tranfer_file" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+
+        <form action="{{ route('backend.member_regis.tranfer_file') }}" method="POST" >
+
+        {{ csrf_field() }}
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">ย้ายไฟล์เอกสารและ Location </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <b> ย้ายไฟล์เอกสารและ Location  รหัส <b id="tranfer_username"></b> ไปกำพูชา </b>
+          </div>
+          <input type="hidden" name="user_name" id="n_tranfer_username">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">ยืนยัน</button>
+          </div>
+        </div>
+        </form>
+      </div>
+    </div>
+
 
 @endsection
 
@@ -826,6 +856,11 @@
                     {
                         data: 'id',
                         title: 'ID',
+                        className: 'text-center w50'
+                    },
+                    {
+                        data: 'tranfer',
+                        title: 'ย้ายเอกสาร',
                         className: 'text-center w50'
                     },
 
@@ -1168,6 +1203,12 @@
                                 title: 'ID',
                                 className: 'text-center w50'
                             },
+                            {
+                        data: 'tranfer',
+                        title: 'ย้ายเอกสาร',
+                        className: 'text-center w50'
+                    },
+
                             {
                                 data: 'customer_name',
                                 title: '<center>{{ __('message.info_member') }} </center>',
@@ -1668,5 +1709,28 @@
         // $('#checkRegis').on('hidden.bs.modal', function () {
         //    location.reload();
         // });
+
+        function tranfer_file(user_name){
+
+              if(user_name){
+
+                $('#tranfer_username').html(user_name);
+                $('#n_tranfer_username').val(user_name);
+
+                $('#tranfer_file').modal('show');
+              }else{
+                Swal.fire({
+                  icon: "error",
+                  text: "ไม่พบรหัสผู้ใช้ กรุณาทำรายการไหม่",
+
+                });
+
+              }
+
+
+        }
+
+
+
     </script>
 @endsection
