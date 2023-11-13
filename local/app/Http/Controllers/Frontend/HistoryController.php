@@ -151,8 +151,8 @@ class HistoryController extends Controller
         if ($type == 'refresh_time') {
 
             $type_qr_modal = 'update';
-            $random = 'QR'.Random_code::random_code('6');
-            $qr = $id . '' . $random;
+            $random = Random_code::random_code('6');
+            $qr = 'QR'.$id . '' . $random;
 
             $endata = date('Y-m-d H:i:s', strtotime("+30 minutes"));
             $updated_qrcode = DB::table('db_orders')
@@ -171,8 +171,8 @@ class HistoryController extends Controller
                 }
             } else {
                 $type_qr_modal = 'update';
-                $random = 'QR'.Random_code::random_code('6');
-                $qr = $id . '' . $random;
+                $random = Random_code::random_code('6');
+                $qr = 'QR'.$id . '' . $random;
 
                 $endata = date('Y-m-d H:i:s', strtotime("+30 minutes"));
                 $updated_qrcode = DB::table('db_orders')
