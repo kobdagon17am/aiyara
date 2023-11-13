@@ -1168,6 +1168,7 @@
                                 title: 'ID',
                                 className: 'text-center w50'
                             },
+
                             {
                                 data: 'customer_name',
                                 title: '<center>{{ __('message.info_member') }} </center>',
