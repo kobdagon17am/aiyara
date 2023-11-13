@@ -1518,38 +1518,25 @@ GROUP BY db_order_products_list.product_id_fk
                   $amt_scan = @$value->amt_get;
 
                   if($key==0){
-                                // for ($i=0; $i < $amt_scan ; $i++) { บันทึกสแกน
-
                                   $qr = DB::select(" select qr_code,updated_at from db_pick_warehouse_qrcode where item_id='".@$item_id."' and invoice_code='".$value->code_order."' and packing_code= ('".@$row->packing_code."') AND product_id_fk='".@$value->product_id_fk."' ");
-
-                                  // if( (@$qr[0]->updated_at < date("Y-m-d") && !empty(@$qr[0]->qr_code)) ){
-
-                                  //   $pn .=
-                                  //    '
-                                  //     <input type="text" style="width:122px;" value="'.@$qr[0]->qr_code.'" readonly >
-                                  //     <i class="fa fa-times-circle fa-2 " aria-hidden="true" style="color:grey;" ></i>
-                                  //    ';
-
-                                  // }else{
-
                                     $pn .=
                                     '
                                       <input type="text" class="in-tx qr_scan " data-item_id="'.@$item_id.'" packing_list="'.$row->lists.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'" placeholder="scan qr" style="width:122px;" value="" >
-
                                     ';
-                                    // <i class="fa fa-times-circle fa-2 btnDeleteQrcodeProduct " aria-hidden="true" style="color:red;cursor:pointer;" data-item_id="'.@$item_id.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.@$value->product_id_fk.'" ></i>
-
                                     //  วุฒิเพิ่มมา
                                     $pn .=
                                     '  <a href="'.url('backend/qr_show/'.$value->code_order.'/'.$row->packing_code.'/'.$value->product_id_fk.'/'.$row->lists).'" target="bank" class="qr_scan_show" data-item_id="'.@$item_id.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'"><u>แสดง</u></a>
                                     <br>
                                     ';
                                     $pn .= '<label class="last_scan" style="color:red;"></label>';
-                                  // }
-
-                                //     @$item_id++;
-
-                                // }
+                                    $pn .=
+                                    '<br>
+                                    <table id="table_qr_scaned" class="table table-bordered">
+                                    </table>
+                                    <button class="btn btn-success btn-sm" type="button" id="qr_scaned_submit" data-item_id="'.@$item_id.'" packing_list="'.$row->lists.'" invoice_code="'.$value->code_order.'" data-packing_code="'.@$row->packing_code.'" data-product_id_fk="'.$value->product_id_fk.'">
+                                    บันทึก QR
+                                    </button>
+                                    ';
                   }
 
 

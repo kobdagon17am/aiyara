@@ -954,22 +954,70 @@
 
                 var v = $(this).val();
                 var this_data = $(this);
-                // var item_id = $(this).data('item_id');
                 var packing_code = $(this).data('packing_code');
                 var product_id_fk = $(this).data('product_id_fk');
                 var invoice_code = $(this).attr('invoice_code');
                 var packing_list = $(this).attr('packing_list');
-                // alert(v+":"+invoice_code+":"+product_id_fk);
-                // if($(this).val()!=''){
-                //   $(this).css({ 'background-color' : '', 'opacity' : '' });
-                // }
+
+                var p = '<tr class="qr_scaned_tr">' +
+                    '<td>' + v + '</td>' +
+                    '<input class="qr_scaned" type="hidden" name="qr_scaned[]" value="' + v + '">' +
+                    '<td width="10%;"><i class="fa fa-trash qr_scanned_remove" style="color:red;"></i></td>' +
+                    '</tr>';
+
+                $('#table_qr_scaned').append(p);
+                $('.btnDeleteQrcodeProduct').trigger('click');
+                this_data.val('');
+
+                // $(".myloading").show();
+                // $.ajax({
+                //     type: 'POST',
+                //     url: " {{ url('backend/ajaxScanQrcodeProductPacking') }} ",
+                //     data: {
+                //         _token: '{{ csrf_token() }}',
+                //         invoice_code: invoice_code,
+                //         qr_code: v,
+                //         packing_code: packing_code,
+                //         packing_list: packing_list,
+                //         product_id_fk: product_id_fk
+                //     },
+                //     success: function(data) {
+                //         $(".myloading").hide();
+                //         $('.btnDeleteQrcodeProduct').trigger('click');
+                //         $('.last_scan').html(data);
+                //         this_data.val('');
+                //     },
+                //     error: function(jqXHR, textStatus, errorThrown) {
+                //         $(".myloading").hide();
+                //     }
+                // });
+            });
+
+            $(document).on('click', '.qr_scanned_remove', function(e) {
+                $(this).closest('.qr_scaned_tr').remove();
+            });
+
+            $(document).on('click', '#qr_scaned_submit', function(e) {
+              var packing_code = $(this).data('packing_code');
+              var product_id_fk = $(this).data('product_id_fk');
+              var invoice_code = $(this).attr('invoice_code');
+              var packing_list = $(this).attr('packing_list');
+              var v = '';
+              $(".qr_scaned").each(function( index ) {
+                console.log( index + ": " + $( this ).text() );
+                v+= $( this ).val()+',';
+              });
+              // alert(v);
+              if( $('.qr_scaned').length == 0){
+                alert('กรุณาสแกน QR ก่อนบันทึก');
+                return false;
+              }else{
                 $(".myloading").show();
                 $.ajax({
                     type: 'POST',
                     url: " {{ url('backend/ajaxScanQrcodeProductPacking') }} ",
                     data: {
                         _token: '{{ csrf_token() }}',
-                        //  item_id:item_id,
                         invoice_code: invoice_code,
                         qr_code: v,
                         packing_code: packing_code,
@@ -977,50 +1025,25 @@
                         product_id_fk: product_id_fk
                     },
                     success: function(data) {
-                        // console.log(data);
-                        //  $.each(data,function(key,value){
-
-                        //  });
+                      $(".qr_scaned_tr").each(function( index ) {
+                        $(this).remove();
+                      });
                         $(".myloading").hide();
-                        $('.btnDeleteQrcodeProduct').trigger('click');
-                        $('.last_scan').html(data);
-                        this_data.val('');
-                        // $(this).prev().val('');
+                        alert('บันทึก QR สำเร็จ');
+                        // $('.btnDeleteQrcodeProduct').trigger('click');
+                        // $('.last_scan').html(data);
+                        // this_data.val('');
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         $(".myloading").hide();
                     }
                 });
+              }
             });
-
 
             $(document).on('click', '.btnDeleteQrcodeProduct', function(e) {
-                // var item_id = $(this).data('item_id');
-                // var packing_code = $(this).data('packing_code');
-                // var product_id_fk = $(this).data('product_id_fk');
-                // // alert(item_id+":"+packing_code+":"+product_id_fk);
-                //    $(".myloading").show();
-                //    $.ajax({
-                //        type:'POST',
-                //        url: " {{ url('backend/ajaxDeleteQrcodeProductPacking') }} ",
-                //        data:{ _token: '{{ csrf_token() }}',item_id:item_id,packing_code:packing_code,product_id_fk:product_id_fk },
-                //         success:function(data){
-                //              // console.log(data);
-                //              $.each(data,function(key,value){
-                //              });
-
-                //              $(".myloading").hide();
-                //           },
-                //         error: function(jqXHR, textStatus, errorThrown) {
-                //             $(".myloading").hide();
-                //         }
-                //     });
-                // $(this).prev().css({ 'background-color' : 'blanchedalmond'});
                 $(this).prev().val('');
             });
-
-
-
         });
     </script>
 

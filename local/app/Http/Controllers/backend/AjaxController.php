@@ -4590,36 +4590,7 @@ class AjaxController extends Controller
     {
 
       if($request->ajax()){
-        // return $request->all();
-        // dd();
-        // DB::select(" UPDATE db_pick_warehouse_qrcode SET qr_code = '' where id = $request->id ");
 
-                    // $value=DB::table('db_pick_warehouse_qrcode')
-                    // ->where('item_id', $request->item_id)
-                    // ->where('packing_code', $request->packing_code)
-                    // ->where('product_id_fk', $request->product_id_fk)
-                    // ->where('invoice_code', $request->invoice_code)
-                    // ->get();
-                    // if($value->count() == 0){
-                    //       DB::table('db_pick_warehouse_qrcode')->insert(array(
-                    //         'item_id' => $request->item_id,
-                    //         'packing_code' => $request->packing_code,
-                    //         'product_id_fk' => $request->product_id_fk,
-                    //         'qr_code' => $request->qr_code,
-                    //         'invoice_code' => $request->invoice_code,
-                    //         'created_at' => date("Y-m-d H:i:s"),
-                    //       ));
-                    // }else{
-                    //       DB::table('db_pick_warehouse_qrcode')
-                    //       ->where('item_id', $request->item_id)
-                    //       ->where('packing_code', $request->packing_code)
-                    //       ->where('product_id_fk', $request->product_id_fk)
-                    //       ->where('invoice_code', $request->invoice_code)
-                    //       ->update(array(
-                    //         'qr_code' => $request->qr_code,
-                    //       ));
-                    // }
-// dd($request->qr_code);
                     if(isset($request->item_id)){
                         DB::table('db_pick_warehouse_qrcode')
                         ->where('item_id', $request->item_id)
@@ -4631,6 +4602,7 @@ class AjaxController extends Controller
                           'qr_code' => $request->qr_code,
                         ));
                     }else{
+
                         $value=DB::table('db_pick_warehouse_qrcode')
                         ->where('packing_code', $request->packing_code)
                         // ->where('product_id_fk', $request->product_id_fk)
@@ -4638,9 +4610,23 @@ class AjaxController extends Controller
                         ->where('packing_list', $request->packing_list)
                         ->orderBy('item_id','desc')
                         ->first();
-                        if(!$value){
+
+                        $qr_arr = explode(',',$request->qr_code);
+                        foreach($qr_arr as $key => $qr){
+                          if($qr != ''){
+                            if(!$value){
+                                DB::table('db_pick_warehouse_qrcode')->insert(array(
+                                  'item_id' => $key+1,
+                                  'packing_code' => $request->packing_code,
+                                  // 'product_id_fk' => $request->product_id_fk,
+                                  'qr_code' => $qr,
+                                  'invoice_code' => $request->invoice_code,
+                                  'packing_list' => $request->packing_list,
+                                  'created_at' => date("Y-m-d H:i:s"),
+                                ));
+                            }else{
                               DB::table('db_pick_warehouse_qrcode')->insert(array(
-                                'item_id' => 1,
+                                'item_id' => $value->item_id+($key+1),
                                 'packing_code' => $request->packing_code,
                                 // 'product_id_fk' => $request->product_id_fk,
                                 'qr_code' => $request->qr_code,
@@ -4648,35 +4634,52 @@ class AjaxController extends Controller
                                 'packing_list' => $request->packing_list,
                                 'created_at' => date("Y-m-d H:i:s"),
                               ));
-                        }else{
-                            DB::table('db_pick_warehouse_qrcode')->insert(array(
-                                'item_id' => $value->item_id+1,
-                                'packing_code' => $request->packing_code,
-                                // 'product_id_fk' => $request->product_id_fk,
-                                'qr_code' => $request->qr_code,
-                                'invoice_code' => $request->invoice_code,
-                                'packing_list' => $request->packing_list,
-                                'created_at' => date("Y-m-d H:i:s"),
-                              ));
+                            }
+                          }
                         }
+                        // if(!$value){
+
+                        //       DB::table('db_pick_warehouse_qrcode')->insert(array(
+                        //         'item_id' => 1,
+                        //         'packing_code' => $request->packing_code,
+                        //         // 'product_id_fk' => $request->product_id_fk,
+                        //         'qr_code' => $request->qr_code,
+                        //         'invoice_code' => $request->invoice_code,
+                        //         'packing_list' => $request->packing_list,
+                        //         'created_at' => date("Y-m-d H:i:s"),
+                        //       ));
+
+                        // }else{
+
+                        //     DB::table('db_pick_warehouse_qrcode')->insert(array(
+                        //         'item_id' => $value->item_id+1,
+                        //         'packing_code' => $request->packing_code,
+                        //         // 'product_id_fk' => $request->product_id_fk,
+                        //         'qr_code' => $request->qr_code,
+                        //         'invoice_code' => $request->invoice_code,
+                        //         'packing_list' => $request->packing_list,
+                        //         'created_at' => date("Y-m-d H:i:s"),
+                        //       ));
+                        // }
+
                     }
+                    // $qrs = DB::table('db_pick_warehouse_qrcode')
+                    // ->select('qr_code')
+                    // // ->where('invoice_code',$oid)
+                    // // ->where('product_id_fk',$proid)
+                    // ->where('packing_code',$request->packing_code)
+                    // ->where('packing_list',$request->packing_list)
+                    // ->orderBy('item_id','desc')
+                    // ->limit(6)
+                    // ->get();
 
-                    $qrs = DB::table('db_pick_warehouse_qrcode')
-                    ->select('qr_code')
-                    // ->where('invoice_code',$oid)
-                    // ->where('product_id_fk',$proid)
-                    ->where('packing_code',$request->packing_code)
-                    ->where('packing_list',$request->packing_list)
-                    ->orderBy('item_id','desc')
-                    ->limit(6)
-                    ->get();
+                    // $qr = "";
+                    // foreach($qrs as $q){
+                    //     $qr .= "QR : ".$q->qr_code."<br>";
+                    // }
 
-                    $qr = "";
-                    foreach($qrs as $q){
-                        $qr .= "QR : ".$q->qr_code."<br>";
-                    }
-
-                    return response()->json($qr);
+                    // return response()->json($qr);
+                    return response()->json();
       }
 
     }
