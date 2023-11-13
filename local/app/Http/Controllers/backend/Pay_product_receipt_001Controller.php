@@ -590,7 +590,7 @@ class Pay_product_receipt_001Controller extends Controller
       // temp_db_stocks
       $invoice_code = $request->txtSearch;
       if(strpos($invoice_code,"QR") !== false){
-        $order_qr = DB::table('db_orders')->select('invoice_code')->where('qr_code',$invoice_code)->where('qr_endate','>',date('Y-m-d'))->first();
+        $order_qr = DB::table('db_orders')->select('invoice_code')->where('delivery_location',0)->where('qr_code',$invoice_code)->where('qr_endate','>',date('Y-m-d'))->first();
         if($order_qr){
           $invoice_code = $order_qr->invoice_code;
           $request->txtSearch = $order_qr->invoice_code;
