@@ -774,6 +774,7 @@
         </div>
     </div>
 
+{{--
     <div class="modal fade" id="tranfer_file" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
 
@@ -798,7 +799,7 @@
         </div>
         </form>
       </div>
-    </div>
+    </div> --}}
 
 
 @endsection
@@ -858,11 +859,11 @@
                         title: 'ID',
                         className: 'text-center w50'
                     },
-                    {
-                        data: 'tranfer',
-                        title: 'ย้ายเอกสาร',
-                        className: 'text-center w50'
-                    },
+                    // {
+                    //     data: 'tranfer',
+                    //     title: 'ย้ายเอกสาร',
+                    //     className: 'text-center w50'
+                    // },
 
                     {
                         data: 'customer_name',
@@ -1203,11 +1204,11 @@
                                 title: 'ID',
                                 className: 'text-center w50'
                             },
-                            {
-                        data: 'tranfer',
-                        title: 'ย้ายเอกสาร',
-                        className: 'text-center w50'
-                    },
+                    //         {
+                    //     data: 'tranfer',
+                    //     title: 'ย้ายเอกสาร',
+                    //     className: 'text-center w50'
+                    // },
 
                             {
                                 data: 'customer_name',

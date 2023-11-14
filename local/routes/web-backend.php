@@ -844,7 +844,8 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::get('member_regis_list', 'Member_regisController@index_list');
     Route::post('member_regis/datatable', 'Member_regisController@Datatable')->name('member_regis.datatable');
 
-    Route::post('member_regis/tranfer_file', 'Member_regisController@tranfer_file')->name('member_regis.tranfer_file');
+    Route::post('member_regis/tranfer_file', 'Member_pvController@tranfer_file')->name('member_regis.tranfer_file');
+
     Route::post('member_regis/datatable_list', 'Member_regisController@Datatable_list')->name('member_regis.datatable_list');
     Route::post('member_regis02/datatable', 'Member_regisController@Datatable02')->name('member_regis02.datatable');
 
