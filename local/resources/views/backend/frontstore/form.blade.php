@@ -1010,7 +1010,7 @@
                                                                         <input {{ @$disChannel3 }}
                                                                             {{ @$pay_type_transfer_aicash }} disabled
                                                                             type="radio" province_id="0"
-                                                                            class="ShippingCalculate_deli ch_Disabled "
+                                                                            class="ShippingCalculate ch_Disabled "
                                                                             name="delivery_location" id="addr_04"
                                                                             value="4"
                                                                             <?= @$sRow->delivery_location == 4 ? 'checked' : '' ?>>
@@ -1021,7 +1021,7 @@
                                                                         <input {{ @$disChannel3 }}
                                                                             {{ @$pay_type_transfer_aicash }}
                                                                             type="radio" province_id="0"
-                                                                            class="ShippingCalculate_deli ch_Disabled "
+                                                                            class="ShippingCalculate ch_Disabled "
                                                                             name="delivery_location" id="addr_04"
                                                                             value="4"
                                                                             <?= @$sRow->delivery_location == 4 ? 'checked' : '' ?>>
