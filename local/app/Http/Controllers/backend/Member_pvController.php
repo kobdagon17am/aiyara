@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Frontend\Customer;
 use Auth;
+use Session;
 
 class Member_pvController extends Controller
 {
@@ -473,15 +474,35 @@ class Member_pvController extends Controller
 
         $routeEdit = route('backend.member_pv.edit', $user->id);
 
-        if (auth()->user()->permission == 0 && !auth()->user()->can_edit_profile) {
-          return '';
+
+
+        $sPermission = Auth::user()->permission ;
+          // $menu_id = @$_REQUEST['menu_id'];
+          $menu_id = Session::get('session_menu_id');
+        if($sPermission==1){
+          $sC = '';
+          $sU = '';
+          $sD = '';
+        }else{
+          $role_group_id = Auth::user()->role_group_id_fk;
+          $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
+          $sC = @$menu_permit->c==1?'1':'0';
+          $sU = @$menu_permit->u==1?'1':'0';
+          $sD = @$menu_permit->d==1?'1':'0';
         }
 
-        return "
+
+        if ($sU == 0) {
+          return '';
+        }else{
+          return "
           <a class='btn btn-sm btn-warning' href='{$routeEdit}' target='_blank' class='btn btn-primary'>
             <i class='bx bx-edit font-size-16 align-middle'></i>
           </a>
         ";
+        }
+
+
       })
       ->addColumn('aistockist_status', function ($row) {
           if($row->aistockist_status==1){
