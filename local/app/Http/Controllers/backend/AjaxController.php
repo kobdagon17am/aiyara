@@ -4629,7 +4629,7 @@ class AjaxController extends Controller
                                 'item_id' => $value->item_id+($key+1),
                                 'packing_code' => $request->packing_code,
                                 // 'product_id_fk' => $request->product_id_fk,
-                                'qr_code' => $request->qr_code,
+                                'qr_code' => $qr,
                                 'invoice_code' => $request->invoice_code,
                                 'packing_list' => $request->packing_list,
                                 'created_at' => date("Y-m-d H:i:s"),
