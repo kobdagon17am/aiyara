@@ -479,10 +479,12 @@ class Member_pvController extends Controller
         $sPermission = Auth::user()->permission ;
           // $menu_id = @$_REQUEST['menu_id'];
           $menu_id = Session::get('session_menu_id');
+
+
         if($sPermission==1){
-          $sC = '';
-          $sU = '';
-          $sD = '';
+          $sC = 1;
+          $sU = 1;
+          $sD = 1;
         }else{
           $role_group_id = Auth::user()->role_group_id_fk;
           $menu_permit = DB::table('role_permit')->where('role_group_id_fk',$role_group_id)->where('menu_id_fk',$menu_id)->first();
@@ -493,8 +495,10 @@ class Member_pvController extends Controller
 
 
         if ($sU == 0) {
+
           return '';
         }else{
+
           return "
           <a class='btn btn-sm btn-warning' href='{$routeEdit}' target='_blank' class='btn btn-primary'>
             <i class='bx bx-edit font-size-16 align-middle'></i>
