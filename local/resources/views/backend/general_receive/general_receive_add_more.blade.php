@@ -104,7 +104,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                                 <div class="col-md-8">
-                                    <select class="form-control select2-templating " disabled="">
+                                    <select class="form-control select2-templating "  disabled="">
                                         @if (@$sBusiness_location)
                                             @foreach (@$sBusiness_location as $r)
                                                 <option value="{{ @$r->id }}"
@@ -114,7 +114,7 @@
                                         @endif
                                     </select>
                                     <input type="hidden" name="business_location_id_fk"
-                                        value="{{ @\Auth::user()->business_location_id_fk }}">
+                                        value="{{ @\Auth::user()->business_location_id_fk }}" id="business_location_id_fk" >
                                 </div>
                             </div>
 
@@ -130,7 +130,7 @@
                                             @endforeach
                                         @endif
                                     </select>
-                                    <input type="hidden" name="branch_id_fk" value="{{ @\Auth::user()->branch_id_fk }}">
+                                    <input type="hidden" name="branch_id_fk" id="branch_id_fk" value="{{ @\Auth::user()->branch_id_fk }}">
                                 </div>
                             </div>
 
