@@ -619,8 +619,9 @@ class PvPayment extends Model
                     'type' =>'',//'admin','customer'
                     ];
                     $rs = \App\Http\Controllers\Frontend\Fc\LogErrorController::log_error($log);
+                  }else{
+                    $order_update->status_run_pv = 'success';
                   }
-
 
 
 
@@ -659,7 +660,6 @@ class PvPayment extends Model
                             $customer_update->date_mt_first = date('Y-m-d h:i:s');
                             $order_update->active_mt_date = date('Y-m-1',$mt_mount_new);
                         }
-                        $order_update->status_run_pv = 'success';
 
 
 
