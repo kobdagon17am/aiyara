@@ -45,15 +45,23 @@ class RunErrorController extends Controller
 
     //     $data = DB::table('customers') //อัพ Pv ของตัวเอง
     //       ->select('id','user_name')
-    //       ->wherein('user_name',['A797254',
-    //       'A163389',
-    //       'A847626',
-    //       'A744803',
-    //       'A702445',
-    //       'A547504',
+    //       ->wherein('user_name',['A796135',
+    //       'A729954',
+    //       'A728234',
+    //       'A739426',
+    //       'A840653',
+    //       'A871162',
+    //       'A872831',
+    //       'A762514',
+    //       'A137206',
+    //       'A594725',
+    //       'A583817',
+    //       'A550456',
+    //       'A869076',
+    //       'A871453',
     //      ])
     //       ->get();
-    //       $arr = array();
+    //       $arr = array(); 
     // $i = 0; 
     // foreach($data as $value){
 
@@ -67,20 +75,20 @@ class RunErrorController extends Controller
     //   if($gv_value>0){
     //     dd($value->user_name,'fail');
     //   }else{
-    //      $arr[] = $value->id;
+    //      $arr[] = $value->id; 
     //   }
 
     // $i++;
 
     // $customers = DB::table('customers') 
-    // ->wherein('id',$arr)
+    // ->wherein('id',$arr) 
     // ->update(['business_location_id' => 3]); //ลงข้อมูลบิลชำระเงิน
 
     // $file = DB::table('register_files')
     // ->wherein('customer_id',$arr)
     // ->update(['business_location_id_fk' => 3]); //ลงข้อมูลบิลชำระเงิน
 
-    // }
+    // } 
     // dd($i,'success');  
  
 
@@ -98,13 +106,23 @@ class RunErrorController extends Controller
 //   $promotions = DB::table('db_promotion_cus')
 //   ->select('db_promotion_cus.id')
 //   ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
-//            ->where('db_promotion_code.pro_edate', '<=', '2023-07-31 00:59:59')
+//            ->where('db_promotion_code.pro_edate', '<=', '2023-11-20 00:59:59')
 //            //  ->where('pro_status', 3)
 //            ->orderByDesc('pro_status')
 //            //->limit(50000)
-//           ->count(); 
-//    dd($promotions);
-// 	dd('ok');
+//           ->delete(); 
+   
+// 	dd('ok'); 
+
+// $promotions = DB::table('db_code_order')
+// ->select('	db_code_order.id')
+ 
+//          ->where('db_code_order.created_at', '<=', '2023-09-19 00:59:59')
+//          //  ->where('pro_status', 3)
+//          //->limit(50000)
+//         ->count();  
+//  dd($promotions);
+//   dd('ok');
 
 
     // $data = DB::table('db_salepage_setting')
@@ -175,17 +193,17 @@ class RunErrorController extends Controller
 //    dd($rs);
 
 //   $order_data = DB::table('db_orders')
-//   ->where('code_order', '=', 'O123083000103')
+//   ->where('code_order', '=', 'O123113000419')
 //   ->first(); 
 // //   dd($order_data);
-
+ 
 //   $user = DB::table('customers') 
 //   ->select('id', 'pv_aistockist', 'user_name')
-//   ->where('id', '=',$order_data->customers_id_fk)  
-//   ->first();
+//   ->where('id', '=',$order_data->customers_id_fk)   
+//   ->first(); 
 
 //   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
-//   dd($rs,$user->user_name);
+//   dd($rs,$user->user_name); 
 
 
 
@@ -1585,13 +1603,14 @@ class RunErrorController extends Controller
 
 
                 if ($resule['status'] == 'success') {
-                    $movement_ai_cash->save();
+                   
                     $customer_update->save();
                     $order_update->save();
 
                     if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
                     $customer_update_ai_cash->save();
+                    $movement_ai_cash->save();
                     }
 
 

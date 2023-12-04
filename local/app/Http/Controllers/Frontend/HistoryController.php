@@ -213,7 +213,7 @@ class HistoryController extends Controller
         // dd($request->dt_order_type);
 
             $orders = DB::table('db_orders')
-            ->select('db_orders.tracking_no','db_orders.note','db_orders.sum_price','db_orders.shipping_price','db_orders.distribution_channel_id_fk',
+            ->select('db_orders.tracking_no','db_orders.note','db_orders.sum_price','db_orders.shipping_price','db_orders.distribution_channel_id_fk','db_orders.member_id_aicash',
             'db_orders.purchase_type_id_fk', 'db_orders.pv_total', 'db_orders.created_at', 'db_orders.delivery_location_frontend','db_orders.order_status_id_fk',
             'db_orders.branch_id_fk' , 'db_orders.code_order', 'db_orders.cancel_expiry_date','db_orders.pay_type_id_fk','db_orders.id',
             'db_orders.pv_banlance','db_orders.active_mt_date','db_orders.active_tv_date',
