@@ -105,6 +105,8 @@ return [
     'error_edit_1' => 'เปลี่ยนแปลงรหัส',
     'error_edit_2' => 'ปรับประเทศ',
     'error_edit_3' => 'ยกเลิกรหัส',
+
+    'ai_report' => 'รายงานการใช้ Ai',
 ],
 
 // /backend/index
@@ -239,6 +241,8 @@ return [
 'add_ai_cash' => 'เติม Ai-Cash',
 'branch' => 'สาขาที่ดำเนินการ',
 'info_member' => 'รหัส-ชื่อสมาชิก',
+'info_member_id' => 'รหัสสมาชิก',
+'info_member_name' => 'ชื่อสมาชิก',
 'bill_no' => 'สถานะบิล',
 'date' => 'วันที่ดำเนินการ',
 'approver' => 'ผู้อนุมัติ',
@@ -584,7 +588,7 @@ return [
 'p_contact us detail' => 'รายละเอียด',
 'p_contact quest' => 'สอบถาม',
 
-
+'ai_report' => 'รายงานการใช้ Ai',
 
 ];
 

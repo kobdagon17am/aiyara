@@ -103,6 +103,7 @@ return [
     'error_edit_1' => 'เปลี่ยนแปลงรหัส',
     'error_edit_2' => 'ปรับประเทศ',
     'error_edit_3' => 'ยกเลิกรหัส',
+    'ai_report' => 'Ai Report',
     ],
 
 // /backend/index
@@ -229,6 +230,8 @@ return [
 'add_ai_cash' => 'Add Ai Cash',
 'branch' => 'Branch',
 'info_member' => 'ID - Name Member',
+'info_member_id' => 'Member ID',
+'info_member_name' => 'Name Member',
 'bill_no' => 'Bill No.',
 'date' => 'Date',
 'approver' => 'Approver',
@@ -572,7 +575,7 @@ until you set up PassWord Ai-Cash',
 'p_contact us topic' => 'Topic',
 'p_contact us detail' => 'Detail',
 'p_contact quest' => 'Query',
-
+'ai_report' => 'Ai Report',
 ];
 
 

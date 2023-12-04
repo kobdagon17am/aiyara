@@ -105,6 +105,7 @@ return [
     'error_edit_1' => 'เปลี่ยนแปลงรหัส',
     'error_edit_2' => 'ปรับประเทศ',
     'error_edit_3' => 'ยกเลิกรหัส',
+    'ai_report' => 'Ai Report',
 ],
 
 // /backend/index
@@ -226,6 +227,8 @@ return [
 'add_ai_cash' => 'ថែម Ai-Cash',
 'branch' => 'សាខាដែលដំណើរការ',
 'info_member' => 'លេចកូដ-ឈ្មោះសមាជិក',
+'info_member_id' => 'លេចកូដ',
+'info_member_name' => 'ឈ្មោះសមាជិក',
 'bill_no' => 'ស្ថានភាពវិក្កយបត្រ',
 
 'date' => 'ថ្ងៃទីដំណើរការ',
@@ -574,7 +577,7 @@ return [
 'p_contact us topic' => 'ចំណងជើង',
 'p_contact us detail' => 'ព័ត៌មានលម្អិត',
 'p_contact quest' => 'សាកសួរ',
-
+'ai_report' => 'Ai Report',
 ];
 
 

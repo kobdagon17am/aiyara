@@ -75,6 +75,11 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('add_ai_cash/datatable', 'Add_ai_cashController@Datatable')->name('add_ai_cash.datatable');
     Route::post('add_ai_cash_02/datatable', 'Add_ai_cashController@Datatable02')->name('add_ai_cash_02.datatable');
 
+    Route::get('ai_report', 'AIReportController@ai_report');
+    Route::post('ai_report/datatable', 'AIReportController@ai_report_datatable');
+    Route::post('ai_report/datatable_ai_cash', 'AIReportController@ai_report_datatable_ai_cash');
+    Route::post('ai_report/datatable_gv', 'AIReportController@ai_report_datatable_gv');
+
 // สาขา / คลัง @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     Route::resource('branchs', 'BranchsController');
     Route::post('branchs/datatable', 'BranchsController@Datatable')->name('branchs.datatable');
