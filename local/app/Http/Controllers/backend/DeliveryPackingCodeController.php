@@ -135,8 +135,8 @@ class DeliveryPackingCodeController extends Controller
             $array = array();
             if(@$DP){
               foreach ($DP as $key => $value) {
-                $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-                // array_push($array, @$rs[0]->receipt);
+                $rs = DB::table('db_delivery')->select('orders_id_fk','receipt')->where('id',$value->delivery_id_fk)->get();
+                // array_push($array, @$rs[0]->receipt); customer_id
                 $p = "<a href='".url('backend/frontstore/print_receipt_022/'.@$rs[0]->orders_id_fk)."' target='blank'>".@$rs[0]->receipt."</a>";
                 array_push($array, $p);
               }
@@ -172,12 +172,12 @@ class DeliveryPackingCodeController extends Controller
       ->addColumn('addr_to_send', function($row) {
 
            if($row->id!==""){
-              $DP = DB::table('db_delivery_packing')->where('packing_code_id_fk',$row->id)->get();
+              $DP = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code_id_fk',$row->id)->get();
               // dd($DP);
               $array = array();
               if(@$DP){
                 foreach ($DP as $key => $value) {
-                  $rs = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
+                  $rs = DB::table('db_delivery')->select('receipt')->where('id',$value->delivery_id_fk)->get();
                   array_push($array, "'".@$rs[0]->receipt."'");
                 }
                 $arr = implode(',', $array);
@@ -188,7 +188,6 @@ class DeliveryPackingCodeController extends Controller
               // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($rr->orders_id_fk);
               // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($rr->orders_id_fk);
             // }
-
 
             $addr = DB::select(" SELECT
                   db_delivery.set_addr_send_this,
@@ -218,7 +217,6 @@ class DeliveryPackingCodeController extends Controller
                 return @$addr[0]->recipient_name."<br>".@$addr[0]->addr_send." ".@$addr[0]->postcode."<br>".@$addr[0]->mobile.", ".@$addr[0]->tel_home."<br>".$de;
                 // ."<span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [แก้ไขที่อยู่] </span> ";
               }
-
 
             }else{
               return "* กรณีได้สิทธิ์ส่งฟรี กรุณาระบุที่อยู่อีกครั้ง <span class='class_add_address' data-id=".$row->id." style='cursor:pointer;color:blue;'> [Click here] </span> ";

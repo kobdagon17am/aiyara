@@ -3941,7 +3941,9 @@ class FrontstoreController extends Controller
         $viewcondition_01 = ' db_orders.purchase_type_id_fk in (4,5) ';
         $viewcondition_02 = '';
       } else if(isset($req->viewcondition) && $req->viewcondition == "ViewFailed"){
-        $viewcondition_01 = ' db_orders.pay_type_id_fk IS NULL ';
+        // $viewcondition_01 = ' db_orders.pay_type_id_fk IS NULL ';
+        $viewcondition_01 = ' db_orders.pay_type_id_fk = 0 ';
+        // $viewcondition_01 = ' db_orders.pay_type_id_fk not in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20) ';
         $viewcondition_02 = '';
         $viewcondition_03 = 'db_orders.approve_status in (2,3,4,9)';
       }
