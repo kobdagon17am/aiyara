@@ -722,13 +722,14 @@ class PvPayment extends Model
 
 
                 if ($resule['status'] == 'success') {
-                    $movement_ai_cash->save();
+
                     $customer_update->save();
                     $order_update->save();
 
                     if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
                     $customer_update_ai_cash->save();
+                    $movement_ai_cash->save();
                     }
 
 

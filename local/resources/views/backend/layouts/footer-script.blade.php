@@ -85,6 +85,7 @@
                 sessionStorage.setItem("role_group_id", role_group_id);
 
                 var menu_id = $(this).data('id');
+                // console.log(menu_id);
                 sessionStorage.setItem("menu_id", menu_id);
 
                 $.ajax({
@@ -96,7 +97,7 @@
                         session_menu_id: menu_id
                     },
                     success: function(data) {
-                        console.log(data);
+
                         // return false;
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

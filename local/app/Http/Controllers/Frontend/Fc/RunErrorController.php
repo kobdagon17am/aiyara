@@ -25,18 +25,18 @@ class RunErrorController extends Controller
     // ->selectRaw('count(id) as id')
     // ->havingRaw('count(id) > 1 ')
     // // ->wheredate('date_active', '=', $date)
-  
+
     // ->groupby('id')
-    // ->get(); 
-    
-    
+    // ->get();
+
+
 //     $customers =  DB::table('customers') //รายชื่อคนที่มีรายการแจงโบนัสข้อ
 //     ->selectRaw('user_name as username,count(user_name) as user_name_count')
 //     ->havingRaw('count(user_name) > 1 ')
 //     // ->wheredate('date_active', '=', $date)
-  
+
 //     ->groupby('user_name')
-//     ->get(); 
+//     ->get();
 
 
 // dd($customers);
@@ -54,16 +54,16 @@ class RunErrorController extends Controller
     //      ])
     //       ->get();
     //       $arr = array();
-    // $i = 0; 
+    // $i = 0;
     // foreach($data as $value){
 
-    //   $gv = \App\Helpers\Frontend::get_gitfvoucher($value->user_name); 
+    //   $gv = \App\Helpers\Frontend::get_gitfvoucher($value->user_name);
     //   if($gv){
     //     $gv_value = 0;
     //   }else{
     //     $gv_value = $gv;
     //   }
-      
+
     //   if($gv_value>0){
     //     dd($value->user_name,'fail');
     //   }else{
@@ -72,7 +72,7 @@ class RunErrorController extends Controller
 
     // $i++;
 
-    // $customers = DB::table('customers') 
+    // $customers = DB::table('customers')
     // ->wherein('id',$arr)
     // ->update(['business_location_id' => 3]); //ลงข้อมูลบิลชำระเงิน
 
@@ -81,8 +81,8 @@ class RunErrorController extends Controller
     // ->update(['business_location_id_fk' => 3]); //ลงข้อมูลบิลชำระเงิน
 
     // }
-    // dd($i,'success');  
- 
+    // dd($i,'success');
+
 
     /////////////////////////////////
     // $data = \App\Models\Frontend\Promotion::all_available_purchase_2(350);
@@ -102,7 +102,7 @@ class RunErrorController extends Controller
 //            //  ->where('pro_status', 3)
 //            ->orderByDesc('pro_status')
 //            //->limit(50000)
-//           ->count(); 
+//           ->count();
 //    dd($promotions);
 // 	dd('ok');
 
@@ -176,12 +176,12 @@ class RunErrorController extends Controller
 
 //   $order_data = DB::table('db_orders')
 //   ->where('code_order', '=', 'O123083000103')
-//   ->first(); 
+//   ->first();
 // //   dd($order_data);
 
-//   $user = DB::table('customers') 
+//   $user = DB::table('customers')
 //   ->select('id', 'pv_aistockist', 'user_name')
-//   ->where('id', '=',$order_data->customers_id_fk)  
+//   ->where('id', '=',$order_data->customers_id_fk)
 //   ->first();
 
 //   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
@@ -1585,13 +1585,14 @@ class RunErrorController extends Controller
 
 
                 if ($resule['status'] == 'success') {
-                    $movement_ai_cash->save();
+
                     $customer_update->save();
                     $order_update->save();
 
                     if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
                     $customer_update_ai_cash->save();
+                    $movement_ai_cash->save();
                     }
 
 
