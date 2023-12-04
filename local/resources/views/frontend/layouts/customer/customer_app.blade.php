@@ -572,7 +572,7 @@
 		</li>
 
 
-	{{-- 	<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
+	{{--<li class="{{ (request()->is('comission')) ? 'active' : '' }}">
 			<a href="{{route('comission')}}">
 				<span class="pcoded-micon"><i class="fa fa-line-chart text-success"></i><b> @lang('message.history')</b></span>
 				<span class="pcoded-mtext"> @lang('message.history')</span>
@@ -581,7 +581,7 @@
 		</li> --}}
 
 
-		<li class="pcoded-hasmenu {{ (request()->is('reward-history') || request()->is('benefits') || request()->is('travel*') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
+		<li class="pcoded-hasmenu {{( request()->is('benefits') )  ? 'pcoded-trigger' : '' }}" dropdown-icon="style3" subitem-icon="style7">
 			<a href="javascript:void(0)">
 				<span class="pcoded-micon"><i class="fa fa-gift text-success"></i><b> @lang('message.benefits')</b></span>
 				<span class="pcoded-mtext"> @lang('message.benefits')</span>
