@@ -481,6 +481,13 @@ class CartPaymentController extends Controller
     public function payment_submit(Request $request)
     {
 
+      // dd($request->all());
+      // $cartCollection = Cart::session($request-> $type)->getContent();
+      // $data = $cartCollection->toArray();
+
+
+      // return redirect('product-history')->withError('Payment Fail')
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
           $business_location_id = 1;

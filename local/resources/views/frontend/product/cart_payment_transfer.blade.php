@@ -226,11 +226,11 @@
                                                             value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
                                                     </div>
 
-                                                    <div class="col-xs-6 p-1">
+                                                    {{-- <div class="col-xs-6 p-1">
                                                         <button class="btn btn-primary btn-block" type="submit"
                                                             name="submit"
                                                             value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
 
