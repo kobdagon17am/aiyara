@@ -25,18 +25,18 @@ class RunErrorController extends Controller
     // ->selectRaw('count(id) as id')
     // ->havingRaw('count(id) > 1 ')
     // // ->wheredate('date_active', '=', $date)
-  
+
     // ->groupby('id')
-    // ->get(); 
-    
-    
+    // ->get();
+
+
 //     $customers =  DB::table('customers') //รายชื่อคนที่มีรายการแจงโบนัสข้อ
 //     ->selectRaw('user_name as username,count(user_name) as user_name_count')
 //     ->havingRaw('count(user_name) > 1 ')
 //     // ->wheredate('date_active', '=', $date)
-  
+
 //     ->groupby('user_name')
-//     ->get(); 
+//     ->get();
 
 
 // dd($customers);
@@ -61,36 +61,36 @@ class RunErrorController extends Controller
     //       'A871453',
     //      ])
     //       ->get();
-    //       $arr = array(); 
-    // $i = 0; 
+    //       $arr = array();
+    // $i = 0;
     // foreach($data as $value){
 
-    //   $gv = \App\Helpers\Frontend::get_gitfvoucher($value->user_name); 
+    //   $gv = \App\Helpers\Frontend::get_gitfvoucher($value->user_name);
     //   if($gv){
     //     $gv_value = 0;
     //   }else{
     //     $gv_value = $gv;
     //   }
-      
+
     //   if($gv_value>0){
     //     dd($value->user_name,'fail');
     //   }else{
-    //      $arr[] = $value->id; 
+    //      $arr[] = $value->id;
     //   }
 
     // $i++;
 
-    // $customers = DB::table('customers') 
-    // ->wherein('id',$arr) 
+    // $customers = DB::table('customers')
+    // ->wherein('id',$arr)
     // ->update(['business_location_id' => 3]); //ลงข้อมูลบิลชำระเงิน
 
     // $file = DB::table('register_files')
     // ->wherein('customer_id',$arr)
     // ->update(['business_location_id_fk' => 3]); //ลงข้อมูลบิลชำระเงิน
 
-    // } 
-    // dd($i,'success');  
- 
+    // }
+    // dd($i,'success');
+
 
     /////////////////////////////////
     // $data = \App\Models\Frontend\Promotion::all_available_purchase_2(350);
@@ -110,17 +110,17 @@ class RunErrorController extends Controller
 //            //  ->where('pro_status', 3)
 //            ->orderByDesc('pro_status')
 //            //->limit(50000)
-//           ->delete(); 
-   
-// 	dd('ok'); 
+//           ->delete();
+
+// 	dd('ok');
 
 // $promotions = DB::table('db_code_order')
 // ->select('	db_code_order.id')
- 
+
 //          ->where('db_code_order.created_at', '<=', '2023-09-19 00:59:59')
 //          //  ->where('pro_status', 3)
 //          //->limit(50000)
-//         ->count();  
+//         ->count();
 //  dd($promotions);
 //   dd('ok');
 
@@ -194,16 +194,16 @@ class RunErrorController extends Controller
 
 //   $order_data = DB::table('db_orders')
 //   ->where('code_order', '=', 'O123113000419')
-//   ->first(); 
+//   ->first();
 // //   dd($order_data);
- 
-//   $user = DB::table('customers') 
+
+//   $user = DB::table('customers')
 //   ->select('id', 'pv_aistockist', 'user_name')
-//   ->where('id', '=',$order_data->customers_id_fk)   
-//   ->first(); 
+//   ->where('id', '=',$order_data->customers_id_fk)
+//   ->first();
 
 //   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
-//   dd($rs,$user->user_name); 
+//   dd($rs,$user->user_name);
 
 
 
@@ -1603,7 +1603,7 @@ class RunErrorController extends Controller
 
 
                 if ($resule['status'] == 'success') {
-                   
+
                     $customer_update->save();
                     $order_update->save();
 
@@ -1784,7 +1784,37 @@ class RunErrorController extends Controller
             ->where('id', $value->id)
             ->update(['deleted_at' => now()]); //ลงข้อมูลบิลชำระเงิน
         }
-        dd('success',$i);
+
+
+        $date_delete = date("Y-m-d 00:59:59", strtotime("-5 day",strtotime($adate)));
+        $db_orders = DB::table('db_orders')
+        ->select('id')
+        ->where('db_orders.approve_status', '=',0)
+        ->where('db_orders.order_status_id_fk', '=',1)
+        ->where('db_orders.created_at', '<=', $date_delete)
+        ->where('db_orders.deleted_at', '!=',null)
+        ->get();
+
+
+
+        $arr_id_order = array();
+        foreach( $db_orders as $value){
+            $arr_id_order[] = $value->id;
+        }
+        if(count($arr_id_order)>0){
+
+            $db_orders_d = DB::table('db_orders')
+            ->wherein('id',$arr_id_order)
+            ->delete();
+
+
+            $db_list_d = DB::table('db_order_products_list')
+            ->wherein('frontstore_id_fk',$arr_id_order)
+            ->delete();
+
+        }
+
+
 
 
     }

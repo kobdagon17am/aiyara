@@ -1185,6 +1185,13 @@
                 document.getElementById("submit_upload").className = "btn btn-success";
             }
         });
+
+
+        window.history.forward();
+
+window.onunload = function() {
+    null;
+};
     </script>
 
     <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}
