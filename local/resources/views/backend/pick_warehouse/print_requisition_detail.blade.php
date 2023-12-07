@@ -294,6 +294,8 @@ $delivery = DB::select(
         ' AND set_addr_send_this=1 ',
 );
 
+// dd($data[0]);
+
 $delivery0 = DB::select(
     " SELECT
               db_delivery.set_addr_send_this,
@@ -315,20 +317,25 @@ $delivery0 = DB::select(
         ' AND set_addr_send_this=0 ',
 );
 
+// dd($delivery0);
+
 if (!$delivery) {
     if ($delivery0) {
         // วุฒิเพิ่มมาสำหรับพวกบิลส่งกับบิลอื่น
         $order_this = DB::table('db_orders')
             ->where('id', $delivery0[0]->orders_id_fk)
             ->first();
+            // dd( $order_this);
         if ($order_this) {
             $order_send = DB::table('db_orders')
                 ->where('code_order', 'like', '%' . $order_this->bill_transfer_other . '%')
                 ->first();
+                // dd($order_send);
             if ($order_send) {
                 $delivery2 = DB::table('db_delivery')
                     ->where('orders_id_fk', $order_send->id)
                     ->first();
+                    // dd($delivery2);
                 if ($delivery2) {
                     DB::table('db_delivery')
                         ->where('id', $delivery0[0]->id)

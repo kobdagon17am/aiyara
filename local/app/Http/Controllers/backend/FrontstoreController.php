@@ -1737,10 +1737,17 @@ class FrontstoreController extends Controller
   public static function fncUpdateDeliveryAddress($id)
   {
     $sRow = \App\Models\Backend\Frontstore::find($id);
-    // dd($sRow->delivery_location);
+
+    // วุฒิเพิ่มไว้เช็คเผื่อบิลมาทีหลัง
+    $db_delivery = DB::table('db_delivery')->select('status_to_wh')->where('orders_id_fk',$sRow->id)->where('status_to_wh',1)->first();
+
     if (@$sRow->delivery_location == 0) {
       DB::select(" UPDATE `db_orders` SET invoice_code=code_order WHERE (`id`=" . $sRow->id . ") ");
-      DB::select(" DELETE FROM `db_delivery` WHERE (`orders_id_fk`=" . $sRow->id . ") ");
+
+      if(!$db_delivery){
+        DB::select(" DELETE FROM `db_delivery` WHERE (`orders_id_fk`=" . $sRow->id . ") ");
+      }
+
     }
 
     // วุฒิปรับ approve_status > 1
@@ -1750,7 +1757,9 @@ class FrontstoreController extends Controller
       // วุฒิเพิ่มมาเช็คว่ามาชาร์ไหม จะได้รู้ว่าต้องบวกค่าธรรมเนียมไหม
       $check_order = DB::table('db_orders')->where('id',$sRow->id)->first();
       if($check_order->charger_type==1){
-   // วุฒิเอา (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) ออกมา
+
+        if(!$db_delivery){
+  // วุฒิเอา (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) ออกมา
             DB::select("
             INSERT IGNORE INTO db_delivery
             ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
@@ -1764,9 +1773,12 @@ class FrontstoreController extends Controller
             ))
             FROM db_orders WHERE (`id`=" . $sRow->id . ") AND delivery_location <> 0 ;
           ");
+        }
+
       }else{
    // วุฒิเอา (CASE WHEN db_orders.gift_voucher_price is null THEN 0 ELSE db_orders.gift_voucher_price END) ออกมา
   // วุฒิเอา (CASE WHEN db_orders.fee_amt is null THEN 0 ELSE db_orders.fee_amt END) ออกมา
+            if(!$db_delivery){
                 DB::select("
                 INSERT IGNORE INTO db_delivery
                 ( orders_id_fk,receipt, customer_id, business_location_id,branch_id_fk , delivery_date, billing_employee, created_at,list_type,shipping_price,total_price)
@@ -1779,9 +1791,11 @@ class FrontstoreController extends Controller
                 ))
                 FROM db_orders WHERE (`id`=" . $sRow->id . ") AND delivery_location <> 0 ;
               ");
+            }
       }
 
       // Clear ก่อน ค่อย อัพเดต ใส่ตามเงื่อนไขทีหลัง
+      if(!$db_delivery){
       DB::select(" UPDATE db_delivery
                           SET
                           recipient_name = '',
@@ -1797,6 +1811,7 @@ class FrontstoreController extends Controller
                           where orders_id_fk = '" . $sRow->id . "'
 
                          ");
+      }
 
       //delivery_location = ที่อยู่ผู้รับ>0=รับสินค้าด้วยตัวเอง|1=ที่อยู่ตามบัตร ปชช.>customers_address_card|2=ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ>customers_detail|3=ที่อยู่กำหนดเอง>customers_addr_frontstore|4=จัดส่งพร้อมบิลอื่น|5=ส่งแบบพิเศษ/พรีเมี่ยม
 
@@ -1852,6 +1867,7 @@ class FrontstoreController extends Controller
             //   @$address = null;
             // }
 
+            if(!$db_delivery){
             DB::select(" UPDATE db_delivery
                                             SET
                                             recipient_name = '" . @$recipient_name . "',
@@ -1865,9 +1881,9 @@ class FrontstoreController extends Controller
                                             where orders_id_fk = '" . $sRow->id . "'
 
                                            ");
+            }
 
           }
-
 
                             DB::select("
 
@@ -1937,7 +1953,7 @@ class FrontstoreController extends Controller
             // }
 
             @$recipient_name = @$v->prefix_name . @$v->first_name . ' ' . @$v->last_name;
-
+            if(!$db_delivery){
             DB::select(" UPDATE db_delivery
                                   SET
                                   recipient_name = '" . @$recipient_name . "',
@@ -1951,6 +1967,7 @@ class FrontstoreController extends Controller
                                   where orders_id_fk = '" . $sRow->id . "'
 
                                  ");
+            }
           }
 
           DB::select("
@@ -1971,7 +1988,7 @@ class FrontstoreController extends Controller
                               WHERE (id='" . $id . "')");
         }
       }
-
+      // customers_addr_frontstore
       if (@$sRow->delivery_location == 3) {
 
         if(@$sRow->distribution_channel_id_fk==3){
@@ -2004,6 +2021,7 @@ class FrontstoreController extends Controller
           $house_name = '';
         }
 
+        DB::table('customers_addr_frontstore')->where('frontstore_id_fk',@$sRow->id)->where('customer_id',@$sRow->customers_id_fk)->delete();
         DB::table('customers_addr_frontstore')->insert([
           'frontstore_id_fk' => @$sRow->id,
           'customer_id' => @$sRow->customers_id_fk,
@@ -2038,7 +2056,7 @@ class FrontstoreController extends Controller
               @$address .= ", อ." . @$v->ampname;
               @$address .= ", จ." . @$v->provname;
 
-
+              if(!$db_delivery){
               DB::select(" UPDATE db_delivery
                                     SET
                                     recipient_name = '" . @$v->recipient_name . "',
@@ -2052,6 +2070,7 @@ class FrontstoreController extends Controller
                                     where orders_id_fk = '" . $sRow->id . "'
 
                                    ");
+              }
             }
 
             DB::select("
@@ -2082,8 +2101,6 @@ class FrontstoreController extends Controller
 
   public static function fncUpdateDeliveryAddressDefault($id)
   {
-    // dd($id);
-
     $ch = DB::select("
 
                 SELECT  * FROM db_orders
@@ -2097,6 +2114,8 @@ class FrontstoreController extends Controller
       //delivery_location = ที่อยู่ผู้รับ>0=รับสินค้าด้วยตัวเอง|1=ที่อยู่ตามบัตร ปชช.>customers_address_card|2=ที่อยู่จัดส่งไปรษณีย์หรือที่อยู่ตามที่ลงทะเบียนไว้ในระบบ>customers_detail|3=ที่อยู่กำหนดเอง>customers_addr_frontstore|4=จัดส่งพร้อมบิลอื่น|5=ส่งแบบพิเศษ/พรีเมี่ยม
 
       $sRow = \App\Models\Backend\Frontstore::find($id);
+         // วุฒิเพิ่มไว้เช็คเผื่อบิลมาทีหลัง
+      $db_delivery = DB::table('db_delivery')->select('status_to_wh')->where('orders_id_fk',$sRow->id)->where('status_to_wh',1)->first();
 
       $delivery_location_01 = DB::select(" SELECT
                                       customers_address_card.id,
@@ -2148,6 +2167,7 @@ class FrontstoreController extends Controller
             @$address = null;
           }
 
+          if(!$db_delivery){
           DB::select(" UPDATE db_delivery
                                           SET
                                           recipient_name = '" . @$recipient_name . "',
@@ -2159,6 +2179,7 @@ class FrontstoreController extends Controller
                                           where orders_id_fk = '" . $sRow->id . "'
 
                                          ");
+                  }
 
 
           DB::select("
@@ -2229,6 +2250,7 @@ class FrontstoreController extends Controller
 
           @$recipient_name = @$v->prefix_name . @$v->first_name . ' ' . @$v->last_name;
 
+          if(!$db_delivery){
           DB::select(" UPDATE db_delivery
                                   SET
                                   recipient_name = '" . @$recipient_name . "',
@@ -2242,6 +2264,7 @@ class FrontstoreController extends Controller
                                   where orders_id_fk = '" . $sRow->id . "'
 
                                  ");
+          }
 
 
           DB::select("
@@ -2282,6 +2305,7 @@ class FrontstoreController extends Controller
           @$address .= ", จ." . @$v->provname;
 
 
+          if(!$db_delivery){
           DB::select(" UPDATE db_delivery
                                   SET
                                   recipient_name = '" . @$v->recipient_name . "',
@@ -2295,6 +2319,7 @@ class FrontstoreController extends Controller
                                   where orders_id_fk = '" . $sRow->id . "'
 
                                  ");
+          }
 
           DB::select("
 

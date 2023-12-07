@@ -294,6 +294,18 @@ class Pick_packPackingCodeController extends Controller
       ->escapeColumns('action_date')
 
       ->addColumn('status_desc', function($row) {
+
+        $recall_status = '';
+        $recall = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$row->id)->where('recall_status',1)->first();
+        if($recall){
+          $recall_status = '<br><span style="color:red;">(มีสินค้าเรียกคืนยังไม่ได้รับ)</span>';
+        }else{
+          $recall = DB::table('db_consignments')->where('pick_pack_requisition_code_id_fk',$row->id)->where('recall_status',2)->first();
+          if($recall){
+            $recall_status = '<br><span style="color:green;">(มีสินค้าเรียกคืนได้รับแล้ว)</span>';
+          }
+        }
+
           $sD = DB::select(" select * from dataset_pay_requisition_status_02 where id=".$row->status." ");
           // return @$sD[0]->txt_desc;
           $t = '';
@@ -304,11 +316,11 @@ class Pick_packPackingCodeController extends Controller
 
               }
 
-              return "<span data-toggle='tooltip' style='color:red;' data-placement='right' title='".$t."' >".@$sD[0]->txt_desc."</span>";
+              return "<span data-toggle='tooltip' style='color:red;' data-placement='right' title='".$t."' >".@$sD[0]->txt_desc."</span>".$recall_status;
 
 
           }else{
-            return @$sD[0]->txt_desc;
+            return @$sD[0]->txt_desc.$recall_status;
           }
       })
       ->escapeColumns('status_desc')
