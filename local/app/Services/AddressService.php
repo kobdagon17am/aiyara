@@ -92,10 +92,17 @@ class AddressService {
 
     foreach ($this->options->get() as $option) {
 
+
       if (isset($option->name)) {
+
         $name = $option->name;
       } else {
-        $name = $option->name_th;
+        if($option->name_cam){
+          $name = $option->name_cam;
+        }else{
+          $name = $option->name_th;
+        }
+
       }
 
       $options .= "<option value='$option->id'>$name</option>";
