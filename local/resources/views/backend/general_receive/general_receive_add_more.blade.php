@@ -104,7 +104,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-md-3 col-form-label"> Business Location : * </label>
                                 <div class="col-md-8">
-                                    <select class="form-control select2-templating "  disabled="">
+                                    <select class="form-control select2-templating " disabled="">
                                         @if (@$sBusiness_location)
                                             @foreach (@$sBusiness_location as $r)
                                                 <option value="{{ @$r->id }}"
@@ -114,7 +114,7 @@
                                         @endif
                                     </select>
                                     <input type="hidden" name="business_location_id_fk"
-                                        value="{{ @\Auth::user()->business_location_id_fk }}" id="business_location_id_fk" >
+                                        value="{{ @\Auth::user()->business_location_id_fk }}" id="business_location_id_fk">
                                 </div>
                             </div>
 
@@ -130,7 +130,8 @@
                                             @endforeach
                                         @endif
                                     </select>
-                                    <input type="hidden" name="branch_id_fk" id="branch_id_fk" value="{{ @\Auth::user()->branch_id_fk }}">
+                                    <input type="hidden" name="branch_id_fk" id="branch_id_fk"
+                                        value="{{ @\Auth::user()->branch_id_fk }}">
                                 </div>
                             </div>
 
@@ -181,13 +182,13 @@
                             </div>
                         </div>
                         <!--
-                                                                                          <div class="form-group row">
-                                                                                            <label for="po_invoice_no" class="col-md-3 col-form-label">เลขที่ PO : </label>
-                                                                                            <div class="col-md-8">
-                                                                                              <input class="form-control" type="text" value="{{ @$sRow->po_invoice_no }}" name="po_invoice_no">
-                                                                                            </div>
-                                                                                          </div>
-                                                                             -->
+                                                                                              <div class="form-group row">
+                                                                                                <label for="po_invoice_no" class="col-md-3 col-form-label">เลขที่ PO : </label>
+                                                                                                <div class="col-md-8">
+                                                                                                  <input class="form-control" type="text" value="{{ @$sRow->po_invoice_no }}" name="po_invoice_no">
+                                                                                                </div>
+                                                                                              </div>
+                                                                                 -->
                         <div class="form-group row">
                             <label for="loan_ref_number " class="col-md-3 col-form-label">เลขที่อ้างอิงใบยืม
                                 (กรณีรับคืนจากการยืม) : </label>
@@ -198,20 +199,20 @@
                         </div>
 
                         <!--               <div class="form-group row">
-                                                                                            <label for="delivery_person" class="col-md-3 col-form-label">ชื่อ Supplier : </label>
-                                                                                            <div class="col-md-8">
-                                                                                              <select name="supplier_id_fk" class="form-control select2-templating ">
-                                                                                                <option value="">Select</option>
-                                                                                                @if (@$sSupplier)
+                                                                                                <label for="delivery_person" class="col-md-3 col-form-label">ชื่อ Supplier : </label>
+                                                                                                <div class="col-md-8">
+                                                                                                  <select name="supplier_id_fk" class="form-control select2-templating ">
+                                                                                                    <option value="">Select</option>
+                                                                                                    @if (@$sSupplier)
     @foreach (@$sSupplier as $r)
     <option value="{{ $r->id }}" {{ @$r->id == @$sRow->supplier_id_fk ? 'selected' : '' }}>
-                                                                                                  {{ $r->txt_desc }}
-                                                                                                </option>
+                                                                                                      {{ $r->txt_desc }}
+                                                                                                    </option>
     @endforeach
     @endif
-                                                                                              </select>
-                                                                                            </div>
-                                                                                          </div> -->
+                                                                                                  </select>
+                                                                                                </div>
+                                                                                              </div> -->
 
                         <div class="form-group row">
                             <label for="delivery_person" class="col-md-3 col-form-label">ผู้ส่งมอบ : *</label>
@@ -551,7 +552,16 @@
             var shelf_floor = $('#shelf_floor').val();
             var delivery_person = $('#delivery_person').val();
             var recipient = $('#recipient').val();
-            var approve_status = $('#customSwitch').val();
+
+            var approve = $('#customSwitch').prop("checked");
+            var approve_status = 0;
+            if (approve == true) {
+                approve_status = 1;
+            } else {
+                approve_status = 0;
+            }
+            // alert(approve_status);
+            // return false;
 
             $.ajax({
                 url: " {{ url('backend/general_receive_store_more') }} ",

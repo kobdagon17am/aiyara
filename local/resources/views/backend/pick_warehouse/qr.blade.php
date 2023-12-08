@@ -958,7 +958,18 @@
                 var product_id_fk = $(this).data('product_id_fk');
                 var invoice_code = $(this).attr('invoice_code');
                 var packing_list = $(this).attr('packing_list');
+                var check = 0;
+                $(".qr_scaned").each(function( index ) {
+                  if(v==$(this).val()){
+                    check++;
+                  }
+              });
 
+              if(check>0){
+                alert('QR นี้ซ้ำกับก่อนหน้า');
+                this_data.val('');
+                return false;
+              }
                 var p = '<tr class="qr_scaned_tr">' +
                     '<td>' + v + '</td>' +
                     '<input class="qr_scaned" type="hidden" name="qr_scaned[]" value="' + v + '">' +
