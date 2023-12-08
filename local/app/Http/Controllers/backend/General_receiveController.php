@@ -560,7 +560,8 @@ class General_receiveController extends Controller
           $sRow->action_date    = date('Y-m-d H:i:s');
 
           $sRow->approver    = @\Auth::user()->id ;
-          $sRow->approve_status    = request('approve_status')?request('approve_status'):0;
+          $sRow->approve_status    = request('approve_status');
+          // $sRow->approve_status    = request('approve_status')?request('approve_status'):0;
           $sRow->approve_date    = date('Y-m-d H:i:s');
 
           $sRow->created_at = date('Y-m-d H:i:s');

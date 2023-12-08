@@ -604,9 +604,15 @@ if ($branch_data) {
                             ->where('product_id_fk', $p_p->product_id_fk)
                             ->where('lang_id',1)
                             ->first();
+
+                            $p_p_code = DB::table('products')
+                            ->select('product_code')
+                            ->where('id', $p_p->product_id_fk)
+                            ->first();
+
                         if ($p_p_detail) {
                             $arr_product_total[$p_p->product_id_fk] = [
-                                'product_name' => $p_p_detail->product_name,
+                                'product_name' => $p_p_code->product_code.' : '.$p_p_detail->product_name,
                             ];
                             if (isset($arr_product_amt_total[$p_p_detail->product_id_fk])) {
                                 $arr_product_amt_total[$p_p_detail->product_id_fk] = $arr_product_amt_total[$p_p_detail->product_id_fk] + ($p_p->product_amt*$arr_promotion_amt_total[$key]);
