@@ -21,6 +21,14 @@ class Transfer_branchController extends Controller
           return $query->where('id', auth()->user()->business_location_id_fk);
         })->get();
 
+        $db_transfer_branch_codes = DB::table('db_transfer_branch_code')->select('id')->where('tr_status_to',4)->where('tr_status_from',2)->get();
+        foreach($db_transfer_branch_codes as $bc){
+              DB::table('db_transfer_branch_code')->where('id',$bc->id)->update(
+                [
+                  'tr_status_from' => 4,
+                ]
+              );
+        }
 
        $sPermission = @\Auth::user()->permission ;
        $User_branch_id = @\Auth::user()->branch_id_fk;
