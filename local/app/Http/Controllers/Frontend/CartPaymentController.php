@@ -32,6 +32,7 @@ class CartPaymentController extends Controller
     public function index($type)
     {
 
+
         $business_location_id = Auth::guard('c_user')->user()->business_location_id;
         if(empty($business_location_id)){
           $business_location_id = 1;
@@ -247,12 +248,15 @@ class CartPaymentController extends Controller
             $insert_db_orders->purchase_type_id_fk = $type;
             $insert_db_orders->business_location_id_fk = $business_location_id;
             $insert_db_orders->distribution_channel_id_fk = '3';
-            $insert_db_orders->order_status_id_fk = '2';
+            $insert_db_orders->order_status_id_fk = '1';
+            $insert_db_orders->save();
 
             foreach ($data as $value) {
                 $j = $value['quantity'];
                 for ($i = 1; $i <= $j; $i++) {
                     DB::table('db_order_products_list')->insert([
+
+                        'frontstore_id_fk'=> $insert_db_orders->id,
                         'code_order' => $code_order,
                         'course_id_fk' => $value['id'],
                         'product_name' => $value['name'],
@@ -267,23 +271,11 @@ class CartPaymentController extends Controller
                 }
 
             }
-            $insert_db_orders->save();
 
-            $update_db_order_products_list = DB::table('db_order_products_list') //log_gift_voucher order_id_fk
-                ->where('code_order', $code_order)
-                ->update(['frontstore_id_fk' => $insert_db_orders->id]);
-            $resule = Couse_Event::couse_register($insert_db_orders->id);
+            //$resule = Couse_Event::couse_register($insert_db_orders->id);
 
-
-            if ($resule['status'] == 'success') {
-                Cart::session(6)->clear();
                 DB::commit();
                 return redirect('cart_payment_transfer/' . $code_order);
-
-            } else {
-                DB::rollback();
-                return redirect('product-history')->withError($resule['message']);
-            }
 
         } catch (Exception $e) {
             DB::rollback();
@@ -441,6 +433,8 @@ class CartPaymentController extends Controller
                       ->leftjoin('course_event_regis', 'course_event_regis.order_item_id', '=', 'db_order_products_list.id')
                       ->leftjoin('course_ticket_number', 'course_ticket_number.id', '=', 'course_event_regis.ticket_id')
                       ->get();
+
+
               } else {
                   $order_items = DB::table('db_order_products_list')
                       ->where('code_order', '=',$code_order)
@@ -481,7 +475,7 @@ class CartPaymentController extends Controller
     public function payment_submit(Request $request)
     {
 
-      // dd($request->all());
+
       // $cartCollection = Cart::session($request-> $type)->getContent();
       // $data = $cartCollection->toArray();
 

@@ -114,7 +114,7 @@ class Frontend{
 
       if($customer->regisdoc_expri_date){
 		if($customer->regisdoc_expri_date == '0000-00-00'){
-			 
+
 			$html .='<div class="alert alert-warning icons-alert">
 			<p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y').'</b></code></p>
 		   </div>';
@@ -122,9 +122,9 @@ class Frontend{
 			$html .='<div class="alert alert-warning icons-alert">
 			<p><strong>Warning!</strong> <code>'.__('message.Check_expridate').' <b>'.date('d/m/Y',strtotime($customer->regisdoc_expri_date)).'</b></code></p>
 		   </div>';
-			 
+
 		}
-       
+
       }
 
       if(empty($customer->regisdoc_expri_date) || $customer->regisdoc_expri_date == '0000-00-00'){
@@ -243,13 +243,13 @@ class Frontend{
 		$date_now = date('Y-m-d');
 		//$date_now = '2021-01-13';
 
-		$orders = DB::table('db_order_products_list')
-		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
-		->where('db_order_products_list.course_id_fk','=',$ce_id)
-		->where('db_orders.customers_id_fk','=',$customer_id)
-		->whereDate('db_orders.created_at','=',$date_now)
-		->where('db_orders.approve_status','=',0)
-		->count();
+		// $orders = DB::table('db_order_products_list')
+		// ->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
+		// ->where('db_order_products_list.course_id_fk','=',$ce_id)
+		// ->where('db_orders.customers_id_fk','=',$customer_id)
+		// ->whereDate('db_orders.created_at','=',$date_now)
+		// ->where('db_orders.approve_status','=',0)
+		// ->count();
 
 		$course_event_regis = DB::table('course_event_regis')
 		->where('ce_id_fk',$ce_id)
@@ -257,17 +257,17 @@ class Frontend{
 		->whereDate('created_at','=',$date_now)
 		->count();
 
-		$sum = $orders + $course_event_regis;
+		$sum = $course_event_regis;
 		return $sum;
 	}
 
-	public static function get_ce_register_per_customer_percourse($ce_id,$customer_id){//ต่อวัน
-		$orders = DB::table('db_order_products_list')
-		->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
-		->where('db_order_products_list.course_id_fk','=',$ce_id)
-		->where('db_orders.customers_id_fk','=',$customer_id)
-		->where('db_orders.approve_status','=',0)
-		->count();
+	public static function get_ce_register_per_customer_percourse($ce_id,$customer_id){//ต่อcourse
+		// $orders = DB::table('db_order_products_list')
+		// ->leftjoin('db_orders','db_orders.id','=','db_order_products_list.frontstore_id_fk')
+		// ->where('db_order_products_list.course_id_fk','=',$ce_id)
+		// ->where('db_orders.customers_id_fk','=',$customer_id)
+		// ->where('db_orders.approve_status','=',0)
+		// ->count();
 
 
 		$course_event_regis = DB::table('course_event_regis')
@@ -275,7 +275,7 @@ class Frontend{
 		->where('customers_id_fk','=',$customer_id)
 		->count();
 
-		$sum = $orders + $course_event_regis;
+		$sum = $course_event_regis;
 
 		return $sum;
 
