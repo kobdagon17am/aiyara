@@ -170,11 +170,11 @@ class AiCashController extends Controller
 
           $button .= '<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete_aicash" onclick="delete_aicash(' . $row->id . ',\'' . $row->code_order . '\')"><i class="fa fa-trash"></i></button>';
 
-          // } elseif ($row->order_status_id_fk == 7) {
-          //       if (strtotime('now') < strtotime($row->cancel_expiry_date)) {
-          //           $button .= '<button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#cancel_aicash"
-          // onclick="cancel_aicash(' . $row->id . ',\'' . $row->code_order . '\')"><i class="fa fa-reply-all"></i> Cancel</button>';
-          //       }
+          } elseif ($row->order_status_id_fk == 7) {
+                if (strtotime('now') < strtotime($row->cancel_expiry_date)) {
+                    $button .= '<button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#cancel_aicash"
+          onclick="cancel_aicash(' . $row->id . ',\'' . $row->code_order . '\')"><i class="fa fa-reply-all"></i> Cancel</button>';
+                }
 
         } else {
         }

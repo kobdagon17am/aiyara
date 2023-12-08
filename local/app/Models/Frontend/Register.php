@@ -328,6 +328,11 @@ class Register extends Model
 
 if($data['status'] == 'success'){
 
+
+  DB::table('customers_aicash_password')->insert([
+    'customer_id_fk' => $id,
+    'aicash_password' => $pass_db]);
+
     DB::commit();
     //DB::rollback();
     return $data;

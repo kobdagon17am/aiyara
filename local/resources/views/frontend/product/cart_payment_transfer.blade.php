@@ -226,11 +226,11 @@
                                                             value="upload">อัพโหลดหลักฐานการชำระเงิน</button>
                                                     </div>
 
-                                                    <div class="col-xs-6 p-1">
+                                                    {{-- <div class="col-xs-6 p-1">
                                                         <button class="btn btn-primary btn-block" type="submit"
                                                             name="submit"
                                                             value="not_upload">อัพโหลดหลักฐานการชำระเงินภายหลัง</button>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
 
@@ -1185,6 +1185,13 @@
                 document.getElementById("submit_upload").className = "btn btn-success";
             }
         });
+
+
+        window.history.forward();
+
+window.onunload = function() {
+    null;
+};
     </script>
 
     <script src="{{ asset('frontend/custom/cart_payment/other.js') }}"></script>{{-- js อื่นๆ --}}

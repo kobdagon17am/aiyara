@@ -50,6 +50,24 @@ class PvPayment extends Model
         }
 
         $pv = $order_data->pv_total;
+
+        if($order_data->pv_total == 0){
+
+          $db_order_products_list_vp = DB::table('db_order_products_list')
+          ->selectRaw('sum(total_pv) as lis_pv_total')
+          ->where('frontstore_id_fk', '=',$order_id)
+          ->first();
+
+          $pv = $db_order_products_list_vp->lis_pv_total;
+
+          $order_update_pv = DB::table('db_orders')
+          ->where('id', $order_id)
+          ->update(['pv_total' =>$pv]);
+
+        }
+
+
+
         if ($order_data->status_payment_sent_other == 1) {
 
             $customer_id = $order_data->customers_sent_id_fk;

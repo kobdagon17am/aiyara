@@ -28,14 +28,14 @@
                     @if ($aicash_data)
                         <form action="{{ route('edit_password_aicash_submit') }}" id="edit_password_aicash_submit" method="post" accept-charset="utf-8">
                         @csrf
-                        {{-- <div class="input-group input-group-primary">
+                        <div class="input-group input-group-primary">
                             <span class="input-group-addon">
                                 <i class="fa fa-lock"></i>
                             </span>
                             <input type="password" name="old_password" id="old_password" class="form-control"
                                 style="font-size: 18px;color: #000;font-weight: bold;" placeholder="Old Password"
                                 required="">
-                        </div> --}}
+                        </div>
 
                         <div class="input-group input-group-primary">
                             <span class="input-group-addon">
