@@ -710,9 +710,13 @@ class PvPayment extends Model
 
                 } elseif ($type_id == 6) { //couse อบรม
 
-                    $update_couse = DB::table('course_event_regis')
-                        ->where('order_id_fk', $order_id)
-                        ->update(['status_register' => '2']);
+                  $resule = Couse_Event::couse_register($order_id);
+                  if($resule['status'] == 'fail'){
+                    $resule =  ['status' => 'fail','message' => 'อนุมัติบิลไม่สำเร็จ กรุณาตรวจสอบ'];
+                    return $resule;
+                  }
+
+
 
                     $add_pv = $customer_update->pv + $pv;
 

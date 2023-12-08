@@ -166,27 +166,26 @@ public function dt_course(Request $request){
   $i++;
   $nestedData['id'] = $i;
 
-  if(strtotime($value->ce_sdate) > strtotime(now()) ){
-    $date_css = 'primary';
+  if(strtotime($value->ce_sdate) >= strtotime(date('Y-m-d')) ){
+    $date_css1 = 'primary';
   }else{
-    $date_css = 'danger';
+    $date_css1 = 'danger';
   }
 
-  if(strtotime($value->ce_edate) > strtotime(now()) ){
-    $date_css = 'primary';
+  if(strtotime($value->ce_edate) >= strtotime(date('Y-m-d')) ){
+    $date_css2 = 'primary';
   }else{
-    $date_css = 'danger';
+    $date_css3 = 'danger';
   }
 
-  $nestedData['sdate'] = '<span class="label label-inverse-'.$date_css.'"><b style="color:#000">'
+  $nestedData['sdate'] = '<span class="label label-inverse-'.$date_css1.'"><b style="color:#000">'
   .date('d/m/Y',strtotime($value->ce_sdate)).'</b></span>';
 
 
-  $nestedData['edate'] = '<span class="label label-inverse-'.$date_css.'"><b style="color:#000">'
+  $nestedData['edate'] = '<span class="label label-inverse-'.$date_css2.'"><b style="color:#000">'
   .date('d/m/Y',strtotime($value->ce_edate)).'</b></span>';
 
   $nestedData['title'] = '<b>'.$value->ce_name.'</b><br><span>'.$value->ticket_number.'</span>';
-
 
 
   if($value->txt_desc == 'Course'){
@@ -196,7 +195,6 @@ public function dt_course(Request $request){
     $nestedData['type'] = '<label class="label label-inverse-warning"><b style="color:#000">'.$value->txt_desc.'</b></label>';
 
   }
-
 
   $nestedData['price'] = '<b class="text-primary">'.number_format($value->ce_ticket_price).'</b>';
   $nestedData['pv'] =  '<b class="text-success">'.number_format($value->pv).'</b>';

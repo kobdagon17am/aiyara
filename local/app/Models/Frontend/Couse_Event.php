@@ -135,6 +135,7 @@ class Couse_Event extends Model
             'subject_recipient'=>1,
             'order_id_fk'=>$order_id,
             'order_item_id'=>$value->id,
+            'status_register'=>2,
             'regis_date'=>date('Y-m-d'),
         ]);
 
