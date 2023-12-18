@@ -4007,6 +4007,13 @@ class FrontstoreController extends Controller
     //             ORDER BY id DESC
     //           ");
 
+    if($invoice_code!=''){
+      $startDate = '';
+      $endDate = '';
+      $startDate2 = '';
+      $endDate2 = '';
+    }
+
 
     $sTable = DB::table('db_orders')
     ->leftJoin('dataset_pay_type', 'db_orders.pay_type_id_fk', '=', 'dataset_pay_type.id')

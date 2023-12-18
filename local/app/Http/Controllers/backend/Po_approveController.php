@@ -849,6 +849,10 @@ class Po_approveController extends Controller
 
     $branch_id_fk = "";
     $action_user = "";
+    if($doc_id!=''){
+      $created_at = '';
+      $transfer_bill_approvedate = "";
+    }
 
     $sTable = DB::table('db_orders')
     ->select(

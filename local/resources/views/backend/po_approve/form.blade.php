@@ -376,13 +376,13 @@
                                                                 <select class="form-control"
                                                                     name="approval_amount_transfer_over_status">
                                                                     <option <?php if (@$sRow->approval_amount_transfer_over_status == 0) {
-                                                                      echo 'selected';
-                                                                  } ?> value="0">
-                                                                      ยังไม่โอนยอดคืน</option>
-                                                                  <option <?php if (@$sRow->approval_amount_transfer_over_status == 1) {
-                                                                      echo 'selected';
-                                                                  } ?> value="1">
-                                                                      โอนยอดคืนแล้ว</option>
+                                                                        echo 'selected';
+                                                                    } ?> value="0">
+                                                                        ยังไม่โอนยอดคืน</option>
+                                                                    <option <?php if (@$sRow->approval_amount_transfer_over_status == 1) {
+                                                                        echo 'selected';
+                                                                    } ?> value="1">
+                                                                        โอนยอดคืนแล้ว</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -584,13 +584,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-12 mt-2 mb-2 text-left ">
-                                                      <div class="row form-group ">
-                                                        @if (!empty(@$sRow->approval_amount_transfer_over_slip))
-                                                        <img src="{{asset(@$sRow->approval_amount_transfer_over_slip)}}"
-                                                            class="img-fluid" alt="Responsive image">
-                                                      </div>
-                                                      @endif
-                                                  </div>
+                                                        <div class="row form-group ">
+                                                            @if (!empty(@$sRow->approval_amount_transfer_over_slip))
+                                                                <img src="{{ asset(@$sRow->approval_amount_transfer_over_slip) }}"
+                                                                    class="img-fluid" alt="Responsive image">
+                                                        </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
 
                                                 <input type="hidden" name="approved" value="approved">
@@ -1061,6 +1061,10 @@
 
         $(document).on('click', '.btn_approve_con', function() {
             // $('.myloading').show();
+            if ($('#account_bank').val() == 'null' || $('#account_bank').val() == '' || $('#account_bank').val() == null) {
+                alert('กรุณาเลือกธนาคารที่โอนเงิน');
+                return false;
+            }
 
             Swal.fire({
                 title: 'รอสักครู่...' + ' ' + time_approve + '/' + '20',

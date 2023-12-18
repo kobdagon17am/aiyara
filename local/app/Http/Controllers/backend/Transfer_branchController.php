@@ -257,7 +257,6 @@ class Transfer_branchController extends Controller
 
     public function edit($id)
     {
-
        // วุฒิสร้าง session
     $menus = DB::table('ck_backend_menu')->select('id')->where('id', 33)->first();
     Session::put('session_menu_id', $menus->id);
