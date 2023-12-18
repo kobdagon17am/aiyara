@@ -391,7 +391,9 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
-// dd($request->all());
+        $request->delivery_addr = preg_replace('/[^A-Za-z0-9ก-ฮ\-]/', '', $request->delivery_addr);
+        $request->delivery_cusname = preg_replace('/[^A-Za-z0-9ก-ฮ\-]/', '', $request->delivery_cusname);
+
         if(isset($request->update_delivery_custom)){
 
             $ch = DB::select("select * from customers_addr_frontstore where frontstore_id_fk=".($request->customers_addr_frontstore_id?$request->customers_addr_frontstore_id:0)." ");
