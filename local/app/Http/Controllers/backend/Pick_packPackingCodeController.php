@@ -550,10 +550,10 @@ class Pick_packPackingCodeController extends Controller
         $endDate = date('Y-m-d');
       }
 
-      $pick_code = DB::table('db_pick_pack_packing_code')->whereIn('status',[4,5])
+      $pick_code = DB::table('db_pick_pack_packing_code')->select('id')->whereIn('status',[4,5])
       ->whereBetween(DB::raw('DATE(sent_date)'), array($startDate, $endDate))
       ->pluck('id')->toArray();
-      $sTable = DB::table('db_consignments')->whereIn('pick_pack_requisition_code_id_fk',$pick_code)->groupBy('pick_pack_requisition_code_id_fk')->orderBy('recipient_code','asc')->get();
+      $sTable = DB::table('db_consignments')->select('pick_pack_requisition_code_id_fk')->whereIn('pick_pack_requisition_code_id_fk',$pick_code)->groupBy('pick_pack_requisition_code_id_fk')->orderBy('recipient_code','asc');
 
       $sQuery = \DataTables::of($sTable);
 
@@ -562,8 +562,7 @@ class Pick_packPackingCodeController extends Controller
       ->addColumn('column_001', function($row) {
         $pcode = DB::table('db_pick_pack_packing_code')->select('receipt')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
         $order = explode(',',$pcode->receipt);
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
-
+         $d = DB::select(" SELECT delivery_id_fk,recipient_code FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
           $f = [] ;
           $packing_code = [] ;
           $delivery_packing = [] ;
@@ -593,7 +592,7 @@ class Pick_packPackingCodeController extends Controller
 
       ->addColumn('column_002', function($row) {
 
-         $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+         $d = DB::select(" SELECT recipient_name,address,postcode,mobile,phone_no FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
           foreach ($d as $key => $v) {
@@ -623,7 +622,7 @@ class Pick_packPackingCodeController extends Controller
 
       ->addColumn('column_004', function($row) {
 
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+          $d = DB::select(" SELECT consignment_no,con_arr FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
           $ff = [] ;
@@ -649,7 +648,7 @@ class Pick_packPackingCodeController extends Controller
 
       ->addColumn('column_005', function($row) {
 
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+          $d = DB::select(" SELECT recipient_code FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
           $f = [] ;
           $tx = '';
@@ -681,7 +680,7 @@ class Pick_packPackingCodeController extends Controller
 
       ->addColumn('column_008', function($row) {
 
-        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+        $d = DB::select(" SELECT recipient_code,pick_pack_requisition_code_id_fk FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
 
         $f = [] ;
         $tx = '';
@@ -714,22 +713,24 @@ class Pick_packPackingCodeController extends Controller
           // return '<center> <a href="backend/pick_warehouse/print_requisition/'.$row->pick_pack_requisition_code_id_fk.'" target=_blank title="พิมพ์ใบเบิก"> <i class="bx bx-printer grow " style="font-size:24px;cursor:pointer;color:#660000;"></i></a> </center>';
 
           $db_pick_pack_packing_code = DB::table('db_pick_pack_packing_code')
+          ->select('bill_remain_status')
           ->where('id',$row->pick_pack_requisition_code_id_fk)->first();
 
           // วุฒิแก้อีกรอบ
           if($db_pick_pack_packing_code->bill_remain_status==1){
             $DP = DB::table('db_pick_pack_packing')
+            ->select('id','p_amt_box',)
             ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
             ->where('no_product',0)
             ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
             ->get();
           }else{
             $DP = DB::table('db_pick_pack_packing')
+            ->select('id','p_amt_box')
             ->where('packing_code_id_fk',$row->pick_pack_requisition_code_id_fk)
             ->orderBy('db_pick_pack_packing.delivery_id_fk','asc')
             ->get();
           }
-
 
           $pn = '';
           $f = [] ;
@@ -764,10 +765,10 @@ class Pick_packPackingCodeController extends Controller
       ->escapeColumns('column_006')
 
       ->addColumn('column_007', function($row) {
-        $p_code = DB::table('db_pick_pack_packing_code')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
+        $p_code = DB::table('db_pick_pack_packing_code')->select('id')->where('id',$row->pick_pack_requisition_code_id_fk)->first();
         if($p_code){
             $DP = DB::table('db_pick_pack_packing')
-            ->select('db_pick_pack_packing.*')
+            ->select('db_pick_pack_packing.delivery_id_fk')
             // ->join('db_consignments','db_consignments.delivery_id_fk','db_pick_pack_packing.delivery_id_fk')
             ->where('db_pick_pack_packing.packing_code_id_fk',$p_code->id)
             // ->orderBy('db_consignments.recipient_code','asc')
@@ -795,7 +796,7 @@ class Pick_packPackingCodeController extends Controller
         })
 
         ->addColumn('tracking_status', function($row) {
-          $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+          $d = DB::select(" SELECT tracking_status,con_arr FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
           $f = [] ;
           $ff = [] ;
           foreach ($d as $key => $v) {
@@ -825,7 +826,7 @@ class Pick_packPackingCodeController extends Controller
       ->escapeColumns('tracking_status')
 
       ->addColumn('tracking_approve', function($row) {
-        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+        $d = DB::select(" SELECT tracking_status,id FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
         $f = [] ;
         $ff = [] ;
         foreach ($d as $key => $v) {
@@ -864,7 +865,7 @@ class Pick_packPackingCodeController extends Controller
       ->escapeColumns('tracking_approve')
 
       ->addColumn('tracking_remark', function($row) {
-        $d = DB::select(" SELECT * FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+        $d = DB::select(" SELECT tracking_remark,id FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
         $f = [] ;
         $ff = [] ;
         foreach ($d as $key => $v) {

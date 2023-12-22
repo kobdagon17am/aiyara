@@ -6178,7 +6178,7 @@ class AjaxController extends Controller
         if($request->ajax()){
 
             if(empty($request->term)){
-                $customers = DB::table('customers')->take(15)->get();
+                $customers = DB::table('customers')->select('id','user_name','first_name','last_name','business_name')->take(15)->get();
             }else{
                 $customers = DB::table('customers')
                 ->select('id','user_name','first_name','last_name','business_name')
@@ -6191,7 +6191,7 @@ class AjaxController extends Controller
                 // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 // ->orWhere('business_name','LIKE', '%'.$request->term.'%')
-                ->take(50)
+                ->take(20)
                 // ->orderBy('user_name', 'asc')
                 ->orderByRaw('LENGTH(user_name)', 'asc')
                 // ->orderBy('id', 'asc')
@@ -6215,7 +6215,7 @@ class AjaxController extends Controller
         if($request->ajax()){
 
             if(empty($request->term)){
-                $customers = DB::table('db_promotion_cus')->orderBy('id','desc')->take(15)->get();
+                $customers = DB::table('db_promotion_cus')->select('id','promotion_code_id_fk','promotion_code','user_name')->orderBy('id','desc')->take(15)->get();
             }else{
                 $customers = DB::table('db_promotion_cus')
                 ->select('id','promotion_code_id_fk','promotion_code','user_name')
@@ -6225,7 +6225,7 @@ class AjaxController extends Controller
                 // ->orWhere('first_name','LIKE', '%'.$request->term.'%')
                 // ->orWhere('last_name','LIKE', '%'.$request->term.'%')
                 // ->orWhere('business_name','LIKE', '%'.$request->term.'%')
-                ->take(50)
+                ->take(20)
                 // ->orderBy('user_name', 'asc')
                 ->orderByRaw('LENGTH(promotion_code)', 'asc')
                 // ->orderBy('id', 'asc')
