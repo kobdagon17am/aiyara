@@ -1124,11 +1124,11 @@ if(!empty($db_orders[0]->action_user)){
 
                         if(@$sRow->delivery_location==4){
 
-                          $delivery_data = DB::table('db_delivery')->where('orders_id_fk',$id)->first();
+                         $delivery_data = DB::table('db_delivery')->select('id','recipient_name','addr_send','postcode','mobile','tel_home')->where('orders_id_fk',$id)->first();
                           if($delivery_data){
-                            $db_delivery_packing_data = DB::table('db_delivery_packing')->where('delivery_id_fk',$delivery_data->id)->first();
+                             $db_delivery_packing_data = DB::table('db_delivery_packing')->select('packing_code')->where('delivery_id_fk',$delivery_data->id)->first();
                             if($db_delivery_packing_data){
-                              $db_delivery_packing_other = DB::table('db_delivery_packing')->where('packing_code',$db_delivery_packing_data->packing_code)->get();
+                               $db_delivery_packing_other = DB::table('db_delivery_packing')->select('id')->where('packing_code',$db_delivery_packing_data->packing_code)->get();
                               if(count($db_delivery_packing_other)==1){
                                 @$address = @$delivery_data->recipient_name;
                                 @$address .= " ". @$delivery_data->addr_send;
@@ -1147,7 +1147,25 @@ if(!empty($db_orders[0]->action_user)){
 //   if($id == '55448'){
 // dd($address);
 //   }
-  $address = !empty($address) ? ' '. $address . ' ' . $tel : NULL;
+  // $address = !empty($address) ? ' '. $address . ' ' . $tel : NULL;
+  if(!empty($address)){
+    $delivery_data = DB::table('db_delivery')->select('id','recipient_name','addr_send','postcode','mobile','tel_home')->where('orders_id_fk',$id)->first();
+    if($delivery_data){
+      if($delivery_data->addr_send!=''){
+        @$address = @$delivery_data->recipient_name;
+        @$address .= " ". @$delivery_data->addr_send;
+        @$address .= " ". @$delivery_data->postcode;
+        @$address .= " Tel". @$delivery_data->mobile.' '. @$delivery_data->tel_home;
+      }else{
+        $address = !empty($address) ? $address . ' ' .$tel : null;
+      }
+    }else{
+      $address = !empty($address) ? $address . ' ' .$tel : null;
+    }
+  // $address = !empty($address) ? $address . ' ' .$tel : null;
+  }else{
+    $address =  null;
+  }
 // ๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑๑
 
     $db_orders = DB::select("

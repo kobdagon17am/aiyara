@@ -121,6 +121,12 @@ class StatusDeliveryController extends Controller
           $branch_id_fk = "";
         }
 
+        if($receipt!=''){
+          $business_location_id = '';
+          $customer_id_fk = '';
+          $delivery_date = '';
+        }
+
        // วุฒิเอา  $branch_id_fk ออก
        // order by db_delivery_packing_code.updated_at desc
       //  dd($receipt);
@@ -292,8 +298,6 @@ class StatusDeliveryController extends Controller
           <br> '.$row->status_to_wh_date.'
           ';
          }
-
-
        }else{
       //    $p = '
       //    <a onclick="return confirm(\'ยืนยันการทำรายการ\')" href="'.url('backend/delivery_approve_to_wh/'.$row->db_delivery_id).'" class="btn btn-sm btn-success">ยืนยัน</a>

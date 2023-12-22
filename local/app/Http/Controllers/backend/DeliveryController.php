@@ -391,8 +391,8 @@ class DeliveryController extends Controller
 
     public function store(Request $request)
     {
-        $request->delivery_addr = preg_replace('/[^A-Za-z0-9ก-ฮ\-]/', '', $request->delivery_addr);
-        $request->delivery_cusname = preg_replace('/[^A-Za-z0-9ก-ฮ\-]/', '', $request->delivery_cusname);
+        // $request->delivery_addr = preg_replace('/[^A-Za-z0-9ก-ฮ\-]/', '', $request->delivery_addr);
+        // $request->delivery_cusname = preg_replace('/[^A-Za-z0-9ก-ฮ\-]/', '', $request->delivery_cusname);
 
         if(isset($request->update_delivery_custom)){
 

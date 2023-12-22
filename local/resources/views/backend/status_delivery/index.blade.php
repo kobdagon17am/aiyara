@@ -704,16 +704,16 @@
                 var bill_sdate = $('#bill_sdate').val();
                 var bill_edate = $('#bill_edate').val();
 
-                if (business_location_id_fk == '') {
-                    $('#business_location_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                };
-                if (branch_id_fk == '' || branch_id_fk === null) {
-                    $('#branch_id_fk').select2('open');
-                    $(".myloading").hide();
-                    return false;
-                }
+                // if (business_location_id_fk == '') {
+                //     $('#business_location_id_fk').select2('open');
+                //     $(".myloading").hide();
+                //     return false;
+                // };
+                // if (branch_id_fk == '' || branch_id_fk === null) {
+                //     $('#branch_id_fk').select2('open');
+                //     $(".myloading").hide();
+                //     return false;
+                // }
 
                 var sU = "{{ @$sU }}";
                 var sD = "{{ @$sD }}";
