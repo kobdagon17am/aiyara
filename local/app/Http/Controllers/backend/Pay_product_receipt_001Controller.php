@@ -621,8 +621,12 @@ class Pay_product_receipt_001Controller extends Controller
           try
           {
 
-        // หา time+pay ครั้งที่จ่าย
-          $rs_time_pay = DB::select(" SELECT * FROM `db_pay_product_receipt_001` WHERE invoice_code='$invoice_code' order by time_pay DESC limit 1 ");
+        // หา time+pay ครั้งที่จ่าย status_sent
+          $check_success =   DB::table('db_pay_product_receipt_001')->select('status_sent')->where('invoice_code',$invoice_code)->where('status_sent',3)->first();
+          if($check_success){
+            return redirect()->back();
+          }
+          $rs_time_pay = DB::select(" SELECT time_pay FROM `db_pay_product_receipt_001` WHERE invoice_code='$invoice_code' order by time_pay DESC limit 1 ");
           if(count($rs_time_pay)>0){
             $time_pay = $rs_time_pay[0]->time_pay + 1;
           }else{
