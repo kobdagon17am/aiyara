@@ -796,12 +796,14 @@ class Pick_packPackingCodeController extends Controller
         })
 
         ->addColumn('tracking_status', function($row) {
-          $d = DB::select(" SELECT tracking_status,con_arr FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
+          $d = DB::select(" SELECT tracking_status,con_arr,id FROM `db_consignments` where pick_pack_requisition_code_id_fk = $row->pick_pack_requisition_code_id_fk order by delivery_id_fk asc");
           $f = [] ;
           $ff = [] ;
+          $arr_id = [] ;
           foreach ($d as $key => $v) {
              array_push($f,@$v->tracking_status);
              array_push($ff,@$v->con_arr);
+             array_push($arr_id,@$v->id);
           }
           $web_all = "";
           foreach($f as $key => $value){
@@ -812,7 +814,7 @@ class Pick_packPackingCodeController extends Controller
                 $status = "ไม่สำเร็จ";
                 $color = "style='color:red;'";
             }else{
-              $status = "รอยืนยัน";
+              $status = '<input type="checkbox" class="arr_success" name="arr_success[]" value="'.$arr_id[$key].'"> &nbsp;&nbsp;&nbsp;'."รอยืนยัน";
               $color = "";
             }
 
@@ -895,6 +897,20 @@ class Pick_packPackingCodeController extends Controller
           ]);
           return redirect()->back()->with('success','ทำรายการสำเร็จ');
    }
+
+   public function consignments_approve_select(Request $r){
+
+      $arr_id = explode(",",$r->arr_id);
+      foreach($arr_id as $id){
+        DB::table('db_consignments')->where('id',$id)->update([
+          'tracking_status' => 1,
+        ]);
+      }
+    // return redirect()->back()->with('success','ทำรายการสำเร็จ');
+    return response()->json([
+      'status' => 'success',
+  ]);
+}
 
 
    public function consignments_remark(Request $request){

@@ -1305,7 +1305,7 @@
 
                 var id = $(this).data('id');
 
-                if (!confirm("ยืนยัน ? เพื่อยกลบ ")) {
+                if (!confirm("ยืนยัน ? เพื่อยกเลิก ")) {
                     return false;
                 } else {
                     $.ajax({

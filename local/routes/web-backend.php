@@ -459,6 +459,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
     Route::post('packing_list_for_fifo_02/datatable', 'Pick_packPackingCodeController@packing_list_for_fifo_02')->name('packing_list_for_fifo_02.datatable');
 
     Route::get('pay_requisition_001_report/consignments_approve/{approve_id}/{con_id}', 'Pick_packPackingCodeController@consignments_approve');
+    Route::post('pay_requisition_001_report/consignments_approve_select', 'Pick_packPackingCodeController@consignments_approve_select');
     Route::post('pay_requisition_001_report/consignments_remark/', 'Pick_packPackingCodeController@consignments_remark');
 
     Route::resource('pick_warehouse', 'Pick_warehouseController');
@@ -627,6 +628,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('frontstore/get_order_history_status', 'FrontstoreController@getOrderHistoryStatus')->name('frontstore.get_order_history_status');
     Route::resource('frontstore', 'FrontstoreController');
+
+    Route::post('frontstore/edit_ai', 'FrontstoreController@edit_ai');
+
     Route::post('frontstore_save_delivery_location', 'FrontstoreController@frontstore_save_delivery_location');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');

@@ -728,6 +728,13 @@ class FrontstoreController extends Controller
   }
 
 
+  public function edit_ai(Request $r)
+  {
+    DB::table('db_orders')->where('id',$r->order_id)->update([
+      'aistockist' => $r->customer_id,
+    ]);
+  }
+
   public function viewdata($id)
   {
     // dd($id);
