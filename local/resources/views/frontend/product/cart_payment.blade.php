@@ -554,8 +554,8 @@
                                      <div id="sent_office" style="display: none;" class="h_address">
                                          <div class="row m-t-5">
                                              <div class="col-sm-12">
-                                                 <select name="receive_location" class="form-control" readonly="">
-
+                                                 <select name="receive_location" id="receive_location" class="form-control" readonly="">
+                                                  <option value=""> เลือกสาขา </option>
                                                      @foreach ($location as $value)
                                                          <option value="{{ $value->id }}">{{ $value->b_name }}
                                                              {{-- ({{ $value->b_details }}) --}}
@@ -1181,7 +1181,7 @@
          }
 
          function check_shipping(provinces_id = '', type_sent = '') {
-           
+
 
              var location_id = '{{ $bill['location_id'] }}';
              var type = '{{ $bill['type'] }}';
@@ -1479,6 +1479,10 @@
          }
 
 
+
+
+
+
          function submit_address() {
              var check_sent_other = document.getElementById("sent_other").checked;
              var check_office_check = document.getElementById("sent_office_check").checked;
@@ -1545,6 +1549,7 @@
 
              }
 
+
              if (check_sent_other == true) {
                  var other_name = $('#other_name').val();
                  var other_tel_mobile = $('#other_tel_mobile').val();
@@ -1552,8 +1557,8 @@
                  var other_house_name = $('#other_house_name').val();
                  var other_moo = $('#other_moo').val();
                  var other_province = $('#other_province').val();
-                 var other_district = $('#other_district').val();
-                 var other_district_sub = $('#other_district_sub').val();
+                 var other_district = $('#amphures').val();
+                 var other_district_sub = $('#district').val();
                  var other_zipcode = $('#other_zipcode').val();
                  if (other_name == '') {
                      Swal.fire({
@@ -1586,19 +1591,19 @@
                          title: 'กรุณาใส่ข้อมูล หมู่ที่',
                      })
 
-                 } else if (province == '') {
+                 } else if (other_province == '') {
                      Swal.fire({
                          icon: 'error',
                          title: 'กรุณาใส่ข้อมูล จังหวัด',
                      })
 
-                 } else if (amphures == '') {
+                 } else if (other_district == '') {
                      Swal.fire({
                          icon: 'error',
                          title: 'กรุณาใส่ข้อมูล เขต/อำเภอ *',
                      })
 
-                 } else if (amphures == '') {
+                 } else if (other_district_sub == '') {
                      Swal.fire({
                          icon: 'error',
                          title: 'กรุณาใส่ข้อมูล แขวง/ตำบล',
@@ -1617,7 +1622,14 @@
              } else if (check_office_check == true) {
                  var office_name = $('#office_name').val();
                  var office_tel_mobile = $('#office_tel_mobile').val();
-                 if (office_name == '') {
+                 var receive_location = $('#receive_location').val();
+
+                 if (receive_location == '') {
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'กรุณาเลือกสาขา',
+                     })
+                 }else if (office_name == '') {
                      Swal.fire({
                          icon: 'error',
                          title: 'Name is Null',
