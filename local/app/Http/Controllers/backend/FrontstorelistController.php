@@ -314,6 +314,10 @@ class FrontstorelistController extends Controller
 
     public function plus(Request $request)
     {
+      DB::beginTransaction();
+      try
+          {
+
       // dd($request->all());
       if(isset($request->product_plus)){
         // dd($request->product_id_fk);
@@ -353,7 +357,7 @@ class FrontstorelistController extends Controller
                   $quantity_key = $key;
                 }
              }
-           $sRow = \App\Models\Backend\Frontstorelist::where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @request('product_id_fk_this'))->get();
+           $sRow = \App\Models\Backend\Frontstorelist::select('id')->where('frontstore_id_fk', @$request->frontstore_id)->where('product_id_fk', @request('product_id_fk_this'))->get();
           if( count($sRow)>0 ){
 
               if(@request('product_id_fk_this') == request('product_id_fk_this')){
@@ -375,7 +379,6 @@ class FrontstorelistController extends Controller
                           'type_product' => 'product' ,
                         ]
                     );
-
               }
 
           }else{
@@ -421,13 +424,13 @@ class FrontstorelistController extends Controller
             WHERE products.id=".@request('product_id_fk_this')." AND lang_id=1");
 
            foreach($ProductsName AS $r){
-              DB::select(" UPDATE db_order_products_list SET product_name='".@$r->product_code." : ".@$r->product_name."' WHERE product_id_fk=".@$r->product_id."  ");
+              DB::select(" UPDATE db_order_products_list SET product_name='".@$r->product_code." : ".@$r->product_name."' WHERE product_id_fk=".@$r->product_id." WHERE  frontstore_id_fk".@$request->frontstore_id." ");
            }
 
 
           // }
 
-       $id=   @$request->frontstore_id;
+       $id = @$request->frontstore_id;
 
        $sFrontstoreDataTotal = DB::select(" select SUM(total_price) as total,SUM(total_pv) as total_pv from db_order_products_list WHERE frontstore_id_fk in ($id) GROUP BY frontstore_id_fk ");
        // dd($sFrontstoreDataTotal);
@@ -443,19 +446,15 @@ class FrontstorelistController extends Controller
           DB::select(" UPDATE db_orders SET product_value=0,tax=0,sum_price=0 WHERE id=$id  ");
         }
 
-
-
           // $total_price = DB::select(" select SUM(total_price) as total from db_order_products_list WHERE frontstore_id_fk=".@$request->frontstore_id." GROUP BY frontstore_id_fk ");
           // DB::select(" UPDATE db_orders SET sum_price=".(@$total_price[0]->total?@$total_price[0]->total:0)." WHERE id=".@$request->frontstore_id." ");
-
 
           if(isset($request->product_plus_addlist)){
               // return redirect()->to(url("backend/frontstore/".request('frontstore_id')."/edit"));
              if($request->quantity[0]==0){
-                DB::delete(" DELETE FROM db_order_products_list WHERE amt=0 ;");
+                DB::delete(" DELETE FROM db_order_products_list WHERE frontstore_id_fk=$id WHERE amt=0 ;");
              }
           }
-
 
                  DB::select(" UPDATE db_orders SET
 
@@ -480,10 +479,28 @@ class FrontstorelistController extends Controller
                   cash_pay='0'
 
                   WHERE id=$request->frontstore_id ");
-
-
       }
 
+                     DB::commit();
+                      }
+                      catch (\Exception $e) {
+                          DB::rollback();
+                      // return $e->getMessage();
+                      return response()->json([
+                          'message' =>  $e->getMessage(),
+                          'status' => 0,
+                          'data' => '',
+                      ]);
+                      }
+                      catch(\FatalThrowableError $e)
+                      {
+                          DB::rollback();
+                          return response()->json([
+                              'message' =>  $e->getMessage(),
+                              'status' => 0,
+                              'data' => '',
+                   ]);
+                 }
     }
 
     public function plus_old(Request $request)
