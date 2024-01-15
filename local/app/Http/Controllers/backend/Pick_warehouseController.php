@@ -955,8 +955,8 @@ class Pick_warehouseController extends Controller
           $arr = [];
 
           foreach ($DP as $key => $value) {
-             $delivery = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->get();
-
+             $delivery = DB::table('db_delivery')->where('id',$value->delivery_id_fk)->where('status_to_wh','!=',0)->get();
+             if(count($delivery)>0){
               if($delivery[0]->status_scan_wh==1){
                 $color = 'style="color:green;"';
               }else{
@@ -992,6 +992,7 @@ class Pick_warehouseController extends Controller
 
              }
 
+             }
 
           }
              $pn .= '</div>';

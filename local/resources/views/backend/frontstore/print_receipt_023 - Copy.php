@@ -100,7 +100,7 @@
 <?php
     require(app_path().'/Models/MyFunction.php');
 
-
+    $arr_orders_id = [];
 if(substr($data[0],0,1)=="O"){
     $d1 = DB::select(" SELECT * FROM `db_orders` WHERE `code_order`='".$data[0]."' ");
     $arr_orders_id = [];

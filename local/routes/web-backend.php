@@ -628,6 +628,9 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
 
     Route::get('frontstore/get_order_history_status', 'FrontstoreController@getOrderHistoryStatus')->name('frontstore.get_order_history_status');
     Route::resource('frontstore', 'FrontstoreController');
+
+    Route::post('frontstore/edit_ai', 'FrontstoreController@edit_ai');
+
     Route::post('frontstore_save_delivery_location', 'FrontstoreController@frontstore_save_delivery_location');
     Route::post('frontstore/datatable', 'FrontstoreController@Datatable')->name('frontstore.datatable');
     Route::get('frontstore/print_receipt/{id}', 'AjaxController@createPDFReceiptFrontstore');
