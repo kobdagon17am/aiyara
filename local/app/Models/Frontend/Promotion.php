@@ -9,6 +9,8 @@ use Auth;
 class Promotion extends Model
 {
 	public static function all_available_purchase($promotion_id){
+		// $resule = ['status'=>'success','message'=>'success','all_available_purchase'=>0];
+		// return $resule;
 
     $promotions = DB::table('promotions')
     ->select('show_startdate','show_enddate')
@@ -47,6 +49,8 @@ class Promotion extends Model
 
 
 	public static function count_per_promotion($promotion_id,$customer_id){//เฉพาะต่อรอบโปรโมชั่น
+    // $resule = ['status'=>'success','message'=>'success','count'=>0];
+		// return $resule;
 
 
     $promotions = DB::table('promotions')
@@ -88,6 +92,8 @@ class Promotion extends Model
 	}
 
 	public static function count_per_promotion_day($promotion_id,$customer_id){//ต่อวันภายในรอบโปรโมชั่น
+    // $resule = ['status'=>'success','message'=>'success','count'=>0];
+		// return $resule;
     $date_now = date('Y-m-d');
 
     $promotions = DB::table('promotions')
