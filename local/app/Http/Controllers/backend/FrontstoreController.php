@@ -33,9 +33,14 @@ class FrontstoreController extends Controller
   {
     // สำคัญ
     // เปลี่ยนบิลเป็นจัดส่ง
-    $order = DB::table('db_orders')->select('id')->where('code_order','O123030500139')->first();
+    $order = DB::table('db_orders')->select('id')->where('code_order','O124011500285')->first();
     $this->fncUpdateDeliveryAddress($order->id);
     $this->fncUpdateDeliveryAddressDefault($order->id);
+
+    $order = DB::table('db_orders')->select('id')->where('code_order','O124011500283')->first();
+    $this->fncUpdateDeliveryAddress($order->id);
+    $this->fncUpdateDeliveryAddressDefault($order->id);
+
     //
 
     // สำคัญ

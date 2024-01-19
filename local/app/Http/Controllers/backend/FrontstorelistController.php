@@ -323,7 +323,7 @@ class FrontstorelistController extends Controller
         // dd($request->product_id_fk);
         $this->fnManageGiveaway(@$request->frontstore_id);
         $sBranchs = DB::select(" select business_location_id_fk from branchs where id=" . $request->branch_id_fk . " ");
-        // for ($i=0; $i < count($request->product_id_fk) ; $i++) {
+        // for ($i=0; $i < count($request->product_id_fk) ; $i++) { frontstore_id_fk
               $sProducts = DB::select("
                 SELECT
                 products.id,
@@ -424,7 +424,7 @@ class FrontstorelistController extends Controller
             WHERE products.id=".@request('product_id_fk_this')." AND lang_id=1");
 
            foreach($ProductsName AS $r){
-              DB::select(" UPDATE db_order_products_list SET product_name='".@$r->product_code." : ".@$r->product_name."' WHERE product_id_fk=".@$r->product_id." WHERE  frontstore_id_fk".@$request->frontstore_id." ");
+              DB::select(" UPDATE db_order_products_list SET product_name='".@$r->product_code." : ".@$r->product_name."' WHERE product_id_fk=".@$r->product_id." ");
            }
 
 
