@@ -535,6 +535,7 @@ class AipocketController extends Controller
     $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
 
     $customer->pv_aistockist = $add_pv_aistockist;
+    $to_customer_id = Customer::find($ai_stockist->to_customer_id);
 
     if ($ai_stockist->type_id == 1) { //ทำคุณสมบัติ
 
@@ -542,34 +543,38 @@ class AipocketController extends Controller
       $rs = RunPvController::Cancle_pv($ai_stockist->c_to, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
     } elseif ($ai_stockist->type_id == 2) { //รักษาคุณสมบัติรายเดือน
 
-      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($ai_stockist->customer_id, $ai_stockist->pv);
 
-      $customer->pv_mt = $rs['pv'];
+      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_mt($ai_stockist->to_customer_id,$ai_stockist->pv);
+
+      $to_customer_id->pv_mt = $rs['pv'];
       if ($rs['mt_active'] > 0) {
-
-        $customer->pv_mt = $rs['pv'];
+        $to_customer_id->pv_mt = $rs['pv'];
         $m = $rs['mt_active'];
 
-        $mt_active = strtotime("-$m Month", strtotime($customer->pv_mt_active));
+
+        $mt_active = strtotime("-$m Month", strtotime($to_customer_id->pv_mt_active));
 
         $mt_active = date('Y-m-1', $mt_active); //วันที่ mt_active
-        $customer->pv_mt_active = $mt_active;
+        $to_customer_id->pv_mt_active = $mt_active;
       }
 
       $rs = RunPvController::Cancle_pv($ai_stockist->c_to, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
-    } elseif ($ai_stockist->type_id == 3) { //รักษาคุณสมบัติท่องเที่ยว
-      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_tv($ai_stockist->customer_id, $ai_stockist->pv);
 
-      $customer->pv_tv = $rs['pv'];
+
+
+    } elseif ($ai_stockist->type_id == 3) { //รักษาคุณสมบัติท่องเที่ยว
+      $rs =  \App\Http\Controllers\Frontend\Fc\Cancel_mt_tv::cancel_tv($ai_stockist->to_customer_id, $ai_stockist->pv);
+
+      $to_customer_id->pv_tv = $rs['pv'];
       if ($rs['tv_active'] > 0) {
 
-        $customer->pv_tv = $rs['pv'];
+        $to_customer_id->pv_tv = $rs['pv'];
         $m = $rs['tv_active'];
 
-        $tv_active = strtotime("-$m Month", strtotime($customer->pv_tv_active));
+        $tv_active = strtotime("-$m Month", strtotime($to_customer_id->pv_tv_active));
 
         $tv_active = date('Y-m-1', $tv_active); //วันที่ mt_active
-        $customer->pv_tv_active = $tv_active;
+        $to_customer_id->pv_tv_active = $tv_active;
       }
 
       $rs = RunPvController::Cancle_pv($ai_stockist->c_to, $ai_stockist->pv, $ai_stockist->type_id, $ai_stockist->transection_code);
@@ -586,6 +591,10 @@ class AipocketController extends Controller
 
       $update_ai_stockist->save();
       $customer->save();
+      if ($ai_stockist->type_id == 2 || $ai_stockist->type_id == 3) {
+        $to_customer_id->save();
+      }
+
       return redirect('ai-stockist')->withSuccess($rs['message']);
     } else {
       return redirect('ai-stockist')->withError($rs['message']);
