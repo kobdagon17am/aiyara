@@ -25,7 +25,7 @@ class RunErrorController extends Controller
     
 //  $order_data = DB::table('db_orders')
 //   ->wherein('code_order',
-//   ['O124013100285'])
+//   ['O124020500006'])
 //   ->where('status_run_pv','=','not_run_pv')
 //   //->where('invoice_code_id_fk','=',null)
 //   ->get();
@@ -35,12 +35,12 @@ class RunErrorController extends Controller
 
 //   }
 
-//   if(count($order_data)==0){
-//     dd('Null');
+// //   if(count($order_data)==0){
+// //     dd('Null');
 
-//   }
+// //   }
 
-// //  dd($order_data);
+ 
 //   $i=0;
 
 //   foreach($order_data as $value){
@@ -52,6 +52,11 @@ class RunErrorController extends Controller
  
  
 //     $rs = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
+
+//     $order_data = DB::table('db_orders')
+//     ->where('code_order',$value->code_order)
+//     //->where('invoice_code_id_fk','=',null)
+//     ->update(['order_status_id_fk'=>5,'approve_status'=>'2']);
 
 
 //     $data[][$i]=$rs;

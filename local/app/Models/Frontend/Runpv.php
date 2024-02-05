@@ -11,8 +11,7 @@ class Runpv extends Model
     public static function run_pv($type, $pv, $username)
     {
         if (!empty($type) || !empty($pv) || !empty($username)) {
-            try {
-                DB::BeginTransaction();
+     
                 $id = Auth::guard('c_user')->user()->id;
 
                 $user = DB::table('customers')
@@ -292,6 +291,7 @@ class Runpv extends Model
                                         $update_pv = DB::table('customers')
                                             ->where('id', $customer_id)
                                             ->update(['pv_c' => $add_pv]);
+                                            
 
                                         $resule = ['status' => 'success', 'message' => 'Pv upline Type 1 Success'];
                                         $j = 0;
@@ -352,20 +352,15 @@ class Runpv extends Model
 
                 }
                 if ($resule['status'] == 'success') {
-                    DB::commit();
+                    
                     //DB::rollback();
                     return $resule;
                 } else {
-                    DB::rollback();
+                  
                     return $resule;
                 }
 
-            } catch (Exception $e) {
-                DB::rollback();
-                $resule = ['status' => 'fail', 'message' => 'Update PvPayment Fail'];
-                return $resule;
-
-            }
+       
 
             $resule = ['status' => 'success', 'message' => 'Yess'];
 
