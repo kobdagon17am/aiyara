@@ -68,7 +68,7 @@ class Promotion extends Model
     ->wheredate('created_at', '>=',$promotions->show_startdate)
     //->whereIn('db_orders.order_status_id_fk', [1, 2, 3, 4, 5, 6, 7])
     ->first();
-
+ 
     $count_per_promotion = null;
 
     if($count_per_promotion){
@@ -93,14 +93,14 @@ class Promotion extends Model
 
 	public static function count_per_promotion_day($promotion_id,$customer_id){//ต่อวันภายในรอบโปรโมชั่น
     // $resule = ['status'=>'success','message'=>'success','count'=>0];
-		// return $resule;
+		// return $resule; 
     $date_now = date('Y-m-d');
 
     $promotions = DB::table('promotions')
     ->select('show_startdate','show_enddate')
     ->where('id','=',$promotion_id)
     ->first();
-
+ 
         $count_per_promotion = DB::table('db_order_products_list')
     ->select(db::raw('sum(db_order_products_list.amt) as amt_all'))
     //->leftjoin('db_orders', 'db_orders.id', '=', 'db_order_products_list.frontstore_id_fk')

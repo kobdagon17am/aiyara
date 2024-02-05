@@ -20,222 +20,36 @@ use App\Http\Controllers\Frontend\Fc\RunPvController;
 class RunErrorController extends Controller
 {
   public static function index(){
+    dd('ddd');
 
+    $text = DB::table('products')->select('products.id','products_units.id as unit_id')->
+    leftJoin('products_units','products_units.product_id_fk','products.id')->get();
+    dd($text);
 
-    
-//  $order_data = DB::table('db_orders')
-//   ->wherein('code_order',
-//   ['O124013100285'])
-//   ->where('status_run_pv','=','not_run_pv')
-//   //->where('invoice_code_id_fk','=',null)
-//   ->get();
-// // dd($order_data);
-//   if(count($order_data)>1){
-//     dd('มากกว่า 1');
-
-//   }
-
-//   if(count($order_data)==0){
-//     dd('Null');
-
-//   }
-
-// //  dd($order_data);
-//   $i=0;
-
-//   foreach($order_data as $value){
-//     $i++;
-//     $order_data = DB::table('db_orders')
-//     ->where('code_order',$value->code_order)
-//     //->where('invoice_code_id_fk','=',null)
-//     ->update(['order_status_id_fk'=>2,'status_run_pv'=>'not_run_pv']);
- 
- 
-//     $rs = \App\Models\Frontend\PvPayment::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
-
-
-//     $data[][$i]=$rs;
-//   }
-
-//   dd($data);
-
-
-
-    // $product_list =  DB::table('db_order_products_list') //รายชื่อคนที่มีรายการแจงโบนัสข้อ
-    // ->selectRaw('count(id) as id')
-    // ->havingRaw('count(id) > 1 ')
-    // // ->wheredate('date_active', '=', $date)
-
-    // ->groupby('id')
-    // ->get();
-
-
-//     $customers =  DB::table('customers') //รายชื่อคนที่มีรายการแจงโบนัสข้อ
-//     ->selectRaw('user_name as username,count(user_name) as user_name_count')
-//     ->havingRaw('count(user_name) > 1 ')
-//     // ->wheredate('date_active', '=', $date)
-
-//     ->groupby('user_name')
-//     ->get();
-
-
-// dd($customers);
-
-    // ////////////////////////////
-
-    //     $data = DB::table('customers') //อัพ Pv ของตัวเอง
-    //       ->select('id','user_name')
-    //       ->wherein('user_name',['A796135',
-    //       'A729954',
-    //       'A728234',
-    //       'A739426',
-    //       'A840653',
-    //       'A871162',
-    //       'A872831',
-    //       'A762514',
-    //       'A137206',
-    //       'A594725',
-    //       'A583817',
-    //       'A550456',
-    //       'A869076',
-    //       'A871453',
-    //      ])
-    //       ->get();
-    //       $arr = array();
-    // $i = 0;
-    // foreach($data as $value){
-
-    //   $gv = \App\Helpers\Frontend::get_gitfvoucher($value->user_name);
-    //   if($gv){
-    //     $gv_value = 0;
-    //   }else{
-    //     $gv_value = $gv;
-    //   }
-
-    //   if($gv_value>0){
-    //     dd($value->user_name,'fail');
-    //   }else{
-    //      $arr[] = $value->id;
-    //   }
-
-    // $i++;
-
-    // $customers = DB::table('customers')
-    // ->wherein('id',$arr)
-    // ->update(['business_location_id' => 3]); //ลงข้อมูลบิลชำระเงิน
-
-    // $file = DB::table('register_files')
-    // ->wherein('customer_id',$arr)
-    // ->update(['business_location_id_fk' => 3]); //ลงข้อมูลบิลชำระเงิน
-
-    // }
-    // dd($i,'success');
-
-
-    /////////////////////////////////
-    // $data = \App\Models\Frontend\Promotion::all_available_purchase_2(350);
-    // dd($data);
-
-
-    // $run_pament_code = RunNumberPayment::run_number_order(1);
-
-    // dd($run_pament_code);
-    // $data = RunErrorController::hidden_order();
-    // dd($data);
-//dd('1');
-//   $promotions = DB::table('db_promotion_cus')
-//   ->select('db_promotion_cus.id')
-//   ->leftjoin('db_promotion_code', 'db_promotion_code.id', '=', 'db_promotion_cus.promotion_code_id_fk')
-//            ->where('db_promotion_code.pro_edate', '<=', '2024-01-15 00:59:59')
-//            //  ->where('pro_status', 3)
-//            ->orderByDesc('pro_status') 
-//            //->limit(50000)
-//           ->delete();
- 
-// 	dd('ok');
-
-// $promotions = DB::table('db_code_order')
-// ->select('	db_code_order.id')
-
-//          ->where('db_code_order.created_at', '<=', '2023-09-19 00:59:59')
-//          //  ->where('pro_status', 3)
-//          //->limit(50000)
-//         ->count();
-//  dd($promotions);
-//   dd('ok');
-
-
-    // $data = DB::table('db_salepage_setting')
-    // ->get();
-    // $i = 0;
-    // foreach($data as $value){
-
-    //   $c = DB::table('customers') //อัพ Pv ของตัวเอง
-    //   ->select('user_name')
-    //   ->where('id', '=', $value->customers_id_fk)
-    //   ->first();
-
-    //   $salepage_setting = DB::table('db_salepage_setting')
-    //   ->where('id', $value->id)
-    //   ->update(['customers_username' => $c->user_name]); //ลงข้อมูลบิลชำระเงิน
-    // $i++;
-    // }
-    // dd($i);
-
-  //   $user = DB::table('customers')
-  //   ->select('id', 'user_name','upline_id','introduce_id')
-  //   // ->where('id', '>=',1298067)
-  //   // ->where('id', '<=',1311311)
-  //   ->where('user_name','A1307989')
-  //   ->get();
-  //   // dd($user);
-  //   //max1311311
-  //   $i= 0;
-  // foreach($user as $value){
-  //   // $data =  \App\Models\Frontend\LineModel::check_type_introduce($value->introduce_id,$value->upline_id);
-  //   $data= RunErrorController::check_type_introduce($value->introduce_id,$value->upline_id,'A1307989');
-  //   // dd($data);
-
-  //   if( $data['status'] == 'success'){
-  //     $i++;
-  //     $introduce_type = $data['data']->line_type;
-  //   }else{
-  //     $introduce_type = '';
-  //   }
-
-
-
-  //   $update = DB::table('customers')
-  //   ->where('id', $value->id)
-  //   ->update(['introduce_type' =>$introduce_type]);
-  // }
-
-  // dd('success รวม'.count($user).' Run'.$i);
 
 
 
     // $rs= RunErrorController::check_type_introduce('A787338','A872520');
 
 
-//     $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::run_invoice_code();
-//     dd($rs);
+    // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::run_invoice_code();
+    // dd($rs);
 
-//     dd('qqq');
-//     $x = 1000;
-//     dd('222');
-//     // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A873120',$x,1, $order_code = null);
-//     $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A516540',$x,2, $order_code = null);
-//     dd($rs);
-//     Cancle_pv
-//     Runpv
+    // dd('qqq');
+    // $x = 1000;
+    // dd('222');
+    // // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A873120',$x,1, $order_code = null);
+    // $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::Runpv('A516540',$x,2, $order_code = null);
+    // dd($rs);
+    //Cancle_pv
+    //Runpv
 
-//    $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code(1,'product');
-//    dd($rs);
+  //  $rs = \App\Models\Frontend\RunNumberPayment::run_payment_code(1,'product');
+  //  dd($rs);
 
 //   $order_data = DB::table('db_orders')
-//   ->where('code_order', '=', 'O123113000419')
+//   ->where('code_order', '=', 'O122083101256')
 //   ->first();
-// //   dd($order_data);
 
 //   $user = DB::table('customers')
 //   ->select('id', 'pv_aistockist', 'user_name')
@@ -245,20 +59,14 @@ class RunErrorController extends Controller
 //   $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::add_pv_aistockist('4',$order_data->pv_total,$user->user_name,$user->user_name,$order_data->code_order,$order_data->id);
 //   dd($rs,$user->user_name);
 
-
-
+//O122083101093
 //  $order_data = DB::table('db_orders')
 //   ->wherein('code_order',
-//   ['O123082100036'])
+//   ['O122091003188'])
 //   ->where('status_run_pv','=','not_run_pv')
 //   //->where('invoice_code_id_fk','=',null)
 //   ->get();
 // // dd($order_data);
-//   if(count($order_data)>1){
-//     dd('มากกว่า 1');
-
-//   }
-// //  dd($order_data);
 //   $i=0;
 
 //   foreach($order_data as $value){
@@ -266,12 +74,11 @@ class RunErrorController extends Controller
 //     //$rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,$value->distribution_channel_id_fk,'customer');
 //     $rs = \App\Http\Controllers\Frontend\Fc\RunErrorController::PvPayment_type_confirme($value->id,$value->approver,2,'customer');
 
-
 //     $data[][$i]=$rs;
 //   }
 
 
-// dd($data,'O123082100036');
+// dd($data);
   }
 
   public static function run_invoice_code(){
@@ -948,15 +755,12 @@ class RunErrorController extends Controller
     }
 
 
-
     public static function PvPayment_type_confirme($order_id, $admin_id, $distribution_channel, $action_type)
     {
         DB::BeginTransaction();
         $order_data = DB::table('db_orders')
             ->where('id', '=', $order_id)
             ->first();
-// dd('ok');
-            // dd($order_data);
 
         $order_update = Order::find($order_id);
         $movement_ai_cash = new Db_Movement_ai_cash;
@@ -970,20 +774,10 @@ class RunErrorController extends Controller
             return $resule;
         }
 
-        if ($order_data->order_status_id_fk == 4 || $order_data->order_status_id_fk == 5 || $order_data->order_status_id_fk == 6 || $order_data->order_status_id_fk == 7) {
-            $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
-            return $resule;
-        }
-
-        if($order_update->approve_status){
-          if($order_update->status_run_pv == 'success'){
-            if($order_update->pay_type_id_fk==1||$order_update->pay_type_id_fk==8||$order_update->pay_type_id_fk==10||$order_update->pay_type_id_fk==11||$order_update->pay_type_id_fk==12){
-              $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
-              return $resule;
-            }
-          }
-
-        }
+        // if ($order_data->order_status_id_fk == 4 || $order_data->order_status_id_fk == 5 || $order_data->order_status_id_fk == 6 || $order_data->order_status_id_fk == 7) {
+        //     $resule = ['status' => 'fail', 'message' => 'บิลนี้ถูกอนุมัติไปแล้ว ไม่สามารถอนุมัติซ้ำได้'];
+        //     return $resule;
+        // }
 
         $pv = $order_data->pv_total;
         if ($order_data->status_payment_sent_other == 1) {
@@ -1001,6 +795,7 @@ class RunErrorController extends Controller
         $business_location_id = $order_data->business_location_id_fk;
 
         if (empty($order_id)) {
+
             $resule = ['status' => 'fail', 'message' => 'Data is Null'];
             DB::rollback();
             return $resule;
@@ -1021,6 +816,9 @@ class RunErrorController extends Controller
 
                 if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
+
+
+
 
                     $check_aicash = DB::table('customers') //อัพ Pv ของตัวเอง
                         ->select('ai_cash','id','user_name')
@@ -1167,7 +965,7 @@ class RunErrorController extends Controller
                                         'approve_status' => 1,
                                         'approve_date' => date('Y-m-d H:i:s')]);
 
-                                $expiry_date = date("Y-m-d", strtotime("+30 day"));
+                                $expiry_date = date("Y-m-d", strtotime("+1 month", strtotime(now())));
 
                                 $inseart_gift_voucher = DB::table('gift_voucher')->insert([
 
@@ -1584,8 +1382,6 @@ class RunErrorController extends Controller
                         $order_update->status_run_pv = 'success';
 
 
-
-
                 } elseif ($type_id == 5) { // Ai Voucher
 
                   if($customer_update->date_order_first == null || $customer_update->date_order_first == '' || $customer_update->date_order_first == '0000-00-00 00:00:00'){
@@ -1643,14 +1439,13 @@ class RunErrorController extends Controller
 
 
                 if ($resule['status'] == 'success') {
-
+                    $movement_ai_cash->save();
                     $customer_update->save();
                     $order_update->save();
 
                     if ($order_data->pay_type_id_fk == 3 || $order_data->pay_type_id_fk == 6 || $order_data->pay_type_id_fk == 9
                     || $order_data->pay_type_id_fk == 11 || $order_data->pay_type_id_fk == 14) { //Aicash
                     $customer_update_ai_cash->save();
-                    $movement_ai_cash->save();
                     }
 
 
@@ -1679,23 +1474,13 @@ class RunErrorController extends Controller
     }
 
 
-    public static function check_type_introduce($introduce_id,$under_line_id,$user_name){//คนแนะนำ//สร้างภายใต้ id
+    public static function check_type_introduce($introduce_id,$under_line_id){//คนแนะนำ//สร้างภายใต้ id
 
 
-        if($introduce_id == $under_line_id){
-            $data = DB::table('customers')
-            ->select('user_name','upline_id','line_type')
-            ->where('user_name','=',$user_name)
-          //->where('upline_id','=',$use_id)
-            ->first();
-            $resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data];
-            return $resule;
-        }
       $data_user = DB::table('customers')
       ->select('upline_id','user_name','upline_id','line_type')
       ->where('user_name','=',$under_line_id)
       ->first();
-    //   dd($data_user);
 
       if(!empty($data_user)){
         $upline_id = $data_user->upline_id;
@@ -1711,7 +1496,7 @@ class RunErrorController extends Controller
         for ($i=1; $i <= $j ; $i++){
           if($i == 1){
             $data = DB::table('customers')
-            ->select('user_name','upline_id','line_type')
+            ->select('upline_id','user_name','upline_id','line_type')
             ->where('user_name','=',$username)
           //->where('upline_id','=',$use_id)
             ->first();
@@ -1732,7 +1517,7 @@ class RunErrorController extends Controller
             }else{
 
               $data = DB::table('customers')
-              ->select('user_name','upline_id','line_type')
+              ->select('upline_id','user_name','upline_id','line_type')
               ->where('id','=',$data->upline_id)
               ->first();
 
@@ -1754,7 +1539,7 @@ class RunErrorController extends Controller
         if($resule['status'] == 'fail'){
 
           $data_account = DB::table('customers')
-          ->select('user_name','upline_id','line_type')
+          ->select('upline_id','user_name','upline_id','line_type')
           ->where('user_name','=',$introduce_id)
           ->first();
 
@@ -1772,7 +1557,7 @@ class RunErrorController extends Controller
               $j =0;
             }else{
               $data_account = DB::table('customers')
-              ->select('user_name','upline_id','line_type')
+              ->select('upline_id','user_name','upline_id','line_type')
               ->where('user_name','=',$username)
               ->first();
 
@@ -1790,7 +1575,6 @@ class RunErrorController extends Controller
 
           //return $resule;
         }
-
         if (in_array($introduce_id, $upline_id_arr)) {
           $resule = ['status'=>'success','message'=>'Upline ID ','data'=>$data_account];
         }else{
@@ -1806,57 +1590,5 @@ class RunErrorController extends Controller
       }
     }
 
-    public static function hidden_order(){
-       $adate= now();
-       $date = date("Y-m-d 00:59:59", strtotime("-1 day",strtotime($adate)));
-
-        $data = DB::table('db_orders')
-        ->where('db_orders.approve_status', '=',0)
-        ->where('db_orders.order_status_id_fk', '=',1)
-        ->where('db_orders.created_at', '<=', $date)
-        ->where('db_orders.deleted_at', '=',null)
-        ->get();
-
-        $i = 0;
-        foreach( $data as $value){
-            $i++;
-            $order_update = DB::table('db_orders')
-            ->where('id', $value->id)
-            ->update(['deleted_at' => now()]); //ลงข้อมูลบิลชำระเงิน
-        }
-
-
-        $date_delete = date("Y-m-d 00:59:59", strtotime("-5 day",strtotime($adate)));
-        $db_orders = DB::table('db_orders')
-        ->select('id')
-        ->where('db_orders.approve_status', '=',0)
-        ->where('db_orders.order_status_id_fk', '=',1)
-        ->where('db_orders.created_at', '<=', $date_delete)
-        ->where('db_orders.deleted_at', '!=',null)
-        ->get();
-
-
-
-        $arr_id_order = array();
-        foreach( $db_orders as $value){
-            $arr_id_order[] = $value->id;
-        }
-        if(count($arr_id_order)>0){
-
-            $db_orders_d = DB::table('db_orders')
-            ->wherein('id',$arr_id_order)
-            ->delete();
-
-
-            $db_list_d = DB::table('db_order_products_list')
-            ->wherein('frontstore_id_fk',$arr_id_order)
-            ->delete();
-
-        }
-
-
-
-
-    }
 
 }

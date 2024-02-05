@@ -144,8 +144,7 @@
 
 
                                             <form action="{{ route('register_member_salepage') }}"
-                                                id="register_member_salepage" method="POST"
-                                                enctype="multipart/form-data">
+                                                id="register_member_salepage" method="POST" enctype="multipart/form-data">
                                                 @csrf
 
                                                 <div class="form-group row">
