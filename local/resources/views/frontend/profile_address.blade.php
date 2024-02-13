@@ -53,7 +53,7 @@
           <input type="text" class="form-control form-control-bold"  name="business_name" value="{{@$customer->business_name}}" >
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-3 mt-2">
 					<label>@lang('message.Mobile_Phone') </label>
           <input type="text" placeholder="@lang('message.Mobile_Phone')" id="tel_mobile" name="tel_mobile"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_mobile }}">
 					{{-- <input type="" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}"> --}}
