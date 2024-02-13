@@ -23,7 +23,19 @@
        <div class="form-group row">
         <div class="col-sm-2">
           <label>@lang('message.name_prefix')</label>
-          <input type="text" name="prefix_name" class="form-control form-control-bold"  value="{{@$customer->prefix_name}}" >
+
+
+          <select class="form-control" name="prefix_name">
+
+            <option value="{{$customer->prefix_name}}" selected> {{$customer->prefix_name}}</option>
+            <option value="@lang('message.mr')" @if()>@lang('message.mr')
+            </option>
+            <option value="@lang('message.mrs')">@lang('message.mrs')
+            </option>
+            <option value="@lang('message.ms')">@lang('message.ms')
+            </option>
+        </select>
+
         </div>
 
         <div class="col-sm-3">
