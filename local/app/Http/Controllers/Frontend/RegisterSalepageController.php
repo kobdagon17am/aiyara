@@ -76,7 +76,7 @@ class RegisterSalepageController extends Controller
       ->orderByRaw("FIELD(id, $business_location_id) desc")
       ->get();
 
-      $data = ['data'=>$customer,'line_type_back'=>$customer->registers_setting,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation_id'=>$nation_id,'last_user'=>$last_user];
+      $data = ['data'=>$customer,'line_type_back'=>$line_setting,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation_id'=>$nation_id,'last_user'=>$last_user];
      //  dd($data);
 
       return view('frontend/salepage/registers',compact('data'));
