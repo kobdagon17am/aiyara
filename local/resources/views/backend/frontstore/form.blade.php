@@ -3190,6 +3190,7 @@
                     $('.lock_input_row').show();
                     $('#lock_input').prop("disabled", false);
                 }
+                
                 $("input[name=_method]").prop("disabled", false);
             } else {
                 fnShippingCalculate(0);

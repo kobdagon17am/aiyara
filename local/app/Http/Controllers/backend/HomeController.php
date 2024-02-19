@@ -11,6 +11,24 @@ use App\Models\Backend\Orders;
 class HomeController extends Controller
 {
 
+  public function test_add_delivery(Request $request)
+  {
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109961);
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109961);
+
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109972);
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109972);
+
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109983);
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109983);
+
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109987);
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109987);
+
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109991);
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109991);
+  }
+
   public function test_sql(Request $request)
   {
     //  $db_delivery_packing = DB::table('db_delivery_packing')->select('delivery_id_fk')->where('packing_code','P101787')->pluck('delivery_id_fk')->toArray();
