@@ -11,22 +11,16 @@ use App\Models\Backend\Orders;
 class HomeController extends Controller
 {
 
+  // จากรับเองเป็นจัดส่ง
   public function test_add_delivery(Request $request)
   {
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109961);
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109961);
-
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109972);
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109972);
-
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109983);
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109983);
-
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109987);
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109987);
-
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109991);
-    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109991);
+    //
+    // DB::table('db_orders')->where('id',109961)->update([
+    //   'delivery_location' => 4,
+    //   'delivery_location_frontend' => 'delivery_location_frontend',
+    // ]);
+    // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109961);
+    // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109961);
   }
 
   public function test_sql(Request $request)
