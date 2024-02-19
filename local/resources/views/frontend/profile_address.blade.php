@@ -23,7 +23,19 @@
        <div class="form-group row">
         <div class="col-sm-2">
           <label>@lang('message.name_prefix')</label>
-          <input type="text" name="prefix_name" class="form-control form-control-bold"  value="{{@$customer->prefix_name}}" >
+
+
+          <select class="form-control" name="prefix_name">
+
+            <option value="{{$customer->prefix_name}}" selected > {{$customer->prefix_name}}</option>
+            <option value="@lang('message.mr')" >@lang('message.mr')
+            </option>
+            <option value="@lang('message.mrs')">@lang('message.mrs')
+            </option>
+            <option value="@lang('message.ms')">@lang('message.ms')
+            </option>
+        </select>
+
         </div>
 
         <div class="col-sm-3">
@@ -41,15 +53,15 @@
           <input type="text" class="form-control form-control-bold"  name="business_name" value="{{@$customer->business_name}}" >
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-3 mt-2">
 					<label>@lang('message.Mobile_Phone') </label>
           <input type="text" placeholder="@lang('message.Mobile_Phone')" id="tel_mobile" name="tel_mobile"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_mobile }}">
 					{{-- <input type="" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}"> --}}
 				</div>
 
 				<div class="col-sm-3 mt-2">
-					<label>@lang('message.Home_Phone')</label>
-          <input type="text" placeholder="@lang('message.Home_Phone')" id="tel_home" name="tel_home"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_home }}">
+					<label>@lang('message.Home_Phone') *</label>
+          <input type="text" placeholder="@lang('message.Home_Phone')" id="tel_home" name="tel_home"  class="form-control us_telephone" autocomplete="off" data-mask="999-999-9999" value="{{ @$customer->tel_home }}" required>
 					{{-- <input type="" class="form-control" autocomplete="off" placeholder="เบอร์โทรศัพท์" id="tel_mobile" name="tel_mobile" value="{{ @$customer->tel_mobile }}"> --}}
 				</div>
 

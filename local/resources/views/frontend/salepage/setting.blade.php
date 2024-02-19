@@ -213,18 +213,18 @@
                 <div class="card-header">
                     <h5 class="card-header-text">{{trans('message.p_sale page set')}} </h5>
                     @if ($canAccess)
-                        <button id="edit-Contact" type="button" onclick="save_type_register()"
+                        {{-- <button id="edit-Contact" type="button" onclick="save_type_register()"
                             class="btn btn-primary waves-effect waves-light f-right">
                             <i class="icofont icofont-edit"></i> Save
-                        </button>
+                        </button> --}}
                     @endif
                 </div>
 
                 <div class="card-block">
                     <?php $url_registers = Auth::guard('c_user')->user()->user_name; ?>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-sm-12 col-md-12 col-xl-12 m-b-30">
-                            {{-- <h4 class="sub-title">Radio Fill Button</h4> --}}
+
                             <div class="form-radio">
                                 <form>
                                     <div class="radio radio-inline">
@@ -249,20 +249,52 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> --}}
 
                     <div class="row">
 
                         <div class="col-sm-12">
+                          <label for=""> A </label>
                             <div class="input-group input-group-button">
+
                                 <input type="text" class="form-control"
-                                    value="{{ url('registermember/' . $url_registers) }}">
-                                <span class="input-group-addon btn btn-primary" id="basic-addon10" >
-                                    <span class="copy-to-clipboard" data-url="{{ url('registermember/' . $url_registers) }}">Copy Url</span>
+                                    value="{{ url('registermember/' . $url_registers.'/A') }}">
+                                <span class="input-group-addon btn btn-primary" id="basic-addon10_A" >
+                                    <span class="copy-to-clipboard" data-url="{{ url('registermember/' . $url_registers.'/A') }}">Copy Url Type A</span>
                                 </span>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+
+                      <div class="col-sm-12">
+                        <label for=""> B </label>
+                          <div class="input-group input-group-button">
+
+                              <input type="text" class="form-control"
+                                  value="{{ url('registermember/' . $url_registers.'/B') }}">
+                              <span class="input-group-addon btn btn-primary" id="basic-addon10_B" >
+                                  <span class="copy-to-clipboard" data-url="{{ url('registermember/' . $url_registers.'/B') }}">Copy Url Type B</span>
+                              </span>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-sm-12">
+                      <label for=""> C </label>
+                        <div class="input-group input-group-button">
+
+                            <input type="text" class="form-control"
+                                value="{{ url('registermember/' . $url_registers.'/C') }}">
+                            <span class="input-group-addon btn btn-primary" id="basic-addon10_C" >
+                                <span class="copy-to-clipboard" data-url="{{ url('registermember/' . $url_registers.'/C') }}">Copy Url Type C</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
                 </div>
             </div>

@@ -21,11 +21,11 @@ class CancelOrderController extends Controller
 
 
     $delivery = DB::table('db_delivery')
-    ->where('orders_id_fk','=',$order_id)
-    ->first();
+      ->where('orders_id_fk', '=', $order_id)
+      ->first();
 
-    if($delivery){
-      if($delivery->status_to_wh != 0){
+    if ($delivery) {
+      if ($delivery->status_to_wh != 0) {
         $resule = ['status' => 'fail', 'message' => 'ไม่สามารถยกเลิกบิลได้เนื่องจากสินค้าเข้าสู่ขั้นตอนแพคสินค้าแล้ว'];
         return $resule;
       }
@@ -65,7 +65,7 @@ class CancelOrderController extends Controller
       $type_id = $order_data->purchase_type_id_fk;
 
       //1=รออนุมัติ,2=อนุมัติแล้ว,3=รอชำระ,4=รอจัดส่ง,5=ยกเลิก,6=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย) > Ref>dataset_approve_status>id
-      if ($order_data->status_run_pv == 'not_run_pv' ) { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ  0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
+      if ($order_data->status_run_pv == 'not_run_pv') { //กรณีสั่งซื้อเเล้วยังไม่มีการอนุมัติค่า PV ยังไม่ถูกดำเนินการ  0=รออนุมัติ,1=อนุมัติแล้ว,2=รอชำระ,3=รอจัดส่ง,4=ยกเลิก,5=ไม่อนุมัติ,9=สำเร็จ(ถึงขั้นตอนสุดท้าย ส่งของให้ลูกค้าเรียบร้อย)'
 
         $order_data->cancel_by_user_id_fk = $customer_or_admin;
         $order_data->order_status_id_fk = 8; //Status  8 = Cancel
@@ -82,12 +82,12 @@ class CancelOrderController extends Controller
         $pv_total = $order_data->pv_total;
 
         $order_first  = DB::table('db_orders')
-        ->where('customers_id_fk', $customer_id)
-        ->whereIn('approve_status',[2,9,4])
-        ->whereIn('purchase_type_id_fk',[1,2,3,4,5])
-        ->get();
+          ->where('customers_id_fk', $customer_id)
+          ->whereIn('approve_status', [2, 9, 4])
+          ->whereIn('purchase_type_id_fk', [1, 2, 3, 4, 5])
+          ->get();
 
-        if(count($order_first) <= 1){
+        if (count($order_first) <= 1) {
           $customer_user->date_order_first = '0000-00-00 00:00:00';
           $customer_user->pv_mt_active = '0000-00-00 00:00:00';
           $customer_user->status_pv_mt == 'not';
@@ -96,6 +96,7 @@ class CancelOrderController extends Controller
 
         if ($pv_total > 0) {
           $pay_type = $order_data->pay_type_id_fk;
+
           // 1 เงินโอน
           // 2 บัตรเครดิต
           // 3 Ai-Cash
@@ -243,19 +244,19 @@ class CancelOrderController extends Controller
             $update_ai_stockist->banlance = $add_pv_aistockist;
             $update_ai_stockist->pv_aistockist = $add_pv_aistockist;
 
-              //check การยกเลิก Aistockis
-              if($pv_total>=10000 and $customer_user->aistockist_status == 1){
-                $check_aistockis_status = DB::table('db_orders')
-                ->where('purchase_type_id_fk','=',$type_id)
-                ->where('customers_id_fk','=',$customer_user->id)
-                ->whereIn('db_orders.approve_status',[2,4,9])
-                ->where('pv_total','>=',10000)
+            //check การยกเลิก Aistockis
+            if ($pv_total >= 10000 and $customer_user->aistockist_status == 1) {
+              $check_aistockis_status = DB::table('db_orders')
+                ->where('purchase_type_id_fk', '=', $type_id)
+                ->where('customers_id_fk', '=', $customer_user->id)
+                ->whereIn('db_orders.approve_status', [2, 4, 9])
+                ->where('pv_total', '>=', 10000)
                 ->count();
-                if($check_aistockis_status == 1){
-                  $customer_user->aistockist_status = 0;
-                  $customer_user->aistockist_date = null;
-                }
+              if ($check_aistockis_status == 1) {
+                $customer_user->aistockist_status = 0;
+                $customer_user->aistockist_date = null;
               }
+            }
 
             //$resule = RunPvController::Cancle_pv($customer_user->user_name, $pv_total, $type_id, $order_data->code_order);
           } elseif ($type_id == 5) {
@@ -289,7 +290,7 @@ class CancelOrderController extends Controller
             ->where('code_order', '=', $order_data->code_order)
             ->get();
 
-          if ($giv_log) { //GivtVoucher
+          if (count($giv_log) > 0) { //GivtVoucher
 
             if ($type_id == 5) {
 
@@ -391,7 +392,7 @@ class CancelOrderController extends Controller
             ->where('code_order', '=', $order_data->code_order)
             ->get();
 
-          if ($giv_log) { //GivtVoucher
+          if (count($giv_log)) { //GivtVoucher
 
             if ($type_id == 5) {
 
@@ -526,15 +527,15 @@ class CancelOrderController extends Controller
           ]);
 
 
-          $order_wut = DB::table('db_orders')
-          ->where('id','=',$order_id)
+        $order_wut = DB::table('db_orders')
+          ->where('id', '=', $order_id)
           ->first();
-          if($order_wut){
-            $db_order_products_list = DB::table('db_order_products_list')->select('promotion_code')->where('frontstore_id_fk',$order_wut->id)->where('promotion_code','!=','')->get();
-            foreach($db_order_products_list as $pl){
-              DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='".$pl->promotion_code."') ");
-            }
+        if ($order_wut) {
+          $db_order_products_list = DB::table('db_order_products_list')->select('promotion_code')->where('frontstore_id_fk', $order_wut->id)->where('promotion_code', '!=', '')->get();
+          foreach ($db_order_products_list as $pl) {
+            DB::select(" UPDATE `db_promotion_cus` SET `pro_status`='1',`used_user_name`=NULL,`used_date`=NULL WHERE (`promotion_code`='" . $pl->promotion_code . "') ");
           }
+        }
 
         $update_products_list_giveaway = DB::table('db_order_products_list_giveaway')
           ->where('order_id_fk', $order_id)
@@ -542,14 +543,14 @@ class CancelOrderController extends Controller
             'approve_status' => 2,
             'approve_date' => date('Y-m-d H:i:s'),
           ]);
-          $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($customer_order->user_name);
+        $update_package = \App\Http\Controllers\Frontend\Fc\RunPvController::update_package($customer_order->user_name);
         $order_data->save();
         $customer_user->save();
-
-
+        $resule = ['status' => 'success', 'message' => 'Cancel Oder Success'];
         DB::commit();
         return $resule;
       } else {
+
 
         DB::rollback();
         return $resule;
@@ -559,6 +560,4 @@ class CancelOrderController extends Controller
       return $e;
     }
   }
-
-
 }

@@ -10,75 +10,83 @@ use App\Http\Controllers\Controller;
 class RegisterSalepageController extends Controller
 {
 
-  public function index($user_name){
+  public function index($user_name,$line_setting){
 
-       $customer = DB::table('customers')
-       ->select('*')
-       ->where('user_name','=',$user_name)
-       ->limit(1)
-       ->first();
+    if($line_setting == 'A' || $line_setting == 'B' || $line_setting == 'C'){
+      $customer = DB::table('customers')
+      ->select('*')
+      ->where('user_name','=',$user_name)
+      ->limit(1)
+      ->first();
 
-       if(empty($customer)){
+      if(empty($customer)){
 
+       $data = ['status' => 'fail', 'message' => 'ไม่มีข้อมูลผู้แนะนำกรุณาติดต่อ AIYARA'];
+       return view('frontend/salepage/fail',compact('data'));
+      }
+
+      $provinces = DB::table('dataset_provinces')
+      ->select('*')
+      ->get();
+
+      $nation_id = DB::table('db_country')
+      ->select('*')
+      ->get();
+
+      $country = DB::table('dataset_business_location')
+      ->select('*')
+      ->where('lang_id','=',1)
+      ->orderby('orderby')
+      ->get();
+
+      $registers_setting = DB::table('customers')
+      ->select('user_name','registers_setting')
+      ->where('user_name','=',$user_name)
+      ->first();
+
+      if(empty($registers_setting)){
         $data = ['status' => 'fail', 'message' => 'ไม่มีข้อมูลผู้แนะนำกรุณาติดต่อ AIYARA'];
         return view('frontend/salepage/fail',compact('data'));
-       }
-
-       $provinces = DB::table('dataset_provinces')
-       ->select('*')
-       ->get();
-
-       $nation_id = DB::table('db_country')
-       ->select('*')
-       ->get();
-
-       $country = DB::table('dataset_business_location')
-       ->select('*')
-       ->where('lang_id','=',1)
-       ->orderby('orderby')
-       ->get();
-
-       $registers_setting = DB::table('customers')
-       ->select('user_name','registers_setting')
-       ->where('user_name','=',$user_name)
-       ->first();
-
-       if(empty($registers_setting)){
-         $data = ['status' => 'fail', 'message' => 'ไม่มีข้อมูลผู้แนะนำกรุณาติดต่อ AIYARA'];
-         return view('frontend/salepage/fail',compact('data'));
-       }
+      }
 
 
-       $user_registers = $registers_setting->user_name;
-       $line_setting = $registers_setting->registers_setting;
+      $user_registers = $registers_setting->user_name;
+      //$line_setting = $registers_setting->registers_setting;
 
-       $last_user = LineModel::last_line($user_registers,$line_setting);
+      $last_user = LineModel::last_line($user_registers,$line_setting);
 
 
 
 
 
-       if($customer->business_location_id == '1' || $customer->business_location_id == null ){
-        $business_location_id = 1;
-       }else{
-        $business_location_id = 3;
+      if($customer->business_location_id == '1' || $customer->business_location_id == null ){
+       $business_location_id = 1;
+      }else{
+       $business_location_id = 3;
 
-       }
+      }
 
 
 
-       $business_location = DB::table('dataset_business_location')
-       ->select('*')
+      $business_location = DB::table('dataset_business_location')
+      ->select('*')
 
-       ->where('lang_id','=',1)
-       ->where('status','=',1)
-       ->orderByRaw("FIELD(id, $business_location_id) desc")
-       ->get();
+      ->where('lang_id','=',1)
+      ->where('status','=',1)
+      ->orderByRaw("FIELD(id, $business_location_id) desc")
+      ->get();
 
-       $data = ['data'=>$customer,'line_type_back'=>$customer->registers_setting,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation_id'=>$nation_id,'last_user'=>$last_user];
-      //  dd($data);
+      $data = ['data'=>$customer,'line_type_back'=>$line_setting,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation_id'=>$nation_id,'last_user'=>$last_user];
+     //  dd($data);
 
-       return view('frontend/salepage/registers',compact('data'));
+      return view('frontend/salepage/registers',compact('data'));
+
+    }else{
+      $data = ['status' => 'fail', 'message' => 'สายงานผิดกรุณาตรวจสอบ URL การสมัคร'];
+      return view('frontend/salepage/fail',compact('data'));
+
+    }
+
 
 
 
