@@ -8,7 +8,7 @@ use App\Models\Frontend\LineModel;
 class Register extends Model
 {
 	public static function register($req,$introduce_id=''){
-    //dd($req->all());
+
 
     if($introduce_id == $req->upline_id){
       $introduce_type = $req->line_type_back;
@@ -23,6 +23,8 @@ class Register extends Model
       }
 
     }
+
+
 
 
         $customer_code_id =DB::table('customer_code')

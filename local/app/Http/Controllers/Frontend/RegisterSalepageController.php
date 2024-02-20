@@ -12,6 +12,7 @@ class RegisterSalepageController extends Controller
 
   public function index($user_name,$line_setting){
 
+
     if($line_setting == 'A' || $line_setting == 'B' || $line_setting == 'C'){
       $customer = DB::table('customers')
       ->select('*')
@@ -44,6 +45,8 @@ class RegisterSalepageController extends Controller
       ->where('user_name','=',$user_name)
       ->first();
 
+
+
       if(empty($registers_setting)){
         $data = ['status' => 'fail', 'message' => 'ไม่มีข้อมูลผู้แนะนำกรุณาติดต่อ AIYARA'];
         return view('frontend/salepage/fail',compact('data'));
@@ -54,8 +57,6 @@ class RegisterSalepageController extends Controller
       //$line_setting = $registers_setting->registers_setting;
 
       $last_user = LineModel::last_line($user_registers,$line_setting);
-
-
 
 
 
@@ -77,7 +78,7 @@ class RegisterSalepageController extends Controller
       ->get();
 
       $data = ['data'=>$customer,'line_type_back'=>$line_setting,'provinces'=>$provinces,'business_location'=>$business_location,'country'=>$country,'nation_id'=>$nation_id,'last_user'=>$last_user];
-     //  dd($data);
+
 
       return view('frontend/salepage/registers',compact('data'));
 
@@ -100,6 +101,7 @@ class RegisterSalepageController extends Controller
 
    public function register_member_salepage(Request $req){
 
+
     $customer = DB::table('customers')
     ->select('user_name','registers_setting')
     ->where('user_name','=',$req->upline_id)
@@ -112,7 +114,7 @@ class RegisterSalepageController extends Controller
 
 
     $user_name = $customer->user_name;
-    $line_type = $customer->registers_setting;
+    $line_type = $req->line_type_back;
 
     $rs = LineModel::last_line($user_name,$line_type);
 

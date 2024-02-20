@@ -77,15 +77,17 @@ class ProfileController extends Controller
           $business_location_id = 1;
       }
 
-        $customer = DB::table('customers_detail')
+        $customer = DB::table('customers')
             ->select('customers_detail.*','customers.business_location_id', 'dataset_provinces.id as provinces_id', 'dataset_provinces.name_th as provinces_name', 'dataset_amphures.name_th as amphures_name', 'dataset_amphures.id as amphures_id',
             'dataset_districts.id as district_id', 'dataset_districts.name_th as district_name','customers.prefix_name','customers.first_name','customers.last_name','customers.business_name')
+            ->leftJoin('customers_detail', 'customers_detail.customer_id', '=', 'customers.id')
             ->leftjoin('dataset_provinces', 'dataset_provinces.id', '=', 'customers_detail.province_id_fk')
             ->leftjoin('dataset_amphures', 'dataset_amphures.id', '=', 'customers_detail.amphures_id_fk')
             ->leftjoin('dataset_districts', 'dataset_districts.id', '=', 'customers_detail.district_id_fk')
-            ->leftJoin('customers', 'customers.id', '=', 'customers_detail.customer_id')
-            ->where('customers_detail.customer_id', '=', Auth::guard('c_user')->user()->id)
+           
+            ->where('customers.id', '=', Auth::guard('c_user')->user()->id)
             ->first();
+ 
 
         $provinces = DB::table('dataset_provinces')
             ->select('*')
