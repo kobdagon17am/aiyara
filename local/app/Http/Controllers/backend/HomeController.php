@@ -11,6 +11,66 @@ use App\Models\Backend\Orders;
 class HomeController extends Controller
 {
 
+  // แก้นำสินค้าออกเกิน คืนสินค้าเข้าคลัง
+  public function test_general_takeout_remove(Request $request)
+  {
+    $db_general_takeout = DB::table('db_general_takeout')->select('id','ref_doc','business_location_id_fk','branch_id_fk')->where('id',1012)->first();
+    $db_general_takeout_item = DB::table('db_general_takeout_item')->where('general_takeout_id',$db_general_takeout->id)->get();
+    DB::beginTransaction();
+    try {
+
+      foreach($db_general_takeout_item as $item){
+
+        DB::table('db_stock_movement')->insert([
+          'stock_type_id_fk' => 5,
+          'stock_id_fk' => $item->stocks_id_fk,
+          'ref_table' => 'db_general_takeout',
+          'ref_table_id' => $db_general_takeout->id,
+          'ref_doc' => $db_general_takeout->ref_doc,
+          'doc_date' => $item->created_at,
+          'business_location_id_fk' => $db_general_takeout->business_location_id_fk,
+          'branch_id_fk' => $db_general_takeout->branch_id_fk,
+          'product_id_fk' => $item->product_id_fk,
+          'lot_number' => $item->lot_number,
+          'lot_expired_date' => $item->lot_expired_date,
+          'amt' => $item->amt,
+          'in_out' => 1,
+          'product_unit_id_fk' => $item->product_unit_id_fk,
+          'warehouse_id_fk' => $item->warehouse_id_fk,
+          'zone_id_fk' => $item->zone_id_fk,
+          'shelf_id_fk' => $item->shelf_id_fk,
+          'shelf_floor' => $item->shelf_floor,
+          'status' => 1,
+          'note' => 'คืนสินค้าจากการยกเลิก',
+          'note2' => 'ยกเลิกนำสินค้าออก '.$db_general_takeout->ref_doc,
+          'action_user' => 1,
+          'action_date' => date('Y-m-d H:i:s'),
+          'approver' => 1,
+          'approve_date' => date('Y-m-d H:i:s'),
+          'sender' => 0,
+          'who_cancel' => 0,
+          'created_at' => date('Y-m-d H:i:s'),
+          'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $db_stocks = DB::table('db_stocks')->select('id','amt')->where('id',$item->stocks_id_fk)->first();
+        DB::table('db_stocks')->where('id',$db_stocks->id)->update([
+          'amt' => $db_stocks->amt+$item->amt,
+        ]);
+
+      }
+
+
+        DB::commit();
+        } catch (\Exception $e) {
+          DB::rollback();
+          return $e->getMessage();
+        } catch (\FatalThrowableError $fe) {
+          DB::rollback();
+          return $e->getMessage();
+        }
+  }
+
   // จากรับเองเป็นจัดส่ง
   public function test_add_delivery(Request $request)
   {

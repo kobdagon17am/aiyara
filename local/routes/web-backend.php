@@ -14,7 +14,7 @@ Route::group(['prefix' => 'backend','namespace' => 'backend',  'as' => 'backend.
   #=========================================================================================================================================================
 
   	Route::post('testme', 'HomeController@testme');
- 	Route::get('testme', 'HomeController@testme');
+ 	  Route::get('test_general_takeout_remove', 'HomeController@test_general_takeout_remove');
 
 
     Route::get('test_sql', 'HomeController@test_sql');
