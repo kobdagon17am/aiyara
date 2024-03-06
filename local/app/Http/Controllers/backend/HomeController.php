@@ -60,8 +60,10 @@ class HomeController extends Controller
 
       }
 
-
         DB::commit();
+
+        return 'OK Bro!!';
+
         } catch (\Exception $e) {
           DB::rollback();
           return $e->getMessage();
