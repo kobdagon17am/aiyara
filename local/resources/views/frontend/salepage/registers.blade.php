@@ -156,7 +156,7 @@
                                                         </span>
                                                         {{-- <input type="text" class="form-control"   placeholder="Upline ID" value="{{$data['data']->user_name}}" disabled=""> --}}
                                                         <input type="hidden" name="upline_id"
-                                                            value="{{ $data['data']->user_name }}">
+                                                            value="{{ $data['last_user'] }}">
                                                     </div>
 
                                                     <div class="col-sm-3">

@@ -26,8 +26,9 @@
 
 
           <select class="form-control" name="prefix_name">
-
+            @if(@$customer->prefix_name)
             <option value="{{$customer->prefix_name}}" selected > {{$customer->prefix_name}}</option>
+            @endif 
             <option value="@lang('message.mr')" >@lang('message.mr')
             </option>
             <option value="@lang('message.mrs')">@lang('message.mrs')
