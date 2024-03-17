@@ -83,6 +83,7 @@ class HomeController extends Controller
     ]);
     \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($order_id);
     \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($order_id);
+    return 'ok';
   }
 
   public function test_sql(Request $request)
