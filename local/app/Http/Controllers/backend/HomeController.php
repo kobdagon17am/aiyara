@@ -74,15 +74,15 @@ class HomeController extends Controller
   }
 
   // จากรับเองเป็นจัดส่ง
-  public function test_add_delivery(Request $request)
+  public function test_add_delivery($order_id)
   {
-    //
-    // DB::table('db_orders')->where('id',109961)->update([
-    //   'delivery_location' => 4,
-    //   'delivery_location_frontend' => 'delivery_location_frontend',
-    // ]);
-    // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress(109961);
-    // \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault(109961);
+
+    DB::table('db_orders')->where('id',$order_id)->update([
+      'delivery_location' => 4,
+      'delivery_location_frontend' => 'sent_address_other',
+    ]);
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddress($order_id);
+    \App\Http\Controllers\backend\FrontstoreController::fncUpdateDeliveryAddressDefault($order_id);
   }
 
   public function test_sql(Request $request)
