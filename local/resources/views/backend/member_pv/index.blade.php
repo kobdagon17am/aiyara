@@ -206,10 +206,18 @@
                 </div>
               </div>
 
-                <table id="data-table" class="table table-bordered " style="width: 100%;">
-                </table>
+                {{-- <table id="data-table" class="table table-bordered" style="width: 100%;">
+                </table> --}}
 
+             
 </div>
+ 
+<div class="row">
+  <div class="table-responsive mt-2 mb-2">
+      <table  class="table table-hover" id="data-table" style="width:100%">
+      </table>
+  </div>
+</div> 
 
                 <b style="font-size: 14px;">{{ __('message.remark') }}</b>
                 <div class="divTable">
